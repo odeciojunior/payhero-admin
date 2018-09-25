@@ -10,8 +10,8 @@
         <div class="panel">
           <div class="panel-body">
             <div class="brand">
-              <img class="brand-img" src="../../assets//images/logo-colored.png" alt="...">
-              <h2 class="brand-text font-size-18">Remark</h2>
+              <img class="brand-img logo-login" src="{{ asset('adminremark/assets/images/logo0.png') }}" alt="...">
+              {{-- <h2 class="brand-text font-size-18">Remark</h2> --}}
             </div>
             <form autocomplete="off"   method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
                 @csrf
