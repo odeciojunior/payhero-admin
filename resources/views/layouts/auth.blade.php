@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/waves/waves.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/pages/login-v3.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('adminremark/global/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminremark/assets/css/style.css') }}">
     
     
     <!-- Fonts -->
