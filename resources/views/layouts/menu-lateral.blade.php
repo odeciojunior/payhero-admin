@@ -507,25 +507,18 @@
                 </li>
                 <li class="site-menu-item has-sub">
                   <a href="javascript:void(0)">
-                          <i class="site-menu-icon wb-order" aria-hidden="true"></i>
-                          <span class="site-menu-title">Relatorios</span>
-                                  <span class="site-menu-arrow"></span>
-                      </a>
+                    <i class="site-menu-icon wb-order" aria-hidden="true"></i>
+                    <span class="site-menu-title">Relatórios</span>
+                    <span class="site-menu-arrow"></span>
+                  </a>
                   <ul class="site-menu-sub">
                     <li class="site-menu-item">
-                      <a class="animsition-link" href="layouts/menu-collapsed.html">
-                        <span class="site-menu-title">Menu Collapsed</span>
-                      </a>
-                    </li>
-                    <li class="site-menu-item">
-                      <a class="animsition-link" href="layouts/menubar-native-scrolling.html">
-                        <span class="site-menu-title">Menubar Native Scrolling</span>
+                      <a class="animsition-link" href="{{ route('relatorios.vendas') }}">
+                        <span class="site-menu-title">Vendas</span>
                       </a>
                     </li>
                   </ul>
                 </li>
-                
-                
               </div>    
             </div>
           </div>
