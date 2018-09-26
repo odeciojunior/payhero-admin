@@ -19,3 +19,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+//Route::redirect("home", "cliente", 301);
+//Route::view("welcome", "welcome");

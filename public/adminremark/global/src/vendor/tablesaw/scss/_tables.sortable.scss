@@ -27,7 +27,7 @@
 .tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
 .tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
 	// content: "\0020";
-	font-family: $zmdi-font-name;
+	font-family: $wb-font-family;
   font-feature-settings: normal;
   font-kerning: auto;
   font-language-override: normal;
@@ -42,8 +42,8 @@
   text-rendering: auto;
 }
 .tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
-	content: $zmdi-var-caret-up;
+	content: $wb-var-triangle-up;
 }
 .tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
-	content: $zmdi-var-caret-down;
+	content: $wb-var-triangle-down;
 }

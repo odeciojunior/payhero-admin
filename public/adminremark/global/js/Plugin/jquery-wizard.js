@@ -19,8 +19,6 @@
 
   var _Plugin3 = babelHelpers.interopRequireDefault(_Plugin2);
 
-  // import $ from 'jquery';
-
   var NAME = 'wizard';
 
   var Wizard = function (_Plugin) {
@@ -49,7 +47,16 @@
           },
           classes: {
             step: {
-              active: 'active'
+              done: 'done',
+              error: 'error',
+              active: 'active',
+              disabled: 'disabled',
+              activing: 'activing',
+              loading: 'loading'
+            },
+            pane: {
+              active: 'active',
+              activing: 'activing'
             },
             button: {
               hide: 'hidden-xs-up',

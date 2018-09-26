@@ -14,16 +14,16 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table
   position: absolute;
   top: 6px;
   left: 10px;
-  font-family: "Material Design Iconic";
+  font-family: "Web Icons";
   font-style: normal;
   font-weight: 400;
-  content: "";
+  content: "";
   -webkit-transform: translate(0, 0);
           transform: translate(0, 0);
   text-rendering: auto; }
 
-table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
-  content: ""; }
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
+  content: ""; }
 
 table.dataTable.dtr-inline.collapsed > tbody > tr.child td:before {
   display: none; }

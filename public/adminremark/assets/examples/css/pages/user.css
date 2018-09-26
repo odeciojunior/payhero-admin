@@ -3,11 +3,11 @@
 
 .page-user .page-content .list-group-item {
   padding: 25px 0;
-  border-top-color: #dee2e6; }
+  border-top-color: #e4eaec; }
   .page-user .page-content .list-group-item:first-child {
     border-top-color: transparent; }
   .page-user .page-content .list-group-item:last-child {
-    border-bottom-color: #dee2e6; }
+    border-bottom-color: #e4eaec; }
   .page-user .page-content .list-group-item .media-heading > small {
     margin-left: 10px; }
   .page-user .page-content .list-group-item p {

@@ -1,50 +1,39 @@
 @import 'vars';
 
 // Variables
-$charPlus: $zmdi-var-plus;
-$charMinus: $zmdi-var-minus;
-
-$charCirclePlus: $zmdi-var-plus-circle;
-$charCircleMinus: $zmdi-var-minus-circle;
-
-$charSearch: $zmdi-var-search;
-$charRemove: $zmdi-var-close;
-$charPencil: $zmdi-var-edit;
-$charTrash: $zmdi-var-delete;
-
-$charArrowUp: $zmdi-var-long-arrow-up;
-$charArrowDown: $zmdi-var-long-arrow-down;
-$charArrowLeft: $zmdi-var-long-arrow-left;
-$charArrowRight: $zmdi-var-long-arrow-right;
-
-$charArrowSmallUp: $zmdi-var-caret-up;
-$charArrowSmallDown: $zmdi-var-caret-down;
-$charArrowSmallLeft: $zmdi-var-caret-left;
-$charArrowSmallRight: $zmdi-var-caret-right;
-
-$charArrowAltUp: $zmdi-var-chevron-up;
-$charArrowAltDown: $zmdi-var-chevron-down;
-$charArrowAltLeft: $zmdi-var-chevron-left;
-$charArrowAltRight: $zmdi-var-chevron-right;
-
-$charCircleArrowUp: $zmdi-var-caret-up-circle;
-$charCircleArrowDown: $zmdi-var-caret-down-circle;
-$charCircleArrowLeft: $zmdi-var-caret-left-circle;
-$charCircleArrowRight: $zmdi-var-caret-right-circle;
-
-$charArrowTinyUp: $zmdi-var-chevron-up;
-$charArrowTinyDown: $zmdi-var-chevron-down;
-$charArrowTinyLeft: $zmdi-var-chevron-left;
-$charArrowTinyRight: $zmdi-var-chevron-right;
-
-$charArrowSmallUpDown: $zmdi-var-unfold-more;
-
-
+$charPlus: $wb-var-plus;
+$charMinus: $wb-var-minus;
+$charCirclePlus: $wb-var-plus-circle;
+$charCircleMinus: $wb-var-minus-circle;
+$charSearch: $wb-var-search;
+$charRemove: $wb-var-close;
+$charPencil: $wb-var-pencil;
+$charTrash: $wb-var-trash;
+$charArrowUp: $wb-var-arrow-up;
+$charArrowDown: $wb-var-arrow-down;
+$charArrowLeft: $wb-var-arrow-left;
+$charArrowRight: $wb-var-arrow-right;
+$charArrowSmallUp: $wb-var-triangle-up;
+$charArrowSmallDown: $wb-var-triangle-down;
+$charArrowSmallLeft: $wb-var-triangle-left;
+$charArrowSmallRight: $wb-var-triangle-right;
+$charArrowAltUp: $wb-var-chevron-up;
+$charArrowAltDown: $wb-var-chevron-down;
+$charArrowAltLeft: $wb-var-chevron-left;
+$charArrowAltRight: $wb-var-chevron-right;
+$charCircleArrowUp: $wb-var-dropup;
+$charCircleArrowDown: $wb-var-dropdown;
+$charCircleArrowLeft: $wb-var-dropleft;
+$charCircleArrowRight: $wb-var-dropright;
+$charArrowTinyUp: $wb-var-chevron-up-mini;
+$charArrowTinyDown: $wb-var-chevron-down-mini;
+$charArrowTinyLeft: $wb-var-chevron-left-mini;
+$charArrowTinyRight: $wb-var-chevron-right-mini;
+$charArrowSmallUpDown: $wb-var-sort-vertical;
 $colorStriping: $table-accent-bg;
 $tr-hover: $table-hover-bg;
-
-$fontPath: $zmdi-font-path;
-$fontFootable: $zmdi-font-name;
+$fontPath: $wb-font-path;
+$fontFootable: $wb-font-family;
 
 $dropdown-header-padding: 8px 20px 6px !default;
 $dropdown-link-padding: $dropdown-item-padding-y $dropdown-item-padding-x;
@@ -211,6 +200,9 @@ $dropdown-link-padding: $dropdown-item-padding-y $dropdown-item-padding-x;
 
     //add for v4a6-dev 20170302 ---Kevin_y
     > .form-inline {
+      @include media-breakpoint-down(md) {
+        justify-content: flex-start;
+      }
       justify-content: flex-end;
     }
     //---Kevin_y
@@ -398,6 +390,24 @@ $dropdown-link-padding: $dropdown-item-padding-y $dropdown-item-padding-x;
   }
 }
 
+// To repair and repair / repair for repair's sake PS:MDZZ
+// .footable-detail-row .footable-details.table-bordered {
+//   > tbody > tr:first-child,
+//   > thead > tr:first-child {
+//     > th,
+//     > td {
+//       border-top-width: 0 !important;
+//     }
+//   } 
+
+//   > tbody > tr:last-child,
+//   > tfoot > tr:last-child {
+//     > th,
+//     > td {
+//       border-bottom-width: 0 !important;
+//     }
+//   } 
+// } 
 
 // for bootstrapV3.x pagination & input-group-btn & label & dropdown-menu
 // ======================================================================

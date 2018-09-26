@@ -17,16 +17,16 @@
 
 // Variables
 // ========================================================================
-$breadcrumb-margin-bottom:            10px !default;
-$breadcrumb-arrow-separator:          "\00bb" !default;
-$breadcrumb-icon-margin-right:        10px !default;
+$breadcrumb-margin-bottom: 10px !default;
+$breadcrumb-arrow-separator: "\00bb" !default;
+$breadcrumb-icon-margin-right: 10px !default;
 
 // Component: breadcrumb
 // ========================================================================
 
 .breadcrumb {
   margin-bottom: $breadcrumb-margin-bottom;
-  background-color: transparent;   // add  from---v3
+  background-color: transparent; // add  from---v3
 
   .is-hidden {
     display: none;

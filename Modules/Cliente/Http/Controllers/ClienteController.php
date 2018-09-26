@@ -15,7 +15,7 @@ class ClienteController extends Controller
     public function index()
     {
         //return view('cliente::index');
-        return "Modulo Cliente";
+        return view('cliente::dashboard');
     }
 
     /**

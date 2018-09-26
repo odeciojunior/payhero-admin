@@ -6,10 +6,10 @@
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: #fff;
+  padding: .5em;
   background: #222;
+  color: #fff;
 }
 
 .hljs-comment, .hljs-quote {

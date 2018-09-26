@@ -4,7 +4,7 @@
 
 .c3 path, .c3 line {
   fill: none;
-  stroke: #bdbdbd; }
+  stroke: #a3afb7; }
 
 .c3 text {
   -webkit-user-select: none;
@@ -27,7 +27,7 @@
   font-size: 13px; }
 
 .c3-grid line {
-  stroke: #bdbdbd; }
+  stroke: #a3afb7; }
 
 .c3-grid text {
   fill: #aaa; }
@@ -36,7 +36,7 @@
   stroke-dasharray: 3 3; }
 
 .c3-text.c3-empty {
-  fill: #757575;
+  fill: #76838f;
   font-size: 2em; }
 
 .c3-line {
@@ -99,11 +99,11 @@
   opacity: 0.95; }
 
 .c3-tooltip tr {
-  border: 1px solid rgba(224, 224, 224, 0.8); }
+  border: 1px solid rgba(204, 213, 219, 0.8); }
 
 .c3-tooltip th {
-  background-color: #eeeeee;
-  font-weight: 400;
+  background-color: #f3f7f9;
+  font-weight: 500;
   font-size: 14px;
   padding: 2px 5px;
   text-align: left; }
@@ -112,7 +112,7 @@
   font-size: 13px;
   padding: 3px 6px;
   background-color: #fff;
-  border-left: 1px dotted rgba(224, 224, 224, 0.8); }
+  border-left: 1px dotted rgba(204, 213, 219, 0.8); }
 
 .c3-tooltip td > span {
   display: inline-block;
@@ -132,7 +132,7 @@
   font-size: 1.3em; }
 
 .c3-chart-arcs .c3-chart-arcs-background {
-  fill: #e0e0e0;
+  fill: #ccd5db;
   stroke: none; }
 
 .c3-chart-arcs .c3-chart-arcs-gauge-unit {
@@ -140,10 +140,10 @@
   font-size: 16px; }
 
 .c3-chart-arcs .c3-chart-arcs-gauge-max {
-  fill: #9e9e9e; }
+  fill: #76838f; }
 
 .c3-chart-arcs .c3-chart-arcs-gauge-min {
-  fill: #9e9e9e; }
+  fill: #76838f; }
 
 .c3-chart-arc .c3-gauge-value {
   fill: #000;

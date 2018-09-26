@@ -1,13 +1,13 @@
 .app-location #map {
   height: 100%; }
   .app-location #map .marker-active .in-map-markers .friend-icon {
-    border-color: #5c6bc0; }
+    border-color: #79b2fc; }
     .app-location #map .marker-active .in-map-markers .friend-icon::before {
-      border-color: #5c6bc0 transparent transparent; }
+      border-color: #79b2fc transparent transparent; }
   .app-location #map .in-map-markers {
     display: inline-block; }
     .app-location #map .in-map-markers .friend-icon {
-      border: 3px solid #3f51b5;
+      border: 3px solid #3e8ef7;
       transition: 0.4s ease-in-out all;
       position: relative;
       border-radius: 50%;
@@ -20,7 +20,7 @@
         height: 0;
         width: 0;
         border-width: 17px 21px 0;
-        border-color: #3f51b5 transparent transparent;
+        border-color: #3e8ef7 transparent transparent;
         border-style: solid;
         transition: 0.4s ease-in-out all;
         position: absolute;
@@ -28,9 +28,9 @@
         left: 10px;
         z-index: -1; }
       .app-location #map .in-map-markers .friend-icon:hover {
-        border-color: #5c6bc0; }
+        border-color: #79b2fc; }
       .app-location #map .in-map-markers .friend-icon:hover::before {
-        border-color: #5c6bc0 transparent transparent; }
+        border-color: #79b2fc transparent transparent; }
 
 .app-location .list-group .friend-info {
   padding: 0;
@@ -66,7 +66,7 @@
     transition: border .2s linear, color .2s linear, width .2s linear, background-color .2s linear; }
     .list-group .card-block:hover {
       cursor: pointer;
-      background-color: #eeeeee; }
+      background-color: #eee; }
   .list-group .list-group-item,
   .list-group .list-group-item:hover {
     background-color: transparent; }
@@ -76,25 +76,25 @@
 
 .list-inline li a:hover {
   text-decoration: none;
-  color: #9e9e9e !important; }
+  color: #76838f !important; }
 
 .detail {
-  background-color: #5c6bc0 !important; }
+  background-color: #79b2fc !important; }
 
 .leaflet-popup-pane:hover h3 {
-  color: #5c6bc0 !important; }
+  color: #79b2fc !important; }
 
 .marker-cluster-small {
-  background-color: rgba(121, 134, 203, 0.6); }
+  background-color: rgba(162, 202, 238, 0.6); }
   .marker-cluster-small > div {
-    background-color: rgba(63, 81, 181, 0.6); }
+    background-color: rgba(98, 168, 234, 0.6); }
   .marker-cluster-small span {
     color: #fff; }
 
 .marker-cluster-medium {
-  background-color: rgba(229, 115, 115, 0.6); }
+  background-color: rgba(250, 152, 152, 0.6); }
   .marker-cluster-medium > div {
-    background-color: rgba(244, 67, 54, 0.6); }
+    background-color: rgba(249, 104, 104, 0.6); }
   .marker-cluster-medium span {
     color: #fff; }
 

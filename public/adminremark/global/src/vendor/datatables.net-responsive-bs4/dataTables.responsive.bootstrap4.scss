@@ -18,10 +18,10 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table
   position: absolute;
   top: 6px;
   left: 10px;
-  font-family: "#{$zmdi-font-name}";
+  font-family: "#{$wb-font-family}";
   font-style: normal;
   font-weight: 400;
-  content: "#{$zmdi-var-plus-circle}";
+  content: "#{$wb-var-plus-circle}";
   transform: translate(0, 0);
   text-rendering: auto;
 
@@ -43,8 +43,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before, table
   // background-color: $brand-primary;
 }
 
-table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
-  content: "#{$zmdi-var-minus-circle}";
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
+  content: "#{$wb-var-minus-circle}";
   // background-color: #d33333;
 }
 

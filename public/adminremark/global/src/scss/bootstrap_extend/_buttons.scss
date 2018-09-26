@@ -3,6 +3,7 @@
 // Component:       `btn`
 //
 // Modifiers:       `btn-block`
+//                  `btn-outline`
 //                  `btn-lg`
 //                  `btn-sm`
 //                  `btn-xs`
@@ -35,124 +36,94 @@
 
 // Variables
 // ========================================================================
+$btn-tagged-padding-horizontal: pxToRem(8px) !default;
+$btn-tagged-xs-padding-horizontal: pxToRem(4px) !default;
+$btn-tagged-sm-padding-horizontal: pxToRem(6px) !default;
+$btn-tagged-lg-padding-horizontal: pxToRem(14px) !default;
+$btn-tagged-tag-bgColor: rgba(0, 0, 0, .15) !default;
+$btn-color: $inverse !default;
+$btn-bg: transparent !default;
+$btn-border: $border-color-base !default;
+$btn-default-disabled-color: $btn-default-color !default;
+$btn-default-disabled-bg: $gray-100 !default;
+$btn-default-disabled-border: $btn-default-disabled-bg !default;
+$btn-primary-disabled-color: $color-white !default;
+$btn-primary-disabled-bg: $color-primary-400 !default;
+$btn-primary-disabled-border: $btn-primary-disabled-bg !default;
+$btn-success-disabled-color: $color-white !default;
+$btn-success-disabled-bg: $color-green-400 !default;
+$btn-success-disabled-border: $btn-success-disabled-bg !default;
+$btn-info-disabled-color: $color-white !default;
+$btn-info-disabled-bg: $color-cyan-400 !default;
+$btn-info-disabled-border: $btn-info-disabled-bg !default;
+$btn-warning-disabled-color: $color-white !default;
+$btn-warning-disabled-bg: $color-orange-400 !default;
+$btn-warning-disabled-border: $btn-warning-disabled-bg !default;
+$btn-danger-disabled-color: $color-white !default;
+$btn-danger-disabled-bg: $color-red-400 !default;
+$btn-danger-disabled-border: $btn-danger-disabled-bg !default;
+$btn-dark-disabled-color: $color-white !default;
+$btn-dark-disabled-bg: $gray-400 !default;
+$btn-dark-disabled-border: $btn-dark-disabled-bg !default;
+$btn-with-icon-margin: -1px 3px 0 !default;
+$btn-raised-shadow-top: $shadow-2-top !default;
+$btn-raised-shadow-bottom: $shadow-2-bottom !default;
+$btn-raised-shadow-active-top: $shadow-3-top !default;
+$btn-raised-shadow-active-bottom: $shadow-3-bottom !default;
+$btn-flat-disabled-color: $gray-400 !default;
+$btn-icon-xs-font-size: $font-size-sm !default;
+$btn-icon-sm-font-size: $font-size-base !default;
+$btn-icon-lg-font-size: pxToRem(20px) !default;
+$btn-floating-size: pxToRem(56px) !default;
+$btn-floating-padding: pxToRem(14px) !default;
+$btn-floating-font-size: pxToRem(24px) !default;
+$btn-floating-shadow: $shadow-5-bottom !default;
+$btn-floating-xs-size: pxToRem(30px) !default;
 
-$btn-shadow:                             0 1px 4px 0 rgba(0,0,0,.1) !default;
-
-$btn-tagged-padding-horizontal:         pxToRem(8px) !default;
-$btn-tagged-xs-padding-horizontal:      pxToRem(4px) !default;
-$btn-tagged-sm-padding-horizontal:      pxToRem(6px) !default;
-$btn-tagged-lg-padding-horizontal:      pxToRem(14px) !default;
-$btn-tagged-tag-bgColor:                rgba(0, 0, 0, 0.15) !default;
-
-$btn-color:                              $inverse !default;
-$btn-bg:                                 transparent !default;
-$btn-border:                             $border-color-base !default;
-
-$btn-default-disabled-color:             $btn-default-color !default;
-$btn-default-disabled-bg:                $gray-lightest !default;
-$btn-default-disabled-border:            $btn-default-disabled-bg !default;
-
-$btn-primary-disabled-color:             $color-white !default;
-$btn-primary-disabled-bg:                $color-primary-400 !default;
-$btn-primary-disabled-border:            $btn-primary-disabled-bg !default;
-
-$btn-success-disabled-color:             $color-white !default;
-$btn-success-disabled-bg:                $color-green-400 !default;
-$btn-success-disabled-border:            $btn-success-disabled-bg !default;
-
-$btn-info-disabled-color:                $color-white !default;
-$btn-info-disabled-bg:                   $color-cyan-400 !default;
-$btn-info-disabled-border:               $btn-info-disabled-bg !default;
-
-$btn-warning-disabled-color:             $color-white !default;
-$btn-warning-disabled-bg:                $color-orange-400 !default;
-$btn-warning-disabled-border:            $btn-warning-disabled-bg !default;
-
-$btn-danger-disabled-color:              $color-white !default;
-$btn-danger-disabled-bg:                 $color-red-400 !default;
-$btn-danger-disabled-border:             $btn-danger-disabled-bg !default;
-
-$btn-dark-disabled-color:                $color-white !default;
-$btn-dark-disabled-bg:                   $gray !default;
-$btn-dark-disabled-border:               $btn-dark-disabled-bg !default;
-
-$btn-with-icon-margin:                   -1px 3px 0 !default;
-
-$btn-raised-shadow-top:                  $shadow-2-top !default;
-$btn-raised-shadow-bottom:               $shadow-2-bottom !default;
-$btn-raised-shadow-active-top:           $shadow-3-top !default;
-$btn-raised-shadow-active-bottom:        $shadow-3-bottom !default;
-
-$btn-flat-disabled-color:                $gray !default;
-
-$btn-icon-xs-font-size:                  $font-size-sm !default;
-$btn-icon-sm-font-size:                  $font-size-base !default;
-$btn-icon-lg-font-size:                  pxToRem(20px) !default;
-
-$btn-floating-size:                      pxToRem(56px) !default;
-$btn-floating-padding:                   pxToRem(14px) !default;
-$btn-floating-font-size:                 pxToRem(36px) !default;
-
-$btn-floating-shadow:                    $shadow-5-bottom !default;
-
-$btn-floating-xs-size:                   pxToRem(30px) !default;
 /*$btn-floating-xs-padding:                10px !default;*/
-$btn-floating-xs-font-size:              pxToRem(18px) !default;
+$btn-floating-xs-font-size: pxToRem(13px) !default;
+$btn-floating-sm-size: pxToRem(40px) !default;
 
-$btn-floating-sm-size:                   pxToRem(40px) !default;
 /*$btn-floating-sm-padding:                13px !default;*/
-$btn-floating-sm-font-size:              pxToRem(26px) !default;
+$btn-floating-sm-font-size: pxToRem(15px) !default;
+$btn-floating-lg-size: pxToRem(70px) !default;
 
-$btn-floating-lg-size:                   pxToRem(70px) !default;
 /*$btn-floating-lg-padding:                15px !default;*/
-$btn-floating-lg-font-size:              pxToRem(46px) !default;
-
-$btn-animate-side-padding:               pxToRem(8px) pxToRem(28px) !default;
-$btn-animate-side-xs-padding:            pxToRem(3px) pxToRem(14px) !default;
-$btn-animate-side-sm-padding:            pxToRem(6px) pxToRem(22px) !default;
-$btn-animate-side-lg-padding:            pxToRem(10px) pxToRem(33px) !default;
-$btn-animate-vertical-icon-font-size:    pxToRem(24px) !default;
+$btn-floating-lg-font-size: pxToRem(30px) !default;
+$btn-animate-side-padding: pxToRem(8px) pxToRem(28px) !default;
+$btn-animate-side-xs-padding: pxToRem(3px) pxToRem(14px) !default;
+$btn-animate-side-sm-padding: pxToRem(6px) pxToRem(22px) !default;
+$btn-animate-side-lg-padding: pxToRem(10px) pxToRem(33px) !default;
+$btn-animate-vertical-icon-font-size: pxToRem(24px) !default;
 $btn-animate-vertical-xs-icon-font-size: pxToRem(18px) !default;
 $btn-animate-vertical-sm-icon-font-size: pxToRem(21px) !default;
 $btn-animate-vertical-lg-icon-font-size: pxToRem(37px) !default;
-
-
-$btn-inverse-color:                      $text-color !default;
-$btn-inverse-bg:                         $inverse !default;
-$btn-inverse-border:                     $btn-default-border !default;
-$btn-inverse-hover-bg:                   $inverse !default;
-$btn-inverse-hover-border:               $btn-default-hover-border !default;
-$btn-inverse-active-bg:                  $inverse !default;
-$btn-inverse-active-border:              $btn-default-active-border !default;
-$btn-inverse-disabled-color:             $gray-light !default;
-$btn-inverse-disabled-bg:                $inverse !default;
-$btn-inverse-disabled-border:            $btn-dark-disabled-bg !default;
-
-
-$btn-pure-default-color:                 $gray !default;
-$btn-pure-default-hover-color:           $gray-dark !default;
-
-$btn-pure-primary-color:                 $brand-primary !default;
-$btn-pure-primary-hover-color:           $brand-primary-400 !default;
-
-$btn-pure-success-color:                 $brand-success !default;
-$btn-pure-success-hover-color:           $brand-success-400 !default;
-
-$btn-pure-info-color:                    $brand-info !default;
-$btn-pure-info-hover-color:              $brand-info-400 !default;
-
-$btn-pure-warning-color:                 $brand-warning !default;
-$btn-pure-warning-hover-color:           $brand-warning-400 !default;
-
-$btn-pure-danger-color:                  $brand-danger !default;
-$btn-pure-danger-hover-color:            $brand-danger-400 !default;
-
-$btn-pure-dark-color:                    $brand-dark !default;
-$btn-pure-dark-hover-color:              $brand-dark-hover !default;
-
-$btn-pure-inverse-color:                 $inverse !default;
-$btn-pure-inverse-hover-color:           $btn-inverse-hover-bg !default;
-
+$btn-inverse-color: $text-color !default;
+$btn-inverse-bg: $inverse !default;
+$btn-inverse-border: $btn-default-border !default;
+$btn-inverse-hover-bg: $inverse !default;
+$btn-inverse-hover-border: $btn-default-hover-border !default;
+$btn-inverse-active-bg: $inverse !default;
+$btn-inverse-active-border: $btn-default-active-border !default;
+$btn-inverse-disabled-color: $gray-300 !default;
+$btn-inverse-disabled-bg: $inverse !default;
+$btn-inverse-disabled-border: $btn-dark-disabled-bg !default;
+$btn-pure-default-color: $gray-400 !default;
+$btn-pure-default-hover-color: $gray-300 !default;
+$btn-pure-primary-color: $brand-primary !default;
+$btn-pure-primary-hover-color: $brand-primary-400 !default;
+$btn-pure-success-color: $brand-success !default;
+$btn-pure-success-hover-color: $brand-success-400 !default;
+$btn-pure-info-color: $brand-info !default;
+$btn-pure-info-hover-color: $brand-info-400 !default;
+$btn-pure-warning-color: $brand-warning !default;
+$btn-pure-warning-hover-color: $brand-warning-400 !default;
+$btn-pure-danger-color: $brand-danger !default;
+$btn-pure-danger-hover-color: $brand-danger-400 !default;
+$btn-pure-dark-color: $brand-dark !default;
+$btn-pure-dark-hover-color: $brand-dark-hover !default;
+$btn-pure-inverse-color: $inverse !default;
+$btn-pure-inverse-hover-color: $btn-inverse-hover-bg !default;
 
 $btn-styles: (
   'default': (
@@ -257,15 +228,12 @@ $btn-styles: (
 // ========================================================================
 
 .btn {
+  cursor: pointer;
+  transition: border .2s linear, color .2s linear, width .2s linear, background-color .2s linear;
   // @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $border-radius);
   -webkit-font-smoothing: subpixel-antialiased;
-  box-shadow: $btn-shadow;
-  transition: border .2s linear, color .2s linear, width .2s linear, background-color .2s linear;
-  cursor: pointer;
 
-  &,
-  &:active,
-  &.active {
+  &, &:active, &.active {
     &:focus {
       outline: 0;
     }
@@ -285,33 +253,25 @@ $btn-styles: (
     cursor: not-allowed;
   }
 
-  // &:not([disabled]):not(.disabled):active,
-  // &:not([disabled]):not(.disabled).active {
-  //  box-shadow: none;
-  // }
+  &:not([disabled]):not(.disabled):active,
+  &:not([disabled]):not(.disabled).active {
+   box-shadow: none;
+  }
 
   // Button with icon
   .icon {
     @include icon-fixed-width();
-    line-height: inherit;
     margin: $btn-with-icon-margin;
+    line-height: inherit;
   }
 }
 
 a.btn:not(.btn-link) {
   text-decoration: none;
-  &,
-  &:active,
-  &.active {
+
+  &, &:active, &.active {
     text-decoration: none;
   }
-}
-
-// Modifier: `btn-link`
-// -------------------------
-
-.btn-link {
-  box-shadow: none;
 }
 
 // Modifier: `btn-block`
@@ -321,16 +281,53 @@ a.btn:not(.btn-link) {
   white-space: normal;
 }
 
-// Size Modifier
+// Modifier: `btn-outline`
 // ========================================================================
 
-// .btn-lg {
-//   @include button-size($padding-large-vertical, $padding-large-horizontal, $font-size-lg, $line-height-lg, $border-radius-large);
-// }
+.btn-outline {
+  &-default,
+  &.btn-default {
+    @include button-outline-styles-variant("default");
+  }
+  
+  &-primary,
+  &.btn-primary {
+    @include button-outline-styles-variant("primary");
+  }
+  
+  &-success,
+  &.btn-success {
+    @include button-outline-styles-variant("success");
+  }
+  
+  &-info,
+  &.btn-info {
+    @include button-outline-styles-variant("info");
+  }
+  
+  &-warning,
+  &.btn-warning {
+    @include button-outline-styles-variant("warning");
+  }
+  
+  &-danger,
+  &.btn-danger {
+    @include button-outline-styles-variant("danger");
+  }
+  
+  &-dark,
+  &.btn-dark {
+    @include button-outline-styles-variant("dark");
+  }
+  
+  &-inverse,
+  &.btn-inverse {
+    @include button-outline-styles-variant("inverse");
+  }
+}
 
-// .btn-sm {
-//   @include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-sm, $line-height-sm, $border-radius-small);
-// }
+// Size Modifier
+// ========================================================================
 
 .btn-xs {
   @include button-size($padding-xs-vertical, $padding-xs-horizontal, $font-size-sm, $line-height-sm, $border-radius-small);
@@ -360,56 +357,59 @@ a.btn:not(.btn-link) {
 // -------------------------
 
 .btn-primary {
-  @include button-styles-variant('primary');
+  @include button-styles-variant("primary");
 }
 
 // Modifier: `btn-success`
 // -------------------------
 
 .btn-success {
-  @include button-styles-variant('success');
+  @include button-styles-variant("success");
 }
 
 // Modifier: `btn-info`
 // -------------------------
 
 .btn-info {
-  @include button-styles-variant('info');
+  @include button-styles-variant("info");
 }
 
 // Modifier: `btn-warning`
 // -------------------------
 
 .btn-warning {
-  @include button-styles-variant('warning');
+  @include button-styles-variant("warning");
 }
 
 // Modifier: `btn-danger`
 // -------------------------
 
 .btn-danger {
-  @include button-styles-variant('danger');
+  @include button-styles-variant("danger");
 }
 
 // Modifier: `btn-default`
 // -------------------------
 
 .btn-default {
-  @include button-styles-variant('default');
+  // @include button-variant($btn-default-color, $btn-default-bg, $btn-default-border);
+  @include button-styles-variant("default");
 }
 
 // Modifier: `btn-inverse`
 // -------------------------
 
 .btn-inverse {
-  @include button-styles-variant('inverse');
+  // @include button-variant($btn-inverse-color, $btn-inverse-bg, $btn-inverse-border);
+  @include button-styles-variant("inverse");
 }
 
 // Modifier: `btn-dark`
 // -------------------------
 
 .btn-dark {
-  @include button-styles-variant('dark');
+  // @include button-variant($btn-dark-color, $btn-dark-bg, $btn-dark-border);
+  @include button-styles-variant("dark");
 }
 
 // Modifier: `btn-flat`
@@ -419,36 +419,34 @@ a.btn:not(.btn-link) {
   background: none;
   border: none;
   box-shadow: none;
-  &:hover,
-  &:focus {
-    box-shadow: none;
-  }
+
   &.disabled {
     color: $btn-flat-disabled-color;
   }
 }
-
 
 // Modifier: `btn-icon`
 // ========================================================================
 
 .btn-icon, .btn.icon {
   padding: pxToRem(10px);
-  font-size: $font-size-icon;
   line-height: 1em;
 
   &.btn-xs {
     padding: pxToRem(4px);
     font-size: $btn-icon-xs-font-size;
   }
+
   &.btn-sm {
     padding: pxToRem(8px);
     font-size: $btn-icon-sm-font-size;
   }
+
   &.btn-lg {
     padding: pxToRem(12px);
     font-size: $btn-icon-lg-font-size;
   }
+
   &.disabled {
     color: $btn-flat-disabled-color;
   }
@@ -466,9 +464,7 @@ a.btn:not(.btn-link) {
 .btn-raised {
   @include btn-raised-shadow();
 
-  &.disabled,
-  &[disabled],
-  fieldset[disabled] & {
+  &.disabled, &[disabled], fieldset[disabled] & {
     box-shadow: none;
   }
 }
@@ -484,32 +480,34 @@ a.btn:not(.btn-link) {
   font-size: $btn-floating-font-size;
   text-align: center;
   border-radius: 100%;
-
   box-shadow: $btn-floating-shadow;
+
   &.btn-xs {
     width: $btn-floating-xs-size;
     height: $btn-floating-xs-size;
     padding: 0;
     font-size: $btn-floating-xs-font-size;
   }
+
   &.btn-sm {
     width: $btn-floating-sm-size;
     height: $btn-floating-sm-size;
     padding: 0;
     font-size: $btn-floating-sm-font-size;
   }
+
   &.btn-lg {
     width: $btn-floating-lg-size;
     height: $btn-floating-lg-size;
     padding: 0;
     font-size: $btn-floating-lg-font-size;
   }
+
   i {
     position: relative;
     top: 0;
   }
 }
-
 
 // Modifier: `btn-animate`
 // ========================================================================
@@ -522,15 +520,14 @@ a.btn:not(.btn-link) {
     display: block;
     width: 100%;
     height: 100%;
-
-    @include translate(0px, 0px);
+    transform: translate(0, 0);
   }
 
   &-side {
     padding: $btn-animate-side-padding;
 
     span {
-      transition: transform 0.2s ease-out 0s;
+      transition: transform .2s ease-out 0s;
 
       > .icon {
         position: absolute;
@@ -538,14 +535,14 @@ a.btn:not(.btn-link) {
         left: 0;
         display: block;
         opacity: 0;
-        @include translate(-20px, -50%);
         transition: opacity .2s ease-out 0s;
+        transform: translate(-20px, -50%);
       }
     }
 
     &:hover {
       span {
-        @include translate(10px, 0px);
+        transform: translate(10px, 0);
 
         > .icon {
           opacity: 1;
@@ -564,7 +561,7 @@ a.btn:not(.btn-link) {
 
       &:hover {
         span {
-          @include translate(8px, 0px);
+          transform: translate(8px, 0);
         }
       }
     }
@@ -580,7 +577,7 @@ a.btn:not(.btn-link) {
 
       &:hover {
         span {
-          @include translate(8px, 0px);
+          transform: translate(8px, 0);
         }
       }
     }
@@ -596,7 +593,7 @@ a.btn:not(.btn-link) {
 
       &:hover {
         span {
-          @include translate(14px, 0px);
+          transform: translate(14px, 0);
         }
       }
     }
@@ -604,7 +601,7 @@ a.btn:not(.btn-link) {
 
   &-vertical {
     span {
-      transition: all 0.2s ease-out 0s;
+      transition: all .2s ease-out 0s;
 
       > .icon {
         position: absolute;
@@ -612,13 +609,13 @@ a.btn:not(.btn-link) {
         left: 50%;
         display: block;
         font-size: $btn-animate-vertical-icon-font-size;
-        @include translate(-50%, -100%);
+        transform: translate(-50%, -100%);
       }
     }
 
     &:hover {
       span {
-        @include translate(0, 150%);
+        transform: translate(0, 150%);
       }
     }
 
@@ -654,9 +651,8 @@ a.btn:not(.btn-link) {
 // ========================================================================
 
 .btn-tagged {
-  padding: 0;
-
   @include btn-tagged-variant($btn-tagged-padding-horizontal, $padding-base-vertical, $btn-tagged-padding-horizontal);
+  padding: 0;
 
   &.btn-xs {
     @include btn-tagged-variant($padding-xs-horizontal, $padding-xs-vertical, $btn-tagged-xs-padding-horizontal);
@@ -681,7 +677,6 @@ a.btn:not(.btn-link) {
   border-radius: $border-radius 0 0 $border-radius;
 }
 
-
 // Pill Modifier
 // ========================================================================
 
@@ -698,14 +693,14 @@ a.btn:not(.btn-link) {
 
 .btn-direction {
   position: relative;
+
   &:before {
     position: absolute;
     line-height: 0;
-    content: '';
+    content: "";
     border: 8px solid transparent;
   }
 }
-
 
 // Modifier: `btn-up`
 // -------------------------
@@ -716,7 +711,6 @@ a.btn:not(.btn-link) {
   margin-left: -8px;
   border-bottom-color: $border-color-base;
 }
-
 
 // Modifier: `btn-right`
 // -------------------------
@@ -752,28 +746,22 @@ a.btn:not(.btn-link) {
 // ========================================================================
 
 .btn-pure {
-  &,
-  &:hover,
-  &.hover,
-  &:focus,
-  &:active,
-  &.active,
+  &, 
+  &:hover, 
+  &:focus, 
+  &:active, 
+  &.active, 
   &:not([disabled]):not(.disabled):active,
   &:not([disabled]):not(.disabled).active,
   .open > &.dropdown-toggle,
-  .show > &.dropdown-toggle,
-  &[disabled],
+  .show > &.dropdown-toggle, 
+  &[disabled], 
   fieldset[disabled] & {
     background-color: transparent;
     border-color: transparent;
     box-shadow: none;
 
-    &:hover,
-    &.hover,
-    &:focus,
-    &.focus,
-    &:active,
-    &.active {
+    &:hover, &:focus, &.focus {
       background-color: transparent;
       border-color: transparent;
       box-shadow: none;

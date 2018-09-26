@@ -95,7 +95,7 @@ $colorpicker-dropdown-z-index: $zindex-fullscreen;//500002;
     top: 50%;
     right: $trigger-width + pxToRem(5px);
     display: none;
-    font-family: $zmdi-font-name;
+    font-family: $wb-font-family;
     font-style: normal;
     font-weight: normal;
     color: $colorInput-clear-color;
@@ -111,7 +111,7 @@ $colorpicker-dropdown-z-index: $zindex-fullscreen;//500002;
     }
 
     &:after {
-      content: $zmdi-var-close;
+      content: $wb-var-close;
     }
   }
 

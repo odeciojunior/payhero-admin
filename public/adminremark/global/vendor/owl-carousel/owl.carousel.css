@@ -172,7 +172,7 @@
  *  Default theme - Owl Carousel CSS File
  */
 .owl-carousel.owl-carousel-navOut .owl-nav [class*='owl-'] {
-  background-color: #bdbdbd;
+  background-color: #a3afb7;
   margin-top: -15px; }
   .owl-carousel.owl-carousel-navOut .owl-nav [class*='owl-']:before, .owl-carousel.owl-carousel-navOut .owl-nav [class*='owl-']:after {
     font-size: 15px; }
@@ -189,7 +189,7 @@
   text-align: center;
   opacity: 0.6;
   border-radius: 50px;
-  font-family: "Material Design Iconic";
+  font-family: "Web Icons";
   font-style: normal;
   font-weight: normal;
   text-rendering: auto;
@@ -206,12 +206,12 @@
 .owl-carousel .owl-nav .owl-prev {
   left: 10px; }
   .owl-carousel .owl-nav .owl-prev:before {
-    content: ""; }
+    content: ""; }
 
 .owl-carousel .owl-nav .owl-next {
   right: 10px; }
   .owl-carousel .owl-nav .owl-next:before {
-    content: ""; }
+    content: ""; }
 
 .owl-carousel .owl-dots {
   padding: 0;

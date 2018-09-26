@@ -31,45 +31,33 @@
 
 // Variables
 // ========================================================================
-
-$modal-header-padding-x        : 20px !default;//fix v4a6-dev set width equal to modal-body---Kevin_y
-
-$modal-header-padding-y        : 15px !default;//fix v4a6-dev ---Kevin_y
-
-$modal-footer-padding          : 6px 20px 20px !default;
-
-$modal-radius                  : $border-radius-large !default;
-
-$modal-sidebar-bg              : $inverse !default;
-
-$modal-fill-in-bg              : rgba(255, 255, 255, 0.95) !default;
-$modal-fill-in-close-font-size : 2rem !default;
-
-$modal-primary-color           : $inverse !default;
-$modal-primary-bg              : $brand-primary !default;
-
-$modal-success-color           : $inverse !default;
-$modal-success-bg              : $brand-success !default;
-
-$modal-info-color              : $inverse !default;
-$modal-info-bg                 : $brand-info !default;
-
-$modal-warning-color           : $inverse !default;
-$modal-warning-bg              : $brand-warning !default;
-
-$modal-danger-color            : $inverse !default;
-$modal-danger-bg               : $brand-danger !default;
+$modal-header-padding-x: 20px !default;
+$modal-header-padding-y: 15px !default;
+$modal-footer-padding: 6px 20px 20px !default;
+$modal-radius: $border-radius-large !default;
+$modal-sidebar-bg: $inverse !default;
+$modal-fill-in-bg: rgba(255, 255, 255, .95) !default;
+$modal-fill-in-close-font-size: 2rem !default;
+$modal-primary-color: $inverse !default;
+$modal-primary-bg: $brand-primary !default;
+$modal-success-color: $inverse !default;
+$modal-success-bg: $brand-success !default;
+$modal-info-color: $inverse !default;
+$modal-info-bg: $brand-info !default;
+$modal-warning-color: $inverse !default;
+$modal-warning-bg: $brand-warning !default;
+$modal-danger-color: $inverse !default;
+$modal-danger-bg: $brand-danger !default;
 
 // Component: Modal
 // ========================================================================
 .modal-content {
   border: none;
-  border-radius: $modal-radius;
-  box-shadow: $modal-content-shadow;
 }
 
 .modal-header {
-  padding: $modal-header-padding-y $modal-header-padding-x;//fix v4a6-dev ---Kevin_y
+  padding: $modal-header-padding-y $modal-header-padding-x;
+  padding-right: ($modal-header-padding-x + 20);
   border-bottom: none;
 }
 
@@ -80,13 +68,14 @@ $modal-danger-bg               : $brand-danger !default;
 }
 
 .modal-header .modal-title {
-  margin-top: 0;
   order: 1;
+  margin-top: 0;
 }
 
 .modal-header .close {
-  margin-top: 1px;
   order: 2;
+  margin-top: 1px;
+  padding: 0;
 }
 
 .modal-footer {
@@ -130,45 +119,25 @@ $modal-danger-bg               : $brand-danger !default;
 // -------------------------
 
 .modal-center {
-  display: -ms-flexbox;
-  display: -webkit-flex;
   display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
   height: 100%;
   margin: 0 auto;
-
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-flow: column nowrap;
-  -ms-flex-flow: column nowrap;
-  flex-flow: column nowrap;
-  -webkit-align-content: stretch;
-  -ms-flex-line-pack: center;
   align-content: center;
 }
-
 
 // Modifier: `modal-bottom`
 // -------------------------
 
 .modal-bottom {
-  display: -ms-flexbox;
-  display: -webkit-flex;
   display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-end;
   height: 100%;
   margin: 0 auto;
-
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-flex-flow: column nowrap;
-  -ms-flex-flow: column nowrap;
-  flex-flow: column nowrap;
-  -webkit-align-content: stretch;
-  -ms-flex-line-pack: center;
   align-content: center;
 }
-
 
 // Modifier: `modal-sidebar`
 // -------------------------
@@ -176,29 +145,20 @@ $modal-danger-bg               : $brand-danger !default;
 .modal-sidebar {
   position: absolute;
   right: 0;
-  display: -ms-flexbox;
-  display: -webkit-flex;
   display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
   height: 100%;
   margin: 0;
   background-color: $modal-sidebar-bg;
-
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-flow: column nowrap;
-  -ms-flex-flow: column nowrap;
-  flex-flow: column nowrap;
-  -webkit-align-content: stretch;
-  -ms-flex-line-pack: center;
   align-content: center;
 
   .modal-content {
+    overflow-x: hidden;
+    overflow-y: auto;
     background-color: transparent;
     border-radius: 0;
     box-shadow: none;
-    overflow-y: auto;
-    overflow-x: hidden;
   }
 
   .modal-header {
@@ -206,8 +166,8 @@ $modal-danger-bg               : $brand-danger !default;
   }
 
   .modal-footer {
-    border-top: none;
     flex-wrap: wrap;
+    border-top: none;
   }
 
   button.close {
@@ -218,14 +178,13 @@ $modal-danger-bg               : $brand-danger !default;
   }
 }
 
-
 .modal.fade .modal-dialog.modal-sidebar {
-  @include translate(25%, 0px);
-}
-.modal.show .modal-dialog.modal-sidebar {
-  @include translate(0px, 0px);
+  transform: translate(25%, 0);
 }
 
+.modal.show .modal-dialog.modal-sidebar {
+  transform: translate(0, 0);
+}
 
 // Modifier: `modal-fill-in`
 // -------------------------
@@ -239,25 +198,6 @@ $modal-danger-bg               : $brand-danger !default;
   }
 
   .modal-dialog {
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    max-width: 100%;
-    height: 100%;
-    margin: 0 auto;
-
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-flex-flow: column nowrap;
-    -ms-flex-flow: column nowrap;
-    flex-flow: column nowrap;
-    -webkit-align-content: stretch;
-    -ms-flex-line-pack: center;
-    align-content: center;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
-    align-items: center;
 
     // Scale up the modal
     @include media-breakpoint-up(md) {
@@ -265,30 +205,42 @@ $modal-danger-bg               : $brand-danger !default;
         width: $modal-md;
       }
 
-      &.modal-sm > * { width: $modal-sm; }
+      &.modal-sm > * {
+        width: $modal-sm;
+      }
 
       button.close {
         position: fixed;
         top: 20px;
         right: 40px;
+        z-index: 1;
         font-size: $modal-fill-in-close-font-size;
         opacity: .5;
-        z-index: 1;
-        @include translate(0%, 0%);
+        transform: translate(0%, 0%);
       }
     }
 
     @include media-breakpoint-up(lg) {
-      &.modal-lg > * { width: $modal-lg; }
+      &.modal-lg > * {
+        width: $modal-lg;
+      }
     }
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    align-content: center;
   }
+
   .modal-content {
     background-color: transparent;
     border-radius: 0;
     box-shadow: none;
   }
 }
-
 
 // Color Modifier
 // ========================================================================
@@ -332,15 +284,14 @@ $modal-danger-bg               : $brand-danger !default;
 // ========================================================================
 
 .modal {
-
   // Modifier: `modal-fade-in-scale-up`
   // -------------------------
 
   &.modal-fade-in-scale-up {
     .modal-dialog {
       opacity: 0;
-      transform: scale(0.7);
       transition: all .3s ease 0s;
+      transform: scale(.7);
     }
 
     &.show {
@@ -357,14 +308,14 @@ $modal-danger-bg               : $brand-danger !default;
   &.modal-slide-in-right {
     .modal-dialog {
       opacity: 0;
-      @include translate(20%, 0%);
       transition: all .3s cubic-bezier(.25, .5, .5, .9) 0s;
+      transform: translate(20%, 0%);
     }
 
     &.show {
       .modal-dialog {
         opacity: 1;
-        @include translate(0px, 0px);
+        transform: translate(0, 0);
       }
     }
   }
@@ -375,14 +326,14 @@ $modal-danger-bg               : $brand-danger !default;
   &.modal-slide-from-bottom {
     .modal-dialog {
       opacity: 0;
-      @include translate(0%, 20%);
       transition: all .3s ease 0s;
+      transform: translate(0%, 20%);
     }
 
     &.show {
       .modal-dialog {
         opacity: 1;
-        @include translate(0px, 0px);
+        transform: translate(0, 0);
       }
     }
   }
@@ -393,14 +344,14 @@ $modal-danger-bg               : $brand-danger !default;
   &.modal-newspaper {
     .modal-dialog {
       opacity: 0;
-      @include transform(scale(0) rotate(720deg));
-      transition: all 0.5s ease 0s;
+      transition: all .5s ease 0s;
+      transform: scale(0) rotate(720deg);
     }
 
     &.show {
       .modal-dialog {
         opacity: 1;
-        @include transform(scale(1) rotate(0deg));
+        transform: scale(1) rotate(0deg);
       }
     }
   }
@@ -413,15 +364,15 @@ $modal-danger-bg               : $brand-danger !default;
 
     .modal-dialog {
       opacity: 0;
-      @include transform(translateZ(600px) rotateX(20deg));
-      @include transform-style(preserve-3d);
+      transform: translateZ(600px) rotateX(20deg);
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
         opacity: 1;
-        @include transform(translateZ(0px) rotateX(0deg));
-        transition: all 0.3s ease-in 0s;
+        transition: all .3s ease-in 0s;
+        transform: translateZ(0) rotateX(0deg);
       }
     }
   }
@@ -433,14 +384,14 @@ $modal-danger-bg               : $brand-danger !default;
     perspective: 1300px;
 
     .modal-dialog {
-      @include transform(translate(30%) translateZ(600px) rotate(10deg));
-      @include transform-style(preserve-3d);
+      transform: translate(30%) translateZ(600px) rotate(10deg);
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
-        @include transform(translate(0%) translateZ(0px) rotate(0deg));
-        transition: all 0.3s ease-in 0s;
+        transition: all .3s ease-in 0s;
+        transform: translate(0%) translateZ(0) rotate(0deg);
       }
     }
   }
@@ -452,14 +403,14 @@ $modal-danger-bg               : $brand-danger !default;
     perspective: 1300px;
 
     .modal-dialog {
-      transform:rotateY(-70deg);
-      @include transform-style(preserve-3d);
-      transition: all 0.3s ease 0s;
+      transition: all .3s ease 0s;
+      transform: rotateY(-70deg);
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
-        transform:rotateY(0deg);
+        transform: rotateY(0deg);
       }
     }
   }
@@ -471,14 +422,14 @@ $modal-danger-bg               : $brand-danger !default;
     perspective: 1300px;
 
     .modal-dialog {
-      transform:rotateX(-70deg);
-      @include transform-style(preserve-3d);
-      transition: all 0.3s ease 0s;
+      transition: all .3s ease 0s;
+      transform: rotateX(-70deg);
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
-        transform:rotateX(0deg);
+        transform: rotateX(0deg);
       }
     }
   }
@@ -490,15 +441,15 @@ $modal-danger-bg               : $brand-danger !default;
     perspective: 1300px;
 
     .modal-dialog {
-      transform:rotateX(-60deg);
+      transition: all .3s ease 0s;
+      transform: rotateX(-60deg);
       transform-origin: 50% 0 0;
-      @include transform-style(preserve-3d);
-      transition: all 0.3s ease 0s;
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
-        transform:rotateX(0deg);
+        transform: rotateX(0deg);
       }
     }
   }
@@ -509,8 +460,8 @@ $modal-danger-bg               : $brand-danger !default;
   &.modal-super-scaled {
     .modal-dialog {
       opacity: 0;
+      transition: all .3s ease 0s;
       transform: scale(2);
-      transition: all 0.3s ease 0s;
     }
 
     &.show {
@@ -527,8 +478,8 @@ $modal-danger-bg               : $brand-danger !default;
   &.modal-just-me {
     .modal-dialog {
       opacity: 0;
-      transform: scale(0.8);
-      transition: all 0.3s ease 0s;
+      transition: all .3s ease 0s;
+      transform: scale(.8);
     }
 
     .modal-backdrop {
@@ -557,14 +508,14 @@ $modal-danger-bg               : $brand-danger !default;
 
     .modal-dialog {
       opacity: 0;
-      @include transform(translateZ(-3000px) rotateY(90deg));
-      @include transform-style(preserve-3d);
-      transition: all 0.5s ease 0s;
+      transition: all .5s ease 0s;
+      transform: translateZ(-3000px) rotateY(90deg);
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
-        animation: slit 0.7s ease-out forwards;
+        animation: slit .7s ease-out forwards;
       }
     }
   }
@@ -576,15 +527,15 @@ $modal-danger-bg               : $brand-danger !default;
     perspective: 1300px;
 
     .modal-dialog {
-      @include transform(translateY(100%) rotateX(90deg));
+      transition: all .3s ease-out 0s;
+      transform: translateY(100%) rotateX(90deg);
       transform-origin: 0 100% 0;
-      @include transform-style(preserve-3d);
-      transition: all 0.3s ease-out 0s;
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
-        @include transform(translateY(0%) rotateX(0deg));
+        transform: translateY(0%) rotateX(0deg);
       }
     }
   }
@@ -596,15 +547,15 @@ $modal-danger-bg               : $brand-danger !default;
     perspective: 1300px;
 
     .modal-dialog {
-      @include transform(translateZ(100px) translateX(-30%) rotateY(90deg));
+      transition: all .3s ease-out 0s;
+      transform: translateZ(100px) translateX(-30%) rotateY(90deg);
       transform-origin: 0 100% 0;
-      @include transform-style(preserve-3d);
-      transition: all 0.3s ease-out 0s;
+      transform-style: preserve-3d;
     }
 
     &.show {
       .modal-dialog {
-        @include transform(translateZ(0px) translateX(0%) rotateY(0deg));
+        transform: translateZ(0) translateX(0%) rotateY(0deg);
       }
     }
   }
@@ -612,24 +563,24 @@ $modal-danger-bg               : $brand-danger !default;
 
 @-webkit-keyframes slit {
   50% {
-    opacity: 0.5;
-    @include transform(translateZ(-250px) rotateY(89deg));
+    opacity: .5;
+    transform: translateZ(-250px) rotateY(89deg);
   }
+
   100% {
     opacity: 1;
-    @include transform(translateZ(0px) rotateY(0deg));
+    transform: translateZ(0) rotateY(0deg);
   }
 }
+
 @keyframes slit {
   50% {
-    opacity: 0.5;
-    @include transform(translateZ(-250px) rotateY(89deg));
+    opacity: .5;
+    transform: translateZ(-250px) rotateY(89deg);
   }
+
   100% {
     opacity: 1;
-    @include transform(translateZ(0px) rotateY(0deg));
+    transform: translateZ(0) rotateY(0deg);
   }
 }
-
-
-

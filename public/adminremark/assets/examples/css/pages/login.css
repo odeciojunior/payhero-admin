@@ -7,14 +7,6 @@
   .page-login form a {
     margin-left: 20px; }
 
-.page-login .form-control,
-.page-login .floating-label,
-.page-login .form-control:focus + .floating-label {
-  color: #bdbdbd; }
-
-.page-login a {
-  color: #9fa8da; }
-
 @media (max-width: 767.98px) {
   .page-login form {
     width: auto; } }

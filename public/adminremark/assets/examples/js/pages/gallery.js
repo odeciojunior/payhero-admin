@@ -18,7 +18,7 @@
   (0, _jquery2.default)(document).ready(function ($$$1) {
     (0, _Site.run)();
 
-    $$$1('.md-search').magnificPopup({
+    $$$1('.wb-search').magnificPopup({
       type: 'image',
       closeOnContentClick: true,
       mainClass: 'mfp-fade',

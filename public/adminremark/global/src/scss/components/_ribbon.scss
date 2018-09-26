@@ -21,50 +21,37 @@
 
 // Variables
 // ========================================================================
-
-$ribbon-width                 : 150px !default;
-$ribbon-height                : 150px !default;
-
-$ribbon-inner-top             : 16px !default;
-$ribbon-inner-height          : 30px !default;
-$ribbon-inner-color           : $inverse !default;
-$ribbon-inner-bg              : $brand-dark !default;
-
-$ribbon-inner-xs-height       : 22px !default;
-$ribbon-inner-xs-font-size    : $font-size-sm !default;
-
-$ribbon-inner-sm-height       : 26px !default;
-$ribbon-inner-sm-font-size    : $font-size-sm !default;
-
-$ribbon-inner-lg-height       : 38px !default;
-$ribbon-inner-lg-font-size    : $font-size-lg !default;
-
-$ribbon-vertical-inner-left   : $ribbon-inner-top !default;
-$ribbon-vertical-inner-width  : 30px !default;
-$ribbon-vertical-inner-height : 60px !default;
-
-$ribbon-clip-inner-border     : $brand-dark-active !default;
-
-$ribbon-primary-inner-bg      : $brand-primary !default;
-$ribbon-primary-clip-border   : $brand-primary-active !default;
-
-$ribbon-success-inner-bg      : $brand-success !default;
-$ribbon-success-clip-border   : $brand-success-active !default;
-
-$ribbon-info-inner-bg         : $brand-info !default;
-$ribbon-info-clip-border      : $brand-info-active !default;
-
-$ribbon-warning-inner-bg      : $brand-warning !default;
-$ribbon-warning-clip-border   : $brand-warning-active !default;
-
-$ribbon-danger-inner-bg       : $brand-danger !default;
-$ribbon-danger-clip-border    : $brand-danger-active !default;
-
+$ribbon-width: 150px !default;
+$ribbon-height: 150px !default;
+$ribbon-inner-top: 16px !default;
+$ribbon-inner-height: 30px !default;
+$ribbon-inner-color: $inverse !default;
+$ribbon-inner-bg: $brand-dark !default;
+$ribbon-inner-xs-height: 22px !default;
+$ribbon-inner-xs-font-size: $font-size-sm !default;
+$ribbon-inner-sm-height: 26px !default;
+$ribbon-inner-sm-font-size: $font-size-sm !default;
+$ribbon-inner-lg-height: 38px !default;
+$ribbon-inner-lg-font-size: $font-size-lg !default;
+$ribbon-vertical-inner-left: $ribbon-inner-top !default;
+$ribbon-vertical-inner-width: 30px !default;
+$ribbon-vertical-inner-height: 60px !default;
+$ribbon-clip-inner-border: $brand-dark-active !default;
+$ribbon-primary-inner-bg: $brand-primary !default;
+$ribbon-primary-clip-border: $brand-primary-active !default;
+$ribbon-success-inner-bg: $brand-success !default;
+$ribbon-success-clip-border: $brand-success-active !default;
+$ribbon-info-inner-bg: $brand-info !default;
+$ribbon-info-clip-border: $brand-info-active !default;
+$ribbon-warning-inner-bg: $brand-warning !default;
+$ribbon-warning-clip-border: $brand-warning-active !default;
+$ribbon-danger-inner-bg: $brand-danger !default;
+$ribbon-danger-clip-border: $brand-danger-active !default;
 
 // Mixins
 // ========================================================================
 
-@mixin ribbon-variant($bg){
+@mixin ribbon-variant($bg) {
   .ribbon-inner {
     background-color: $bg;
   }
@@ -78,7 +65,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
   }
 }
 
-@mixin ribbon-bookmark-variant($border){
+@mixin ribbon-bookmark-variant($border) {
   .ribbon-inner {
     background-color: transparent;
     background-image: linear-gradient(to left, transparent 22px, $border 0);
@@ -122,7 +109,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
   }
 }
 
-@mixin ribbon-clip-variant($border){
+@mixin ribbon-clip-variant($border) {
   &.ribbon-clip {
     &:before {
       border-top-color: $border;
@@ -145,7 +132,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
   }
 }
 
-@mixin ribbon-corner-variant($border){
+@mixin ribbon-corner-variant($border) {
   &:before {
     border-top-color: $border;
     border-left-color: $border;
@@ -188,15 +175,15 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
   top: $ribbon-inner-top;
   left: 0;
   display: inline-block;
-  height: $ribbon-inner-height;
   max-width: 100%;
+  height: $ribbon-inner-height;
   padding-right: 20px;
   padding-left: 20px;
+  overflow: hidden;
   line-height: $ribbon-inner-height;
   color: $ribbon-inner-color;
-  white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
+  white-space: nowrap;
   background-color: $ribbon-inner-bg;
 
   .icon {
@@ -308,7 +295,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
       display: block;
       width: 0;
       height: 0;
-      content: '';
+      content: "";
       border: 15px solid $ribbon-inner-bg;
       border-right: 10px solid transparent;
     }
@@ -358,8 +345,8 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
 
   &.ribbon-reverse {
     .ribbon-inner {
-      padding-left: 42px; // 20px + 22px
       padding-right: 20px;
+      padding-left: 42px; // 20px + 22px
       background-image: linear-gradient(to right, transparent 22px, $ribbon-inner-bg 0);
 
       &:before {
@@ -372,8 +359,8 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
 
   &.ribbon-reverse.ribbon-vertical {
     .ribbon-inner {
-      padding-left: 0;
       padding-right: 0;
+      padding-left: 0;
 
       &:before {
         right: auto;
@@ -421,17 +408,16 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
   .ribbon-inner {
     left: -40px;
     width: 100%;
-
     transform: rotate(-45deg);
   }
 
   &.ribbon-reverse {
     right: -2px;
     left: auto;
+
     .ribbon-inner {
       right: -40px;
       left: auto;
-
       transform: rotate(45deg);
     }
   }
@@ -439,10 +425,10 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
   &.ribbon-bottom {
     top: auto;
     bottom: -2px;
+
     .ribbon-inner {
       top: auto;
       bottom: 16px;
-
       transform: rotate(45deg);
       // box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.3) inset, 0 0 20px rgba(0, 0, 0, 0.1) inset, 0 -1px 1px rgba(0, 0, 0, 0.4);
     }
@@ -469,7 +455,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
     left: 0;
     width: 0;
     height: 0;
-    content: '';
+    content: "";
     border: 30px solid transparent;
     border-top-color: $ribbon-inner-bg;
     border-left-color: $ribbon-inner-bg;
@@ -518,6 +504,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
       bottom: 0;
     }
   }
+
   &.ribbon-xs {
     &:before {
       border-width: 22px;
@@ -533,6 +520,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
       }
     }
   }
+
   &.ribbon-sm {
     &:before {
       border-width: 26px;
@@ -548,6 +536,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
       }
     }
   }
+
   &.ribbon-lg {
     &:before {
       border-width: 36px;
@@ -577,7 +566,7 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
     left: 0;
     width: 0;
     height: 0;
-    content: '';
+    content: "";
     border: 7px solid transparent;
     border-top-color: $ribbon-clip-inner-border;
     border-right-color: $ribbon-clip-inner-border;
@@ -698,4 +687,3 @@ $ribbon-danger-clip-border    : $brand-danger-active !default;
   @include ribbon-variant($ribbon-danger-inner-bg);
   @include ribbon-clip-variant($ribbon-danger-clip-border);
 }
-

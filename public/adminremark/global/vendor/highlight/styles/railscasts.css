@@ -6,15 +6,15 @@ Railscasts-like style (c) Visoft, Inc. (Damien White)
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: #e6e1dc;
+  padding: .5em;
   background: #232323;
+  color: #e6e1dc;
 }
 
 .hljs-comment, .hljs-quote {
-  font-style: italic;
   color: #bc9458;
+  font-style: italic;
 }
 
 .hljs-keyword, .hljs-selector-tag {
@@ -59,17 +59,17 @@ Railscasts-like style (c) Visoft, Inc. (Damien White)
 }
 
 .hljs-addition {
+  background-color: #144212;
+  color: #e6e1dc;
   display: inline-block;
   width: 100%;
-  color: #e6e1dc;
-  background-color: #144212;
 }
 
 .hljs-deletion {
+  background-color: #600;
+  color: #e6e1dc;
   display: inline-block;
   width: 100%;
-  color: #e6e1dc;
-  background-color: #600;
 }
 
 .hljs-selector-class {

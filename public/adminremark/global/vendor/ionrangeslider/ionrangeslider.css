@@ -161,18 +161,18 @@
 .irs-line-mid,
 .irs-line-right {
   height: 12px;
-  background-color: #e0e0e0; }
+  background-color: #e4eaec; }
 
 .irs-bar {
   top: 25px;
   height: 12px;
-  background-color: #3f51b5; }
+  background-color: #3e8ef7; }
 
 .irs-bar-edge {
   top: 25px;
   width: 9px;
   height: 12px;
-  background-color: #3f51b5; }
+  background-color: #3e8ef7; }
 
 .irs-shadow {
   top: 34px;
@@ -196,21 +196,21 @@
     left: 50%;
     -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
-    background-color: #3f51b5; }
+    background-color: #3e8ef7; }
 
 .irs-slider.state_hover, .irs-slider:hover {
   cursor: pointer; }
   .irs-slider.state_hover::after, .irs-slider:hover::after {
-    background-color: #283593; }
+    background-color: #0b69e3; }
 
 .irs-min, .irs-max {
   top: 0;
   padding: 1px 3px;
   font-size: 10px;
   line-height: 1.333;
-  color: #9e9e9e;
+  color: #76838f;
   text-shadow: none;
-  background: #eeeeee;
+  background: #e4eaec;
   border-radius: 4px; }
 
 .irs-from, .irs-to, .irs-single {
@@ -219,7 +219,7 @@
   line-height: 1.333;
   color: #fff;
   text-shadow: none;
-  background: #1e88e5;
+  background: #3e8ef7;
   border-radius: 4px; }
 
 .irs-from:after, .irs-to:after, .irs-single:after {
@@ -233,10 +233,10 @@
   overflow: hidden;
   content: "";
   border: 3px solid transparent;
-  border-top-color: #1e88e5; }
+  border-top-color: #3e8ef7; }
 
 .irs-grid-pol {
-  background: #eeeeee; }
+  background: #e4eaec; }
 
 .irs-grid-text {
-  color: #9e9e9e; }
+  color: #76838f; }

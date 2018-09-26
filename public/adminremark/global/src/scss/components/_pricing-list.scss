@@ -13,24 +13,17 @@
 
 // Variables
 // ========================================================================
-
-$pricing-list-margin-bottom:         $line-height-computed !default;
-
-$pricing-list-border-color:          $border-color-base !default;
-$pricing-list-border-radius:         $border-radius !default;
-
-$pricing-list-title-font-size:       $font-size-base !default;
-
-$pricing-list-price-font-size:       (1.5 * $h1-font-size) !default;
-$pricing-list-period-font-size:      $font-size-base !default;
-
-$pricing-list-title-padding:         15px 30px !default;
-$pricing-list-price-padding:         20px 30px !default;
-$pricing-list-features-padding:      0 18px !default;
+$pricing-list-margin-bottom: $line-height-computed !default;
+$pricing-list-border-color: $border-color-base !default;
+$pricing-list-border-radius: $border-radius !default;
+$pricing-list-title-font-size: $font-size-base !default;
+$pricing-list-price-font-size: (1.5 * $h1-font-size) !default;
+$pricing-list-period-font-size: $font-size-base !default;
+$pricing-list-title-padding: 15px 30px !default;
+$pricing-list-price-padding: 20px 30px !default;
+$pricing-list-features-padding: 0 18px !default;
 $pricing-list-features-item-padding: 15px !default;
-$pricing-list-footer-padding:        30px !default;
-
-$pricing-list-box-shadow:            0 2px 16px 1px rgba(0, 0, 0, 0.1) !default;
+$pricing-list-footer-padding: 30px !default;
 
 // Component: Pricing List
 // ========================================================================
@@ -38,12 +31,11 @@ $pricing-list-box-shadow:            0 2px 16px 1px rgba(0, 0, 0, 0.1) !default;
 .pricing-list {
   margin-bottom: $pricing-list-margin-bottom;
   text-align: center;
-  box-shadow: $pricing-list-box-shadow;
+  border: 1px solid $pricing-list-border-color;
   border-radius: $pricing-list-border-radius;
-  [class^="bg-"],
-  [class*="bg-"] {
-    &,
-    * {
+
+  [class^="bg-"], [class*="bg-"] {
+    &, * {
       color: $inverse;
     }
   }
@@ -88,11 +80,13 @@ $pricing-list-box-shadow:            0 2px 16px 1px rgba(0, 0, 0, 0.1) !default;
   .pricing-features {
     padding: $pricing-list-features-padding;
     margin: 0;
+
     li {
       display: block;
       padding: $pricing-list-features-item-padding;
       list-style: none;
       border-top: 1px dashed $pricing-list-border-color;
+
       &:first-child {
         border-top: none;
       }

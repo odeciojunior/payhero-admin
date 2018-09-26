@@ -1,4 +1,3 @@
-
 .page-header + .page-content {
   padding-top: 0;
 }
@@ -18,6 +17,9 @@
 }
 
 .page-header {
+  @include media-breakpoint-down(xs) {
+    padding: 10px;
+  }
   position: relative;
   z-index: $zindex-header; // fix for issue#498
   padding: $page-header-vertical-padding $page-horizontal-padding;
@@ -62,6 +64,7 @@
   .nav-tabs-line {
     margin-top: 5px;
     border-bottom-color: transparent;
+
     > li > a {
       padding: 5px 20px;
     }

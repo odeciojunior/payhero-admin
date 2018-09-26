@@ -297,11 +297,11 @@
   transition: background-color 0.15s, box-shadow 0.15s; }
 
 .jstree-default .jstree-hovered {
-  color: #3f51b5;
-  background: #eeeeee;
+  color: #589ffc;
+  background: #f3f7f9;
   border-radius: 0.215rem; }
   .jstree-default .jstree-hovered .jstree-themeicon-custom {
-    color: #757575; }
+    color: #76838f; }
 
 .jstree-default .jstree-context {
   background: #e7f4f9;
@@ -309,15 +309,15 @@
   box-shadow: inset 0 0 1px #cccccc; }
 
 .jstree-default .jstree-clicked {
-  background: #757575;
-  background: #eeeeee;
+  background: #76838f;
+  background: #f3f7f9;
   border-radius: 0.215rem; }
 
 .jstree-default .jstree-no-icons .jstree-anchor > .jstree-themeicon {
   display: none; }
 
 .jstree-default .jstree-disabled {
-  color: #bdbdbd;
+  color: #e4eaec;
   background: transparent; }
 
 .jstree-default .jstree-disabled.jstree-hovered {

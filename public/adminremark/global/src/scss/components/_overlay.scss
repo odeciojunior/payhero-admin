@@ -33,33 +33,24 @@
 //
 // ========================================================================
 
-
 // Variables
 // ========================================================================
-
-$overlay-panel-padding:              20px !default;
-$overlay-panel-color:                $inverse !default;
-
-$overlay-panel-background:           rgba(0, 0, 0, 0.5) !default;
-
-$overlay-icon-font-size:             (2 * $font-size-icon) !default;
-$overlay-icon-color:                 $inverse !default;
-$overlay-icons-gutter:               20px !default;
-
-$overlay-panel-link-color:           inherit !default;
+$overlay-panel-padding: 20px !default;
+$overlay-panel-color: $inverse !default;
+$overlay-panel-background: rgba(0, 0, 0, .5) !default;
+$overlay-icon-font-size: (2 * $font-size-icon) !default;
+$overlay-icon-color: $inverse !default;
+$overlay-icons-gutter: 20px !default;
+$overlay-panel-link-color: inherit !default;
 $overlay-panel-link-text-decoration: underline !default;
-
-$overlay-fade-in-opacity:            1 !default;
-$overlay-fade-out-opacity:           0.7 !default;
-
-$overlay-scale-in-scale:             1.1 !default;
-$overlay-scale-out-scale:            1 !default;
-
-$overlay-spin-in-scale:              1.1 !default;
-$overlay-spin-out-scale:             1 !default;
-$overlay-spin-in-rotate:             3deg !default;
-$overlay-spin-out-rotate:            0deg !default;
-
+$overlay-fade-in-opacity: 1 !default;
+$overlay-fade-out-opacity: .7 !default;
+$overlay-scale-in-scale: 1.1 !default;
+$overlay-scale-out-scale: 1 !default;
+$overlay-spin-in-scale: 1.1 !default;
+$overlay-spin-out-scale: 1 !default;
+$overlay-spin-in-rotate: 3deg !default;
+$overlay-spin-out-rotate: 0deg !default;
 
 /* ========================================================================
    Component: Overlay
@@ -73,8 +64,7 @@ $overlay-spin-out-rotate:            0deg !default;
   margin: 0;
   overflow: hidden;
   vertical-align: middle;
-  -webkit-transform: translateZ(0);
-          transform: translateZ(0);
+  transform: translateZ(0);
   // > :first-child, .overlay-figure {
   //   width: 100%;
   //   max-width: 100%;
@@ -104,15 +94,15 @@ $overlay-spin-out-rotate:            0deg !default;
     color: $overlay-panel-link-color;
     text-decoration: $overlay-panel-link-text-decoration;
   }
+
   & > :last-child {
     margin-bottom: 0;
   }
+
   h1, h2, h3, h4, h5, h6 {
     color: inherit;
   }
 }
-
-
 
 /* Sub-object `overlay-hover`
  ========================================================================== */
@@ -130,7 +120,6 @@ $overlay-spin-out-rotate:            0deg !default;
   background: $overlay-panel-background;
 }
 
-
 /* Modifier `overlay-image`
  ========================================================================== */
 
@@ -143,9 +132,8 @@ $overlay-spin-out-rotate:            0deg !default;
 /* Modifier `overlay-shade`
  ========================================================================== */
 .overlay-shade {
-  background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.87) 90%, #fff 100%) repeat scroll 0 0;
+  background: rgba(0, 0, 0, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, .87) 90%, #fff 100%) repeat scroll 0 0;
 }
-
 
 /* Position modifiers
  ========================================================================== */
@@ -171,25 +159,26 @@ $overlay-spin-out-rotate:            0deg !default;
 .overlay-icon {
   font-size: 0;
   text-align: center;
+
   &:before {
     display: inline-block;
     height: 100%;
     vertical-align: middle;
     content: "";
   }
+
   .icon {
     display: inline-block;
     width: $overlay-icon-font-size;
     height: $overlay-icon-font-size;
-    margin-right: ($overlay-icons-gutter/2);
-    margin-left: ($overlay-icons-gutter/2);
+    margin-right: ($overlay-icons-gutter / 2);
+    margin-left: ($overlay-icons-gutter / 2);
     font-size: $overlay-icon-font-size;
     line-height: 1;
     color: $overlay-icon-color;
     text-decoration: none;
   }
 }
-
 
 /* Sub-object `overlay-anchor`
  ========================================================================== */
@@ -204,17 +193,11 @@ $overlay-spin-out-rotate:            0deg !default;
 /* Transitions
  ========================================================================== */
 
-.overlay-fade,
-.overlay-scale,
-.overlay-spin,
-.overlay-grayscale,
-.overlay-blur,
-[class*='overlay-slide'] {
+.overlay-fade, .overlay-scale, .overlay-spin, .overlay-grayscale, .overlay-blur, [class*="overlay-slide"] {
   transition-timing-function: ease-out;
   transition-duration: .3s;
   transition-property: opacity transform filter;
 }
-
 
 // Fade
 .overlay-fade {
@@ -227,68 +210,58 @@ $overlay-spin-out-rotate:            0deg !default;
 
 // Scale
 .overlay-scale {
-          transform: scale($overlay-scale-out-scale);
+  transform: scale($overlay-scale-out-scale);
 }
-
 
 .overlay-hover:hover .overlay-scale {
-          transform: scale($overlay-scale-in-scale);
+  transform: scale($overlay-scale-in-scale);
 }
-
 
 // Spin
 .overlay-spin {
-          transform: scale($overlay-spin-out-scale) rotate($overlay-spin-out-rotate);
+  transform: scale($overlay-spin-out-scale) rotate($overlay-spin-out-rotate);
 }
-
 
 .overlay-hover:hover .overlay-spin {
-          transform: scale($overlay-spin-in-scale) rotate($overlay-spin-in-rotate);
+  transform: scale($overlay-spin-in-scale) rotate($overlay-spin-in-rotate);
 }
-
 
 // Grayscale
 .overlay-grayscale {
-          filter: grayscale(100%);
-
+  filter: grayscale(100%);
 }
-
 
 .overlay-hover:hover .overlay-grayscale {
-          filter: grayscale(0%);
-
+  filter: grayscale(0%);
 }
 
-
 // Slide
-[class*='overlay-slide'] { opacity: 0; }
+[class*="overlay-slide"] {
+  opacity: 0;
+}
 
 /* Top */
 .overlay-slide-top {
-          transform: translateY(-100%);
+  transform: translateY(-100%);
 }
-
 
 /* Bottom */
 .overlay-slide-bottom {
-          transform: translateY(100%);
+  transform: translateY(100%);
 }
-
 
 /* Left */
 .overlay-slide-left {
-          transform: translateX(-100%);
+  transform: translateX(-100%);
 }
-
 
 /* Right */
 .overlay-slide-right {
-          transform: translateX(100%);
+  transform: translateX(100%);
 }
 
-
 /* Hover */
-.overlay-hover:hover [class*='overlay-slide'] {
+.overlay-hover:hover [class*="overlay-slide"] {
   opacity: 1;
-          transform: translateX(0) translateY(0);
+  transform: translateX(0) translateY(0);
 }

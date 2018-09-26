@@ -20,42 +20,28 @@
 //
 // ========================================================================
 
-
 // Variables
 // ========================================================================
-
-$badge-bg:                    $bg-color-base !default;
-
-$badge-pill-padding:          3px 6px !default;
-$badge-pill-up-margin:        0 -0.8em !default;
-$badge-pill-active-color:     $gray-darker !default;
-$badge-pill-active-bg:        $brand-default !default;
-
-$badge-default-color:         $text-color !default;
+$badge-bg: $bg-color-base !default;
+$badge-pill-padding: 3px 6px !default;
+$badge-pill-up-margin: 0 -0.8em !default;
+$badge-pill-active-color: $gray-600 !default;
+$badge-pill-active-bg: $brand-default !default;
+$badge-default-color: $text-color !default;
 // $badge-default-font-size:     $font-size-base !default;
-
-$badge-lg-font-size:          16px !default;
-
-$badge-sm-font-size:          10px !default;
-$badge-sm-padding:            .1em .5em .1em !default;
-
-$badge-round-border-radius:   1em !default;
-
-$badge-default-hover-color:   $gray !default;
-$badge-default-hover-bg:      $brand-default-hover !default;
-
-$badge-primary-hover-bg:      $brand-primary-hover !default;
-
-$badge-success-hover-bg:      $brand-success-hover !default;
-
-$badge-info-hover-bg:         $brand-info-hover !default;
-
-$badge-warning-hover-bg:      $brand-warning-hover !default;
-
-$badge-danger-hover-bg:       $brand-danger-hover !default;
-
-$badge-dark-bg:               $brand-dark !default;
-$badge-dark-hover-bg:         $brand-dark-hover !default;
+$badge-lg-font-size: 16px !default;
+$badge-sm-font-size: 10px !default;
+$badge-sm-padding: .1em .5em .1em !default;
+$badge-round-border-radius: 1em !default;
+$badge-default-hover-color: $gray-400 !default;
+$badge-default-hover-bg: $brand-default-hover !default;
+$badge-primary-hover-bg: $brand-primary-hover !default;
+$badge-success-hover-bg: $brand-success-hover !default;
+$badge-info-hover-bg: $brand-info-hover !default;
+$badge-warning-hover-bg: $brand-warning-hover !default;
+$badge-danger-hover-bg: $brand-danger-hover !default;
+$badge-dark-bg: $brand-dark !default;
+$badge-dark-hover-bg: $brand-dark-hover !default;
 
 // Component: badge
 // ========================================================================
@@ -74,7 +60,6 @@ $badge-dark-hover-bg:         $brand-dark-hover !default;
     border-radius: 15px;
   }
 }
-
 
 // Alternate styles: `badge-outline`
 // -------------------------
@@ -105,25 +90,23 @@ $badge-dark-hover-bg:         $brand-dark-hover !default;
     top: 0;
   }
 
-  .btn-xs &,
-  .btn-group-xs > .btn & {
+  .btn-xs &, .btn-group-xs > .btn & {
     top: 0;
     padding: 1px 5px;
   }
 
   // Hover state, but only for links
   a & {
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       text-decoration: none;
       cursor: pointer;
     }
   }
 
   .list-group-item > & {
-    margin-left: auto; //?
     order: 1; //?
     float: right; //?
+    margin-left: auto; //?
   }
 
   .list-group-item > & + & {
@@ -142,13 +125,11 @@ $badge-dark-hover-bg:         $brand-dark-hover !default;
 // -------------------------
 
 .badge-default {
+  @include badge-styles-variant($badge-default-bg, $badge-default-hover-bg);
   color: $badge-default-color;
 
-  @include badge-styles-variant($badge-default-bg, $badge-default-hover-bg);
-
   &[href] {
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       color: $badge-default-hover-color;
     }
   }
@@ -218,4 +199,3 @@ $badge-dark-hover-bg:         $brand-dark-hover !default;
   padding: $badge-sm-padding;
   font-size: $badge-sm-font-size;
 }
-

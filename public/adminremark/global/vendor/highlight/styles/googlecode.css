@@ -6,10 +6,10 @@ Google Code style (c) Aahan Krish <geekpanth3r@gmail.com>
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: black;
+  padding: .5em;
   background: white;
+  color: black;
 }
 
 .hljs-comment, .hljs-quote {
@@ -41,8 +41,8 @@ Google Code style (c) Aahan Krish <geekpanth3r@gmail.com>
 }
 
 .hljs-formula {
-  font-style: italic;
   background-color: #eee;
+  font-style: italic;
 }
 
 .hljs-selector-id, .hljs-selector-class {

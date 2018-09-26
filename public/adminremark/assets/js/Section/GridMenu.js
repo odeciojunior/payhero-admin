@@ -112,7 +112,6 @@
       key: 'close',
       value: function close() {
         this.animate(function () {
-
           this.$el.removeClass('active');
 
           (0, _jquery2.default)('[data-toggle="gridmenu"]').addClass('active').attr('aria-expanded', true);

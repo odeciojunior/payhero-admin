@@ -13,20 +13,11 @@
 
 // Variables
 // ========================================================================
-
-$list-tasks-done-bg:                   $gray-lightest;
-
-$list-tasks-done-success-color:        $brand-success;
-$list-tasks-done-success-bg:           rgba($brand-success, (10/100));
-
-$list-tasks-done-info-color:           $brand-info;
-$list-tasks-done-info-bg:              rgba($brand-info, (10/100));
-
-$list-tasks-done-warning-color:        $brand-warning;
-$list-tasks-done-warning-bg:           rgba($brand-warning, (10/100));
-
-$list-tasks-done-danger-color:         $brand-danger;
-$list-tasks-done-danger-bg:            rgba($brand-danger, (10/100));
+$list-tasks-done-bg: $gray-100;
+$list-tasks-done-success-bg: rgba($brand-success, (10/100));
+$list-tasks-done-info-bg: rgba($brand-info, (10/100));
+$list-tasks-done-warning-bg: rgba($brand-warning, (10/100));
+$list-tasks-done-danger-bg: rgba($brand-danger, (10/100));
 
 // Component: List task
 // ========================================================================
@@ -53,22 +44,18 @@ $list-tasks-done-danger-bg:            rgba($brand-danger, (10/100));
   // ========================================================================
 
   .list-group-item-success {
-    color: $list-tasks-done-success-color;
     background-color: $list-tasks-done-success-bg;
   }
 
   .list-group-item-info {
-    color: $list-tasks-done-info-color;
     background-color: $list-tasks-done-info-bg;
   }
 
   .list-group-item-warning {
-    color: $list-tasks-done-warning-color;
     background-color: $list-tasks-done-warning-bg;
   }
 
   .list-group-item-danger {
-    color: $list-tasks-done-danger-color;
     background-color: $list-tasks-done-danger-bg;
   }
 }

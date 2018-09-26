@@ -65,14 +65,15 @@
         return {
           responsive: true,
           language: {
-            sSearchPlaceholder: 'Search..',
             lengthMenu: '_MENU_',
-            search: '_INPUT_'
-            // paginate: {
-            //   previous: '<i class="icon md-chevron-left"></i>',
-            //   next: '<i class="icon md-chevron-right"></i>'
+            searchPlaceholder: 'Search..',
+            search: "_INPUT_"
+            // ,paginate: {
+            //   previous: '<i class="icon wb-chevron-left-mini"></i>',
+            //   next: '<i class="icon wb-chevron-right-mini"></i>'
             // }
 
+            // ,
             // classes: {
             //   sFilterInput: "form-control form-control-sm",
             //   sLengthSelect: "form-control form-control-sm"

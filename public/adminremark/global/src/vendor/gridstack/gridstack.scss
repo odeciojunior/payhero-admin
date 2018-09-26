@@ -91,7 +91,7 @@ $animation_speed: .3s;
     > .ui-resizable-se, > .ui-resizable-sw {
       padding: 2px 3px 0 0;
       margin: 0;
-      font: normal normal normal 10px/1 $zmdi-font-name;
+      font: normal normal normal 10px/1 $wb-font-family;
       font-size: inherit;
       color: gray;
       text-align: right;
@@ -100,7 +100,7 @@ $animation_speed: .3s;
       -moz-osx-font-smoothing: grayscale;
 
       &::before {
-        content: $zmdi-var-arrow-right-top;
+        content: $wb-var-arrow-expand;
       }
     }
 

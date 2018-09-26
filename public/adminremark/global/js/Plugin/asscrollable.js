@@ -19,8 +19,6 @@
 
   var _Plugin3 = babelHelpers.interopRequireDefault(_Plugin2);
 
-  // import $ from 'jquery';
-
   var NAME = 'scrollable';
 
   var Scrollable = function (_Plugin) {
@@ -48,8 +46,8 @@
       value: function getDefaults() {
         return {
           namespace: 'scrollable',
-          contentSelector: '> [data-role=\'content\']',
-          containerSelector: '> [data-role=\'container\']'
+          contentSelector: "> [data-role='content']",
+          containerSelector: "> [data-role='container']"
         };
       }
     }]);

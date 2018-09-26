@@ -21,68 +21,55 @@
 //
 // ========================================================================
 
-
 // Variables
 // ========================================================================
-$alert-padding-horizontal:        20px !default;
-
-$alert-list-padding-left:         13px !default;
-$alert-list-item-padding-left:    7px !default;
-
-$alert-icon-font-size:            $font-size-base !default;
-$alert-icon-padding-left:         45px !default;
-
-$alert-close-opacity:             0.6 !default;
-$alert-close-hover-opacity:       1 !default;
-
+$alert-padding-horizontal: 20px !default;
+$minus-alert-padding-horizontal: -20px !default;
+$alert-list-padding-left: 13px !default;
+$alert-list-item-padding-left: 7px !default;
+$alert-icon-font-size: $font-size-base !default;
+$alert-icon-padding-left: 45px !default;
+$alert-close-opacity: .6 !default;
+$alert-close-hover-opacity: 1 !default;
 
 // link-color
-$alert-primary-link-color:        $brand-primary-active !default;
-$alert-success-link-color:        $brand-success-active !default;
-$alert-info-link-color:           $brand-info-active !default;
-$alert-warning-link-color:        $brand-warning-active !default;
-$alert-danger-link-color:         $brand-danger-active !default;
+$alert-primary-link-color: $brand-primary-active !default;
+$alert-success-link-color: $brand-success-active !default;
+$alert-info-link-color: $brand-info-active !default;
+$alert-warning-link-color: $brand-warning-active !default;
+$alert-danger-link-color: $brand-danger-active !default;
 
 // default
-$alert-alt-color:                 $text-color !default;
-$alert-alt-bg:                    rgba($bg-color-base, (80/100)) !default;
-$alert-alt-close-color:           $gray !default;
-$alert-alt-close-opacity:         0.6 !default;
-$alert-alt-close-hover-opacity:   1 !default;
-
-$alert-alt-primary-border:        $brand-primary !default;
-$alert-alt-primary-text:          $brand-primary !default;
-
-$alert-alt-success-border:        $brand-success !default;
-$alert-alt-success-text:          $brand-success !default;
-
-$alert-alt-info-border:           $brand-info !default;
-$alert-alt-info-text:             $brand-info !default;
-
-$alert-alt-warning-border:        $brand-warning !default;
-$alert-alt-warning-text:          $brand-warning !default;
-
-$alert-alt-danger-border:         $brand-danger !default;
-$alert-alt-danger-text:           $brand-danger !default;
+$alert-alt-color: $text-color !default;
+$alert-alt-bg: rgba($bg-color-base, (80/100)) !default;
+$alert-alt-close-color: $gray-400 !default;
+$alert-alt-close-opacity: .6 !default;
+$alert-alt-close-hover-opacity: 1 !default;
+$alert-alt-primary-border: $brand-primary !default;
+$alert-alt-primary-text: $brand-primary !default;
+$alert-alt-success-border: $brand-success !default;
+$alert-alt-success-text: $brand-success !default;
+$alert-alt-info-border: $brand-info !default;
+$alert-alt-info-text: $brand-info !default;
+$alert-alt-warning-border: $brand-warning !default;
+$alert-alt-warning-text: $brand-warning !default;
+$alert-alt-danger-border: $brand-danger !default;
+$alert-alt-danger-text: $brand-danger !default;
 
 // Dark
-$alert-dark-text:                  $color-white !default;
-
-$alert-dark-alt-primary-border:    darken($brand-primary-active, 15%) !default;
-$alert-dark-alt-success-border:    darken($brand-success-active, 15%) !default;
-$alert-dark-alt-info-border:       darken($brand-info-active, 15%) !default;
-$alert-dark-alt-warning-border:    darken($brand-warning-active, 15%) !default;
-$alert-dark-alt-danger-border:     darken($brand-danger-active, 15%) !default;
-
-$alert-dark-primary-bg:            $brand-primary !default;
-$alert-dark-success-bg:            $brand-success !default;
-$alert-dark-info-bg:               $brand-info !default;
-$alert-dark-warning-bg:            $brand-warning !default;
-$alert-dark-danger-bg:             $brand-danger !default;
-
+$alert-dark-text: $color-white !default;
+$alert-dark-alt-primary-border: darken($brand-primary-active, 15%) !default;
+$alert-dark-alt-success-border: darken($brand-success-active, 15%) !default;
+$alert-dark-alt-info-border: darken($brand-info-active, 15%) !default;
+$alert-dark-alt-warning-border: darken($brand-warning-active, 15%) !default;
+$alert-dark-alt-danger-border: darken($brand-danger-active, 15%) !default;
+$alert-dark-primary-bg: $brand-primary !default;
+$alert-dark-success-bg: $brand-success !default;
+$alert-dark-info-bg: $brand-info !default;
+$alert-dark-warning-bg: $brand-warning !default;
+$alert-dark-danger-bg: $brand-danger !default;
 $alert-social-icon-size: 28px !default;
 $alert-social-padding-left: 65px !default;
-
 $alert-social-text: $color-white !default;
 
 // Component: Alert
@@ -91,12 +78,15 @@ $alert-social-text: $color-white !default;
 .alert {
   padding-right: $alert-padding-horizontal;
   padding-left: $alert-padding-horizontal;
+
   ul {
     padding-left: $alert-list-padding-left;
+
     li {
       padding-left: $alert-list-item-padding-left;
     }
   }
+
   .panel > & {
     margin: 0;
   }
@@ -112,7 +102,6 @@ $alert-social-text: $color-white !default;
   }
 }
 
-
 // Alternate styles
 // -------------------------
 
@@ -121,30 +110,27 @@ $alert-social-text: $color-white !default;
   background-color: $alert-alt-bg;
   border: none;
   border-left: 3px solid transparent;
-  a,
-  .alert-link {
+
+  a, .alert-link {
     text-decoration: none;
   }
 }
-
-
 
 // Modifier: `alert-dismissible`
 // -------------------------
 
 .alert-dismissible {
-  // .close {
-  //   padding: 0;
-  // }
-
   padding-right: ($alert-padding-horizontal + 20);
+
   .close {
-    top: 0;
+    padding: 0;
+    position: inherit;
+    margin-right: $minus-alert-padding-horizontal;
+    // top: 0;
     text-decoration: none;
     opacity: $alert-close-opacity;
 
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       opacity: $alert-close-hover-opacity;
     }
   }
@@ -154,15 +140,13 @@ $alert-social-text: $color-white !default;
       color: $alert-alt-close-color;
       opacity: $alert-alt-close-opacity;
 
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         color: $alert-alt-close-color;
         opacity: $alert-alt-close-hover-opacity;
       }
     }
   }
 }
-
 
 // Modifier: `alert-icon`
 // -------------------------
@@ -172,12 +156,11 @@ $alert-social-text: $color-white !default;
   padding-left: $alert-icon-padding-left;
 
   > .icon {
+    @include icon-fixed-width();
     position: absolute;
     top: $alert-padding;
     left: $alert-padding-horizontal;
     font-size: $alert-icon-font-size;
-
-    @include icon-fixed-width();
   }
 }
 
@@ -189,10 +172,11 @@ $alert-social-text: $color-white !default;
   padding-top: $alert-padding-horizontal;
   padding-bottom: $alert-padding-horizontal;
   padding-left: (($avatar-size + $alert-padding + 20px));
+
   > .avatar {
     position: absolute;
-    top: ($alert-padding - 3px);//12px
-    left: $alert-padding-horizontal;
+    top: ($alert-padding - 3px);
+    left: $alert-padding-horizontal; //12px
     // width: $avatar-size;//30px;
   }
 }
@@ -206,13 +190,13 @@ $alert-social-text: $color-white !default;
     padding: 0;
     margin: 0;
     overflow: hidden;
-
     transition: max-height .7s linear 0s;
+
     &.in {
       max-height: 500px;
-
       transition: max-height 1s linear 0s;
     }
+
     .alert {
       margin: 0;
       text-align: left;
@@ -220,7 +204,6 @@ $alert-social-text: $color-white !default;
     }
   }
 }
-
 
 // Color Modifier
 // ========================================================================
@@ -254,7 +237,6 @@ $alert-social-text: $color-white !default;
   @include alert-alt-variant($alert-alt-success-border, $alert-alt-success-text);
 }
 
-
 // Modifier: `alert-info`
 // -------------------------
 
@@ -267,7 +249,6 @@ $alert-social-text: $color-white !default;
 .alert-alt.alert-info {
   @include alert-alt-variant($alert-alt-info-border, $alert-alt-info-text);
 }
-
 
 // Modifier: `alert-warning`
 // -------------------------
@@ -282,7 +263,6 @@ $alert-social-text: $color-white !default;
   @include alert-alt-variant($alert-alt-warning-border, $alert-alt-warning-text);
 }
 
-
 // Modifier: `alert-danger`
 // -------------------------
 .alert-danger {
@@ -295,21 +275,20 @@ $alert-social-text: $color-white !default;
   @include alert-alt-variant($alert-alt-danger-border, $alert-alt-danger-text);
 }
 
-
 // Social Modifier
 // ========================================================================
 
 .alert-social {
   position: relative;
   padding-left: $alert-social-padding-left;
+
   > .icon {
+    @include icon-fixed-width();
     position: absolute;
     top: ($alert-padding - 3px);
-    left: $alert-padding-horizontal;
     bottom: 0;
+    left: $alert-padding-horizontal;
     font-size: $alert-social-icon-size;
-
-    @include icon-fixed-width();
   }
 }
 
@@ -318,9 +297,10 @@ $alert-social-text: $color-white !default;
 
 .alert-facebook {
   @include alert-variant($color-facebook, $color-facebook, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -329,9 +309,10 @@ $alert-social-text: $color-white !default;
 
 .alert-twitter {
   @include alert-variant($color-twitter, $color-twitter, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -340,9 +321,10 @@ $alert-social-text: $color-white !default;
 
 .alert-google-plus {
   @include alert-variant($color-google-plus, $color-google-plus, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -351,9 +333,10 @@ $alert-social-text: $color-white !default;
 
 .alert-linkedin {
   @include alert-variant($color-linkedin, $color-linkedin, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -362,9 +345,10 @@ $alert-social-text: $color-white !default;
 
 .alert-flickr {
   @include alert-variant($color-flickr, $color-flickr, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -373,9 +357,10 @@ $alert-social-text: $color-white !default;
 
 .alert-tumblr {
   @include alert-variant($color-tumblr, $color-tumblr, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -384,9 +369,10 @@ $alert-social-text: $color-white !default;
 
 .alert-github {
   @include alert-variant($color-github, $color-github, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -395,9 +381,10 @@ $alert-social-text: $color-white !default;
 
 .alert-dribbble {
   @include alert-variant($color-dribbble, $color-dribbble, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
 
@@ -406,21 +393,20 @@ $alert-social-text: $color-white !default;
 
 .alert-youtube {
   @include alert-variant($color-youtube, $color-youtube, $alert-social-text);
+
   .alert-link {
-    color: $alert-social-text;
     font-weight: $font-weight-bold;
+    color: $alert-social-text;
   }
 }
-
 
 // Style .Dark
 //========================================================================
 
 .alert.dark {
-
   .alert-link {
-    color: $alert-dark-text !important;
     font-weight: $font-weight-bold;
+    color: $alert-dark-text !important;
   }
 
   // Alternate styles
@@ -438,8 +424,8 @@ $alert-social-text: $color-white !default;
     &.alert-alt {
       .close {
         color: $alert-dark-text;
-        &:hover,
-        &:focus {
+
+        &:hover, &:focus {
           color: $alert-dark-text;
         }
       }
@@ -471,7 +457,6 @@ $alert-social-text: $color-white !default;
     }
   }
 
-
   // Modifier: `alert-info`
   // -------------------------
 
@@ -482,7 +467,6 @@ $alert-social-text: $color-white !default;
       @include alert-alt-variant($alert-dark-alt-info-border, $alert-dark-text);
     }
   }
-
 
   // Modifier: `alert-warning`
   // -------------------------
@@ -495,7 +479,6 @@ $alert-social-text: $color-white !default;
     }
   }
 
-
   // Modifier: `alert-danger`
   // -------------------------
   &.alert-danger {
@@ -506,4 +489,3 @@ $alert-social-text: $color-white !default;
     }
   }
 }
-

@@ -5,7 +5,7 @@
   max-height: 100%;
   visibility: hidden;
   background: #fff;
-  box-shadow: -5px 0 20px 0 rgba(66, 66, 66, 0.2); }
+  box-shadow: -10px 0 20px 0 rgba(66, 66, 66, 0.2); }
   .slidePanel-right, .slidePanel-left {
     top: 66.01px;
     bottom: 0;
@@ -114,7 +114,7 @@
 .slidePanel-inner-section {
   padding-top: 30px;
   padding-bottom: 30px;
-  border-bottom: 1px solid #eeeeee; }
+  border-bottom: 1px solid #e4eaec; }
 
 .slidePanel-comment {
   position: relative;

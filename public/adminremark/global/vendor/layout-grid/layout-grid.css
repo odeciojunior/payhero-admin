@@ -421,7 +421,7 @@
 .lt-ghost {
   z-index: 2;
   pointer-events: none;
-  background-color: #eeeeee;
+  background-color: #f3f7f9;
   opacity: .5;
   transition: margin-left 0s ease-out, margin-top 0s ease-out; }
 
@@ -436,4 +436,4 @@
   left: 0;
   z-index: 3;
   display: block;
-  border: 1px solid #e0e0e0; }
+  border: 1px solid #ccd5db; }

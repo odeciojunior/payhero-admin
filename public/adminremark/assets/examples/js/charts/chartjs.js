@@ -30,13 +30,13 @@
         label: "First",
         fill: true,
         backgroundColor: "rgba(204, 213, 219, .1)",
-        borderColor: Config.colors("grey", 300),
+        borderColor: Config.colors("blue-grey", 300),
         pointRadius: 4,
         borderDashOffset: 2,
         pointBorderColor: "#fff",
-        pointBackgroundColor: Config.colors("grey", 300),
+        pointBackgroundColor: Config.colors("blue-grey", 300),
         pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: Config.colors("grey", 300),
+        pointHoverBorderColor: Config.colors("blue-grey", 300),
         data: [65, 59, 80, 81, 56, 55, 40]
       }, {
         label: "Second",
@@ -78,7 +78,7 @@
       datasets: [{
         label: "First",
         backgroundColor: "rgba(204, 213, 219, .2)",
-        borderColor: Config.colors("grey", 300),
+        borderColor: Config.colors("blue-grey", 300),
         hoverBackgroundColor: "rgba(204, 213, 219, .3)",
         borderWidth: 2,
         data: [65, 45, 75, 50, 60, 45, 55]

@@ -27,10 +27,6 @@ $toastr-z-index: zindex('modal', 0);
 $toastr-border-color: rgba(0, 0, 0, .1);
 $toastr-border-radius: $border-radius;
 
-// shadow
-$toastr-shadow: 0 1px 2px 0 rgba(0,0,0,.16), 0 1px 4px 0 rgba(0,0,0,.12);  // @box-shadow-1;
-$toastr-hover-shadow: 0 2px 4px 0 rgba(0,0,0,.16), 0 2px 8px 0 rgba(0,0,0,.12);
-
 // Styles
 .toast-title {
   font-weight: $font-weight-bold;
@@ -181,7 +177,7 @@ button.toast-close-button {
         position: absolute;
         top: 50%;
         left: 12px;
-        font-family: $zmdi-font-name;
+        font-family: $wb-font-family;
         font-size: 30px;
         font-style: normal;
         font-weight: $font-weight-normal;
@@ -199,7 +195,7 @@ button.toast-close-button {
 
     &:not(.toast-just-text) {
       &:before {
-        content: $zmdi-var-check;
+        content: $wb-var-check;
       }
     }
   }
@@ -209,7 +205,7 @@ button.toast-close-button {
 
     &:not(.toast-just-text) {
       &:before {
-        content: $zmdi-var-info;
+        content: $wb-var-info-circle;
       }
     }
   }
@@ -219,7 +215,7 @@ button.toast-close-button {
 
     &:not(.toast-just-text) {
       &:before {
-        content: $zmdi-var-alert-triangle;
+        content: $wb-var-warning;
       }
     }
   }
@@ -229,7 +225,7 @@ button.toast-close-button {
 
     &:not(.toast-just-text) {
       &:before {
-        content: $zmdi-var-alert-circle;
+        content: $wb-var-alert-circle;
       }
     }
   }

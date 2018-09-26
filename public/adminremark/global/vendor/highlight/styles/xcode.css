@@ -6,10 +6,10 @@ XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: black;
+  padding: .5em;
   background: #fff;
+  color: black;
 }
 
 .hljs-comment, .hljs-quote {
@@ -49,8 +49,8 @@ XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
 }
 
 .hljs-formula {
-  font-style: italic;
   background-color: #eee;
+  font-style: italic;
 }
 
 .hljs-addition {

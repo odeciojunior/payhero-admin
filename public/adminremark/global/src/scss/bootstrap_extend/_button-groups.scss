@@ -3,48 +3,15 @@
 // Component:       `btn-group`
 //
 // ========================================================================
-// Variables
-// ========================================================================
-
-$btn-group-shadow:            $btn-shadow !default;
 
 // Component: Button groups
 // ========================================================================
 
 .btn-group {
-  .dropdown-menu {
-    > li {
-      > a {
-        padding: 6px 40px 6px 15px;
-
-        .badge {
-          position: absolute;
-          right: 15px;
-          margin-top: 2px;
-        }
-      }
-    }
-  }
-
-  &,
-  &-vertical {
-    // box-shadow: $btn-group-shadow; //to fix remark-v4 issue#301 ---Kevin_y
-
-    > .btn,
-    .btn-group,
-    .btn-group-vertical {
-      box-shadow: none;
-    }
-  }
-
-  &-flat {
-    box-shadow: none;
-  }
-
   .btn ~ .dropdown-toggle {
-    margin-left: -1px;
     padding-right: .8em;
     padding-left: .8em;
+    margin-left: -1px;
 
     &:after {
       margin-left: 0;
@@ -70,12 +37,13 @@ $btn-group-shadow:            $btn-shadow !default;
   width: 100%;
   table-layout: fixed;
   border-collapse: separate;
-  > .btn,
-  > .btn-group {
-    float: none;
+
+  > .btn, > .btn-group {
     display: table-cell;
+    float: none;
     width: 1%;
   }
+
   > .btn-group .btn {
     width: 100%;
   }
@@ -85,5 +53,7 @@ $btn-group-shadow:            $btn-shadow !default;
   }
 }
 
-.btn-group-xs > .btn { @extend .btn-xs; }
+.btn-group-xs > .btn {
+  @extend .btn-xs;
+}
 // add end

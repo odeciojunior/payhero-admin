@@ -7,11 +7,9 @@ html {
 }
 
 // ========================================================================
-
-$link-text-action-color:       $gray !default;
-$link-text-action-hover-color: $gray-light !default;
-
-$link-like-action-color:       $gray !default;
+$link-text-action-color: $gray-400 !default;
+$link-text-action-hover-color: $gray-300 !default;
+$link-like-action-color: $gray-400 !default;
 $link-like-action-hover-color: $color-red-600 !default;
 
 //  Correct color not being inherited.
@@ -22,10 +20,7 @@ button {
 // Links
 // ========================================================================
 a {
-
-  &:active,
-  &:hover,
-  &:focus {
+  &:active, &:hover, &:focus {
     outline: 0;
   }
 
@@ -74,15 +69,12 @@ a {
   margin-left: 6px;
 }
 
-
-b,
-strong {
+b, strong {
   font-weight: inherit;
 }
 
 // Add the correct font weight in Chrome, Edge, and Safari.
 
-b,
-strong {
+b, strong {
   font-weight: $font-weight-bold;
 }

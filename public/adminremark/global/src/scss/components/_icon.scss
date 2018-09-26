@@ -23,10 +23,9 @@
 
 // Variables
 // ========================================================================
-
-$icon-border-color:  $gray-lighter !default;
-$icon-inverse:       $inverse !default;
-$icon-li-width:      (30em / 14) !default;
+$icon-border-color: $gray-200 !default;
+$icon-inverse: $inverse !default;
+$icon-li-width: (30em / 14) !default;
 
 // Component: Icon
 // ========================================================================
@@ -35,8 +34,13 @@ $icon-li-width:      (30em / 14) !default;
   @include make-icon();
   line-height: 1;
 
-  &.float-left { margin-right: .3em; }
-  &.float-right { margin-left: .3em; }
+  &.float-left {
+    margin-right: .3em;
+  }
+
+  &.float-right {
+    margin-left: .3em;
+  }
 }
 
 // Modifier: `icon-circle`
@@ -58,12 +62,12 @@ $icon-li-width:      (30em / 14) !default;
     left: 50%;
     // z-index: 0;
     z-index: $zindex-init;
-    content: "";
     width: 2em;
     height: 2em;
+    content: "";
     background-color: inherit;
     border-radius: 100%;
-    @include transform(translate(-50%, -50%));
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -74,10 +78,22 @@ $icon-li-width:      (30em / 14) !default;
   font-size: (4em / 3);
   vertical-align: -15%;
 }
-.icon-2x { font-size: 2em; }
-.icon-3x { font-size: 3em; }
-.icon-4x { font-size: 4em; }
-.icon-5x { font-size: 5em; }
+
+.icon-2x {
+  font-size: 2em;
+}
+
+.icon-3x {
+  font-size: 3em;
+}
+
+.icon-4x {
+  font-size: 4em;
+}
+
+.icon-5x {
+  font-size: 5em;
+}
 
 // Modifier: `icon-fw`
 // ========================================================================
@@ -108,7 +124,7 @@ $icon-li-width:      (30em / 14) !default;
   text-align: center;
 
   &.icon-lg {
-    left: (-$icon-li-width + (4em / 14));
+    left: (- $icon-li-width + (4em / 14));
   }
 }
 
@@ -176,8 +192,7 @@ $icon-li-width:      (30em / 14) !default;
   line-height: 2em;
   vertical-align: middle;
 
-  &-1x,
-  &-2x {
+  &-1x, &-2x {
     position: absolute;
     left: 0;
     width: 100%;
@@ -218,11 +233,7 @@ $icon-li-width:      (30em / 14) !default;
 // ========================================================================
 
 :root {
-  &-rotate-90,
-  &-rotate-180,
-  &-rotate-270,
-  &-flip-horizontal,
-  &-flip-vertical {
+  &-rotate-90, &-rotate-180, &-rotate-270, &-flip-horizontal, &-flip-vertical {
     filter: none;
   }
 }
@@ -233,49 +244,25 @@ $icon-li-width:      (30em / 14) !default;
 // Modifier: `icon-spin`
 // -------------------------
 
-@-webkit-keyframes icon-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
-  }
-}
-
 @keyframes icon-spin {
   0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
+
   100% {
-    -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }
 
 // Modifier: `icon-spin-reverse`
 // -------------------------
 
-@-webkit-keyframes icon-spin-reverse {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(-359deg);
-            transform: rotate(-359deg);
-  }
-}
-
 @keyframes icon-spin-reverse {
   0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
+
   100% {
-    -webkit-transform: rotate(-359deg);
-            transform: rotate(-359deg);
+    transform: rotate(-359deg);
   }
 }

@@ -34,10 +34,10 @@
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: #68615e;
   background: #f1efee;
+  color: #68615e;
+  padding: .5em;
 }
 
 .hljs-emphasis {

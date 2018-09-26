@@ -60,11 +60,11 @@
     left: 0;
     line-height: 0;
     cursor: pointer;
-    background: rgba(189, 189, 189, 0.6);
+    background: rgba(163, 175, 183, 0.6);
     border-radius: 2px;
     transition: width, height .5s; }
   .scrollable-bar.is-dragging .scrollable-bar-handle {
-    background: rgba(189, 189, 189, 0.8) !important; }
+    background: rgba(163, 175, 183, 0.8) !important; }
   .scrollable-bar.is-dragging, .scrollable-bar.is-hovering {
     border-radius: 4px; }
     .scrollable-bar.is-dragging .scrollable-bar-handle, .scrollable-bar.is-hovering .scrollable-bar-handle {
@@ -95,7 +95,7 @@
   transition: opacity 0; }
 
 .scrollable.is-hovering .scrollable-bar-handle {
-  background: rgba(189, 189, 189, 0.8); }
+  background: rgba(163, 175, 183, 0.8); }
 
 .scrollable.is-dragging {
   -webkit-user-select: none;
@@ -107,16 +107,16 @@
   user-focus: ignore; }
 
 .scrollable-inverse.scrollable .scrollable-bar-handle {
-  background: rgba(238, 238, 238, 0.6); }
+  background: rgba(228, 234, 236, 0.6); }
 
 .scrollable-inverse.scrollable.is-dragging .scrollable-bar-handle {
-  background: rgba(238, 238, 238, 0.8) !important; }
+  background: rgba(228, 234, 236, 0.8) !important; }
 
 .scrollable-shadow.scrollable.is-dragging .scrollable-bar, .scrollable-shadow.scrollable.is-hovering .scrollable-bar {
-  background: rgba(238, 238, 238, 0.5); }
+  background: rgba(228, 234, 236, 0.5); }
 
 .scrollable-inverse.scrollable-shadow.scrollable.is-dragging .scrollable-bar, .scrollable-inverse.scrollable-shadow.scrollable.is-hovering .scrollable-bar {
-  background: rgba(238, 238, 238, 0.4); }
+  background: rgba(228, 234, 236, 0.4); }
 
 .scrollable-content .list-group-item {
   width: calc(100% - 10px); }

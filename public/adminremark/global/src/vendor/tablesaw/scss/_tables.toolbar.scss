@@ -98,7 +98,7 @@ a.tablesaw-btn {
 	position: absolute;
 
 	display: inline-block;
-  font-family: $zmdi-font-name;
+  font-family: $wb-font-family;
   font-feature-settings: normal;
   font-kerning: auto;
   font-language-override: normal;
@@ -115,7 +115,7 @@ a.tablesaw-btn {
 	background: none;
 	// background-repeat: no-repeat;
 	// background-position: .25em .45em;
-	content: $zmdi-var-caret-down;
+	content: $wb-var-triangle-down;
 	// font-size: .55em;
 	// padding-top: 1.2em;
 	// padding-left: 1em;
@@ -173,7 +173,7 @@ a.tablesaw-btn {
 	margin-right: .25em;
 	position: relative;
 
-	font-family: $zmdi-font-name;
+	font-family: $wb-font-family;
   font-feature-settings: normal;
   font-kerning: auto;
   font-language-override: normal;
@@ -203,7 +203,7 @@ a.tablesaw-btn {
 	// border-left: 5px solid transparent;
 	// border-right: 5px solid transparent;
 	// border-top: 5px solid #808080;
-	content: $zmdi-var-caret-down;
+	content: $wb-var-triangle-down;
 }
 .tablesaw-advance a.tablesaw-nav-btn.up:before {
 	// left: .5em;
@@ -212,7 +212,7 @@ a.tablesaw-btn {
 	// border-right: 5px solid transparent;
 	// border-bottom: 5px solid #808080;
 
-	content: $zmdi-var-caret-up;
+	content: $wb-var-triangle-up;
 }
 .tablesaw-advance a.tablesaw-nav-btn.left:before,
 .tablesaw-advance a.tablesaw-nav-btn.right:before {
@@ -224,13 +224,13 @@ a.tablesaw-btn {
 	// left: .6em;
 	// border-right: 5px solid #808080;
 
-	content: $zmdi-var-chevron-left;
+	content: $wb-var-chevron-left-mini;
 }
 .tablesaw-advance a.tablesaw-nav-btn.right:before {
 	// left: .7em;
 	// border-left: 5px solid #808080;
 
-	content: $zmdi-var-chevron-right;
+	content: $wb-var-chevron-right-mini;
 }
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
 	opacity: .25;
@@ -279,9 +279,7 @@ a.tablesaw-btn {
 	background: transparent;
 	font-size: 1em;
 	padding-left: .3em;
-	// vertical-align: baseline;
-	vertical-align: middle; // for waves-effect
-	margin-top: -3px;
+	vertical-align: baseline;
 }
 .tablesaw-bar .tablesaw-bar-section .btn-select {
 	min-width: 0;

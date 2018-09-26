@@ -31,7 +31,7 @@ $background-color: #f5f5f5;
     .note-dropzone-message {
       display: table-cell;
       font-size: 28px;
-      font-weight: bold;
+      font-weight: 700;
       text-align: center;
       vertical-align: middle;
     }
@@ -148,7 +148,16 @@ $background-color: #f5f5f5;
         border-top: 1px solid $border-color;
       }
     }
+
+  &.locked {
+    .note-resizebar {
+      cursor: default;
+      .note-icon-bar {
+        display: none;
+      }
+    }
   }
+}
 
   .note-placeholder {
     padding: 10px;
@@ -273,7 +282,8 @@ $background-color: #f5f5f5;
 
   .note-para {
     .dropdown-menu {
-      min-width: 216px;
+      //min-width: 216px;
+      min-width: 242px;
       padding: 5px;
 
       & > div:first-child {
@@ -284,7 +294,15 @@ $background-color: #f5f5f5;
 
   /* dropdown-menu for toolbar and popover */
   .dropdown-menu {
-    min-width: 90px;
+    //min-width: 90px;
+    width: auto;
+
+    .note-palette {
+      display: inline-block;
+      &:first-child {
+        margin: 0 5px;
+      }
+    }
 
     /* dropdown-menu right position */
 

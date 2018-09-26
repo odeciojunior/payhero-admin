@@ -1,6 +1,6 @@
 {
-  "name": "remark-global",
-  "title": "Remark Global",
+  "name": "remark",
+  "title": "Remark",
   "description": "The best backend-end framework for developing responsive, mobile first projects on the web.",
   "version": "4.1.2",
   "homepage": "http://getbootstrapadmin.com/remark",
@@ -15,10 +15,14 @@
     "web",
     "admin",
     "bootstrap",
-    "scss"
+    "scss",
+    "bootstrap-v4"
   ],
-  "author": "thecreation <thecreation@gmail.com>",
-  "license": "MIT",
+  "author": {
+    "name": "thecreation",
+    "url": "http://thecreation.com"
+  },
+  "license": "Themeforest Standard Licenses",
   "scripts": {
     "start": "gulp",
     "build": "gulp build --production",
@@ -31,6 +35,7 @@
     "autoprefixer": "^8.2.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.4",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -40,7 +45,6 @@
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "browser-sync": "^2.23.6",
-    "babel-eslint": "^8.2.2",
     "deepmerge": "^2.1.0",
     "del": "^3.0.0",
     "eslint-plugin-compat": "^2.2.0",
@@ -93,7 +97,7 @@
     "stylelint-scss": "^2.5.0",
     "uglify-js": "^3.3.16",
     "vinyl-named": "^1.1.0",
-    "yargs": "^11.0.0"
+    "yargs": "^11.1.0"
   },
   "engines": {
     "node": ">= 8",
@@ -206,7 +210,6 @@
     "nprogress": "^0.2.0",
     "owl.carousel": "^2.3.3",
     "peity": "^3.3.0",
-    "plyr": "^3.0.6",
     "popper.js": "^1.14.1",
     "raphael": "^2.2.7",
     "raty-js": "^2.7.1",
@@ -229,5 +232,26 @@
     "typeahead.js": "^0.11.1",
     "webui-popover": "^1.2.18",
     "x-editable": "^1.5.1"
-  }
+  },
+  "bugs": {
+    "url": "https://forum.getbootstrapadmin.com/remark"
+  },
+  "licenses": [
+    {
+      "type": "Themeforest Standard Licenses",
+      "url": "http://themeforest.net/licenses/standard"
+    }
+  ],
+  "files": [
+    "js/**/*.js",
+    "css/**/*.css",
+    "vendor/**/*",
+    "fonts/**/*",
+    "src/js/**/*.js",
+    "src/es/**/*.js",
+    "src/scss/**/*.scss",
+    "src/skins/**/*.scss",
+    "src/vendor/**/*.scss",
+    "src/fonts/**/*.scss"
+  ]
 }

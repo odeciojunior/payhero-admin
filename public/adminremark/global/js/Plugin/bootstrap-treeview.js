@@ -61,10 +61,10 @@
       value: function getDefaults() {
         return {
           injectStyle: false,
-          expandIcon: 'icon md-plus',
-          collapseIcon: 'icon md-minus',
+          expandIcon: 'icon wb-plus',
+          collapseIcon: 'icon wb-minus',
           emptyIcon: 'icon',
-          nodeIcon: 'icon md-folder',
+          nodeIcon: 'icon wb-folder',
           showBorder: false,
           // color: undefined, // "#000000",
           // backColor: undefined, // "#FFFFFF",

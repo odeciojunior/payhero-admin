@@ -53,13 +53,13 @@
       map.drawOverlay({
         lat: -12.043333,
         lng: -77.028333,
-        content: '<i class="md-pin" style="font-size:40px;color:' + Config.colors("red", 500) + ';"></i>'
+        content: '<i class="wb-map" style="font-size:40px;color:' + Config.colors("red", 500) + ';"></i>'
       });
 
       map.drawOverlay({
         lat: -12.05449279282314,
         lng: -77.04333,
-        content: '<i class="md-pin" style="font-size:32px;color:' + Config.colors("primary", 500) + ';"></i>'
+        content: '<i class="wb-map" style="font-size:32px;color:' + Config.colors("primary", 500) + ';"></i>'
       });
 
       map.addStyle({

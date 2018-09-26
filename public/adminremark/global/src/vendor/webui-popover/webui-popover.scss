@@ -3,44 +3,44 @@
 
 // Variables
 // ========================================================================
-
-$webui-popover-width:             276px;
-
-$webui-popover-min-height:        32px;
-
-
-$webui-popover-primary-color:    $inverse;
-$webui-popover-primary-bg:       $brand-primary;
-$webui-popover-primary-border:   $brand-primary;
-
-$webui-popover-success-color:    $inverse;
-$webui-popover-success-bg:       $brand-success;
-$webui-popover-success-border:   $brand-success;
-
-$webui-popover-info-color:       $inverse;
-$webui-popover-info-bg:          $brand-info;
-$webui-popover-info-border:      $brand-info;
-
-$webui-popover-warning-color:    $inverse;
-$webui-popover-warning-bg:       $brand-warning;
-$webui-popover-warning-border:   $brand-warning;
-
-$webui-popover-danger-color:     $inverse;
-$webui-popover-danger-bg:        $brand-danger;
-$webui-popover-danger-border:    $brand-danger;
-$webui-popover-close-size:       20px;
-$webui-popover-close-color:      #000;
+$webui-popover-width: 276px;
+$webui-popover-min-height: 32px;
+$webui-popover-primary-color: $inverse;
+$webui-popover-primary-bg: $brand-primary;
+$webui-popover-primary-border: $brand-primary;
+$webui-popover-success-color: $inverse;
+$webui-popover-success-bg: $brand-success;
+$webui-popover-success-border: $brand-success;
+$webui-popover-info-color: $inverse;
+$webui-popover-info-bg: $brand-info;
+$webui-popover-info-border: $brand-info;
+$webui-popover-warning-color: $inverse;
+$webui-popover-warning-bg: $brand-warning;
+$webui-popover-warning-border: $brand-warning;
+$webui-popover-danger-color: $inverse;
+$webui-popover-danger-bg: $brand-danger;
+$webui-popover-danger-border: $brand-danger;
+$webui-popover-close-size: 20px;
+$webui-popover-close-color: #000;
 
 //z-index
-$webui-popover-z-index:          $zindex-popover;
+$webui-popover-z-index: $zindex-popover;
 $webui-popover-backdrop-z-index: ($webui-popover-z-index - 1);
 
+// for v4a-v4b;
 $popover-title-bg: $popover-header-bg;
+// $popover-title-color:            $popover-header-color;
+// $popover-title-padding-y:        $popover-header-padding-y;
+// $popover-title-padding-x:        $popover-header-padding-x;
+
+// $popover-content-color:          $popover-body-color;
+// $popover-content-padding-y:      $popover-body-padding-y;
+// $popover-content-padding-x:      $popover-body-padding-x;
 
 // Mixins
 // ========================================================================
 
-@mixin webui-popover-variant($color, $bg, $border){
+@mixin webui-popover-variant($color, $bg, $border) {
   .webui-popover-title {
     color: $color;
     background-color: $bg;
@@ -164,8 +164,7 @@ $popover-title-bg: $popover-header-bg;
 // .webui-arrow is outer, .webui-arrow:after is inner
 
 .webui-popover > .webui-arrow {
-  &,
-  &:after {
+  &, &:after {
     position: absolute;
     display: block;
     width: 0;
@@ -174,18 +173,18 @@ $popover-title-bg: $popover-header-bg;
     border-style: solid;
   }
 }
+
 .webui-popover > .webui-arrow {
   border-width: $popover-arrow-outer-width;
 }
+
 .webui-popover > .webui-arrow:after {
   content: "";
   border-width: $popover-arrow-width;
 }
 
 .webui-popover {
-  &.top > .webui-arrow,
-  &.top-right > .webui-arrow,
-  &.top-left > .webui-arrow {
+  &.top > .webui-arrow, &.top-right > .webui-arrow, &.top-left > .webui-arrow {
     bottom: -$popover-arrow-outer-width;
     left: 50%;
     margin-left: -$popover-arrow-outer-width;
@@ -201,9 +200,8 @@ $popover-title-bg: $popover-header-bg;
       border-bottom-width: 0;
     }
   }
-  &.right > .webui-arrow,
-  &.right-top > .webui-arrow,
-  &.right-bottom > .webui-arrow {
+
+  &.right > .webui-arrow, &.right-top > .webui-arrow, &.right-bottom > .webui-arrow {
     top: 50%;
     left: -$popover-arrow-outer-width;
     margin-top: -$popover-arrow-outer-width;
@@ -219,9 +217,8 @@ $popover-title-bg: $popover-header-bg;
       border-left-width: 0;
     }
   }
-  &.bottom > .webui-arrow,
-  &.bottom-right > .webui-arrow,
-  &.bottom-left > .webui-arrow {
+
+  &.bottom > .webui-arrow, &.bottom-right > .webui-arrow, &.bottom-left > .webui-arrow {
     top: -$popover-arrow-outer-width;
     left: 50%;
     margin-left: -$popover-arrow-outer-width;
@@ -238,9 +235,7 @@ $popover-title-bg: $popover-header-bg;
     }
   }
 
-  &.left > .webui-arrow,
-  &.left-top > .webui-arrow,
-  &.left-bottom > .webui-arrow {
+  &.left > .webui-arrow, &.left-top > .webui-arrow, &.left-bottom > .webui-arrow {
     top: 50%;
     right: -$popover-arrow-outer-width;
     margin-top: -$popover-arrow-outer-width;

@@ -18,10 +18,10 @@
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: white;
+  padding: .5em;
   background: #333;
+  color: white;
 }
 
 .hljs-name, .hljs-strong {
@@ -69,13 +69,13 @@
 }
 
 .hljs-deletion {
-  color: #333;
   background-color: #fc9b9b;
+  color: #333;
 }
 
 .hljs-addition {
-  color: #333;
   background-color: #a2fca2;
+  color: #333;
 }
 
 .hljs a {

@@ -1,37 +1,32 @@
-
 // Variables
 // ========================================================================
-$blockquote-font-size:             20px !default;
-$blockquote-color:                 $gray-darker !default;
-$blockquote-styles-padding:        15px 20px !default;
-
-$blockquote-success-border:        $brand-success !default;
-$blockquote-info-border:           $brand-info !default;
-$blockquote-warning-border:        $brand-warning !default;
-$blockquote-danger-border:         $brand-danger !default;
+$blockquote-font-size: 20px !default;
+$blockquote-color: $gray-600 !default;
+$blockquote-styles-padding: 15px 20px !default;
+$blockquote-success-border: $brand-success !default;
+$blockquote-info-border: $brand-info !default;
+$blockquote-warning-border: $brand-warning !default;
+$blockquote-danger-border: $brand-danger !default;
 
 // Component: Typography
 // ========================================================================
 
 // Headings
 // -------------------------
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   text-shadow: $headings-text-shadow;
 
   .icon:first-child {
-    margin-right: 0.5em;
+    margin-right: .5em;
   }
 }
 
-h1, h2, h3,
-.h1, .h2, .h3 {
+h1, h2, h3, .h1, .h2, .h3 {
   margin-top: 22px;
   margin-bottom: 11px;
 }
 
-h4, h5, h6,
-.h4, .h5, .h6 {
+h4, h5, h6, .h4, .h5, .h6 {
   margin-top: 11px;
   margin-bottom: 11px;
 }
@@ -39,8 +34,7 @@ h4, h5, h6,
 // Emphasis & misc
 // -------------------------
 
-mark,
-.mark {
+mark, .mark {
   color: $state-warning-text;
   border-radius: $border-radius-small;
 }
@@ -55,11 +49,11 @@ mark,
   font-family: Georgia;
   font-size: 60px;
   line-height: 50px;
-  color: $gray-base;
+  color: $gray-800;
 
   &-reversed {
     color: $inverse;
-    background-color: $gray-base;
+    background-color: $gray-800;
   }
 }
 
@@ -83,15 +77,13 @@ mark,
   }
 }
 
-
 // Component: Blockquote
 // ========================================================================
 
 .blockquote {
-  color: $blockquote-color;
-  font-size: $blockquote-font-size;
-
   padding: ($line-height-computed / 2) $line-height-computed;
+  font-size: $blockquote-font-size;
+  color: $blockquote-color;
   border-left: 2px solid $blockquote-border-color;
 
   p:last-child {
@@ -101,12 +93,15 @@ mark,
   &-success {
     @include blockquote-variant($blockquote-success-border);
   }
+
   &-info {
     @include blockquote-variant($blockquote-info-border);
   }
+
   &-warning {
     @include blockquote-variant($blockquote-warning-border);
   }
+
   &-danger {
     @include blockquote-variant($blockquote-danger-border);
   }
@@ -167,6 +162,3 @@ mark,
 //     }
 //   }
 // }
-
-
-

@@ -6,8 +6,8 @@ Intellij Idea-like styling (c) Vasily Polovnyov <vast@whiteants.net>
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
+  padding: .5em;
   color: #000;
   background: #fff;
 }
@@ -18,8 +18,8 @@ Intellij Idea-like styling (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 .hljs-comment, .hljs-quote {
-  font-style: italic;
   color: #808080;
+  font-style: italic;
 }
 
 .hljs-meta {
@@ -45,14 +45,14 @@ Intellij Idea-like styling (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 .hljs-string {
-  font-weight: bold;
   color: #008000;
+  font-weight: bold;
 }
 
 .hljs-symbol, .hljs-bullet, .hljs-formula {
-  font-style: italic;
   color: #000;
   background: #d0eded;
+  font-style: italic;
 }
 
 .hljs-doctag {

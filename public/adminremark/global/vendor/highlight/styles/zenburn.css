@@ -7,10 +7,10 @@ based on dark.css by Ivan Sagalaev
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: #dcdcdc;
+  padding: .5em;
   background: #3f3f3f;
+  color: #dcdcdc;
 }
 
 .hljs-keyword, .hljs-selector-tag, .hljs-tag {

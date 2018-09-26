@@ -60,10 +60,10 @@
   top: 50%;
   right: 2.788rem;
   display: none;
-  font-family: "Material Design Iconic";
+  font-family: "Web Icons";
   font-style: normal;
   font-weight: normal;
-  color: #e0e0e0;
+  color: #ccd5db;
   transition: color .1s ease-in;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
@@ -74,7 +74,7 @@
   .colorInputUi-clear, .colorInputUi-clear:hover, .colorInputUi-clear:active {
     text-decoration: none; }
   .colorInputUi-clear:after {
-    content: ""; }
+    content: ""; }
 
 .colorInputUi-wrap:hover .colorInputUi-clear {
   display: inline-block; }
@@ -161,7 +161,7 @@
     float: left;
     width: 20px;
     height: 20px;
-    border: 1px solid #dee2e6;
+    border: 1px solid #e4eaec;
     border-radius: 100%; }
     .colorInputUi-gradient-wheel i {
       position: absolute;
@@ -177,25 +177,25 @@
   padding: 10px;
   margin: 5px 0;
   background: #fff;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e4eaec;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05); }
   [data-mode="palettes"] .colorInputUi-dropdown {
     min-width: auto;
     max-width: auto; }
   .colorInputUi-dropdown input {
-    color: #757575;
+    color: #76838f;
     background-color: #fff;
     background-image: none;
-    border: 1px solid #dee2e6;
+    border: 1px solid #e4eaec;
     border-radius: 0.215rem;
     transition: box-shadow .25s linear, border .25s linear, color .25s linear, background-color .25s linear;
     -webkit-appearance: none; }
     .colorInputUi-dropdown input.focus, .colorInputUi-dropdown input:focus {
-      border-color: #3f51b5;
+      border-color: #3e8ef7;
       box-shadow: none; }
 
 .colorInputUi-trigger {
-  border: 4px solid #f5f5f5;
+  border: 4px solid #f3f7f9;
   border-left-width: 5px; }
   .colorInputUi-trigger:before {
     position: absolute;
@@ -205,7 +205,7 @@
     height: 100%;
     pointer-events: none;
     content: "";
-    background: #dee2e6; }
+    background: #e4eaec; }
 
 .colorInputUi-saturation {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05); }
@@ -297,7 +297,7 @@
     height: 10px;
     margin-left: -6px;
     background: #fff;
-    border: 1px solid #dee2e6; }
+    border: 1px solid #e4eaec; }
     .colorInputUi-gradient-marker span {
       display: block;
       width: 100%;
@@ -316,16 +316,16 @@
       transform: rotate(45deg); }
     .colorInputUi-gradient-marker_active {
       z-index: 1;
-      border: 2px solid #3f51b5; }
+      border: 2px solid #3e8ef7; }
       .colorInputUi-gradient-marker_active i {
         left: 1px;
         border: 2px solid transparent;
-        border-right-color: #3f51b5;
-        border-bottom-color: #3f51b5; }
+        border-right-color: #3e8ef7;
+        border-bottom-color: #3e8ef7; }
   .colorInputUi-gradient-wheel {
     margin-left: 10px; }
     .colorInputUi-gradient-wheel i {
-      background-color: #a4afba; }
+      background-color: #a8bbc2; }
   .colorInputUi-gradient-angle {
     width: 28px;
     margin-left: 10px; }

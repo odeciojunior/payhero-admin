@@ -5,10 +5,10 @@ Visual Studio-like style based on original C# coloring by Jason Diamond <jason@d
 */
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: black;
+  padding: .5em;
   background: white;
+  color: black;
 }
 
 .hljs-comment, .hljs-quote, .hljs-variable {

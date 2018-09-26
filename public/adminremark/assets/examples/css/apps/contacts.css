@@ -2,9 +2,9 @@
   margin-left: -6px; }
 
 .app-contacts .page-content-actions .btn-pure.btn-default {
-  color: #9e9e9e; }
+  color: #a3afb7; }
   .app-contacts .page-content-actions .btn-pure.btn-default.active, .app-contacts .page-content-actions .btn-pure.btn-default:focus, .app-contacts .page-content-actions .btn-pure.btn-default:hover {
-    color: #757575; }
+    color: #76838f; }
 
 .app-contacts table > thead > tr > th,
 .app-contacts table > tbody > tr > th,
@@ -23,7 +23,7 @@
   top: 15px;
   right: 20px; }
   .app-contacts .slidePanel-actions .btn-pure {
-    color: #bdbdbd; }
+    color: #ccd5db; }
     .app-contacts .slidePanel-actions .btn-pure.active, .app-contacts .slidePanel-actions .btn-pure:focus, .app-contacts .slidePanel-actions .btn-pure:hover {
       color: #fff; }
 
@@ -40,11 +40,11 @@
     position: absolute;
     bottom: -26px;
     right: 20px; }
-    .app-contacts .slidePanel-header .edit .md-close {
+    .app-contacts .slidePanel-header .edit .wb-close {
       display: none; }
-    .app-contacts .slidePanel-header .edit.active .md-close {
+    .app-contacts .slidePanel-header .edit.active .wb-close {
       display: inline-block; }
-    .app-contacts .slidePanel-header .edit.active .md-edit {
+    .app-contacts .slidePanel-header .edit.active .wb-pencil {
       display: none; }
 
 .app-contacts .slidePanel .user-info {
@@ -75,7 +75,7 @@
     float: none;
     display: block; }
     .app-contacts .page-content-actions .actions-right .dropdown-toggle {
-      border-color: #e0e0e0; } }
+      border-color: #e4eaec; } }
 
 @media (max-width: 479.98px) {
   .app-contacts .page-header .page-header-actions {

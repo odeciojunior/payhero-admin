@@ -1,6 +1,6 @@
 @import "vars";
 $site-menubar-section-title-color: $gray-500 !default;
-$site-menubar-footer-height:        65px;
+$site-menubar-footer-height: 76px !default;
 
 .mm {
   &-hidden {
@@ -18,8 +18,9 @@ $site-menubar-footer-height:        65px;
   }
 
   &-panels {
+    $height: calc(100% - #{$site-menubar-footer-height});
     height: 100%;
-    height: calc(100% - #{$site-menubar-footer-height});
+    height: $height;
     overflow: hidden;
   }
 
@@ -71,12 +72,12 @@ $site-menubar-footer-height:        65px;
 
     .mm-prev {
       @include make-icon();
-      font-family: '#{$zmdi-font-name}';
       position: absolute;
       left: 20px;
+      font-family: "#{$wb-font-family}";
 
       &:before {
-        content: '#{$zmdi-var-chevron-left}';
+        content: "#{$wb-var-chevron-left-mini}";
       }
     }
 

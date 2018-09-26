@@ -224,7 +224,6 @@
         };
 
         $('.plugin-selective').each(function () {
-
           setItems(member.length);
 
           var items = self.items;
@@ -244,7 +243,7 @@
                 // i++;
               },
               triggerButton: function triggerButton() {
-                return '<div class="' + this.namespace + '-trigger-button"><i class="md-plus"></i></div>';
+                return '<div class="' + this.namespace + '-trigger-button"><i class="wb-plus"></i></div>';
               },
               listItem: function listItem(data) {
                 return '<li class="' + this.namespace + '-list-item"><img class="avatar" src="' + data.avatar + '">' + data.name + '</li>';
@@ -253,7 +252,7 @@
                 return '<li class="' + this.namespace + '-item"><img class="avatar" src="' + data.avatar + '" title="' + data.name + '">' + this.options.tpl.itemRemove.call(this) + '</li>';
               },
               itemRemove: function itemRemove() {
-                return '<span class="' + this.namespace + '-remove"><i class="md-minus-circle"></i></span>';
+                return '<span class="' + this.namespace + '-remove"><i class="wb-minus-circle"></i></span>';
               },
               option: function option(data) {
                 return '<option value="' + this.options.tpl.optionValue.call(this, data) + '">' + data.name + '</option>';

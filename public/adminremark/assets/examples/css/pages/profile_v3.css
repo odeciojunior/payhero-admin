@@ -7,7 +7,7 @@
 .wall-attrs {
   list-style: none; }
   .wall-attrs .success {
-    color: #43a047; }
+    color: #11c26d; }
   .wall-attrs .attrs-meta {
     line-height: 30px; }
   .wall-attrs i {
@@ -55,11 +55,11 @@
 
 .wall-posting .form-control {
   border: none;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e4eaec;
   border-radius: 0; }
 
 .wall-recent-comments .comments-view {
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #e4eaec;
   padding: 10px 0;
   text-align: center; }
 

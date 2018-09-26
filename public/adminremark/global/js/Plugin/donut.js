@@ -19,8 +19,6 @@
 
   var _Plugin3 = babelHelpers.interopRequireDefault(_Plugin2);
 
-  // import $ from 'jquery';
-
   var NAME = 'donut';
 
   var DonutPlugin = function (_Plugin) {
@@ -74,11 +72,11 @@
           pointer: {
             length: 0.9,
             strokeWidth: 0.035,
-            color: (0, _Config.colors)('grey', 400)
+            color: (0, _Config.colors)('blue-grey', 400)
           },
           limitMax: false, // If true, the pointer will not go past the end of the gauge
-          colorStart: (0, _Config.colors)('grey', 200),
-          colorStop: (0, _Config.colors)('grey', 200),
+          colorStart: (0, _Config.colors)('blue-grey', 200),
+          colorStop: (0, _Config.colors)('blue-grey', 200),
           strokeColor: (0, _Config.colors)('primary', 500),
           generateGradient: true
         };

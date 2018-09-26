@@ -5,8 +5,8 @@
   display: block;
   height: 42px;
   margin-top: 1px;
-  background-color: #eeeeee;
-  border: 1px dashed #dee2e6; }
+  background-color: #f3f7f9;
+  border: 1px dashed #e4eaec; }
 
 .sortable.list-group-gap .sortable-placeholder, .sortable-with-handle.list-group-gap .sortable-placeholder {
   margin-bottom: 2px; }

@@ -19,8 +19,6 @@
 
   var _Plugin3 = babelHelpers.interopRequireDefault(_Plugin2);
 
-  // import $ from 'jquery';
-
   var NAME = 'TouchSpin';
 
   var TouchSpin = function (_Plugin) {
@@ -40,10 +38,10 @@
       key: 'getDefaults',
       value: function getDefaults() {
         return {
-          verticalupclass: 'md-plus',
-          verticaldownclass: 'md-minus',
-          buttondown_class: 'btn btn-default',
-          buttonup_class: 'btn btn-default'
+          verticalupclass: 'wb-plus',
+          verticaldownclass: 'wb-minus',
+          buttondown_class: 'btn btn-outline btn-default',
+          buttonup_class: 'btn btn-outline btn-default'
         };
       }
     }]);

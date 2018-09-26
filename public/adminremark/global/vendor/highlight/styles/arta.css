@@ -5,8 +5,8 @@ Author: pumbur <pumbur@pumbur.net>
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
+  padding: .5em;
   background: #222;
 }
 

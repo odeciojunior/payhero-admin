@@ -1,14 +1,14 @@
 @charset "UTF-8";
 /**
- * Web Icons, 0.2.3
+ * Web Icons, 0.2.4
  * Created by amazingSurge
  * https://github.com/amazingSurge/web-icons
  * MIT License
  */
 @font-face {
   font-family: "Web Icons";
-  src: url("./web-icons.eot?v=0.2.3");
-  src: url("./web-icons.eot?#iefix&v=0.2.3") format("embedded-opentype"), url("./web-icons.woff2?v=0.2.3") format("woff2"), url("./web-icons.woff?v=0.2.3") format("woff"), url("./web-icons.ttf?v=0.2.3") format("truetype"), url("./web-icons.svg?v=0.2.3#web-icons") format("svg");
+  src: url("./web-icons.eot?v=0.2.4");
+  src: url("./web-icons.eot?#iefix&v=0.2.4") format("embedded-opentype"), url("./web-icons.woff2?v=0.2.4") format("woff2"), url("./web-icons.woff?v=0.2.4") format("woff"), url("./web-icons.ttf?v=0.2.4") format("truetype"), url("./web-icons.svg?v=0.2.4#web-icons") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -19,12 +19,12 @@
   display: inline-block;
   font-style: normal;
   font-weight: normal;
-  text-rendering: auto;
-  speak: none;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-transform: translate(0, 0);
-          transform: translate(0, 0); }
+  speak: none;
+  text-rendering: auto; }
 
 .wb-dashboard:before {
   content: ""; }

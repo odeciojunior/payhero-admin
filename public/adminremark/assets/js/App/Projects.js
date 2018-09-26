@@ -85,7 +85,7 @@
               return '<div class="' + this.namespace + '">\n            ' + this.options.tpl.items.call(this) + '\n          <div class="' + this.namespace + '-trigger">\n            ' + this.options.tpl.triggerButton.call(this) + '\n          <div class="' + this.namespace + '-trigger-dropdown">\n            ' + this.options.tpl.list.call(this) + '\n          </div>\n          </div>\n          </div>';
             },
             triggerButton: function triggerButton() {
-              return '<div class="' + this.namespace + '-trigger-button"><i class="md-plus"></i></div>';
+              return '<div class="' + this.namespace + '-trigger-button"><i class="wb-plus"></i></div>';
             },
             listItem: function listItem(data) {
               return '<li class="' + this.namespace + '-list-item"><img class="avatar" src="' + data.img + '">' + data.name + '</li>';
@@ -94,7 +94,7 @@
               return '<li class="' + this.namespace + '-item"><img class="avatar" src="' + data.img + '">' + this.options.tpl.itemRemove.call(this) + '</li>';
             },
             itemRemove: function itemRemove() {
-              return '<span class="' + this.namespace + '-remove"><i class="md-minus-circle"></i></span>';
+              return '<span class="' + this.namespace + '-remove"><i class="wb-minus-circle"></i></span>';
             },
             option: function option(data) {
               return '<option value="' + this.options.tpl.optionValue.call(this, data) + '">' + data.name + '</option>';

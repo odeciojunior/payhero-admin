@@ -17,53 +17,39 @@
 
 // Variables
 // ========================================================================
-// $nav-tabs-link-padding                      : $nav-padding-vertical pxToRem(20px) !default;
-// $nav-tabs-vertical-link-padding             : $nav-padding-vertical pxToRem(20px) !default;
-
-$nav-tabs-color                             : $text-color !default;
-$nav-tabs-active-color                      : $inverse !default;
-$nav-tabs-active-bg                         : $brand-primary !default;
-$nav-tabs-active-border                     : $brand-primary !default;
-
-$nav-tabs-solid-color                       : $text-color !default;
-$nav-tabs-solid-bg                          : $gray-lightest !default;
-$nav-tabs-solid-border                      : $gray-lightest !default;
-
-$nav-tabs-solid-content-padding             : pxToRem(20px) !default;
-$nav-tabs-vertical-solid-content-padding    : pxToRem(20px) !default;
-
-$nav-tabs-line-border                       : $border-color-base !default;
-$nav-tabs-line-hover-border                 : $gray-light !default;
-$nav-tabs-line-active-color                 : $brand-primary !default;
-$nav-tabs-line-active-border                : $brand-primary !default;
-$nav-tabs-line-link-padding                 : $nav-padding-vertical pxToRem(20px) !default;
-
-$nav-tabs-sm-padding                        : pxToRem(5px) pxToRem(10px) !default;
-$nav-tabs-sm-font-size                      : $font-size-sm !default;
-$nav-tabs-sm-line-height                    : $line-height-sm !default;
-
-$nav-tabs-lg-padding                        : pxToRem(12px) pxToRem(20px) !default;
-$nav-tabs-lg-font-size                      : $font-size-lg !default;
-$nav-tabs-lg-line-height                    : $line-height-lg !default;
-
-$nav-tabs-inverse-bg                        : $inverse !default;
-$nav-tabs-inverse-border                    : $inverse !default;
-
-$nav-quick-margin-bottom                    : $line-height-computed !default;
-$nav-quick-bg                               : $inverse !default;
-$nav-quick-hover-bg                         : $bg-color-base !default;
-$nav-quick-border-radius                    : $border-radius !default;
-$nav-quick-box-shadow                       : 0 1px 1px rgba(0, 0, 0, .05) !default;
-$nav-quick-icon-font-size                   : (2*$font-size-icon) !default;
-$nav-quick-vertical-padding                 : pxToRem(16px) !default;
-
-$nav-quick-lg-icon-font-size                : (2.5*$font-size-icon) !default;
-$nav-quick-lg-vertical-padding              : pxToRem(22px) !default;
-
-$nav-quick-sm-icon-font-size                : (1.5*$font-size-icon) !default;
-$nav-quick-sm-vertical-padding              : pxToRem(12px) !default;
-
-$nav-quick-border-color                     : $border-color-base !default;
+$nav-tabs-color: $text-color !default;
+$nav-tabs-active-bg: $brand-primary !default;
+$nav-tabs-active-border: $brand-primary !default;
+$nav-tabs-solid-color: $text-color !default;
+$nav-tabs-solid-bg: $gray-100 !default;
+$nav-tabs-solid-border: $gray-100 !default;
+$nav-tabs-solid-content-padding: pxToRem(20px) !default;
+$nav-tabs-vertical-solid-content-padding: pxToRem(20px) !default;
+$nav-tabs-line-border: $border-color-base !default;
+$nav-tabs-line-hover-border: $gray-300 !default;
+$nav-tabs-line-active-color: $brand-primary !default;
+$nav-tabs-line-active-border: $brand-primary !default;
+$nav-tabs-line-link-padding: $nav-padding-vertical pxToRem(20px) !default;
+$nav-tabs-sm-padding: pxToRem(5px) pxToRem(10px) !default;
+$nav-tabs-sm-font-size: $font-size-sm !default;
+$nav-tabs-sm-line-height: $line-height-sm !default;
+$nav-tabs-lg-padding: pxToRem(12px) pxToRem(20px) !default;
+$nav-tabs-lg-font-size: $font-size-lg !default;
+$nav-tabs-lg-line-height: $line-height-lg !default;
+$nav-tabs-inverse-bg: $inverse !default;
+$nav-tabs-inverse-border: $inverse !default;
+$nav-quick-margin-bottom: $line-height-computed !default;
+$nav-quick-bg: $inverse !default;
+$nav-quick-hover-bg: $bg-color-base !default;
+$nav-quick-border-radius: $border-radius !default;
+$nav-quick-box-shadow: 0 1px 1px rgba(0, 0, 0, .05) !default;
+$nav-quick-icon-font-size: (2 * $font-size-icon) !default;
+$nav-quick-vertical-padding: pxToRem(16px) !default;
+$nav-quick-lg-icon-font-size: (2.5 * $font-size-icon) !default;
+$nav-quick-lg-vertical-padding: pxToRem(22px) !default;
+$nav-quick-sm-icon-font-size: (1.5 * $font-size-icon) !default;
+$nav-quick-sm-vertical-padding: pxToRem(12px) !default;
+$nav-quick-border-color: $border-color-base !default;
 
 // Component: Nav
 // ========================================================================
@@ -71,22 +57,19 @@ $nav-quick-border-color                     : $border-color-base !default;
 .nav-link {
   position: relative;
   display: block;
-  padding: pxToRem(10px) pxToRem(15px); 
-
-  overflow:hidden;
+  padding: pxToRem(10px) pxToRem(15px);
+  overflow: hidden;
 
   &:focus {
     outline: none;
   }
 
-  &:focus,
-  &:hover {
+  &:focus, &:hover {
     background-color: $nav-link-hover-bg;
   }
 
   &.disabled {
-    &:focus,
-    &:hover {
+    &:focus, &:hover {
       background-color: transparent;
     }
   }
@@ -110,20 +93,19 @@ $nav-quick-border-color                     : $border-color-base !default;
 // ========================================================================
 .nav-quick {
   padding: 0;
+  margin-right: 0;
   margin-bottom: $nav-quick-margin-bottom;
+  margin-left: 0;
   background-color: $nav-quick-bg;
   border-radius: $nav-quick-border-radius;
-  margin-left: 0;
-  margin-right: 0;
-
   box-shadow: $nav-quick-box-shadow;
 
   .nav-item {
     position: relative;
     display: block;
-    list-style: none;
     padding: 0;
     text-align: center;
+    list-style: none;
   }
 
   .nav-link {
@@ -132,13 +114,8 @@ $nav-quick-border-color                     : $border-color-base !default;
 
     .icon {
       display: block;
-      margin-bottom: 0.2rem;
+      margin-bottom: .2rem;
       font-size: $nav-quick-icon-font-size;
-    }
-
-    &:hover {
-      text-decoration: none;
-      background-color: $nav-quick-hover-bg;
     }
   }
 
@@ -173,8 +150,8 @@ $nav-quick-border-color                     : $border-color-base !default;
     border-left: 1px solid $nav-quick-border-color;
 
     .nav-item {
-      border-bottom: 1px solid $nav-quick-border-color;
       border-right: 1px solid $nav-quick-border-color;
+      border-bottom: 1px solid $nav-quick-border-color;
     }
   }
 }
@@ -184,40 +161,35 @@ $nav-quick-border-color                     : $border-color-base !default;
 .nav-tabs {
   .nav-link {
     color: $nav-tabs-color;
-
     transition: .25s;
 
     > .icon {
-      line-height: 1;
       margin-right: .5em;
+      line-height: 1;
     }
   }
 
-  .nav-link.active,
-  .nav-item.show .nav-link,
-  .nav-item.open .nav-link {
+  .nav-link.active, .nav-item.show .nav-link, .nav-item.open .nav-link {
     @include plain-hover-focus {
-      color: $nav-tabs-active-color;
-      background-color: $nav-tabs-active-bg;
       border-color: transparent;
       border-bottom-color: $nav-tabs-active-border;
     }
   }
 
   .dropup .dropdown-menu {
-    margin-bottom: -$nav-tabs-border-width;
-
     @include border-bottom-radius(0);
+    margin-bottom: -$nav-tabs-border-width;
   }
 }
 
 .nav-pills {
   .nav-link {
-    transition: border 0.2s linear 0s, color 0.2s linear 0s, background-color 0.2s linear 0s;
+    transition: border .2s linear 0s, color .2s linear 0s, background-color .2s linear 0s;
   }
 }
 
-.nav-pills-rounded .nav-link {      // add
+.nav-pills-rounded .nav-link {
+  // add
   padding-right: 20px;
   padding-left: 20px;
   margin-right: 5px;
@@ -240,14 +212,12 @@ $nav-quick-border-color                     : $border-color-base !default;
   .nav-link {
     border-radius: 0 0 $border-radius-large $border-radius-large;
 
-    &:hover,
-    &:focus {
-      border-bottom-color: transparent;
+    &:hover, &:focus {
       border-top-color: $nav-tabs-border-color;
+      border-bottom-color: transparent;
     }
   }
 }
-
 
 // Modifier: `nav-tabs-reverse`
 // -------------------------
@@ -257,12 +227,11 @@ $nav-quick-border-color                     : $border-color-base !default;
     float: right;
 
     + .nav-item {
-      margin-left: 0;
       margin-right: 2px;
+      margin-left: 0;
     }
   }
 }
-
 
 // Modifier: `nav-tabs-solid`
 // ========================================================================
@@ -276,16 +245,13 @@ $nav-quick-border-color                     : $border-color-base !default;
     }
   }
 
-  .nav-link.active,
-  .nav-item.show .nav-link,
-  .nav-item.open .nav-link {
+  .nav-link.active, .nav-item.show .nav-link, .nav-item.open .nav-link {
     @include plain-hover-focus {
       color: $nav-tabs-solid-color;
       background-color: $nav-tabs-solid-bg;
       border-color: transparent;
     }
   }
-
 
   & ~ .tab-content {
     padding: $nav-tabs-solid-content-padding;
@@ -295,16 +261,13 @@ $nav-quick-border-color                     : $border-color-base !default;
   &.nav-tabs-bottom {
     .nav-link {
       &.active {
-        &,
-        &:hover,
-        &:focus {
+        &, &:hover, &:focus {
           border: none;
         }
       }
     }
   }
 }
-
 
 // Modifier: `nav-tabs-line`
 // ========================================================================
@@ -316,8 +279,7 @@ $nav-quick-border-color                     : $border-color-base !default;
     padding: $nav-tabs-line-link-padding;
     border-bottom: 2px solid transparent;
 
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       background-color: transparent;
     }
 
@@ -326,9 +288,7 @@ $nav-quick-border-color                     : $border-color-base !default;
     }
   }
 
-  .nav-link.active,
-  .nav-item.show .nav-link,
-  .nav-item.open .nav-link {
+  .nav-link.active, .nav-item.show .nav-link, .nav-item.open .nav-link {
     @include plain-hover-focus {
       color: $nav-tabs-line-active-color;
       background-color: transparent;
@@ -345,80 +305,62 @@ $nav-quick-border-color                     : $border-color-base !default;
   }
 
   // Open dropdowns
-  .nav-item.open > .nav-link,
-  .nav-item.show > .nav-link {
+  .nav-item.open > .nav-link, .nav-item.show > .nav-link {
     @include plain-hover-focus {
       border-bottom-color: $nav-tabs-active-border;
     }
-  }
-
-  > .nav-tabs-autoline {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    background-color: $nav-tabs-active-bg;
-    transition-property: left, width;
   }
 
   &.nav-tabs-bottom {
     .nav-link {
       border-top: 2px solid transparent;
       border-bottom: none;
+
       &:hover {
         border-top-color: $nav-tabs-line-hover-border;
         border-bottom-color: transparent;
       }
     }
 
-    .nav-link.active,
-    .nav-item.open .nav-link,
-    .nav-item.show .nav-link {
+    .nav-link.active, .nav-item.open .nav-link, .nav-item.show .nav-link {
       @include plain-hover-focus {
         border-top: 2px solid $nav-tabs-line-active-border;
         border-bottom: none;
       }
     }
 
-    .nav-item.open > .nav-link,
-    .nav-item.show > .nav-link {
+    .nav-item.open > .nav-link, .nav-item.show > .nav-link {
       @include plain-hover-focus {
         border-top-color: $nav-tabs-active-border;
       }
-    }
-
-    > .nav-tabs-autoline {
-      top: 0;
-      bottom: auto;
     }
   }
 }
 
 // CLASS [tab-line-top]
 // ========================================================================
-.tabs-line-top{
+.tabs-line-top {
   border-bottom: 1px solid $nav-tabs-line-border;
-  .nav-link,
-  .nav-item .nav-link{
+
+  .nav-link, .nav-item .nav-link {
     bottom: -1px;
     border-top: 2px solid transparent;
     border-bottom-color: transparent;
-    &:hover{
+
+    &:hover {
+      border-top: 2px solid $nav-tabs-line-hover-border;
       border-bottom-color: transparent;
-      border-top:2px solid $nav-tabs-line-hover-border;
     }
   }
-  .nav-link.active,
-  .nav-item.open .nav-link,
-  .nav-item.show .nav-link {
+
+  .nav-link.active, .nav-item.open .nav-link, .nav-item.show .nav-link {
     @include plain-hover-focus {
       color: $nav-tabs-line-active-color;
       background-color: transparent;
       border-top: 2px solid $nav-tabs-line-active-border;
-      border-left: 1px solid $nav-tabs-line-border;
       border-right: 1px solid $nav-tabs-line-border;
       border-bottom: 1px solid #fff;
+      border-left: 1px solid $nav-tabs-line-border;
     }
   }
 }
@@ -446,16 +388,14 @@ $nav-quick-border-color                     : $border-color-base !default;
       border-radius: $border-radius-large 0 0 $border-radius-large;
 
       &:hover {
-        border-bottom-color: transparent;
         border-right-color: $nav-tabs-border-color;
+        border-bottom-color: transparent;
       }
 
       &.active {
-        &,
-        &:focus,
-        &:hover {
-          border-bottom-color: transparent;
+        &, &:focus, &:hover {
           border-right-color: $nav-tabs-active-border;
+          border-bottom-color: transparent;
         }
       }
     }
@@ -480,9 +420,7 @@ $nav-quick-border-color                     : $border-color-base !default;
       }
 
       &.active {
-        &,
-        &:focus,
-        &:hover {
+        &, &:focus, &:hover {
           border-right-color: transparent;
           border-left-color: $nav-tabs-active-border;
         }
@@ -499,9 +437,7 @@ $nav-quick-border-color                     : $border-color-base !default;
       }
 
       &.active {
-        &,
-        &:focus,
-        &:hover {
+        &, &:focus, &:hover {
           border-color: transparent;
         }
       }
@@ -526,21 +462,11 @@ $nav-quick-border-color                     : $border-color-base !default;
       }
 
       &.active {
-        &,
-        &:hover,
-        &:focus {
+        &, &:hover, &:focus {
           border-right: 2px solid $nav-tabs-line-active-border;
           border-bottom: none;
         }
       }
-    }
-
-    > .nav-tabs-autoline {
-      left: auto;
-      right: 0;
-      width: 2px;
-      height: 0;
-      transition-property: top, height;
     }
   }
 
@@ -548,24 +474,18 @@ $nav-quick-border-color                     : $border-color-base !default;
     .nav-link {
       border-right-width: 1px;
       border-left: 2px solid transparent;
+
       &:hover {
         border-color: transparent;
         border-left-color: $nav-tabs-line-hover-border;
       }
 
       &.active {
-        &,
-        &:hover,
-        &:focus {
+        &, &:hover, &:focus {
           border-right: 1px solid transparent;
           border-left: 2px solid $nav-tabs-line-active-border;
         }
       }
-    }
-
-    > .nav-tabs-autoline {
-      left: 0;
-      right: auto;
     }
   }
 
@@ -574,15 +494,12 @@ $nav-quick-border-color                     : $border-color-base !default;
   }
 }
 
-
 // Modifier: `nav-tabs-inverse`
 // ========================================================================
 
 .nav-tabs-inverse {
   .nav-link.active {
-    &,
-    &:hover,
-    &:focus {
+    &, &:hover, &:focus {
       border-color: transparent;
     }
   }
@@ -591,9 +508,7 @@ $nav-quick-border-color                     : $border-color-base !default;
     border-bottom-color: $nav-tabs-inverse-border;
 
     .nav-link.active {
-      &,
-      &:hover,
-      &:focus {
+      &, &:hover, &:focus {
         color: $nav-tabs-color;
         background-color: $nav-tabs-inverse-bg;
       }
@@ -602,15 +517,14 @@ $nav-quick-border-color                     : $border-color-base !default;
 
   &.nav-tabs-vertical {
     .nav-link.active {
-      &,
-      &:hover,
-      &:focus {
+      &, &:hover, &:focus {
         border-color: transparent;
       }
     }
 
     .nav-tabs-solid {
       border-right-color: $nav-tabs-inverse-border;
+
       &.nav-tabs-reverse {
         border-left-color: $nav-tabs-inverse-border;
       }
@@ -626,7 +540,7 @@ $nav-quick-border-color                     : $border-color-base !default;
 // ========================================================================
 .nav-tabs-animate {
   .tab-content {
-    overflow:hidden;
+    overflow: hidden;
   }
 }
 
@@ -640,4 +554,3 @@ $nav-quick-border-color                     : $border-color-base !default;
 .nav-tabs-sm {
   @include nav-tabs-size($nav-tabs-sm-font-size, $nav-tabs-sm-line-height, $nav-tabs-sm-padding);
 }
-

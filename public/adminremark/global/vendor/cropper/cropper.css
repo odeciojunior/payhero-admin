@@ -40,8 +40,8 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  outline: 1px solid #3949ab;
-  outline-color: rgba(57, 73, 171, 0.75); }
+  outline: 1px solid #3e8ef7;
+  outline-color: rgba(62, 142, 247, 0.75); }
 
 .cropper-dashed {
   position: absolute;
@@ -100,7 +100,7 @@
   background-color: #fff; }
 
 .cropper-line {
-  background-color: #3949ab; }
+  background-color: #3e8ef7; }
   .cropper-line.line-e {
     top: 0;
     right: -3px;
@@ -125,7 +125,7 @@
 .cropper-point {
   width: 5px;
   height: 5px;
-  background-color: #3949ab;
+  background-color: #3e8ef7;
   opacity: .75; }
   @media (min-width: 480px) {
     .cropper-point.point-se {
@@ -187,7 +187,7 @@
     width: 200%;
     height: 200%;
     content: " ";
-    background-color: #3949ab;
+    background-color: #3e8ef7;
     opacity: 0; }
 
 .cropper-invisible {

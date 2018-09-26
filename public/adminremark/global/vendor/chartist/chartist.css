@@ -1,6 +1,6 @@
 .ct-label {
-  fill: #bdbdbd;
-  color: #bdbdbd;
+  fill: #a3afb7;
+  color: #a3afb7;
   font-size: 0.858rem;
   line-height: 1; }
 
@@ -116,76 +116,76 @@
   stroke-width: 60px; }
 
 .ct-series-a .ct-point, .ct-series-a .ct-line, .ct-series-a .ct-bar, .ct-series-a .ct-slice-donut {
-  stroke: #1e88e5; }
+  stroke: #3e8ef7; }
 
 .ct-series-a .ct-slice-pie, .ct-series-a .ct-area {
-  fill: #1e88e5; }
+  fill: #3e8ef7; }
 
 .ct-series-b .ct-point, .ct-series-b .ct-line, .ct-series-b .ct-bar, .ct-series-b .ct-slice-donut {
-  stroke: #66bb6a; }
+  stroke: #49de94; }
 
 .ct-series-b .ct-slice-pie, .ct-series-b .ct-area {
-  fill: #66bb6a; }
+  fill: #49de94; }
 
 .ct-series-c .ct-point, .ct-series-c .ct-line, .ct-series-c .ct-bar, .ct-series-c .ct-slice-donut {
-  stroke: #f44336; }
+  stroke: #ff666b; }
 
 .ct-series-c .ct-slice-pie, .ct-series-c .ct-area {
-  fill: #f44336; }
+  fill: #ff666b; }
 
 .ct-series-d .ct-point, .ct-series-d .ct-line, .ct-series-d .ct-bar, .ct-series-d .ct-slice-donut {
-  stroke: #8e24aa; }
+  stroke: #9463f7; }
 
 .ct-series-d .ct-slice-pie, .ct-series-d .ct-area {
-  fill: #8e24aa; }
+  fill: #9463f7; }
 
 .ct-series-e .ct-point, .ct-series-e .ct-line, .ct-series-e .ct-bar, .ct-series-e .ct-slice-donut {
-  stroke: #fdd835; }
+  stroke: #ffcd17; }
 
 .ct-series-e .ct-slice-pie, .ct-series-e .ct-area {
-  fill: #fdd835; }
+  fill: #ffcd17; }
 
 .ct-series-f .ct-point, .ct-series-f .ct-line, .ct-series-f .ct-bar, .ct-series-f .ct-slice-donut {
-  stroke: #d81b60; }
+  stroke: #f74584; }
 
 .ct-series-f .ct-slice-pie, .ct-series-f .ct-area {
-  fill: #d81b60; }
+  fill: #f74584; }
 
 .ct-series-g .ct-point, .ct-series-g .ct-line, .ct-series-g .ct-bar, .ct-series-g .ct-slice-donut {
-  stroke: #5c6bc0; }
+  stroke: #96a3fa; }
 
 .ct-series-g .ct-slice-pie, .ct-series-g .ct-area {
-  fill: #5c6bc0; }
+  fill: #96a3fa; }
 
 .ct-series-h .ct-point, .ct-series-h .ct-line, .ct-series-h .ct-bar, .ct-series-h .ct-slice-donut {
-  stroke: #689f38; }
+  stroke: #5a9101; }
 
 .ct-series-h .ct-slice-pie, .ct-series-h .ct-area {
-  fill: #689f38; }
+  fill: #5a9101; }
 
 .ct-series-i .ct-point, .ct-series-i .ct-line, .ct-series-i .ct-bar, .ct-series-i .ct-slice-donut {
-  stroke: #ffa726; }
+  stroke: #fa983c; }
 
 .ct-series-i .ct-slice-pie, .ct-series-i .ct-area {
-  fill: #ffa726; }
+  fill: #fa983c; }
 
 .ct-series-j .ct-point, .ct-series-j .ct-line, .ct-series-j .ct-bar, .ct-series-j .ct-slice-donut {
-  stroke: #26c6da; }
+  stroke: #54cbe3; }
 
 .ct-series-j .ct-slice-pie, .ct-series-j .ct-area {
-  fill: #26c6da; }
+  fill: #54cbe3; }
 
 .ct-series-k .ct-point, .ct-series-k .ct-line, .ct-series-k .ct-bar, .ct-series-k .ct-slice-donut {
-  stroke: #00897b; }
+  stroke: #17b3a3; }
 
 .ct-series-k .ct-slice-pie, .ct-series-k .ct-area {
-  fill: #00897b; }
+  fill: #17b3a3; }
 
 .ct-series-l .ct-point, .ct-series-l .ct-line, .ct-series-l .ct-bar, .ct-series-l .ct-slice-donut {
-  stroke: #795548; }
+  stroke: #ab8c82; }
 
 .ct-series-l .ct-slice-pie, .ct-series-l .ct-area {
-  fill: #795548; }
+  fill: #ab8c82; }
 
 .ct-series-m .ct-point, .ct-series-m .ct-line, .ct-series-m .ct-bar, .ct-series-m .ct-slice-donut {
   stroke: #bdbdbd; }
@@ -194,10 +194,10 @@
   fill: #bdbdbd; }
 
 .ct-series-n .ct-point, .ct-series-n .ct-line, .ct-series-n .ct-bar, .ct-series-n .ct-slice-donut {
-  stroke: #757575; }
+  stroke: #76838f; }
 
 .ct-series-n .ct-slice-pie, .ct-series-n .ct-area {
-  fill: #757575; }
+  fill: #76838f; }
 
 .ct-square {
   display: block;

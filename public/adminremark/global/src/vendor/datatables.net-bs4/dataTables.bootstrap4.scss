@@ -99,7 +99,7 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting:after, tab
   // bottom: 0.9em;
   top: 50%;
   right: 1em;
-  font-family: '#{$zmdi-font-name}';
+  font-family: "#{$wb-font-family}";
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -112,7 +112,7 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
   margin-top: -5px;
   // right: 1em;
   // content: "\2191";
-  content: "#{$zmdi-var-caret-up}";
+  content: "#{$wb-var-triangle-up}";
   transform: translateY(-50%);
 }
 
@@ -120,7 +120,7 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
   margin-top: 5px;
   // right: 0.5em;
   // content: "\2193";
-  content: "#{$zmdi-var-caret-down}";
+  content: "#{$wb-var-triangle-down}";
   transform: translateY(-50%);
 }
 

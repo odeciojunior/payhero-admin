@@ -2,16 +2,16 @@
   transition: all 0.3s ease; }
 
 .notie-background-success {
-  background-color: #66bb6a !important; }
+  background-color: #28d17c !important; }
 
 .notie-background-warning {
-  background-color: #ffa726 !important; }
+  background-color: #f57d1b !important; }
 
 .notie-background-error {
-  background-color: #ef5350 !important; }
+  background-color: #ff666b !important; }
 
 .notie-background-info {
-  background-color: #26c6da !important; }
+  background-color: #28c0de !important; }
 
 #notie-alert-outer, #notie-confirm-outer, #notie-force-outer, #notie-input-outer, #notie-select-outer, #notie-date-outer {
   -o-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
@@ -51,7 +51,7 @@
   width: 100%;
   padding: 20px;
   cursor: default;
-  background-color: #26c6da; }
+  background-color: #28c0de; }
 
 #notie-confirm-text {
   color: #fff; }
@@ -68,11 +68,11 @@
   height: 50px;
   line-height: 50px;
   cursor: pointer;
-  background-color: #66bb6a; }
+  background-color: #28d17c; }
 
 #notie-confirm-no, #notie-input-no {
   float: right;
-  background-color: #ef5350; }
+  background-color: #ff666b; }
 
 #notie-confirm-background, #notie-force-background, #notie-input-background, #notie-select-background, #notie-date-background {
   position: fixed;
@@ -136,7 +136,7 @@
   color: #fff; }
 
 #notie-select-choices, .notie-select-choice {
-  background-color: #66bb6a; }
+  background-color: #28d17c; }
 
 .notie-select-choice {
   height: 50px;
@@ -149,7 +149,7 @@
   line-height: 60px;
   color: #fff;
   cursor: pointer;
-  background-color: #78909c; }
+  background-color: #a3afb7; }
 
 .notie-select-choice-bottom-border {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
@@ -157,7 +157,7 @@
 #notie-date-outer {
   color: #fff;
   cursor: default;
-  background-color: #26c6da; }
+  background-color: #28c0de; }
 
 #notie-date-selector {
   max-width: 900px;
@@ -197,7 +197,7 @@
   line-height: 50px;
   color: #fff;
   cursor: pointer;
-  background-color: #66bb6a; }
+  background-color: #28d17c; }
 
 #notie-date-no {
-  background-color: #ef5350; }
+  background-color: #ff666b; }

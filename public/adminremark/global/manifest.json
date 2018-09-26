@@ -134,10 +134,6 @@
       "js": "js",
       "css": "css"
     },
-    "npm:datatables.net-buttons": [{
-      "js": "js",
-      "css": "css"
-    }],
     "npm:datatables.net-buttons-bs4": {
       "js": "js",
       "css": "css"
@@ -150,10 +146,6 @@
       "js": "js",
       "css": "css"
     },
-    "npm:datatables.net-fixedcolumns": [{
-      "js": "js",
-      "css": "css"
-    }],
     "npm:datatables.net-fixedcolumns-bs4": {
       "js": "js",
       "css": "css"
@@ -190,18 +182,10 @@
       "js": "js",
       "css": "css"
     },
-    "npm:datatables.net-scroller": [{
-      "js": "js",
-      "css": "css"
-    }],
     "npm:datatables.net-scroller-bs4": {
       "js": "js",
       "css": "css"
     },
-    "npm:datatables.net-select": [{
-      "js": "js",
-      "css": "css"
-    }],
     "npm:datatables.net-select-bs4": {
       "js": "js",
       "css": "css"

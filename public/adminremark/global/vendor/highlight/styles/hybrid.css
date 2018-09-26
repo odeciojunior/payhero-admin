@@ -7,8 +7,8 @@ vim-hybrid theme by w0ng (https://github.com/w0ng/vim-hybrid)
 /*background color*/
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
+  padding: .5em;
   background: #1d1f21;
 }
 

@@ -7,12 +7,10 @@
 
 // Variables
 // ========================================================================
-
-$example-title-text-shadow:     $color-white !default;
-$example-title-span-color:      #ED5565 !default;
-
-$example-typography-note-color: #AAB2BD !default;
-$example-well-bg:               $page-bg !default;
+$example-title-text-shadow: $color-white !default;
+$example-title-span-color: #ed5565 !default;
+$example-typography-note-color: #aab2bd !default;
+$example-well-bg: $page-bg !default;
 
 // Component: Example
 // ========================================================================
@@ -25,15 +23,14 @@ $example-well-bg:               $page-bg !default;
 }
 
 .example {
+  @include clearfix(); // add
   margin-top: 20px;
   margin-bottom: 20px;
 
   &:before {
-    content: "";
     display: table;
+    content: "";
   }
-
-  @include clearfix();  // add
 }
 
 // Modifier: `example-title`
@@ -42,7 +39,7 @@ $example-well-bg:               $page-bg !default;
 .example-title {
   text-transform: uppercase;
 }
-// start --20160813--fish
+
 h4.example-title {
   font-size: 14px;
 }
@@ -50,7 +47,6 @@ h4.example-title {
 h3.example-title {
   font-size: 18px;
 }
-// end --20160813--fish
 
 // Panel
 // ========================================================================
@@ -59,6 +55,7 @@ h3.example-title {
   > .example-wrap:last-child {
     margin-bottom: 0;
   }
+
   > .row:last-child {
     > [class*="col-"]:last-child {
       .example-wrap:last-child {
@@ -78,12 +75,12 @@ h3.example-title {
 
   .center {
     position: absolute;
-    display: inline-block;
     top: 50%;
     left: 50%;
+    display: inline-block;
     max-width: 100%;
     max-height: 100%;
-    @include transform(translate(-50%, -50%));
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -91,8 +88,7 @@ h3.example-title {
 // ========================================================================
 
 .example-dropdown {
-  .dropdown,
-  .dropup {
+  .dropdown, .dropup {
     @include clearfix();
 
     > .dropdown-toggle {
@@ -117,13 +113,14 @@ h3.example-title {
 
 .example-tooltip {
   position: relative;
-  display: inline-block;
   z-index: 1;
+  display: inline-block;
 
   .tooltip {
     position: relative;
     margin-right: 25px;
     opacity: 1;
+
     &.bs-tooltip-bottom, &.bs-tooltip-top {
       .arrow {
         left: 50%;
@@ -182,14 +179,13 @@ h3.example-title {
   background-color: darken($example-well-bg, 5%);
 }
 
-
 // Modifier: `example-popover`
 // ========================================================================
 
 .example-popover {
   position: relative;
-  display: inline-block;
   z-index: 1;
+  display: inline-block;
 
   .popover {
     position: relative;
@@ -198,23 +194,17 @@ h3.example-title {
   }
 }
 
-
 // Modifier: `example-buttons`
 // ========================================================================
 
 .example-buttons {
-  .btn,
-  .btn-group,
-  .btn-group-vertical {
+  .btn, .btn-group, .btn-group-vertical {
     margin-right: 15px;
     margin-bottom: 20px;
   }
 
-  .btn-group-vertical,
-  .btn-group {
-    .btn,
-    .btn-group,
-    .btn-group-vertical {
+  .btn-group-vertical, .btn-group {
+    .btn, .btn-group, .btn-group-vertical {
       margin-right: 0;
       margin-bottom: 0;
     }
@@ -226,22 +216,21 @@ h3.example-title {
 
 .example-box {
   position: relative;
-  margin-left: 0;
-  margin-right: 0;
   padding: 45px 15px 15px;
+  margin-right: 0;
+  margin-left: 0;
   border: 1px solid $border-color-base;
 
   &:after {
     position: absolute;
     top: 15px;
     left: 15px;
-    content: "Example";
-    color: #959595;
     font-size: $font-size-sm;
-    letter-spacing: 1px;
+    color: #959595;
     text-transform: uppercase;
+    letter-spacing: 1px;
+    content: "Example";
   }
-
 }
 // Modifier: `example-avatars`
 // ========================================================================
@@ -264,8 +253,7 @@ h3.example-title {
   position: relative;
   padding-left: 25%;
 
-  .heading-note,
-  .text-note {
+  .heading-note, .text-note {
     position: absolute;
     bottom: 2px;
     left: 0;
@@ -283,16 +271,14 @@ h3.example-title {
   }
 }
 
-
 // Modifier: `example-typography`
 // ========================================================================
 .example-responsive {
-  overflow-x: auto;
-  min-height: 0.01%; // Workaround for IE9 bug (see https://github.com/twbs/bootstrap/issues/14837)
-
   @include media-breakpoint-down(sm) {
     width: 100%;
     overflow-y: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar;
   }
+  min-height: .01%; // Workaround for IE9 bug (see https://github.com/twbs/bootstrap/issues/14837)
+  overflow-x: auto;
 }

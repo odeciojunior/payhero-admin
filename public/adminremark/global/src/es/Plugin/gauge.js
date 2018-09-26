@@ -1,11 +1,9 @@
-// import $ from 'jquery';
 import Plugin from 'Plugin';
-import * as Config from 'Config';
+import * as Config from "Config";
 
 const NAME = 'gauge';
 
 class GaugePlugin extends Plugin {
-
   getName() {
     return NAME;
   }
@@ -18,11 +16,11 @@ class GaugePlugin extends Plugin {
       pointer: {
         length: 0.58,
         strokeWidth: 0.03,
-        color: Config.colors('grey', 400)
+        color: Config.colors('blue-grey', 400)
       },
       limitMax: true,
-      colorStart: Config.colors('grey', 200),
-      colorStop: Config.colors('grey', 200),
+      colorStart: Config.colors('blue-grey', 200),
+      colorStop: Config.colors('blue-grey', 200),
       strokeColor: Config.colors('primary', 500),
       generateGradient: true
     };

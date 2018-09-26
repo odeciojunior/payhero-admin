@@ -21,7 +21,7 @@
 
 // Variables
 // ========================================================================
-$pagination-gap-hover-border:               $brand-primary !default;
+$pagination-gap-hover-border: $brand-primary !default;
 
 // $pagination-lg-font-size:                   16px !default;
 
@@ -33,12 +33,12 @@ $pagination-gap-hover-border:               $brand-primary !default;
 .page-item {
   // Link
   > span {
+    @include hover-focus {
+      text-decoration: none; // add from---v3
+      transition: background .2s ease-out, border-color .2s ease-out, color .2s ease-out;
+    }
     padding: $pagination-padding-y $pagination-padding-x;
     transition: background .2s ease-out, border-color 0s ease-out, color .2s ease-out;
-    @include hover-focus {
-      transition: background .2s ease-out, border-color .2s ease-out, color .2s ease-out;
-      text-decoration: none;        // add from---v3
-    }
   }
 
   .icon {
@@ -61,12 +61,11 @@ $pagination-gap-hover-border:               $brand-primary !default;
 }
 
 .page-link {
-  transition: background .2s ease-out, border-color 0s ease-out, color .2s ease-out;
-
   @include hover-focus {
+    text-decoration: none;
     transition: background .2s ease-out, border-color .2s ease-out, color .2s ease-out;
-    text-decoration: none; 
   }
+  transition: background .2s ease-out, border-color 0s ease-out, color .2s ease-out;
 }
 
 // Modifier: `pagination-gap`
@@ -74,14 +73,13 @@ $pagination-gap-hover-border:               $brand-primary !default;
 
 .pagination-gap {
   .page-item {
-    &.disabled .page-link{
+    &.disabled .page-link {
       @include hover-focus {
         border-color: $pagination-disabled-border;
       }
     }
 
-    &:first-child,
-    &:last-child {
+    &:first-child, &:last-child {
       .page-link {
         border-radius: 5px;
       }
@@ -93,16 +91,14 @@ $pagination-gap-hover-border:               $brand-primary !default;
   }
 
   .page-link {
-    margin: 0 5px;
-    border-radius: 5px;
-
     @include hover-focus {
       background-color: transparent;
       border-color: $pagination-gap-hover-border;
     }
+    margin: 0 5px;
+    border-radius: 5px;
   }
 }
-
 
 // Modifier: `pagination-no-border`
 // -------------------------

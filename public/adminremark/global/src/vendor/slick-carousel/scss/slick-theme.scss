@@ -3,14 +3,14 @@
 // Default Variables
 
 $slick-font-path: "./";
-$slick-font-family: $zmdi-font-name;
+$slick-font-family: $wb-font-family;
 $slick-loader-path: ".";
-$slick-arrow-color: $gray-lighter;
-$slick-dot-color: $gray-light;
+$slick-arrow-color: $gray-200;
+$slick-dot-color: $gray-300;
 $slick-dot-color-active: $slick-dot-color;
-$slick-prev-character: $zmdi-var-chevron-left; //"←"
-$slick-next-character: $zmdi-var-chevron-right; // "→"
-$slick-dot-character: $zmdi-var-circle; // "•"
+$slick-prev-character: $wb-var-chevron-left; //"←"
+$slick-next-character: $wb-var-chevron-right; // "→"
+$slick-dot-character: $wb-var-large-point; // "•"
 $slick-dot-size: 6px;
 $slick-opacity-default: 0.75;
 $slick-opacity-on-hover: 1;

@@ -79,7 +79,7 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting:after, tab
   position: absolute;
   top: 50%;
   right: 1em;
-  font-family: "Material Design Iconic";
+  font-family: "Web Icons";
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -88,13 +88,13 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting:after, tab
 
 table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before {
   margin-top: -5px;
-  content: "";
+  content: "";
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%); }
 
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
   margin-top: 5px;
-  content: "";
+  content: "";
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%); }
 

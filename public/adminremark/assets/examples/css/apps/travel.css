@@ -33,7 +33,7 @@
   cursor: pointer; }
 
 .spot-info .card-text.type-link a {
-  color: #4caf50; }
+  color: #28d17c; }
 
 .spot-info .card-actions .text-active {
   display: none; }
@@ -43,7 +43,7 @@
 
 .spot-info .card-actions.active .text-active {
   display: inline-block;
-  color: #d81b60; }
+  color: #f74584; }
 
 .spot-info .item-title {
   display: inline-block; }
@@ -51,7 +51,7 @@
 .spot-info .item-name {
   font-size: 14px;
   font-weight: 300;
-  color: #607d8b; }
+  color: #76838f; }
 
 .hotel-info .card {
   height: 240px; }
@@ -61,7 +61,7 @@
 
 .reviews-header {
   padding: 10px 30px;
-  border-bottom: 1px solid #b0bec5; }
+  border-bottom: 1px solid #e4eaec; }
   .reviews-header p {
     margin: 0; }
 
@@ -70,10 +70,10 @@
   margin: 0;
   list-style: none; }
   .reviews-list .review-info {
-    border-bottom: 1px solid #b0bec5;
+    border-bottom: 1px solid #e4eaec;
     cursor: pointer; }
     .reviews-list .review-info:hover {
-      border-bottom: 1px solid #b0bec5; }
+      border-bottom: 1px solid #e4eaec; }
     .reviews-list .review-info.last-review {
       border-bottom: none; }
       .reviews-list .review-info.last-review:hover {
@@ -82,7 +82,7 @@
 .percent {
   margin-right: 5px;
   font-weight: 400;
-  color: #4caf50; }
+  color: #28d17c; }
 
 .page-main {
   position: relative;
@@ -98,7 +98,7 @@
 .marker-icon {
   position: relative;
   display: inline-block;
-  border: 3px solid #3f51b5;
+  border: 3px solid #3e8ef7;
   border-radius: 50%;
   transition: 0.4s ease-in-out all; }
   .marker-icon img {
@@ -114,17 +114,17 @@
     height: 0;
     width: 0;
     border-width: 17px 21px 0;
-    border-color: #3f51b5 transparent transparent;
+    border-color: #3e8ef7 transparent transparent;
     border-style: solid;
     transition: 0.4s ease-in-out all; }
   .marker-icon:hover {
-    border-color: #5c6bc0; }
+    border-color: #79b2fc; }
   .marker-icon:hover::before {
-    border-color: #5c6bc0 transparent transparent; }
+    border-color: #79b2fc transparent transparent; }
   .marker-active .marker-icon {
-    border-color: #5c6bc0; }
+    border-color: #79b2fc; }
     .marker-active .marker-icon::before {
-      border-color: #5c6bc0 transparent transparent; }
+      border-color: #79b2fc transparent transparent; }
 
 .marker-cluster-small {
   background-color: rgba(162, 202, 238, 0.6); }
@@ -134,10 +134,10 @@
     color: #fff; }
 
 .detail {
-  background-color: #5c6bc0 !important; }
+  background-color: #79b2fc !important; }
 
 .leaflet-popup-pane:hover h3 {
-  color: #5c6bc0 !important; }
+  color: #79b2fc !important; }
 
 @media (min-width: 992px) and (max-width: 1599.98px) {
   .hotel-info .card {

@@ -401,7 +401,7 @@ temporary rendered events).
   display: block;
   /* make the <a> tag block */
   font-size: .85em;
-  font-weight: 300;
+  font-weight: 400;
   /* undo jqui's ui-widget-header bold */
   line-height: 1.3;
   border: 1px solid #3a87ad;
@@ -793,7 +793,7 @@ a.fc-more:hover {
   text-align: left; }
 
 .ui-widget td.fc-axis {
-  font-weight: 300;
+  font-weight: 400;
   /* overcome jqui theme making it bold */ }
 
 /* TimeGrid Structure

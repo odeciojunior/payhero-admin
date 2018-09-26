@@ -16,7 +16,7 @@ let postcssConfig = {
         "Opera >= 30"
       ]
     }),
-    //require('stylefmt')
+    ////require('stylefmt')
   ]
 };
 

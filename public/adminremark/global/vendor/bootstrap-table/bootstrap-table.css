@@ -1,7 +1,7 @@
 .bootstrap-table .table {
   margin-bottom: 0 !important;
   border-collapse: collapse !important;
-  border-bottom: 1px solid #dee2e6; }
+  border-bottom: 1px solid #e4eaec; }
 
 .bootstrap-table .table:not(.table-condensed), .bootstrap-table .table:not(.table-condensed) > tbody > tr > th, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > th, .bootstrap-table .table:not(.table-condensed) > thead > tr > td, .bootstrap-table .table:not(.table-condensed) > tbody > tr > td, .bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {
   padding: 8px; }
@@ -15,7 +15,7 @@
 .fixed-table-container {
   position: relative;
   clear: both;
-  border: 1px solid #dee2e6; }
+  border: 1px solid #e4eaec; }
 
 .fixed-table-container.table-no-bordered {
   border: 1px solid transparent; }
@@ -26,10 +26,10 @@
   overflow: hidden; }
 
 .fixed-table-header {
-  border-bottom: 1px solid #dee2e6; }
+  border-bottom: 1px solid #e4eaec; }
 
 .fixed-table-footer {
-  border-top: 1px solid #dee2e6; }
+  border-top: 1px solid #e4eaec; }
 
 .fixed-table-body {
   height: 100%;
@@ -43,7 +43,7 @@
   height: 0;
   padding: 0;
   margin: 0;
-  border-left: 1px solid #dee2e6; }
+  border-left: 1px solid #e4eaec; }
 
 .fixed-table-container thead th:focus {
   outline: 0 solid transparent; }
@@ -78,7 +78,7 @@
   width: 30px; }
 
 .fixed-table-container tbody td {
-  border-left: 1px solid #dee2e6; }
+  border-left: 1px solid #e4eaec; }
 
 .fixed-table-container tbody tr:first-child td {
   border-top: none; }
@@ -92,7 +92,7 @@
 
 /* the same color with .active */
 .fixed-table-container tbody .selected td {
-  background-color: #eeeeee; }
+  background-color: #f3f7f9; }
 
 .fixed-table-container .bs-checkbox {
   text-align: center; }
@@ -126,13 +126,13 @@
     z-index: 2;
     color: #fff;
     cursor: default;
-    background-color: #3f51b5;
-    border-color: #3f51b5; }
+    background-color: #3e8ef7;
+    border-color: #3e8ef7; }
   .fixed-table-pagination .pagination li.disabled > a, .fixed-table-pagination .pagination li.disabled > a:hover, .fixed-table-pagination .pagination li.disabled > a:focus {
-    color: #bdbdbd;
+    color: #ccd5db;
     cursor: not-allowed;
     background-color: transparent;
-    border-color: #dee2e6; }
+    border-color: #e4eaec; }
 
 .fixed-table-pagination .pagination a {
   position: relative;
@@ -140,14 +140,14 @@
   padding: 6px 12px;
   margin-left: -1px;
   line-height: 1.428571429;
-  color: #757575;
+  color: #76838f;
   text-decoration: none;
   background-color: transparent;
-  border: 1px solid #dee2e6; }
+  border: 1px solid #e4eaec; }
   .fixed-table-pagination .pagination a:hover, .fixed-table-pagination .pagination a:focus {
-    color: #3f51b5;
-    background-color: #eeeeee;
-    border-color: #dee2e6; }
+    color: #589ffc;
+    background-color: #f3f7f9;
+    border-color: #e4eaec; }
 
 .fixed-table-pagination .pagination-info {
   margin-right: 5px;
@@ -174,7 +174,7 @@
   display: block;
   padding: 3px 20px;
   clear: both;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.428571429; }
 
 .fixed-table-toolbar .bs-bars, .fixed-table-toolbar .search, .fixed-table-toolbar .columns {
@@ -201,7 +201,7 @@
 .fixed-table-body .card-view .title {
   display: inline-block;
   min-width: 30%;
-  font-weight: 400;
+  font-weight: 500;
   text-align: left !important; }
 
 /* support bootstrap 2 */
@@ -234,7 +234,7 @@
 
 .bootstrap-table .table > thead > tr > th {
   vertical-align: bottom;
-  border-bottom: 1px solid #dee2e6; }
+  border-bottom: 1px solid #e4eaec; }
 
 /* support bootstrap 3 */
 .bootstrap-table .table thead > tr > th {
@@ -272,26 +272,26 @@ div.fixed-table-scroll-outer {
 
 .bootstrap-table .dropdown-menu > li > a {
   display: block;
-  padding: 0.429rem 0.929rem;
+  padding: 0.572rem 1.072rem;
   font-weight: normal;
   line-height: 1.57142857;
-  color: #757575;
+  color: #76838f;
   white-space: nowrap;
   border-radius: 0.215rem;
   transition: background-color .25s; }
   .bootstrap-table .dropdown-menu > li > a:hover, .bootstrap-table .dropdown-menu > li > a:focus {
-    color: #757575;
+    color: #76838f;
     text-decoration: none;
-    background-color: #eeeeee; }
+    background-color: #f3f7f9; }
 
 .bootstrap-table .dropdown-menu > .active > a, .bootstrap-table .dropdown-menu > .active > a:hover, .bootstrap-table .dropdown-menu > .active > a:focus {
-  color: #757575;
+  color: #76838f;
   text-decoration: none;
-  background-color: #eeeeee;
+  background-color: #f3f7f9;
   outline: 0; }
 
 .bootstrap-table .dropdown-menu > .disabled > a, .bootstrap-table .dropdown-menu > .disabled > a:hover, .bootstrap-table .dropdown-menu > .disabled > a:focus {
-  color: #bdbdbd; }
+  color: #e4eaec; }
 
 .bootstrap-table .dropdown-menu > .disabled > a:hover, .bootstrap-table .dropdown-menu > .disabled > a:focus {
   text-decoration: none;

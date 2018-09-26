@@ -14,22 +14,19 @@
 
 // Variables
 // ========================================================================
-
-$pricing-table-border:             $border-color-base !default;
-
-$pricing-table-column-bg:          $bg-color-base !default;
+$pricing-table-border: $border-color-base !default;
+$pricing-table-column-bg: $bg-color-base !default;
 $pricing-table-column-featured-bg: $color-white !default;
-
-$pricing-table-price-font-size:    48px !default;
+$pricing-table-price-font-size: 48px !default;
 
 // Component: Pricing Table
 // ========================================================================
 
 .pricing-table {
+  @include clearfix();
   padding-top: 30px;
   text-align: center;
 
-  @include clearfix();
   [class*="pricing-column"] {
     float: left;
     width: 100%;
@@ -37,7 +34,7 @@ $pricing-table-price-font-size:    48px !default;
     background-color: $pricing-table-column-bg;
     border: 1px solid $pricing-table-border;
     border-right: none;
-    
+
     &:last-child {
       border-right: 1px solid $pricing-table-border;
     }
@@ -118,6 +115,7 @@ $pricing-table-price-font-size:    48px !default;
     .pricing-column {
       &-three {
         width: 33.33%;
+
         &.featured {
           top: -30px;
           padding-top: 30px;
@@ -125,9 +123,11 @@ $pricing-table-price-font-size:    48px !default;
           margin-bottom: -30px;
         }
       }
+
       &-four {
         width: 50%;
       }
+
       &-five {
         width: 50%;
       }
@@ -141,11 +141,12 @@ $pricing-table-price-font-size:    48px !default;
       &-four {
         width: 25%;
       }
+
       &-five {
         width: 20%;
       }
-      &-four,
-      &-five {
+
+      &-four, &-five {
         &.featured {
           top: -30px;
           padding-top: 30px;

@@ -1,14 +1,14 @@
 @charset "UTF-8";
 /**
- * OpenWeb Icons, 1.4.2
+ * OpenWeb Icons, 1.4.3
  * Created by Matthias Pfefferle
  * http://pfefferle.github.io/openwebicons/
  * OFL-1.1 License
  */
 @font-face {
   font-family: "OpenWeb Icons";
-  src: url("./openwebicons.eot?v=1.4.2");
-  src: url("./openwebicons.eot?#iefix&v=1.4.2") format("embedded-opentype"), url("./openwebicons.woff2?v=1.4.2") format("woff2"), url("./openwebicons.woff?v=1.4.2") format("woff"), url("./openwebicons.ttf?v=1.4.2") format("truetype"), url("./openwebicons.svg?v=1.4.2#openwebicons") format("svg");
+  src: url("./openwebicons.eot?v=1.4.3");
+  src: url("./openwebicons.eot?#iefix&v=1.4.3") format("embedded-opentype"), url("./openwebicons.woff2?v=1.4.3") format("woff2"), url("./openwebicons.woff?v=1.4.3") format("woff"), url("./openwebicons.ttf?v=1.4.3") format("truetype"), url("./openwebicons.svg?v=1.4.3#openwebicons") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -19,12 +19,12 @@
   display: inline-block;
   font-style: normal;
   font-weight: normal;
-  text-rendering: auto;
-  speak: none;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-transform: translate(0, 0);
-          transform: translate(0, 0); }
+  speak: none;
+  text-rendering: auto; }
 
 .owi-apml:before {
   content: ""; }
@@ -205,6 +205,12 @@
 
 .owi-gnusocial:before {
   content: ""; }
+
+.owi-mastodon:before {
+  content: ""; }
+
+.owi-mastodon-simple:before {
+  content: ""; }
 
 .owi-html5:before {
   content: ""; }

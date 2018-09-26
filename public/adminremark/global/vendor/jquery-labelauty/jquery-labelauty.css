@@ -21,13 +21,13 @@ input.labelauty + label {
   margin-bottom: 0;
   font-size: 1rem;
   line-height: 1;
-  color: #757575;
+  color: #76838f;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  background-color: #eeeeee;
+  background-color: #f3f7f9;
   border-radius: 0.215rem;
   transition: background-color .25s; }
 
@@ -53,8 +53,8 @@ input.labelauty + label > span.labelauty-unchecked-image + span.labelauty-unchec
 
 /* When not Checked */
 input.labelauty:not(:checked):not([disabled]) + label:hover {
-  color: #9e9e9e;
-  background-color: #eeeeee; }
+  color: #76838f;
+  background-color: #e4eaec; }
 
 input.labelauty:not(:checked) + label > span.labelauty-checked-image {
   display: none; }
@@ -65,10 +65,10 @@ input.labelauty:not(:checked) + label > span.labelauty-checked {
 /* When Checked */
 input.labelauty:checked + label {
   color: #fff;
-  background-color: #3949ab; }
+  background-color: #3e8ef7; }
 
 input.labelauty:checked:not([disabled]) + label:hover {
-  background-color: #3f51b5; }
+  background-color: #589ffc; }
 
 input.labelauty:checked + label > span.labelauty-unchecked-image {
   display: none; }

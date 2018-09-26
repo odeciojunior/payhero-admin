@@ -61,8 +61,8 @@
   content: "\EA08"; }
 
 .context-menu-icon::before {
-  color: #757575;
-  font-family: "Material Design Iconic";
+  color: #76838f;
+  font-family: "Web Icons";
   font-style: normal;
   font-weight: normal;
   font-size: 1rem;
@@ -78,10 +78,10 @@
   width: 2em; }
 
 .context-menu-icon.context-menu-hover:before {
-  color: #757575; }
+  color: #76838f; }
 
 .context-menu-icon.context-menu-disabled::before {
-  color: #bdbdbd; }
+  color: #e4eaec; }
 
 .context-menu-icon.context-menu-icon-loading:before {
   -webkit-animation: cm-spin 2s infinite;
@@ -91,7 +91,7 @@
   display: list-item;
   font-family: inherit; }
   .context-menu-icon.context-menu-icon--fa::before {
-    color: #757575;
+    color: #76838f;
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
@@ -107,9 +107,9 @@
     -moz-osx-font-smoothing: grayscale;
     width: 2em; }
   .context-menu-icon.context-menu-icon--fa.context-menu-hover:before {
-    color: #757575; }
+    color: #76838f; }
   .context-menu-icon.context-menu-icon--fa.context-menu-disabled::before {
-    color: #bdbdbd; }
+    color: #e4eaec; }
 
 .context-menu-list {
   position: absolute;
@@ -122,14 +122,14 @@
   font-size: inherit;
   list-style-type: none;
   background: #fff;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e4eaec;
   border-radius: 0.215rem;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05); }
 
 .context-menu-item {
   position: relative;
-  padding: 0.429rem 0.929rem;
-  color: #757575;
+  padding: 0.572rem 1.072rem;
+  color: #76838f;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -139,7 +139,7 @@
 .context-menu-separator {
   padding: 0;
   margin: 0.35em 0;
-  border-bottom: 1px solid #e0e0e0; }
+  border-bottom: 1px solid #e4eaec; }
 
 .context-menu-item > label > input, .context-menu-item > label > textarea {
   -webkit-user-select: text;
@@ -148,17 +148,17 @@
           user-select: text; }
 
 .context-menu-item.context-menu-hover {
-  color: #757575;
+  color: #76838f;
   cursor: pointer;
-  background-color: #eeeeee; }
+  background-color: #f3f7f9; }
 
 .context-menu-item.context-menu-disabled {
-  color: #bdbdbd;
+  color: #e4eaec;
   cursor: default;
   background-color: #fff; }
 
 .context-menu-input.context-menu-hover {
-  color: #757575;
+  color: #76838f;
   cursor: default; }
 
 .context-menu-submenu:after {
@@ -169,7 +169,7 @@
   width: 0;
   height: 0;
   content: "";
-  border-color: transparent transparent transparent #757575;
+  border-color: transparent transparent transparent #76838f;
   border-style: solid;
   border-width: .25em 0 .25em .25em;
   -webkit-transform: translateY(-50%);

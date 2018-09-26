@@ -6,8 +6,8 @@ Arduino® Light Theme - Stefania Mellai <s.mellai@arduino.cc>
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
+  padding: .5em;
   background: #fff;
 }
 
@@ -32,8 +32,8 @@ Arduino® Light Theme - Stefania Mellai <s.mellai@arduino.cc>
 }
 
 .hljs-title, .hljs-section {
-  font-weight: bold;
   color: #800;
+  font-weight: bold;
 }
 
 .hljs-comment {
