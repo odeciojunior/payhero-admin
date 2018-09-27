@@ -44,6 +44,7 @@
         <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/jvectormap/jquery-jvectormap.css') }}">
         <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css') }}">
         <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/dashboard/v1.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/tablesaw/tablesaw.min.css') }}">
     
     
     <!-- Fonts -->
@@ -141,6 +142,7 @@
         <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
         <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 
-   
+        <script src="{{ asset('adminremark/global/vendor/tablesaw/tablesaw.jquery.js') }}"></script>
+        <script src="{{ asset('adminremark/global/vendor/tablesaw/tablesaw-init.js') }}"></script>   
   </body>
 </html>

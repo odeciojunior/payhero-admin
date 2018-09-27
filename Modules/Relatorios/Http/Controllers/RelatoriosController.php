@@ -26,27 +26,25 @@ class RelatoriosController extends Controller
 
     public function dadosVendas(){
 
-        return datatables(Venda::select(
-            'status',
-            'forma_pagamento',
-            'valor_total_pago',
-            'valor_recebido_mercado_pago',
-            'valor_plano',
-            'valor_frete',
-            'cod_cupom',
-            'meio_pagamento',
-            'data_inicio',
-            'data_finalizada',
-            'comprador',
-            'mercado_pago_id',
-            'mercado_pago_status',
-            'qtd_parcela',
-            'bandeira',
-            'entrega',
-            'valor_cupom',
-            'tipo_cupom'
-        )->get())->toJson();
-    
+        return datatables(\DB::table('vendas as venda')
+
+            ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'venda.id')
+            ->leftjoin('compradores as comprador', 'comprador.id', '=', 'venda.comprador')
+            ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
+
+            ->get([
+                'venda.id',
+                'plano.nome as plano_nome',
+                'comprador.nome',
+                'venda.meio_pagamento',
+                'venda.forma_pagamento',
+                'venda.mercado_pago_status',
+                'venda.data_inicio',
+                'venda.data_finalizada',
+                'venda.valor_plano',
+            ])
+        )->toJson();
+
     }
 
 }
