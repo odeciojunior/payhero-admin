@@ -30,6 +30,9 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/assets/css/site.min.css') }}">
     
+    <!-- Datatables -->
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/asscrollable/asScrollable.css') }}">
@@ -59,6 +62,11 @@
     <![endif]-->
     
     <!-- Scripts -->
+    <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
+
+    <!-- Datatables -->
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
     <script src="{{ asset('adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
       Breakpoints();
@@ -83,7 +91,6 @@
     </footer>
     <!-- Core  -->
     <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
-    <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/animsition/animsition.js') }}"></script>
