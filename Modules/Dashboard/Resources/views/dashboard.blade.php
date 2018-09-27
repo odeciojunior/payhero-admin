@@ -1,4 +1,5 @@
 @extends("layouts.master")
+@section('title', '- Dashboard')
 @section('content')
 <!-- Page -->
 <div class="page">

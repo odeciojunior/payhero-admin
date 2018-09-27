@@ -18,10 +18,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="bootstrap admin template">
+    <meta name="description" content="CloudFox">
     <meta name="author" content="">
     
-    <title>Dashboard | Remark Admin Template</title>
+    <title>CloudFox @yield('title')</title> 
     <link rel="apple-touch-icon" href="{{ asset('adminremark/assets/images/apple-touch-icon.png') }}">
     <link rel="shortcut icon" href="{{ asset('adminremark/assets/images/favicon.ico') }}">
     
@@ -78,10 +78,8 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-      <div class="site-footer-legal">© 2018 <a href="http://themeforest.net/item/remark-responsive-bootstrap-admin-template/11989202">Remark</a></div>
-      <div class="site-footer-right">
-        Crafted with <i class="red-600 wb wb-heart"></i> by <a href="https://themeforest.net/user/creation-studio">Creation Studio</a>
-      </div>
+      <div class="site-footer-right">© 2018 - CloudFox</div>
+      
     </footer>
     <!-- Core  -->
     <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>

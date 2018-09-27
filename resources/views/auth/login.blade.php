@@ -76,7 +76,7 @@
 
     <!-- Page -->
     
-{{-- @section('title', 'Home') --}}
+ @section('title', '- Login')
     @section('content')
     {{-- <div class="">{{ __('Login') }}</div> --}}
     <div class="page vertical-align text-center" data-animsition-in="fade-in" data-animsition-out="fade-out">>
