@@ -9,38 +9,26 @@
     <div class="page-content container-fluid">
       <div class="row" data-plugin="matchHeight" data-by-row="true">
 
-        <table id="tabela_vendas" class="table table-hover table-bordered table-striped datatable">
+        <table id="tabela_vendas" class="tablesaw table-bordered table-hover datatTable" style="width: 100%">
           <thead>
             <tr>
-              <td>status</td>
-              <td>forma_pagamento</td>
-              <td>valor_total_pago</td>
-              <td>valor_recebido_mercado_pago</td>
-              <td>valor_plano</td>
-              <td>valor_frete</td>
-              <td>cod_cupom</td>
-              <td>meio_pagamento</td>
-              <td>data_inicio</td>
-              <td>data_finalizada</td>
-              <td>comprador</td>
-              <td>mercado_pago_id</td>
-              <td>mercado_pago_status</td>
-              <td>qtd_parcela</td>
-              <td>bandeira</td>
-              <td>entrega</td>
-              <td>valor_cupom</td>
-              <td>tipo_cupom</td>
+              <td>Transação</td>
+              <td>Produto</td>
+              <td>Comprador</td>
+              <td>Forma de Pagamento</td>
+              <td>Status</td>
+              <td>Data de pagamento</td>
+              <td>Data Finalizada</td>
+              <td>Valor Venda</td>
             </tr>
           </thead>
           <tbody>
           </tbody>
         </table>
-        
       </div>
     </div>
   </div>
   <!-- End Page -->
-
 
   <script>
 
@@ -53,24 +41,14 @@
             type: 'POST'
         },
         columns: [
-            {data: 'status', name: 'status'},
+            {data: 'id', name: 'id'},
+            {data: 'plano_nome', name: 'plano_nome'},
+            {data: 'nome', name: 'nome'},
             {data: 'forma_pagamento', name: 'forma_pagamento'},
-            {data: 'valor_total_pago', name: 'valor_total_pago'},
-            {data: 'valor_recebido_mercado_pago', name: 'valor_recebido_mercado_pagov'},
-            {data: 'valor_plano', name: 'valor_plano'},
-            {data: 'valor_frete', name: 'valor_frete'},
-            {data: 'cod_cupom', name: 'cod_cupom'},
-            {data: 'meio_pagamento', name: 'meio_pagamento'},
+            {data: 'mercado_pago_status', name: 'mercado_pago_status'},
             {data: 'data_inicio', name: 'data_inicio'},
             {data: 'data_finalizada', name: 'data_finalizada'},
-            {data: 'comprador', name: 'comprador'},
-            {data: 'mercado_pago_id', name: 'mercado_pago_id'},
-            {data: 'mercado_pago_status', name: 'mercado_pago_status'},
-            {data: 'qtd_parcela', name: 'qtd_parcela'},
-            {data: 'bandeira', name: 'bandeira'},
-            {data: 'entrega', name: 'entrega'},
-            {data: 'valor_cupom', name: 'valor_cupom'},
-            {data: 'tipo_cupom', name: 'tipo_cupom'},
+            {data: 'valor_plano', name: 'valor_plano'},
         ],
         "language": {
             "sProcessing":    "Procesando...",
