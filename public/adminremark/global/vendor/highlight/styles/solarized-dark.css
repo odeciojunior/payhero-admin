@@ -6,10 +6,10 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: #839496;
+  padding: .5em;
   background: #002b36;
+  color: #839496;
 }
 
 .hljs-comment, .hljs-quote {

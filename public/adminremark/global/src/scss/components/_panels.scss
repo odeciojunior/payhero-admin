@@ -18,42 +18,34 @@
 
 // Variables
 // ========================================================================
-
-$panel-grid-gutter-width                 : 60px !default;
-$panel-margin-bottom                     : $grid-gutter-width !default;
-
-$panel-responsive-padding-horizontal     : 20px !default;
-$panel-title-padding                     : $panel-heading-padding !default;
-$panel-title-font-size                   : 18px !default;
-
-$panel-bordered-heading-padding-vertical : 20px !default;
-
-$panel-desc-color                        : $gray-dark !default;
-$panel-desc-font-size                    : $font-size-base !default;
-$panel-border-width                      : 0 !default;
-
-$panel-toolbar-padding                   : 5px 15px !default;
-$panel-toolbar-icon-padding              : 5px 10px !default;
-$panel-toolbar-color                     : $gray !default;
-$panel-toolbar-color-hover               : $gray-dark !default;
-$panel-toolbar-bg                        : transparent !default;
-$panel-toolbar-border                    : $panel-inner-border !default;
-
-$panel-dark-text                         : $color-white !default;
-$panel-dark-border                       : $brand-dark !default;
-$panel-dark-heading-bg                   : $brand-dark !default;
-
-$panel-action-color                      : $gray !default;
-$panel-action-active-color               : $gray-darker !default;
-$panel-action-hover-color                : $gray-darker !default;
-
-$panel-colored-title-color               : $inverse !default;
-$panel-colored-action-color              : $inverse !default;
+$panel-grid-gutter-width: 60px !default;
+$panel-margin-bottom: $grid-gutter-width !default;
+$panel-responsive-padding-horizontal: 20px !default;
+$panel-title-padding: $panel-heading-padding !default;
+$panel-title-font-size: 18px !default;
+$panel-bordered-heading-padding-vertical: 20px !default;
+$panel-desc-color: $gray-500 !default;
+$panel-desc-font-size: $font-size-base !default;
+$panel-border-width: 0 !default;
+$panel-toolbar-padding: 5px 15px !default;
+$panel-toolbar-icon-padding: 5px 10px !default;
+$panel-toolbar-color: $gray-400 !default;
+$panel-toolbar-color-hover: $gray-500 !default;
+$panel-toolbar-bg: transparent !default;
+$panel-toolbar-border: $panel-inner-border !default;
+$panel-dark-text: $color-white !default;
+$panel-dark-border: $brand-dark !default;
+$panel-dark-heading-bg: $brand-dark !default;
+$panel-action-color: $gray-400 !default;
+$panel-action-active-color: $gray-600 !default;
+$panel-action-hover-color: $gray-600 !default;
+$panel-colored-title-color: $inverse !default;
+$panel-colored-action-color: $inverse !default;
 
 //z-index
-$panel-nav-z-index                       : $zindex-base !default;
-$panel-fullscreen-z-index                : $zindex-fullscreen !default;
-$panel-loading-z-index                   : ($zindex-base + 5) !default;
+$panel-nav-z-index: $zindex-base !default;
+$panel-fullscreen-z-index: $zindex-fullscreen !default;
+$panel-loading-z-index: ($zindex-base + 5) !default;
 
 // Component: Panel
 // ========================================================================
@@ -64,7 +56,7 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
   background-color: $panel-bg;
   border: $panel-border-width solid transparent;
   border-radius: $panel-border-radius;
-  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
 }
 
 // Panel Grid
@@ -72,12 +64,12 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
 
 .panel-content {
   > .row {
-    padding-left:  ($panel-grid-gutter-width / 2);
     padding-right: ($panel-grid-gutter-width / 2);
+    padding-left: ($panel-grid-gutter-width / 2);
 
     > [class*="col-"] {
-      padding-left:  ($panel-grid-gutter-width / 2);
       padding-right: ($panel-grid-gutter-width / 2);
+      padding-left: ($panel-grid-gutter-width / 2);
     }
   }
 }
@@ -86,10 +78,10 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
 // ========================================================================
 
 .panel-heading {
+  @include border-top-radius($panel-border-radius - pxToRem(1px));
   position: relative;
   padding: 0;
   border-bottom: 1px solid transparent;
-  @include border-top-radius($panel-border-radius - pxToRem(1px));
 
   + .alert {
     border-radius: 0;
@@ -99,20 +91,19 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
     border-bottom: none;
   }
 
-  // --20160810--fish add tab-in-panel-heading
   &-tab {
-    padding: 10px 30px 0; 
+    padding: 10px 30px 0;
     background-color: $brand-primary;
+
     > .nav-tabs {
       .nav-link {
         color: #fff;
-        
-        &.hover,
-        &:hover {
+
+        &.hover, &:hover {
           color: $text-color;
         }
-        &.active,
-        &:active {
+
+        &.active, &:active {
           color: $text-color;
           background-color: $color-white;
         }
@@ -133,16 +124,15 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
 // ========================================================================
 
 .panel-body {
+  @include clearfix;
   position: relative;
   padding: $panel-body-padding;
-  @include clearfix;
 
   .panel-heading + & {
     padding-top: 0;
   }
 
-  h1, h2, h3, h4, h5, h6,
-  .h1, .h2, .h3, .h4, .h5, .h6 {
+  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     &:first-child {
       margin-top: 0;
     }
@@ -163,10 +153,10 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
 // ========================================================================
 
 .panel-footer {
-  padding: $panel-footer-padding;
-  border-top: 1px solid transparent;
-  background-color: $panel-footer-bg;
   @include border-bottom-radius($panel-border-radius - pxToRem(1px));
+  padding: $panel-footer-padding;
+  background-color: $panel-footer-bg;
+  border-top: 1px solid transparent;
 
   .table + & {
     padding-top: $panel-footer-padding-vertical;
@@ -179,9 +169,9 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
 
 .panel-title {
   display: block;
+  padding: $panel-title-padding;
   margin-top: 0;
   margin-bottom: 0;
-  padding: $panel-title-padding;
   font-size: $panel-title-font-size;
   color: $headings-color;
 
@@ -195,14 +185,11 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
     margin-left: 10px;
   }
 
-  small,
-  .small {
+  small, .small {
     color: $panel-desc-color;
   }
 
-  > a,
-  > small > a,
-  > .small > a {
+  > a, > small > a, > .small > a {
     color: inherit;
   }
 }
@@ -222,17 +209,15 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
 // ========================================================================
 
 .panel-actions {
-  position: absolute;
-  right: $panel-padding-horizontal;
-  top: 50%;
-  @include translate(0%, -50%);
-
   @include media-breakpoint-down(xs) {
     right: $panel-responsive-padding-horizontal;
   }
-
-  margin: auto;
+  position: absolute;
+  top: 50%;
+  right: $panel-padding-horizontal;
   z-index: 1;
+  margin: auto;
+  transform: translate(0%, -50%);
 
   ul & {
     list-style: none;
@@ -277,13 +262,12 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
       color: $panel-action-active-color;
     }
 
-    // fix email #16 fish20170323 
+    // write these fixing code with the feelings of F**k.
     // &[data-toggle="dropdown"],
     &[data-toggle="dropdown"]:not(.dropdown-toggle) {
-      width: 34px;// 2*( dropdown-menu-bullet-borderwidth(7px) + location(right: 10px) );
-      text-align: center;
+      width: 34px;
+      text-align: center; // 2*( dropdown-menu-bullet-borderwidth(7px) + location(right: 10px) );
     }
-    
   }
 
   .progress {
@@ -295,7 +279,6 @@ $panel-loading-z-index                   : ($zindex-base + 5) !default;
     margin: 0;
   }
 }
-
 
 ul.panel-actions {
   list-style: none;
@@ -316,16 +299,16 @@ ul.panel-actions {
   padding: $panel-toolbar-padding;
   margin: 0;
   background-color: $panel-toolbar-bg;
-  border-bottom: 1px solid $panel-toolbar-border;
   border-top: 1px solid $panel-toolbar-border;
+  border-bottom: 1px solid $panel-toolbar-border;
 
   .panel-bordered & {
     border-top-color: transparent;
   }
 
   .btn {
-    color: $panel-toolbar-color;
     padding: $panel-toolbar-icon-padding;
+    color: $panel-toolbar-color;
 
     &.icon {
       @include icon-fixed-width();
@@ -354,14 +337,13 @@ ul.panel-actions {
     position: absolute;
     top: 50%;
     left: 50%;
-    @include translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
 }
 
 .panel {
   > *:not(.panel-loading):not(.collapsing) {
-    -webkit-transition: opacity .3s;
-            transition: opacity .3s;
+    transition: opacity .3s;
   }
 
   &.is-loading {
@@ -397,7 +379,6 @@ ul.panel-actions {
 // ========================================================================
 
 .panel-body {
-
   // > .list-group {
   //   > .list-group-item {
   //     // padding-left: 0;
@@ -405,33 +386,29 @@ ul.panel-actions {
   //   }
   // }
   &.scrollable-vertical {
-    padding-left: 0 !important;
     padding-right: 0 !important;
+    padding-left: 0 !important;
 
     > .scrollable-container {
       > .scrollable-content {
-        padding-left: $panel-padding-horizontal;
-        padding-right: $panel-padding-horizontal;
-
         @include media-breakpoint-down(xs) {
-          padding-left: $panel-responsive-padding-horizontal;
           padding-right: $panel-responsive-padding-horizontal;
+          padding-left: $panel-responsive-padding-horizontal;
         }
+        padding-right: $panel-padding-horizontal;
+        padding-left: $panel-padding-horizontal;
       }
     }
 
     > .scrollable-bar {
-      margin-top: 0;
-
-      margin-bottom: $panel-body-padding-vertical;
       height: calc(100% - #{$panel-body-padding-vertical});
-      @include transform(translateX((-$panel-padding-horizontal + 4px)));
+      margin-top: 0;
+      margin-bottom: $panel-body-padding-vertical;
+      transform: translateX((-$panel-padding-horizontal + 4px));
 
       .panel-bordered > & {
-
+        height: calc(100% - 2 * #{$panel-body-padding-vertical});
         margin-bottom: $panel-body-padding-vertical;
-        $height: (2 * $panel-body-padding-vertical);
-        height: calc(100% - #{$height});
       }
     }
   }
@@ -453,22 +430,17 @@ ul.panel-actions {
     }
 
     > .scrollable-bar {
-      margin-left: 0;
-      margin-right: $panel-padding-horizontal;
-
-      $width: (2 * $panel-padding-horizontal);
-      width: calc(100% - #{$width});
-
       @include media-breakpoint-down(xs) {
+        width: calc(100% - 2* #{$panel-responsive-padding-horizontal});
         margin-right: $panel-responsive-padding-horizontal;
-        $width: (2 * $panel-responsive-padding-horizontal);
-        width: calc(100% - #{$width});
       }
-
-      @include transform(translateY((-$panel-body-padding-vertical + 4px)));
+      width: calc(100% - 2 * #{$panel-padding-horizontal});
+      margin-right: $panel-padding-horizontal;
+      margin-left: 0;
+      transform: translateY((-$panel-body-padding-vertical + 4px));
 
       .panel-bordered > & {
-        @include transform(translateY((-$panel-body-padding-vertical + 4px)));
+        transform: translateY((-$panel-body-padding-vertical + 4px));
       }
     }
   }
@@ -487,22 +459,21 @@ ul.panel-actions {
   }
 
   > .panel-footer {
-    border-top: 1px solid $panel-inner-border;
     padding-top: $panel-footer-padding-vertical;
+    border-top: 1px solid $panel-inner-border;
   }
 
   > .panel-body {
     padding-top: $panel-body-padding-vertical;
   }
 
-  > .table > tbody:first-child > tr:first-child th,
-  > .table > tbody:first-child > tr:first-child td {
+  > .table > tbody:first-child > tr:first-child th, > .table > tbody:first-child > tr:first-child td {
     border-top: 0;
   }
 }
 
 .panel.is-dragging {
-  opacity: 0.8;
+  opacity: .8;
 }
 
 .panel.is-dragging {
@@ -518,6 +489,7 @@ ul.panel-actions {
   & > .nav-tabs-vertical {
     .nav-tabs {
       margin-left: -1px;
+
       > li {
         > a {
           border-left: none;
@@ -527,6 +499,7 @@ ul.panel-actions {
 
       &.nav-tabs-reverse {
         margin-right: -1px;
+
         > li {
           > a {
             border-right: none;
@@ -537,7 +510,7 @@ ul.panel-actions {
     }
   }
 
-  // Actions in Panel 
+  // Actions in Panel
   // ================
   &:hover {
     .panel-actions .show-on-hover {
@@ -565,7 +538,7 @@ ul.panel-actions {
     }
 
     .panel-actions {
-      [data-toggle=collapse] {
+      [data-toggle="collapse"] {
         display: none;
       }
     }
@@ -582,166 +555,146 @@ ul.panel-actions {
     }
   }
 
-  // Alert in Panel 
+  // Alert in Panel
   // ==============
   > .alert {
-    padding-left: $panel-padding-horizontal;
-    padding-right: $panel-padding-horizontal;
-
-    &-dismissible {
-      padding-right: ($panel-padding-horizontal + 20px);
-    }
-
     @include media-breakpoint-down(xs) {
-      padding-left: $panel-responsive-padding-horizontal;
       padding-right: $panel-responsive-padding-horizontal;
+      padding-left: $panel-responsive-padding-horizontal;
 
       &-dismissible {
         padding-right: ($panel-responsive-padding-horizontal + 20px);
       }
     }
+    padding-right: $panel-padding-horizontal;
+    padding-left: $panel-padding-horizontal;
+
+    &-dismissible {
+      padding-right: ($panel-padding-horizontal + 20px);
+    }
   }
 
-  // Table in Panel 
+  // Table in Panel
   // ==============
-  > .table,
-  > .table-responsive > .table,
-  > .panel-collapse > .table {
+  > .table, > .table-responsive > .table, > .panel-collapse > .table {
     margin-bottom: 0;
 
     caption {
-      padding-left: $panel-body-padding;
       padding-right: $panel-body-padding;
+      padding-left: $panel-body-padding;
     }
   }
   // Add border top radius for first one
-  > .table:first-child,
-  > .table-responsive:first-child > .table:first-child {
+  > .table:first-child, > .table-responsive:first-child > .table:first-child {
     @include border-top-radius($panel-border-radius - pxToRem(1px));
 
-    > thead:first-child,
-    > tbody:first-child {
+    > thead:first-child, > tbody:first-child {
       > tr:first-child {
         border-top-left-radius: ($panel-border-radius - pxToRem(1px));
         border-top-right-radius: ($panel-border-radius - pxToRem(1px));
 
-        td:first-child,
-        th:first-child {
+        td:first-child, th:first-child {
           border-top-left-radius: ($panel-border-radius - pxToRem(1px));
         }
-        td:last-child,
-        th:last-child {
+
+        td:last-child, th:last-child {
           border-top-right-radius: ($panel-border-radius - pxToRem(1px));
         }
       }
     }
   }
   // Add border bottom radius for last one
-  > .table:last-child,
-  > .table-responsive:last-child > .table:last-child {
+  > .table:last-child, > .table-responsive:last-child > .table:last-child {
     @include border-bottom-radius($panel-border-radius - pxToRem(1px));
 
-    > tbody:last-child,
-    > tfoot:last-child {
+    > tbody:last-child, > tfoot:last-child {
       > tr:last-child {
-        border-bottom-left-radius: ($panel-border-radius - pxToRem(1px));
         border-bottom-right-radius: ($panel-border-radius - pxToRem(1px));
+        border-bottom-left-radius: ($panel-border-radius - pxToRem(1px));
 
-        td:first-child,
-        th:first-child {
+        td:first-child, th:first-child {
           border-bottom-left-radius: ($panel-border-radius - pxToRem(1px));
         }
-        td:last-child,
-        th:last-child {
+
+        td:last-child, th:last-child {
           border-bottom-right-radius: ($panel-border-radius - pxToRem(1px));
         }
       }
     }
   }
-  > .panel-body + .table,
-  > .panel-body + .table-responsive,
-  > .table + .panel-body,
-  > .table-responsive + .panel-body {
+
+  > .panel-body + .table, > .panel-body + .table-responsive, > .table + .panel-body, > .table-responsive + .panel-body {
     border-top: 1px solid $table-border-color;
   }
-  > .table > tbody:first-child > tr:first-child th,
-  > .table > tbody:first-child > tr:first-child td {
+
+  > .table > tbody:first-child > tr:first-child th, > .table > tbody:first-child > tr:first-child td {
     border-top: 0;
   }
-  > .table-bordered,
-  > .table-responsive > .table-bordered {
+
+  > .table-bordered, > .table-responsive > .table-bordered {
     border: 0;
-    > thead,
-    > tbody,
-    > tfoot {
+
+    > thead, > tbody, > tfoot {
       > tr {
-        > th:first-child,
-        > td:first-child {
+        > th:first-child, > td:first-child {
           border-left: 0;
         }
-        > th:last-child,
-        > td:last-child {
+
+        > th:last-child, > td:last-child {
           border-right: 0;
         }
       }
     }
-    > thead,
-    > tbody {
+
+    > thead, > tbody {
       > tr:first-child {
-        > td,
-        > th {
+        > td, > th {
           border-bottom: 0;
         }
       }
     }
-    > tbody,
-    > tfoot {
+
+    > tbody, > tfoot {
       > tr:last-child {
-        > td,
-        > th {
+        > td, > th {
           border-bottom: 0;
         }
       }
     }
   }
+
   > .table-responsive {
-    border: 0;
     margin-bottom: 0;
+    border: 0;
   }
   // -------------------------------------
-  > .table, > .table-responsive .table  {
+  > .table, > .table-responsive .table {
     &, & > thead, & > tbody, & > tfoot {
       > tr {
-        > td:first-child,
-        > th:first-child {
-          padding-left: $panel-padding-horizontal;
-
+        > td:first-child, > th:first-child {
           @include media-breakpoint-down(xs) {
             padding-left: $panel-responsive-padding-horizontal;
           }
+          padding-left: $panel-padding-horizontal;
         }
 
-        > td:last-child,
-        > th:last-child {
-          padding-right: $panel-padding-horizontal;
-
+        > td:last-child, > th:last-child {
           @include media-breakpoint-down(xs) {
             padding-right: $panel-responsive-padding-horizontal;
           }
+          padding-right: $panel-padding-horizontal;
         }
       }
     }
   }
 
-  > .table > tbody:first-child > tr:first-child th,
-  > .table > tbody:first-child > tr:first-child td {
+  > .table > tbody:first-child > tr:first-child th, > .table > tbody:first-child > tr:first-child td {
     border-top: 1px solid $panel-inner-border;
   }
-  
-  // List-group in Panel 
+
+  // List-group in Panel
   // ===================
-  > .list-group,
-  > .panel-collapse > .list-group {
+  > .list-group, > .panel-collapse > .list-group {
     margin-bottom: 0;
 
     .list-group-item {
@@ -752,19 +705,20 @@ ul.panel-actions {
     // Add border top radius for first one
     &:first-child {
       .list-group-item:first-child {
-        border-top: 0;
         @include border-top-radius($panel-border-radius - pxToRem(1px));
+        border-top: 0;
       }
     }
 
     // Add border bottom radius for last one
     &:last-child {
       .list-group-item:last-child {
-        border-bottom: 0;
         @include border-bottom-radius($panel-border-radius - pxToRem(1px));
+        border-bottom: 0;
       }
     }
   }
+
   > .panel-heading + .panel-collapse > .list-group {
     .list-group-item:first-child {
       @include border-top-radius(0);
@@ -773,15 +727,14 @@ ul.panel-actions {
   //----------------------------------
   > .list-group {
     .list-group-item {
+      @include media-breakpoint-down(xs) {
+        padding-right: $panel-responsive-padding-horizontal;
+        padding-left: $panel-responsive-padding-horizontal;
+      }
       padding-right: $panel-padding-horizontal;
       padding-left: $panel-padding-horizontal;
-
-      @include media-breakpoint-down(xs) {
-        padding-left: $panel-responsive-padding-horizontal;
-        padding-right: $panel-responsive-padding-horizontal;
-      }
     }
-  } 
+  }
 }
 
 // Collapse space between when there's no additional content.
@@ -790,40 +743,9 @@ ul.panel-actions {
     border-top-width: 0;
   }
 }
+
 .list-group + .panel-footer {
   border-top-width: 0;
-}
-
-// Panel-group
-// ========================================================================
-.panel-group {
-  margin-bottom: $line-height-computed;
-
-  // Tighten up margin so it's only between panels
-  .panel {
-    margin-bottom: 0;
-    border-radius: $panel-border-radius;
-
-    + .panel {
-      margin-top: 5px;
-    }
-  }
-
-  .panel-heading {
-    border-bottom: 0;
-
-    + .panel-collapse > .panel-body,
-    + .panel-collapse > .list-group {
-      border-top: 1px solid $panel-inner-border;
-    }
-  }
-
-  .panel-footer {
-    border-top: 0;
-    + .panel-collapse .panel-body {
-      border-bottom: 1px solid $panel-inner-border;
-    }
-  }
 }
 
 // Color Modifier
@@ -834,7 +756,6 @@ ul.panel-actions {
 .panel.panel-transparent {
   background: transparent;
   border-color: transparent;
-
   box-shadow: none;
 
   > .panel-heading, > .panel-footer {
@@ -842,21 +763,19 @@ ul.panel-actions {
   }
 }
 
-
 // Modifier: `Contextual variations`
 // --------------------------------
 
 @mixin panel-variant($border, $heading-text-color, $heading-bg-color, $heading-border) {
-  border-color: $border;
-
-  & > .panel-heading {
+  .panel-heading {
     color: $heading-text-color;
     background-color: $heading-bg-color;
-    border-color: $heading-border;
+    border: none;
 
     + .panel-collapse > .panel-body {
       border-top-color: $border;
     }
+
     .badge-pill {
       color: $heading-bg-color;
       background-color: $heading-text-color;
@@ -878,25 +797,30 @@ ul.panel-actions {
   }
 }
 
-
 .panel-default {
   @include panel-variant($panel-default-border, $panel-default-text, $panel-default-heading-bg, $panel-default-border);
+
   .panel-title {
     color: $headings-color;
   }
 }
+
 .panel-primary {
   @include panel-variant($panel-primary-border, $panel-primary-text, $panel-primary-heading-bg, $panel-primary-border);
 }
+
 .panel-success {
   @include panel-variant($panel-success-border, $panel-success-text, $panel-success-heading-bg, $panel-success-border);
 }
+
 .panel-info {
   @include panel-variant($panel-info-border, $panel-info-text, $panel-info-heading-bg, $panel-info-border);
 }
+
 .panel-warning {
   @include panel-variant($panel-warning-border, $panel-warning-text, $panel-warning-heading-bg, $panel-warning-border);
 }
+
 .panel-danger {
   @include panel-variant($panel-danger-border, $panel-danger-text, $panel-danger-heading-bg, $panel-danger-border);
 }
@@ -905,35 +829,14 @@ ul.panel-actions {
   @include panel-variant($panel-dark-border, $panel-dark-text, $panel-dark-heading-bg, $panel-dark-border);
 }
 
-.panel-primary,
-.panel-info,
-.panel-success,
-.panel-warning,
-.panel-danger,
-.panel-dark {
-  border: none;
-
-  .panel-heading {
-    border: none;
-  }
-
-  .panel-title {
-    color: $panel-colored-title-color;
-  }
-
-  .panel-action {
-    color: $panel-colored-action-color;
-  }
-}
-
 // Panel-line
 // ========================================================================
 
 @mixin panel-line-variant($heading-border-color) {
   .panel-heading {
     color: $heading-border-color;
-    border-top-color: $heading-border-color;
     background: transparent;
+    border-top-color: $heading-border-color;
   }
 
   .panel-title {
@@ -963,18 +866,23 @@ ul.panel-actions {
       color: $panel-action-color;
     }
   }
+
   &.panel-primary {
     @include panel-line-variant($panel-primary-heading-bg);
   }
+
   &.panel-success {
     @include panel-line-variant($panel-success-heading-bg);
   }
+
   &.panel-info {
     @include panel-line-variant($panel-info-heading-bg);
   }
+
   &.panel-warning {
     @include panel-line-variant($panel-warning-heading-bg);
   }
+
   &.panel-danger {
     @include panel-line-variant($panel-danger-heading-bg);
   }
@@ -982,20 +890,18 @@ ul.panel-actions {
   &.panel-dark {
     @include panel-line-variant($panel-dark-heading-bg);
   }
-
 }
 
-// Tablet //--20160518fish
+// Tablet
 // ========================================================================
-
 @include media-breakpoint-down(sm) {
   .panel-actions {
     position: relative;
     top: auto;
     right: auto;
     display: block;
-    margin: auto;
     padding: 0 30px 15px;
+    margin: auto;
     transform: none;
 
     &-keep {
@@ -1003,34 +909,33 @@ ul.panel-actions {
       top: 50%;
       right: $panel-padding-horizontal;
       padding: 0;
-      @include translate(0%, -50%);
+      transform: translate(0%, -50%);
     }
   }
 }
-
 
 // Phone
 // ========================================================================
 
 @include media-breakpoint-down(xs) {
   .panel-actions {
-    // right: $panel-responsive-padding-horizontal; //--20160518fish
     padding-left: 20px;
 
     &-keep {
       right: 15px;
     }
+
     .progress {
       min-width: 80px;
     }
-    
+
     .show-on-hover {
       display: none;
     }
   }
 
   .panel-title, .panel-body, .panel-footer {
-    padding-left: $panel-responsive-padding-horizontal;
     padding-right: $panel-responsive-padding-horizontal;
+    padding-left: $panel-responsive-padding-horizontal;
   }
 }

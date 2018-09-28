@@ -36,15 +36,13 @@
 
 // Modifier: `cover-quote`
 // ========================================================================
-.cover-quote,
-.blockquote.cover-quote {
+.cover-quote, .blockquote.cover-quote {
   position: relative;
-  margin-bottom: 0;
   padding-left: 35px;
+  margin-bottom: 0;
   border-left: none;
 
-  &:before,
-  &:after {
+  &:before, &:after {
     position: absolute;
     top: -20px;
     font-size: 4em;
@@ -57,14 +55,15 @@
 
   &:after {
     right: 0;
-    content: close-quote;
     visibility: hidden;
+    content: close-quote;
   }
 
   &.blockquote-reverse {
     padding-right: 35px;
     padding-left: 20px;
     border-right: none;
+
     &:before {
       right: 0;
       left: auto;

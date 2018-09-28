@@ -58,11 +58,11 @@
           targetKeep: true,
           icon: 'font',
           starType: 'i',
-          starOff: 'icon md-star',
-          starOn: 'icon md-star orange-600',
-          cancelOff: 'icon md-minus-circle',
-          cancelOn: 'icon md-minus-circle orange-600',
-          starHalf: 'icon md-star-half orange-500'
+          starOff: 'icon wb-star',
+          starOn: 'icon wb-star orange-600',
+          cancelOff: 'icon wb-minus-circle',
+          cancelOn: 'icon wb-minus-circle orange-600',
+          starHalf: 'icon wb-star-half orange-500'
         };
       }
     }]);

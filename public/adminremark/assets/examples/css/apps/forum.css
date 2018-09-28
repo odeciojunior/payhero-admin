@@ -15,13 +15,13 @@
     .app-forum .page-content .table .title > * {
       margin-right: 10px; }
     .app-forum .page-content .table .title .locked {
-      color: #9e9e9e; }
+      color: #a3afb7; }
   .app-forum .page-content .table .sticky-top {
     font-size: 90%; }
     .app-forum .page-content .table .sticky-top .icon {
       margin-right: 4px; }
   .app-forum .page-content .table .metas {
-    color: #9e9e9e; }
+    color: #a3afb7; }
     .app-forum .page-content .table .metas > span {
       position: relative;
       margin-right: 10px; }
@@ -37,7 +37,7 @@
     text-align: right; }
 
 .app-forum .slidePanel-header {
-  background-color: #7cb342; }
+  background-color: #6da611; }
   .app-forum .slidePanel-header::after {
     display: block;
     clear: both;
@@ -57,7 +57,7 @@
   margin-right: 6px; }
 
 .app-forum .slidePanel .time {
-  color: #9e9e9e; }
+  color: #a3afb7; }
 
 .app-forum .slidePanel .forum-header, .app-forum .slidePanel .forum-content, .app-forum .slidePanel .forum-metas {
   margin-bottom: 20px; }

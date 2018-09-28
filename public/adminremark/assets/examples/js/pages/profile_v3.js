@@ -23,7 +23,6 @@
   // ---------------------
   var galleryNum = (0, _jquery2.default)('.imgs-gallery').length;
   for (var i = 0; i < galleryNum; i++) {
-
     (0, _jquery2.default)((0, _jquery2.default)('.imgs-gallery')[i]).magnificPopup({
       delegate: 'a',
       type: 'image',
@@ -42,7 +41,6 @@
       }
     });
   }
-
   //bind input focus
   (0, _jquery2.default)('.wall-comment-reply .form-control').on('focus', function (event) {
     var $this = (0, _jquery2.default)(this);

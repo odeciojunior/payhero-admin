@@ -27,55 +27,44 @@
 
 // Variables
 // ========================================================================
-
-$steps-margin-bottom:              $line-height-computed !default;
-$step-padding-horizontal:          20px !default;
-$step-padding-vertical:            12px !default;
-
+$steps-margin-bottom: $line-height-computed !default;
+$step-padding-horizontal: 20px !default;
+$step-padding-vertical: 12px !default;
 $step-vertical-padding-horizontal: 20px !default;
-$step-vertical-padding-vertical:   18px !default;
-
-$step-color:                       $gray !default;
-$step-bg:                          $bg-color-base !default;
-$step-number-bg:                   $gray-lighter !default;
-$step-number-color:                $inverse !default;
-
-$step-current-color:               $inverse !default;
-$step-current-bg:                  $brand-primary !default;
-
-$step-done-color:                  $inverse !default;
-$step-done-bg:                     $brand-success !default;
-
-$step-error-color:                 $inverse !default;
-$step-error-bg:                    $brand-danger !default;
-
-$step-disabled-color:              $gray-light !default;
-
-$step-font-size:                   inherit !default;
-$step-title-font-size:             20px !default;
-$step-icon-font-size:              27px !default;
-$step-number-font-size:            24px !default;
-$step-number-size:                 40px !default;
-
-$step-lg-padding-horizontal:       20px !default;
-$step-lg-padding-vertical:         20px !default;
-$step-lg-font-size:                16px !default;
-$step-lg-title-font-size:          22px !default;
-$step-lg-icon-font-size:           32px !default;
-$step-lg-number-font-size:         28px !default;
-$step-lg-number-size:              46px !default;
-
-$step-sm-font-size:                12px !default;
-$step-sm-title-font-size:          18px !default;
-$step-sm-icon-font-size:           24px !default;
-$step-sm-number-font-size:         24px !default;
-$step-sm-number-size:              30px !default;
-
-$step-xs-font-size:                10px !default;
-$step-xs-title-font-size:          16px !default;
-$step-xs-icon-font-size:           22px !default;
-$step-xs-number-font-size:         20px !default;
-$step-xs-number-size:              24px !default;
+$step-vertical-padding-vertical: 18px !default;
+$step-color: $gray-400 !default;
+$step-bg: $bg-color-base !default;
+$step-number-bg: $gray-200 !default;
+$step-number-color: $inverse !default;
+$step-current-color: $inverse !default;
+$step-current-bg: $brand-primary !default;
+$step-done-color: $inverse !default;
+$step-done-bg: $brand-success !default;
+$step-error-color: $inverse !default;
+$step-error-bg: $brand-danger !default;
+$step-disabled-color: $gray-300 !default;
+$step-font-size: inherit !default;
+$step-title-font-size: 20px !default;
+$step-icon-font-size: $step-title-font-size !default;
+$step-number-font-size: 24px !default;
+$step-number-size: 40px !default;
+$step-lg-padding-horizontal: 20px !default;
+$step-lg-padding-vertical: 20px !default;
+$step-lg-font-size: 16px !default;
+$step-lg-title-font-size: 22px !default;
+$step-lg-icon-font-size: $step-lg-title-font-size !default;
+$step-lg-number-font-size: 28px !default;
+$step-lg-number-size: 46px !default;
+$step-sm-font-size: 12px !default;
+$step-sm-title-font-size: 18px !default;
+$step-sm-icon-font-size: $step-sm-title-font-size !default;
+$step-sm-number-font-size: 24px !default;
+$step-sm-number-size: 30px !default;
+$step-xs-font-size: 10px !default;
+$step-xs-title-font-size: 16px !default;
+$step-xs-icon-font-size: $step-xs-title-font-size !default;
+$step-xs-number-font-size: 20px !default;
+$step-xs-number-size: 24px !default;
 
 // Component: steps
 // ========================================================================
@@ -89,8 +78,8 @@ $step-xs-number-size:              24px !default;
   position: relative;
   padding: $step-padding-vertical $step-padding-horizontal;
   margin: 0;
-  color: $step-color;
   font-size: $step-font-size;
+  color: $step-color;
   vertical-align: top;
   background-color: $step-bg;
   border-radius: 0;
@@ -98,14 +87,13 @@ $step-xs-number-size:              24px !default;
 
 .step-icon {
   float: left;
+  margin-right: .5em;
   font-size: $step-icon-font-size;
-  margin-right: 0.5em;
 }
 
 .step-number {
   position: absolute;
   top: 50%;
-  @include transform(translateY(-50%));
   left: $step-padding-horizontal;
   width: $step-number-size;
   height: $step-number-size;
@@ -115,6 +103,7 @@ $step-xs-number-size:              24px !default;
   text-align: center;
   background: $step-number-bg;
   border-radius: 50%;
+  transform: translateY(-50%);
 
   & ~ .step-desc {
     min-height: $step-number-size;
@@ -123,9 +112,9 @@ $step-xs-number-size:              24px !default;
 }
 
 .step-title {
+  margin-bottom: 0;
   font-size: $step-title-font-size;
   color: $subtitle-color;
-  margin-bottom: 0;
   //.text-truncate();
 }
 
@@ -142,7 +131,7 @@ $step-xs-number-size:              24px !default;
 
 .steps-vertical {
   // @if $enable-flex {
-    flex-direction: column;
+  flex-direction: column;
   // } @else {
   //   .step {
   //     &,
@@ -227,6 +216,7 @@ $step-xs-number-size:              24px !default;
     &-icon {
       font-size: $step-lg-icon-font-size;
     }
+
     &-title {
       font-size: $step-lg-title-font-size;
     }
@@ -252,6 +242,7 @@ $step-xs-number-size:              24px !default;
     &-icon {
       font-size: $step-sm-icon-font-size;
     }
+
     &-title {
       font-size: $step-sm-title-font-size;
     }
@@ -277,6 +268,7 @@ $step-xs-number-size:              24px !default;
     &-icon {
       font-size: $step-xs-icon-font-size;
     }
+
     &-title {
       font-size: $step-xs-title-font-size;
     }

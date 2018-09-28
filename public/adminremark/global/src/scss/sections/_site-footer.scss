@@ -1,12 +1,13 @@
-
-
 .site-footer {
+  @include clearfix();
+
+  @include media-breakpoint-down(xs) {
+    height: auto;
+  }
   height: $site-footer-height;
   padding: $site-footer-vertical-padding $page-horizontal-padding;
-  background-color:  $site-footer-bg;
+  background-color: $site-footer-bg;
   border-top: 1px solid $site-footer-divider-color;
-
-  @include clearfix();
 
   &-legal {
     float: left;
@@ -26,10 +27,6 @@
     &, &:hover, &:active {
       text-decoration: none;
     }
-  }
-
-  @include media-breakpoint-down(xs) {
-    height: auto;
   }
 
   &-legal, &-right, &-actions {

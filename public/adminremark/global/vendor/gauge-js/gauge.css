@@ -10,8 +10,8 @@
     bottom: 15%;
     width: 100%;
     font-size: 24px;
-    font-weight: 500;
-    color: #616161; }
+    font-weight: 700;
+    color: #37474f; }
 
 .gauge-sm canvas {
   width: 150px; }
@@ -37,8 +37,8 @@
     top: 50%;
     width: 100%;
     font-size: 24px;
-    font-weight: 500;
-    color: #616161;
+    font-weight: 700;
+    color: #37474f;
     -webkit-transform: translateY(-50%);
             transform: translateY(-50%); }
 

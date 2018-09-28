@@ -32,17 +32,17 @@
   margin: 5px 0;
   text-decoration: none;
   background: #fff;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e4eaec;
   border-radius: 0.215rem; }
   .dd-handle:hover {
-    color: #3f51b5;
-    background: #eeeeee; }
+    color: #589ffc;
+    background: #f3f7f9; }
 
 .dd-content {
   padding: 10px;
   margin-top: -5px;
   background: #fff;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e4eaec;
   border-top: 0; }
 
 .dd-item > button {
@@ -99,15 +99,15 @@
 
 .dd-placeholder {
   min-height: 30px;
-  background: #eeeeee;
-  border: 1px dashed #dee2e6; }
+  background: #f3f7f9;
+  border: 1px dashed #e4eaec; }
 
 .dd-empty {
   min-height: 100px;
-  background-color: #eeeeee;
+  background-color: #f3f7f9;
   background-position: 0 0, 30px 30px;
   background-size: 60px 60px;
-  border: 1px dashed #dee2e6; }
+  border: 1px dashed #e4eaec; }
 
 .dd-item-alt .dd-handle {
   position: absolute;
@@ -116,7 +116,7 @@
   display: inline-block;
   width: 30px;
   margin: 0;
-  font-family: "Material Design Iconic";
+  font-family: "Web Icons";
   font-style: normal;
   font-weight: normal;
   text-align: center;
@@ -133,9 +133,9 @@
   .dd-item-alt .dd-handle:before {
     position: relative;
     top: auto;
-    content: ""; }
+    content: ""; }
   .dd-item-alt .dd-handle:hover {
-    background: #eeeeee; }
+    background: #f3f7f9; }
 
 .dd-item-alt > button {
   margin-left: 30px; }
@@ -148,11 +148,11 @@
   margin: 5px 0;
   text-decoration: none;
   background: #fff;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e4eaec;
   border-radius: 0.215rem; }
   .dd-item-alt .dd-content:hover {
-    color: #3f51b5;
-    background: #eeeeee; }
+    color: #589ffc;
+    background: #f3f7f9; }
 
 .dd-item-with-media .dd-handle {
   border-bottom-right-radius: 0;

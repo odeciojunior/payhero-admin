@@ -142,7 +142,7 @@
     .grid-stack > .grid-stack-item > .ui-resizable-se, .grid-stack > .grid-stack-item > .ui-resizable-sw {
       padding: 2px 3px 0 0;
       margin: 0;
-      font: normal normal normal 10px/1 "Material Design Iconic";
+      font: normal normal normal 10px/1 "Web Icons";
       font-size: inherit;
       color: gray;
       text-align: right;
@@ -150,7 +150,7 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale; }
       .grid-stack > .grid-stack-item > .ui-resizable-se::before, .grid-stack > .grid-stack-item > .ui-resizable-sw::before {
-        content: ""; }
+        content: ""; }
     .grid-stack > .grid-stack-item > .ui-resizable-sw {
       -webkit-transform: rotate(90deg);
       transform: rotate(90deg);

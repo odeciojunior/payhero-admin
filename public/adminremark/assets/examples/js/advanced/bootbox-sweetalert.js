@@ -118,6 +118,7 @@
 
   // Example Styles
   // --------------
+
   (function () {
     (0, _jquery2.default)('#exampleSuccessMessage').on("click", function () {
       swal({

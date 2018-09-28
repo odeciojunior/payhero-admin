@@ -1,4 +1,4 @@
-@mixin popover-variant($color, $bg, $border){
+@mixin popover-variant($color, $bg, $border) {
   .popover-header {
     color: $color;
     background-color: $bg;
@@ -12,13 +12,13 @@
   }
 
   // &.bs-popover-top .arrow, &.popover-top .arrow {
-  //   &::before {
-  //     border-top-color: $border;
-  //   }
+    // &::before {
+    //   border-top-color: $border;
+    // }
 
-  //   &::after {
-  //     border-top-color: $bg;
-  //   }
+    // &::after {
+    //   border-top-color: $bg;
+    // }
   // }
 
   &.bs-popover-bottom .arrow, &.popover-bottom .arrow {
@@ -32,22 +32,22 @@
   }
 
   // &.bs-popover-left .arrow, &.popover-left .arrow {
-  //   &::before {
-  //     border-left-color: $border;
-  //   }
+    // &::before {
+    //   border-left-color: $border;
+    // }
 
-  //   &::after {
-  //     border-left-color: $bg;
-  //   }
+    // &::after {
+    //   border-left-color: $bg;
+    // }
   // }
 
   // &.bs-popover-right .arrow, &.popover-right .arrow {
-  //   &::before {
-  //     border-right-color: $border;
-  //   }
+    // &::before {
+    //   border-right-color: $border;
+    // }
 
-  //   &::after {
-  //     border-right-color: $bg;
-  //   }
+    // &::after {
+    //   border-right-color: $bg;
+    // }
   // }
 }

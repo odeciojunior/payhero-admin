@@ -67,11 +67,9 @@
         this.setupGridMenu();
         this.setupFullScreen();
         this.setupMegaNavbar();
-        this.setupWave();
         this.setupTour();
         this.setupNavbarCollpase();
-        // Dropdown menu setup
-        // ===================
+        // Dropdown menu setup ===================
         this.$el.on('click', '.dropdown-menu-media', function (e) {
           e.stopPropagation();
         });
@@ -176,8 +174,7 @@
     }, {
       key: 'initBootstrap',
       value: function initBootstrap() {
-        // Tooltip setup
-        // =============
+        // Tooltip setup =============
         $DOC.tooltip({
           selector: '[data-tooltip=true]',
           container: 'body'
@@ -250,7 +247,6 @@
           }
         }).on('shown.bs.dropdown', function (e) {
           var $menu = (0, _jquery2.default)(e.target).find('.dropdown-menu-media > .list-group');
-
           if ($menu.length > 0) {
             var api = $menu.data('asScrollable');
             if (api) {
@@ -270,7 +266,7 @@
       value: function setupMenubar() {
         var _this3 = this;
 
-        (0, _jquery2.default)(document).on('click', '[data-toggle="menubar"]', function () {
+        (0, _jquery2.default)(document).on('click', '[data-toggle="menubar"]:visible', function () {
           var type = _this3.menubar.type;
 
           switch (type) {
@@ -302,13 +298,13 @@
     }, {
       key: 'setupNavbarCollpase',
       value: function setupNavbarCollpase() {
-        (0, _jquery2.default)(document).on('click', "[data-target='#site-navbar-collapse']", function (e) {
+        (0, _jquery2.default)(document).on('click', '[data-target=\'#site-navbar-collapse\']', function (e) {
           var $trigger = (0, _jquery2.default)(this);
           var isClose = $trigger.hasClass('collapsed');
-          $BODY.addClass("site-navbar-collapsing");
-          $BODY.toggleClass("site-navbar-collapse-show", !isClose);
+          $BODY.addClass('site-navbar-collapsing');
+          $BODY.toggleClass('site-navbar-collapse-show', !isClose);
           setTimeout(function () {
-            $BODY.removeClass("site-navbar-collapsing");
+            $BODY.removeClass('site-navbar-collapsing');
           }, 350);
         });
       }
@@ -362,22 +358,6 @@
           (0, _jquery2.default)('.site-tour-trigger').on('click', function () {
             self.tour.start();
           });
-        }
-        // if (window.localStorage && window.localStorage.getItem('startTour') && (flag !== true)) {
-        //   return;
-        // } else {
-        //   this.tour.start();
-        //   window.localStorage.setItem('startTour', true);
-        // }
-      }
-    }, {
-      key: 'setupWave',
-      value: function setupWave() {
-        if (typeof Waves !== 'undefined') {
-          Waves.init();
-          Waves.attach('.site-menu-item > a', ['waves-classic']);
-          Waves.attach(".site-navbar .navbar-toolbar a", ["waves-light", "waves-round"]);
-          Waves.attach('.btn', ['waves-classic']);
         }
       }
     }]);

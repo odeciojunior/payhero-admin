@@ -74,13 +74,13 @@ select .input-group.input-group-lg .twitter-typeahead .tt-input, select .input-g
     display: table-cell !important; }
 
 .twitter-typeahead .tt-hint {
-  color: #616161; }
+  color: #a3afb7; }
 
 .twitter-typeahead .tt-input {
   z-index: 2; }
   .twitter-typeahead .tt-input[disabled], .twitter-typeahead .tt-input[readonly], fieldset[disabled] .twitter-typeahead .tt-input {
     cursor: not-allowed;
-    background-color: #eeeeee !important; }
+    background-color: #f3f7f9 !important; }
 
 .tt-dropdown-menu, .tt-menu {
   position: absolute;
@@ -96,23 +96,23 @@ select .input-group.input-group-lg .twitter-typeahead .tt-input, select .input-g
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ccc;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e4eaec;
   border-radius: 0.215rem;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05); }
   .tt-dropdown-menu .tt-suggestion, .tt-menu .tt-suggestion {
     display: block;
     padding: 3px 20px;
     clear: both;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.57142857;
-    color: #757575; }
+    color: #76838f; }
     .tt-dropdown-menu .tt-suggestion.tt-cursor, .tt-dropdown-menu .tt-suggestion:hover, .tt-menu .tt-suggestion.tt-cursor, .tt-menu .tt-suggestion:hover {
-      color: #757575;
+      color: #76838f;
       text-decoration: none;
       cursor: pointer;
-      background-color: #eeeeee;
+      background-color: #f3f7f9;
       outline: 0; }
       .tt-dropdown-menu .tt-suggestion.tt-cursor a, .tt-dropdown-menu .tt-suggestion:hover a, .tt-menu .tt-suggestion.tt-cursor a, .tt-menu .tt-suggestion:hover a {
-        color: #757575; }
+        color: #76838f; }
     .tt-dropdown-menu .tt-suggestion p, .tt-menu .tt-suggestion p {
       margin: 0; }

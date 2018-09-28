@@ -6,20 +6,20 @@ grayscale style (c) MY Sun <simonmysun@gmail.com>
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
+  padding: .5em;
   color: #333;
   background: #fff;
 }
 
 .hljs-comment, .hljs-quote {
-  font-style: italic;
   color: #777;
+  font-style: italic;
 }
 
 .hljs-keyword, .hljs-selector-tag, .hljs-subst {
-  font-weight: bold;
   color: #333;
+  font-weight: bold;
 }
 
 .hljs-number, .hljs-literal {
@@ -32,8 +32,8 @@ grayscale style (c) MY Sun <simonmysun@gmail.com>
 }
 
 .hljs-title, .hljs-section, .hljs-selector-id {
-  font-weight: bold;
   color: #000;
+  font-weight: bold;
 }
 
 .hljs-subst {
@@ -41,8 +41,8 @@ grayscale style (c) MY Sun <simonmysun@gmail.com>
 }
 
 .hljs-class .hljs-title, .hljs-type, .hljs-name {
-  font-weight: bold;
   color: #333;
+  font-weight: bold;
 }
 
 .hljs-tag {
@@ -65,8 +65,8 @@ grayscale style (c) MY Sun <simonmysun@gmail.com>
 }
 
 .hljs-meta {
-  font-weight: bold;
   color: #999;
+  font-weight: bold;
 }
 
 .hljs-deletion {

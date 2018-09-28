@@ -253,10 +253,10 @@ $input-bg-disabled: $input-disabled-bg;
 
 .md-footer {
   .icon-ok {
-    font-family: $zmdi-font-name;
+    font-family: "#{$wb-font-family}";
 
     &:before {
-      content: '#{$zmdi-var-check}';
+      content: "#{$wb-var-check}";
     }
   }
 }

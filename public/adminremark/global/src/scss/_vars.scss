@@ -1,6 +1,9 @@
 // Bootstrap's functions
 @import "bootstrap/functions";
 
+// Bootstrap_extend's functions
+// @import "bootstrap_extend/functions";
+
 // Bootstrap's variables
 @import 'bootstrap/variables';
 
@@ -22,8 +25,8 @@
 // Load components variables
 @import 'vars-components';
 
-// Material Design
-@import 'material-design/variables';
+//web icons
+@import 'web-icons/variables';
 
 // Load Custom variables
 @import 'vars-customs';

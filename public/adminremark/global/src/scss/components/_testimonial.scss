@@ -10,13 +10,10 @@
 
 // Variables
 // ========================================================================
-
-$testimonial-content-bg:          $bg-color-base !default;
-$testimonial-content-border:      $border-color-base !default;
-$testimonial-control-color:       $gray-light !default;
-$testimonial-control-font-size:   26px !default;
+$testimonial-content-bg: $bg-color-base !default;
+$testimonial-content-border: $border-color-base !default;
+$testimonial-control-color: $gray-300 !default;
 $testimonial-control-hover-color: $hover-color-base !default;
-
 
 // Component: Testimonial
 // ========================================================================
@@ -52,9 +49,8 @@ $testimonial-control-hover-color: $hover-color-base !default;
     display: block;
     width: 14px;
     height: 14px;
-    content: '';
+    content: "";
     background-color: $testimonial-content-bg;
-
     transform: rotate(45deg);
   }
 
@@ -104,19 +100,19 @@ $testimonial-control-hover-color: $hover-color-base !default;
       left: auto;
     }
   }
+
   .testimonial-image {
     float: right;
     margin-right: 20px;
     margin-left: 0;
   }
-  .testimonial-author,
-  .testimonial-company {
-    margin-left: 0;
+
+  .testimonial-author, .testimonial-company {
     margin-right: 75px;
+    margin-left: 0;
     text-align: right;
   }
 }
-
 
 // Modifier: `testimonial-top`
 // ========================================================================
@@ -150,17 +146,13 @@ $testimonial-control-hover-color: $hover-color-base !default;
     display: none;
     width: 100%;
     padding: 10px;
+    transition: left .6s ease-in-out 0s;
 
-    transition: left 0.6s ease-in-out 0s;
-
-    &.active,
-    &.next,
-    &.prev {
+    &.active, &.next, &.prev {
       display: block;
     }
 
-    &.next,
-    &.prev {
+    &.next, &.prev {
       position: absolute;
       top: 0;
       width: 100%;
@@ -174,8 +166,7 @@ $testimonial-control-hover-color: $hover-color-base !default;
       left: -100%;
     }
 
-    &.next.left,
-    &.prev.right {
+    &.next.left, &.prev.right {
       left: 0;
     }
 

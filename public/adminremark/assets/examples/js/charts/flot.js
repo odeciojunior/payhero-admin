@@ -59,14 +59,14 @@
       data: getRandomData()
     }], {
 
-      colors: [Config.colors("grey", 200)],
+      colors: [Config.colors("blue-grey", 100)],
       series: {
         shadowSize: 0,
         lines: {
           show: true,
           lineWidth: 0,
           fill: true,
-          fillColor: Config.colors("grey", 200)
+          fillColor: Config.colors("blue-grey", 100)
         }
       },
       legend: {
@@ -165,7 +165,7 @@
           lineWidth: 1
         }
       },
-      colors: [Config.colors("primary", 500)],
+      colors: [Config.colors("primary", 400)],
       grid: {
         // show: true,
         hoverable: true,
@@ -306,7 +306,7 @@
         show: true,
         align: "center",
         fill: true,
-        fillColor: Config.colors("grey", 200)
+        fillColor: Config.colors("blue-grey", 100)
       }
     }, {
       data: b1,
@@ -384,7 +384,7 @@
       series: {
         shadowSize: 0
       },
-      colors: [Config.colors("grey", 200), Config.colors("orange", 200), Config.colors("green", 600), Config.colors("yellow", 600), Config.colors("primary", 600), Config.colors("purple", 200)]
+      colors: [Config.colors("blue-grey", 100), Config.colors("orange", 200), Config.colors("green", 600), Config.colors("yellow", 600), Config.colors("primary", 600), Config.colors("purple", 200)]
     });
   })();
 
@@ -421,7 +421,7 @@
       data: a2,
       bars: {
         fill: true,
-        fillColor: Config.colors("grey", 400)
+        fillColor: Config.colors("blue-grey", 300)
       }
     }, {
       data: a3,
@@ -450,7 +450,7 @@
           barWidth: 0.38
         }
       },
-      colors: [Config.colors("light-green", 500), Config.colors("grey", 400), Config.colors("primary", 500), Config.colors("purple", 500)],
+      colors: [Config.colors("light-green", 500), Config.colors("blue-grey", 300), Config.colors("primary", 500), Config.colors("purple", 500)],
       xaxis: {
         tickLength: 0,
         color: "#474e54",
@@ -518,7 +518,7 @@
       data: a22,
       bars: {
         fill: true,
-        fillColor: Config.colors("grey", 400)
+        fillColor: Config.colors("blue-grey", 300)
       }
     }, {
       data: a33,
@@ -540,7 +540,7 @@
           horizontal: true
         }
       },
-      colors: [Config.colors("primary", 500), Config.colors("grey", 400), Config.colors("red", 500)],
+      colors: [Config.colors("primary", 500), Config.colors("blue-grey", 300), Config.colors("red", 500)],
       xaxis: {
         color: "#474e54",
         font: {
@@ -604,7 +604,7 @@
             show: true
           }
         },
-        colors: [Config.colors("primary", 500), Config.colors("grey", 300)]
+        colors: [Config.colors("primary", 500), Config.colors("blue-grey", 200)]
       });
     });
 
@@ -621,7 +621,7 @@
             }
           }
         },
-        colors: [Config.colors("primary", 500), Config.colors("grey", 300)],
+        colors: [Config.colors("primary", 500), Config.colors("blue-grey", 200)],
         legend: {
           show: false
         }
@@ -644,7 +644,7 @@
             }
           }
         },
-        colors: [Config.colors("primary", 500), Config.colors("grey", 300)],
+        colors: [Config.colors("primary", 500), Config.colors("blue-grey", 200)],
         legend: {
           show: false
         }
@@ -667,7 +667,7 @@
             }
           }
         },
-        colors: [_jquery2.default.colors("primary", 500), _jquery2.default.colors("grey", 300)],
+        colors: [Config.colors("primary", 500), Config.colors("blue-grey", 200)],
         legend: {
           show: false
         }
@@ -685,7 +685,7 @@
             show: true
           }
         },
-        colors: [Config.colors("primary", 500), Config.colors("grey", 300)]
+        colors: [Config.colors("primary", 500), Config.colors("blue-grey", 200)]
       });
     });
 
@@ -699,7 +699,7 @@
             show: true
           }
         },
-        colors: [Config.colors("primary", 500), Config.colors("grey", 300)],
+        colors: [Config.colors("primary", 500), Config.colors("blue-grey", 200)],
         grid: {
           hoverable: true,
           clickable: true

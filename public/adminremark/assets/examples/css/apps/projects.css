@@ -27,6 +27,11 @@
     color: #bdbdbd; }
     .app-projects .overlay .btn-icon:hover {
       color: white; }
+  .app-projects .overlay .project-button {
+    color: #fff; }
+    .app-projects .overlay .project-button:hover {
+      background-color: white;
+      color: #526069; }
   .app-projects .overlay .dropdown .dropdown-menu > li > a {
     padding: 6px 8px; }
   .app-projects .overlay .dropdown:hover .dropdown-toggle {
@@ -34,7 +39,7 @@
   .app-projects .overlay .dropdown:hover .dropdown-menu {
     display: block; }
   .app-projects .overlay .dropdown-menu {
-    color: #757575;
+    color: #76838f;
     margin-top: 0;
     min-width: 110px; }
     .app-projects .overlay .dropdown-menu a {

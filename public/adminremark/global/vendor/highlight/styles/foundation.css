@@ -8,10 +8,10 @@ Date: 2013-04-02
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: black;
+  padding: .5em;
   background: #eee;
+  color: black;
 }
 
 .hljs-link, .hljs-emphasis, .hljs-attribute, .hljs-addition {
@@ -31,8 +31,8 @@ Date: 2013-04-02
 }
 
 .hljs-quote, .hljs-comment {
-  font-style: italic;
   color: #998;
+  font-style: italic;
 }
 
 .hljs-section, .hljs-title {
@@ -60,8 +60,8 @@ Date: 2013-04-02
 }
 
 .hljs-regexp {
-  color: #808;
   background-color: #fff0ff;
+  color: #808;
 }
 
 .hljs-symbol {

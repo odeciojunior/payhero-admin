@@ -14,32 +14,25 @@
 
 // Variables
 // ========================================================================
-
-$bg-white-color:   $text-color !default;
-$bg-white-bg:      $color-white !default;
-
+$bg-white-color: $text-color !default;
+$bg-white-bg: $color-white !default;
 $bg-primary-color: $inverse !default;
-$bg-primary-bg:    $brand-primary !default;
-
+$bg-primary-bg: $brand-primary !default;
 $bg-success-color: $inverse !default;
-$bg-success-bg:    $brand-success !default;
-
-$bg-info-color:    $inverse !default;
-$bg-info-bg:       $brand-info !default;
-
+$bg-success-bg: $brand-success !default;
+$bg-info-color: $inverse !default;
+$bg-info-bg: $brand-info !default;
 $bg-warning-color: $inverse !default;
-$bg-warning-bg:    $brand-warning !default;
-
-$bg-danger-color:  $inverse !default;
-$bg-danger-bg:     $brand-danger !default;
-
-$bg-dark-color:    $inverse !default;
-$bg-dark-bg:       $brand-dark !default;
+$bg-warning-bg: $brand-warning !default;
+$bg-danger-color: $inverse !default;
+$bg-danger-bg: $brand-danger !default;
+$bg-dark-color: $inverse !default;
+$bg-dark-bg: $brand-dark !default;
 
 // Mixins
 // ========================================================================
 
-@mixin bg-variant($parent, $color, $bg){
+@mixin bg-variant($parent, $color, $bg) {
   color: $color;
   background-color: $bg;
 
@@ -47,8 +40,7 @@ $bg-dark-bg:       $brand-dark !default;
     background-color: lighten($bg, 10%);
   }
 
-  a,
-  a#{$parent} {
+  a, a#{$parent} {
     color: $color;
 
     &:hover {
@@ -88,6 +80,3 @@ $bg-dark-bg:       $brand-dark !default;
 .bg-dark {
   @include bg-variant(".bg-dark", $bg-dark-color, $bg-dark-bg);
 }
-
-
-

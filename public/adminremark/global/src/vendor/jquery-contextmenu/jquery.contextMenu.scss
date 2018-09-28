@@ -14,8 +14,25 @@
  * Date: @DATE
  */
 @import 'vars';
-
 @import "scss/variables";
+
+// $context-menu-icons: (
+// add: "",// wb-add-file
+
+// copy: "",
+
+// cut: "", // wb-sisscs
+
+// delete: "",// wb-close
+
+// edit: "",
+
+// loading: "",// wb-refresh
+
+// paste: "",// wb-clipboard
+
+// quit: "",// wb-power
+// );
 
 // Container Sizing
 $context-menu-min-width: $dropdown-min-width;
@@ -31,7 +48,7 @@ $context-menu-border-color: $dropdown-border-color;
 $context-menu-box-shadow: $dropdown-box-shadow;
 
 // Item Default
-$context-menu-item-padding: $dropdown-link-padding;
+$context-menu-item-padding: $dropdown-item-padding-y $dropdown-item-padding-x;
 $context-menu-text-color: $dropdown-link-color;
 $context-menu-item-color: $context-menu-background-color;
 
@@ -53,8 +70,8 @@ $context-menu-separator-color: $dropdown-divider-bg;
 $context-menu-separator-margin: .35em 0;
 
 // Icons
-// $context-menu-icon-font-path: '../../fonts/material-design';
-// $context-menu-icon-font-name: 'Material-Design-Iconic-Font';
+// $context-menu-icon-font-path: '../../fonts/web-icons';
+// $context-menu-icon-font-name: 'Web Icons';
 $context-menu-icon-size: 1rem;
 $context-menu-icon-color: $text-color;
 $context-menu-icon-color-hover: $context-menu-text-color-hover;
@@ -62,24 +79,25 @@ $context-menu-icon-color-hover: $context-menu-text-color-hover;
 @import "scss/icons";
 
 .context-menu-icon {
-  @include base-context-menu-icon($zmdi-font-name);
+  @include base-context-menu-icon($wb-font-family);
 
   &.context-menu-hover:before {
     color: $context-menu-icon-color-hover;
   }
+
   &.context-menu-disabled::before {
     color: $context-menu-text-color-disabled;
   }
 
   &.context-menu-icon-loading:before {
-    animation:cm-spin 2s infinite;
+    animation: cm-spin 2s infinite;
   }
 
   &.context-menu-icon--fa {
-    display: list-item;
-    font-family: inherit;
 
     @include base-context-menu-icon(FontAwesome);
+    display: list-item;
+    font-family: inherit;
 
     &.context-menu-hover:before {
       color: $context-menu-icon-color-hover;

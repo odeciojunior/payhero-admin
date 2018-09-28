@@ -38,10 +38,9 @@
     $el.bootstrapTable('destroy').bootstrapTable({
       columns: columns,
       data: data,
-      iconsPrefix: 'icon',
-      iconSize: 'icon',
+      iconSize: 'outline',
       icons: {
-        columns: 'md-view-list-alt'
+        columns: 'wb-list-bulleted'
       }
     });
   }
@@ -103,13 +102,12 @@
     (0, _jquery2.default)('#exampleTableColumns').bootstrapTable({
       url: "../../assets/data/bootstrap_table_test.json",
       height: "400",
+      iconSize: 'outline',
       showColumns: true,
-      iconsPrefix: 'icon',
-      iconSize: 'icon',
       icons: {
-        refresh: 'md-refresh',
-        toggle: 'md-receipt',
-        columns: 'md-view-list-alt'
+        refresh: 'wb-refresh',
+        toggle: 'wb-order',
+        columns: 'wb-list-bulleted'
       }
     });
   })();
@@ -128,12 +126,11 @@
       showToggle: true,
       showColumns: true,
       toolbar: '#exampleToolbar',
-      iconsPrefix: 'icon',
-      iconSize: 'icon',
+      iconSize: 'outline',
       icons: {
-        refresh: 'md-refresh',
-        toggle: 'md-receipt',
-        columns: 'md-view-list-alt'
+        refresh: 'wb-refresh',
+        toggle: 'wb-order',
+        columns: 'wb-list-bulleted'
       }
     });
   })();
@@ -148,12 +145,12 @@
       showRefresh: true,
       showToggle: true,
       showColumns: true,
+      iconSize: 'outline',
       toolbar: '#exampleTableEventsToolbar',
-      iconsPrefix: 'icon',
       icons: {
-        refresh: 'md-refresh',
-        toggle: 'md-receipt',
-        columns: 'md-view-list-alt'
+        refresh: 'wb-refresh',
+        toggle: 'wb-order',
+        columns: 'wb-list-bulleted'
       }
     });
 

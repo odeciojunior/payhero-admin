@@ -12,72 +12,63 @@
 
 // Variables
 // ========================================================================
-
-$timeline-line-width:                  2px !default;
-$timeline-line-color:                  $border-color-base !default;
-
-$timeline-dot-color:                   $color-white !default;
-$timeline-dot-bg:                      $brand-primary !default;
-$timeline-dot-border:                  $color-white !default;
-
-$timeline-dot-size:                    14px !default;
-$timeline-icon-size:                   40px !default;
-
-$timeline-item-reverse-top:            90px !default;
-$timeline-item-margin-bottom:          60px !default;
-$timeline-item-padding-horizontal:     40px !default;
-
-$timeline-info-bg:                     $gray-lighter !default;
-$timeline-info-border:                 $timeline-info-bg !default;
-$timeline-info-padding-horizontal:     20px !default;
-$timeline-info-line-height:            28px !default;
-$timeline-info-border-size:            1px !default;
-
-$timeline-period-bg:                   $page-bg !default;
-
-$timeline-nav-color:                   $color-white !default;
-$timeline-nav-bg:                      $brand-primary !default;
-$timeline-nav-hover-bg:                $brand-primary-hover !default;
-
-$timeline-feed-dot-size:               30px !default;
-$timeline-feed-item-margin-bottom:     $line-height-computed !default;
-$timeline-feed-item-padding-horizontal:30px !default;
+$timeline-line-width: 2px !default;
+$timeline-line-color: $border-color-base !default;
+$timeline-dot-color: $color-white !default;
+$timeline-dot-bg: $brand-primary !default;
+$timeline-dot-border: $color-white !default;
+$timeline-dot-size: 14px !default;
+$timeline-icon-size: 40px !default;
+$timeline-item-reverse-top: 90px !default;
+$timeline-item-margin-bottom: 60px !default;
+$timeline-item-padding-horizontal: 40px !default;
+$timeline-info-bg: $gray-200 !default;
+$timeline-info-border: $timeline-info-bg !default;
+$timeline-info-padding-horizontal: 20px !default;
+$timeline-info-line-height: 28px !default;
+$timeline-info-border-size: 1px !default;
+$timeline-period-bg: $page-bg !default;
+$timeline-nav-color: $color-white !default;
+$timeline-nav-bg: $brand-primary !default;
+$timeline-nav-hover-bg: $brand-primary-hover !default;
+$timeline-feed-dot-size: 30px !default;
+$timeline-feed-item-margin-bottom: $line-height-computed !default;
+$timeline-feed-item-padding-horizontal: 30px !default;
 
 // z-index
-$timeline-period-z-index:              ($zindex-base + 5) !default;
-$timeline-dot-z-index:                 ($zindex-base + 10) !default;
-
+$timeline-period-z-index: ($zindex-base + 5) !default;
+$timeline-dot-z-index: ($zindex-base + 10) !default;
 
 // Mixins
 // ========================================================================
 
-@mixin timeline-dot-size($size){
+@mixin timeline-dot-size($size) {
+  @include media-breakpoint-down(sm) {
+    margin-left: ($size / 2);
+
+    .timeline-dot {
+      margin-left: (- $size / 2);
+    }
+  }
+
   .timeline-dot {
     width: $size;
     height: $size;
-    margin-right: (-$size/2);
+    margin-right: (- $size / 2);
     line-height: $size;
   }
 
   .timeline-reverse {
     .timeline-dot {
-      margin-left: (-$size/2);
+      margin-left: (- $size / 2);
     }
   }
 
   &.timeline-single {
-    margin-left: ($size/2);
+    margin-left: ($size / 2);
 
     .timeline-dot {
-      margin-left: (-$size/2);
-    }
-  }
-
-  @include media-breakpoint-down(sm) {
-    margin-left: ($size/2);
-
-    .timeline-dot {
-      margin-left: (-$size/2);
+      margin-left: (- $size / 2);
     }
   }
 }
@@ -86,6 +77,7 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
 // ========================================================================
 
 .timeline {
+  @include clearfix();
   position: relative;
   padding: 0;
   margin-bottom: $line-height-computed;
@@ -98,16 +90,13 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
     bottom: 0;
     left: 50%;
     width: $timeline-line-width;
-    margin-left: (-$timeline-line-width / 2);
+    margin-left: (- $timeline-line-width / 2);
     content: "";
     background-color: $timeline-line-color;
   }
 
-  @include clearfix();
-
   &:not(.timeline-single) {
-    .timeline-item:first-child + .timeline-item,
-    .timeline-period + .timeline-item + .timeline-item {
+    .timeline-item:first-child + .timeline-item, .timeline-period + .timeline-item + .timeline-item {
       margin-top: $timeline-item-reverse-top;
     }
   }
@@ -120,7 +109,7 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
   width: 50%;
   padding-right: $timeline-item-padding-horizontal;
   margin-bottom: $timeline-item-margin-bottom;
-  
+
   &:not(.timeline-period) {
     @include clearfix();
   }
@@ -155,9 +144,9 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
   overflow: hidden;
 }
 
-
 .timeline-dot {
   position: absolute;
+  top: (($timeline-info-line-height + $timeline-info-border-size - $timeline-dot-size) / 2);
   right: 0;
   z-index: $timeline-dot-z-index;
   color: $timeline-dot-color;
@@ -165,8 +154,6 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
   cursor: pointer;
   background-color: $timeline-dot-bg;
   border-radius: 50%;
-
-  top: (($timeline-info-line-height + $timeline-info-border-size - $timeline-dot-size)/2);
 
   .timeline-reverse & {
     right: auto;
@@ -226,8 +213,7 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
   }
 
   .timeline-item {
-    &,
-    &.timeline-reverse {
+    &, &.timeline-reverse {
       float: none;
       width: 100%;
       padding-right: 0;
@@ -241,7 +227,7 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
     right: auto;
     left: 0;
     margin-right: 0;
-    margin-left: (-$timeline-dot-size/2);
+    margin-left: (- $timeline-dot-size / 2);
   }
 
   .timeline-info {
@@ -257,7 +243,6 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
     margin-left: 40px;
   }
 }
-
 
 // Modifier: `timeline-single`
 // ========================================================================
@@ -279,7 +264,7 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
     right: auto;
     left: 0;
     margin-right: 0;
-    margin-left: (-$timeline-dot-size/2);
+    margin-left: (- $timeline-dot-size / 2);
   }
 
   .timeline-info {
@@ -302,7 +287,7 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
   @include timeline-dot-size($timeline-icon-size);
 
   .timeline-dot {
-    top: (($timeline-info-line-height + $timeline-info-border-size - $timeline-icon-size)/2);
+    top: (($timeline-info-line-height + $timeline-info-border-size - $timeline-icon-size) / 2);
   }
 }
 
@@ -316,7 +301,6 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
 .timeline-avatar-sm {
   @include timeline-dot-size($avatar-size-sm);
 }
-
 
 .timeline-avatar-lg {
   @include timeline-dot-size($avatar-size-lg);
@@ -337,6 +321,13 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
 .timeline-feed {
   @include timeline-dot-size($timeline-feed-dot-size);
 
+  @include media-breakpoint-down(sm) {
+    .timeline-item {
+      padding-right: $timeline-feed-item-padding-horizontal;
+      margin-bottom: $timeline-feed-item-margin-bottom;
+    }
+  }
+
   &.timeline-simple {
     .timeline-dot {
       margin-top: 5px;
@@ -355,13 +346,6 @@ $timeline-dot-z-index:                 ($zindex-base + 10) !default;
   &.timeline-single {
     .timeline-item {
       padding-left: $timeline-feed-item-padding-horizontal;
-    }
-  }
-
-  @include media-breakpoint-down(sm) {
-    .timeline-item {
-      padding-right: $timeline-feed-item-padding-horizontal;
-      margin-bottom: $timeline-feed-item-margin-bottom;
     }
   }
 }

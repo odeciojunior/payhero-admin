@@ -1,8 +1,10 @@
-
 .site-navbar {
   background-color: $site-navbar-header-bg;
 
   .navbar-header {
+    @include media-breakpoint-up(md) {
+      width: $site-menubar-unfold-width;
+    }
     color: $site-navbar-header-color;
     background-color: transparent;
 
@@ -11,9 +13,7 @@
     }
 
     .hamburger {
-      &::before,
-      &::after,
-      .hamburger-bar {
+      &::before, &::after, .hamburger-bar {
         background-color: $site-navbar-header-color;
       }
     }
@@ -23,17 +23,12 @@
       color: $site-navbar-brand-color;
       cursor: pointer;
     }
-
-    @include media-breakpoint-up(md) {
-      width: $site-menubar-unfold-width;
-    }
   }
 
   .navbar-container {
     @include media-breakpoint-up(md) {
       margin-left: $site-menubar-unfold-width;
     }
-
     background-color: $inverse;
   }
 

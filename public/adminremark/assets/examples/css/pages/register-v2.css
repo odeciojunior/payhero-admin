@@ -3,7 +3,7 @@
   .page-register-v2:before {
     background-image: url("../../images/login.jpg"); }
   .page-register-v2.page-dark.layout-full:after {
-    background-color: rgba(33, 33, 33, 0.6); }
+    background-color: rgba(38, 50, 56, 0.6); }
   .page-register-v2 .page-brand-info {
     margin: 220px 100px 0 90px; }
     .page-register-v2 .page-brand-info .brand-img {
@@ -22,7 +22,7 @@
     height: auto;
     min-height: 100%;
     padding: 150px 60px 180px;
-    color: #757575;
+    color: #76838f;
     background: #fff; }
     .page-register-v2 .page-register-main .brand {
       margin-bottom: 60px; }
@@ -32,7 +32,7 @@
       display: inline-block;
       vertical-align: middle;
       margin: 11px 0 11px 20px;
-      color: #3f51b5; }
+      color: #3e8ef7; }
   .page-register-v2 form {
     width: 350px;
     margin: 45px 0 20px; }

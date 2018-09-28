@@ -36,11 +36,11 @@ class editlist {
     this.$delBtn.on('click', () => {
       if (typeof bootbox === 'undefined') return;
       bootbox.dialog({
-        message: "Do you want to delete the contact?",
+        message: 'Do you want to delete the contact?',
         buttons: {
           success: {
-            label: "Delete",
-            className: "btn-danger",
+            label: 'Delete',
+            className: 'btn-danger',
             callback() {
               self.$element.remove();
             }
@@ -79,7 +79,7 @@ class editlist {
 
       if (/^\_/.test(method)) {
         return false;
-      } else if ((/^(get)$/.test(method))) {
+      } else if (/^(get)$/.test(method)) {
         const api = this.first().data(pluginName);
         if (api && typeof api[method] === 'function') {
           return api[method](...args);

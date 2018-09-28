@@ -101,7 +101,7 @@
           });
 
           /* create new marker and add to map */
-          var popupInfo = '<div class=\'friend-popup-info\'><div class=\'detail\'>info</div><h3>' + $(this.friends[i]).find('.friend-name').html() + '</h3><p>' + $(this.friends[i]).find('.friend-title').html() + '</p></div><i class=\'icon md-chevron-right\'></i>';
+          var popupInfo = '<div class=\'friend-popup-info\'><div class=\'detail\'>info</div><h3>' + $(this.friends[i]).find('.friend-name').html() + '</h3><p>' + $(this.friends[i]).find('.friend-title').html() + '</p></div><i class=\'icon wb-chevron-right-mini\'></i>';
           var marker = L.marker(markerLatlng, {
             title: $(this.friends[i]).find('friend-name').html(),
             icon: friendImg
@@ -256,7 +256,6 @@
         var self = this;
 
         this.$allFriends.on('click', function () {
-
           $('.list-inline').on('click', function (event) {
             event.stopPropagation();
           });

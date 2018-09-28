@@ -29,7 +29,7 @@
       opacity: 0.6;
       border-radius: 50px;
 
-      font-family: $zmdi-font-name;
+      font-family: '#{$wb-font-family}';
       font-style: normal;
       font-weight: normal;
       text-rendering: auto;
@@ -52,7 +52,7 @@
       left: 10px;
 
       &:before {
-        content: $zmdi-var-chevron-left; //"←"
+        content: $wb-var-chevron-left;
       }
     }
 
@@ -60,7 +60,7 @@
       right: 10px;
 
       &:before {
-        content: $zmdi-var-chevron-right; // "→"
+        content: $wb-var-chevron-right;
       }
     }
   }

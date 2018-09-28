@@ -24,6 +24,7 @@
           level = i;
         }
       }
+
       for (var m = 1; m < level; m++) {
         path += '../';
       }
@@ -32,12 +33,11 @@
     };
 
     var layout = 'base';
-    // var levelPaht = layout;
-    var settingsName = 'remark.material.' + layout + '.skinTools';
+    var settingsName = 'remark.' + layout + '.skinTools';
     var settings = localStorage.getItem(settingsName);
 
     if (settings) {
-      if (settings[0] === "{") {
+      if (settings[0] === '{') {
         settings = JSON.parse(settings);
       }
 
@@ -48,40 +48,41 @@
         link.type = 'text/css';
         link.rel = 'stylesheet';
         link.href = getLevel(window.location.pathname, layout) + 'assets/skins/' + settings['primary'] + '.css';
-        link.id = "skinStyle";
+        link.id = 'skinStyle';
 
         head.appendChild(link);
       }
 
-      if (settings['sidebar'] && settings['sidebar'] === 'dark') {
+      if (settings['sidebar'] && settings['sidebar'] === 'light') {
         var menubarFn = setInterval(function () {
           var menubar = document.getElementsByClassName('site-menubar');
           if (menubar.length > 0) {
             clearInterval(menubarFn);
-            menubar[0].className += " site-menubar-dark";
+            menubar[0].className += ' site-menubar-light';
           }
         }, 5);
       }
 
       var navbarFn = setInterval(function () {
         var navbar = document.getElementsByClassName('site-navbar');
+
         if (navbar.length > 0) {
           clearInterval(navbarFn);
           if (settings['navbar'] && settings['navbar'] !== 'primary') {
             navbar[0].className += ' bg-' + settings['navbar'] + '-600';
           }
           if (settings['navbarInverse'] && settings['navbarInverse'] !== 'false') {
-            navbar[0].className += " navbar-inverse";
+            navbar[0].className += ' navbar-inverse';
           }
         }
       }, 5);
     }
 
     if (document.addEventListener) {
-      document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener('DOMContentLoaded', function () {
         var $body = $(document.body);
-        // $doc = $(document),
-        // $win = $(window);
+        var $doc = $(document);
+        var $win = $(window);
 
         var Storage = {
           set: function set(key, value) {
@@ -108,7 +109,7 @@
               return null;
             }
 
-            if (value[0] === "{") {
+            if (value[0] === '{') {
               value = JSON.parse(value);
             }
 
@@ -117,16 +118,16 @@
         };
 
         var Skintools = {
-          tpl: '<div class="site-skintools">' + '<div class="site-skintools-inner">' + '<div class="site-skintools-toggle">' + '<i class="icon md-settings primary-600"></i>' + '</div>' + '<div class="site-skintools-content">' + '<div class="nav-tabs-horizontal">' + '<ul role="tablist" class="nav nav-tabs nav-tabs-line">' + '<li role="presentation" class="nav-item"><a class="nav-link active" role="tab" aria-controls="skintoolsSidebar" href="#skintoolsSidebar" data-toggle="tab" aria-expanded="true">Sidebar</a></li>' + '<li class="nav-item" role="presentation"><a class="nav-link" role="tab" aria-controls="skintoolsNavbar" href="#skintoolsNavbar" data-toggle="tab" aria-expanded="false">Navbar</a></li>' + '<li class="nav-item" role="presentation"><a class="nav-link" role="tab" aria-controls="skintoolsPrimary" href="#skintoolsPrimary" data-toggle="tab" aria-expanded="false">Primary</a></li>' + '</ul>' + '<div class="tab-content">' + '<div role="tabpanel" id="skintoolsSidebar" class="tab-pane active"></div>' + '<div role="tabpanel" id="skintoolsNavbar" class="tab-pane"></div>' + '<div role="tabpanel" id="skintoolsPrimary" class="tab-pane"></div>' + '<button class="btn btn-block btn-primary mt-20" id="skintoolsReset" type="button">Reset</button>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>',
+          tpl: '<div class="site-skintools">' + '<div class="site-skintools-inner">' + '<div class="site-skintools-toggle">' + '<i class="icon wb-settings primary-600"></i>' + '</div>' + '<div class="site-skintools-content">' + '<div class="nav-tabs-horizontal">' + '<ul role="tablist" class="nav nav-tabs nav-tabs-line">' + '<li role="presentation" class="nav-item"><a class="nav-link active" role="tab" aria-controls="skintoolsSidebar" href="#skintoolsSidebar" data-toggle="tab" aria-expanded="true">Sidebar</a></li>' + '<li class="nav-item" role="presentation"><a class="nav-link" role="tab" aria-controls="skintoolsNavbar" href="#skintoolsNavbar" data-toggle="tab" aria-expanded="false">Navbar</a></li>' + '<li class="nav-item" role="presentation"><a class="nav-link" role="tab" aria-controls="skintoolsPrimary" href="#skintoolsPrimary" data-toggle="tab" aria-expanded="false">Primary</a></li>' + '</ul>' + '<div class="tab-content">' + '<div role="tabpanel" id="skintoolsSidebar" class="tab-pane active"></div>' + '<div role="tabpanel" id="skintoolsNavbar" class="tab-pane"></div>' + '<div role="tabpanel" id="skintoolsPrimary" class="tab-pane"></div>' + '<button class="btn btn-outline btn-block btn-primary mt-20" id="skintoolsReset" type="button">Reset</button>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>',
           skintoolsSidebar: ['dark', 'light'],
-          skintoolsNavbar: ['primary', 'blue', 'brown', 'cyan', 'green', 'grey', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'],
-          navbarSkins: 'bg-primary-600 bg-blue-600 bg-brown-600 bg-cyan-600 bg-green-600 bg-grey-600 bg-orange-600 bg-pink-600 bg-purple-600 bg-red-600 bg-teal-600 bg-yellow-700',
-          skintoolsPrimary: ['primary', 'blue', 'brown', 'cyan', 'green', 'grey', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'],
+          skintoolsNavbar: ['primary', 'brown', 'cyan', 'green', 'grey', 'indigo', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'],
+          navbarSkins: 'bg-primary-600 bg-brown-600 bg-cyan-600 bg-green-600 bg-grey-600 bg-indigo-600 bg-orange-600 bg-pink-600 bg-purple-600 bg-red-600 bg-teal-600 bg-yellow-700',
+          skintoolsPrimary: ['primary', 'brown', 'cyan', 'green', 'grey', 'indigo', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'],
           storageKey: settingsName,
           defaultSettings: {
-            'sidebar': 'light',
+            'sidebar': 'dark',
             'navbar': 'primary',
-            'navbarInverse': 'true',
+            'navbarInverse': 'false',
             'primary': 'primary'
           },
           init: function init() {
@@ -254,9 +255,9 @@
             this.updateSetting('primary', val);
           },
           sidebarImprove: function sidebarImprove(val) {
-            if (val === 'light') {
-              this.$siteSidebar.removeClass('site-menubar-dark');
-            } else if (val === 'dark') {
+            if (val === 'dark') {
+              this.$siteSidebar.removeClass('site-menubar-light');
+            } else if (val === 'light') {
               this.$siteSidebar.addClass('site-menubar-' + val);
             }
           },
@@ -264,7 +265,6 @@
             if (val === 'inverse') {
               checked ? this.$siteNavbar.addClass('navbar-inverse') : this.$siteNavbar.removeClass('navbar-inverse');
             } else {
-
               var bg = 'bg-' + val + '-600';
               if (val === 'yellow') {
                 bg = 'bg-yellow-700';

@@ -32,38 +32,38 @@
         "edit": {
           name: "Edit",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-edit';
+            return 'context-menu-icon context-menu-extend-icon wb-edit';
           }
         },
         "cut": {
           name: "Cut",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-scissors';
+            return 'context-menu-icon context-menu-extend-icon wb-scissor';
           }
         },
         "copy": {
           name: "Copy",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-copy';
+            return 'context-menu-icon context-menu-extend-icon wb-copy';
           }
         },
         "paste": {
           name: "Paste",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-collection-item';
+            return 'context-menu-icon context-menu-extend-icon wb-clipboard';
           }
         },
         "delete": {
           name: "Delete",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-delete';
+            return 'context-menu-icon context-menu-extend-icon wb-close';
           }
         },
         "sep1": "---------",
         "share": {
           name: "Share",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-share';
+            return 'context-menu-icon context-menu-extend-icon wb-share';
           }
         }
       }
@@ -83,38 +83,38 @@
         "edit": {
           name: "Edit",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-edit';
+            return 'context-menu-icon context-menu-extend-icon wb-edit';
           }
         },
         "cut": {
           name: "Cut",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-scissors';
+            return 'context-menu-icon context-menu-extend-icon wb-scissor';
           }
         },
         "copy": {
           name: "Copy",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-copy';
+            return 'context-menu-icon context-menu-extend-icon wb-copy';
           }
         },
         "paste": {
           name: "Paste",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-collection-item';
+            return 'context-menu-icon context-menu-extend-icon wb-clipboard';
           }
         },
         "delete": {
           name: "Delete",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-delete';
+            return 'context-menu-icon context-menu-extend-icon wb-close';
           }
         },
         "sep1": "---------",
         "share": {
           name: "Share",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-share';
+            return 'context-menu-icon context-menu-extend-icon wb-share';
           }
         }
       }
@@ -134,41 +134,85 @@
         "edit": {
           name: "Edit",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-edit';
+            return 'context-menu-icon context-menu-extend-icon wb-edit';
           }
         },
         "cut": {
           name: "Cut",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-scissors';
+            return 'context-menu-icon context-menu-extend-icon wb-scissor';
           }
         },
         "copy": {
           name: "Copy",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-copy';
+            return 'context-menu-icon context-menu-extend-icon wb-copy';
           }
         },
         "paste": {
           name: "Paste",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-collection-item';
+            return 'context-menu-icon context-menu-extend-icon wb-clipboard';
           }
         },
         "delete": {
           name: "Delete",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-delete';
+            return 'context-menu-icon context-menu-extend-icon wb-close';
           }
         },
         "sep1": "---------",
         "share": {
           name: "Share",
           icon: function icon() {
-            return 'context-menu-icon context-menu-extend-icon md-share';
+            return 'context-menu-icon context-menu-extend-icon wb-share';
           }
         }
       }
     });
   })();
+
+  // // Demo 4
+  // // ------
+  // (function() {
+  //   $.contextMenu({
+  //     selector: '.contextMenu-example4',
+  //     // callback: function(key, options) {
+  //     //   var m = "clicked: " + key;
+  //     //   window.console && console.log(m) || alert(m);
+  //     // },
+  //     items: {
+  //       "edit": {
+  //         name: "Edit",
+  //         icon: "wb-edit"
+  //       },
+  //       "copy": {
+  //         name: "Copy",
+  //         icon: "wb-copy"
+  //       }
+  //     }
+  //   });
+  // })();
+
+  // // Demo 5
+  // // ------
+  // (function() {
+  //   $.contextMenu({
+  //     selector: '.contextMenu-example5',
+  //     // callback: function(key, options) {
+  //     //   var m = "clicked: " + key;
+  //     //   window.console && console.log(m) || alert(m);
+  //     // },
+  //     items: {
+  //       "edit": {
+  //         name: "Edit",
+  //         icon: "fa-edit"
+  //       },
+  //       "cut": {
+  //         name: "Cut",
+  //         icon: "fa-cut"
+  //       }
+  //     }
+  //   });
+  // })();
 });

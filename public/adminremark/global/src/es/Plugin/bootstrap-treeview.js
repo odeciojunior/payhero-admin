@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import Plugin from 'Plugin';
-import * as Config from 'Config';
+import * as Config from "Config";
 
 const NAME = 'treeview';
 
@@ -12,10 +12,10 @@ class Treeview extends Plugin {
   static getDefaults() {
     return {
       injectStyle: false,
-      expandIcon: 'icon md-plus',
-      collapseIcon: 'icon md-minus',
+      expandIcon: 'icon wb-plus',
+      collapseIcon: 'icon wb-minus',
       emptyIcon: 'icon',
-      nodeIcon: 'icon md-folder',
+      nodeIcon: 'icon wb-folder',
       showBorder: false,
       // color: undefined, // "#000000",
       // backColor: undefined, // "#FFFFFF",
@@ -36,7 +36,10 @@ class Treeview extends Plugin {
     let $el = this.$el,
       options = this.options;
 
-    if (typeof options.source === 'string' && $.isFunction(window[options.source])) {
+    if (
+      typeof options.source === 'string' &&
+      $.isFunction(window[options.source])
+    ) {
       options.data = window[options.source]();
       delete options.source;
     } else if ($.isFunction(options.souce)) {

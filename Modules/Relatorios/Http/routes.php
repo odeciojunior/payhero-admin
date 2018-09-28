@@ -1,0 +1,17 @@
+<?php
+
+Route::group(['middleware' => 'web', 'prefix' => 'relatorios', 'namespace' => 'Modules\Relatorios\Http\Controllers'], function()
+{
+    Route::get('/vendas',[
+        'as' => 'relatorios.vendas',
+        'uses' => 'RelatoriosController@vendas'
+    ]);
+
+    Route::post('/vendas/data-source',[
+        'as' => 'relatorios.dadosvendas',
+        'uses' => 'RelatoriosController@dadosVendas'
+    ]);
+
+});
+
+

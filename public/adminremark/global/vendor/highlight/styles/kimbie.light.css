@@ -37,10 +37,10 @@
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: #84613d;
   background: #fbebd4;
+  color: #84613d;
+  padding: .5em;
 }
 
 .hljs-emphasis {

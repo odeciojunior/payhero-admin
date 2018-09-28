@@ -7,19 +7,12 @@
 // Variables
 // =======================================================================
 $primary-lists: (
-  "primary": (
-    "50": $color-primary-50,
-    "100": $color-primary-100,
-    "200": $color-primary-200,
-    "300": $color-primary-300,
-    "400": $color-primary-400,
-    "500": $color-primary-500,
-    "600": $color-primary-600,
-    "700": $color-primary-700,
-    "800": $color-primary-800,
-    "900": $color-primary-900,
+  "primary":
+  (
+    "100": $color-primary-100, "200": $color-primary-200, "300": $color-primary-300, "400": $color-primary-400, "500": $color-primary-500, "600": $color-primary-600, "700": $color-primary-700, "800": $color-primary-800
   )
-) !default;
+)
+  !default;
 
 // Component: Color
 // ========================================================================
@@ -30,8 +23,7 @@ $primary-lists: (
   @if ($type == "color") {
     $type-class: "";
     $type-property: "color";
-  }
-  @else if ($type == "bg") {
+  } @else if($type == "bg") {
     $type-class: "bg-";
     $type-property: "background-color";
   }
@@ -53,5 +45,10 @@ $primary-lists: (
   @include labelColorGenerator($label, $map, "color");
 }
 
-.black { color: $color-black !important; }
-.white { color: $color-white !important; }
+.black {
+  color: $color-black !important;
+}
+
+.white {
+  color: $color-white !important;
+}

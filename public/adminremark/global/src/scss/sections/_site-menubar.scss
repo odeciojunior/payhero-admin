@@ -1,4 +1,3 @@
-
 html, body {
   height: 100%;
 }
@@ -11,10 +10,8 @@ body {
   position: fixed;
   top: $site-navbar-height;
   z-index: $zindex-menubar;
-
   height: 100%;
   height: calc(100% - #{$site-navbar-height});
-
   font-family: $site-menubar-font-family;
   color: $site-menubar-color;
   background: $site-menubar-bg;
@@ -33,18 +30,19 @@ body {
 
   a {
     outline: none;
+
     &:hover, &:focus {
       text-decoration: none;
     }
   }
 
-  .scrollable-inverse.scrollable .scrollable-bar-handle {
-    background: rgba($gray, (60/100));;
-  }
+  &.site-menubar-light {
+    background: $site-menubar-light-bg;
+    box-shadow: $site-menubar-light-shadow;
 
-  &.site-menubar-dark {
-    background: $site-menubar-dark-bg;
-    box-shadow: $site-menubar-dark-shadow;
+    .scrollable-inverse.scrollable .scrollable-bar-handle {
+      background: rgba($gray-400, (60 / 100));
+    }
   }
 }
 
@@ -81,20 +79,19 @@ body {
     text-align: center;
     background-color: $site-menubar-footer-link-bg;
 
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       background-color: $site-menubar-footer-link-hover-bg;
     }
   }
 }
 
-.site-menubar-dark {
+.site-menubar-light {
   .site-menubar-footer {
     > a {
-      background-color: $site-menubar-dark-footer-link-bg;
-      &:hover,
-      &:focus {
-        background-color: $site-menubar-dark-footer-link-hover-bg;
+      background-color: $site-menubar-light-footer-link-bg;
+
+      &:hover, &:focus {
+        background-color: $site-menubar-light-footer-link-hover-bg;
       }
     }
   }

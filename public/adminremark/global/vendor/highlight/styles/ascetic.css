@@ -6,10 +6,10 @@ Original style from softwaremaniacs.org (c) Ivan Sagalaev <Maniac@SoftwareManiac
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
-  color: black;
+  padding: .5em;
   background: white;
+  color: black;
 }
 
 .hljs-string, .hljs-variable, .hljs-template-variable, .hljs-symbol, .hljs-bullet, .hljs-section, .hljs-addition, .hljs-attribute, .hljs-link {

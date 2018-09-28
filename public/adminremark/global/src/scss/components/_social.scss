@@ -1,26 +1,23 @@
 // Name:            Social Icons
 // ========================================================================
 
-
 // Mixins
 // ========================================================================
 
-@mixin social-variant($bg){
+@mixin social-variant($bg) {
   color: $inverse;
   background-color: $bg !important;
-  
-  &:hover,
-  &:focus {
+
+  &:hover, &:focus {
     color: $inverse;
     background-color: lighten($bg, 10%) !important;
   }
-  &:active,
-  &.active {
+
+  &:active, &.active {
     color: $inverse;
     background-color: darken($bg, 10%) !important;
   }
 }
-
 
 // Component: Social Icons
 // ========================================================================
@@ -321,5 +318,3 @@
 .bg-evernote {
   background-color: $color-evernote;
 }
-
-

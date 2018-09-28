@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 import Plugin from 'Plugin';
 
 const NAME = 'TouchSpin';
@@ -10,10 +9,10 @@ class TouchSpin extends Plugin {
 
   static getDefaults() {
     return {
-      verticalupclass: 'md-plus',
-      verticaldownclass: 'md-minus',
-      buttondown_class: 'btn btn-default',
-      buttonup_class: 'btn btn-default'
+      verticalupclass: 'wb-plus',
+      verticaldownclass: 'wb-minus',
+      buttondown_class: 'btn btn-outline btn-default',
+      buttonup_class: 'btn btn-outline btn-default'
     };
   }
 }

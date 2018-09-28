@@ -108,10 +108,10 @@
     opacity: 0.25; }
 
 .slick-prev:before, .slick-next:before {
-  font-family: "Material Design Iconic";
+  font-family: "Web Icons";
   font-size: 20px;
   line-height: 1;
-  color: #e0e0e0;
+  color: #e4eaec;
   opacity: 0.75;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
@@ -122,9 +122,9 @@
     left: auto;
     right: -25px; }
   .slick-prev:before {
-    content: ""; }
+    content: ""; }
     [dir="rtl"] .slick-prev:before {
-      content: ""; }
+      content: ""; }
 
 .slick-next {
   right: -25px; }
@@ -132,9 +132,9 @@
     left: -25px;
     right: auto; }
   .slick-next:before {
-    content: ""; }
+    content: ""; }
     [dir="rtl"] .slick-next:before {
-      content: ""; }
+      content: ""; }
 
 /* Dots */
 .slick-dotted.slick-slider {
@@ -177,17 +177,17 @@
         position: absolute;
         top: 0;
         left: 0;
-        content: "";
+        content: "";
         width: 20px;
         height: 20px;
-        font-family: "Material Design Iconic";
+        font-family: "Web Icons";
         font-size: 6px;
         line-height: 20px;
         text-align: center;
-        color: #bdbdbd;
+        color: #ccd5db;
         opacity: 0.25;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale; }
     .slick-dots li.slick-active button:before {
-      color: #bdbdbd;
+      color: #ccd5db;
       opacity: 0.75; }

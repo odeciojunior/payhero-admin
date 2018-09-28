@@ -20,15 +20,15 @@ hue-6-2: #e6c07b
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
+  padding: .5em;
   color: #abb2bf;
   background: #282c34;
 }
 
 .hljs-comment, .hljs-quote {
-  font-style: italic;
   color: #5c6370;
+  font-style: italic;
 }
 
 .hljs-doctag, .hljs-keyword, .hljs-formula {

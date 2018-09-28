@@ -20,11 +20,11 @@ $multi-select-disabled-bg: $disabled-color-base;
     top: 68px;
     left: 3.5%;
     display: inline-block;
-    font-family: $zmdi-font-name;
+    font-family: $wb-font-family;
     font-size: inherit;
     font-style: normal;
     font-weight: normal;
-    content: $zmdi-var-refresh-alt;
+    content: $wb-var-loop;
     transform: translate(0, 0);
     text-rendering: auto;
   }
@@ -92,7 +92,7 @@ $multi-select-disabled-bg: $disabled-color-base;
 
 .ms-container .ms-selectable li.ms-elem-selectable, .ms-container .ms-selection li.ms-elem-selection {
   // border-bottom: 1px $ms-border solid;
-  padding: 3px 10px 3px 20px;
+  padding: 5px 10px 5px 20px;
 }
 
 .ms-container .ms-selectable li.ms-hover, .ms-container .ms-selection li.ms-hover {

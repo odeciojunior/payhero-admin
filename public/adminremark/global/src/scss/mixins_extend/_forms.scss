@@ -1,7 +1,7 @@
-@mixin form-control-focus($color: $input-focus-border-color){
+@mixin form-control-focus($color: $input-focus-border-color) {
   $color-rgba: rgba(red($color), green($color), blue($color), .3) !default;
-  &.focus,
-  &:focus {
+
+  &.focus, &:focus {
     border-color: $color;
     // @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .05), 0 0 6px #{$color-rgba});
     box-shadow: none;
@@ -25,16 +25,16 @@
 //   }
 // }
 
-@mixin form-control-defaults(){
-    background-color: $input-bg;
-    border: 1px solid $input-border;
-    border-radius: $input-border-radius;
-    color: $input-color;
-    font-family: $font-family-base;
-    font-size: $font-size-base;
+@mixin form-control-defaults() {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  color: $input-color;
+  background-color: $input-bg;
+  border: 1px solid $input-border;
+  border-radius: $input-border-radius;
 }
 
-@mixin input-size($input-height, $padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius){
+@mixin input-size($input-height, $padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius) {
   select & {
     padding-top: 0;
     padding-bottom: 0;

@@ -118,7 +118,7 @@
           /* create new marker and add to map */
           var itemName = $(items[i]).find('.item-name').html();
           var itemTitle = $(items[i]).find('.item-title').html();
-          var popupInfo = '<div class=\'marker-popup-info\'>\n                        <div class=\'detail\'>info</div>\n                        <h3>' + itemName + '</h3>\n                        <p>' + itemTitle + '</p>\n                      </div>\n                      <i class=\'icon md-chevron-right\'>\n                      </i>';
+          var popupInfo = '<div class=\'marker-popup-info\'>\n                        <div class=\'detail\'>info</div>\n                        <h3>' + itemName + '</h3>\n                        <p>' + itemTitle + '</p>\n                      </div>\n                      <i class=\'icon wb-chevron-right-mini\'>\n                      </i>';
           var marker = L.marker(markerLatlng, {
             title: itemName,
             icon: itemImg
@@ -237,16 +237,18 @@
     }, {
       key: 'optionChange',
       value: function optionChange(change) {
+        var self = this;
+
         this.states.optionChange = change;
 
         if (change) {
           console.log('tab change');
-          if (this.markers.markers) {
-            this.markers.deleteMarkers();
+          if (self.markers.markers) {
+            self.markers.deleteMarkers();
           }
-          var tabOption = this.states.optionChange; // spots,hotels,reviews
-          this.markers.addMarkersByOption(tabOption);
-          this.changeListItemsByOption(tabOption);
+          var tabOption = self.states.optionChange; // spots,hotels,reviews
+          self.markers.addMarkersByOption(tabOption);
+          self.changeListItemsByOption(tabOption);
         }
       }
     }, {

@@ -15,16 +15,14 @@
 
 // Variables
 // ========================================================================
-
-$status-size-sm:      8px !default;
-$status-size-lg:      14px !default;
-$status-size-xs:      7px !default;
-$status-size-md:      10px !default;
-
-$status-online-color:   $brand-success !default;
-$status-off-color:      $brand-dark !default;
-$status-busy-color:     $brand-warning !default;
-$status-away-color:     $brand-danger !default;
+$status-size-sm: 8px !default;
+$status-size-lg: 14px !default;
+$status-size-xs: 7px !default;
+$status-size-md: 10px !default;
+$status-online-color: $brand-success !default;
+$status-off-color: $brand-dark !default;
+$status-busy-color: $brand-warning !default;
+$status-away-color: $brand-danger !default;
 
 // Component: Status
 // ========================================================================

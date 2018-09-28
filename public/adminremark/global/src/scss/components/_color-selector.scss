@@ -15,13 +15,12 @@
 
 // Variables
 // ========================================================================
-
-$color-selector-bg:                     $brand-primary !default;
-$color-selector-checked-label-color:    $inverse !default;
-$color-selector-disabled-bg:            $disabled-color-base !default;
+$color-selector-bg: $brand-primary !default;
+$color-selector-checked-label-color: $inverse !default;
+$color-selector-disabled-bg: $disabled-color-base !default;
 
 // z-index
-$color-selector-z-index:                $zindex-base !default;
+$color-selector-z-index: $zindex-base !default;
 
 // Component: color-selector
 // ========================================================================
@@ -75,8 +74,8 @@ $color-selector-z-index:                $zindex-base !default;
 
     label {
       position: relative;
-      margin-bottom: 0.4rem;
-      font-family: $zmdi-font-name;
+      margin-bottom: .4rem;
+      font-family: $wb-font-family;
       font-style: normal;
       font-weight: normal;
       font-variant: normal;
@@ -92,7 +91,7 @@ $color-selector-z-index:                $zindex-base !default;
       font-size: 16px;
       line-height: 1;
       color: $color-selector-checked-label-color;
-      content: $zmdi-var-check;
+      content: $wb-var-check;
     }
 
     &.color-selector-disabled {

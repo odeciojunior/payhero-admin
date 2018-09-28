@@ -2,8 +2,7 @@
   height: calc(100% - 44px); }
 
 .app-message .page-main {
-  height: 100%;
-  background-color: #fff; }
+  height: 100%; }
 
 .app-message .page-aside .form-control {
   border-radius: 0;
@@ -27,10 +26,8 @@
     padding: 16px 30px;
     white-space: nowrap;
     z-index: 0; }
-    .app-message-list .list-group .list-group-item:hover {
-      background-color: rgba(92, 107, 192, 0.05); }
-    .app-message-list .list-group .list-group-item.active {
-      background-color: #e8eaf6; }
+    .app-message-list .list-group .list-group-item:hover, .app-message-list .list-group .list-group-item.active {
+      background-color: #d9e9ff; }
     .app-message-list .list-group .list-group-item.active:after {
       width: 1px;
       position: absolute;
@@ -38,9 +35,9 @@
       height: 100%;
       right: 0;
       top: 0;
-      background: #3949ab; }
+      background: #3e8ef7; }
     .app-message-list .list-group .list-group-item .media-time {
-      color: #9e9e9e; }
+      color: #a3afb7; }
 
 .app-message-chats {
   padding: 20px 30px;
@@ -49,21 +46,25 @@
   height: calc(100% - 96px);
   background-color: #fff; }
   .app-message-chats > .btn {
-    font-weight: 300; }
+    color: #589ffc; }
+    .app-message-chats > .btn:hover {
+      color: #76838f; }
   .app-message-chats .chats {
     padding: 0; }
     .app-message-chats .chats .chat-avatar .avatar {
       width: 60px;
       margin-top: -10px; }
     .app-message-chats .chats .time {
-      color: #9e9e9e;
+      color: #a3afb7;
       font-size: 12px;
       text-align: center;
       margin: 40px 0; }
 
 .app-message-input {
   position: relative;
-  padding: 30px; }
+  padding: 30px;
+  padding-right: 110px;
+  background-color: #f3f7f9; }
   .app-message-input .message-input {
     position: relative; }
     .app-message-input .message-input textarea {

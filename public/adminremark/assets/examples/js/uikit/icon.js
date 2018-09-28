@@ -26,6 +26,7 @@
         $$$1('.panel .icon').css('font-size', value);
       }
     });
+
     $$$1('.input-search input[type=text]').on('keyup', function () {
       var val = $$$1(this).val();
       if (val !== '') {

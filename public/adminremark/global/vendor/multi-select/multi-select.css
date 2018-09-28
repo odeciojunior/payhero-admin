@@ -4,11 +4,11 @@
   top: 68px;
   left: 3.5%;
   display: inline-block;
-  font-family: "Material Design Iconic";
+  font-family: "Web Icons";
   font-size: inherit;
   font-style: normal;
   font-weight: normal;
-  content: "";
+  content: "";
   -webkit-transform: translate(0, 0);
           transform: translate(0, 0);
   text-rendering: auto; }
@@ -26,7 +26,7 @@
 .ms-container .ms-selectable, .ms-container .ms-selection {
   float: left;
   width: 45%;
-  color: #757575;
+  color: #76838f;
   background: #fff; }
 
 .ms-container .ms-selection {
@@ -37,7 +37,7 @@
   height: 160px;
   padding: 3px;
   overflow-y: auto;
-  border: 1px solid #dee2e6;
+  border: 1px solid #e4eaec;
   border-radius: 0.215rem;
   transition: border linear .2s, box-shadow linear .2s; }
 
@@ -57,23 +57,23 @@
 .ms-container .ms-optgroup-label {
   padding: 5px 0 0 7px;
   margin: 0;
-  font-weight: 400;
-  color: #757575;
+  font-weight: 500;
+  color: #76838f;
   cursor: pointer; }
 
 .ms-container .ms-selectable li.ms-elem-selectable, .ms-container .ms-selection li.ms-elem-selection {
-  padding: 3px 10px 3px 20px; }
+  padding: 5px 10px 5px 20px; }
 
 .ms-container .ms-selectable li.ms-hover, .ms-container .ms-selection li.ms-hover {
   color: #fff;
   text-decoration: none;
   cursor: pointer;
-  background-color: #5c6bc0; }
+  background-color: #589ffc; }
 
 .ms-container .ms-selectable li.disabled, .ms-container .ms-selection li.disabled {
-  color: #757575;
+  color: #76838f;
   cursor: text;
-  background-color: #bdbdbd; }
+  background-color: #e4eaec; }
 
 @media (min-width: 1200px) {
   .ms-container {

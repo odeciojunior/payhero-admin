@@ -146,6 +146,7 @@
 
     (0, _jquery2.default)('#exampleEvents').treeview(options);
   })();
+
   // Example jstree use JSON format
   // ------------------------
   (function () {
@@ -153,20 +154,20 @@
       'core': {
         'data': [{
           'text': 'Simple root node',
-          "icon": "md-folder"
+          "icon": "wb-folder"
         }, {
           'text': 'Root node 2',
-          "icon": "md-folder",
+          "icon": "wb-folder",
           'state': {
             'opened': false,
             'selected': true
           },
           'children': [{
             'text': 'Child 1',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }, {
             'text': 'Child 2',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }]
         }]
       }
@@ -193,20 +194,20 @@
       'core': {
         'data': [{
           'text': 'Simple root node',
-          "icon": "md-folder"
+          "icon": "wb-folder"
         }, {
           'text': 'Root node 2',
-          "icon": "md-folder",
+          "icon": "wb-folder",
           'state': {
             'opened': true,
             'selected': true
           },
           'children': [{
             'text': 'Child 1',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }, {
             'text': 'Child 2',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }]
         }]
       },
@@ -222,20 +223,20 @@
         "check_callback": true,
         'data': [{
           'text': 'Simple root node',
-          "icon": "md-folder"
+          "icon": "wb-folder"
         }, {
           'text': 'Root node 2',
-          "icon": "md-folder",
+          "icon": "wb-folder",
           'state': {
             'opened': true,
             'selected': true
           },
           'children': [{
             'text': 'Child 1',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }, {
             'text': 'Child 2',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }]
         }]
       },
@@ -244,26 +245,26 @@
   })();
 
   // Example jstree use Search Plugin
-  // ------------------------------------
+  // --------------------------------
   (function () {
     (0, _jquery2.default)('#jstreeExample_7').jstree({
       'core': {
         'data': [{
           'text': 'Simple root node',
-          "icon": "md-folder"
+          "icon": "wb-folder"
         }, {
           'text': 'Root node 2',
-          "icon": "md-folder",
+          "icon": "wb-folder",
           'state': {
             'opened': true,
             'selected': true
           },
           'children': [{
             'text': 'Child 1',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }, {
             'text': 'Child 2',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }]
         }]
       },
@@ -283,27 +284,27 @@
   })();
 
   // Example jstree use Drag & drop Plugin
-  // ------------------------------------
+  // -------------------------------------
   (function () {
     (0, _jquery2.default)('#jstreeExample_8').jstree({
       'core': {
         "check_callback": true,
         'data': [{
           'text': 'Simple root node',
-          "icon": "md-folder"
+          "icon": "wb-folder"
         }, {
           'text': 'Root node 2',
-          "icon": "md-folder",
+          "icon": "wb-folder",
           'state': {
             'opened': true,
             'selected': true
           },
           'children': [{
             'text': 'Child 1',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }, {
             'text': 'Child 2',
-            "icon": "md-folder"
+            "icon": "wb-folder"
           }]
         }]
       },

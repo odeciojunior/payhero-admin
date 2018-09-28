@@ -2,9 +2,9 @@
 //
 // Component:       `media`
 //
-// Modifiers:       
-//                  
-//                  
+// Modifiers:
+//
+//
 //
 // ========================================================================
 
@@ -12,12 +12,10 @@
 // ========================================================================
 
 // @media-border:             $divider-color-base;
-$media-meta-color:         $text-muted !default;
-$media-meta-font-size:     $font-size-sm !default;
+$media-meta-color: $text-muted !default;
+$media-meta-font-size: $font-size-sm !default;
 // @media-padding-vertical:   30px;
-$media-column-spacing:     20px !default;
-$media-list-spacing:       15px !default;
-
+$media-list-spacing: 15px !default;
 
 // Component: Media
 // ========================================================================
@@ -40,16 +38,16 @@ $media-list-spacing:       15px !default;
 }
 
 .media-meta {
-  color: $media-meta-color;
-  font-size: $media-meta-font-size;
   margin-bottom: 3px;
+  font-size: $media-meta-font-size;
+  color: $media-meta-color;
 }
 
 // Media list
 // ========================================================================
 .media-list {
-  list-style: none;
   padding-left: 0;
+  list-style: none;
 
   & > .media {
     margin-top: $media-list-spacing;
@@ -82,10 +80,10 @@ $media-list-spacing:       15px !default;
 @include media-breakpoint-down(xs) {
   .media {
     flex-direction: column;
+
     > div:first-child {
       margin-bottom: 5px;
     }
-    //---Kevin_y
 
     .media {
       padding-left: 15px;

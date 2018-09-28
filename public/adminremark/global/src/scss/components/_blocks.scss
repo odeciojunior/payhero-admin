@@ -12,15 +12,13 @@
 
 // Variables
 // ========================================================================
-
 $blocks-enable-flex: false !default;
-$blocks-grid-gutter-width:         $grid-gutter-width !default;
-$block-margin-bottom:              $blocks-grid-gutter-width !default;
+$blocks-grid-gutter-width: $grid-gutter-width !default;
+$block-margin-bottom: $blocks-grid-gutter-width !default;
 $blocks-columns: (100: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6) !default;
 
 //for not enable-flex
-$block-font-size:                $font-size-base !default;
-
+$block-font-size: $font-size-base !default;
 
 // $blocks-breakpoints: (
 //   xxl: map-get($grid-breakpoints, xxl),// 1600px,
@@ -42,9 +40,9 @@ $block-font-size:                $font-size-base !default;
 
 @mixin flex-blocks-column-width($columns: $blocks-columns) {
   @each $i in map-keys($columns) {
-    .blocks-#{$i} > .block,
-    .blocks-#{$i} > li {
+    .blocks-#{$i} > .block, .blocks-#{$i} > li {
       $rate1: ((1 / map-get($blocks-columns, $i))) !default;
+
       @if not $blocks-enable-flex {
         width: percentage($rate1);
       } @else {
@@ -61,21 +59,20 @@ $block-font-size:                $font-size-base !default;
 //         .blocks-#{$j}-#{$i} > .block,
 //         .blocks-#{$j}-#{$i} > li {
 //           $rate2: ((1 / map-get($blocks-columns, $i))) !default;
-          // // width: percentage($rate2);
-          //    flex: 0 0 percentage($rate2);
+// // width: percentage($rate2);
+//    flex: 0 0 percentage($rate2);
 //         }
 //       }
 //     }
 //   }
 // }
-// fllow  the same to bootstrap v4 `grid-system
-@mixin flex-blocks-media-column-width($columns: $blocks-columns, $breakpoints: $grid-breakpoints){
+@mixin flex-blocks-media-column-width($columns: $blocks-columns, $breakpoints: $grid-breakpoints) {
   @each $j in map-keys($breakpoints) {
     @include media-breakpoint-up($j) {
       @each $i in map-keys($columns) {
-        .blocks-#{$j}-#{$i} > .block,
-        .blocks-#{$j}-#{$i} > li {
+        .blocks-#{$j}-#{$i} > .block, .blocks-#{$j}-#{$i} > li {
           $rate2: ((1 / map-get($blocks-columns, $i))) !default;
+
           @if not $blocks-enable-flex {
             width: percentage($rate2);
           } @else {
@@ -99,26 +96,21 @@ $block-font-size:                $font-size-base !default;
 //   <li>5</li>
 // </ul>
 
-.blocks,
-[class*="blocks-"] {
+.blocks, [class*="blocks-"] {
   @if not $blocks-enable-flex {
     font-size: 0;
   } @else {
     display: flex;
     flex-flow: row wrap;
   }
-
-  list-style: none;
   padding: 0;
   margin: 0;
-
-  margin-left:  ($blocks-grid-gutter-width / -2);
   margin-right: ($blocks-grid-gutter-width / -2);
+  margin-left: ($blocks-grid-gutter-width / -2);
+  list-style: none;
 }
 
-.blocks > .block,
-[class*="blocks-"] >li,
-[class*="blocks-"] > .block {
+.blocks > .block, [class*="blocks-"] > li, [class*="blocks-"] > .block {
   @if not $blocks-enable-flex {
     display: inline-block;
     font-size: $block-font-size;
@@ -126,10 +118,9 @@ $block-font-size:                $font-size-base !default;
   } @else {
     flex: 0 0 auto;
   }
-
-  margin-bottom: $block-margin-bottom;
-  padding-left:  ($blocks-grid-gutter-width / 2);
   padding-right: ($blocks-grid-gutter-width / 2);
+  padding-left: ($blocks-grid-gutter-width / 2);
+  margin-bottom: $block-margin-bottom;
 
   // @media (max-width: $blocks-mobile-point) {
   //   width: 100%;
@@ -137,13 +128,11 @@ $block-font-size:                $font-size-base !default;
 }
 
 // no-sapce
-.blocks.no-space,
-[class*="blocks-"].no-space {
+.blocks.no-space, [class*="blocks-"].no-space {
   margin: 0;
 
-  > li,
-  > .block {
-    padding: 0 ;
+  > li, > .block {
+    padding: 0;
     margin: 0;
   }
 }

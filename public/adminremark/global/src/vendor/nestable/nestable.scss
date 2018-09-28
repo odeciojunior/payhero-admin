@@ -197,7 +197,7 @@ $dd-dragel-z-index: $zindex-overlay;
     display: inline-block;
     width: $nestable-alt-handle-width;
     margin: 0;
-    font-family: $zmdi-font-name;
+    font-family: "#{$wb-font-family}";
     font-style: normal;
     font-weight: normal;
     text-align: center;
@@ -217,7 +217,7 @@ $dd-dragel-z-index: $zindex-overlay;
     &:before {
       position: relative;
       top: auto;
-      content: '#{$zmdi-var-unfold-more}';
+      content: "#{$wb-var-sort-vertical}";
     }
 
     &:hover {

@@ -1,13 +1,13 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define('/Plugin/ace-editor', ['exports', 'Plugin', 'jquery'], factory);
+    define('/Plugin/ace-editor', ['exports', 'Plugin'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require('Plugin'), require('jquery'));
+    factory(exports, require('Plugin'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.Plugin, global.jQuery);
+    factory(mod.exports, global.Plugin);
     global.PluginAceEditor = mod.exports;
   }
 })(this, function (exports, _Plugin2) {

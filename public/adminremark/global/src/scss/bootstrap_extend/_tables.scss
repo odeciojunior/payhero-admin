@@ -13,16 +13,15 @@
 // ========================================================================
 
 .table {
-  color: $gray-dark;
+  color: $gray-500;
 
   th {
     font-weight: $font-weight-medium;
   }
-  
-  thead th,
-  tfoot th {
-    color: $gray-darker;
+
+  thead th, tfoot th {
     font-weight: $font-weight-medium;
+    color: $gray-600;
     border-bottom-width: $table-border-width;
   }
 
@@ -51,39 +50,51 @@
   .cell-30 {
     width: 30px;
   }
+
   .cell-40 {
     width: 40px;
   }
+
   .cell-50 {
     width: 50px;
   }
+
   .cell-60 {
     width: 60px;
   }
+
   .cell-80 {
     width: 80px;
   }
+
   .cell-100 {
     width: 100px;
   }
+
   .cell-120 {
     width: 120px;
   }
+
   .cell-130 {
     width: 130px;
   }
+
   .cell-150 {
     width: 150px;
   }
+
   .cell-180 {
     width: 180px;
   }
+
   .cell-200 {
     width: 200px;
   }
+
   .cell-250 {
     width: 250px;
   }
+
   .cell-300 {
     width: 300px;
   }
@@ -105,8 +116,8 @@
 @include table-thead-variant(info, $brand-info, $inverse);
 @include table-thead-variant(warning, $brand-warning, $inverse);
 @include table-thead-variant(danger, $brand-danger, $inverse);
-@include table-thead-variant(dark, $gray-darker, $inverse);
-@include table-thead-variant(gray, $gray-light, $gray-darker);
+@include table-thead-variant(dark, $gray-600, $inverse);
+@include table-thead-variant(gray, $gray-300, $gray-600);
 
 // Modifier: `table-bordered`
 // ========================================================================
@@ -127,19 +138,18 @@
 // ========================================================================
 .table-section {
   & + tbody {
-    display: none
+    display: none;
   }
 
   &-arrow {
     @include make-icon();
-    text-align: center;
     position: relative;
-    font-family: '#{$zmdi-font-name}';
-
-    transition: transform 0.15s;
+    font-family: "#{$wb-font-family}";
+    text-align: center;
+    transition: transform .15s;
 
     &:before {
-      content: '#{$zmdi-var-chevron-down}';
+      content: "#{$wb-var-chevron-down}";
     }
   }
 
@@ -158,11 +168,9 @@
   }
 }
 
-// col[class*="col-"] in table 
+// col[class*="col-"] in table
 table col[class*="col-"] {
   position: static; // Prevent border hiding in Firefox and IE9-11 (see https://github.com/twbs/bootstrap/issues/11623)
-  float: none;
   display: table-column;
+  float: none;
 }
-
-

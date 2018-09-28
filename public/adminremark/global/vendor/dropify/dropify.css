@@ -37,12 +37,12 @@
   font-family: "Roboto", sans-serif;
   font-size: 14px;
   line-height: 22px;
-  color: #757575;
+  color: #76838f;
   text-align: center;
   cursor: pointer;
   background-color: #fff;
   background-image: none;
-  border: 2px solid #dee2e6; }
+  border: 2px solid #e4eaec; }
   .dropify-wrapper:hover {
     background-image: linear-gradient(-45deg, #f6f6f6 25%, transparent 25%, transparent 50%, #f6f6f6 50%, #f6f6f6 75%, transparent 75%, transparent);
     background-size: 30px 30px;
@@ -86,8 +86,8 @@
       margin: 5px 0 0; }
       .dropify-wrapper .dropify-message p.dropify-error {
         display: none;
-        font-weight: 400;
-        color: #f44336; }
+        font-weight: 500;
+        color: #ff4c52; }
   .dropify-wrapper .dropify-clear {
     position: absolute;
     top: 10px;
@@ -97,7 +97,7 @@
     padding: 4px 8px;
     font-family: "Roboto", sans-serif;
     font-size: 11px;
-    font-weight: 400;
+    font-weight: 500;
     color: #fff;
     text-transform: uppercase;
     background: none;
@@ -145,7 +145,7 @@
       margin-top: 10px;
       overflow: hidden;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 700;
       text-overflow: ellipsis;
       text-transform: uppercase;
       letter-spacing: -0.03em;
@@ -249,12 +249,12 @@
             margin: 0;
             overflow: hidden;
             line-height: 25px;
-            color: #757575;
+            color: #76838f;
             text-align: left;
             text-overflow: ellipsis;
             white-space: nowrap; }
             .dropify-wrapper.touch-fallback .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-filename {
-              font-weight: 400; }
+              font-weight: 500; }
             .dropify-wrapper.touch-fallback .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message {
               position: relative;
               padding-top: 0;
@@ -270,8 +270,8 @@
     .dropify-wrapper.touch-fallback .dropify-clear {
       top: auto;
       bottom: 23px;
-      color: #757575;
-      border-color: rgba(117, 117, 117, 0.7);
+      color: #76838f;
+      border-color: rgba(118, 131, 143, 0.7);
       opacity: 1; }
     .dropify-wrapper.touch-fallback.has-preview .dropify-message {
       display: none; }

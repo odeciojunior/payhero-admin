@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/relatorios",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Relatorios\\Providers\\RelatoriosServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Relatorios\\": ""
+        }
+    }
+}

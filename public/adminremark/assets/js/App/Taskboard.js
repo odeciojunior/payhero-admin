@@ -108,7 +108,7 @@
     }, {
       key: 'getTpl',
       value: function getTpl(title) {
-        return '\n            <li class="taskboard-stage">\n              <header class="taskboard-stage-header">\n                <div class="taskboard-stage-actions float-right">\n                  <div class="dropdown">\n                    <a data-toggle="dropdown" href="#" aria-expanded="false"><i class="icon md-chevron-down" aria-hidden="true"></i></a>\n                    <div class="dropdown-menu bullet" role="menu">\n                      <a class="taskboard-stage-rename dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon md-edit" aria-hidden="true"></i>Rename</a>\n                      <a class="taskboard-stage-delete dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon md-delete" aria-hidden="true"></i>Delete</a>\n                        <div class="taskboard-stage-rename-wrap">\n                          <div class="form-group">\n                            <input class="form-control taskboard-stage-rename-input" type="text" value="' + title + '" name="name">\n                          </div>\n                          <button class="btn btn-primary btn-block taskboard-stage-rename-save" type="button">Save</button>\n                        </div>\n                    </div>\n                  </div>\n                </div>\n                <h5 class="taskboard-stage-title">' + title + '</h5>\n              </header>\n              <div class="taskboard-stage-content">\n                <ul class="list-group taskboard-list"></ul>\n                <div class="action-wrap">\n                  <a class="add-item-toggle" href="#"><i class="icon md-plus" aria-hidden="true"></i>Add Task</a>\n                    <div class="add-item-wrap">\n                      <form class="add-item" role="form" method="post" action="#">\n                        <div class="form-group">\n                          <label class="form-control-label mb-15" for="name">Task name:</label>\n                          <input class="form-control" type="text" placeholder="Task name" name="name">\n                        </div>\n                        <div class="form-group text-right">\n                          <a class="btn btn-sm btn-white btn-pure add-item-cancel">Cancel</a>\n                          <button type="button" class="btn btn-primary add-item-add">Add</button>\n                        </div>\n                      </form>\n                    </div>\n                </div>\n              </div>\n            </li>\n           ';
+        return '\n            <li class="taskboard-stage">\n              <header class="taskboard-stage-header">\n                <div class="taskboard-stage-actions float-right">\n                  <div class="dropdown">\n                    <a data-toggle="dropdown" href="#" aria-expanded="false"><i class="icon wb-chevron-down" aria-hidden="true"></i></a>\n                    <div class="dropdown-menu bullet" role="menu">\n                      <a class="taskboard-stage-rename dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-pencil" aria-hidden="true"></i>Rename</a>\n                      <a class="taskboard-stage-delete dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-trash" aria-hidden="true"></i>Delete</a>\n                        <div class="taskboard-stage-rename-wrap">\n                          <div class="form-group">\n                            <input class="form-control taskboard-stage-rename-input" type="text" value="' + title + '" name="name">\n                          </div>\n                          <button class="btn btn-primary btn-block taskboard-stage-rename-save" type="button">Save</button>\n                        </div>\n                    </div>\n                  </div>\n                </div>\n                <h5 class="taskboard-stage-title">' + title + '</h5>\n              </header>\n              <div class="taskboard-stage-content">\n                <ul class="list-group taskboard-list"></ul>\n                <div class="action-wrap">\n                  <a class="add-item-toggle" href="#"><i class="icon wb-plus" aria-hidden="true"></i>Add Task</a>\n                    <div class="add-item-wrap">\n                      <form class="add-item" role="form" method="post" action="#">\n                        <div class="form-group">\n                          <label class="form-control-label mb-15" for="name">Task name:</label>\n                          <input class="form-control" type="text" placeholder="Task name" name="name">\n                        </div>\n                        <div class="form-group text-right">\n                          <a class="btn btn-sm btn-white add-item-cancel">Cancel</a>\n                          <button type="button" class="btn btn-primary add-item-add">Add</button>\n                        </div>\n                      </form>\n                    </div>\n                </div>\n              </div>\n            </li>\n           ';
       }
     }, {
       key: 'bindStageDropdownArrow',
@@ -267,7 +267,7 @@
     }, {
       key: 'bindTaskInput',
       value: function bindTaskInput() {
-        this.$el.on("click", ".checkbox-custom input", function (e) {
+        this.$el.on('click', '.checkbox-custom input', function (e) {
           var $this = $(this);
 
           var $target = $this.closest('.list-group-item'),
@@ -471,7 +471,7 @@
             return '<div class="' + this.namespace + '">\n            ' + this.options.tpl.items.call(this) + '\n            <div class="' + this.namespace + '-trigger">\n            ' + this.options.tpl.triggerButton.call(this) + '\n            <div class="' + this.namespace + '-trigger-dropdown">\n            ' + this.options.tpl.list.call(this) + '\n            </div>\n            </div>\n            </div>';
           },
           triggerButton: function triggerButton() {
-            return '<div class="' + this.namespace + '-trigger-button"><i class="md-plus"></i></div>';
+            return '<div class="' + this.namespace + '-trigger-button"><i class="wb-plus"></i></div>';
           },
           listItem: function listItem(data) {
             return '<li class="' + this.namespace + '-list-item"><img class="avatar" src="' + data.img + '">' + data.name + '</li>';
@@ -480,7 +480,7 @@
             return '<li class="' + this.namespace + '-item"><img class="avatar" src="' + data.img + '">\n            ' + this.options.tpl.itemRemove.call(this) + '\n            </li>';
           },
           itemRemove: function itemRemove() {
-            return '<span class="' + this.namespace + '-remove"><i class="md-minus-circle"></i></span>';
+            return '<span class="' + this.namespace + '-remove"><i class="wb-minus-circle"></i></span>';
           },
           option: function option(data) {
             return '<option value="' + this.options.tpl.optionValue.call(this, data) + '">' + data.name + '</option>';
@@ -514,14 +514,12 @@
       return '\n            <li class="list-group-item subtask">\n              <div class="checkbox-custom checkbox-primary">\n                <input type="checkbox" ' + checkedString + ' name="checkbox">\n                <label class="title">' + data.title + '</label>\n              </div>\n              <div class="subtask-editor">\n                <form>\n                  <div class="form-group">\n                    <input class="form-control subtask-title" type="text" name="title">\n                  </div>\n                  <div class="form-group">\n                    <button class="btn btn-primary subtask-editor-save" type="button">Save</button>\n                    <a class="btn btn-sm btn-white subtask-editor-delete" href="javascript:void(0)">Delete</a>\n                  </div>\n                </form>\n              </div>\n            </li>\n           ';
     },
     attachmentTpl: function attachmentTpl(data) {
-
-      return '\n            <li class="list-group-item">\n              <div class="meida">\n                <div class="pr-20">\n                  <div class="attachments-image">\n                    <img src="' + data.src + '">\n                  </div>\n                </div>\n                <div class="media-body">\n                  <p><span class="name">' + data.title + '</span><span</p>\n                  <p>\n                    <span class="size">' + data.size + '</span>\n                    <span class="attachments-actions">\n                      <button class="btn btn-icon btn-pure" type="button">\n                        <i class="icon md-download" aria-hidden="true"></i>\n                      </button>\n                      <button class="btn btn-icon btn-pure" type="button">\n                         <i class="icon md-delete" aria-hidden="true"></i>\n                      </button>\n                    </span>\n                  </p>\n                </div>\n              </div>\n            </li>\n           ';
+      return '\n            <li class="list-group-item">\n              <div class="meida">\n                <div class="pr-20">\n                  <div class="attachments-image">\n                    <img src="' + data.src + '">\n                  </div>\n                </div>\n                <div class="media-body">\n                  <p><span class="name">' + data.title + '</span><span</p>\n                  <p>\n                    <span class="size">' + data.size + '</span>\n                    <span class="attachments-actions">\n                      <button class="btn btn-icon btn-pure" type="button">\n                        <i class="icon wb-download" aria-hidden="true"></i>\n                      </button>\n                      <button class="btn btn-icon btn-pure" type="button">\n                         <i class="icon wb-trash" aria-hidden="true"></i>\n                      </button>\n                    </span>\n                  </p>\n                </div>\n              </div>\n            </li>\n           ';
     },
     commentTpl: function commentTpl(src, user, time, content) {
       return '\n            <div class="comment media">\n              <div class="pr-20">\n                <a class="avatar avatar-lg" href="javascript:void(0)">\n                  <img src="' + src + '" alt="...">\n                </a>\n              </div>\n              <div class="media-body">\n                <div class="comment-body">\n                  <a class="comment-author" href="javascript:void(0)">' + user + '</a>\n                  <div class="comment-meta">\n                    <span class="date">' + time + '</span>\n                  </div>\n                <div class="comment-content"><p>' + content + '</p></div>\n              </div>\n            </div>\n           ';
     },
     handlePriority: function handlePriority() {
-
       $(document).on('click', '[name="priorities"]', function () {
         var $this = $(this);
         var $target = $this.closest('.slidePanel').data('slidePanel').target;
@@ -586,8 +584,6 @@
       });
     },
     handleSubtasks: function handleSubtasks() {
-      var _this4 = this;
-
       var self = this;
       $(document).on('click', '.subtask-toggle', function () {
         var length = $('.subtask').length;
@@ -678,6 +674,7 @@
 
       $(document).on('click', '.subtask-editor-save', function () {
         var $this = $(this);
+
         var $subtask = $this.closest('.subtask'),
             $target = $this.closest('.slidePanel').data('slidePanel').target;
 
@@ -693,7 +690,7 @@
       });
 
       $(document).on('click', '.subtask-editor-delete', function (e) {
-        var $this = $(_this4);
+        var $this = $(this);
         bootbox.dialog({
           message: 'Do you want to delete the subtask?',
           buttons: {
@@ -703,6 +700,7 @@
               callback: function callback() {
                 var $subtask = $this.closest('.subtask'),
                     $target = $this.closest('.slidePanel').data('slidePanel').target;
+
                 var data = $target.data('taskInfo'),
                     index = $subtask.index(),
                     taskData = $target.data('taskInfo');
@@ -867,7 +865,7 @@
     }, {
       key: 'getTpl',
       value: function getTpl(content) {
-        return '<span class="task-badge task-badge-subtask icon md-calendar">' + content + '</span>';
+        return '<span class="task-badge task-badge-subtask icon wb-calendar">' + content + '</span>';
       }
     }]);
     return Duedate;
@@ -899,7 +897,7 @@
     }, {
       key: 'getTpl',
       value: function getTpl(content) {
-        return '<span class="task-badge task-badge-subtask icon md-format-list-bulleted">' + content + '</span>';
+        return '<span class="task-badge task-badge-subtask icon wb-list-bulleted">' + content + '</span>';
       }
     }]);
     return Subtask;
@@ -925,7 +923,7 @@
     }, {
       key: 'getTpl',
       value: function getTpl(content) {
-        return '<span class="task-badge task-badge-attachments icon md-attachment-alt">' + content + '</span>';
+        return '<span class="task-badge task-badge-attachments icon wb-paperclip">' + content + '</span>';
       }
     }]);
     return Attachment;
@@ -951,7 +949,7 @@
     }, {
       key: 'getTpl',
       value: function getTpl(content) {
-        return '<span class="task-badge task-badge-comments icon md-comment">' + content + '</span>';
+        return '<span class="task-badge task-badge-comments icon wb-chat">' + content + '</span>';
       }
     }]);
     return Comment;
@@ -1056,36 +1054,36 @@
     }, {
       key: 'createStageList',
       value: function createStageList() {
-        var _this6 = this;
+        var _this5 = this;
 
         var assets = Config.get('assets');
 
         $.getJSON(assets + '/data/taskboard.json', function (data) {
-          _this6.stageList = new StageList(_this6.$taskboard, data);
+          _this5.stageList = new StageList(_this5.$taskboard, data);
         });
       }
     }, {
       key: 'bindFloatBtn',
       value: function bindFloatBtn() {
-        var _this7 = this;
+        var _this6 = this;
 
         this.$floatBtn.on('click', function () {
-          $('input', _this7.$model).val('');
-          $('option:first', $('select', _this7.$model)).prop('selected', 'selected');
+          $('input', _this6.$model).val('');
+          $('option:first', $('select', _this6.$model)).prop('selected', 'selected');
         });
       }
     }, {
       key: 'bindStageCreateBtn',
       value: function bindStageCreateBtn() {
-        var _this8 = this;
+        var _this7 = this;
 
         this.$stageCreateBtn.on('click', function () {
-          var $name = $('[name="name"]', _this8.$model);
+          var $name = $('[name="name"]', _this7.$model);
           var stageData = {
             title: $name.val(),
             tasks: []
           };
-          _this8.stageList.add(stageData);
+          _this7.stageList.add(stageData);
         });
       }
     }, {

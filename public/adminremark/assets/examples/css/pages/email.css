@@ -2,12 +2,6 @@
   max-width: 660px;
   margin: 0 auto; }
 
-.page-email .page-content div.card-img-top {
-  margin-bottom: 35px; }
-
-.page-email .page-content div.card-link {
-  margin-top: 10px; }
-
 .page-email .email-title {
   padding: 15px 0 5px;
   text-align: center; }
@@ -16,7 +10,7 @@
   margin-top: 40px;
   padding: 35px 0 10px;
   text-align: center;
-  border-top: 1px solid #e0e0e0; }
+  border-top: 1px solid #e4eaec; }
   .page-email .email-more-title {
     font-size: 20px; }
   .page-email .email-more-content {
@@ -28,12 +22,12 @@
       padding: 5px;
       text-decoration: none; }
     .page-email .email-more-social .icon {
-      color: rgba(66, 66, 66, 0.4);
+      color: rgba(55, 71, 79, 0.4);
       font-size: 1.143rem; }
       .page-email .email-more-social .icon:hover, .page-email .email-more-social .icon:focus {
-        color: rgba(66, 66, 66, 0.6); }
+        color: rgba(55, 71, 79, 0.6); }
       .page-email .email-more-social .icon.active, .page-email .email-more-social .icon:active {
-        color: #424242; }
+        color: #37474f; }
   .page-email .email-more .card {
     margin-bottom: 1.572rem; }
 

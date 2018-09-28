@@ -1,12 +1,12 @@
 @import "vars";
 
 .table-dragger-handle {
-  font-family: '#{$zmdi-font-name}';
   @include make-icon();
-  margin-left: 0.3em;
+  margin-left: .3em;
+  font-family: "#{$wb-font-family}";
 
   &:before {
-    content: '#{$zmdi-var-arrows}';
+    content: "#{$wb-var-move}";
   }
 }
 
@@ -81,4 +81,8 @@
 
 .gu-transit {
   opacity: .5;
+}
+
+.sindu_dragger table {
+  background: transparent !important;
 }

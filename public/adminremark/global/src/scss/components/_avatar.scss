@@ -22,16 +22,13 @@
 
 // Variables
 // ========================================================================
-
-$avatar-size-100:        100px !default;
+$avatar-size-100: 100px !default;
 $avatar-status-size-100: 20px !default;
-
-$avatar-online-color:    $brand-success !default;
-$avatar-off-color:       $brand-dark !default;
-$avatar-busy-color:      $brand-warning !default;
-$avatar-away-color:      $brand-danger !default;
-
-$avatar-status-border:   $inverse !default;
+$avatar-online-color: $brand-success !default;
+$avatar-off-color: $brand-dark !default;
+$avatar-busy-color: $brand-warning !default;
+$avatar-away-color: $brand-danger !default;
+$avatar-status-border: $inverse !default;
 
 // Component: Avatar
 // ========================================================================
@@ -41,8 +38,8 @@ $avatar-status-border:   $inverse !default;
   display: inline-block;
   width: $avatar-size;
   white-space: nowrap;
-  border-radius: 1000px;
   vertical-align: bottom;
+  border-radius: 1000px;
 
   i {
     position: absolute;
@@ -59,12 +56,10 @@ $avatar-status-border:   $inverse !default;
     width: 100%;
     max-width: 100%;
     height: auto;
-
     border: 0 none;
     border-radius: 1000px;
   }
 }
-
 
 // Status Modifier
 // ========================================================================
@@ -100,8 +95,8 @@ $avatar-status-border:   $inverse !default;
   width: $avatar-size-100;
 
   i {
-    height: $avatar-status-size-100;
     width: $avatar-status-size-100;
+    height: $avatar-status-size-100;
   }
 }
 
@@ -109,8 +104,8 @@ $avatar-status-border:   $inverse !default;
   width: $avatar-size-lg;
 
   i {
-    height: $avatar-status-size-lg;
     width: $avatar-status-size-lg;
+    height: $avatar-status-size-lg;
   }
 }
 
@@ -118,8 +113,8 @@ $avatar-status-border:   $inverse !default;
   width: $avatar-size-sm;
 
   i {
-    height: $avatar-status-size-sm;
     width: $avatar-status-size-sm;
+    height: $avatar-status-size-sm;
   }
 }
 
@@ -127,7 +122,7 @@ $avatar-status-border:   $inverse !default;
   width: $avatar-size-xs;
 
   i {
-    height: $avatar-status-size-xs;
     width: $avatar-status-size-xs;
+    height: $avatar-status-size-xs;
   }
 }

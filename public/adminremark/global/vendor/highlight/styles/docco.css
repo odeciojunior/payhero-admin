@@ -4,15 +4,15 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 
 .hljs {
   display: block;
-  padding: .5em;
   overflow-x: auto;
+  padding: .5em;
   color: #000;
   background: #f8f8ff;
 }
 
 .hljs-comment, .hljs-quote {
-  font-style: italic;
   color: #408080;
+  font-style: italic;
 }
 
 .hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-subst {
@@ -36,13 +36,13 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 }
 
 .hljs-title {
-  font-weight: bold;
   color: #458;
+  font-weight: bold;
 }
 
 .hljs-tag, .hljs-name, .hljs-attribute {
-  font-weight: normal;
   color: #000080;
+  font-weight: normal;
 }
 
 .hljs-variable, .hljs-template-variable {
@@ -62,8 +62,8 @@ Docco style used in http://jashkenas.github.com/docco/ converted by Simon Madine
 }
 
 .hljs-meta {
-  font-weight: bold;
   color: #999;
+  font-weight: bold;
 }
 
 .hljs-deletion {

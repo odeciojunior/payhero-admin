@@ -305,7 +305,7 @@
     });
   })();
 
-  // Example Chartist Line Interpolation 
+  // Example Chartist Line Interpolation
   // -----------------------------------
   (function () {
     var smoothingChart = new Chartist.Line('#exampleSmoothingLine', {
@@ -460,7 +460,7 @@
     });
   })();
 
-  // Example Chartist Extreme Responsive 
+  // Example Chartist Extreme Responsive
   // -----------------------------------
   (function () {
     new Chartist.Bar('#exampleResponsiveBar', {

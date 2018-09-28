@@ -1,4 +1,3 @@
-
 .site-gridmenu {
   position: fixed;
   top: $site-navbar-height;
@@ -9,7 +8,6 @@
   padding: 20px 0;
   visibility: hidden;
   background-color: $site-gridmenu-bg;
-
   opacity: 0;
 
   .js > & {
@@ -18,9 +16,7 @@
 
   .site-gridmenu-active > & {
     @include media-breakpoint-down(sm) {
-
     }
-
     visibility: visible;
     opacity: 1;
     transition: opacity .5s ease 0s;
@@ -35,7 +31,6 @@
     padding: 0;
     margin: 0;
     list-style: none;
-
     opacity: .4;
     transition: transform .5s ease 0s, opacity .5s ease 0s;
     transform: translateY(-25%) rotateX(35deg);
@@ -74,14 +69,12 @@ body.site-gridmenu-active {
 .site-gridmenu-toggle {
   &:after {
     @include make-icon();
-
     position: relative;
     top: -1px;
     right: -3px;
-
-    font-family: '#{$zmdi-font-name}';
+    font-family: "#{$wb-font-family}";
     font-size: $site-gridmenu-toggle-size;
-    content: '#{$zmdi-var-chevron-down}';
+    content: "#{$wb-var-chevron-down-mini}";
     opacity: 0;
     transition: opacity .15s;
 

@@ -23,13 +23,13 @@
     position: absolute; }
   .strength-container .strength-invalid.strength-score {
     height: 25%;
-    background-color: #f44336; }
+    background-color: #ff4c52; }
   .strength-container .strength-weak.strength-score {
     height: 50%;
-    background-color: #ff9800; }
+    background-color: #eb6709; }
   .strength-container .strength-good.strength-score {
     height: 75%;
-    background-color: #00bcd4; }
+    background-color: #0bb2d4; }
   .strength-container .strength-strong.strength-score {
     height: 100%;
-    background-color: #4caf50; }
+    background-color: #11c26d; }

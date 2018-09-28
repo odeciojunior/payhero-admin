@@ -3,8 +3,7 @@ import Component from 'Component';
 import {
   pluginFactory,
   getPluginAPI
-}
-from 'Plugin';
+} from 'Plugin';
 
 export default class extends Component {
   initializePlugins(context = false) {

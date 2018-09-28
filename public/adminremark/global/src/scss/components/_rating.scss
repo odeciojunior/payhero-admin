@@ -11,14 +11,12 @@
 
 // Variables
 // ========================================================================
-
-$rating-size:               $font-size-base !default;
-$rating-size-sm:            $font-size-sm !default;
-$rating-size-lg:            $font-size-lg !default;
-
-$rating-color:              $gray-light !default;
-$rating-active-color:       $color-orange-600 !default;
-$rating-hover-color:        $color-orange-600 !default;
+$rating-size: $font-size-base !default;
+$rating-size-sm: $font-size-sm !default;
+$rating-size-lg: $font-size-lg !default;
+$rating-color: $gray-300 !default;
+$rating-active-color: $color-orange-600 !default;
+$rating-hover-color: $color-orange-600 !default;
 $rating-active-hover-color: $rating-hover-color !default;
 
 // Component: Rating
@@ -35,11 +33,13 @@ $rating-active-hover-color: $rating-hover-color !default;
     height: 0;
     clear: both;
     visibility: hidden;
-    content: '';
+    content: "";
   }
+
   &.hover .icon.active {
     opacity: .5;
   }
+
   .icon {
     width: 1em;
     height: auto;
@@ -51,12 +51,12 @@ $rating-active-hover-color: $rating-hover-color !default;
     cursor: pointer;
 
     &:before {
-      transition: color .3s ease,
-      opacity .3s ease;
+      transition: color .3s ease, opacity .3s ease;
     }
 
     &.active {
       color: $rating-active-color !important;
+
       &.hover {
         color: $rating-active-hover-color !important;
         opacity: 1;

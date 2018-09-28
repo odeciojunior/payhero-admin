@@ -6,12 +6,10 @@
   overflow-y: hidden;
   background: $page-aside-bg;
   border-right: 1px solid $border-color-base;
-  transition: visibility .1s ease,top .3s ease,left .5s ease, right .5s ease;
-  
+  transition: visibility .1s ease, top .3s ease, left .5s ease, right .5s ease;
+
   .list-group-item {
-    &.active,
-    &.active:focus,
-    &.active:hover {
+    &.active, &.active:focus, &.active:hover {
       z-index: 0;
     }
   }
@@ -37,7 +35,7 @@
 
     .page-aside-inner {
       border-right: 0;
-      border-left: 1px solid $gray-lighter;
+      border-left: 1px solid $gray-200;
     }
   }
 }
@@ -85,7 +83,7 @@
     display: block;
     margin: $line-height-computed;
     content: "";
-    border-bottom: 1px solid $gray-lighter;
+    border-bottom: 1px solid $gray-200;
   }
 
   &:last-child:after {
@@ -107,11 +105,11 @@
   border-radius: 0 100px 100px 0;
   box-shadow: 1px 0 3px rgba(0, 0, 0, .2);
 
-  .md-chevron-right {
+  .wb-chevron-right {
     display: inline-block;
   }
 
-  .md-chevron-left {
+  .wb-chevron-left {
     display: none;
   }
 
@@ -120,11 +118,11 @@
     padding: 15px 8px 15px 4px;
     border-radius: 0 100px 100px 0;
 
-    .md-chevron-right {
+    .wb-chevron-right {
       display: inline-block;
     }
 
-    .md-chevron-left {
+    .wb-chevron-left {
       display: none;
     }
   }
@@ -135,16 +133,15 @@
     padding: 15px 4px 15px 8px;
     border-radius: 100px 0 0 100px;
 
-    .md-chevron-right {
+    .wb-chevron-right {
       display: none;
     }
 
-    .md-chevron-left {
+    .wb-chevron-left {
       display: inline-block;
     }
   }
 }
-
 
 // Page Aside Title
 // ----------------
@@ -153,12 +150,11 @@
   margin: 20px 0 10px;
   overflow: hidden;
   font-weight: $font-weight-bold;
-  color: $gray-darker;
+  color: $gray-600;
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: default;
 }
-
 
 // List group
 // ----------
@@ -175,13 +171,12 @@
       border: 0;
 
       .icon {
-        color: $gray;
+        color: $gray-400;
       }
 
       .list-content {
         width: 100%;
       }
-      //end fix v4a6-dev ---Kevin_y
 
       .item-right {
         float: right;
@@ -189,7 +184,7 @@
 
       &:hover, &:focus {
         color: $brand-primary;
-        background-color: $gray-lightest;
+        background-color: $gray-100;
         border: 0;
 
         > .icon {
@@ -200,14 +195,14 @@
       &.active {
         color: $brand-primary;
         background-color: transparent;
-        
+
         > .icon {
           color: $brand-primary;
         }
 
         &:hover, &:focus {
           color: $brand-primary;
-          background-color: $gray-lightest;
+          background-color: $gray-100;
           border: 0;
 
           > .icon {
@@ -255,8 +250,8 @@
           display: none;
 
           .btn-icon {
-            padding-left: 2px;
             padding-right: 2px;
+            padding-left: 2px;
             background-color: transparent;
 
             &:hover {
@@ -278,8 +273,9 @@
 
           .item-actions {
             display: block;
+
             .icon {
-              color: $gray-dark;
+              color: $gray-500;
             }
           }
         }
@@ -332,39 +328,36 @@
     height: calc(100% - #{$site-navbar-height});
     overflow-y: visible;
     visibility: visible;
-    border-color: transparent;
+    border: none;
 
     .site-navbar-collapse-show & {
       top: (2 * $site-navbar-height);
-      $height: ($site-navbar-height * 2);
-      height: calc(100% - #{$height});
+      height: calc(100% - #{$site-navbar-height}*2);
     }
 
-    .site-menubar-changing &,
-    .site-menubar-open & {
+    .site-menubar-changing &, .site-menubar-open & {
       height: 100%;
     }
 
     .page-aside-inner {
       height: 100%;
       background-color: #fff;
-      border-right: 1px solid $gray-lighter;
+      border-right: 1px solid $gray-200;
     }
 
     &.open {
       left: 0;
 
-      .site-menubar-changing &,
-      .site-menubar-open & {
+      .site-menubar-changing &, .site-menubar-open & {
         visibility: hidden;
       }
 
       .page-aside-switch {
-        .md-chevron-right {
+        .wb-chevron-right {
           display: none;
         }
 
-        .md-chevron-left {
+        .wb-chevron-left {
           display: inline;
         }
       }
@@ -390,13 +383,12 @@
       }
 
       &.open {
-
         .page-aside-switch {
-          .md-chevron-right {
+          .wb-chevron-right {
             display: inline;
           }
 
-          .md-chevron-left {
+          .wb-chevron-left {
             display: none;
           }
         }

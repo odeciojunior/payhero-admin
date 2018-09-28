@@ -195,32 +195,32 @@
       "rename": {
         name: "Rename ...",
         icon: function icon() {
-          return 'context-menu-icon context-menu-extend-icon md-edit';
+          return 'context-menu-icon context-menu-extend-icon wb-pencil';
         }
       },
       "search": {
         name: "Find in...",
         icon: function icon() {
-          return 'context-menu-icon context-menu-extend-icon md-search';
+          return 'context-menu-icon context-menu-extend-icon wb-search';
         }
       },
       "sep1": "---------",
       "new": {
         name: "New File",
         icon: function icon() {
-          return 'context-menu-icon context-menu-extend-icon md-file';
+          return 'context-menu-icon context-menu-extend-icon wb-file';
         }
       },
       "new-folder": {
         name: "New Folder",
         icon: function icon() {
-          return 'context-menu-icon context-menu-extend-icon md-folder';
+          return 'context-menu-icon context-menu-extend-icon wb-folder';
         }
       }
     }, babelHelpers.defineProperty(_items, 'sep1', "---------"), babelHelpers.defineProperty(_items, "delete", {
       name: "Delete",
       icon: function icon() {
-        return 'context-menu-icon context-menu-extend-icon md-close';
+        return 'context-menu-icon context-menu-extend-icon wb-close';
       }
     }), _items)
   });

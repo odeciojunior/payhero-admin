@@ -6,10 +6,10 @@
 
 // Variables
 // ========================================================================
-$comment-padding-vertical          : 20px !default;
-$comment-border                    : $divider-color-base !default;
-$comment-author-color              : $title-color !default;
-$comment-meta-color                : $prompt-color !default;
+$comment-padding-vertical: 20px !default;
+$comment-border: $divider-color-base !default;
+$comment-author-color: $title-color !default;
+$comment-meta-color: $prompt-color !default;
 
 // Component: Comments
 // ========================================================================
@@ -26,6 +26,7 @@ $comment-meta-color                : $prompt-color !default;
       &:first-child {
         border-top: 1px solid $comment-border;
       }
+
       &:last-child {
         border-bottom: none;
       }
@@ -38,9 +39,8 @@ $comment-meta-color                : $prompt-color !default;
   margin: 0;
 
   .comment {
-    margin-top: $comment-padding-vertical;
-
     padding-bottom: $comment-padding-vertical;
+    margin-top: $comment-padding-vertical;
 
     &:last-child {
       padding-bottom: 0;
@@ -49,18 +49,15 @@ $comment-meta-color                : $prompt-color !default;
 }
 
 .comment-author {
-  &,
-  &:hover,
-  &:focus {
+  &, &:hover, &:focus {
     color: $comment-author-color;
   }
 }
 
 .comment-meta {
-  margin-left: 5px;
   display: inline-block;
+  margin-left: 5px;
   font-size: $font-size-sm;
-
   color: $comment-meta-color;
 }
 

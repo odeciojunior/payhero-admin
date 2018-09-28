@@ -9,28 +9,25 @@
   }
 
   &-icon {
+    @include icon-fixed-width();
     display: inline-block;
     vertical-align: middle;
-
-    @include icon-fixed-width();
   }
 
   &-title {
+    @include text-truncate();
     display: inline-block;
     max-width: 160px;
     vertical-align: middle;
-
-    @include text-truncate();
   }
 
   &-arrow {
-    font-family: '#{$zmdi-font-name}';
-
+    @include make-icon();
+    font-family: "#{$wb-font-family}";
     transition: transform .15s;
 
-    @include make-icon();
-    &:before {
-      content: '#{$zmdi-var-chevron-right}';
+    &::before {
+      content: "#{$wb-var-chevron-right-mini}";
     }
   }
 
@@ -68,10 +65,6 @@
   > .site-menu-item {
     padding: 0;
 
-    > a {
-      font-weight: $site-menu-top-weight;
-    }
-
     &.open {
       background: $site-menu-top-open-bg;
 
@@ -98,7 +91,6 @@
 
     &.active {
       background: $site-menu-top-active-bg;
-
       border-top: 1px solid $site-menu-top-active-border-color;
       border-bottom: 1px solid $site-menu-top-active-border-color;
 
@@ -178,67 +170,76 @@
   }
 }
 
-.site-menubar-dark {
+.site-menubar-light {
   .site-menu {
     &-item {
       a {
-        color: $site-menubar-dark-color;
+        color: $site-menubar-light-color;
       }
+
       &.hover, &:hover {
         > a {
-          background: $site-menu-dark-top-open-head-bg;
+          background: $site-menu-light-top-open-head-bg;
         }
       }
     }
+
     > .site-menu-item {
       &.open {
-        background: $site-menu-dark-top-open-bg;
+        background: $site-menu-light-top-open-bg;
+
         > a {
-          color: $site-menu-dark-sub-open-color;
+          color: $site-menu-light-sub-open-color;
         }
       }
 
       &.hover, &:hover {
-        background-color: $site-menu-dark-top-hover-bg;
+        background-color: $site-menu-light-top-hover-bg;
+
         > a {
-          color: $site-menu-dark-top-hover-color;
+          color: $site-menu-light-top-hover-color;
         }
       }
 
       &.active {
-        background: $site-menu-dark-top-active-bg;
+        background: $site-menu-light-top-active-bg;
+
         > a {
-          color: $site-menu-dark-top-active-color;
+          color: $site-menu-light-top-active-color;
         }
       }
     }
+
     .site-menu-sub {
       .site-menu-item {
         &.open {
-          background: $site-menu-dark-sub-open-bg;
+          background: $site-menu-light-sub-open-bg;
+
           > a {
-            color: $site-menu-dark-sub-open-color;
+            color: $site-menu-light-sub-open-color;
           }
         }
 
         &.hover, &:hover {
-          background-color: $site-menu-dark-sub-active-bg;
+          background-color: $site-menu-light-sub-active-bg;
+
           > a {
-            color: $site-menu-dark-sub-hover-color;
+            color: $site-menu-light-sub-hover-color;
           }
+
           &.open {
-            background-color: $site-menu-dark-sub-open-bg;
+            background-color: $site-menu-light-sub-open-bg;
           }
         }
 
         &.active {
-          background: $site-menu-dark-sub-active-bg;
+          background: $site-menu-light-sub-active-bg;
+
           > a {
-            color: $site-menu-dark-sub-active-color;
+            color: $site-menu-light-sub-active-color;
           }
         }
       }
     }
   }
 }
-

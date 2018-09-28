@@ -2,9 +2,9 @@
   margin-bottom: 20px; }
 
 .app-media .page-content-actions .actions-inner {
-  border-bottom: 1px solid #e0e0e0; }
+  border-bottom: 1px solid #e4eaec; }
 
-.app-media .page-content-actions .btn-default {
+.app-media .page-content-actions .btn-outline.btn-default {
   z-index: 2; }
 
 .app-media .blocks {
@@ -16,13 +16,13 @@
     margin-bottom: 0; }
 
 .app-media .time {
-  color: #9e9e9e; }
+  color: #a3afb7; }
 
 .app-media .media-item .checkbox-custom label::before {
   position: relative; }
 
 .app-media .media-item .dropdown:hover .dropdown-toggle {
-  color: #757575; }
+  color: #76838f; }
 
 .app-media .media-item .dropdown:hover .dropdown-menu {
   display: block;
@@ -46,8 +46,8 @@
     position: relative;
     cursor: pointer; }
     .app-media .media-list.is-grid .media-item:hover, .app-media .media-list.is-grid .media-item.active {
-      border-color: #e0e0e0;
-      background-color: #eeeeee; }
+      border-color: #e4eaec;
+      background-color: #f3f7f9; }
       .app-media .media-list.is-grid .media-item:hover .dropdown, .app-media .media-list.is-grid .media-item.active .dropdown {
         display: block; }
     .app-media .media-list.is-grid .media-item .checkbox-custom {
@@ -62,9 +62,9 @@
       float: right;
       display: none; }
       .app-media .media-list.is-grid .media-item .dropdown.open .dropdown-toggle, .app-media .media-list.is-grid .media-item .dropdown.open .dropdown-toggle:hover {
-        color: #616161; }
+        color: #526069; }
     .app-media .media-list.is-grid .media-item .dropdown-toggle {
-      color: #9e9e9e; }
+      color: #a3afb7; }
     .app-media .media-list.is-grid .media-item .dropdown-menu {
       -webkit-transform-origin: 100% 0;
       transform-origin: 100% 0;
@@ -86,13 +86,13 @@
       .app-media .media-list.is-list .media-item > div {
         display: inline-block; }
       .app-media .media-list.is-list .media-item:hover {
-        background-color: #eeeeee; }
+        background-color: #f3f7f9; }
         .app-media .media-list.is-list .media-item:hover .media-item-actions {
           display: block; }
       .app-media .media-list.is-list .media-item:after {
         content: '';
         display: block;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e4eaec;
         width: calc(100% - 60px);
         position: absolute;
         left: 30px;
@@ -120,7 +120,7 @@
     .app-media .media-list.is-list .media-item-actions {
       margin-top: 15px; }
       .app-media .media-list.is-list .media-item-actions .btn-icon {
-        color: #9e9e9e;
+        color: #a3afb7;
         margin-left: 1px; }
 
 .app-media .slidePanel-header {
