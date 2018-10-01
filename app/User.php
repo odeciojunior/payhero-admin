@@ -2,7 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticable;
 
 /**
  * @property int $id
@@ -30,8 +31,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $deleted_at
  * @property UsersEmpresa[] $usersEmpresas
  */
-class User extends Model
+class User extends Authenticable
 {
+    use Notifiable;
+
     /**
      * @var array
      */

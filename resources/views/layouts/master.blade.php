@@ -44,9 +44,20 @@
         <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/jvectormap/jquery-jvectormap.css') }}">
         <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css') }}">
         <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/dashboard/v1.css') }}">
-        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/tablesaw/tablesaw.min.css') }}">
-    
-    
+
+        <!-- Plugins For This Page -->
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-bs4/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-fixedheader-bs4/dataTables.fixedheader.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-fixedcolumns-bs4/dataTables.fixedcolumns.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-rowgroup-bs4/dataTables.rowgroup.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-scroller-bs4/dataTables.scroller.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-select-bs4/dataTables.select.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-responsive-bs4/dataTables.responsive.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-buttons-bs4/dataTables.buttons.bootstrap4.min.css') }}">
+
+        <!-- Page -->
+        <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/tables/datatable.min.css') }}">
+
     <!-- Fonts -->
         <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/weather-icons/weather-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/web-icons/web-icons.min.css') }}">
@@ -78,17 +89,15 @@
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     @include("layouts.menu-lateral")
-   
 
      <!-- Page -->   
         @yield('content')
     <!-- End Page -->
 
-
     <!-- Footer -->
     <footer class="site-footer">
       <div class="site-footer-right">© 2018 - CloudFox</div>
-      
+
     </footer>
     <!-- Core  -->
     <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
@@ -119,30 +128,29 @@
     <script src="{{ asset('adminremark/global/js/Plugin.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Base.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Config.js') }}"></script>
-    
+
     <script src="{{ asset('adminremark/assets/js/Section/Menubar.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/Section/GridMenu.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/Section/Sidebar.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/Section/PageAside.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/Plugin/menu.js') }}"></script>
-    
+
     <script src="{{ asset('adminremark/global/js/config/colors.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/config/tour.js') }}"></script>
     <script>Config.set('assets', '../../assets');</script>
-    
-    
+
     <!-- Page -->
     <script src="{{ asset('adminremark/assets/js/Site.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/asscrollable.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/slidepanel.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/switchery.js') }}"></script>
-    
+
         <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
         <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
         <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
         <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 
-        <script src="{{ asset('adminremark/global/vendor/tablesaw/tablesaw.jquery.js') }}"></script>
-        <script src="{{ asset('adminremark/global/vendor/tablesaw/tablesaw-init.js') }}"></script>   
+        <script src="{{ asset('adminremark/global/js/Plugin/datatables.js') }}"></script>
+        <script src="{{ asset('adminremark/assets/examples/js/tables/datatable.js') }}"></script>
   </body>
 </html>

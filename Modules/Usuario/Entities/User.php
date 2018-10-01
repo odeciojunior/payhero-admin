@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $deleted_at
  * @property UsersEmpresa[] $usersEmpresas
  */
-class User extends Model
+class User extends Authenticatable
 {
     /**
      * @var array

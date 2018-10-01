@@ -2,15 +2,13 @@
 
 @section('content')
 
-  {{-- token datatables ??? 8e9710ced8ef52bb3eebfb2e472c6fb193555b8a --}}
-
   <!-- Page -->
   <div class="page">
     <div class="page-content container-fluid">
-      <div class="row" data-plugin="matchHeight" data-by-row="true">
+      <div class="panel" data-plugin="matchHeight">
 
-        <table id="tabela_vendas" class="tablesaw table-bordered table-hover datatTable" style="width: 100%">
-          <thead>
+        <table id="tabela_vendas" class="table-bordered table-hover  w-full">
+          <thead class="bg-blue-grey-100">
             <tr>
               <td>Transação</td>
               <td>Produto</td>

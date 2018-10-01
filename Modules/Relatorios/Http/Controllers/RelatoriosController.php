@@ -23,15 +23,12 @@ class RelatoriosController extends Controller
 
     }
 
-
     public function dadosVendas(){
 
         return datatables(\DB::table('vendas as venda')
-
             ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'venda.id')
             ->leftjoin('compradores as comprador', 'comprador.id', '=', 'venda.comprador')
             ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
-
             ->get([
                 'venda.id',
                 'plano.nome as plano_nome',
@@ -44,7 +41,6 @@ class RelatoriosController extends Controller
                 'venda.valor_plano',
             ])
         )->toJson();
-
     }
 
 }
