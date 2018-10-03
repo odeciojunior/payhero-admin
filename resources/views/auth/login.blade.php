@@ -87,7 +87,7 @@
               <img class="brand-img logo-login" src="{{ asset('adminremark/assets/images/logo0.png') }}" alt="...">
               {{-- <h2 class="brand-text font-size-18">Remark</h2> --}}
             </div>
-            <form autocomplete="off"   method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+            <form autocomplete="off" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
                 @csrf
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus/>
@@ -116,7 +116,7 @@
               </div>
               <button type="submit" class="btn btn-primary btn-block btn-lg mt-40">{{ __('Sign in') }}</button>
             </form>
-            <p>Não tem Conta? Porfavor <a href="{{ route('register') }}">{{ __('Cadastrar-se') }}</a></p>
+            {{-- <p>Não tem Conta? Porfavor <a href="{{ route('register') }}">{{ __('Cadastrar-se') }}</a></p> --}}
           </div>
         </div>
 
@@ -139,6 +139,4 @@
     </div>
     @endsection
     <!-- End Page -->
-
-
 
