@@ -1,6 +1,6 @@
 
  <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation">
-    
+
         <div class="navbar-header">
           <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided"
             data-toggle="menubar">
@@ -15,9 +15,7 @@
             <img class="navbar-brand-logo" src="{{ asset('adminremark/assets/images/logo.png') }}" title="CloudFox">
             <span class="navbar-brand-text hidden-xs-down"> CloudFox</span>
           </div>
-          
         </div>
-      
         <div class="navbar-container container-fluid">
           <!-- Navbar Collapse -->
           <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
@@ -36,14 +34,11 @@
                   <span class="sr-only">Toggle fullscreen</span>
                 </a>
               </li>
-              
             </ul>
             <!-- End Navbar Toolbar -->
-      
+
             <!-- Navbar Toolbar Right -->
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-              
-              
               <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" title="Notifications"
                   aria-expanded="false" data-animation="scale-up" role="button">
@@ -55,7 +50,6 @@
                     <h5>NOTIFICATIONS</h5>
                     <span class="badge badge-round badge-danger">New 5</span>
                   </div>
-      
                   <div class="list-group">
                     <div data-role="container">
                       <div data-role="content">
@@ -127,7 +121,6 @@
                   </div>
                 </div>
               </li>
-
               <li class="nav-item dropdown">
                 <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
                   data-animation="scale-up" role="button">
@@ -151,11 +144,7 @@
           <!-- End Navbar Collapse -->         
         </div>
   </nav>   
-  
-  
 
-
-  
   <div class="site-menubar">
         <div class="site-menubar-body">
           <div>
@@ -181,6 +170,12 @@
                       </a>
                     </li>
                   </ul>
+                </li>
+                <li class="site-menu-item has-sub">
+                  <a href="{{ route('logs') }}">
+                    <i class="site-menu-icon wb-list-bulleted" aria-hidden="true"></i>
+                    <span class="site-menu-title">Logs</span>
+                  </a>
                 </li>
               </div>    
             </div>

@@ -75,7 +75,7 @@
 @extends('layouts.auth')
 
     <!-- Page -->
-    
+
  @section('title', '- Login')
     @section('content')
     {{-- <div class="">{{ __('Login') }}</div> --}}
