@@ -12,6 +12,11 @@ Route::group(['middleware' => 'web', 'prefix' => 'relatorios', 'namespace' => 'M
         'uses' => 'RelatoriosController@dadosVendas'
     ]);
 
+    Route::post('/venda/detalhe',[
+        'as' => 'relatorios.vendadetalhe',
+        'uses' => 'RelatoriosController@getDetalhesVenda'
+    ]);
+
 });
 
 

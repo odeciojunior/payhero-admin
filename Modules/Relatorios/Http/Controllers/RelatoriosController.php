@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use App\Venda;
+use App\PlanoVenda;
+use App\Plano;
+use App\Comprador;
+use App\Entrega;
+use Yajra\DataTables\Facades\DataTables;
 
 class RelatoriosController extends Controller
 {
@@ -25,7 +30,7 @@ class RelatoriosController extends Controller
 
     public function dadosVendas(){
 
-        return datatables(\DB::table('vendas as venda')
+        $vendas = \DB::table('vendas as venda')
             ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'venda.id')
             ->leftjoin('compradores as comprador', 'comprador.id', '=', 'venda.comprador')
             ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
@@ -39,8 +44,130 @@ class RelatoriosController extends Controller
                 'venda.data_inicio',
                 'venda.data_finalizada',
                 'venda.valor_plano',
-            ])
-        )->toJson();
+        ]);
+
+        return Datatables::of($vendas)
+        ->addColumn('detalhes', function ($venda) {
+            return "<button class='btn btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button>";
+        })
+        ->rawColumns(['detalhes'])
+        ->make(true);
+    }
+
+
+    public function getDetalhesVenda(Request $request){
+
+        $dados = $request->all();
+        $venda = Venda::find($dados['id_venda']);
+        $plano_venda = PlanoVenda::where('venda', $venda->id)->first();
+        $plano = Plano::find($plano_venda->plano);
+        $comprador = Comprador::find($venda->comprador);
+        $entrega = Entrega::find($venda->entrega);
+
+        $modal_body = '';
+        // $modal_body .= "<div class='row'>";
+        // $modal_body .= "<div class='col-xl-4 col-lg-4'>";
+        // $modal_body .= "<img src='https://checkout.mrorganic.com.br/storage/upload/plano/shampoo.jpg'>";
+        // $modal_body .= "</div>";
+        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
+        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
+        $modal_body .= "<thead>";
+        $modal_body .= "</thead>";
+        $modal_body .= "<tbody>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Comprador:</b></td>";
+        $modal_body .= "<td>".$comprador->nome."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>CPF:</b></td>";
+        $modal_body .= "<td>".$comprador->cpf_cnpj."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Email:</b></td>";
+        $modal_body .= "<td>".$comprador->email."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Telefone:</b></td>";
+        $modal_body .= "<td>".$comprador->telefone."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Data de nascimento:</b></td>";
+        $modal_body .= "<td>".$comprador->data_nascimento."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Produto:</b></td>";
+        $modal_body .= "<td>".$plano->nome."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Preço:</b></td>";
+        $modal_body .= "<td>".$plano->preco."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Código da transação:</b></td>";
+        $modal_body .= "<td>#".$venda->id."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Meio de pagamento:</b></td>";
+        $modal_body .= "<td>".$venda->meio_pagamento."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Forma de pagamento:</b></td>";
+        $modal_body .= "<td>".$venda->forma_pagamento."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Data da venda:</b></td>";
+        $modal_body .= "<td>".$venda->data_inicio."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Status da venda:</b></td>";
+        $modal_body .= "<td>".$venda->mercado_pago_status."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Código do plano:</b></td>";
+        $modal_body .= "<td>".$plano->cod_identificador."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Frete:</b></td>";
+        $modal_body .= "<td>".$venda->valor_frete."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>CEP:</b></td>";
+        $modal_body .= "<td>".$entrega->cep."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Estado:</b></td>";
+        $modal_body .= "<td>".$entrega->estado."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Cidade:</b></td>";
+        $modal_body .= "<td>".$entrega->cidade."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Bairro:</b></td>";
+        $modal_body .= "<td>".$entrega->bairro."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Rua:</b></td>";
+        $modal_body .= "<td>".$entrega->rua."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Numero:</b></td>";
+        $modal_body .= "<td>".$entrega->numero."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Ponto de referência:</b></td>";
+        $modal_body .= "<td>".$entrega->ponto_referencia."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>id kapsula:</b></td>";
+        $modal_body .= "<td>".$entrega->id_kapsula_pedido."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "</thead>";
+        $modal_body .= "</table>";
+        $modal_body .= "</div>";
+        $modal_body .= "</div>";
+
+        return response()->json($modal_body);
     }
 
 }
