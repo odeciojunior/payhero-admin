@@ -31,6 +31,7 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property string $deleted_at
  * @property UsersEmpresa[] $usersEmpresas
  */
+
 class User extends Authenticable
 {
     use Notifiable;

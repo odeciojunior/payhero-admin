@@ -72,7 +72,7 @@
     <script src="../../global/vendor/media-match/media.match.min.js"></script>
     <script src="../../global/vendor/respond/respond.min.js"></script>
     <![endif]-->
-    
+
     <!-- Scripts -->
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
 

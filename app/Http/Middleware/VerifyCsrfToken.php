@@ -14,6 +14,8 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/relatorios/vendas/data-source',
         '/logs/data-source',
+        '/usuarios/data-source',
         '/relatorios/venda/detalhe',
+        '/usuarios/detalhe',
     ];
 }

@@ -177,6 +177,12 @@
                     <span class="site-menu-title">Logs</span>
                   </a>
                 </li>
+                <li class="site-menu-item has-sub">
+                  <a href="{{ route('usuarios') }}">
+                    <i class="site-menu-icon wb-user" aria-hidden="true"></i>
+                    <span class="site-menu-title">Usuários</span>
+                  </a>
+                </li>
               </div>    
             </div>
           </div>
