@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticable;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id
@@ -35,6 +36,7 @@ use Illuminate\Foundation\Auth\User as Authenticable;
 class User extends Authenticable
 {
     use Notifiable;
+    use HasRoles;
 
     /**
      * @var array

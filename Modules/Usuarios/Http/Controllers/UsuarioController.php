@@ -9,6 +9,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\User;
 use App\ModelHasRoles;
 use App\Role;
+use Auth;
 
 class UsuarioController extends Controller {
 
@@ -27,9 +28,63 @@ class UsuarioController extends Controller {
      */
     public function cadastro() {
 
-        return view('usuario::cadastro'); 
+        if(auth()->user()->hasRole('administrador geral')){
+            $roles = Role::all();
+        }
+        else{
+            $roles = Role::where('name', '!=' , 'administrador geral')->get()->toArray();
+        }
+
+        return view('usuario::cadastro',[
+            'roles' => $roles
+        ]);
     }
 
+    public function cadastrarusuario(Request $request){
+
+        $dados = $request->all();
+
+        $user = User::create($dados);
+
+        $user->assignRole('administrador geral');
+
+        return view('usuario::index');
+    }
+
+    public function editarUsuario($id){
+
+        $user = User::find($id);
+
+        if(auth()->user()->hasRole('administrador geral')){
+            $roles = Role::all();
+        }
+        else{
+            $roles = Role::where('name', '!=' , 'administrador geral')->get()->toArray();
+        }
+
+        return view('usuario::editar',[
+            'user' => $user,
+            'roles' => $roles
+        ]);
+
+    }
+
+    public function updateUsuario(Request $request){
+
+        $dados = $request->all();
+
+        User::find($dados['id'])->update($dados);
+
+        return view('usuario::index');
+    }
+
+    public function deletarUsuario($id){
+
+        User::find($id)->delete();
+
+        return view('usuario::index');
+
+    }
 
     /**
      * Return data for datatable
@@ -56,7 +111,7 @@ class UsuarioController extends Controller {
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_user' data-placement='top' data-toggle='tooltip' title='Editar' user='".$user->id."'>
+                        <a href='/usuarios/editar/$user->id' class='btn btn-outline btn-primary editar_user' data-placement='top' data-toggle='tooltip' title='Editar' user='".$user->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
@@ -162,3 +217,5 @@ class UsuarioController extends Controller {
         return response()->json($modal_body);
     }
 }
+
+
