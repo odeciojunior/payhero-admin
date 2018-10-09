@@ -44,6 +44,8 @@ class UsuarioController extends Controller {
 
         $dados = $request->all();
 
+        $dados['password'] = bcrypt($dados['password']);
+
         $user = User::create($dados);
 
         $user->assignRole('administrador geral');
