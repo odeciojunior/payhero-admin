@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'logs', 'namespace' => 'Modules\Logs\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'logs', 'namespace' => 'Modules\Logs\Http\Controllers'], function()
 {
     Route::get('/',[
         'as' => 'logs',
