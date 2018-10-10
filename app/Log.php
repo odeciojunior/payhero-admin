@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Modules\Logs\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $erro
  * @property string $coockies
  */
+
 class Log extends Model
 {
     /**
@@ -51,6 +52,40 @@ class Log extends Model
     /**
      * @var array
      */
-    protected $fillable = ['id_sessao_log', 'plano', 'evento', 'user_agent', 'hora_acesso', 'hora_encerramento', 'hora_submit', 'forward', 'referencia', 'nome', 'email', 'cpf', 'celular', 'entrega', 'cep', 'endereco', 'numero', 'bairro', 'cidade', 'estado', 'valor_frete', 'valor_cupom', 'valor_total', 'numero_cartao', 'nome_cartao', 'cpf_cartao', 'mes_cartao', 'ano_cartao', 'codigo_cartao', 'parcelamento', 'erro', 'coockies'];
+    protected $fillable = [
+        'id_sessao_log',
+        'plano',
+        'evento',
+        'user_agent',
+        'sistema_operacional',
+        'navegador',
+        'hora_acesso',
+        'horario',
+        'forward',
+        'referencia',
+        'nome',
+        'email',
+        'cpf',
+        'celular',
+        'entrega',
+        'cep',
+        'endereco',
+        'numero',
+        'bairro',
+        'cidade',
+        'estado', 
+        'valor_frete', 
+        'valor_cupom', 
+        'valor_total', 
+        'numero_cartao', 
+        'nome_cartao', 
+        'cpf_cartao', 
+        'mes_cartao', 
+        'ano_cartao', 
+        'codigo_cartao', 
+        'parcelamento', 
+        'erro', 
+        'coockies',
+    ];
 
 }

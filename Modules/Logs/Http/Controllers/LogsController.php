@@ -18,7 +18,6 @@ class LogsController extends Controller {
         return view('logs::logs');
     }
 
-
     public function dadosLogs(){
 
         return datatables(
@@ -28,18 +27,16 @@ class LogsController extends Controller {
                 'log.id_sessao_log',
                 'log.plano',
                 'log.evento',
-                'log.user_agent',
+                'log.sistema_operacional',
+                'log.navegador',
                 'log.hora_acesso',
                 'log.horario',
-                'log.hora_encerramento',
-                'log.hora_submit',
                 'log.forward',
                 'log.referencia',
                 'log.nome',
                 'log.email',
                 'log.cpf',
                 'log.celular',
-                'log.entrega',
                 'log.cep',
                 'log.endereco',
                 'log.numero',
