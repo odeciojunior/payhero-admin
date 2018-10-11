@@ -22,9 +22,11 @@ class LogsController extends Controller {
 
         return datatables(
             \DB::table('logs as log')
+            ->leftjoin('planos as plano', 'log.plano', '=', 'plano.cod_identificador')
             ->get([
                 'log.id',
                 'log.id_sessao_log',
+                'plano.nome as plano_nome',
                 'log.plano',
                 'log.evento',
                 'log.sistema_operacional',

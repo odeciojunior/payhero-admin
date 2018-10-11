@@ -13,6 +13,7 @@
               <td style='display:none'>id</td>
               <td>sessao_log</td>
               <td>plano</td>
+              <td>descrição</td>
               <td>evento</td>
               <td>sistema operacional</td>
               <td>navegador</td>
@@ -51,6 +52,7 @@
         columns: [
             {data: 'id', name: 'id', visible: false},
             {data: 'id_sessao_log', name: 'id_sessao_log'},
+            {data: 'plano_nome', name: 'plano_nome'},
             {data: 'plano', name: 'plano'},
             {data: 'evento', name: 'evento'},
             {data: 'sistema_operacional', name: 'sistema_operacional'},
