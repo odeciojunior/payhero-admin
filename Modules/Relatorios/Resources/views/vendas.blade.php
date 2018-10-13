@@ -113,7 +113,29 @@
                   });
 
               });
-          }
+          },
+          "drawCallback": function() {
+
+            $('.detalhes_venda').on('click', function() {
+
+                var venda = $(this).attr('venda');
+
+                $('#modal_venda_titulo').html('Detalhes da venda #' + venda);
+
+                $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+
+                var data = { id_venda : venda };
+
+                $.post("/relatorios/venda/detalhe", data)
+                 .then( function(response, status){
+
+                    $('#modal_venda_body').html(response);
+
+                });
+
+            });
+        }
+
 
       });
 
