@@ -59,6 +59,7 @@
       $('#tabela_vendas').DataTable( {
           processing: true,
           serverSide: true,
+          order: [ [ 0, 'desc' ] ],
           ajax: {
               url: '/relatorios/vendas/data-source',
               type: 'POST'
