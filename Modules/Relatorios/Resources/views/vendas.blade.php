@@ -5,10 +5,10 @@
   <!-- Page -->
   <div class="page">
     <div class="page-content container-fluid">
-      <div class="panel" data-plugin="matchHeight">
+      <div class="panel pt-30 p-30 " data-plugin="matchHeight">
 
-        <table id="tabela_vendas" class="table-bordered table-hover  w-full">
-          <thead class="bg-blue-grey-100">
+        <table id="tabela_vendas" class="tablesaw table-striped tablesaw-swipe">
+          <thead >
             <tr>
               <td>Transação</td>
               <td>Produto</td>
@@ -146,4 +146,3 @@
 
 
 @endsection
-

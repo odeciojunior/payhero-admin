@@ -19,7 +19,7 @@
             @csrf
             <input type="hidden" value="{!! $user->id !!}" name="id">
             <div class="page-content container-fluid">
-                <div class="panel" data-plugin="matchHeight">
+                <div class="panel pt-30 p-30" data-plugin="matchHeight">
                     <div style="width:100%">
                         <div class="row">
                             <div class="form-group col-xl-6">
@@ -152,4 +152,3 @@
 
 
 @endsection
-
