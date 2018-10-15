@@ -16,10 +16,10 @@
     </div>
 
     <div class="page-content container-fluid">
-      <div class="panel" data-plugin="matchHeight">
+      <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-        <table id="tabela_usuarios" class="table-bordered table-hover w-full" style="margin-top: 80px">
-          <thead class="bg-blue-grey-100">
+        <table id="tabela_usuarios" class="tablesaw table-striped tablesaw-swipe" style="margin-top: 80px">
+          <thead>
             <tr>
               <td>Nome</td>
               <td>Função</td>
@@ -163,4 +163,3 @@
 
 
 @endsection
-
