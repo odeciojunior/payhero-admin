@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
+ * @property string $cnpj
  * @property string $status
- * @property string $emaill
+ * @property string $email
  * @property string $cep
  * @property string $municipio
  * @property string $logradouro
@@ -36,7 +37,7 @@ class Empresa extends Model
     /**
      * @var array
      */
-    protected $fillable = ['status', 'emaill', 'cep', 'municipio', 'logradouro', 'cod_atividade', 'data_situacao', 'situacao', 'abertura', 'complemento', 'bairro', 'numero', 'ultima_atualizacao', 'fantasia', 'capital_social', 'atividade_principal', 'nome', 'uf', 'telefone', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['cnpj', 'status', 'email', 'cep', 'municipio', 'logradouro', 'cod_atividade', 'data_situacao', 'situacao', 'abertura', 'complemento', 'bairro', 'numero', 'ultima_atualizacao', 'fantasia', 'capital_social', 'atividade_principal', 'nome', 'uf', 'telefone', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

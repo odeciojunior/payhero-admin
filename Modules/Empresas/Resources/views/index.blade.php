@@ -6,7 +6,7 @@
   <div class="page">
 
     <div class="page-header">
-        <h1 class="page-title">Usuários</h1>
+        <h1 class="page-title">Empresas</h1>
         <div class="page-header-actions">
             <a class="btn btn-primary float-right" href="/empresas/cadastro">
                 <i class='icon wb-user-add' aria-hidden='true'></i>
@@ -21,12 +21,12 @@
         <table id="tabela_empresas" class="table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
             <tr>
-              <td>cnpj</td>
-              <td>nome</td>
-              <td>email</td>
-              <td>municipio</td>
-              <td>estado</td>
-              <td>situacao</td>
+              <td>Nome</td>
+              <td>CNPJ</td>
+              <td>Email</td>
+              <td>Município</td>
+              <td>Estado</td>
+              <td>Situacao</td>
               <td>Opções</td>
             </tr>
           </thead>
@@ -54,7 +54,6 @@
           </div>
         </div>
         <!-- End Modal -->
-
 
         <!-- Modal de confirmação da exclusão do usuário -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -97,8 +96,8 @@
                 type: 'POST'
             },
             columns: [
+                { data: 'nome', name: 'nome'},
                 { data: 'cnpj', name: 'cnpj'},
-                { data: 'name', name: 'name'},
                 { data: 'email', name: 'email'},
                 { data: 'municipio', name: 'municipio'},
                 { data: 'uf', name: 'uf'},
@@ -124,7 +123,7 @@
                     "sPrevious": "Anterior",
                 },
             },
-            {{-- "initComplete": function() {
+            "initComplete": function() {
 
                 $('.detalhes_user').on('click', function() {
 
@@ -147,14 +146,14 @@
 
                 $('.excluir_user').on('click', function(){
 
-                    var id_user = $(this).attr('user');
+                    var id_user = $(this).attr('empresa');
 
-                    $('#form_excluir_usuario').attr('action','/empresas/deletarusuario/'+id_user);
+                    $('#form_excluir_usuario').attr('action','/empresas/deletarempresa/'+id_user);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 
-                    $('#modal_excluir_titulo').html('Excluir o usuário '+name+'?');
-                }); --}}
+                    $('#modal_excluir_titulo').html('Excluir a empresa '+name+'?');
+                });
             }
 
         });

@@ -7,8 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
 use App\User;
-use App\ModelHasRoles;
-use App\Role;
+use App\Empresa;
 use Auth;
 
 class EmpresasController extends Controller {
@@ -23,17 +22,13 @@ class EmpresasController extends Controller {
         return view('empresas::cadastro');
     }
 
-    public function cadastrarempresas(Request $request){
+    public function cadastrarEmpresa(Request $request){
 
         $dados = $request->all();
 
-        $dados['password'] = bcrypt($dados['password']);
+        Empresa::create($dados);
 
-        $user = User::create($dados);
-
-        $user->assignRole('administrador geral');
-
-        return view('empresas::index');
+        return redirect()->route('empresas');
     }
 
     public function editarEmpresas($id){
@@ -63,11 +58,11 @@ class EmpresasController extends Controller {
         return view('empresas::index');
     }
 
-    public function deletarempresas($id){
+    public function deletarEmpresa($id){
 
-        User::find($id)->delete();
+        Empresa::find($id)->delete();
 
-        return view('empresas::index');
+        return redirect()->route('empresas');
 
     }
 
@@ -75,6 +70,7 @@ class EmpresasController extends Controller {
 
         $empresas = \DB::table('empresas as empresa')
             ->get([
+                'id',
                 'cnpj',
                 'nome',
                 'email',
@@ -104,7 +100,6 @@ class EmpresasController extends Controller {
         ->rawColumns(['detalhes'])
         ->make(true);
     }
-
 
     public function getDetalhesempresas(Request $request){
 
