@@ -7,7 +7,7 @@
     <div class="page-content container-fluid">
       <div class="panel pt-30 p-30" data-plugin="matchHeight" style="max-width:100%;">
 
-        <table id="tabela_vendas" class="tablesaw table-striped tablesaw-swipe " style="overflow-x: scroll;">
+        <table id="tabela_vendas" class="tablesaw table-striped tablesaw-swipe table-hover" style="overflow-x: scroll;">
           <thead>
             <tr>
               <td style='display:none'>id</td>
