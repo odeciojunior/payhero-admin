@@ -158,6 +158,12 @@
                   </a>
                 </li>
                 <li class="site-menu-item has-sub">
+                  <a href="{{ route('empresas') }}">
+                    <i class="site-menu-icon wb-briefcase" aria-hidden="true"></i>
+                    <span class="site-menu-title">Empresas</span>
+                  </a>
+                </li>
+                <li class="site-menu-item has-sub">
                   <a href="javascript:void(0)">
                     <i class="site-menu-icon wb-order" aria-hidden="true"></i>
                     <span class="site-menu-title">Relatórios</span>
