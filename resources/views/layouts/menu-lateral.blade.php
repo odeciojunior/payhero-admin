@@ -164,6 +164,18 @@
                   </a>
                 </li>
                 <li class="site-menu-item has-sub">
+                  <a href="#">
+                    <i class="site-menu-icon wb-mobile" aria-hidden="true"></i>
+                    <span class="site-menu-title">Produtos</span>
+                  </a>
+                </li>
+                <li class="site-menu-item has-sub">
+                  <a href="#">
+                    <i class="site-menu-icon wb-shopping-cart" aria-hidden="true"></i>
+                    <span class="site-menu-title">Planos</span>
+                  </a>
+                </li>
+                <li class="site-menu-item has-sub">
                   <a href="javascript:void(0)">
                     <i class="site-menu-icon wb-order" aria-hidden="true"></i>
                     <span class="site-menu-title">Relatórios</span>

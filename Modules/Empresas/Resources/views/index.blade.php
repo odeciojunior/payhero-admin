@@ -59,7 +59,7 @@
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">
-                <form id="form_excluir_usuario" method="GET" action="/deletarusuario">
+                <form id="form_excluir_empresa" method="GET" action="/deletarempresa">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
@@ -125,15 +125,15 @@
             },
             "initComplete": function() {
 
-                $('.detalhes_user').on('click', function() {
+                $('.detalhes_empresa').on('click', function() {
 
-                    var user = $(this).attr('user');
+                    var empresa = $(this).attr('empresa');
 
-                    $('#modal_detalhes_titulo').html('Detalhes do usuário');
+                    $('#modal_detalhes_titulo').html('Detalhes da empresa');
 
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { id_user : user };
+                    var data = { id_empresa : empresa };
 
                     $.post("/empresas/detalhe", data)
                     .then( function(response, status){
@@ -144,11 +144,11 @@
 
                 });
 
-                $('.excluir_user').on('click', function(){
+                $('.excluir_empresa').on('click', function(){
 
                     var id_user = $(this).attr('empresa');
 
-                    $('#form_excluir_usuario').attr('action','/empresas/deletarempresa/'+id_user);
+                    $('#form_excluir_empresa').attr('action','/empresas/deletarempresa/'+id_user);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 

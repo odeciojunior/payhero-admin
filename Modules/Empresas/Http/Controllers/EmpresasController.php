@@ -31,29 +31,21 @@ class EmpresasController extends Controller {
         return redirect()->route('empresas');
     }
 
-    public function editarEmpresas($id){
+    public function editarEmpresa($id){
 
-        $user = User::find($id);
-
-        if(auth()->user()->hasRole('administrador geral')){
-            $roles = Role::all();
-        }
-        else{
-            $roles = Role::where('name', '!=' , 'administrador geral')->get()->toArray();
-        }
+        $empresa = Empresa::find($id);
 
         return view('empresas::editar',[
-            'user' => $user,
-            'roles' => $roles
+            'empresa' => $empresa,
         ]);
 
     }
 
-    public function updateEmpresas(Request $request){
+    public function updateEmpresa(Request $request){
 
         $dados = $request->all();
 
-        User::find($dados['id'])->update($dados);
+        Empresa::find($dados['id'])->update($dados);
 
         return view('empresas::index');
     }
@@ -87,12 +79,12 @@ class EmpresasController extends Controller {
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/empresass/editar/$empresa->id' class='btn btn-outline btn-primary editar_empresa' data-placement='top' data-toggle='tooltip' title='Editar' empresa='".$empresa->id."'>
+                        <a href='/empresas/editar/$empresa->id' class='btn btn-outline btn-primary editar_empresa' data-placement='top' data-toggle='tooltip' title='Editar' empresa='".$empresa->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_user' data-placement='top' data-toggle='tooltip' title='Excluir' empresa='".$empresa->id."'>
+                        <a class='btn btn-outline btn-danger excluir_empresa' data-placement='top' data-toggle='tooltip' title='Excluir' empresa='".$empresa->id."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -101,13 +93,11 @@ class EmpresasController extends Controller {
         ->make(true);
     }
 
-    public function getDetalhesempresas(Request $request){
+    public function getDetalhesEmpresa(Request $request){
 
         $dados = $request->all();
 
-        $user = User::find($dados['id_user']);
-        $role_user = ModelHasRoles::where('model_id',$user->id)->first();
-        $role = Role::find($role_user->role_id);
+        $empresa = Empresa::find($dados['id_empresa']);
 
         $modal_body = '';
 
@@ -117,72 +107,64 @@ class EmpresasController extends Controller {
         $modal_body .= "</thead>";
         $modal_body .= "<tbody>";
         $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Função:</b></td>";
-        $modal_body .= "<td>".$role->name."</td>";
+        $modal_body .= "<td><b>Status:</b></td>";
+        $modal_body .= "<td>".$empresa->status."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Nome:</b></td>";
-        $modal_body .= "<td>".$user->name."</td>";
+        $modal_body .= "<td><b>CNPJ:</b></td>";
+        $modal_body .= "<td>".$empresa->cnpj."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Nome fantasia:</b></td>";
+        $modal_body .= "<td>".$empresa->nome."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Email:</b></td>";
-        $modal_body .= "<td>".$user->email."</td>";
+        $modal_body .= "<td>".$empresa->email."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Data de nascimento:</b></td>";
-        $modal_body .= "<td>".$user->data_nascimento."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Celular:</b></td>";
-        $modal_body .= "<td>".$user->celular."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Telefone 1:</b></td>";
-        $modal_body .= "<td>".$user->telefone1."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Telefone 2:</b></td>";
-        $modal_body .= "<td>".$user->telefone2."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>CPF:</b></td>";
-        $modal_body .= "<td>".$user->cpf."</td>";
+        $modal_body .= "<td><b>Telefone:</b></td>";
+        $modal_body .= "<td>".$empresa->telefone."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>CEP:</b></td>";
-        $modal_body .= "<td>".$user->cep."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>País:</b></td>";
-        $modal_body .= "<td>".$user->pais."</td>";
+        $modal_body .= "<td>".$empresa->cep."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Estado:</b></td>";
-        $modal_body .= "<td>".$user->estado."</td>";
+        $modal_body .= "<td>".$empresa->estado."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Cidade:</b></td>";
-        $modal_body .= "<td>".$user->cidade."</td>";
+        $modal_body .= "<td>".$empresa->cidade."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Bairro:</b></td>";
-        $modal_body .= "<td>".$user->bairro."</td>";
+        $modal_body .= "<td>".$empresa->bairro."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Rua:</b></td>";
-        $modal_body .= "<td>".$user->logradouro."</td>";
+        $modal_body .= "<td>".$empresa->logradouro."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Número:</b></td>";
-        $modal_body .= "<td>".$user->numero."</td>";
+        $modal_body .= "<td>".$empresa->numero."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Complemento:</b></td>";
-        $modal_body .= "<td>".$user->complemento."</td>";
+        $modal_body .= "<td>".$empresa->complemento."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Referência:</b></td>";
-        $modal_body .= "<td>".$user->referencia."</td>";
+        $modal_body .= "<td><b>Atividade principal:</b></td>";
+        $modal_body .= "<td>".$empresa->atividade_principal."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Capital social:</b></td>";
+        $modal_body .= "<td>".$empresa->capital_social."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Data de abertura:</b></td>";
+        $modal_body .= "<td>".$empresa->abertura."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";

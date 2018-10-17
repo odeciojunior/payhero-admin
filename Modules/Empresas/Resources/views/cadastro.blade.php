@@ -21,7 +21,10 @@
                 <div class="panel" data-plugin="matchHeight">
                     <div style="width:100%">
                         <div class="row">
-
+                            <input type="hidden" name="">
+                            <input type="hidden" name="">
+                            <input type="hidden" name="">
+                            <input type="hidden" name="">
                             <div class="form-group col-xl-6">
                                 <label for="cnpj">CNPJ</label>
                                 <input name="cnpj" type="text" class="form-control" id="cnpj" placeholder="CNPJ">
@@ -92,7 +95,7 @@
                                 <label for="complemento">Complemento</label>
                                 <input name="complemento" type="text" class="form-control" id="complemento" placeholder="Complemento">
                             </div>
-        
+
                         </div>
 
                         <div class="row">
@@ -109,6 +112,27 @@
   <script>
 
     $(document).ready( function(){
+
+        $('#cnpj').on('input',function(){
+
+            if($(this).val().replace(/[^0-9]/g,'').length ==  14){
+
+                jQuery.support.cors = true;
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://www.receitaws.com.br/v1/cnpj/'+$(this).val(),
+                    crossDomain: true,
+                    dataType: 'jsonp',
+                    success: function(data) {
+                        alert(data.toSource());
+                        
+                    },
+                });
+        
+            }
+
+        });
 
     });
 
