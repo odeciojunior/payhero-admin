@@ -164,7 +164,7 @@
                   </a>
                 </li>
                 <li class="site-menu-item has-sub">
-                  <a href="#">
+                  <a href="{{ route('produtos') }}">
                     <i class="site-menu-icon wb-mobile" aria-hidden="true"></i>
                     <span class="site-menu-title">Produtos</span>
                   </a>

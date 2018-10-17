@@ -32,8 +32,8 @@
                             <div class="form-group col-xl-6">
                                 <label for="situacao">Situacao</label>
                                 <select name="situacao" class="form-control" id="situacao" required>
-                                    <option value="ativo" value="{!! ($empresa->situacao != '' && $empresa->situacao == 'ativo') ? 'selected' : '' !!}" >Ativo</option>
-                                    <option value="inativo" value="{!! ($empresa->situacao != '' && $empresa->situacao == 'inativo') ? 'selected' : '' !!}">Inativo</option>
+                                    <option value="ativo" {!! ($empresa->situacao == 'ativo') ? 'selected' : '' !!} >Ativo</option>
+                                    <option value="inativo" {!! ($empresa->situacao == 'inativo') ? 'selected' : '' !!}>Inativo</option>
                                 </select>
                             </div>
 

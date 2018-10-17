@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nome
  * @property string $descricao
  * @property string $email
- * @property int $garantia
+ * @property string $garantia
  * @property int $quntidade
  * @property boolean $disponivel
  * @property boolean $formato
@@ -32,7 +32,7 @@ class Produto extends Model
     /**
      * @var array
      */
-    protected $fillable = ['categoria', 'nome', 'descricao', 'email', 'garantia', 'quntidade', 'disponivel', 'formato', 'telefone_suporte', 'created_at', 'updated_at'];
+    protected $fillable = ['categoria', 'nome', 'descricao', 'email', 'garantia', 'quntidade', 'disponivel', 'formato', 'telefone_suporte', 'foto','created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

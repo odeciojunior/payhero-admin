@@ -6,28 +6,32 @@
   <div class="page">
 
     <div class="page-header">
-        <h1 class="page-title">Empresas</h1>
+        <h1 class="page-title">Produtos</h1>
         <div class="page-header-actions">
-            <a class="btn btn-primary float-right" href="/empresas/cadastro">
+            <a class="btn btn-primary float-right" href="/produtos/cadastro">
                 <i class='icon wb-user-add' aria-hidden='true'></i>
                 Cadastrar
             </a>
-        </div>
+            <a class="btn btn-success float-right" href="/categorias" style="margin-right: 10px">
+                <i class='icon wb-grid-4' aria-hidden='true'></i>
+                Categorias
+          </a>
+      </div>
     </div>
 
     <div class="page-content container-fluid">
       <div class="panel" data-plugin="matchHeight">
 
-        <table id="tabela_empresas" class="table-bordered table-hover w-full" style="margin-top: 80px">
+        <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
             <tr>
               <td>Nome</td>
-              <td>CNPJ</td>
-              <td>Email</td>
-              <td>Município</td>
-              <td>Estado</td>
-              <td>Situacao</td>
-              <td>Opções</td>
+              <td>Descrição</td>
+              <td>Categoria</td>
+              <td>Formato</td>
+              <td>Quantidade</td>
+              <td>Status</td>
+              <td style="width: 160px">Detalhes</td>
             </tr>
           </thead>
           <tbody>
@@ -59,7 +63,7 @@
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">
-                <form id="form_excluir_empresa" method="GET" action="/deletarempresa">
+                <form id="form_excluir_produto" method="GET" action="/deletarproduto">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
@@ -87,21 +91,35 @@
 
     $(document).ready( function(){
 
-        $("#tabela_empresas").DataTable( {
+        $("#tabela_produtos").DataTable( {
 
             processing: true,
             serverSide: true,
             ajax: {
-                url: '/empresas/data-source',
+                url: '/produtos/data-source',
                 type: 'POST'
             },
             columns: [
                 { data: 'nome', name: 'nome'},
-                { data: 'cnpj', name: 'cnpj'},
-                { data: 'email', name: 'email'},
-                { data: 'municipio', name: 'municipio'},
-                { data: 'uf', name: 'uf'},
-                { data: 'situacao', name: 'situacao'},
+                { data: function(data){
+                    return data.descricao.substr(0,25);
+                }, name: 'descricao'},
+                { data: 'categoria_nome', name: 'categoria_nome'},
+                { data: function(data){
+                    if(data.formato == 1)
+                      return 'Físico';
+                    if(data.formato == 0)
+                      return 'Digital';
+                    return 'null';
+                }, name: 'formato'},
+                { data: 'quntidade', name: 'quntidade'},
+                { data: function(data){
+                  if(data.disponivel == 1)
+                  return 'Disponível';
+                if(data.disponivel == 0)
+                  return 'Indisponível';
+                return 'null';
+                }, name: 'disponivel'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {
@@ -125,17 +143,17 @@
             },
             "drawCallback": function() {
 
-                $('.detalhes_empresa').on('click', function() {
+                $('.detalhes_produto').on('click', function() {
 
-                    var empresa = $(this).attr('empresa');
+                    var produto = $(this).attr('produto');
 
-                    $('#modal_detalhes_titulo').html('Detalhes da empresa');
+                    $('#modal_detalhes_titulo').html('Detalhes da produto');
 
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { id_empresa : empresa };
+                    var data = { id_produto : produto };
 
-                    $.post("/empresas/detalhe", data)
+                    $.post("/produtos/detalhe", data)
                     .then( function(response, status){
 
                         $('#modal_detalhes_body').html(response);
@@ -144,15 +162,16 @@
 
                 });
 
-                $('.excluir_empresa').on('click', function(){
+                $('.excluir_produto').on('click', function(){
 
-                    var id_user = $(this).attr('empresa');
+                    var id_produto = $(this).attr('produto');
 
-                    $('#form_excluir_empresa').attr('action','/empresas/deletarempresa/'+id_user);
+                    $('#form_excluir_produto').attr('action','/produtos/deletarproduto/'+id_produto);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 
-                    $('#modal_excluir_titulo').html('Excluir a empresa '+name+'?');
+                    $('#modal_excluir_titulo').html('Excluir o produto '+name+'?');
+
                 });
             }
 
