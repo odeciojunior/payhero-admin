@@ -8,14 +8,14 @@
         <div class="page-header">
             <h1 class="page-title">Cadastrar novo plano</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/produtos">
+                <a class="btn btn-primary float-right" href="/planos">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
                     Voltar
                 </a>
             </div>
         </div>
 
-        <form method="post" action="/planos/cadastrarplano">
+        <form method="post" action="/planos/cadastrarplano" enctype="multipart/form-data">
             @csrf
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
@@ -104,9 +104,14 @@
                         <div class="row">
 
                             <div class="form-group col-xl-6">
+                                <label for="foto">Foto do plano</label>
+                                <input name="foto" type="file" class="form-control" id="foto">
+                            </div>
+                            <div class="form-group col-xl-6">
                                 <label for="quntidade">Quantidade</label>
                                 <input name="quntidade" type="text" class="form-control" id="quntidade" placeholder="Quantidade" required>
                             </div>
+
                         </div>
 
                         <div class="row">
@@ -124,6 +129,52 @@
 
     $(document).ready( function(){
     
+        $("input:file").change(function(e) {
+
+            for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+        
+                var file = e.originalEvent.srcElement.files[i];
+        
+                if($('img').length != 0){
+                    $('img').remove();
+                }
+        
+                var img = document.createElement("img");
+                var reader = new FileReader();
+        
+                reader.onloadend = function() {
+        
+                    img.src = reader.result;
+        
+                    $(img).on('load', function (){
+        
+                        var width = img.width, height = img.height;
+        
+                        if (img.width > img.height) {
+                            if (width > 400) {
+                              height *= 400 / img.width;
+                              width = 400;
+                            }
+                        } else {
+                            if (img.height > 200) {
+                              width *= 200 / img.height;
+                              height = 200;
+                            }
+                        }
+            
+                        $(img).css({
+                            'width' : width+'px',
+                            'height' : height+'px',
+                            'margin-top' : '30px',
+                        });
+        
+                    })    
+                }
+                reader.readAsDataURL(file);
+        
+                $(this).after(img);
+            }
+        });
     });
 
   </script>

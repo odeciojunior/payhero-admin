@@ -105,6 +105,13 @@
                         <div class="row">
 
                             <div class="form-group col-xl-6">
+                                <label for="foto">Foto do produto</label>
+                                <input name="foto" type="file" class="form-control" id="foto">
+                                @if($foto != null)
+                                    <img src="{{ $foto }}" style="margin-top: 20px">
+                                @endif
+                            </div>
+                            <div class="form-group col-xl-6">
                                 <label for="quntidade">Quantidade</label>
                                 <input value="{!! $plano->quntidade != '' ? $plano->quntidade : '' !!}" name="quntidade" type="text" class="form-control" id="quntidade" placeholder="Quantidade" required>
                             </div>

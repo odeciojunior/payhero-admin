@@ -186,4 +186,6 @@ class ProdutosController extends Controller
 
         return response()->json($modal_body);
     }
+
+
 }

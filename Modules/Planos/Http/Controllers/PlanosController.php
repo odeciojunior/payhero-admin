@@ -2,12 +2,14 @@
 
 namespace Modules\Planos\Http\Controllers;
 
+use App\Foto;
 use App\Plano;
 use App\Transportadora;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
+use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class PlanosController extends Controller {
 
@@ -41,7 +43,21 @@ class PlanosController extends Controller {
             }
         }
 
-        Plano::create($dados);
+        $plano = Plano::create($dados);
+
+        $foto = $request->file('foto');
+
+        if ($foto != null) {
+            $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
+
+            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $nome_foto);
+
+            Foto::create([
+                'caminho_imagem' => $nome_foto,
+                'plano' => $plano['id'],
+            ]);
+
+        }
 
         return redirect()->route('planos');
     }
@@ -50,10 +66,19 @@ class PlanosController extends Controller {
 
         $plano = Plano::find($id);
         $transportadoras = Transportadora::all();
+        $foto = Foto::where('plano',$plano['id'])->first();
+
+        if($foto != null){
+            $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
+        }
+        else{
+            $caminho_foto = null;
+        }
 
         return view('planos::editar',[
             'plano' => $plano,
-            'transportadoras' => $transportadoras
+            'transportadoras' => $transportadoras,
+            'foto' => $caminho_foto,
         ]);
 
     }
@@ -62,7 +87,17 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
-        Plano::find($dados['id'])->update($dados);
+        $plano = Plano::find($dados['id']);
+        $plano->update($dados);
+
+        $foto = $request->file('foto');
+
+        if ($foto != null) {
+            $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
+
+            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $nome_foto);
+
+        }
 
         return redirect()->route('planos');
     }
@@ -172,6 +207,11 @@ class PlanosController extends Controller {
         $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
+        $foto = Foto::where('plano', $plano->id)->first();
+        if($foto != null)
+            $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem)."'>";
+        else
+            $modal_body .= "<img src=''>";
         $modal_body .= "</div>";
 
         return response()->json($modal_body);
