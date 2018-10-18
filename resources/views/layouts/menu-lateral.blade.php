@@ -170,7 +170,7 @@
                   </a>
                 </li>
                 <li class="site-menu-item has-sub">
-                  <a href="#">
+                  <a href="{{ route('planos') }}">
                     <i class="site-menu-icon wb-shopping-cart" aria-hidden="true"></i>
                     <span class="site-menu-title">Planos</span>
                   </a>

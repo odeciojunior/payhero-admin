@@ -6,31 +6,25 @@
   <div class="page">
 
     <div class="page-header">
-        <h1 class="page-title">Produtos</h1>
+        <h1 class="page-title">Planos</h1>
         <div class="page-header-actions">
-            <a class="btn btn-primary float-right" href="/produtos/cadastro">
+            <a class="btn btn-primary float-right" href="/planos/cadastro">
                 <i class='icon wb-user-add' aria-hidden='true'></i>
                 Cadastrar
             </a>
-            <a class="btn btn-success float-right" href="/categorias" style="margin-right: 10px">
-                <i class='icon wb-grid-4' aria-hidden='true'></i>
-                Categorias
-          </a>
-      </div>
+        </div>
     </div>
 
     <div class="page-content container-fluid">
       <div class="panel" data-plugin="matchHeight">
 
-        <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 80px">
+        <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
             <tr>
               <td>Nome</td>
               <td>Descrição</td>
-              <td>Categoria</td>
-              <td>Formato</td>
-              <td>Quantidade</td>
-              <td>Status</td>
+              <td>Código identificador</td>
+              <td>Preço</td>
               <td style="width: 160px">Detalhes</td>
             </tr>
           </thead>
@@ -63,7 +57,7 @@
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">
-                <form id="form_excluir_produto" method="GET" action="/deletarproduto">
+                <form id="form_excluir_plano" method="GET" action="/deletarplano">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
@@ -91,35 +85,24 @@
 
     $(document).ready( function(){
 
-        $("#tabela_produtos").DataTable( {
+        $("#tabela_planos").DataTable( {
 
             processing: true,
             serverSide: true,
             ajax: {
-                url: '/produtos/data-source',
+                url: '/planos/data-source',
                 type: 'POST'
             },
             columns: [
                 { data: 'nome', name: 'nome'},
                 { data: function(data){
-                    return data.descricao.substr(0,25); 
+                    if(data.descricao == null)
+                        return '';
+                    else
+                        return data.descricao.substr(0,25);   
                 }, name: 'descricao'},
-                { data: 'categoria_nome', name: 'categoria_nome'},
-                { data: function(data){
-                    if(data.formato == 1)
-                      return 'Físico';
-                    if(data.formato == 0)
-                      return 'Digital';
-                    return 'null';
-                }, name: 'formato'},
-                { data: 'quntidade', name: 'quntidade'},
-                { data: function(data){
-                  if(data.disponivel == 1)
-                  return 'Disponível';
-                if(data.disponivel == 0)
-                  return 'Indisponível';
-                return 'null';
-                }, name: 'disponivel'},
+                { data: 'cod_identificador', name: 'cod_identificador'},
+                { data: 'preco', name: 'preco'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {
@@ -143,17 +126,17 @@
             },
             "drawCallback": function() {
 
-                $('.detalhes_produto').on('click', function() {
+                $('.detalhes_plano').on('click', function() {
 
-                    var produto = $(this).attr('produto');
+                    var plano = $(this).attr('plano');
 
-                    $('#modal_detalhes_titulo').html('Detalhes da produto');
+                    $('#modal_detalhes_titulo').html('Detalhes da plano');
 
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { id_produto : produto };
+                    var data = { id_plano : plano };
 
-                    $.post("/produtos/detalhe", data)
+                    $.post("/planos/detalhe", data)
                     .then( function(response, status){
 
                         $('#modal_detalhes_body').html(response);
@@ -162,15 +145,15 @@
 
                 });
 
-                $('.excluir_produto').on('click', function(){
+                $('.excluir_plano').on('click', function(){
 
-                    var id_produto = $(this).attr('produto');
+                    var id_plano = $(this).attr('plano');
 
-                    $('#form_excluir_produto').attr('action','/produtos/deletarproduto/'+id_produto);
+                    $('#form_excluir_plano').attr('action','/planos/deletarplano/'+id_plano);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 
-                    $('#modal_excluir_titulo').html('Excluir o produto '+name+'?');
+                    $('#modal_excluir_titulo').html('Excluir o plano '+name+'?');
 
                 });
             }
