@@ -5,6 +5,8 @@ namespace Modules\Planos\Http\Controllers;
 use App\Foto;
 use App\Plano;
 use App\Transportadora;
+use App\Produto;
+use App\ProdutoPlano;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -21,9 +23,11 @@ class PlanosController extends Controller {
     public function cadastro() {
 
         $transportadoras = Transportadora::all();
+        $produtos = Produto::all();
 
         return view('planos::cadastro',[
-            'transportadoras' => $transportadoras
+            'transportadoras' => $transportadoras,
+            'produtos' => $produtos,
         ]);
     }
 
@@ -59,6 +63,17 @@ class PlanosController extends Controller {
 
         }
 
+        $qtd_produto = 1;
+
+        while(isset($dados['produto_'.$qtd_produto])){
+
+            ProdutoPlano::create([
+                'produto' => $dados['produto_'.$qtd_produto],
+                'plano' => $plano->id,
+                'quantidade_produto' => $dados['produto_qtd_'.$qtd_produto++]
+            ]);
+        }
+
         return redirect()->route('planos');
     }
 
@@ -67,6 +82,9 @@ class PlanosController extends Controller {
         $plano = Plano::find($id);
         $transportadoras = Transportadora::all();
         $foto = Foto::where('plano',$plano['id'])->first();
+        $produtos = Produto::all();
+        $produtosPlanos = ProdutoPlano::where('plano', $plano['id'])->get()->toArray();
+        $qtd_produtosPlanos = ProdutoPlano::where('plano', $plano['id'])->count();
 
         if($foto != null){
             $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
@@ -79,6 +97,8 @@ class PlanosController extends Controller {
             'plano' => $plano,
             'transportadoras' => $transportadoras,
             'foto' => $caminho_foto,
+            'produtos_planos' => $produtosPlanos,
+            'produtos' => $produtos,
         ]);
 
     }
@@ -205,11 +225,35 @@ class PlanosController extends Controller {
         $modal_body .= "<td><b>Valor frete fixo:</b></td>";
         $modal_body .= "<td>".$plano->valor_frete."</td>";
         $modal_body .= "</tr>";
+
+
+        $produtosPlano = ProdutoPlano::where('plano',$plano->id)->get()->toArray();
+
+        if(count($produtosPlano) > 0){
+
+            $modal_body .= "<tr class='text-center'>";
+            $modal_body .= "<td colspan='2'><b>Produtos do plano:</b></td>";
+            $modal_body .= "</tr>";
+    
+            foreach($produtosPlano as $produtoPlano){
+
+                $produto = Produto::find($produtoPlano['produto']);
+                $modal_body .= "<tr>";
+                $modal_body .= "<td><b>Produto:</b></td>";
+                $modal_body .= "<td>".$produto->nome."</td>";
+                $modal_body .= "</tr>";
+                $modal_body .= "<tr>";
+                $modal_body .= "<td><b>Quantidade:</b></td>";
+                $modal_body .= "<td>".$produtoPlano['quantidade_produto']."</td>";
+                $modal_body .= "</tr>";
+            }
+        }
+
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
         $foto = Foto::where('plano', $plano->id)->first();
         if($foto != null)
-            $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem)."'>";
+            $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem)."' style='width: 100%'>";
         else
             $modal_body .= "<img src=''>";
         $modal_body .= "</div>";

@@ -32,7 +32,7 @@ class ProdutoPlano extends Model
     /**
      * @var array
      */
-    protected $fillable = ['produto', 'plano', 'created_at', 'updated_at'];
+    protected $fillable = ['produto', 'plano','quantidade_produto', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -20,6 +20,7 @@
             <input type="hidden" value="{!! $plano->id !!}" name="id">
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
+                    <h4> Dados gerais </h4>
                     <div style="width:100%">
                         <div class="row">
                             <div class="form-group col-xl-6">
@@ -117,11 +118,38 @@
                             </div>
                         </div>
 
+                        <h4> Produtos do plano </h4>
+                        <div id="produtos">
+                            @foreach($produtos_planos as $produto_plano)
+                                <div id="produtos_div_1" class="row">
+
+                                    <div class="form-group col-xl-10">
+                                        <select id="produto_1" name="produto_1" class="form-control">
+                                            <option value="">Selecione</option>
+                                            @foreach($produtos as $produto)
+                                                <option value="{{ $produto['id'] }}"  {!! ($produto['id'] == $produto_plano['produto']) ? 'selected' : '' !!}>{{ $produto['nome'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-xl-2">
+                                        <input value="{!! $produto_plano['quantidade_produto'] != '' ? $produto_plano['quantidade_produto'] : '' !!}" class="form-control qtd-produtos" type="text" name="produto_qtd_1" placeholder="quantidade">
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_produto" class="btn btn-primary">Adicionar produto</button>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -132,28 +160,27 @@
 
     $(document).ready( function(){
 
-        
         $("input:file").change(function(e) {
 
             for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-        
+
                 var file = e.originalEvent.srcElement.files[i];
-        
+
                 if($('img').length != 0){
                     $('img').remove();
                 }
-        
+
                 var img = document.createElement("img");
                 var reader = new FileReader();
-        
+
                 reader.onloadend = function() {
-        
+
                     img.src = reader.result;
-        
+
                     $(img).on('load', function (){
-        
+
                         var width = img.width, height = img.height;
-        
+
                         if (img.width > img.height) {
                             if (width > 400) {
                               height *= 400 / img.width;
@@ -165,21 +192,21 @@
                               height = 200;
                             }
                         }
-            
+
                         $(img).css({
                             'width' : width+'px',
                             'height' : height+'px',
                             'margin-top' : '30px',
                         });
-        
+
                     })    
                 }
                 reader.readAsDataURL(file);
-        
+
                 $(this).after(img);
             }
         });
-        
+
     });
 
   </script>

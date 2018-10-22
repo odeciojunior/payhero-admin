@@ -1,0 +1,16 @@
+{
+    "name": "Pixels",
+    "alias": "pixels",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Pixels\\Providers\\PixelsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

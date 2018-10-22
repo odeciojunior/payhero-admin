@@ -19,6 +19,7 @@
             @csrf
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
+                    <h4> Dados gerais </h4>
                     <div style="width:100%">
                         <div class="row">
                             <div class="form-group col-xl-6">
@@ -114,6 +115,31 @@
 
                         </div>
 
+                        <h4> Produtos do plano </h4>
+                        <div id="produtos">
+                            <div id="produtos_div_1" class="row">
+
+                                <div class="form-group col-xl-10">
+                                    <select id="produto_1" name="produto_1" class="form-control">
+                                        <option value="" selected>Selecione</option>
+                                        @foreach($produtos as $produto)
+                                            <option value="{{ $produto['id'] }}">{{ $produto['nome'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-xl-2">
+                                    <input class="form-control qtd-produtos" type="text" name="produto_qtd_1" placeholder="quantidade">
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_produto" class="btn btn-primary">Adicionar produto</button>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
@@ -128,7 +154,7 @@
   <script>
 
     $(document).ready( function(){
-    
+
         $("input:file").change(function(e) {
 
             for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
@@ -175,6 +201,30 @@
                 $(this).after(img);
             }
         });
+
+        var qtd_produtos = 1;
+
+        var div_produtos = $('#produtos_div_1').parent().clone();
+
+        $('#add_produto').on('click', function(){
+
+            qtd_produtos++;
+
+            var nova_div = div_produtos.clone();
+
+            var select = nova_div.find('select');
+            var input = nova_div.find('.qtd-produtos');
+
+            select.attr('id', 'produto_'+qtd_produtos);            
+            select.attr('name', 'produto_'+qtd_produtos);            
+            input.attr('name', 'produto_qtd_'+qtd_produtos);            
+
+            div_produtos = nova_div;
+
+            $('#produtos').append(nova_div.html());
+
+        });
+
     });
 
   </script>

@@ -6,34 +6,29 @@
   <div class="page">
 
     <div class="page-header">
-        <h1 class="page-title">Planos</h1>
+        <h1 class="page-title">Pixels</h1>
         <div class="page-header-actions">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline btn-dark dropdown-toggle" id="dropdown_config" data-toggle="dropdown" aria-expanded="false" style="margin-right: 20px">
-                    Configurações
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdown_config" role="menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="{{ route('pixels') }}" role="menuitem">Pixels</a>
-                    <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Brindes</a>
-                </div>
-                <a class="btn btn-primary float-right" href="/planos/cadastro">
-                    <i class='icon wb-user-add' aria-hidden='true'></i>
-                    Cadastrar plano
-                </a>
-            </div>
-        </div>
+            <a class="btn btn-primary float-right" href="/planos">
+              <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
+              Voltar
+            </a>
+            <a class="btn btn-success float-right" href="/pixels/cadastro" style="margin-right: 10px">
+                <i class='icon wb-user-add' aria-hidden='true'></i>
+                Cadastrar
+            </a>
+      </div>
     </div>
 
     <div class="page-content container-fluid">
       <div class="panel" data-plugin="matchHeight">
 
-        <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
+        <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
             <tr>
               <td>Nome</td>
-              <td>Descrição</td>
-              <td>Código identificador</td>
-              <td>Preço</td>
+              <td>Código</td>
+              <td>Plataforma</td>
+              <td>Status</td>
               <td style="width: 160px">Detalhes</td>
             </tr>
           </thead>
@@ -66,7 +61,7 @@
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">
-                <form id="form_excluir_plano" method="GET" action="/deletarplano">
+                <form id="form_excluir_pixel" method="GET" action="/deletarpixel">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
@@ -94,24 +89,26 @@
 
     $(document).ready( function(){
 
-        $("#tabela_planos").DataTable( {
+        $("#tabela_pixels").DataTable( {
 
             processing: true,
             serverSide: true,
             ajax: {
-                url: '/planos/data-source',
+                url: '/pixels/data-source',
                 type: 'POST'
             },
             columns: [
                 { data: 'nome', name: 'nome'},
+                { data: 'cod_pixel', name: 'cod_pixel'},
+                { data: 'plataforma', name: 'plataforma'},
                 { data: function(data){
-                    if(data.descricao == null)
-                        return '';
-                    else
-                        return data.descricao.substr(0,25);   
-                }, name: 'descricao'},
-                { data: 'cod_identificador', name: 'cod_identificador'},
-                { data: 'preco', name: 'preco'},
+                    if(data.status == 1){
+                      return 'Ativo';
+                    }
+                    else{
+                      return 'Inativo';
+                    }
+                }, name: 'status'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {
@@ -135,17 +132,17 @@
             },
             "drawCallback": function() {
 
-                $('.detalhes_plano').on('click', function() {
+                $('.detalhes_pixel').on('click', function() {
 
-                    var plano = $(this).attr('plano');
+                    var pixel = $(this).attr('pixel');
 
-                    $('#modal_detalhes_titulo').html('Detalhes da plano');
+                    $('#modal_detalhes_titulo').html('Detalhes da pixel');
 
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { id_plano : plano };
+                    var data = { id_pixel : pixel };
 
-                    $.post("/planos/detalhe", data)
+                    $.post("/pixels/detalhe", data)
                     .then( function(response, status){
 
                         $('#modal_detalhes_body').html(response);
@@ -154,15 +151,15 @@
 
                 });
 
-                $('.excluir_plano').on('click', function(){
+                $('.excluir_pixel').on('click', function(){
 
-                    var id_plano = $(this).attr('plano');
+                    var id_pixel = $(this).attr('pixel');
 
-                    $('#form_excluir_plano').attr('action','/planos/deletarplano/'+id_plano);
+                    $('#form_excluir_pixel').attr('action','/pixels/deletarpixel/'+id_pixel);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 
-                    $('#modal_excluir_titulo').html('Excluir o plano '+name+'?');
+                    $('#modal_excluir_titulo').html('Excluir a pixel '+name+'?');
 
                 });
             }
