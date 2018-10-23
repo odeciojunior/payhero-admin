@@ -12,10 +12,6 @@
                 <i class='icon wb-user-add' aria-hidden='true'></i>
                 Cadastrar
             </a>
-            <a class="btn btn-success float-right" href="/categorias" style="margin-right: 10px">
-                <i class='icon wb-grid-4' aria-hidden='true'></i>
-                Categorias
-          </a>
       </div>
     </div>
 

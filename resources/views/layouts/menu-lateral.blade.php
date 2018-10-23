@@ -164,27 +164,65 @@
                   </a>
                 </li>
                 <li class="site-menu-item has-sub">
-                  <a href="{{ route('produtos') }}">
+                  <a href="javascript:void(0)">
                     <i class="site-menu-icon wb-mobile" aria-hidden="true"></i>
                     <span class="site-menu-title">Produtos</span>
-                  </a>
-                </li>
-                <li class="site-menu-item has-sub">
-                  <a href="{{ route('planos') }}">
-                    <i class="site-menu-icon wb-shopping-cart" aria-hidden="true"></i>
-                    <span class="site-menu-title">Planos</span>
-                  </a>
-                </li>
-                <li class="site-menu-item has-sub">
-                  <a href="javascript:void(0)">
-                    <i class="site-menu-icon wb-order" aria-hidden="true"></i>
-                    <span class="site-menu-title">Relatórios</span>
                     <span class="site-menu-arrow"></span>
                   </a>
                   <ul class="site-menu-sub">
                     <li class="site-menu-item">
-                      <a class="animsition-link" href="{{ route('relatorios.vendas') }}">
-                        <span class="site-menu-title">Vendas</span>
+                      <a class="animsition-link" href="{{ route('produtos') }}">
+                        <span class="site-menu-title">Produtos</span>
+                      </a>
+                    </li>
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="{{ route('categorias') }}">
+                        <span class="site-menu-title">Categorias</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="site-menu-item has-sub">
+                  <a href="javascript:void(0)">
+                    <i class="site-menu-icon wb-shopping-cart" aria-hidden="true"></i>
+                    <span class="site-menu-title">Planos</span>
+                    <span class="site-menu-arrow"></span>
+                  </a>
+                  <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="{{ route('planos') }}">
+                        <span class="site-menu-title">Planos</span>
+                      </a>
+                    </li>
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="{{ route('pixels') }}">
+                        <span class="site-menu-title">Pixels</span>
+                      </a>
+                    </li>
+                    <li class="site-menu-item has-sub">
+                      <a href="javascript:void(0)">
+                        <span class="site-menu-title">Brindes</span>
+                        <span class="site-menu-arrow"></span>
+                      </a>
+                      <ul class="site-menu-sub">
+                        <li class="site-menu-item">
+                          <a class="animsition-link" href="{{ route('brindes') }}">
+                            <span class="site-menu-title">Brindes</span>
+                          </a>
+                        </li>
+                        <li class="site-menu-item">
+                          <a class="animsition-link" href="{{ route('tiposbrindes') }}">
+                            <span class="site-menu-title">Tipos de brinde</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+    
+
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="#">
+                        <span class="site-menu-title">Cupons</span>
                       </a>
                     </li>
                   </ul>
@@ -200,6 +238,20 @@
                     <i class="site-menu-icon wb-user" aria-hidden="true"></i>
                     <span class="site-menu-title">Usuários</span>
                   </a>
+                </li>
+                <li class="site-menu-item has-sub">
+                  <a href="javascript:void(0)">
+                    <i class="site-menu-icon wb-order" aria-hidden="true"></i>
+                    <span class="site-menu-title">Relatórios</span>
+                    <span class="site-menu-arrow"></span>
+                  </a>
+                  <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="{{ route('relatorios.vendas') }}">
+                        <span class="site-menu-title">Vendas</span>
+                      </a>
+                    </li>
+                  </ul>
                 </li>
               </div>    
             </div>

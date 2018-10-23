@@ -6,25 +6,22 @@
   <div class="page">
 
     <div class="page-header">
-        <h1 class="page-title">Pixels</h1>
+        <h1 class="page-title">Tipos de brindes</h1>
         <div class="page-header-actions">
-            <a class="btn btn-success float-right" href="/pixels/cadastro" style="margin-right: 10px">
+            <a class="btn btn-primary float-right" href="#" style="margin-right: 10px">
                 <i class='icon wb-user-add' aria-hidden='true'></i>
                 Cadastrar
             </a>
-      </div>
+        </div>
     </div>
 
     <div class="page-content container-fluid">
       <div class="panel" data-plugin="matchHeight">
 
-        <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
+        <table id="tabela_tiposbrindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
             <tr>
-              <td>Nome</td>
-              <td>Código</td>
-              <td>Plataforma</td>
-              <td>Status</td>
+              <td>Descrição</td>
               <td style="width: 160px">Detalhes</td>
             </tr>
           </thead>
@@ -57,7 +54,7 @@
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">
-                <form id="form_excluir_pixel" method="GET" action="/deletarpixel">
+                <form id="form_excluir_categoria" method="GET" action="#">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
@@ -85,26 +82,16 @@
 
     $(document).ready( function(){
 
-        $("#tabela_pixels").DataTable( {
+        $("#tabela_tiposbrindes").DataTable( {
 
             processing: true,
             serverSide: true,
             ajax: {
-                url: '/pixels/data-source',
+                url: '/tiposbrindes/data-source',
                 type: 'POST'
             },
             columns: [
-                { data: 'nome', name: 'nome'},
-                { data: 'cod_pixel', name: 'cod_pixel'},
-                { data: 'plataforma', name: 'plataforma'},
-                { data: function(data){
-                    if(data.status == 1){
-                      return 'Ativo';
-                    }
-                    else{
-                      return 'Inativo';
-                    }
-                }, name: 'status'},
+                { data: 'descricao', name: 'descricao'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {
@@ -128,17 +115,17 @@
             },
             "drawCallback": function() {
 
-                $('.detalhes_pixel').on('click', function() {
+                $('.detalhes_categoria').on('click', function() {
 
-                    var pixel = $(this).attr('pixel');
+                    var categoria = $(this).attr('categoria');
 
-                    $('#modal_detalhes_titulo').html('Detalhes da pixel');
+                    $('#modal_detalhes_titulo').html('Detalhes da categoria');
 
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { id_pixel : pixel };
+                    var data = { id_categoria : categoria };
 
-                    $.post("/pixels/detalhe", data)
+                    $.post("/tiposbrindes/detalhe", data)
                     .then( function(response, status){
 
                         $('#modal_detalhes_body').html(response);
@@ -147,15 +134,15 @@
 
                 });
 
-                $('.excluir_pixel').on('click', function(){
+                $('.excluir_categoriaa').on('click', function(){
 
-                    var id_pixel = $(this).attr('pixel');
+                    var id_user = $(this).attr('categoria');
 
-                    $('#form_excluir_pixel').attr('action','/pixels/deletarpixel/'+id_pixel);
+                    $('#form_excluir_categoria').attr('action','/tiposbrindes/deletarcategoria/'+id_user);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 
-                    $('#modal_excluir_titulo').html('Excluir a pixel '+name+'?');
+                    $('#modal_excluir_titulo').html('Excluir a categoria '+name+'?');
 
                 });
             }

@@ -8,15 +8,11 @@
     <div class="page-header">
         <h1 class="page-title">Categorias</h1>
         <div class="page-header-actions">
-            <a class="btn btn-primary float-right" href="/produtos">
-              <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
-              Voltar
-            </a>
-            <a class="btn btn-success float-right" href="/categorias/cadastro" style="margin-right: 10px">
+            <a class="btn btn-primary float-right" href="/categorias/cadastro" style="margin-right: 10px">
                 <i class='icon wb-user-add' aria-hidden='true'></i>
                 Cadastrar
             </a>
-      </div>
+        </div>
     </div>
 
     <div class="page-content container-fluid">

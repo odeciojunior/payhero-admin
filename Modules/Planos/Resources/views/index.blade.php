@@ -9,16 +9,9 @@
         <h1 class="page-title">Planos</h1>
         <div class="page-header-actions">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline btn-dark dropdown-toggle" id="dropdown_config" data-toggle="dropdown" aria-expanded="false" style="margin-right: 20px">
-                    Configurações
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdown_config" role="menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item" href="{{ route('pixels') }}" role="menuitem">Pixels</a>
-                    <a class="dropdown-item" href="javascript:void(0)" role="menuitem">Brindes</a>
-                </div>
                 <a class="btn btn-primary float-right" href="/planos/cadastro">
                     <i class='icon wb-user-add' aria-hidden='true'></i>
-                    Cadastrar plano
+                    Cadastrar
                 </a>
             </div>
         </div>
