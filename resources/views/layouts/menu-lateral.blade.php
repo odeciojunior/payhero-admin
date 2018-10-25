@@ -158,6 +158,20 @@
                   </a>
                 </li>
                 <li class="site-menu-item has-sub">
+                  <a href="javascript:void(0)">
+                    <i class="site-menu-icon wb-order" aria-hidden="true"></i>
+                    <span class="site-menu-title">Relatórios</span>
+                    <span class="site-menu-arrow"></span>
+                  </a>
+                  <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="{{ route('relatorios.vendas') }}">
+                        <span class="site-menu-title">Vendas</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="site-menu-item has-sub">
                   <a href="{{ route('empresas') }}">
                     <i class="site-menu-icon wb-briefcase" aria-hidden="true"></i>
                     <span class="site-menu-title">Empresas</span>
@@ -228,10 +242,23 @@
                   </ul>
                 </li>
                 <li class="site-menu-item has-sub">
-                  <a href="{{ route('logs') }}">
-                    <i class="site-menu-icon wb-list-bulleted" aria-hidden="true"></i>
-                    <span class="site-menu-title">Logs</span>
+                  <a href="javascript:void(0)">
+                    <i class="site-menu-icon wb-graph-down" aria-hidden="true"></i>
+                    <span class="site-menu-title">Transportadoras</span>
+                    <span class="site-menu-arrow"></span>
                   </a>
+                  <ul class="site-menu-sub">
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="{{ route('transportadoras') }}">
+                        <span class="site-menu-title">Transportadoras</span>
+                      </a>
+                    </li>
+                    <li class="site-menu-item">
+                      <a class="animsition-link" href="{{ route('despachos') }}">
+                        <span class="site-menu-title">Despachos</span>
+                      </a>
+                    </li>
+                  </ul>
                 </li>
                 <li class="site-menu-item has-sub">
                   <a href="{{ route('usuarios') }}">
@@ -240,19 +267,11 @@
                   </a>
                 </li>
                 <li class="site-menu-item has-sub">
-                  <a href="javascript:void(0)">
-                    <i class="site-menu-icon wb-order" aria-hidden="true"></i>
-                    <span class="site-menu-title">Relatórios</span>
-                    <span class="site-menu-arrow"></span>
+                  <a href="{{ route('logs') }}">
+                    <i class="site-menu-icon wb-list-bulleted" aria-hidden="true"></i>
+                    <span class="site-menu-title">Logs de acesso</span>
                   </a>
-                  <ul class="site-menu-sub">
-                    <li class="site-menu-item">
-                      <a class="animsition-link" href="{{ route('relatorios.vendas') }}">
-                        <span class="site-menu-title">Vendas</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
+                </li>                
               </div>    
             </div>
           </div>

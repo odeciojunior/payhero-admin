@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property int $transportadora
  * @property string $cep
  * @property string $pais
  * @property string $estado
@@ -19,6 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $resposta_kapsula
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
+ * @property string $cod_rastreio
+ * @property Transportadora $transportadora
  * @property Venda[] $vendas
  */
 class Entrega extends Model
@@ -33,7 +37,15 @@ class Entrega extends Model
     /**
      * @var array
      */
-    protected $fillable = ['cep', 'pais', 'estado', 'cidade', 'bairro', 'rua', 'numero', 'ponto_referencia', 'id_kapsula_pedido', 'status_kapsula', 'resposta_kapsula', 'created_at', 'updated_at'];
+    protected $fillable = ['transportadora', 'cep', 'pais', 'estado', 'cidade', 'bairro', 'rua', 'numero', 'ponto_referencia', 'id_kapsula_pedido', 'status_kapsula', 'resposta_kapsula', 'created_at', 'updated_at', 'deleted_at', 'cod_rastreio'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function transportadora()
+    {
+        return $this->belongsTo('App\Transportadora', 'transportadora');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
