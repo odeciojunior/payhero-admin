@@ -7,7 +7,7 @@
     <div class="page-content container-fluid">
       <div class="panel pt-30 p-30 " data-plugin="matchHeight">
 
-        <table id="tabela_vendas" class="tablesaw table-striped tablesaw-swipe table-hover">
+        <table id="tabela_vendas" class="tablesaw table-striped tablesaw-swipe table-hover" style="width: 100%">
           <thead >
             <tr>
               <td>Transação</td>

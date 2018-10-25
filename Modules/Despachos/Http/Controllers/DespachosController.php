@@ -18,7 +18,7 @@ class DespachosController extends Controller
         return view('despachos::index'); 
     }
 
-    // public function atualizaEntregas(){
+    public function atualizaEntregas(){
 
     //     $vendas = Venda::all();
 
@@ -44,7 +44,7 @@ class DespachosController extends Controller
     //         ]);
     //     }
 
-    // }
+    }
 
     public function dadosDespachos() {
 
@@ -55,6 +55,7 @@ class DespachosController extends Controller
             ->leftjoin('entregas as entrega', 'venda.entrega', '=', 'entrega.id')
             ->leftjoin('transportadoras as transportadora', 'plano.transportadora', '=', 'transportadora.id')
             ->where('entrega.transportadora','2')
+            ->where('venda.mercado_pago_status','approved')
             ->get([
                 'venda.id',
                 'plano.nome as plano_nome',
