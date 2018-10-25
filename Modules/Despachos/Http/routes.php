@@ -8,7 +8,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'despachos', 'namespace' => 'Mo
     ]);
 
     Route::get('/atualizaentregas',[
-        'as' => 'despachos',
+        'as' => 'despachos.atualiza',
         'uses' => 'DespachosController@atualizaEntregas'
     ]);
 
