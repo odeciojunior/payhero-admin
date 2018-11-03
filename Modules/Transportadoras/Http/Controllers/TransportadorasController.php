@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
+use App\Transportadora;
 
 class TransportadorasController extends Controller
 {

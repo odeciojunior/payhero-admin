@@ -45,6 +45,34 @@
         </div>
         <!-- End Modal -->
 
+        <!-- Modal -->
+        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_rastreio" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+          <div class="modal-dialog modal-simple">
+              <div class="modal-content">
+                <form id="form_add_cod_rastreio" method="POST" action="/despachos/addcodigorastreio">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" style="width: 100%; text-align:center">Código de rastreio</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <input type="hidden" name="id" id="entrega_id">
+                      <label for="cod_rastreio">Código de rastreio</label>
+                      <input name="cod_rastreio" id="cod_rastreio" class="form-control" placeholder="código de rastreio">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-success">Confirmar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        <!-- End Modal -->
+
       </div>
     </div>
   </div>
@@ -92,27 +120,6 @@
                   "sPrevious": "Anterior",
               },
           },
-          "initComplete": function() {
-
-              $('.detalhes_venda').on('click', function() {
-
-                  var venda = $(this).attr('venda');
-
-                  $('#modal_venda_titulo').html('Detalhes da venda #' + venda);
-
-                  $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-
-                  var data = { id_venda : venda };
-
-                  $.post("/relatorios/venda/detalhe", data)
-                   .then( function(response, status){
-
-                      $('#modal_venda_body').html(response);
-
-                  });
-
-              });
-          },
           "drawCallback": function() {
 
             $('.detalhes_venda').on('click', function() {
@@ -133,8 +140,26 @@
                 });
 
             });
-        }
+            $('.rastreio_venda').on('click', function(){
 
+              $('#cod_rastreio').val('');
+              $('#entrega_id').val('');
+
+              var venda = $(this).attr('venda');
+
+              var data = { id_venda : venda };
+
+              $.post("/despachos/codigorastreio", data)
+              .then( function(response, status){
+
+                $('#modal_venda_body').html(response);
+                 
+                 $('#cod_rastreio').val(response.cod_rastreio);
+                 $('#entrega_id').val(response.id_entrega);
+              });
+
+            });
+          }
 
       });
 

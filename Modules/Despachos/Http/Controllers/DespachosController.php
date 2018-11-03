@@ -72,7 +72,10 @@ class DespachosController extends Controller
         return Datatables::of($vendas)
         ->addColumn('detalhes', function ($venda) {
 
-            return "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button>";
+            return "<button class='btn btn-sm btn-outline btn-success rastreio_venda' venda='".$venda->id."' data-target='#modal_rastreio' data-toggle='modal' type='button'>Rastreio
+                    </button>
+                    <button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes
+                    </button>";
         })
         ->rawColumns(['detalhes'])
         ->make(true);
@@ -158,6 +161,38 @@ class DespachosController extends Controller
 
         return response()->json($modal_body);
     }
+
+    public function getCodigoRastreio(Request $request){
+
+        $dados = $request->all();
+
+        $venda = Venda::find($dados['id_venda']);
+
+        $entrega = Entrega::find($venda['entrega']);
+
+        if($entrega != null){
+            return response()->json([
+                'cod_rastreio' => $entrega->cod_rastreio,
+                'id_entrega' => $entrega->id
+            ]);
+        }
+        else{
+            return response()->json([
+                'erro' => true
+            ]);
+        }
+
+    }
+
+    public function addCodigoRastreio(Request $request){
+
+        $dados = $request->all();
+
+        Entrega::find($dados['id'])->update($dados);
+
+        return redirect()->route('despachos');
+
+    }
+
+
 }
-
-

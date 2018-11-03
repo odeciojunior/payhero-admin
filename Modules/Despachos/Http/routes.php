@@ -22,6 +22,15 @@ Route::group(['middleware' => 'web', 'prefix' => 'despachos', 'namespace' => 'Mo
         'uses' => 'DespachosController@getDetalhesDespacho'
     ]);
 
-});
+    Route::post('/codigorastreio',[
+        'as' => 'despachos.getcodigorastreio',
+        'uses' => 'DespachosController@getCodigoRastreio'
+    ]);
 
+    Route::post('/addcodigorastreio', [
+        'as' => 'despachos.addcodigorastreio',
+        'uses' => 'DespachosController@addCodigoRastreio'
+    ]);
+
+});
 

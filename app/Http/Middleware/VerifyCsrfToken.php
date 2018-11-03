@@ -34,5 +34,7 @@ class VerifyCsrfToken extends Middleware
         '/empresas/detalhe',
         '/relatorios/venda/detalhe',
         '/usuarios/detalhe',
+        '/despachos/codigorastreio',
+        '/despachos/addcodigorastreio',
     ];
 }
