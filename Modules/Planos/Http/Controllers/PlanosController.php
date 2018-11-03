@@ -252,10 +252,13 @@ class PlanosController extends Controller {
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
         $foto = Foto::where('plano', $plano->id)->first();
-        if($foto != null)
-            $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem)."' style='width: 100%'>";
+        if($foto != null){
+            $modal_body .= "<div class='text-center'>";
+            $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem)."' style='height: 250px'>";
+            $modal_body .= "</div>";
+        }
         else
-            $modal_body .= "<img src=''>";
+            $modal_body .= "<img src='' alt='Imagem não encontrada'>";
         $modal_body .= "</div>";
 
         return response()->json($modal_body);

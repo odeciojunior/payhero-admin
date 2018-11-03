@@ -235,7 +235,7 @@
     
 
                     <li class="site-menu-item">
-                      <a class="animsition-link" href="#">
+                      <a class="animsition-link" href="{{ route('cuponsdesconto') }}">
                         <span class="site-menu-title">Cupons</span>
                       </a>
                     </li>

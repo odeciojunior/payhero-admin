@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/cuponsdesconto",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\CuponsDesconto\\Providers\\CuponsDescontoServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\CuponsDesconto\\": ""
+        }
+    }
+}

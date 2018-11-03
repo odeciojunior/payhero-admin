@@ -180,8 +180,10 @@ class ProdutosController extends Controller
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
         $modal_body .= "</div>";
-
-        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto->foto)."'>";// alt='Foto não encontrada.'>";
+ 
+        $modal_body .= "<div class='text-center' style='margin-top: 20px'>";
+        $modal_body .= "<img src='".url($produto->foto)."' style='height: 200px'>";
+        $modal_body .= "</div>";
         $modal_body .= "</div>";
 
         return response()->json($modal_body);

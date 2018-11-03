@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property string $nome
- * @property string $descrica
+ * @property string $descricao
  * @property boolean $tipo
  * @property int $valor
  * @property string $cod_cupom
  * @property boolean $status
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  * @property PlanosCupon[] $planosCupons
  */
 class Cupom extends Model
@@ -35,7 +36,7 @@ class Cupom extends Model
     /**
      * @var array
      */
-    protected $fillable = ['nome', 'descrica', 'tipo', 'valor', 'cod_cupom', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['nome', 'descricao', 'tipo', 'valor', 'cod_cupom', 'status', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

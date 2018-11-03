@@ -17,7 +17,7 @@
               <td>Status</td>
               <td>Data de pagamento</td>
               <td>Data Finalizada</td>
-              <td>Valor Venda</td>
+              <td>Valor plano</td>
               <td>Detalhes</td>
             </tr>
           </thead>

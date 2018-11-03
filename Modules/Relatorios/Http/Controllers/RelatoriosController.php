@@ -2,6 +2,7 @@
 
 namespace Modules\Relatorios\Http\Controllers;
 
+use App\Foto;
 use App\Plano;
 use App\Venda;
 use App\Entrega;
@@ -87,11 +88,6 @@ class RelatoriosController extends Controller
         $entrega = Entrega::find($venda->entrega);
 
         $modal_body = '';
-
-        // $modal_body .= "<div class='row'>";
-        // $modal_body .= "<div class='col-xl-4 col-lg-4'>";
-        // $modal_body .= "<img src='https://checkout.mrorganic.com.br/storage/upload/plano/shampoo.jpg'>";
-        // $modal_body .= "</div>";
 
         $modal_body .= "<div class='col-xl-12 col-lg-12'>";
         $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
