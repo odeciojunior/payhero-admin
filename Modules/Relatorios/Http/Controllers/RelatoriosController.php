@@ -64,6 +64,8 @@ class RelatoriosController extends Controller
                 return 'Rejeitada';
             if($venda->mercado_pago_status == 'in_process')
                 return 'Em processo';
+            if($venda->mercado_pago_status == 'pending')
+                return 'Pendente';
             return $venda->mercado_pago_status;
         })
         ->addColumn('detalhes', function ($venda) {
