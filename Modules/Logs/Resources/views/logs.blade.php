@@ -13,12 +13,11 @@
               <td style='display:none'>id</td>
               <td>sessao_log</td>
               <td>plano</td>
-              <td>descrição</td>
+              <td>data</td>
               <td>evento</td>
               <td>sistema operacional</td>
               <td>navegador</td>
-              <td>horario</td>
-              <td>hora_encerramento</td>
+              <td>descrição</td>
               <td>forward</td>
               <td>referencia</td>
               <td>nome</td>
@@ -53,12 +52,11 @@
             {data: 'id', name: 'id', visible: false},
             {data: 'id_sessao_log', name: 'id_sessao_log'},
             {data: 'plano_nome', name: 'plano_nome'},
-            {data: 'plano', name: 'plano'},
+            {data: 'created_at', name: 'created_at'},
             {data: 'evento', name: 'evento'},
             {data: 'sistema_operacional', name: 'sistema_operacional'},
             {data: 'navegador', name: 'navegador'},
-            {data: 'hora_acesso', name: 'hora_acesso'},
-            {data: 'horario', name: 'horario'},
+            {data: 'plano', name: 'plano'},
             {data: 'forward', name: 'forward'},
             {data: 'referencia', name: 'referencia'},
             {data: 'nome', name: 'nome'},

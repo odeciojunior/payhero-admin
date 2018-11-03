@@ -2,14 +2,15 @@
 
 namespace Modules\Relatorios\Http\Controllers;
 
+use App\Plano;
+use App\Venda;
+use App\Entrega;
+use App\Comprador;
+use Carbon\Carbon;
+use App\PlanoVenda;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Venda;
-use App\PlanoVenda;
-use App\Plano;
-use App\Comprador;
-use App\Entrega;
 use Yajra\DataTables\Facades\DataTables;
 
 class RelatoriosController extends Controller
@@ -45,8 +46,26 @@ class RelatoriosController extends Controller
                 'venda.data_finalizada',
                 'venda.valor_plano',
         ]);
-
+ 
         return Datatables::of($vendas)
+        ->editColumn('data_inicio', function ($venda) {
+            return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
+        })
+        ->editColumn('data_finalizada', function ($venda) {
+            return $venda->data_finalizada ? with(new Carbon($venda->data_finalizada))->format('d/m/Y H:i:s') : '';
+        })
+        ->editColumn('forma_pagamento', function ($venda) {
+            return $venda->forma_pagamento == 'cartao_credito' ? 'cartão de crédito' : $venda->forma_pagamento;
+        })
+        ->editColumn('mercado_pago_status', function ($venda) {
+            if($venda->mercado_pago_status == 'approved')
+                return 'Aprovada';
+            if($venda->mercado_pago_status == 'rejected')
+                return 'Rejeitada';
+            if($venda->mercado_pago_status == 'in_process')
+                return 'Em processo';
+            return $venda->mercado_pago_status;
+        })
         ->addColumn('detalhes', function ($venda) {
 
             return "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button>";
@@ -94,10 +113,6 @@ class RelatoriosController extends Controller
         $modal_body .= "<td>".$comprador->telefone."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Data de nascimento:</b></td>";
-        $modal_body .= "<td>".$comprador->data_nascimento."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
         $modal_body .= "<td><b>Produto:</b></td>";
         $modal_body .= "<td>".$plano->nome."</td>";
         $modal_body .= "</tr>";
@@ -105,6 +120,13 @@ class RelatoriosController extends Controller
         $modal_body .= "<td><b>Preço:</b></td>";
         $modal_body .= "<td>".$plano->preco."</td>";
         $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Frete:</b></td>";
+        $modal_body .= "<td>".$venda->valor_frete."</td>";
+        // $modal_body .= "</tr>";
+        // $modal_body .= "<td><b>Valor total:</b></td>";
+        // $modal_body .= "<td>".(int) $venda->valor_frete + (int) $plano->preco."</td>";
+        // $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Código da transação:</b></td>";
         $modal_body .= "<td>#".$venda->id."</td>";
@@ -119,19 +141,22 @@ class RelatoriosController extends Controller
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Data da venda:</b></td>";
-        $modal_body .= "<td>".$venda->data_inicio."</td>";
+        $modal_body .= "<td>".(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s')."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Status da venda:</b></td>";
-        $modal_body .= "<td>".$venda->mercado_pago_status."</td>";
+        if($venda->mercado_pago_status == 'approved')
+            $modal_body .= "<td>Aprovada</td>";
+        elseif($venda->mercado_pago_status == 'rejected')
+            $modal_body .= "<td>Rejeitada</td>";
+        elseif($venda->mercado_pago_status == 'in_process')
+            $modal_body .= "<td>Em processo</td>";
+        else
+            $modal_body .= "<td>".$venda->mercado_pago_status."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Código do plano:</b></td>";
         $modal_body .= "<td>".$plano->cod_identificador."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Frete:</b></td>";
-        $modal_body .= "<td>".$venda->valor_frete."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>CEP:</b></td>";

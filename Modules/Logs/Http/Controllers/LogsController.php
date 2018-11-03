@@ -2,10 +2,11 @@
 
 namespace Modules\Logs\Http\Controllers;
 
+use App\Log;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Log;
 
 class LogsController extends Controller {
 
@@ -51,7 +52,10 @@ class LogsController extends Controller {
                 'log.erro',
                 'log.created_at'
             ])
-        )->toJson();
+        )->editColumn('created_at', function ($log) {
+            return $log->created_at ? with(new Carbon($log->created_at))->format('d/m/Y H:i:s') : '';
+        })->toJson();
+
     }
 
 }

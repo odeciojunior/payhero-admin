@@ -20,29 +20,29 @@ class DespachosController extends Controller
 
     public function atualizaEntregas(){
 
-    //     $vendas = Venda::all();
+        $vendas = Venda::all();
 
-    //     foreach($vendas as $venda){
+        foreach($vendas as $venda){
 
-    //         $entrega = Entrega::find($venda['entrega']);
+            $entrega = Entrega::find($venda['entrega']);
 
-    //         if($entrega == null)
-    //             continue;
+            if($entrega == null)
+                continue;
 
-    //         $plano_venda = PlanoVenda::where('venda',$venda['id'])->first();
+            $plano_venda = PlanoVenda::where('venda',$venda['id'])->first();
 
-    //         if($plano_venda == null)
-    //             continue;
+            if($plano_venda == null)
+                continue;
 
-    //         $plano = Plano::find($plano_venda['plano']);
+            $plano = Plano::find($plano_venda['plano']);
 
-    //         if($plano == null)
-    //             continue;
+            if($plano == null)
+                continue;
 
-    //         $entrega->update([
-    //             'transportadora' => $plano['transportadora']
-    //         ]);
-    //     }
+            $entrega->update([
+                'transportadora' => $plano['transportadora']
+            ]);
+        }
 
     }
 

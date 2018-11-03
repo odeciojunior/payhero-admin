@@ -16,7 +16,7 @@
     </div>
 
     <div class="page-content container-fluid">
-      <div class="panel" data-plugin="matchHeight">
+      <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
         <table id="tabela_empresas" class="table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
@@ -24,8 +24,8 @@
               <td>Nome</td>
               <td>CNPJ</td>
               <td>Email</td>
-              <td>Município</td>
               <td>Estado</td>
+              <td>Município</td>
               <td>Situacao</td>
               <td>Opções</td>
             </tr>
@@ -99,8 +99,8 @@
                 { data: 'nome', name: 'nome'},
                 { data: 'cnpj', name: 'cnpj'},
                 { data: 'email', name: 'email'},
-                { data: 'municipio', name: 'municipio'},
                 { data: 'uf', name: 'uf'},
+                { data: 'municipio', name: 'municipio'},
                 { data: 'situacao', name: 'situacao'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
