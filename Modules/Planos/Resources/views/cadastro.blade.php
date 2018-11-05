@@ -52,7 +52,7 @@
 
                         <div class="row">
                             <div class="form-group col-xl-6">
-                                <label for="disponivel">Status cumpons</label>
+                                <label for="disponivel">Status cupons</label>
                                 <select name="disponivel" type="text" class="form-control" id="disponivel" required>
                                     <option value="">Selecione o status</option>
                                     <option value="1">Disponível</option>
@@ -105,14 +105,29 @@
                         <div class="row">
 
                             <div class="form-group col-xl-6">
-                                <label for="foto">Foto do plano</label>
-                                <input name="foto" type="file" class="form-control" id="foto">
+                                <label for="hotzapp_dados">Integração com HotZapp</label>
+                                <select name="hotzapp_dados" id="hotzapp_dados" class="form-control">
+                                    <option value="">Sem integração</option>
+                                    @foreach($dados_hotzapp as $hotzapp_dados)
+                                        <option value="{{ $hotzapp_dados['id'] }}">{{ $hotzapp_dados['descricao'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+
                             <div class="form-group col-xl-6">
                                 <label for="quntidade">Quantidade</label>
                                 <input name="quntidade" type="text" class="form-control" id="quntidade" placeholder="Quantidade" required>
                             </div>
 
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-group col-xl-12">
+                                <label for="foto">Foto do plano</label>
+                                <input name="foto" type="file" class="form-control" id="foto">
+                            </div>
+        
                         </div>
 
                         <h4> Produtos do plano </h4>
@@ -133,10 +148,70 @@
 
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="form-group col-xl-12">
                                 <button type="button" id="add_produto" class="btn btn-primary">Adicionar produto</button>
+                            </div>
+                        </div>
+
+                        <h4> Pixels do plano </h4>
+                        <div id="pixels">
+                            <div id="pixels_div_1" class="row">
+
+                                <div class="form-group col-xl-12">
+                                    <select id="pixel_1" name="pixel_1" class="form-control">
+                                        <option value="" selected>Selecione</option>
+                                        @foreach($pixels as $pixel)
+                                            <option value="{{ $pixel['id'] }}">{{ $pixel['nome'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_pixel" class="btn btn-primary">Adicionar pixel</button>
+                            </div>
+                        </div>
+
+                        <h4> Brindes do plano</h4>
+                        <div id="brindes">
+                            <div id="brindes_div_1" class="row">
+                                <div class="form-group col-xl-12">
+                                    <select id="brinde_1" name="brinde_1" class="form-control">
+                                        <option value="" selected>Selecione</option>
+                                        @foreach($brindes as $brinde)
+                                            <option value="{{ $brinde['id'] }}">{{ $brinde['descricao'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_brinde" class="btn btn-primary">Adicionar brinde</button>
+                            </div>
+                        </div>
+
+                        <h4> Cupons de desconto do plano</h4>
+                        <div id="cupons">
+                            <div id="cupons_div_1" class="row">
+                                <div class="form-group col-xl-12">
+                                    <select id="cupom_1" name="cupom_1" class="form-control">
+                                        <option value="" selected>Selecione</option>
+                                        @foreach($cupons as $cupom)
+                                            <option value="{{ $cupom['id'] }}">{{ $cupom['nome'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_cupom" class="btn btn-primary">Adicionar cupom de desconto</button>
                             </div>
                         </div>
 
@@ -151,84 +226,143 @@
         </form>
     </div>
 
-  <script>
+    <script>
 
-    $(document).ready( function(){
+        $(document).ready( function(){
 
-        $("input:file").change(function(e) {
+            $("input:file").change(function(e) {
 
-            for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-        
-                var file = e.originalEvent.srcElement.files[i];
-        
-                if($('img').length != 0){
-                    $('img').remove();
-                }
-        
-                var img = document.createElement("img");
-                var reader = new FileReader();
-        
-                reader.onloadend = function() {
-        
-                    img.src = reader.result;
-        
-                    $(img).on('load', function (){
-        
-                        var width = img.width, height = img.height;
-        
-                        if (img.width > img.height) {
-                            if (width > 400) {
-                              height *= 400 / img.width;
-                              width = 400;
-                            }
-                        } else {
-                            if (img.height > 200) {
-                              width *= 200 / img.height;
-                              height = 200;
-                            }
-                        }
+                for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+
+                    var file = e.originalEvent.srcElement.files[i];
+
+                    if($('img').length != 0){
+                        $('img').remove();
+                    }
+
+                    var img = document.createElement("img");
+                    var reader = new FileReader();
+
+                    reader.onloadend = function() {
             
-                        $(img).css({
-                            'width' : width+'px',
-                            'height' : height+'px',
-                            'margin-top' : '30px',
-                        });
-        
-                    })    
+                        img.src = reader.result;
+            
+                        $(img).on('load', function (){
+            
+                            var width = img.width, height = img.height;
+            
+                            if (img.width > img.height) {
+                                if (width > 400) {
+                                height *= 400 / img.width;
+                                width = 400;
+                                }
+                            } else {
+                                if (img.height > 200) {
+                                width *= 200 / img.height;
+                                height = 200;
+                                }
+                            }
+                
+                            $(img).css({
+                                'width' : width+'px',
+                                'height' : height+'px',
+                                'margin-top' : '30px',
+                            });
+            
+                        })    
+                    }
+                    reader.readAsDataURL(file);
+            
+                    $(this).after(img);
                 }
-                reader.readAsDataURL(file);
-        
-                $(this).after(img);
-            }
+            });
+
+            var qtd_produtos = 1;
+
+            var div_produtos = $('#produtos_div_1').parent().clone();
+
+            $('#add_produto').on('click', function(){
+
+                qtd_produtos++;
+
+                var nova_div = div_produtos.clone();
+
+                var select = nova_div.find('select');
+                var input = nova_div.find('.qtd-produtos');
+
+                select.attr('id', 'produto_'+qtd_produtos);            
+                select.attr('name', 'produto_'+qtd_produtos);            
+                input.attr('name', 'produto_qtd_'+qtd_produtos);            
+
+                div_produtos = nova_div;
+
+                $('#produtos').append(nova_div.html());
+
+            });
+
+            var qtd_pixels = 1;
+
+            var div_pixels = $('#pixels_div_1').parent().clone();
+
+            $('#add_pixel').on('click', function(){
+
+                qtd_pixels++;
+
+                var nova_div = div_pixels.clone();
+
+                var select = nova_div.find('select');
+
+                select.attr('id', 'pixel_'+qtd_pixels);            
+                select.attr('name', 'pixel_'+qtd_pixels);            
+
+                div_pixels = nova_div;
+
+                $('#pixels').append(nova_div.html());
+            });
+
+            var qtd_brindes = 1;
+
+            var div_brindes = $('#brindes_div_1').parent().clone();
+
+            $('#add_brinde').on('click', function(){
+
+                qtd_brindes++;
+
+                var nova_div = div_brindes.clone();
+
+                var select = nova_div.find('select');
+
+                select.attr('id', 'brinde_'+qtd_brindes);            
+                select.attr('name', 'brinde_'+qtd_brindes);            
+
+                div_brindes = nova_div;
+
+                $('#brindes').append(nova_div.html());
+            });
+
+            var qtd_cupons = 1;
+
+            var div_cupons = $('#cupons_div_1').parent().clone();
+
+            $('#add_cupom').on('click', function(){
+
+                qtd_cupons++;
+
+                var nova_div = div_cupons.clone();
+
+                var select = nova_div.find('select');
+
+                select.attr('id', 'cupom_'+qtd_cupons);            
+                select.attr('name', 'cupom_'+qtd_cupons);            
+
+                div_cupons = nova_div;
+
+                $('#cupons').append(nova_div.html());
+            });
+
         });
 
-        var qtd_produtos = 1;
-
-        var div_produtos = $('#produtos_div_1').parent().clone();
-
-        $('#add_produto').on('click', function(){
-
-            qtd_produtos++;
-
-            var nova_div = div_produtos.clone();
-
-            var select = nova_div.find('select');
-            var input = nova_div.find('.qtd-produtos');
-
-            select.attr('id', 'produto_'+qtd_produtos);            
-            select.attr('name', 'produto_'+qtd_produtos);            
-            input.attr('name', 'produto_qtd_'+qtd_produtos);            
-
-            div_produtos = nova_div;
-
-            $('#produtos').append(nova_div.html());
-
-        });
-
-    });
-
-  </script>
+    </script>
 
 
 @endsection
-

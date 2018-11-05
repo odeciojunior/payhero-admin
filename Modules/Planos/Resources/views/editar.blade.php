@@ -118,24 +118,40 @@
                             </div>
                         </div>
 
-                        <h4> Produtos do plano </h4>
+                        <h4> Produtos </h4>
                         <div id="produtos">
-                            @foreach($produtos_planos as $produto_plano)
-                                <div id="produtos_div_1" class="row">
+                            @if(count($produtos_planos) > 0)
+                                @foreach($produtos_planos as $key => $produto_plano)
+                                    <div id="produtos_div_1" class="row">
 
+                                        <div class="form-group col-xl-10">
+                                            <select id="produto_{{ $key + 1 }}" name="produto_{{ $key + 1 }}" class="form-control">
+                                                <option value="">Selecione</option>
+                                                @foreach($produtos as $produto)
+                                                    <option value="{{ $produto['id'] }}"  {!! ($produto['id'] == $produto_plano['produto']) ? 'selected' : '' !!}>{{ $produto['nome'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-xl-2">
+                                            <input value="{!! $produto_plano['quantidade_produto'] != '' ? $produto_plano['quantidade_produto'] : '' !!}" class="form-control qtd-produtos" type="text" name="produto_qtd_1" placeholder="quantidade">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div id="produtos_div_1" class="row">
                                     <div class="form-group col-xl-10">
                                         <select id="produto_1" name="produto_1" class="form-control">
-                                            <option value="">Selecione</option>
+                                            <option value="" selected>Selecione</option>
                                             @foreach($produtos as $produto)
-                                                <option value="{{ $produto['id'] }}"  {!! ($produto['id'] == $produto_plano['produto']) ? 'selected' : '' !!}>{{ $produto['nome'] }}</option>
+                                                <option value="{{ $produto['id'] }}">{{ $produto['nome'] }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group col-xl-2">
-                                        <input value="{!! $produto_plano['quantidade_produto'] != '' ? $produto_plano['quantidade_produto'] : '' !!}" class="form-control qtd-produtos" type="text" name="produto_qtd_1" placeholder="quantidade">
+                                        <input class="form-control qtd-produtos" type="text" name="produto_qtd_1" placeholder="quantidade">
                                     </div>
                                 </div>
-                            @endforeach
+                            @endif
                         </div>
 
                         <div class="row">
@@ -144,8 +160,115 @@
                             </div>
                         </div>
 
+                        <h4> Pixels </h4>
+                        <div id="pixels">
+                            @if(count($planoPixels) > 0)
+                                @foreach($planoPixels as $key => $planoPixel)
+                                    <div id="pixels_div_1" class="row">
+                                        <div class="form-group col-xl-12">
+                                            <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
+                                                <option value="">Selecione</option>
+                                                @foreach($pixels as $pixel)
+                                                    <option value="{{ $pixel['id'] }}"  {!! ($pixel['id'] == $planoPixel['pixel']) ? 'selected' : '' !!}>{{ $pixel['nome'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div id="pixels_div_1" class="row">
+                                    <div class="form-group col-xl-12">
+                                        <select id="pixel_1" name="pixel_1" class="form-control">
+                                            <option value="" selected>Selecione</option>
+                                            @foreach($pixels as $pixel)
+                                                <option value="{{ $pixel['id'] }}">{{ $pixel['nome'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
                         <div class="row">
-                            <div class="form-group">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_pixel" class="btn btn-primary">Adicionar pixel</button>
+                            </div>
+                        </div>
+
+
+                        <h4> Brindes </h4>
+                        <div id="brindes">
+                            @if(count($planoBrindes) > 0)
+                                @foreach($planoBrindes as $key => $planoBrinde)
+                                    <div id="pixels_div_1" class="row">
+                                        <div class="form-group col-xl-12">
+                                            <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
+                                                <option value="">Selecione</option>
+                                                @foreach($brindes as $brinde)
+                                                    <option value="{{ $brinde['id'] }}"  {!! ($brinde['id'] == $planoBrinde['brinde']) ? 'selected' : '' !!}>{{ $brinde['descricao'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div id="brindes_div_1" class="row">
+                                    <div class="form-group col-xl-12">
+                                        <select id="brinde_1" name="brinde_1" class="form-control">
+                                            <option value="" selected>Selecione</option>
+                                            @foreach($brindes as $brinde)
+                                                <option value="{{ $brinde['id'] }}">{{ $brinde['nome'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_brinde" class="btn btn-primary">Adicionar brinde</button>
+                            </div>
+                        </div>
+
+                        <h4> Cupons de desconto </h4>
+                        <div id="cupons">
+                            @if(count($planoCupons) > 0)
+                                @foreach($planoCupons as $key => $planoCupom)
+                                    <div id="pixels_div_1" class="row">
+                                        <div class="form-group col-xl-12">
+                                            <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
+                                                <option value="">Selecione</option>
+                                                @foreach($cupons as $cupom)
+                                                    <option value="{{ $cupom['id'] }}"  {!! ($cupom['id'] == $planoCupom['brinde']) ? 'selected' : '' !!}>{{ $cupom['nome'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div id="cupons_div_1" class="row">
+                                    <div class="form-group col-xl-12">
+                                        <select id="cupom_1" name="cupom_1" class="form-control">
+                                            <option value="" selected>Selecione</option>
+                                            @foreach($cupons as $cupom)
+                                                <option value="{{ $cupom['id'] }}">{{ $cupom['nome'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <button type="button" id="add_cupom" class="btn btn-primary">Adicionar cupom</button>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
                         </div>
@@ -207,10 +330,92 @@
             }
         });
 
+        var qtd_produtos = 1;
+
+        var div_produtos = $('#produtos_div_1').parent().clone();
+
+        $('#add_produto').on('click', function(){
+
+            qtd_produtos++;
+
+            var nova_div = div_produtos.clone();
+
+            var select = nova_div.find('select');
+            var input = nova_div.find('.qtd-produtos');
+
+            select.attr('id', 'produto_'+qtd_produtos);            
+            select.attr('name', 'produto_'+qtd_produtos);            
+            input.attr('name', 'produto_qtd_'+qtd_produtos);            
+
+            div_produtos = nova_div;
+
+            $('#produtos').append(nova_div.html());
+
+        });
+
+        var qtd_pixels = 1;
+
+        var div_pixels = $('#pixels_div_1').parent().clone();
+
+        $('#add_pixel').on('click', function(){
+
+            qtd_pixels++;
+
+            var nova_div = div_pixels.clone();
+
+            var select = nova_div.find('select');
+
+            select.attr('id', 'pixel_'+qtd_pixels);            
+            select.attr('name', 'pixel_'+qtd_pixels);            
+
+            div_pixels = nova_div;
+
+            $('#pixels').append(nova_div.html());
+        });
+
+        var qtd_brindes = 1;
+
+        var div_brindes = $('#brindes_div_1').parent().clone();
+
+        $('#add_brinde').on('click', function(){
+
+            qtd_brindes++;
+
+            var nova_div = div_brindes.clone();
+
+            var select = nova_div.find('select');
+
+            select.attr('id', 'brinde_'+qtd_brindes);            
+            select.attr('name', 'brinde_'+qtd_brindes);            
+
+            div_brindes = nova_div;
+
+            $('#brindes').append(nova_div.html());
+        });
+
+        var qtd_cupons = 1;
+
+        var div_cupons = $('#cupons_div_1').parent().clone();
+
+        $('#add_cupom').on('click', function(){
+
+            qtd_cupons++;
+
+            var nova_div = div_cupons.clone();
+
+            var select = nova_div.find('select');
+
+            select.attr('id', 'cupom_'+qtd_cupons);            
+            select.attr('name', 'cupom_'+qtd_cupons);            
+
+            div_cupons = nova_div;
+
+            $('#cupons').append(nova_div.html());
+        });
+
     });
 
   </script>
 
 
 @endsection
-

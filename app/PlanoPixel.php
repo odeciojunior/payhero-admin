@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Pixel $pixel
  * @property Plano $plano
  */
-class Plano_Pixel extends Model
+class PlanoPixel extends Model
 {
     /**
      * The table associated with the model.
