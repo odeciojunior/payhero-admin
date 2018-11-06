@@ -38,5 +38,6 @@ class VerifyCsrfToken extends Middleware
         '/usuarios/detalhe',
         '/despachos/codigorastreio',
         '/despachos/addcodigorastreio',
+        '/liftgold',
     ];
 }

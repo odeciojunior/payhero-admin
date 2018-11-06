@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +17,13 @@
 Route::get('/', function () {
     //return view('welcome');
     return view('auth.login');
+});
+
+Route::post('/liftgold', function (Request $request) {
+
+    $dados = $request->all();
+
+    Log::write('info', 'retorno liftgold : '.print_r($dados,true));    
 });
 
 Auth::routes();
