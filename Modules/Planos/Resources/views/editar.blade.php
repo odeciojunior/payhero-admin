@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <form method="post" action="/planos/editarplano">
+        <form method="post" action="/planos/editarplano" enctype="multipart/form-data">
             @csrf
             <input type="hidden" value="{!! $plano->id !!}" name="id">
             <div class="page-content container-fluid">
@@ -84,7 +84,6 @@
                                 <label for="valor_frete">Valor frete fixo</label>
                                 <input value="{!! $plano->valor_frete != '' ? $plano->valor_frete : '' !!}" name="valor_frete" type="text" class="form-control" id="valor_frete" placeholder="valor fixo">
                             </div>
-
                         </div>
 
                         <div class="row">
@@ -104,12 +103,11 @@
                         </div>
 
                         <div class="row">
-
                             <div class="form-group col-xl-6">
                                 <label for="foto">Foto do produto</label>
                                 <input name="foto" type="file" class="form-control" id="foto">
                                 @if($foto != null)
-                                    <img src="{{ $foto }}" style="margin-top: 20px">
+                                    <img src="{{ $foto }}" style="margin-top: 20px;height: 250px">
                                 @endif
                             </div>
                             <div class="form-group col-xl-6">
@@ -122,8 +120,7 @@
                         <div id="produtos">
                             @if(count($produtos_planos) > 0)
                                 @foreach($produtos_planos as $key => $produto_plano)
-                                    <div id="produtos_div_1" class="row">
-
+                                    <div id="produtos_div_{{ $key + 1 }}" class="row">
                                         <div class="form-group col-xl-10">
                                             <select id="produto_{{ $key + 1 }}" name="produto_{{ $key + 1 }}" class="form-control">
                                                 <option value="">Selecione</option>
@@ -133,7 +130,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-xl-2">
-                                            <input value="{!! $produto_plano['quantidade_produto'] != '' ? $produto_plano['quantidade_produto'] : '' !!}" class="form-control qtd-produtos" type="text" name="produto_qtd_1" placeholder="quantidade">
+                                            <input value="{!! $produto_plano['quantidade_produto'] != '' ? $produto_plano['quantidade_produto'] : '' !!}" class="form-control qtd-produtos" type="text" name="produto_qtd_{{ $key + 1 }}" placeholder="quantidade">
                                         </div>
                                     </div>
                                 @endforeach
@@ -164,7 +161,7 @@
                         <div id="pixels">
                             @if(count($planoPixels) > 0)
                                 @foreach($planoPixels as $key => $planoPixel)
-                                    <div id="pixels_div_1" class="row">
+                                    <div id="pixels_div_{{ $key + 1 }}" class="row">
                                         <div class="form-group col-xl-12">
                                             <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
                                                 <option value="">Selecione</option>
@@ -195,12 +192,11 @@
                             </div>
                         </div>
 
-
                         <h4> Brindes </h4>
                         <div id="brindes">
                             @if(count($planoBrindes) > 0)
                                 @foreach($planoBrindes as $key => $planoBrinde)
-                                    <div id="pixels_div_1" class="row">
+                                    <div id="pixels_div_{{ $key + 1 }}" class="row">
                                         <div class="form-group col-xl-12">
                                             <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
                                                 <option value="">Selecione</option>
@@ -217,7 +213,7 @@
                                         <select id="brinde_1" name="brinde_1" class="form-control">
                                             <option value="" selected>Selecione</option>
                                             @foreach($brindes as $brinde)
-                                                <option value="{{ $brinde['id'] }}">{{ $brinde['nome'] }}</option>
+                                                <option value="{{ $brinde['id'] }}">{{ $brinde['descricao'] }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -235,12 +231,12 @@
                         <div id="cupons">
                             @if(count($planoCupons) > 0)
                                 @foreach($planoCupons as $key => $planoCupom)
-                                    <div id="pixels_div_1" class="row">
+                                    <div id="pixels_div_{{ $key + 1 }}" class="row">
                                         <div class="form-group col-xl-12">
                                             <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
                                                 <option value="">Selecione</option>
                                                 @foreach($cupons as $cupom)
-                                                    <option value="{{ $cupom['id'] }}"  {!! ($cupom['id'] == $planoCupom['brinde']) ? 'selected' : '' !!}>{{ $cupom['nome'] }}</option>
+                                                    <option value="{{ $cupom['id'] }}"  {!! ($cupom['id'] == $planoCupom['cupom']) ? 'selected' : '' !!}>{{ $cupom['nome'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -265,7 +261,6 @@
                                 <button type="button" id="add_cupom" class="btn btn-primary">Adicionar cupom</button>
                             </div>
                         </div>
-
 
                         <div class="row">
                             <div class="form-group col-xl-12">
@@ -330,9 +325,9 @@
             }
         });
 
-        var qtd_produtos = 1;
+        var qtd_produtos = '{{ count($produtos_planos) == 0 ? 1 : count($produtos_planos) }}';
 
-        var div_produtos = $('#produtos_div_1').parent().clone();
+        var div_produtos = $('#produtos_div_'+qtd_produtos).parent().clone();
 
         $('#add_produto').on('click', function(){
 
@@ -353,9 +348,9 @@
 
         });
 
-        var qtd_pixels = 1;
+        var qtd_pixels = '{{ count($planoPixels) == 0 ? 1 : count($planoPixels) }}';
 
-        var div_pixels = $('#pixels_div_1').parent().clone();
+        var div_pixels = $('#pixels_div_'+qtd_pixels).parent().clone();
 
         $('#add_pixel').on('click', function(){
 
@@ -373,9 +368,9 @@
             $('#pixels').append(nova_div.html());
         });
 
-        var qtd_brindes = 1;
+        var qtd_brindes = '{{ count($planoBrindes) == 0 ? 1 : count($planoBrindes) }}';
 
-        var div_brindes = $('#brindes_div_1').parent().clone();
+        var div_brindes = $('#brindes_div_'+qtd_brindes).parent().clone();
 
         $('#add_brinde').on('click', function(){
 
@@ -393,9 +388,9 @@
             $('#brindes').append(nova_div.html());
         });
 
-        var qtd_cupons = 1;
+        var qtd_cupons = '{{ count($planoCupons) == 0 ? 1 : count($planoCupons) }}';
 
-        var div_cupons = $('#cupons_div_1').parent().clone();
+        var div_cupons = $('#cupons_div_'+qtd_cupons).parent().clone();
 
         $('#add_cupom').on('click', function(){
 

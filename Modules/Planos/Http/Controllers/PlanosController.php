@@ -176,8 +176,91 @@ class PlanosController extends Controller {
             $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
 
             $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $nome_foto);
+
+            $imagem = Foto::where('plano', $plano['id'])->first();
+
+            if($imagem != null){
+                $imagem->update(['caminho_imagem' => $nome_foto]);
+            }
+            else{
+                Foto::create([
+                    'caminho_imagem' => $nome_foto,
+                    'plano' => $plano['id'],
+                ]);
+            }
+
         }
 
+        $produtos_planos = ProdutoPlano::where('plano', $plano['id'])->get()->toArray();
+        if(count($produtos_planos) > 0){
+            foreach($produtos_planos as $produto_plano){
+                ProdutoPlano::find($produto_plano['id'])->delete();
+            }
+        }
+
+        $planos_brindes = PlanoBrinde::where('plano', $plano['id'])->get()->toArray();
+        if(count($planos_brindes) > 0){
+            foreach($planos_brindes as $plano_brinde){
+                PlanoBrinde::find($plano_brinde['id'])->delete();
+            }
+        }
+
+        $planos_pixels = PlanoPixel::where('plano', $plano['id'])->get()->toArray();
+        if(count($planos_pixels) > 0){
+            foreach($planos_pixels as $plano_pixel){
+                PlanoPixel::find($plano_pixel['id'])->delete();
+            }
+        }
+
+        $planos_cupons = PlanoCupom::where('plano', $plano['id'])->get()->toArray();
+        if(count($planos_cupons) > 0){
+            foreach($planos_cupons as $plano_cupom){
+                PlanoCupom::find($plano_cupom['id'])->delete();
+            }
+        }
+        
+
+        $qtd_produto = 1;
+
+        while(isset($dados['produto_'.$qtd_produto]) && $dados['produto_'.$qtd_produto] != ''){
+
+            ProdutoPlano::create([
+                'produto' => $dados['produto_'.$qtd_produto],
+                'plano' => $plano->id,
+                'quantidade_produto' => $dados['produto_qtd_'.$qtd_produto++]
+            ]);
+        }
+
+        $qtd_brinde = 1;
+
+        while(isset($dados['brinde_'.$qtd_brinde]) && $dados['brinde_'.$qtd_brinde] != ''){
+
+            PlanoBrinde::create([
+                'brinde' => $dados['brinde_'.$qtd_brinde++],
+                'plano' => $plano->id,
+            ]);
+        }
+
+        $qtd_pixel = 1;
+
+        while(isset($dados['pixel_'.$qtd_pixel]) && $dados['pixel_'.$qtd_pixel] != ''){
+
+            PlanoPixel::create([
+                'pixel' => $dados['pixel_'.$qtd_pixel++],
+                'plano' => $plano->id,
+            ]);
+        }
+
+        $qtd_cupom = 1;
+
+        while(isset($dados['cupom_'.$qtd_cupom]) && $dados['cupom_'.$qtd_cupom] != ''){
+
+            PlanoCupom::create([
+                'cupom' => $dados['cupom_'.$qtd_cupom++],
+                'plano' => $plano->id,
+            ]);
+        }
+        
         return redirect()->route('planos');
     }
 
