@@ -19,8 +19,8 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/liftgold', function (Request $request) {
-echo 'to aqui';die;
+Route::post('/liftgold', function (Request $request) {
+
     $dados = $request->all();
 
     Log::write('info', 'retorno liftgold : '.print_r($dados,true));    
