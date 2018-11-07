@@ -261,6 +261,12 @@
                   </ul>
                 </li>
                 <li class="site-menu-item has-sub">
+                  <a href="{{ route('dominios') }}">
+                    <i class="site-menu-icon wb-link-intact" aria-hidden="true"></i>
+                    <span class="site-menu-title">Domínios</span>
+                  </a>
+                </li>
+                <li class="site-menu-item has-sub">
                   <a href="{{ route('usuarios') }}">
                     <i class="site-menu-icon wb-user" aria-hidden="true"></i>
                     <span class="site-menu-title">Usuários</span>
