@@ -2,16 +2,62 @@
 
 namespace Modules\Dominios\Http\Controllers;
 
+use Exception;
 use App\Layout;
 use App\Dominio;
 use App\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Cloudflare\API\Auth\APIKey;
+use Cloudflare\API\Endpoints\DNS;
+use Cloudflare\API\Adapter\Guzzle;
+use Cloudflare\API\Endpoints\User;
 use Illuminate\Routing\Controller;
+use Cloudflare\API\Endpoints\Zones;
 use Yajra\DataTables\Facades\DataTables;
 
-class DominiosController extends Controller
-{
+class DominiosController extends Controller {
+
+    public function testeCloudFlare(){
+
+        // $key = new APIKey('adm@healthlab.io', 'cc871fd0763e1dbbb127a4c5a8bddbe24788a');
+
+        // $adapter = new Guzzle($key);
+
+        // $user = new User($adapter);
+
+        // $dns = new DNS($adapter);
+
+        // $zones = new Zones($adapter);
+
+        // $zoneID = $zones->getZoneID("fitbrasil.org");
+
+        // if ($dns->addRecord($zoneID, "CNAME", 'checkout', '104.248.122.89', 0, true) === true) {
+        //     echo "DNS criado.". PHP_EOL;
+        // }
+
+        // try{
+        //     $zones->addZone('testeabcded.tk');
+        // }
+        // catch(Exception $e){
+        //     echo 'Não foi possível adicionar o domínio, domínio não registrado!';die;
+        // }
+
+        // echo 'Meu user ID é: ' . $user->getUserID();
+        // echo '<br>';
+
+        // echo 'Meu sites(zonas) cadastrados:';
+        // echo '<br>';
+        
+        // foreach ($zones->listZones()->result as $zone) {
+        //     if($zone->name == 'fitbrasil.org'){
+        //         $zones->addZone('sac.fitbrasil.org');                
+        //     }
+        //     echo $zone->name.' ('.$zone->plan->name.')'.'<br>';
+        // }
+
+    }
+
     /**
      * Display a listing of the resource.
      * @return Response
@@ -39,6 +85,39 @@ class DominiosController extends Controller
     public function cadastrarDominio(Request $request){
 
         $dados = $request->all();
+
+        $key = new APIKey('adm@healthlab.io', 'cc871fd0763e1dbbb127a4c5a8bddbe24788a');
+
+        $adapter = new Guzzle($key);
+
+        $user = new User($adapter);
+
+        $dns = new DNS($adapter);
+
+        $zones = new Zones($adapter);
+
+        try{
+            $zones->addZone($dados['dominio']);
+        }
+        catch(Exception $e){
+            flash('Não foi possível adicionar o domínio, domínio não registrado!')->error();
+            return redirect()->route('dominios');
+        }
+
+        $zoneID = $zones->getZoneID($dados['dominio']);
+
+        if ($dns->addRecord($zoneID, "A", $dados['dominio'], '104.248.122.89', 0, true) === true) {
+            echo "DNS criado.". PHP_EOL;
+        }
+        if ($dns->addRecord($zoneID, "CNAME", 'www', $dados['dominio'], 0, true) === true) {
+            echo "DNS criado.". PHP_EOL;
+        }
+        if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+            echo "DNS criado.". PHP_EOL;
+        }
+        if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+            echo "DNS criado.". PHP_EOL;
+        }
 
         Dominio::create($dados);
 
@@ -68,7 +147,23 @@ class DominiosController extends Controller
         return redirect()->route('dominios');
     }
 
-    public function deletarDominio($id){
+    public function deletarDominio($id) {
+
+        $dominio = Dominio::find($id);
+
+        $key = new APIKey('adm@healthlab.io', 'cc871fd0763e1dbbb127a4c5a8bddbe24788a');
+
+        $adapter = new Guzzle($key);
+
+        $zones = new Zones($adapter);
+
+        try{
+            $zones->deleteZone($zones->getZoneID($dominio['dominio']));
+        }
+        catch(Exception $e){
+            flash('Não foi possível deletar o domínio!')->error();
+            return redirect()->route('dominios');
+        }
 
         Dominio::find($id)->delete();
 

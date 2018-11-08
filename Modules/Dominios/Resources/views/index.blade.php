@@ -14,7 +14,7 @@
             </a>
       </div>
     </div>
-
+    @include('flash::message')
     <div class="page-content container-fluid">
       <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
