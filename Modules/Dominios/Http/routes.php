@@ -7,11 +7,6 @@ Route::group(['middleware' => 'web', 'prefix' => 'dominios', 'namespace' => 'Mod
         'as' => 'dominios',
     ]);
 
-    Route::get('/teste', [
-        'uses' => 'DominiosController@testeCloudFlare',
-        'as' => 'dominios.cloudflare',
-    ]);
-
     Route::get('/cadastro', [
         'uses' => 'DominiosController@cadastro',
         'as' => 'dominios.cadastro',

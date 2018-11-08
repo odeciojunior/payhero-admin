@@ -18,46 +18,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DominiosController extends Controller {
 
-    public function testeCloudFlare(){
-
-        // $key = new APIKey('adm@healthlab.io', 'cc871fd0763e1dbbb127a4c5a8bddbe24788a');
-
-        // $adapter = new Guzzle($key);
-
-        // $user = new User($adapter);
-
-        // $dns = new DNS($adapter);
-
-        // $zones = new Zones($adapter);
-
-        // $zoneID = $zones->getZoneID("fitbrasil.org");
-
-        // if ($dns->addRecord($zoneID, "CNAME", 'checkout', '104.248.122.89', 0, true) === true) {
-        //     echo "DNS criado.". PHP_EOL;
-        // }
-
-        // try{
-        //     $zones->addZone('testeabcded.tk');
-        // }
-        // catch(Exception $e){
-        //     echo 'Não foi possível adicionar o domínio, domínio não registrado!';die;
-        // }
-
-        // echo 'Meu user ID é: ' . $user->getUserID();
-        // echo '<br>';
-
-        // echo 'Meu sites(zonas) cadastrados:';
-        // echo '<br>';
-        
-        // foreach ($zones->listZones()->result as $zone) {
-        //     if($zone->name == 'fitbrasil.org'){
-        //         $zones->addZone('sac.fitbrasil.org');                
-        //     }
-        //     echo $zone->name.' ('.$zone->plan->name.')'.'<br>';
-        // }
-
-    }
-
     /**
      * Display a listing of the resource.
      * @return Response
