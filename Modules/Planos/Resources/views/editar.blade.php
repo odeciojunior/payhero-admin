@@ -196,9 +196,9 @@
                         <div id="brindes">
                             @if(count($planoBrindes) > 0)
                                 @foreach($planoBrindes as $key => $planoBrinde)
-                                    <div id="pixels_div_{{ $key + 1 }}" class="row">
+                                    <div id="brindes_div_{{ $key + 1 }}" class="row">
                                         <div class="form-group col-xl-12">
-                                            <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
+                                            <select id="brinde_{{ $key + 1 }}" name="brinde_{{ $key + 1 }}" class="form-control">
                                                 <option value="">Selecione</option>
                                                 @foreach($brindes as $brinde)
                                                     <option value="{{ $brinde['id'] }}"  {!! ($brinde['id'] == $planoBrinde['brinde']) ? 'selected' : '' !!}>{{ $brinde['descricao'] }}</option>
@@ -231,9 +231,9 @@
                         <div id="cupons">
                             @if(count($planoCupons) > 0)
                                 @foreach($planoCupons as $key => $planoCupom)
-                                    <div id="pixels_div_{{ $key + 1 }}" class="row">
+                                    <div id="cupons_div_{{ $key + 1 }}" class="row">
                                         <div class="form-group col-xl-12">
-                                            <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
+                                            <select id="cupom_{{ $key + 1 }}" name="cupom_{{ $key + 1 }}" class="form-control">
                                                 <option value="">Selecione</option>
                                                 @foreach($cupons as $cupom)
                                                     <option value="{{ $cupom['id'] }}"  {!! ($cupom['id'] == $planoCupom['cupom']) ? 'selected' : '' !!}>{{ $cupom['nome'] }}</option>
@@ -350,33 +350,34 @@
 
         var qtd_pixels = '{{ count($planoPixels) == 0 ? 1 : count($planoPixels) }}';
 
-        var div_pixels = $('#pixels_div_'+qtd_pixels).parent().clone();
+        var div_pixels = $('#pixels_div_'+qtd_pixels).clone();
 
         $('#add_pixel').on('click', function(){
 
             qtd_pixels++;
 
-            var nova_div = div_pixels.clone();
+            var nova_div = div_pixels;
 
             var select = nova_div.find('select');
 
             select.attr('id', 'pixel_'+qtd_pixels);            
-            select.attr('name', 'pixel_'+qtd_pixels);            
+            select.attr('name', 'pixel_'+qtd_pixels);         
+            select.val('');
 
             div_pixels = nova_div;
 
-            $('#pixels').append(nova_div.html());
+            $('#pixels').append('<div class="row">'+nova_div.html()+'</div>');
         });
 
         var qtd_brindes = '{{ count($planoBrindes) == 0 ? 1 : count($planoBrindes) }}';
 
-        var div_brindes = $('#brindes_div_'+qtd_brindes).parent().clone();
+        var div_brindes = $('#brindes_div_'+qtd_brindes).clone();
 
         $('#add_brinde').on('click', function(){
 
             qtd_brindes++;
 
-            var nova_div = div_brindes.clone();
+            var nova_div = div_brindes;
 
             var select = nova_div.find('select');
 
@@ -385,12 +386,12 @@
 
             div_brindes = nova_div;
 
-            $('#brindes').append(nova_div.html());
+            $('#brindes').append('<div class="row">'+nova_div.html()+'</div>');
         });
 
         var qtd_cupons = '{{ count($planoCupons) == 0 ? 1 : count($planoCupons) }}';
 
-        var div_cupons = $('#cupons_div_'+qtd_cupons).parent().clone();
+        var div_cupons = $('#cupons_div_'+qtd_cupons).clone();
 
         $('#add_cupom').on('click', function(){
 
@@ -405,7 +406,7 @@
 
             div_cupons = nova_div;
 
-            $('#cupons').append(nova_div.html());
+            $('#cupons').append('<div class="row">'+nova_div.html()+'</div>');
         });
 
     });
