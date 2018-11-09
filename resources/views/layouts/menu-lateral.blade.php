@@ -165,7 +165,7 @@
                   </a>
                   <ul class="site-menu-sub">
                     <li class="site-menu-item">
-                      <a class="animsition-link" href="{{ route('relatorios.vendas') }}">
+                      <a class="animsition-link" href="/relatorios/vendas">
                         <span class="site-menu-title">Vendas</span>
                       </a>
                     </li>

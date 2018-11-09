@@ -15,7 +15,8 @@
         "spatie/laravel-permission": "^2.20",
         "yajra/laravel-datatables-oracle": "~8.0",
         "laracasts/flash": "^3.0",
-        "cloudflare/sdk": "^1.0"
+        "cloudflare/sdk": "^1.0",
+        "yajra/laravel-datatables-editor": "1.6.1"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
