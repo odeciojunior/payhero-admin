@@ -12,20 +12,19 @@ use App\PlanoVenda;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller; 
-use Yajra\DataTables\Facades\DataTables;
-use Modules\Relatorios\Datatables\VendasDatatable;
+use Yajra\DataTables\DataTables;
+use Modules\Relatorios\DataTables\VendasDataTable;
 
 class RelatoriosController extends Controller {
 
     public function index(VendasDatatable $dataTable){
 
-        $view = view('relatorios::vendas');
-
-        $dataTable->render('relatorios::vendas');
+        return $dataTable->render('relatorios::vendas');
     }
+ 
+    public function vendas(VendasDataTable $dataTable) {
 
-    public function vendas() {
-
+        return $dataTable->render('relatorios::vendas');
         return view('relatorios::vendas');
     }
 
@@ -48,6 +47,9 @@ class RelatoriosController extends Controller {
         ]);
 
         return Datatables::of($vendas)
+        // ->filter('id', function($query, $keyword) {
+        //     $query->where($id, $keyword);
+        // })
         ->editColumn('data_inicio', function ($venda) {
             return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
         })

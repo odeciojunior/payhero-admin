@@ -32,6 +32,7 @@
     
     <!-- Datatables -->
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('vendor/jquery-datatable/yadcf/jquery.dataTables.yadcf.js') }}">
 
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/animsition/animsition.css') }}">
@@ -145,12 +146,68 @@
     <script src="{{ asset('adminremark/global/js/Plugin/slidepanel.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/switchery.js') }}"></script>
 
-        <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
-        <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
-        <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
-        <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
+    <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 
-        <script src="{{ asset('adminremark/global/js/Plugin/datatables.js') }}"></script>
-        <script src="{{ asset('adminremark/assets/examples/js/tables/datatable.js') }}"></script>
-  </body>
+    <script src="{{ asset('adminremark/global/js/Plugin/datatables.js') }}"></script>
+    <script src="{{ asset('adminremark/assets/examples/js/tables/datatable.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-datatable/yadcf/i18n.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-datatable/yadcf/jquery.dataTables.yadcf.js') }}"></script>
+
+    @if(isset($dataTable))
+        {!! $dataTable->scripts() !!}
+        <script>
+                
+                yadcf.init(window.LaravelDataTables["dataTableBuilder"] ,[{
+                        column_number: 0,
+                        filter_type: "text"
+                    }, {
+                        column_number: 1,
+                        filter_type: "text"
+                    }, {
+                        column_number: 2,
+                        filter_type: "text"
+                    }, {
+                        column_number: 3,
+                        filter_type: 'select',
+                        data: [{
+                            value: 'Boleto',
+                            label: 'Boleto'
+                        }, {
+                            value: 'Cartão de crédito',
+                            label: 'Cartão de crédito'
+                        }],
+                    }, {
+                        column_number: 4,
+                        filter_type: 'select',
+                        data: [{
+                            value: 'Aprovada',
+                            label: 'Aprovada'
+                        }, {
+                            value: 'Rejeitada',
+                            label: 'Rejeitada'
+                        }, {
+                            value: 'Pendente',
+                            label: 'Pendente'
+                        }],
+                    }, {
+                        column_number: 5,
+                        filter_type: "text"
+                    }, {
+                        column_number: 6,
+                        filter_type: "text"
+                    }, {
+                        column_number: 7,
+                        filter_type: "text"
+                    }
+                ]);
+
+                $("th").css('padding','7px');
+            
+        </script>
+    @endif
+
+    </body>
 </html>
