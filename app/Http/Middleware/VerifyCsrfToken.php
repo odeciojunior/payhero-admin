@@ -26,6 +26,7 @@ class VerifyCsrfToken extends Middleware
         '/categorias/data-source',
         '/planos/data-source',
         '/dominios/data-source',
+        '/layouts/data-source',
         '/categorias/detalhe',
         '/cuponsdesconto/detalhe',
         '/transportadoras/detalhe',

@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/jquery-datatable/yadcf/jquery.dataTables.yadcf.js') }}">
 
     <!-- Plugins -->
+    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/ascolorpicker/asColorPicker.min.css?v4.0.2') }}">    
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/asscrollable/asScrollable.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/switchery/switchery.css') }}">
@@ -129,7 +130,11 @@
     <script src="{{ asset('adminremark/global/js/Plugin.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Base.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Config.js') }}"></script>
-
+    <script src="{{ asset('adminremark/global/vendor/clockpicker/bootstrap-clockpicker.min.js?v4.0.2') }}"></script>
+    <script src="{{ asset('adminremark/global/vendor/ascolor/jquery-asColor.min.js?v4.0.2') }}"></script>
+    <script src="{{ asset('adminremark/global/vendor/ascolorpicker/jquery-asColorPicker.min.js?v4.0.2') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/ascolorpicker.js') }}"></script>
+    
     <script src="{{ asset('adminremark/assets/js/Section/Menubar.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/Section/GridMenu.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/Section/Sidebar.js') }}"></script>

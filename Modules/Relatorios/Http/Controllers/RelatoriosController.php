@@ -71,13 +71,11 @@ class RelatoriosController extends Controller {
             return $venda->mercado_pago_status;
         })
         ->addColumn('detalhes', function ($venda) {
-
             return "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button>";
         })
         ->rawColumns(['detalhes'])
         ->make(true);
     }
-
 
     public function getDetalhesVenda(Request $request){
 
