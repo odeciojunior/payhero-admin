@@ -50,6 +50,9 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
+        $dados['preco'] = $this->getValor($dados['preco']);
+        $dados['valor_frete'] = $this->getValor($dados['valor_frete']);
+
         $novo_codigo_identificador = false;
 
         while($novo_codigo_identificador == false){
@@ -166,6 +169,9 @@ class PlanosController extends Controller {
     public function updatePlano(Request $request){
 
         $dados = $request->all();
+
+        $dados['preco'] = $this->getValor($dados['preco']);
+        $dados['valor_frete'] = $this->getValor($dados['valor_frete']);
 
         $plano = Plano::find($dados['id']);
         $plano->update($dados);
@@ -532,6 +538,31 @@ class PlanosController extends Controller {
 
         return $return;
     }
+
+    function getValor($str) {
+
+        if($str == ''){
+            return '0.00';
+        }
+
+        if(strstr($str, ",")) {
+          $str = str_replace(".", "", $str);
+          $str = str_replace(",", ".", $str);
+        }
+
+        $array_valor = explode('.',$str);
+
+        if(count($array_valor) == 1){
+            $str = $str.'.00';
+        }
+        else{
+            if(strlen($array_valor['1']) == 1){
+                $str .= '0';
+            }
+        }
+       
+        return $str;
+      } 
 
 
 }

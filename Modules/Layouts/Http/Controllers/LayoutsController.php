@@ -2,16 +2,18 @@
 
 namespace Modules\Layouts\Http\Controllers;
 
+use App\Layout;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
+use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class LayoutsController extends Controller
 {
     public function index() {
 
-        return view('layouts::index'); 
+        return view('layouts::index');  
     }
 
     public function cadastro() {
@@ -23,7 +25,19 @@ class LayoutsController extends Controller
 
         $dados = $request->all();
 
-        Layout::create($dados);
+        $layout = Layout::create($dados);
+
+        $logo = $request->file('logo');
+
+        if ($logo != null) {
+            $nome_logo = 'logo_' . $layout->id . '_.' . $logo->getClientOriginalExtension();
+
+            $logo->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
+
+            $layout->update([
+                'logo' => $nome_logo
+            ]);
+        }
 
         return redirect()->route('layouts');
     }

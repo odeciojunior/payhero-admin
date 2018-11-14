@@ -123,7 +123,7 @@
         <script src="{{ asset('adminremark/global/vendor/jvectormap/jquery-jvectormap.min.js') }}"></script>
         <script src="{{ asset('adminremark/global/vendor/jvectormap/maps/jquery-jvectormap-au-mill-en.js') }}"></script>
         <script src="{{ asset('adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
-    
+        <script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
 
     <!-- Scripts -->
     <script src="{{ asset('adminremark/global/js/Component.js') }}"></script>

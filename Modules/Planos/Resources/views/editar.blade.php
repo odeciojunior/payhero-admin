@@ -30,7 +30,7 @@
 
                             <div class="form-group col-xl-6">
                                 <label for="preco">Preço</label>
-                                <input value="{!! $plano->preco != '' ? $plano->preco : '' !!}" name="preco" type="text" class="form-control" id="preco" placeholder="Preço" required>
+                                <input value="{!! $plano->preco != '' ? $plano->preco : '' !!}" name="preco" type="text" class="form-control dinheiro" id="preco" placeholder="Preço" required>
                             </div>
 
                         </div>
@@ -82,7 +82,7 @@
                             </div>
                             <div class="form-group col-xl-6">
                                 <label for="valor_frete">Valor frete fixo</label>
-                                <input value="{!! $plano->valor_frete != '' ? $plano->valor_frete : '' !!}" name="valor_frete" type="text" class="form-control" id="valor_frete" placeholder="valor fixo">
+                                <input value="{!! $plano->valor_frete != '' ? $plano->valor_frete : '' !!}" name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete" placeholder="valor fixo">
                             </div>
                         </div>
 
@@ -277,6 +277,8 @@
   <script>
 
     $(document).ready( function(){
+
+        $('.dinheiro').mask('#.###,#0', {reverse: true});
 
         $("input:file").change(function(e) {
 
