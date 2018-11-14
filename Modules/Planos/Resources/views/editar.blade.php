@@ -53,8 +53,8 @@
 
                         <div class="row">
                             <div class="form-group col-xl-6">
-                                <label for="disponivel">Status cumpons</label>
-                                <select name="disponivel" type="text" class="form-control" id="disponivel" required>
+                                <label for="status_cupom">Status cumpons</label>
+                                <select name="status_cupom" type="text" class="form-control" id="status_cupom" required>
                                     <option value="">Selecione o status</option>
                                     <option value="1" {!! ($plano->status_cupom == '1') ? 'selected' : '' !!}>Disponível</option>
                                     <option value="0" {!! ($plano->status_cupom == '0') ? 'selected' : '' !!}>Indisponível</option>
