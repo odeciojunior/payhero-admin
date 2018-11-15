@@ -3,13 +3,14 @@
 namespace Modules\Planos\Http\Controllers;
 
 use App\Foto;
-use App\Plano;
-use App\Pixel;
 use App\Cupom;
+use App\Pixel;
+use App\Plano;
 use App\Brinde;
+use App\Layout;
 use App\Produto;
-use App\PlanoPixel;
 use App\PlanoCupom;
+use App\PlanoPixel;
 use App\PlanoBrinde;
 use App\DadosHotZapp;
 use App\ProdutoPlano;
@@ -35,6 +36,7 @@ class PlanosController extends Controller {
         $brindes = Brinde::all();
         $cupons = Cupom::all();
         $dados_hotzapp = DadosHotZapp::all();
+        $layouts = Layout::all();
 
         return view('planos::cadastro',[
             'transportadoras' => $transportadoras,
@@ -43,6 +45,7 @@ class PlanosController extends Controller {
             'brindes' => $brindes,
             'cupons' => $cupons,
             'dados_hotzapp' => $dados_hotzapp,
+            'layouts' => $layouts,
         ]);
     }
 
@@ -143,6 +146,8 @@ class PlanosController extends Controller {
         $brindes = Brinde::all();
         $planoBrindes = PlanoBrinde::where('plano', $plano['id'])->get()->toArray();
 
+        $layouts = Layout::all();
+
         if($foto != null){
             $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
         }
@@ -162,6 +167,7 @@ class PlanosController extends Controller {
             'planoCupons' => $planoCupons,
             'brindes' => $brindes,
             'planoBrindes' => $planoBrindes,
+            'layouts' => $layouts,
         ]);
 
     }

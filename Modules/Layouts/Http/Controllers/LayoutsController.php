@@ -25,6 +25,15 @@ class LayoutsController extends Controller
 
         $dados = $request->all();
 
+        if($dados['estilo'] == 'Padrao'){
+            $dados['cor1'] = $dados['cor1-padrao'];
+            $dados['cor2'] = '';
+        }
+        elseif($dados['estilo'] == 'Backgoud Multi Camada'){
+            $dados['cor1'] = $dados['cor1-multi-camadas'];
+            $dados['cor2'] = $dados['cor2-multi-camadas'];
+        }
+
         $layout = Layout::create($dados);
 
         $logo = $request->file('logo');
@@ -56,10 +65,32 @@ class LayoutsController extends Controller
 
         $dados = $request->all();
 
+        if($dados['estilo'] == 'Padrao'){
+            $dados['cor1'] = $dados['cor1-padrao'];
+            $dados['cor2'] = '';
+        }
+        elseif($dados['estilo'] == 'Backgoud Multi Camada'){
+            $dados['cor1'] = $dados['cor1-multi-camadas'];
+            $dados['cor2'] = $dados['cor2-multi-camadas'];
+        }
+
         $layout = Layout::find($dados['id']);
 
         $layout->update($dados);
-        
+
+        $logo = $request->file('logo');
+
+        if ($logo != null) {
+            $nome_logo = 'logo_' . $layout['id'] . '_.' . $logo->getClientOriginalExtension();
+
+            $logo->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
+
+            $layout->update([
+                'logo' => $nome_logo
+            ]);
+        }
+
+
         return redirect()->route('layouts');
     }
 
@@ -67,7 +98,7 @@ class LayoutsController extends Controller
 
         Layout::find($id)->delete();
 
-        return redirect()->route('planos');
+        return redirect()->route('layouts');
 
     }
 

@@ -43,7 +43,7 @@ class Plano extends Model
     /**
      * @var array
      */
-    protected $fillable = ['transportadora', 'view_checkout', 'nome', 'descricao', 'quntidade', 'status_cupom', 'cod_identificador', 'preco', 'frete_fixo', 'valor_frete', 'frete', 'status', 'id_plano_trasnportadora', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['transportadora', 'layout', 'nome', 'descricao', 'quntidade', 'status_cupom', 'cod_identificador', 'preco', 'frete_fixo', 'valor_frete', 'frete', 'status', 'id_plano_trasnportadora', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -23,6 +23,10 @@ class PreViewCheckoutController extends Controller {
             $data = file_get_contents($_FILES['logo']['tmp_name']);
             $logo = 'data:' . $mime . ';base64,' . base64_encode($data);
         }
+        elseif($dados['tipo'] == 'editar'){
+            $layout = Layout::find($dados['layout']);
+            $logo = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_LOGO.$layout["logo"];
+        }
 
         $plano = Plano::where('id', '19')->first();
 
@@ -41,7 +45,7 @@ class PreViewCheckoutController extends Controller {
         if ($estilo == "Padrao"){
            $layout["padrao"] = "class='".$cor1."'";
         }
-        if ($estilo == "Backgound Multi Camada"){
+        if ($estilo == "Backgoud Multi Camada"){
                $layout["multi"] = "<style> .definebg:before { background: ".$cor1.";  } .definebg:after { background: ".$cor2."; } </style>";
         }
 

@@ -32,16 +32,16 @@
                                     <div class="row">
                                         <div class="form-group col-xl-12">
                                             <label for="logo">Logo</label>
-                                            <input name="logo" id="logo" type="file" class="form-control" id="logo" required>
+                                            <input name="logo" id="logo" type="file" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-12">
                                             <label for="estilo">Estilo</label>
-                                            <select name="estilo" id="estilo" class="form-control" id="estilo" required>
+                                            <select name="estilo" id="estilo" class="form-control" required>
                                                 <option value="">Selecione</option>
                                                 <option value="Padrao">Padrão</option>
-                                                <option value="Backgound Multi Camada">Background multi-camadas</option>
+                                                <option value="Backgoud Multi Camada">Background multi-camadas</option>
                                             </select>
                                         </div>
                                     </div>
@@ -49,7 +49,7 @@
                                         <div class="row">
                                             <div class="form-group col-xl-12">
                                                 <label for="cor1">Cor 1</label><br>
-                                                <input id="cor1" name="cor1" type="text" style="width: 100%" class="asColorpicker form-control colorInputUi-input" data-plugin="asColorPicker" data-mode="simple" value="#ff666b">
+                                                <input id="cor1" name="cor1-multi-camadas" type="text" style="width: 100%" class="asColorpicker form-control colorInputUi-input" data-plugin="asColorPicker" data-mode="simple" value="#ff666b">
                                                 <a href="#" class="colorInputUi-clear">
                                                 </a>
                                             </div>
@@ -57,7 +57,7 @@
                                         <div class="row">
                                             <div class="form-group col-xl-12">
                                                 <label for="cor2">Cor 2</label><br>
-                                                <input id="cor2" name="cor2" type="text" style="width: 100%" class="asColorpicker form-control colorInputUi-input" data-plugin="asColorPicker" data-mode="simple" value="#ff666b">
+                                                <input id="cor2" name="cor2-multi-camadas" type="text" style="width: 100%" class="asColorpicker form-control colorInputUi-input" data-plugin="asColorPicker" data-mode="simple" value="#ff666b">
                                                 <a href="#" class="colorInputUi-clear">
                                                 </a>
                                             </div>
@@ -112,7 +112,7 @@
             </div>
 
             <form id="form-preview" target="iframe-preview" action="/layouts/preview" method="POST" enctype='multipart/form-data' style="display: none">
-                {{--  <input id="preview_logo" type="file" name="logo"/>  --}}
+                <input id="preview_logo" type="hidden" name="tipo" value="cadastrar"/>
                 <input id="preview_estilo" type="hidden" name="estilo"/>
                 <input id="preview_cor1" type="hidden" name="cor1"/>
                 <input id="preview_cor2" type="hidden" name="cor2"/>
@@ -145,7 +145,7 @@
             $('#cores_multi_camada').hide();
             $('#cores_padrao').hide();
 
-            if($(this).val() == 'Backgound Multi Camada'){
+            if($(this).val() == 'Backgoud Multi Camada'){
                 $('#cor1-padrao').prop('required', false);
                 $('#cor1').prop('required', true);
                 $('#cor2').prop('required', true);

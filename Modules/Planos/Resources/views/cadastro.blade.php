@@ -115,9 +115,15 @@
                             </div>
 
                             <div class="form-group col-xl-6">
-                                <label for="quntidade">Quantidade</label>
-                                <input name="quntidade" type="text" class="form-control" id="quntidade" placeholder="Quantidade" required>
+                                <label for="layout">Layout</label>
+                                <select name="layout" type="text" class="form-control" id="layout" required>
+                                    <option value="">Selecione</option>
+                                    @foreach($layouts as $layout)
+                                        <option value="{{ $layout['id'] }}" {!! ($plano->layout == $layout['id']) ? 'selected' : '' !!}>{{ $layout['descricao'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+                            <input value="10" name="quntidade" type="hidden" class="form-control" id="quntidade" placeholder="Quantidade" required>
 
                         </div>
 

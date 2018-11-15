@@ -34,32 +34,11 @@
           </tbody>
         </table>
 
-        <!-- Modal com detalhes do layout -->
-        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-          <div class="modal-dialog modal-simple">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-                <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-              </div>
-              <div id="modal_detalhes_body" class="modal-body">
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Modal -->
-
         <!-- Modal de confirmação da exclusão do layout -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">
-                <form id="form_excluir_transportadora" method="GET" action="/deletartransportadora">
+                <form id="form_excluir_layout" method="GET" action="/deletarlayout">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
@@ -125,34 +104,15 @@
             },
             "drawCallback": function() {
 
-                $('.detalhes_transportadora').on('click', function() {
+                $('.excluir_layout').on('click', function(){
 
-                    var transportadora = $(this).attr('transportadora');
+                    var id_layout = $(this).attr('layout');
 
-                    $('#modal_detalhes_titulo').html('Detalhes da transportadora');
-
-                    $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-
-                    var data = { id_transportadora : transportadora };
-
-                    $.post("/layouts/detalhe", data)
-                    .then( function(response, status){
-
-                        $('#modal_detalhes_body').html(response);
-
-                    });
-
-                });
-
-                $('.excluir_transportadora').on('click', function(){
-
-                    var id_user = $(this).attr('transportadora');
-
-                    $('#form_excluir_transportadora').attr('action','/layouts/deletartransportadora/'+id_user);
+                    $('#form_excluir_layout').attr('action','/layouts/deletarlayout/'+id_layout);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 
-                    $('#modal_excluir_titulo').html('Excluir a transportadora '+name+'?');
+                    $('#modal_excluir_titulo').html('Excluir o layout '+name+'?');
                 });
             }
 
