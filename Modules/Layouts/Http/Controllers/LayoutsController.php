@@ -43,7 +43,13 @@ class LayoutsController extends Controller
             $nome_logo = 'logo_' . $layout->id . '_.' . $logo->getClientOriginalExtension();
 
             $logo->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
-        
+
+            $img = Image::make(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo)->resize(
+                200,
+                200
+            );
+            $img->save(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo);
+
             $layout->update([
                 'logo' => $nome_logo
             ]);
@@ -85,6 +91,12 @@ class LayoutsController extends Controller
             $nome_logo = 'logo_' . $layout['id'] . '_.' . $logo->getClientOriginalExtension();
 
             $logo->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
+
+            $img = Image::make(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo)->resize(
+                200,
+                200
+            );
+            $img->save(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo);
 
             $layout->update([
                 'logo' => $nome_logo
