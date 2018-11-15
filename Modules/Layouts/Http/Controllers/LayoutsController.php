@@ -88,7 +88,7 @@ class LayoutsController extends Controller
         $logo = $request->file('logo');
 
         if ($logo != null) {
-            $nome_logo = 'logo_' . $layout['id'] . '_.' . $logo->getClientOriginalExtension();
+            $nome_logo = 'logo_' . $layout->id . '_.' . $logo->getClientOriginalExtension();
 
             $logo->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
 
@@ -102,7 +102,6 @@ class LayoutsController extends Controller
                 'logo' => $nome_logo
             ]);
         }
-
 
         return redirect()->route('layouts');
     }
