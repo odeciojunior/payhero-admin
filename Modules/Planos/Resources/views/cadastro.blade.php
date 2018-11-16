@@ -29,7 +29,7 @@
 
                             <div class="form-group col-xl-6">
                                 <label for="preco">Preço</label>
-                                <input name="preco" type="text" class="form-control" id="preco" placeholder="Preço" required>
+                                <input name="preco" type="text" class="form-control dinheiro" id="preco" placeholder="Preço" required>
                             </div>
 
                         </div>
@@ -81,7 +81,7 @@
                             </div>
                             <div class="form-group col-xl-6">
                                 <label for="valor_frete">Valor frete fixo</label>
-                                <input name="valor_frete" type="text" class="form-control" id="valor_frete" placeholder="valor fixo">
+                                <input name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete" placeholder="valor fixo">
                             </div>
 
                         </div>
@@ -115,9 +115,15 @@
                             </div>
 
                             <div class="form-group col-xl-6">
-                                <label for="quntidade">Quantidade</label>
-                                <input name="quntidade" type="text" class="form-control" id="quntidade" placeholder="Quantidade" required>
+                                <label for="layout">Layout</label>
+                                <select name="layout" type="text" class="form-control" id="layout" required>
+                                    <option value="">Selecione</option>
+                                    @foreach($layouts as $layout)
+                                        <option value="{{ $layout['id'] }}" {!! ($plano->layout == $layout['id']) ? 'selected' : '' !!}>{{ $layout['descricao'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+                            <input value="10" name="quntidade" type="hidden" class="form-control" id="quntidade" placeholder="Quantidade" required>
 
                         </div>
 
@@ -229,6 +235,8 @@
     <script>
 
         $(document).ready( function(){
+
+            $('.dinheiro').mask('#.###,#0', {reverse: true});
 
             $("input:file").change(function(e) {
 

@@ -69,8 +69,8 @@ height: 80px;
 
   /*PERSONALIZAÇÃO DE FUNDOS */
 
-  .bg-azul {
-          background-color: lightgrey;
+     .bg-azul {
+      background-color: royalblue;
      }
      .bg-azul2 {
           background-color: #2ec2e8;
@@ -80,15 +80,13 @@ height: 80px;
      }
      .bg-vermelho2 {
           background-color: #d61b1b;
-      }
-
-
+     }
      .bg-roxo {
           background-color: purple;
      }
      .bg-roxo1 {
         background-color: #691b99;
-   }
+     }
      .bg-verde {
           background-color: seagreen;
      }
@@ -103,9 +101,6 @@ height: 80px;
      }
      .bg-cinza {
       background-color: lightgrey;
-     }
-     .bg-azul {
-      background-color: royalblue;
      }
 
      .bg-preto {

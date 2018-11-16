@@ -30,7 +30,7 @@
 
                             <div class="form-group col-xl-6">
                                 <label for="preco">Preço</label>
-                                <input value="{!! $plano->preco != '' ? $plano->preco : '' !!}" name="preco" type="text" class="form-control" id="preco" placeholder="Preço" required>
+                                <input value="{!! $plano->preco != '' ? $plano->preco : '' !!}" name="preco" type="text" class="form-control dinheiro" id="preco" placeholder="Preço" required>
                             </div>
 
                         </div>
@@ -53,8 +53,8 @@
 
                         <div class="row">
                             <div class="form-group col-xl-6">
-                                <label for="disponivel">Status cumpons</label>
-                                <select name="disponivel" type="text" class="form-control" id="disponivel" required>
+                                <label for="status_cupom">Status cumpons</label>
+                                <select name="status_cupom" type="text" class="form-control" id="status_cupom" required>
                                     <option value="">Selecione o status</option>
                                     <option value="1" {!! ($plano->status_cupom == '1') ? 'selected' : '' !!}>Disponível</option>
                                     <option value="0" {!! ($plano->status_cupom == '0') ? 'selected' : '' !!}>Indisponível</option>
@@ -82,7 +82,7 @@
                             </div>
                             <div class="form-group col-xl-6">
                                 <label for="valor_frete">Valor frete fixo</label>
-                                <input value="{!! $plano->valor_frete != '' ? $plano->valor_frete : '' !!}" name="valor_frete" type="text" class="form-control" id="valor_frete" placeholder="valor fixo">
+                                <input value="{!! $plano->valor_frete != '' ? $plano->valor_frete : '' !!}" name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete" placeholder="valor fixo">
                             </div>
                         </div>
 
@@ -111,9 +111,15 @@
                                 @endif
                             </div>
                             <div class="form-group col-xl-6">
-                                <label for="quntidade">Quantidade</label>
-                                <input value="{!! $plano->quntidade != '' ? $plano->quntidade : '' !!}" name="quntidade" type="text" class="form-control" id="quntidade" placeholder="Quantidade" required>
+                                <label for="layout">Layout</label>
+                                <select name="layout" type="text" class="form-control" id="layout" required>
+                                    <option value="">Selecione</option>
+                                    @foreach($layouts as $layout)
+                                        <option value="{{ $layout['id'] }}" {!! ($plano->layout == $layout['id']) ? 'selected' : '' !!}>{{ $layout['descricao'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+                            <input value="10" name="quntidade" type="hidden" class="form-control" id="quntidade" placeholder="Quantidade" required>
                         </div>
 
                         <h4> Produtos </h4>
@@ -277,6 +283,8 @@
   <script>
 
     $(document).ready( function(){
+
+        $('.dinheiro').mask('#.###,#0', {reverse: true});
 
         $("input:file").change(function(e) {
 

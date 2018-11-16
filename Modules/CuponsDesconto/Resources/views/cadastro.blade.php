@@ -8,7 +8,7 @@
         <div class="page-header">
             <h1 class="page-title">Cadastrar novo cupom de desconto</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/cuponsdescontno">
+                <a class="btn btn-primary float-right" href="/cuponsdesconto">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
                     Voltar
                 </a>

@@ -42,4 +42,9 @@ Route::group(['middleware' => 'web', 'prefix' => 'layouts', 'namespace' => 'Modu
         'uses' => 'LayoutsController@getDetalhesLayout'
     ]);
 
+    Route::post('/preview', [
+        'as' => 'checkout.preview',
+        'uses' => 'PreViewCheckoutController@checkoutPreView',
+    ]);
+
 });

@@ -3,13 +3,14 @@
 namespace Modules\Planos\Http\Controllers;
 
 use App\Foto;
-use App\Plano;
-use App\Pixel;
 use App\Cupom;
+use App\Pixel;
+use App\Plano;
 use App\Brinde;
+use App\Layout;
 use App\Produto;
-use App\PlanoPixel;
 use App\PlanoCupom;
+use App\PlanoPixel;
 use App\PlanoBrinde;
 use App\DadosHotZapp;
 use App\ProdutoPlano;
@@ -35,6 +36,7 @@ class PlanosController extends Controller {
         $brindes = Brinde::all();
         $cupons = Cupom::all();
         $dados_hotzapp = DadosHotZapp::all();
+        $layouts = Layout::all();
 
         return view('planos::cadastro',[
             'transportadoras' => $transportadoras,
@@ -43,12 +45,16 @@ class PlanosController extends Controller {
             'brindes' => $brindes,
             'cupons' => $cupons,
             'dados_hotzapp' => $dados_hotzapp,
+            'layouts' => $layouts,
         ]);
     }
 
     public function cadastrarPlano(Request $request){
 
         $dados = $request->all();
+
+        $dados['preco'] = $this->getValor($dados['preco']);
+        $dados['valor_frete'] = $this->getValor($dados['valor_frete']);
 
         $novo_codigo_identificador = false;
 
@@ -140,6 +146,8 @@ class PlanosController extends Controller {
         $brindes = Brinde::all();
         $planoBrindes = PlanoBrinde::where('plano', $plano['id'])->get()->toArray();
 
+        $layouts = Layout::all();
+
         if($foto != null){
             $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
         }
@@ -159,6 +167,7 @@ class PlanosController extends Controller {
             'planoCupons' => $planoCupons,
             'brindes' => $brindes,
             'planoBrindes' => $planoBrindes,
+            'layouts' => $layouts,
         ]);
 
     }
@@ -166,6 +175,9 @@ class PlanosController extends Controller {
     public function updatePlano(Request $request){
 
         $dados = $request->all();
+
+        $dados['preco'] = $this->getValor($dados['preco']);
+        $dados['valor_frete'] = $this->getValor($dados['valor_frete']);
 
         $plano = Plano::find($dados['id']);
         $plano->update($dados);
@@ -532,6 +544,31 @@ class PlanosController extends Controller {
 
         return $return;
     }
+
+    function getValor($str) {
+
+        if($str == ''){
+            return '0.00';
+        }
+
+        if(strstr($str, ",")) {
+          $str = str_replace(".", "", $str);
+          $str = str_replace(",", ".", $str);
+        }
+
+        $array_valor = explode('.',$str);
+
+        if(count($array_valor) == 1){
+            $str = $str.'.00';
+        }
+        else{
+            if(strlen($array_valor['1']) == 1){
+                $str .= '0';
+            }
+        }
+       
+        return $str;
+      } 
 
 
 }
