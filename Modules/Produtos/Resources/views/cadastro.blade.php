@@ -8,9 +8,8 @@
         <div class="page-header">
             <h1 class="page-title">Cadastrar novo produto</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/produtos">
-                    <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
-                    Voltar
+                <a class="btn btn-primary float-right" href="{{ route('produtos') }}">
+                    Meus produtos
                 </a>
             </div>
         </div>
@@ -25,7 +24,6 @@
                                 <label for="nome">Nome</label>
                                 <input name="nome" type="text" class="form-control" id="nome" placeholder="Nome" required>
                             </div>
-
                             <div class="form-group col-xl-6">
                                 <label for="categoria">Categoria</label>
                                 <select name="categoria" class="form-control" id="categoria" required>
@@ -35,11 +33,8 @@
                                     @endforeach
                                 </select>
                             </div>
-
                         </div>
-
                         <div class="row">
-
                             <div class="form-group col-xl-12">
                                 <label for="descricao">Descrição</label>
                                 <input name="descricao" type="text" class="form-control" id="descricao" placeholder="Descrição">
@@ -75,7 +70,6 @@
                                 <label for="garantia">Garantia</label>
                                 <input name="garantia" type="text" class="form-control" id="garantia" placeholder="Garantia">
                             </div>
-
                         </div>
 
                         <div class="row">
@@ -147,11 +141,11 @@
                     })    
                 }
                 reader.readAsDataURL(file);
-        
+
                 $(this).after(img);
             }
         });
-    
+
     });
 
   </script>

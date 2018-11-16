@@ -4,26 +4,29 @@
 
   <!-- Page -->
   <div class="page">
+
+    <div class="page-header">
+        <h1 class="page-title">Projetos</h1>
+        <div class="page-header-actions">
+        </div>
+    </div>
+
     <div class="page-content container-fluid">
       <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-        <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 80px">
+        <table id="tabela_projetos" class="table-bordered table-hover w-full" style="margin-top: 20px">
           <thead class="bg-blue-grey-100">
             <tr>
               <td>Nome</td>
               <td>Descrição</td>
-              <td>Categoria</td>
-              <td>Formato</td>
-              <td>Quantidade</td>
-              <td>Status</td>
-              <td style="width: 160px">Detalhes</td>
+              <td style="max-width: 160px">Detalhes</td>
             </tr>
           </thead>
           <tbody>
           </tbody>
         </table>
 
-        <!-- Modal com detalhes do usuário -->
+        <!-- Modal com detalhes do projeto -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-simple">
             <div class="modal-content">
@@ -44,11 +47,10 @@
         </div>
         <!-- End Modal -->
 
-        <!-- Modal de confirmação da exclusão do usuário -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">
-                <form id="form_excluir_produto" method="GET" action="/deletarproduto">
+                <form id="form_excluir_projeto" method="GET" action="/deletarprojeto">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
@@ -65,46 +67,26 @@
               </div>
             </div>
           </div>
-          <!-- End Modal -->
 
         </div>
     </div>
   </div>
 
-
   <script>
 
     $(document).ready( function(){
 
-        $("#tabela_produtos").DataTable( {
+        $("#tabela_projetos").DataTable( {
 
             processing: true,
             serverSide: true,
             ajax: {
-                url: '/produtos/data-source',
+                url: '/projetos/data-source',
                 type: 'POST'
             },
             columns: [
                 { data: 'nome', name: 'nome'},
-                { data: function(data){
-                    return data.descricao.substr(0,25); 
-                }, name: 'descricao'},
-                { data: 'categoria_nome', name: 'categoria_nome'},
-                { data: function(data){
-                    if(data.formato == 1)
-                      return 'Físico';
-                    if(data.formato == 0)
-                      return 'Digital';
-                    return 'null';
-                }, name: 'formato'},
-                { data: 'quntidade', name: 'quntidade'},
-                { data: function(data){
-                  if(data.disponivel == 1)
-                  return 'Disponível';
-                if(data.disponivel == 0)
-                  return 'Indisponível';
-                return 'null';
-                }, name: 'disponivel'},
+                { data: 'descricao', name: 'descricao'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {
@@ -128,34 +110,33 @@
             },
             "drawCallback": function() {
 
-                $('.detalhes_produto').on('click', function() {
+                $('.detalhes_projeto').on('click', function() {
 
-                    var produto = $(this).attr('produto');
+                    var projeto = $(this).attr('projeto');
 
-                    $('#modal_detalhes_titulo').html('Detalhes da produto');
+                    $('#modal_detalhes_titulo').html('Detalhes da projeto');
 
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { id_produto : produto };
+                    var data = { id_projeto : projeto };
 
-                    $.post("/produtos/detalhe", data)
+                    $.post("/projetos/detalhe", data)
                     .then( function(response, status){
 
                         $('#modal_detalhes_body').html(response);
-
                     });
 
                 });
 
-                $('.excluir_produto').on('click', function(){
+                $('.excluir_projeto').on('click', function(){
 
-                    var id_produto = $(this).attr('produto');
+                    var id_projeto = $(this).attr('projeto');
 
-                    $('#form_excluir_produto').attr('action','/produtos/deletarproduto/'+id_produto);
+                    $('#form_excluir_projeto').attr('action','/projetos/deletarprojeto/'+id_projeto);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 
-                    $('#modal_excluir_titulo').html('Excluir o produto '+name+'?');
+                    $('#modal_excluir_titulo').html('Excluir o projeto '+name+'?');
 
                 });
             }

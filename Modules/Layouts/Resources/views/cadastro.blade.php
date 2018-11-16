@@ -101,7 +101,7 @@
     $(document).ready( function(){
 
         var checkout = $('#view_checkout');
-        $('#view_checkout').html('{!! mb_convert_encoding(file_get_contents("https://checkout.mrorganic.com.br/JTD386"), "HTML-ENTITIES", "UTF-8") !!}'.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ''));
+        {{--  $('#view_checkout').html('{!! mb_convert_encoding(file_get_contents("https://checkout.mrorganic.com.br/JTD386"), "HTML-ENTITIES", "UTF-8") !!}'.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ''));  --}}
 
     });
 
