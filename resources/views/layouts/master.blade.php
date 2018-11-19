@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/assets/css/site.min.css') }}">
-    
+
     <!-- Datatables -->
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{ asset('vendor/jquery-datatable/yadcf/jquery.dataTables.yadcf.js') }}">

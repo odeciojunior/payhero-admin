@@ -65,6 +65,12 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="tab_produtos" role="tabpanel">
+                                    <div class="page-header-actions">
+                                        <a class="btn btn-success float-right" href="#" style="margin-right: 10px">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar produto
+                                        </a>
+                                    </div>
                                     <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 20px">
                                         <thead class="bg-blue-grey-100">
                                             <th>Nome</th>
@@ -258,6 +264,7 @@
                         $('#modal_detalhes_body').html(response);
                     });
                 });
+
             }
 
         });
