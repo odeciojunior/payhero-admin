@@ -67,10 +67,17 @@ class CuponsDescontoController extends Controller
     /**
      * Return data for datatable
      */
-    public function dadosCuponsDesconto() {
+    public function dadosCuponsDesconto(Request $request) {
 
-        $cupons = \DB::table('cupons as cupom')
-            ->get([
+        $dados = $request->all();
+
+        $cupons = \DB::table('cupons as cupom');
+
+        if(isset($dados['projeto'])){
+            $cupons = $cupons->where('cupom.projeto','=', $dados['projeto']);
+        }
+
+        $cupons = $cupons->get([
                 'cupom.id',
                 'cupom.nome',
                 'cupom.descricao',

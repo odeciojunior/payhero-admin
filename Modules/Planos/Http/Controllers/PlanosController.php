@@ -322,10 +322,17 @@ class PlanosController extends Controller {
 
     }
 
-    public function dadosPlano() {
+    public function dadosPlano(Request $request) {
 
-        $planos = \DB::table('planos as plano')
-            ->get([
+        $dados = $request->all();
+
+        $planos = \DB::table('planos as plano');
+
+        if(isset($dados['projeto'])){
+            $planos = $planos->where('plano.projeto','=', $dados['projeto']);
+        }
+
+        $planos = $planos->get([
                 'plano.id',
                 'plano.nome',
                 'plano.descricao',

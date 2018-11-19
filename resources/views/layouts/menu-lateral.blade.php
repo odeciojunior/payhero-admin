@@ -306,7 +306,7 @@
                 </a>
               </li>
             @endif
-          </div>
+          </ul>
         </div>
       </div>
     </div>

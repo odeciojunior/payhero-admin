@@ -114,10 +114,17 @@ class LayoutsController extends Controller
 
     }
 
-    public function dadosLayout() {
+    public function dadosLayout(Request $request) {
 
-        $layouts = \DB::table('layouts as layout')
-            ->get([
+        $dados = $request->all();
+
+        $layouts = \DB::table('layouts as layout');
+
+        if(isset($dados['projeto'])){
+            $layouts = $layouts->where('layout.projeto','=', $dados['projeto']);
+        }
+
+        $layouts = $layouts->get([
                 'layout.id',
                 'layout.descricao',
                 'layout.logo',

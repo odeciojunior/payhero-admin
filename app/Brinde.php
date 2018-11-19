@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property int $tipo_brinde
+ * @property int $projeto
  * @property string $descricao
  * @property string $titulo
  * @property string $foto
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property Projeto $projeto
  * @property TipoBrinde $tipoBrinde
  * @property PlanosBrinde[] $planosBrindes
  */
@@ -22,7 +24,15 @@ class Brinde extends Model
     /**
      * @var array
      */
-    protected $fillable = ['tipo_brinde', 'descricao', 'titulo', 'foto', 'link', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['tipo_brinde', 'projeto', 'descricao', 'titulo', 'foto', 'link', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function projeto()
+    {
+        return $this->belongsTo('App\Projeto', 'projeto');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

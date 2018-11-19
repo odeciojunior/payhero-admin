@@ -67,10 +67,17 @@ class PixelsController extends Controller
     /**
      * Return data for datatable
      */
-    public function dadosPixels() {
+    public function dadosPixels(Request $request) {
 
-        $pixels = \DB::table('pixels as pixel')
-            ->get([
+        $dados = $request->all();
+
+        $pixels = \DB::table('pixels as pixel');
+
+        if(isset($dados['projeto'])){
+            $pixels = $pixels->where('pixel.projeto','=', $dados['projeto']);
+        }
+
+        $pixels = $pixels->get([
                 'pixel.id',
                 'pixel.nome',
                 'pixel.cod_pixel',

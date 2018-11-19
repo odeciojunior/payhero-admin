@@ -134,12 +134,19 @@ class DominiosController extends Controller {
     /**
      * Return data for datatable
      */
-    public function dadosDominios() {
+    public function dadosDominios(Request $request) {
 
+        $dados = $request->all();
+    
         $dominios = \DB::table('dominios as dominio')
             ->leftJoin('layouts', 'dominio.layout', 'layouts.id')
-            ->leftJoin('empresas', 'dominio.empresa', 'empresas.id')
-            ->get([
+            ->leftJoin('empresas', 'dominio.empresa', 'empresas.id');
+
+        if(isset($dados['projeto'])){
+            $dominios = $dominios->where('dominio.projeto','=', $dados['projeto']);
+        }
+            
+        $dominios = $dominios->get([
                 'dominio.id',
                 'dominio.dominio',
                 'dominio.layout',

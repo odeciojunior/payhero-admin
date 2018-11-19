@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Dominio[] $dominios
  * @property Plano[] $planos
  */
-class Layout extends Model
+class Layouts extends Model
 {
     /**
      * @var array

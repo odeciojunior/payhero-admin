@@ -124,11 +124,18 @@ class BrindesController extends Controller
     }
 
 
-    public function dadosBrindes() {
+    public function dadosBrindes(Request $request) {
+
+        $dados = $request->all();
 
         $brindes = \DB::table('brindes as brinde')
-            ->leftJoin('tipo_brindes as tipo_brinde','tipo_brinde.id','brinde.tipo_brinde')
-            ->get([
+            ->leftJoin('tipo_brindes as tipo_brinde','tipo_brinde.id','brinde.tipo_brinde');
+
+        if(isset($dados['projeto'])){
+            $brindes = $brindes->where('brinde.projeto','=', $dados['projeto']);
+        }
+
+        $brindes = $brindes->get([
                 'brinde.id',
                 'brinde.descricao',
                 'brinde.titulo',

@@ -97,11 +97,19 @@ class ProdutosController extends Controller
 
     }
 
-    public function dadosProduto() {
+    public function dadosProduto(Request $request) {
+
+        $dados = $request->all();
 
         $produtos = \DB::table('produtos as produto')
             ->leftJoin('categorias','produto.categoria','categorias.id')
-            ->get([
+            ->leftJoin('projetos_produtos','projetos_produtos.produto','produto.id');
+
+        if(isset($dados['projeto'])){
+            $produtos = $produtos->where('projetos_produtos.projeto','=', $dados['projeto']);
+        }
+
+        $produtos = $produtos->get([
                 'produto.id',
                 'produto.nome',
                 'produto.descricao',
@@ -109,10 +117,11 @@ class ProdutosController extends Controller
                 'produto.formato',
                 'categorias.nome as categoria_nome',
                 'produto.quntidade',
+                'projetos_produtos.projeto',
         ]);
 
         return Datatables::of($produtos)
-        ->addColumn('detalhes', function ($produto) {
+            ->addColumn('detalhes', function ($produto) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
                         <a class='btn btn-outline btn-success detalhes_produto' data-placement='top' data-toggle='tooltip' title='Detalhes' produto='".$produto->id."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
