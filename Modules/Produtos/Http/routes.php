@@ -38,8 +38,23 @@ Route::group(['middleware' => 'web', 'prefix' => 'produtos', 'namespace' => 'Mod
     ]);
 
     Route::post('/detalhe',[
-        'as' => 'usuario.detalhes',
+        'as' => 'produtos.detalhes',
         'uses' => 'ProdutosController@getDetalhesProduto'
     ]);
 
+    Route::post('/getprodutos',[
+        'as' => 'produtos.getprodutos',
+        'uses' => 'ProdutosController@getProdutos'
+    ]);
+
+    Route::post('/addprodutoprojeto',[
+        'as' => 'produtos.addprodutoprojeto',
+        'uses' => 'ProdutosController@addProdutoProjeto'
+    ]);
+
+    Route::post('/deletarprodutoplano',[
+        'as' => 'produtos.deletarprodutoplano',
+        'uses' => 'ProdutosController@deletarProdutoPlano'
+    ]);
+    
 });

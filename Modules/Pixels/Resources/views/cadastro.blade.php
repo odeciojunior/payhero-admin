@@ -1,4 +1,4 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
@@ -13,28 +13,30 @@
                     Voltar
                 </a>
             </div>
+        </div>  --}}
+        <div style="text-align: center">
+            <h4>Adicionar pixel</h4>
         </div>
-
-        <form method="post" action="/pixels/cadastrarpixel">
+        <form id='cadastrar_pixel' method="post" action="/pixels/cadastrarpixel">
             @csrf
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
                     <div style="width:100%">
 
                         <div class="row">
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-xl-12">
                                 <label for="nome">Nome</label>
                                 <input name="nome" type="text" class="form-control" id="nome" placeholder="Nome">
                             </div>
 
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-xl-12">
                                 <label for="descricao">Código</label>
                                 <input name="cod_pixel" type="text" class="form-control" id="cod_pixel" placeholder="Código">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-12">
                                 <label for="plataforma">Plataforma</label>
                                 <select name="plataforma" type="text" class="form-control" id="plataforma">
                                     <option value="" selected>Selecione</option>
@@ -45,7 +47,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-xl-12">
                                 <label for="status">Status</label>
                                 <select name="status" type="text" class="form-control" id="status">
                                     <option value="" selected>Selecione</option>
@@ -55,17 +57,17 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{--  <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
-                        </div>
+                        </div>  --}}
 
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    {{--  </div>
 
   <script>
 
@@ -77,4 +79,4 @@
 
 
 @endsection
-
+  --}}

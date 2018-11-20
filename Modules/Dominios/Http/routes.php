@@ -37,4 +37,10 @@ Route::group(['middleware' => 'web', 'prefix' => 'dominios', 'namespace' => 'Mod
         'uses' => 'DominiosController@dadosDominios'
     ]);
 
+    Route::post('/getformadddominio', [
+        'uses' => 'DominiosController@getFormAddDominio',
+        'as' => 'dominios.getformadddominio',
+    ]);
+
+
 });

@@ -42,5 +42,16 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'pixels', 'namespace' 
         'uses' => 'PixelsController@getDetalhesPixel'
     ]);
 
+    Route::get('/getformaddpixel',[
+        'as' => 'pixels.detalhes',
+        'uses' => 'PixelsController@getFormAddPixel'
+    ]);
+
+    Route::post('/getformeditarpixel',[
+        'as' => 'pixels.getformeditarpixel',
+        'uses' => 'PixelsController@getFormEditarPixel'
+    ]);
+
+
 });
 

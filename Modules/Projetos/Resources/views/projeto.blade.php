@@ -8,7 +8,7 @@
         <div class="page-header">
             <h1 class="page-title">Projeto {{ $projeto->nome }}</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/projetos">
+                <a class="btn btn-success float-right" href="/projetos">
                     Meus projetos
                 </a>
             </div>
@@ -65,13 +65,11 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="tab_produtos" role="tabpanel">
-                                    <div class="page-header-actions">
-                                        <a class="btn btn-success float-right" href="#" style="margin-right: 10px">
+                                    <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 20px">
+                                        <a id="add_produto" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add_produto' style="color: white">
                                             <i class='icon wb-user-add' aria-hidden='true'></i>
                                             Adicionar produto
                                         </a>
-                                    </div>
-                                    <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 20px">
                                         <thead class="bg-blue-grey-100">
                                             <th>Nome</th>
                                             <th>Descrição</th>
@@ -79,7 +77,7 @@
                                             <th>Formato</th>
                                             <th>Quantidade</th>
                                             <th>Status</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                            <th style="width: 110px">Detalhes</th>
                                         </thead>
                                         <tbody>
                                         </tbody>
@@ -87,6 +85,10 @@
                                 </div>
                                 <div class="tab-pane" id="tab_planos" role="tabpanel">
                                     <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="add_plano" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar plano
+                                        </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Nome</th>
                                             <th>Descrição</th>
@@ -100,6 +102,10 @@
                                 </div>
                                 <div class="tab-pane" id="tab_pixels" role="tabpanel">
                                     <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="adicionar_pixel" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar pixel
+                                        </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Nome</th>
                                             <th>Código</th>
@@ -113,6 +119,10 @@
                                 </div>
                                 <div class="tab-pane" id="tab_brindes" role="tabpanel">
                                     <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="add_plano" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar brinde
+                                        </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Título</th>
                                             <th>Descrição</th>
@@ -125,6 +135,10 @@
                                 </div>
                                 <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                     <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="add_plano" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar cupom
+                                        </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Nome</th>
                                             <th>Descrição</th>
@@ -140,6 +154,10 @@
                                 </div>
                                 <div class="tab-pane" id="tab_dominios" role="tabpanel">
                                     <table id="tabela_dominios" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="adicionar_dominio" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar dominio
+                                        </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Domínio</th>
                                             <th>Layout</th>
@@ -152,6 +170,10 @@
                                 </div>
                                 <div class="tab-pane" id="tab_layouts" role="tabpanel">
                                     <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="add_layout" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar layout
+                                        </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Descrição</th>
                                             <th>Logo 1</th>
@@ -169,24 +191,114 @@
                         </div>
                     </div>
 
-                    <!-- Modal detalhes -->
+                    <!-- Modal para ver detalhes de * no projeto -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                      <div class="modal-dialog modal-simple">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                          </div>
-                          <div id="modal_detalhes_body" class="modal-body">
-            
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                          </div>
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
+                                </div>
+                                <div id="modal_detalhes_body" class="modal-body">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+                    </div>
+
+                    <!-- Modal padrão para adicionar produtos no projeto -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_produto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" style="width: 100%; text-align:center">Selecione o produto</h4>
+                                </div>
+                                <div id="modal_detalhes_body" class="modal-body">
+                                    <div class="row">
+                                        <div class="form-group col-12" style="margin-top: 30px">
+                                            <select id="select_produtos" class="form-control">
+                                                <option value="">Selecione algo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="adicionar_produto" type="button" class="btn btn-success" data-dismiss="modal">Adicionar</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal padrão para adicionar * no projeto -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <div id="modal_add_body" class="form-group col-12" style="margin-top: 30px">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="cadastrar" type="button" class="btn btn-success" data-dismiss="modal">Adicionar</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal padrão para editar * no projeto -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_editar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="row">
+                                    <div id="modal_editar_body" class="form-group col-12" style="margin-top: 30px">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="editar" type="button" class="btn btn-success" data-dismiss="modal">Editar</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <!-- Modal padrão para excluir * no plano -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
+                                </div>
+                                <div id="modal_excluir_body" class="modal-body">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                    <button id="bt_excluir" type="button" class="btn btn-success">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -199,6 +311,128 @@
     $(document).ready( function(){
 
         var id_projeto = '{{ $projeto->id }}';
+
+        $('#add_produto').on('click', function(){
+
+            $('#select_produtos').html("<option value=''>Selecione</option>");
+
+            $.ajax({
+                method: "POST",
+                url: "/produtos/getprodutos",
+                data: { projeto: id_projeto },
+                error: function(){
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+
+                    var options = "<option value=''>Selecione</option>";
+                    $.each(data, function(key, d){
+
+                        options += "<option value='"+d.id+"'>"+d.nome+"</option>";
+
+                    });
+
+                    $('#select_produtos').html(options);
+                }
+            });
+        });
+
+        $('#adicionar_produto').on('click', function(){
+
+            var id_produto = $('#select_produtos').val();
+
+            if(id_produto == '')
+                return;
+
+            $.ajax({
+                method: "POST",
+                url: "/produtos/addprodutoprojeto",
+                data: { projeto: id_projeto, produto: id_produto },
+                error: function(){
+                    $('#modal_add_produto').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+                    $('#modal_add_produto').hide();
+                    $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                    $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                }
+            });
+
+        });
+
+        $('#adicionar_dominio').on('click', function(){
+
+            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+
+            $.ajax({
+                method: "POST",
+                url: "/dominios/getformadddominio",
+                data: { projeto: id_projeto },
+                error: function(){
+                    $('#modal_add').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+                    $('#modal_add_body').html(data);
+                    $('#cadastrar').on('click',function(){
+
+
+                    });
+                }
+            });
+
+        });
+
+        $('#adicionar_pixel').on('click', function(){
+
+            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+
+            $.ajax({
+                method: "GET",
+                url: "/pixels/getformaddpixel",
+                error: function(){
+                    $('#modal_add').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+                    $('#modal_add_body').html(data);
+
+                    $('#cadastrar').unbind('click');
+    
+                    $('#cadastrar').on('click',function(){
+
+                        var paramObj = {};
+                        $.each($('#cadastrar_pixel').serializeArray(), function(_, kv) {
+                            if (paramObj.hasOwnProperty(kv.name)) {
+                                paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+                                paramObj[kv.name].push(kv.value);
+                            }
+                            else {
+                                paramObj[kv.name] = kv.value;
+                            }
+                        });
+                        paramObj['projeto'] = id_projeto;
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/pixels/cadastrarpixel",
+                            data: { pixelData: paramObj },
+                            error: function(){
+                                $('#modal_add_produto').hide();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#modal_add_produto').hide();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+                    });
+                }
+            });
+
+        });
 
         $("#tabela_produtos").DataTable( {
             bLengthChange: false,
@@ -265,11 +499,42 @@
                     });
                 });
 
+                var id_produto = '';
+
+                $('.excluir_produto').on('click', function(){
+
+                    id_produto = $(this).attr('produto');
+                    var name = $(this).closest("tr").find("td:first-child").text();
+                    $('#modal_excluir_titulo').html('Remover do projeto o produto '+name+'?');        
+
+                    $('#bt_excluir').unbind('click');
+
+                    $('#bt_excluir').on('click', function(){
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/produtos/deletarprodutoplano",
+                            data: { projeto: id_projeto, produto: id_produto },
+                            error: function(){
+                                $('#fechar_modal_excluir').click();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#fechar_modal_excluir').click();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+            
+                    });
+                });
+
             }
 
         });
 
         $("#tabela_planos").DataTable( {
+            bLengthChange: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -326,7 +591,7 @@
         });
 
         $("#tabela_pixels").DataTable( {
-
+            bLengthChange: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -380,12 +645,97 @@
                         $('#modal_detalhes_body').html(response);
                     });
                 });
+
+                var id_pixel = '';
+
+                $('.excluir_pixel').on('click', function(){
+
+                    id_pixel = $(this).attr('pixel');
+                    var name = $(this).closest("tr").find("td:first-child").text();
+                    $('#modal_excluir_titulo').html('Remover do projeto o pixel '+name+' ?');        
+
+                    $('#bt_excluir').unbind('click');
+
+                    $('#bt_excluir').on('click', function(){
+
+                        $.ajax({
+                            method: "GET",
+                            url: "/pixels/deletarpixel/"+id_pixel,
+                            error: function(){
+                                $('#fechar_modal_excluir').click();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#fechar_modal_excluir').click();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+
+                    });
+
+                });
+
+                $('.editar_pixel').on('click', function(){
+
+                    id_pixel = $(this).attr('pixel');
+
+                    $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/pixels/getformeditarpixel",
+                        data: {id: id_pixel},
+                        error: function(){
+                            $('#modal_editar').hide();
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(data){
+                            $('#modal_editar_body').html(data);
+        
+                            $('#editar').unbind('click');
+            
+                            $('#editar').on('click',function(){
+        
+                                var paramObj = {};
+                                $.each($('#editar_pixel').serializeArray(), function(_, kv) {
+                                    if (paramObj.hasOwnProperty(kv.name)) {
+                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+                                        paramObj[kv.name].push(kv.value);
+                                    }
+                                    else {
+                                        paramObj[kv.name] = kv.value;
+                                    }
+                                });
+                                paramObj['id'] = id_pixel;
+        
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/pixels/editarpixel",
+                                    data: { pixelData: paramObj },
+                                    error: function(){
+                                        $('#modal_editar').hide();
+                                        alert('Ocorreu algum erro');
+                                    },
+                                    success: function(data){
+                                        $('#modal_editar').hide();
+                                        $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                    }
+                                });
+                            });
+                        }
+                    });
+        
+        
+                });
+
             }
 
         });
 
         $("#tabela_brindes").DataTable( {
-
+            bLengthChange: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -436,7 +786,7 @@
         });
 
         $("#tabela_cuponsdesconto").DataTable( {
-
+            bLengthChange: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -490,7 +840,7 @@
         });
 
         $("#tabela_dominios").DataTable( {
-
+            bLengthChange: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -525,12 +875,44 @@
                 },
             },
             "drawCallback": function() {
+
+                var id_dominio = '';
+
+                $('.excluir_dominio').on('click', function(){
+
+                    id_dominio = $(this).attr('dominio');
+                    var name = $(this).closest("tr").find("td:first-child").text();
+                    $('#modal_excluir_titulo').html('Remover do projeto o dominio '+name+'?');        
+
+                    $('#bt_excluir').unbind('click');
+
+                    $('#bt_excluir').on('click', function(){
+    
+                        $.ajax({
+                            method: "POST",
+                            url: "/produtos/deletarprodutoplano",
+                            data: { projeto: id_projeto, produto: id_produto },
+                            error: function(){
+                                $('#fechar_modal_excluir').click();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#fechar_modal_excluir').click();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+    
+                    });
+
+                });    
+
             }
 
         });
 
         $("#tabela_layouts").DataTable( {
-
+            bLengthChange: false,
             processing: true,
             serverSide: true,
             responsive: true,
@@ -572,7 +954,6 @@
             }
 
         });
-
 
         $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
 

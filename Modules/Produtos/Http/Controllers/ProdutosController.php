@@ -4,6 +4,7 @@ namespace Modules\Produtos\Http\Controllers;
 
 use App\Produto;
 use App\Categoria;
+use App\ProjetoProduto;
 use Faker\Provider\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -121,22 +122,26 @@ class ProdutosController extends Controller
         ]);
 
         return Datatables::of($produtos)
-            ->addColumn('detalhes', function ($produto) {
-            return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_produto' data-placement='top' data-toggle='tooltip' title='Detalhes' produto='".$produto->id."'>
-                            <i class='icon wb-order' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_editar'>
+            ->addColumn('detalhes', function ($produto) use($dados) {
+
+                $botoes =   "<span data-toggle='modal' data-target='#modal_detalhes'>
+                                <a class='btn btn-outline btn-success detalhes_produto' data-placement='top' data-toggle='tooltip' title='Detalhes' produto='".$produto->id."'>
+                                    <i class='icon wb-order' aria-hidden='true'></i>
+                                </a>
+                            </span>";
+                if(!isset($dados['projeto'])){
+                    $botoes .= "<span data-toggle='modal' data-target='#modal_editar'>
                         <a href='/produtos/editar/$produto->id' class='btn btn-outline btn-primary editar_produto' data-placement='top' data-toggle='tooltip' title='Editar' produto='".$produto->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_produto' data-placement='top' data-toggle='tooltip' title='Excluir' produto='".$produto->id."'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
                     </span>";
+                }
+                $botoes .= "<span data-toggle='modal' data-target='#modal_excluir'>
+                                <a class='btn btn-outline btn-danger excluir_produto' data-placement='top' data-toggle='tooltip' title='Excluir' produto='".$produto->id."'>
+                                    <i class='icon wb-trash' aria-hidden='true'></i>
+                                </a>
+                            </span>";
+                return $botoes;
         })
         ->rawColumns(['detalhes'])
         ->make(true);
@@ -198,5 +203,63 @@ class ProdutosController extends Controller
         return response()->json($modal_body);
     }
 
+    public function getProdutos(Request $request){
+
+        $dados = $request->all();
+
+        $produtos = Produto::select('nome','id')->get()->toArray();
+
+        $produtosDisponiveis = [];
+
+        foreach($produtos as $produto){
+
+            $projetoProduto = ProjetoProduto::where([
+                ['produto',$produto['id']],
+                ['projeto',$dados['projeto']]
+            ])->first();
+
+            if($projetoProduto != null)
+                continue;
+
+            $produtosDisponiveis[] = $produto;
+        }
+
+        return response()->json($produtosDisponiveis);
+    }
+
+
+    public function addProdutoProjeto(Request $request){
+
+        $dados = $request->all();
+
+        if(isset($dados['projeto']) && isset($dados['produto'])){
+
+            ProjetoProduto::create([
+                'projeto' => $dados['projeto'],
+                'produto' => $dados['produto']
+            ]);
+            return response()->json('sucesso');
+        }
+
+        return response()->json('erro');
+    }
+
+
+    public function deletarProdutoPlano(Request $request){
+
+        $dados = $request->all();
+
+        if(isset($dados['projeto']) && isset($dados['produto'])){
+
+            ProjetoProduto::where([
+                'projeto' => $dados['projeto'],
+                'produto' => $dados['produto']
+            ])->first()->delete();
+            return response()->json('sucesso');
+        }
+
+        return response()->json('erro');
+
+    }
 
 }

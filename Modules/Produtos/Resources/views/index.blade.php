@@ -44,7 +44,7 @@
         </div>
         <!-- End Modal -->
 
-        <!-- Modal de confirmação da exclusão do usuário -->
+        <!-- Modal de confirmação da exclusão do produto -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
               <div class="modal-content">

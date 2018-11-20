@@ -32,9 +32,9 @@ class PixelsController extends Controller
 
         $dados = $request->all();
 
-        Pixel::create($dados);
+        Pixel::create($dados['pixelData']);
 
-        return redirect()->route('pixels');
+        return response()->json('Sucesso');
     }
 
     public function editarPixel($id){
@@ -51,16 +51,16 @@ class PixelsController extends Controller
 
         $dados = $request->all();
 
-        Pixel::find($dados['id'])->update($dados);
+        Pixel::find($dados['pixelData']['id'])->update($dados['pixelData']);
 
-        return redirect()->route('pixels');
+        return response()->json('Sucesso');
     }
 
     public function deletarPixel($id){
 
         Pixel::find($id)->delete();
 
-        return redirect()->route('pixels');
+        return response()->json('sucesso');
 
     }
 
@@ -93,7 +93,7 @@ class PixelsController extends Controller
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/pixels/editar/$pixel->id' class='btn btn-outline btn-primary editar_pixel' data-placement='top' data-toggle='tooltip' title='Editar' pixel='".$pixel->id."'>
+                        <a class='btn btn-outline btn-primary editar_pixel' data-placement='top' data-toggle='tooltip' title='Editar' pixel='".$pixel->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
@@ -147,4 +147,27 @@ class PixelsController extends Controller
 
         return response()->json($modal_body);
     }
+
+    public function getFormAddPixel(){
+
+        $form = view('pixels::cadastro');
+
+        return response()->json($form->render());
+
+    }
+
+    public function getFormEditarPixel(Request $request){
+
+        $dados = $request->all();
+
+        $pixel = Pixel::find($dados['id']);
+
+        $form = view('pixels::editar',[
+            'pixel' => $pixel,
+        ]);
+
+        return response()->json($form->render());
+
+    }
+
 }

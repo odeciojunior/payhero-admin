@@ -172,4 +172,23 @@ class DominiosController extends Controller {
         ->make(true);
     }
 
+
+    public function getFormAddDominio(Request $request){
+
+        $dados = $request->all();
+
+        if(!isset($dados['projeto'])){
+            return response()->json('Erro, projeto não encontrado');
+        }        
+
+        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
+        $empresas = Empresa::all();
+
+        $form = view('dominios::cadastro',[
+            'layouts' => $layouts,
+            'empresas' => $empresas
+        ]);
+
+        return response()->json($form->render());
+    }
 }

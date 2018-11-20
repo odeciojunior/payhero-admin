@@ -1,4 +1,4 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
@@ -13,21 +13,23 @@
                     Voltar
                 </a>
             </div>
+        </div>  --}}
+        <div style="text-align: center">
+            <h4>Cadastro de domínio no projeto</h4>
         </div>
-
         <form method="post" action="/dominios/cadastrardominio">
             @csrf
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
                     <div style="width:100%">
                         <div class="row">
-                            <div class="form-group col-xl-12">
+                            <div class="form-group col-12">
                                 <label for="dominio">Domínio</label>
                                 <input name="dominio" type="text" class="form-control" id="dominio" placeholder="Domínio">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-12">
                                 <label for="layout">Layout</label>
                                 <select name="layout" type="text" class="form-control" id="layout" required>
                                     <option value="" selected>Selecione</option>
@@ -36,7 +38,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-12">
                                 <label for="empresa">Empresa</label>
                                 <select name="empresa" type="text" class="form-control" id="empresa" required>
                                     <option value="" selected>Selecione</option>
@@ -46,16 +48,16 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
+                        {{--  <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
-                        </div>
+                        </div>  --}}
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    {{--  </div>
 
   <script>
 
@@ -67,4 +69,4 @@
 
 
 @endsection
-
+  --}}
