@@ -21,6 +21,8 @@
     <meta name="description" content="CloudFox">
     <meta name="author" content="">
     
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>CloudFox @yield('title')</title> 
     <link rel="apple-touch-icon" href="{{ asset('adminremark/assets/images/apple-touch-icon.png') }}">
     <link rel="shortcut icon" href="{{ asset('adminremark/assets/images/favicon.ico') }}">

@@ -18,7 +18,6 @@ class BrindesController extends Controller
         return view('brindes::index'); 
     }
 
-
     public function cadastro() {
 
         $tipo_brindes = TipoBrinde::all();
@@ -34,14 +33,13 @@ class BrindesController extends Controller
 
         $brinde = Brinde::create($dados);
 
-
-        $foto = $request->file('foto');
+        $foto = $request->file('foto_brinde');
 
         if ($foto != null) {
             $nome_foto = 'brinde_' . $brinde->id . '_.' . $foto->getClientOriginalExtension();
-
+ 
             $foto->move(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO, $nome_foto);
-
+ 
             $brinde->update([
                 'foto' => $nome_foto,
             ]);
@@ -59,7 +57,7 @@ class BrindesController extends Controller
 
         }
 
-        return redirect()->route('brindes');
+        return response()->json('Sucesso');
     }
 
     public function editarBrinde($id){
@@ -88,13 +86,13 @@ class BrindesController extends Controller
         $brinde = Brinde::find($dados['id']);
         $brinde->update($dados);
 
-        $foto = $request->file('foto');
+        $foto = $request->file('foto_brinde');
 
         if ($foto != null) {
             $nome_foto = 'brinde_' . $brinde->id . '_.' . $foto->getClientOriginalExtension();
-
+ 
             $foto->move(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO, $nome_foto);
-
+ 
             $brinde->update([
                 'foto' => $nome_foto,
             ]);
@@ -112,14 +110,16 @@ class BrindesController extends Controller
 
         }
 
-        return redirect()->route('brindes');
+        return response()->json('Sucesso');
     }
 
-    public function deletarBrinde($id){
+    public function deletarBrinde(Request $request){
 
-        Brinde::find($id)->delete();
+        $dados = $request->all();
 
-        return redirect()->route('brindes');
+        Brinde::find($dados['id'])->delete();
+
+        return response()->json('Sucesso');
 
     }
 
@@ -151,7 +151,7 @@ class BrindesController extends Controller
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/brindes/editar/$brinde->id' class='btn btn-outline btn-primary editar_brinde' data-placement='top' data-toggle='tooltip' title='Editar' brinde='".$brinde->id."'>
+                        <a class='btn btn-outline btn-primary editar_brinde' data-placement='top' data-toggle='tooltip' title='Editar' brinde='".$brinde->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
@@ -190,7 +190,7 @@ class BrindesController extends Controller
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Tipo:</b></td>";
-        $modal_body .= "<td>".$tipo_brinde->descricao."</td>";
+        $modal_body .= "<td>".$tipo_brinde['descricao']."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
@@ -200,4 +200,34 @@ class BrindesController extends Controller
 
         return response()->json($modal_body);
     }
+
+
+    public function getFormAddBrinde(){
+
+        $tipo_brindes = TipoBrinde::all();
+
+        $form = view('brindes::cadastro',[
+            'tipo_brindes' => $tipo_brindes
+        ]);
+
+        return response()->json($form->render());
+    }
+
+
+    public function getFormEditarBrinde(Request $request){
+
+        $dados = $request->all();
+
+        $brinde = Brinde::find($dados['id']);
+        $tipo_brindes = TipoBrinde::all();
+
+        $form = view('brindes::editar',[
+            'brinde' => $brinde,
+            'tipo_brindes' => $tipo_brindes
+        ]);
+
+        return response()->json($form->render());
+    }
+
+
 }

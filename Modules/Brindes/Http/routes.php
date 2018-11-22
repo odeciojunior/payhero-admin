@@ -23,7 +23,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'brindes', 'namespace' => 'Modu
         'as' => 'brindes.update',
     ]);
 
-    Route::get('/deletarbrinde/{id}', [
+    Route::post('/deletarbrinde', [
         'uses' => 'BrindesController@deletarBrinde',
         'as' => 'brindes.deletar',
     ]);
@@ -41,6 +41,16 @@ Route::group(['middleware' => 'web', 'prefix' => 'brindes', 'namespace' => 'Modu
     Route::post('/detalhe',[
         'as' => 'brindes.detalhes',
         'uses' => 'BrindesController@getDetalhesBrinde'
+    ]);
+
+    Route::get('/getformaddbrinde',[
+        'as' => 'brindes.getformaddbrindes',
+        'uses' => 'BrindesController@getFormAddBrinde'
+    ]);
+
+    Route::post('/getformeditarbrinde',[
+        'as' => 'brindes.getformaddbrindes',
+        'uses' => 'BrindesController@getFormEditarBrinde'
     ]);
 
 });

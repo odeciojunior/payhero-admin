@@ -119,7 +119,7 @@
                                 </div>
                                 <div class="tab-pane" id="tab_brindes" role="tabpanel">
                                     <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="add_plano" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                        <a id="adicionar_brinde" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
                                             <i class='icon wb-user-add' aria-hidden='true'></i>
                                             Adicionar brinde
                                         </a>
@@ -135,7 +135,7 @@
                                 </div>
                                 <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                     <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="add_plano" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                        <a id="adicionar_cupom" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
                                             <i class='icon wb-user-add' aria-hidden='true'></i>
                                             Adicionar cupom
                                         </a>
@@ -368,6 +368,35 @@
             $.ajax({
                 method: "POST",
                 url: "/dominios/getformadddominio",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: { projeto: id_projeto },
+                error: function(){
+                    $('#modal_add').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+                    $('#modal_add_body').html(data);
+                    $('#cadastrar').on('click',function(){
+
+
+                    });
+                }
+            });
+
+        });
+
+        $('#adicionar_dominio').on('click', function(){
+
+            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+
+            $.ajax({
+                method: "POST",
+                url: "/dominios/getformadddominio",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: { projeto: id_projeto },
                 error: function(){
                     $('#modal_add').hide();
@@ -433,6 +462,111 @@
             });
 
         });
+
+        $('#adicionar_brinde').on('click', function(){
+
+            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+
+            $.ajax({
+                method: "GET",
+                url: "/brindes/getformaddbrinde",
+                error: function(){
+                    $('#modal_add').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+                    $('#modal_add_body').html(data);
+
+                    $('#cadastrar').unbind('click');
+
+                    $('#cadastrar').on('click',function(){
+
+                        var form_data = new FormData(document.getElementById('cadastrar_brinde'));
+                        form_data.append('projeto',id_projeto);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/brindes/cadastrarbrinde",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            data: form_data,
+                            error: function(){
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#modal_add').hide();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            },
+                        });
+                    });
+
+                    $("#foto_brinde").change(function(e) {
+
+                        for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+            
+                            var file = e.originalEvent.srcElement.files[i];
+            
+                            if($('img').length != 0){
+                                $('img').remove();
+                            }
+            
+                            var img = document.createElement("img");
+                            var reader = new FileReader();
+            
+                            reader.onloadend = function() {
+                    
+                                img.src = reader.result;
+                    
+                                $(img).on('load', function (){
+
+                                    var width = img.width, height = img.height;
+
+                                    if (img.width > img.height) {
+                                        if (width > 400) {
+                                          height *= 400 / img.width;
+                                          width = 400;
+                                        }
+                                    } else {
+                                        if (img.height > 200) {
+                                          width *= 200 / img.height;
+                                          height = 200;
+                                        }
+                                    }
+
+                                    $(img).css({
+                                        'width' : width+'px',
+                                        'height' : height+'px',
+                                        'margin-top' : '30px',
+                                    });
+                                })    
+                            }
+                            reader.readAsDataURL(file);
+
+                            $(this).after(img);
+                        }
+
+                    });
+
+                    $('#tipo_brinde').on('change', function(){
+            
+                        if($(this).val() == 1){
+                            $('#div_input_arquivo').show();
+                            $('#div_input_link').hide();
+                        }
+                        if($(this).val() == 2){
+                            $('#div_input_arquivo').hide();
+                            $('#div_input_link').show();
+            
+                        }
+                    });
+
+                }
+            });
+
+        });
+
 
         $("#tabela_produtos").DataTable( {
             bLengthChange: false,
@@ -780,6 +914,162 @@
                     .then( function(response, status){
                         $('#modal_detalhes_body').html(response);
                     });
+                });
+
+                var id_brinde = '';
+
+                $('.excluir_brinde').on('click', function(){
+
+                    id_brinde = $(this).attr('brinde');
+                    var name = $(this).closest("tr").find("td:first-child").text();
+                    $('#modal_excluir_titulo').html('Remover do projeto o brinde '+name+' ?');
+
+                    $('#bt_excluir').unbind('click');
+
+                    $('#bt_excluir').on('click', function(){
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/brindes/deletarbrinde",
+                            data: { id: id_brinde },
+                            error: function(){
+                                $('#fechar_modal_excluir').click();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#fechar_modal_excluir').click();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+                    });
+                });
+            
+
+                $('.editar_brinde').on('click', function(){
+
+                    id_brinde = $(this).attr('brinde');
+
+                    $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/brindes/getformeditarbrinde",
+                        data: {id: id_brinde},
+                        error: function(){
+                            $('#modal_editar').hide();
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(data){
+                            $('#modal_editar_body').html(data);
+        
+                            $('#editar').unbind('click');
+            
+                            $('#editar').on('click',function(){
+        
+                                var paramObj = {};
+                                $.each($('#editar_brinde').serializeArray(), function(_, kv) {
+                                    if (paramObj.hasOwnProperty(kv.name)) {
+                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+                                        paramObj[kv.name].push(kv.value);
+                                    }
+                                    else {
+                                        paramObj[kv.name] = kv.value;
+                                    }
+                                });
+                                paramObj['id'] = id_brinde;
+        
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/brindes/editarbrinde",
+                                    data:  paramObj,
+                                    error: function(){
+                                        $('#modal_editar').hide();
+                                        alert('Ocorreu algum erro');
+                                    },
+                                    success: function(data){
+                                        $('#modal_editar').hide();
+                                        $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                    }
+                                });
+                            });
+
+                            $("#foto_editar_brinde").change(function(e) {
+
+                                for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+                    
+                                    var file = e.originalEvent.srcElement.files[i];
+                    
+                                    if($('img').length != 0){
+                                        $('img').remove();
+                                    }
+                    
+                                    var img = document.createElement("img");
+                                    var reader = new FileReader();
+                    
+                                    reader.onloadend = function() {
+                            
+                                        img.src = reader.result;
+                            
+                                        $(img).on('load', function (){
+                            
+                                            var width = img.width, height = img.height;
+                            
+                                            if (img.width > img.height) {
+                                                if (width > 400) {
+                                                  height *= 400 / img.width;
+                                                  width = 400;
+                                                }
+                                            } else {
+                                                if (img.height > 200) {
+                                                  width *= 200 / img.height;
+                                                  height = 200;
+                                                }
+                                            }
+                                
+                                            $(img).css({
+                                                'width' : width+'px',
+                                                'height' : height+'px',
+                                                'margin-top' : '30px',
+                                            });
+                    
+                                        })    
+                                    }
+                                    reader.readAsDataURL(file);
+                    
+                                    $(this).after(img);
+                                }
+                            });
+                    
+                    
+                            $('#tipo_brinde').on('change', function(){
+                    
+                                if($(this).val() == 1){
+                                    $('#div_input_arquivo').show();
+                                    $('#div_input_link').hide();
+                                }
+                                if($(this).val() == 2){
+                                    $('#div_input_arquivo').hide();
+                                    $('#div_input_link').show();
+                    
+                                }
+                            });
+                    
+                            var tipo_brinde = '1';
+                    
+                            if(tipo_brinde == '1'){
+                                $('#div_input_arquivo').show();
+                            }
+                            if(tipo_brinde == '2'){
+                                $('#div_input_link').show();
+                            }
+                    
+
+                        }
+                    });
+        
+        
                 });
             }
 

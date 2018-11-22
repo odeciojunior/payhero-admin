@@ -1,4 +1,4 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
@@ -13,9 +13,13 @@
                     Voltar
                 </a>
             </div>
+        </div>  --}}
+
+        <div style="text-align: center">
+            <h4>Cadastrar brinde</h4>
         </div>
 
-        <form method="post" action="/brindes/cadastrarbrinde"  enctype="multipart/form-data">
+        <form id="cadastrar_brinde" method="post" action="/brindes/cadastrarbrinde"  enctype="multipart/form-data">
             @csrf
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
@@ -35,8 +39,8 @@
 
                         <div class="row">
                             <div class="form-group col-xl-12">
-                                <label for="foto">Foto</label>
-                                <input name="foto" type="file" class="form-control" id="foto" placeholder="Título">
+                                <label for="foto_brinde">Foto</label>
+                                <input name="foto_brinde" type="file" class="form-control" id="foto_brinde" placeholder="Título">
                             </div>
                         </div>
 
@@ -63,23 +67,23 @@
 
                         </div>
 
-                        <div class="row">
+                        {{--  <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
-                        </div>
+                        </div>  --}}
 
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    {{--  </div>
 
   <script>
 
     $(document).ready( function(){
 
-        $("#foto").change(function(e) {
+        $("#foto_brinde").change(function(e) {
 
             for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
 
@@ -146,4 +150,4 @@
 
 
 @endsection
-
+  --}}
