@@ -176,7 +176,7 @@
                                 </div>
                                 <div class="tab-pane" id="tab_layouts" role="tabpanel">
                                     <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="add_layout" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                        <a id="adicionar_layout" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
                                             <i class='icon wb-user-add' aria-hidden='true'></i>
                                             Adicionar layout
                                         </a>
@@ -634,6 +634,64 @@
                             $('#div_input_link').show();
             
                         }
+                    });
+
+                }
+            });
+
+        });
+
+        $('#adicionar_layout').on('click', function(){
+
+            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+
+            $.ajax({
+                method: "POST",
+                url: "/layouts/getformaddlayout",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function(){
+                    $('#modal_add').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+
+                    $('#modal_add_body').html(data);
+
+                    atualizarPreView();
+
+                    function atualizarPreView(){
+            
+                        $('#form-preview').submit();
+                    }
+
+                    $('#cadastrar').unbind('click');
+
+                    $('#cadastrar').on('click',function(){
+
+                        var form_data = new FormData(document.getElementById('cadastrar_layout'));
+                        form_data.append('projeto',id_projeto);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/layouts/cadastrarlayout",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            data: form_data,
+                            error: function(){
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#modal_add').hide();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            },
+                        });
                     });
 
                 }

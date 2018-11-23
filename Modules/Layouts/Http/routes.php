@@ -47,4 +47,14 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'layouts', 'namespace
         'uses' => 'PreViewCheckoutController@checkoutPreView',
     ]);
 
+    Route::post('/getformaddlayout', [
+        'as' => 'checkout.getformaddlayout',
+        'uses' => 'LayoutsController@getFormAddLayout',
+    ]);
+
+    Route::post('/getformeditarlayout', [
+        'as' => 'checkout.getformeditarlayout',
+        'uses' => 'LayoutsController@getFormEditarLayout',
+    ]);
+
 });
