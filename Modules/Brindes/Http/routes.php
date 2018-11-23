@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'brindes', 'namespace' => 'Modules\Brindes\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'brindes', 'namespace' => 'Modules\Brindes\Http\Controllers'], function()
 {
 
     Route::get('/', [

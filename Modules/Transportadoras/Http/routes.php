@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'transportadoras', 'namespace' => 'Modules\Transportadoras\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'transportadoras', 'namespace' => 'Modules\Transportadoras\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'TransportadorasController@index',

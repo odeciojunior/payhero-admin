@@ -1,5 +1,11 @@
 @extends("layouts.master")
 
+@section('styles')
+
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+@endsection
+
 @section('content')
 
     <!-- Page -->
@@ -319,6 +325,9 @@
             $.ajax({
                 method: "POST",
                 url: "/produtos/getprodutos",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: { projeto: id_projeto },
                 error: function(){
                     alert('Ocorreu algum erro');
@@ -347,6 +356,9 @@
             $.ajax({
                 method: "POST",
                 url: "/produtos/addprodutoprojeto",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: { projeto: id_projeto, produto: id_produto },
                 error: function(){
                     $('#modal_add_produto').hide();
@@ -421,6 +433,9 @@
             $.ajax({
                 method: "GET",
                 url: "/pixels/getformaddpixel",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 error: function(){
                     $('#modal_add').hide();
                     alert('Ocorreu algum erro');
@@ -447,6 +462,9 @@
                         $.ajax({
                             method: "POST",
                             url: "/pixels/cadastrarpixel",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
                             data: { pixelData: paramObj },
                             error: function(){
                                 $('#modal_add_produto').hide();
@@ -540,6 +558,9 @@
                         $.ajax({
                             method: "POST",
                             url: "/brindes/cadastrarbrinde",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
                             processData: false,
                             contentType: false,
                             cache: false,
@@ -812,6 +833,9 @@
             serverSide: true,
             ajax: {
                 url: '/produtos/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'POST',
                 data: {projeto: id_projeto}
             },
@@ -885,6 +909,9 @@
                         $.ajax({
                             method: "POST",
                             url: "/produtos/deletarprodutoplano",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
                             data: { projeto: id_projeto, produto: id_produto },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
@@ -911,6 +938,9 @@
             serverSide: true,
             ajax: {
                 url: '/planos/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'POST',
                 data: {projeto: id_projeto}
             },
@@ -1187,6 +1217,9 @@
             serverSide: true,
             ajax: {
                 url: '/pixels/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'POST',
                 data: {projeto: id_projeto}
             },
@@ -1251,6 +1284,9 @@
                         $.ajax({
                             method: "GET",
                             url: "/pixels/deletarpixel/"+id_pixel,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
                                 alert('Ocorreu algum erro');
@@ -1275,6 +1311,9 @@
                     $.ajax({
                         method: "POST",
                         url: "/pixels/getformeditarpixel",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                         data: {id: id_pixel},
                         error: function(){
                             $('#modal_editar').hide();
@@ -1302,6 +1341,9 @@
                                 $.ajax({
                                     method: "POST",
                                     url: "/pixels/editarpixel",
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
                                     data: { pixelData: paramObj },
                                     error: function(){
                                         $('#modal_editar').hide();
@@ -1331,6 +1373,9 @@
             serverSide: true,
             ajax: {
                 url: '/brindes/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'POST',
                 data: {projeto: id_projeto}
             },
@@ -1387,6 +1432,9 @@
                         $.ajax({
                             method: "POST",
                             url: "/brindes/deletarbrinde",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
                             data: { id: id_brinde },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
@@ -1411,6 +1459,9 @@
                     $.ajax({
                         method: "POST",
                         url: "/brindes/getformeditarbrinde",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                         data: {id: id_brinde},
                         error: function(){
                             $('#modal_editar').hide();
@@ -1438,6 +1489,9 @@
                                 $.ajax({
                                     method: "POST",
                                     url: "/brindes/editarbrinde",
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
                                     data:  paramObj,
                                     error: function(){
                                         $('#modal_editar').hide();
@@ -1538,6 +1592,9 @@
             serverSide: true,
             ajax: {
                 url: '/cuponsdesconto/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'POST',
                 data: {projeto: id_projeto}
             },
@@ -1598,10 +1655,10 @@
                         $.ajax({
                             method: "POST",
                             url: "/cuponsdesconto/deletarcupom",
-                            data: { id: id_cupom },
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
+                            data: { id: id_cupom },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
                                 alert('Ocorreu algum erro');
@@ -1675,6 +1732,9 @@
             serverSide: true,
             ajax: {
                 url: '/dominios/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'POST',
                 data: {projeto: id_projeto}
             },
@@ -1805,6 +1865,9 @@
             responsive: true,
             ajax: {
                 url: '/layouts/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 type: 'POST',
                 data: {projeto: id_projeto}
             },

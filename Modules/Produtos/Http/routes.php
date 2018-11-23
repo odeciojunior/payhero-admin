@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'produtos', 'namespace' => 'Modules\Produtos\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'produtos', 'namespace' => 'Modules\Produtos\Http\Controllers'], function() {
 
     Route::get('/', [
         'uses' => 'ProdutosController@index',

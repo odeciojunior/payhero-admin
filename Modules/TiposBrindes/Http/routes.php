@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'tiposbrindes', 'namespace' => 'Modules\TiposBrindes\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'tiposbrindes', 'namespace' => 'Modules\TiposBrindes\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'TiposBrindesController@index',

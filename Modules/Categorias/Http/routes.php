@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'categorias', 'namespace' => 'Modules\Categorias\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'categorias', 'namespace' => 'Modules\Categorias\Http\Controllers'], function() {
 
     Route::get('/', [
         'uses' => 'CategoriasController@index',

@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     <!-- Datatables -->
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -36,6 +35,7 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/dashboard/v1.css') }}">
 
+    @yield('styles')
     <!-- Plugins For This Page -->
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-bs4/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/datatables.net-fixedheader-bs4/dataTables.fixedheader.bootstrap4.min.css') }}">
@@ -118,6 +118,7 @@
     <script src="{{ asset('adminremark/global/vendor/ascolor/jquery-asColor.min.js?v4.0.2') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/ascolorpicker/jquery-asColorPicker.min.js?v4.0.2') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/ascolorpicker.js') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/tabs.js') }}"></script>
     
     <script src="{{ asset('adminremark/assets/js/Section/Menubar.js') }}"></script>
     <script src="{{ asset('adminremark/assets/js/Section/GridMenu.js') }}"></script>
@@ -135,15 +136,13 @@
     <script src="{{ asset('adminremark/global/js/Plugin/slidepanel.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/switchery.js') }}"></script>
 
-    <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
-    <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
-    <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
-    <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
-
     <script src="{{ asset('adminremark/global/js/Plugin/datatables.js') }}"></script>
     <script src="{{ asset('adminremark/assets/examples/js/tables/datatable.js') }}"></script>
     <script src="{{ asset('vendor/jquery-datatable/yadcf/i18n.js') }}"></script>
     <script src="{{ asset('vendor/jquery-datatable/yadcf/jquery.dataTables.yadcf.js') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
+
+    @yield('scripts')
 
     @if(isset($dataTable))
         {!! $dataTable->scripts() !!}

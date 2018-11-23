@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'cuponsdesconto', 'namespace' => 'Modules\CuponsDesconto\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'cuponsdesconto', 'namespace' => 'Modules\CuponsDesconto\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'CuponsDescontoController@index',

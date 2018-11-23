@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'projetos', 'namespace' => 'Modules\Projetos\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespace' => 'Modules\Projetos\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'ProjetosController@index',
