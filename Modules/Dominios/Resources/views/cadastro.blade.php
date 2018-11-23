@@ -17,7 +17,7 @@
         <div style="text-align: center">
             <h4>Cadastro de domínio no projeto</h4>
         </div>
-        <form method="post" action="/dominios/cadastrardominio">
+        <form id="cadastrar_dominio" method="post" action="/dominios/cadastrardominio">
             @csrf
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">

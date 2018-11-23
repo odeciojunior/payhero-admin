@@ -17,17 +17,17 @@ Route::group(['middleware' => 'web', 'prefix' => 'cuponsdesconto', 'namespace' =
         'as' => 'cuponsdesconto.editar',
     ]);
 
-    Route::post('/editarcupomdesconto', [
+    Route::post('/editarcupom', [
         'uses' => 'CuponsDescontoController@updateCupomDesconto',
         'as' => 'cuponsdesconto.update',
     ]);
 
-    Route::get('/deletarcupomdesconto/{id}', [
+    Route::post('/deletarcupom', [
         'uses' => 'CuponsDescontoController@deletarCupomDesconto',
         'as' => 'cuponsdesconto.deletar',
     ]);
 
-    Route::post('/cadastrarcupomdesconto', [
+    Route::post('/cadastrarcupom', [
         'uses' => 'CuponsDescontoController@cadastrarCupomDesconto',
         'as' => 'cuponsdesconto.cadastrarcupomdesconto',
     ]);
@@ -40,6 +40,16 @@ Route::group(['middleware' => 'web', 'prefix' => 'cuponsdesconto', 'namespace' =
     Route::post('/detalhe',[
         'as' => 'cuponsdesconto.detalhes',
         'uses' => 'CuponsDescontoController@getDetalhesCupomDesconto'
+    ]);
+
+    Route::post('/getformaddcupom',[
+        'as' => 'cuponsdesconto.getformaddcupom',
+        'uses' => 'CuponsDescontoController@getFormAddCupom'
+    ]);
+
+    Route::post('/getformeditarcupom',[
+        'as' => 'cuponsdesconto.getformeditarcupom',
+        'uses' => 'CuponsDescontoController@getFormEditarCupom'
     ]);
 
 });

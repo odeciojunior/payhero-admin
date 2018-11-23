@@ -22,7 +22,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'dominios', 'namespace' => 'Mod
         'as' => 'dominios.update',
     ]);
 
-    Route::get('/deletardominio/{id}', [
+    Route::post('/deletardominio', [
         'uses' => 'DominiosController@deletarDominio',
         'as' => 'dominios.deletar',
     ]);
@@ -42,5 +42,9 @@ Route::group(['middleware' => 'web', 'prefix' => 'dominios', 'namespace' => 'Mod
         'as' => 'dominios.getformadddominio',
     ]);
 
+    Route::post('/getformeditardominio', [
+        'uses' => 'DominiosController@getFormEditarDominio',
+        'as' => 'dominios.getformeditardominio',
+    ]);
 
 });
