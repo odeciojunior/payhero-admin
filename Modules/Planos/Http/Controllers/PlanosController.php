@@ -14,6 +14,7 @@ use App\PlanoPixel;
 use App\PlanoBrinde;
 use App\DadosHotZapp;
 use App\ProdutoPlano;
+use App\ProjetoProduto;
 use App\Transportadora;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -35,7 +36,7 @@ class PlanosController extends Controller {
         $pixels = Pixel::all();
         $brindes = Brinde::all();
         $cupons = Cupom::all();
-        $dados_hotzapp = DadosHotZapp::all();
+        $dados_hotzapp = DadosHotZapp::all(); 
         $layouts = Layout::all();
 
         return view('planos::cadastro',[
@@ -70,7 +71,7 @@ class PlanosController extends Controller {
 
         $plano = Plano::create($dados);
 
-        $foto = $request->file('foto');
+        $foto = $request->file('plano_foto');
 
         if ($foto != null) {
             $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
@@ -125,7 +126,7 @@ class PlanosController extends Controller {
             ]);
         }
 
-        return redirect()->route('planos');
+        return response()->json('sucesso');
     }
 
     public function editarPlano($id){
@@ -182,7 +183,7 @@ class PlanosController extends Controller {
         $plano = Plano::find($dados['id']);
         $plano->update($dados);
 
-        $foto = $request->file('foto');
+        $foto = $request->file('foto_plano');
 
         if ($foto != null) {
             $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
@@ -276,9 +277,11 @@ class PlanosController extends Controller {
         return redirect()->route('planos');
     }
 
-    public function deletarPlano($id){
+    public function deletarPlano(Request $request){
 
-        $plano = Plano::find($id);
+        $dados = $request->all();
+
+        $plano = Plano::find($dados['id']);
 
         $fotos = Foto::where('plano', $plano['id'])->get()->toArray();
 
@@ -318,7 +321,7 @@ class PlanosController extends Controller {
 
         $plano->delete();
 
-        return redirect()->route('planos');
+        return response()->json('sucesso');
 
     }
 
@@ -348,7 +351,7 @@ class PlanosController extends Controller {
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/planos/editar/$plano->id' class='btn btn-outline btn-primary editar_plano' data-placement='top' data-toggle='tooltip' title='Editar' plano='".$plano->id."'>
+                        <a class='btn btn-outline btn-primary editar_plano' data-placement='top' data-toggle='tooltip' title='Editar' plano='".$plano->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
@@ -575,7 +578,101 @@ class PlanosController extends Controller {
         }
        
         return $str;
-      } 
+    } 
 
+    public function getFormAddPlano(Request $request){
+
+        $dados = $request->all();
+
+        $transportadoras = Transportadora::all();
+
+        $produtos = Produto::select('nome','id')->get()->toArray();
+
+        $produtosDisponiveis = [];
+
+        foreach($produtos as $produto){
+
+            $projetoProduto = ProjetoProduto::where([
+                ['produto',$produto['id']],
+                ['projeto',$dados['projeto']]
+            ])->first();
+
+            if($projetoProduto == null)
+                $produtosDisponiveis[] = $produto;
+
+        }
+
+        $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();;
+
+        $brindes = Brinde::where('projeto',$dados['projeto'])->get()->toArray();;
+
+        $cupons = Cupom::where('projeto',$dados['projeto'])->get()->toArray();;
+
+        $dados_hotzapp = DadosHotZapp::all(); 
+
+        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
+
+        $form = view('planos::cadastro',[
+            'transportadoras' => $transportadoras,
+            'produtos' => $produtosDisponiveis,
+            'pixels' => $pixels,
+            'brindes' => $brindes,
+            'cupons' => $cupons,
+            'dados_hotzapp' => $dados_hotzapp,
+            'layouts' => $layouts,
+        ]);
+
+        return response()->json($form->render());
+
+    }
+
+
+    public function getFormEditarPlano(Request $request){
+
+        $dados = $request->all();
+
+        $plano = Plano::find($dados['id']);
+        $transportadoras = Transportadora::all();
+        $foto = Foto::where('plano',$plano['id'])->first();
+
+        $produtos = Produto::all();
+        $produtosPlanos = ProdutoPlano::where('plano', $plano['id'])->get()->toArray();
+
+        $pixels = Pixel::all();
+        $planoPixels = PlanoPixel::where('plano', $plano['id'])->get()->toArray();
+
+        $cupons = Cupom::all();
+        $planoCupons = PlanoCupom::where('plano', $plano['id'])->get()->toArray();
+
+        $brindes = Brinde::all();
+        $planoBrindes = PlanoBrinde::where('plano', $plano['id'])->get()->toArray();
+
+        $layouts = Layout::all();
+
+        if($foto != null){
+            $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
+        }
+        else{
+            $caminho_foto = null;
+        }
+
+        $form = view('planos::editar',[
+            'plano' => $plano,
+            'transportadoras' => $transportadoras,
+            'foto' => $caminho_foto,
+            'produtos_planos' => $produtosPlanos,
+            'produtos' => $produtos,
+            'pixels' => $pixels,
+            'planoPixels' => $planoPixels,
+            'cupons' => $cupons,
+            'planoCupons' => $planoCupons,
+            'brindes' => $brindes,
+            'planoBrindes' => $planoBrindes,
+            'layouts' => $layouts,
+        ]);
+
+        return response()->json($form->render());
+
+    }
 
 }

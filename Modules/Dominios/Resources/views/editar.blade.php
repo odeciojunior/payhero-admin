@@ -1,4 +1,4 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
@@ -13,9 +13,13 @@
                     Voltar
                 </a>
             </div>
+        </div>  --}}
+
+        <div style="text-align: center">
+            <h4> Editar domínio </h4>
         </div>
 
-        <form method="post" action="/dominios/editardominio">
+        <form id="editar_dominio" method="post" action="/dominios/editardominio">
             @csrf
             <input type="hidden" value="{!! $dominio->id !!}" name="id">
             <div class="page-content container-fluid">
@@ -51,17 +55,17 @@
 
                         </div>
 
-                        <div class="row">
+                        {{--  <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
-                            </div>
+                            </div>  --}}
                         </div>
 
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    {{--  </div>
 
   <script>
 
@@ -73,4 +77,4 @@
 
 
 @endsection
-
+  --}}

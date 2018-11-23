@@ -33,7 +33,7 @@ class DominiosController extends Controller {
      */
     public function cadastro() {
 
-        $layouts = Layout::all();
+        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
         $empresas = Empresa::all();
 
         return view('dominios::cadastro',[
@@ -60,28 +60,27 @@ class DominiosController extends Controller {
             $zones->addZone($dados['dominio']);
         }
         catch(Exception $e){
-            flash('Não foi possível adicionar o domínio, domínio não registrado!')->error();
-            return redirect()->route('dominios');
+            return response()->json('Não foi possível adicionar o domínio, domínio não registrado!');
         }
 
         $zoneID = $zones->getZoneID($dados['dominio']);
 
         if ($dns->addRecord($zoneID, "A", $dados['dominio'], '104.248.122.89', 0, true) === true) {
-            echo "DNS criado.". PHP_EOL;
+            // echo "DNS criado.". PHP_EOL;
         }
         if ($dns->addRecord($zoneID, "CNAME", 'www', $dados['dominio'], 0, true) === true) {
-            echo "DNS criado.". PHP_EOL;
+            // echo "DNS criado.". PHP_EOL;
         }
         if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-            echo "DNS criado.". PHP_EOL;
+            // echo "DNS criado.". PHP_EOL;
         }
         if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-            echo "DNS criado.". PHP_EOL;
+            // echo "DNS criado.". PHP_EOL;
         }
 
         Dominio::create($dados);
 
-        return redirect()->route('dominios');
+        return response()->json('sucesso');
     }
 
     public function editarDominio($id){
@@ -107,9 +106,11 @@ class DominiosController extends Controller {
         return redirect()->route('dominios');
     }
 
-    public function deletarDominio($id) {
+    public function deletarDominio(Request $request) {
 
-        $dominio = Dominio::find($id);
+        $dados = $request->all();
+
+        $dominio = Dominio::find($dados['id']);
 
         $key = new APIKey('adm@healthlab.io', 'cc871fd0763e1dbbb127a4c5a8bddbe24788a');
 
@@ -122,12 +123,12 @@ class DominiosController extends Controller {
         }
         catch(Exception $e){
             flash('Não foi possível deletar o domínio!')->error();
-            return redirect()->route('dominios');
+            return response()->json('Não foi possível deletar o domínio!');
         }
 
-        Dominio::find($id)->delete();
+        Dominio::find($dados['id'])->delete();
 
-        return redirect()->route('dominios');
+        return response()->json('sucesso');
 
     }
 
@@ -158,7 +159,7 @@ class DominiosController extends Controller {
         return Datatables::of($dominios)
             ->addColumn('detalhes', function ($dominio) {
             return "<span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/dominios/editar/$dominio->id' class='btn btn-outline btn-primary editar_dominio' data-placement='top' data-toggle='tooltip' title='Editar' dominio='".$dominio->id."'>
+                        <a class='btn btn-outline btn-primary editar_dominio' data-placement='top' data-toggle='tooltip' title='Editar' dominio='".$dominio->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
@@ -181,7 +182,7 @@ class DominiosController extends Controller {
             return response()->json('Erro, projeto não encontrado');
         }        
 
-        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
+        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray(); 
         $empresas = Empresa::all();
 
         $form = view('dominios::cadastro',[
@@ -191,4 +192,25 @@ class DominiosController extends Controller {
 
         return response()->json($form->render());
     }
+
+
+
+    public function getFormEditarDominio(Request $request){
+
+        $dados = $request->all();
+
+        $dominio = Dominio::find($dados['id']);
+        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
+        $empresas = Empresa::all();
+
+        $form = view('dominios::editar',[
+            'dominio' => $dominio,
+            'layouts' => $layouts,
+            'empresas' => $empresas
+        ]);
+
+        return response()->json($form->render());
+    }
+
+
 }

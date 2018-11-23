@@ -1,4 +1,4 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
@@ -13,9 +13,13 @@
                     Voltar
                 </a>
             </div>
+        </div>  --}}
+
+        <div style="text-align: center">
+            <h4>Editar cupom de desconto</h4>
         </div>
 
-        <form method="post" action="/cuponsdesconto/editarcupomdesconto">
+        <form id="editar_cupom" method="post">
             @csrf
             <input type="hidden" value="{!! $cupom->id !!}" name="id">
             <div class="page-content container-fluid">
@@ -66,17 +70,17 @@
                             </div>
                         </div>
         
-                        <div class="row">
+                        {{--  <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
-                        </div>
+                        </div>  --}}
 
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    {{--  </div>
 
   <script>
 
@@ -88,4 +92,4 @@
 
 
 @endsection
-
+  --}}

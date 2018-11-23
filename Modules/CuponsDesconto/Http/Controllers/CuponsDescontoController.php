@@ -34,7 +34,7 @@ class CuponsDescontoController extends Controller
 
         Cupom::create($dados);
 
-        return redirect()->route('cuponsdesconto');
+        return response()->json('Sucesso');
     }
 
     public function editarCupomDesconto($id){
@@ -53,14 +53,16 @@ class CuponsDescontoController extends Controller
 
         Cupom::find($dados['id'])->update($dados);
 
-        return redirect()->route('cuponsdesconto');
+        return response()->json('Sucesso');
     }
 
-    public function deletarCupomDesconto($id){
+    public function deletarCupomDesconto(Request $request){
 
-        Cupom::find($id)->delete();
+        $dados = $request->all();
 
-        return redirect()->route('cuponsdesconto');
+        Cupom::find($dados['id'])->delete();
+
+        return response()->json('Sucesso');
 
     }
 
@@ -107,7 +109,7 @@ class CuponsDescontoController extends Controller
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/cuponsdesconto/editar/$cupom->id' class='btn btn-outline btn-primary editar_cupom' data-placement='top' data-toggle='tooltip' title='Editar' cupom='".$cupom->id."'>
+                        <a class='btn btn-outline btn-primary editar_cupom' data-placement='top' data-toggle='tooltip' title='Editar' cupom='".$cupom->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
@@ -120,7 +122,6 @@ class CuponsDescontoController extends Controller
         ->rawColumns(['detalhes'])
         ->make(true);
     }
-
 
     public function getDetalhesCupomDesconto(Request $request){
 
@@ -172,4 +173,26 @@ class CuponsDescontoController extends Controller
 
         return response()->json($modal_body);
     }
+
+    public function getFormAddCupom(Request $request){
+
+        $form = view('cuponsdesconto::cadastro');
+
+        return response()->json($form->render());
+    }
+
+    public function getFormEditarCupom(Request $request){
+
+        $dados = $request->all();
+
+        $cupom_desconto = Cupom::find($dados['id']);
+
+        $form = view('cuponsdesconto::editar',[
+            'cupom' => $cupom_desconto,
+        ]);
+
+        return response()->json($form->render());
+    }
+
+
 }

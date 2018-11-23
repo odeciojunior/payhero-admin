@@ -1,4 +1,4 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
@@ -13,9 +13,12 @@
                     Voltar
                 </a>
             </div>
+        </div>  --}}
+        <div style="text-align: center">
+            <h4> Editar plano </h4>
         </div>
 
-        <form method="post" action="/planos/editarplano" enctype="multipart/form-data">
+        <form id="editar_plano" method="post" action="/planos/editarplano" enctype="multipart/form-data">
             @csrf
             <input type="hidden" value="{!! $plano->id !!}" name="id">
             <div class="page-content container-fluid">
@@ -104,8 +107,8 @@
 
                         <div class="row">
                             <div class="form-group col-xl-6">
-                                <label for="foto">Foto do produto</label>
-                                <input name="foto" type="file" class="form-control" id="foto">
+                                <label for="foto_plano">Foto do produto</label>
+                                <input name="foto_plano" type="file" class="form-control" id="foto_plano">
                                 @if($foto != null)
                                     <img src="{{ $foto }}" style="margin-top: 20px;height: 250px">
                                 @endif
@@ -268,17 +271,17 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{--  <div class="row">
                             <div class="form-group col-xl-12">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
-                        </div>
+                        </div>  --}}
 
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    {{--  </div>
 
   <script>
 
@@ -286,7 +289,7 @@
 
         $('.dinheiro').mask('#.###,#0', {reverse: true});
 
-        $("input:file").change(function(e) {
+        $("foto_plano").change(function(e) {
 
             for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
 
@@ -422,4 +425,4 @@
   </script>
 
 
-@endsection
+@endsection  --}}

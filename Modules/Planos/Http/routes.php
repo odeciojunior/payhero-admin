@@ -22,7 +22,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'planos', 'namespace' => 'Modul
         'as' => 'planos.update',
     ]);
 
-    Route::get('/deletarplano/{id}', [
+    Route::post('/deletarplano', [
         'uses' => 'PlanosController@deletarPlano',
         'as' => 'planos.deletar',
     ]);
@@ -42,4 +42,15 @@ Route::group(['middleware' => 'web', 'prefix' => 'planos', 'namespace' => 'Modul
         'uses' => 'PlanosController@getDetalhesPlano'
     ]);
 
+    Route::post('/getformaddplano',[
+        'as' => 'usuario.getformaddplano',
+        'uses' => 'PlanosController@getFormAddPlano'
+    ]);
+
+    Route::post('/getformeditarplano',[
+        'as' => 'usuario.getformeditarplano',
+        'uses' => 'PlanosController@getFormEditarPlano'
+    ]);
+
 });
+

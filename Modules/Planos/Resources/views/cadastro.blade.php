@@ -1,4 +1,4 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
@@ -13,9 +13,13 @@
                     Voltar
                 </a>
             </div>
+        </div>  --}}
+
+        <div style="text-align: center">
+            <h4> Cadastrar plano </h4>
         </div>
 
-        <form method="post" action="/planos/cadastrarplano" enctype="multipart/form-data">
+        <form id="cadastrar_plano" method="post" action="/planos/cadastrarplano" enctype="multipart/form-data">
             @csrf
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
@@ -119,7 +123,7 @@
                                 <select name="layout" type="text" class="form-control" id="layout" required>
                                     <option value="">Selecione</option>
                                     @foreach($layouts as $layout)
-                                        <option value="{{ $layout['id'] }}" {!! ($plano->layout == $layout['id']) ? 'selected' : '' !!}>{{ $layout['descricao'] }}</option>
+                                        <option value="{{ $layout['id'] }}">{{ $layout['descricao'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -130,10 +134,10 @@
                         <div class="row">
 
                             <div class="form-group col-xl-12">
-                                <label for="foto">Foto do plano</label>
-                                <input name="foto" type="file" class="form-control" id="foto">
+                                <label for="plano_foto">Foto do plano</label>
+                                <input name="plano_foto" type="file" class="form-control" id="plano_foto">
                             </div>
-        
+
                         </div>
 
                         <h4> Produtos do plano </h4>
@@ -156,7 +160,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-xl-12">
-                                <button type="button" id="add_produto" class="btn btn-primary">Adicionar produto</button>
+                                <button type="button" id="add_produtoplano" class="btn btn-primary">Adicionar produto</button>
                             </div>
                         </div>
 
@@ -221,16 +225,16 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{--  <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
-                        </div>
+                        </div>  --}}
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    {{--  </div>
 
     <script>
 
@@ -238,7 +242,7 @@
 
             $('.dinheiro').mask('#.###,#0', {reverse: true});
 
-            $("input:file").change(function(e) {
+            $("plano_foto").change(function(e) {
 
                 for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
 
@@ -373,4 +377,4 @@
     </script>
 
 
-@endsection
+@endsection  --}}
