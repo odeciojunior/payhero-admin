@@ -35,4 +35,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'zenvia' => [
+        'from'    => 'Cloudfox',
+        'pretend' => false,
+        'conta'   => 'healthlab.corp',
+        'senha'   => 'hLQNVb7VQk'
+    ],
+
 ];

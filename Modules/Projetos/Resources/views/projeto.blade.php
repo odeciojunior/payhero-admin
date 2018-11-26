@@ -41,6 +41,8 @@
                                     aria-controls="tab_brindes" role="tab">Brindes</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_cupons"
                                     aria-controls="tab_cupons" role="tab">Cupons de desconto</a></li>
+                                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_sms"
+                                    aria-controls="tab_cupons" role="tab">Sms</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_planos"
                                     aria-controls="tab_planos" role="tab">Planos</a></li>
                             </ul>
@@ -174,6 +176,22 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="tab-pane" id="tab_sms" role="tabpanel">
+                                    <table id="tabela_sms" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="adicionar_sms" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar sms
+                                        </a>
+                                        <thead class="bg-blue-grey-100">
+                                            <th>Evento</th>
+                                            <th>Tempo</th>
+                                            <th>Mensagem</th>
+                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="tab-pane" id="tab_layouts" role="tabpanel">
                                     <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_layout" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -286,7 +304,7 @@
                             </div>
                         </div>
                     </div>
-                        
+
                     <!-- Modal padrão para excluir * no plano -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-simple">
@@ -509,6 +527,55 @@
                         $.ajax({
                             method: "POST",
                             url: "/cuponsdesconto/cadastrarcupom",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            data: form_data,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function(){
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#modal_add').hide();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            },
+                        });
+                    });
+                }
+            });
+
+        });
+
+        $('#adicionar_sms').on('click', function(){
+
+            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+
+            $.ajax({
+                method: "POST",
+                url: "/sms/getformaddsms",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function(){
+                    $('#modal_add').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+                    $('#modal_add_body').html(data);
+
+                    $('#cadastrar').unbind('click');
+    
+                    $('#cadastrar').on('click',function(){
+
+                        var form_data = new FormData(document.getElementById('cadastrar_sms'));
+                        form_data.append('projeto',id_projeto);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/sms/cadastrarsms",
                             processData: false,
                             contentType: false,
                             cache: false,
@@ -1422,6 +1489,165 @@
 
             }
 
+        });
+
+        $("#tabela_sms").DataTable( {
+            bLengthChange: false,
+            processing: true,
+            responsive: true,
+            serverSide: true,
+            ajax: {
+                url: '/sms/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                data: {projeto: id_projeto}
+            },
+            columns: [
+                { data: 'evento', name: 'evento'},
+                { data: 'tempo', name: 'tempo'},
+                { data: 'mensagem', name: 'mensagem'},
+                { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
+            ],
+            "language": {
+                "sProcessing":    "Carregando...",
+                "lengthMenu": "Apresentando _MENU_ registros por página",
+                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "info": "Apresentando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoFiltered": "(filtrado por _MAX_ registros)",
+                "sInfoPostFix":   "",
+                "sSearch":        "Procurar :",
+                "sUrl":           "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Carregando...",
+                "oPaginate": {
+                    "sFirst":    "Primeiro",
+                    "sLast":    "Último",
+                    "sNext":    "Próximo",
+                    "sPrevious": "Anterior",
+                },
+            },
+            "drawCallback": function() {
+
+                var id_sms = '';
+
+                $('.detalhes_sms').on('click', function() {
+                    var sms = $(this).attr('sms');
+
+                    $('#modal_detalhes_titulo').html('Detalhes da sms');
+
+                    $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/sms/detalhe",
+                        data: { id_sms : sms },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function(){
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(data){
+                            $('#modal_detalhes_body').html(data);
+                        }
+                    });
+        
+
+                });
+
+                $('.excluir_sms').on('click', function(){
+
+                    id_sms = $(this).attr('sms');
+                    var name = $(this).closest("tr").find("td:first-child").text();
+                    $('#modal_excluir_titulo').html('Remover do projeto o sms '+name+' ?');        
+
+                    $('#bt_excluir').unbind('click');
+
+                    $('#bt_excluir').on('click', function(){
+
+                        $.ajax({
+                            method: "GET",
+                            url: "/sms/deletarsms/"+id_sms,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function(){
+                                $('#fechar_modal_excluir').click();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#fechar_modal_excluir').click();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+
+                    });
+
+                });
+
+                $('.editar_sms').on('click', function(){
+
+                    id_sms = $(this).attr('sms');
+
+                    $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/sms/getformeditarsms",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {id: id_sms},
+                        error: function(){
+                            $('#modal_editar').hide();
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(data){
+                            $('#modal_editar_body').html(data);
+
+                            $('#editar').unbind('click');
+
+                            $('#editar').on('click',function(){
+
+                                var paramObj = {};
+
+                                $.each($('#editar_sms').serializeArray(), function(_, kv) {
+                                    if (paramObj.hasOwnProperty(kv.name)) {
+                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+                                        paramObj[kv.name].push(kv.value);
+                                    }
+                                    else {
+                                        paramObj[kv.name] = kv.value;
+                                    }
+                                });
+                                paramObj['id'] = id_sms;
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/smss/editarsms",
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    data: { smsData: paramObj },
+                                    error: function(){
+                                        $('#modal_editar').hide();
+                                        alert('Ocorreu algum erro');
+                                    },
+                                    success: function(data){
+                                        $('#modal_editar').hide();
+                                        $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
         });
 
         $("#tabela_brindes").DataTable( {
