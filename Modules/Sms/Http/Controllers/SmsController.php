@@ -11,22 +11,22 @@ use NotificationChannels\Zenvia\ZenviaChannel;
 use NotificationChannels\Zenvia\ZenviaMessage;
 use NotificationChannels\Zenvia\Zenvia;
 
-class SmsController extends Controller
-{
+class SmsController extends Controller {
+
     public function enviarMensagem(){
 
         $dados = [
-            'from'    => 'Cloudfox app',
-            'msg' => 'Cloudfox is growing up',
-            'id'      => '23',
-            'schedule' => '2018-11-26T18:30:15',
+            'from'           => 'Cloudfox app',
+            'msg'            => 'Cloudfox is growing up',
+            'id'             => '26',
+            'schedule'       => '2018-11-26T18:35:45',
             'callbackOption' => 'NONE',
-            'flashSms' => false
+            'flashSms'       => true
         ];
 
-        $msg = new Zenvia('healthlab.corp','hLQNVb7VQk',null,false,30);
+        $msg = new Zenvia('healthlab.corp','hLQNVb7VQk',null,false,32);
 
-        $status = $msg->sendMessage('5553999364177', $dados);
+        $status = $msg->sendMessage('5555996931098', $dados);
 
         dd($status);
     }
