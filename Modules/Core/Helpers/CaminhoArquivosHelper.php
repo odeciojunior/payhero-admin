@@ -11,5 +11,6 @@ class CaminhoArquivosHelper {
     const CAMINHO_BRINDES_FOTO = "storage/upload/brindes/fotos/";
     const CAMINHO_BRINDES_EBOOK = "storage/upload/brindes/ebooks/";
     const CAMINHO_BRINDES_VIDEO = "storage/upload/brindes/videos/";
+    const CAMINHO_FOTO_USER = "storage/upload/perfil/";
 
 }

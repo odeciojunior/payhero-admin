@@ -77,7 +77,7 @@
   </head>
   <body class="animsition dashboard">
 
-    @include("layouts.menu-lateral")
+    @include("layouts.menu-principal")
 
     @yield('content')
     <footer class="site-footer">

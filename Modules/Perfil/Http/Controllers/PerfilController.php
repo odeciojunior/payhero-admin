@@ -2,71 +2,45 @@
 
 namespace Modules\Perfil\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Helpers\CaminhoArquivosHelper;
 
-class PerfilController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
-    public function index()
-    {
-        return view('perfil::index');
+class PerfilController extends Controller {
+
+    public function index() {
+
+        $user = \Auth::user();
+
+        return view('perfil::index', [
+            'user' => $user
+        ]);
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create()
-    {
-        return view('perfil::create');
+    public function update(Request $request) {
+
+        $dados = $request->all();
+
+        $user = User::find($dados['id']);
+
+        $user->update($dados);
+
+        $foto = $request->file('foto');
+
+        if ($foto != null) {
+            $nome_foto = 'user_' . $user->id . '_.' . $foto->getClientOriginalExtension();
+
+            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_USER, $nome_foto);
+
+            $user->update([
+                'foto' => $nome_foto
+            ]);
+        }
+
+        return redirect()->route('perfil');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-    }
-
-    /**
-     * Show the specified resource.
-     * @return Response
-     */
-    public function show()
-    {
-        return view('perfil::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @return Response
-     */
-    public function edit()
-    {
-        return view('perfil::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function update(Request $request)
-    {
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @return Response
-     */
-    public function destroy()
-    {
-    }
 }

@@ -950,7 +950,7 @@
             });
 
         });
-        
+
         $("#tabela_produtos").DataTable( {
             bLengthChange: false,
             responsive: true,
