@@ -168,6 +168,6 @@ class PixelsController extends Controller
 
         return response()->json($form->render());
 
-    }
+    } 
 
 }

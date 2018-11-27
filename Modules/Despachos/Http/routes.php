@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'despachos', 'namespace' => 'Modules\Despachos\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'despachos', 'namespace' => 'Modules\Despachos\Http\Controllers'], function()
 {
     Route::get('/',[
         'as' => 'despachos',

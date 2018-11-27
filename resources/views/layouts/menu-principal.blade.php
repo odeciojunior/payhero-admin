@@ -38,7 +38,7 @@
             <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" title="Notifications"
               aria-expanded="false" data-animation="scale-up" role="button">
               <i class="icon wb-bell" aria-hidden="true"></i>
-              <span class="badge badge-pill badge-danger up">5</span>
+              {{--  <span class="badge badge-pill badge-danger up">5</span>  --}}
             </a>
             <div class="dropdown-menu dropdown-menu-right dropdown-menu-media" role="menu">
               <div class="dropdown-menu-header">
@@ -120,12 +120,12 @@
             <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
               data-animation="scale-up" role="button">
               <span class="avatar avatar-online">
-                <img src="../../global/portraits/5.jpg" alt="...">
+                <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.\Auth::user()->foto)!!}" alt="...">
                 <i></i>
               </span>
             </a>
             <div class="dropdown-menu" role="menu">
-              <a class="dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-user" aria-hidden="true"></i> Perfil </a>
+              <a class="dropdown-item" href="{!! route('perfil') !!}" role="menuitem"><i class="icon wb-user" aria-hidden="true"></i> Perfil </a>
               <div class="dropdown-divider" role="presentation"></div>
               <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon wb-power" aria-hidden="true"></i> Logout </a>
               <form id="logout-form" action="/logout" method="POST" style="display: none;">
@@ -262,10 +262,18 @@
               </ul>
             </li>
             <li class="site-menu-item has-sub">
-              <a href="#">
+              <a href="javascript:void(0)">
                 <i class="site-menu-icon wb-settings" aria-hidden="true"></i>
                 <span class="site-menu-title">Ferramentas</span>
+                <span class="site-menu-arrow"></span>
               </a>
+              <ul class="site-menu-sub">
+                <li class="site-menu-item">
+                  <a class="animsition-link" href="{!! route('sms') !!}">
+                    <span class="site-menu-title">SMS</span>
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="site-menu-item has-sub">
               <a href="#">

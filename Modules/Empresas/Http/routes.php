@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'empresas', 'namespace' => 'Modules\Empresas\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'empresas', 'namespace' => 'Modules\Empresas\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'EmpresasController@index',

@@ -151,4 +151,14 @@ class LayoutsController extends Controller
         ->make(true);
     }
 
+    public function getFormAddLayout(Request $request){
+
+        $dados = $request->all();
+
+        $form = view('layouts::cadastro');
+
+        return response()->json($form->render());
+
+    }
+
 }

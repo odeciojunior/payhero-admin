@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'dominios', 'namespace' => 'Modules\Dominios\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dominios', 'namespace' => 'Modules\Dominios\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'DominiosController@index',

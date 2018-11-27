@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'planos', 'namespace' => 'Modules\Planos\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'planos', 'namespace' => 'Modules\Planos\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'PlanosController@index',

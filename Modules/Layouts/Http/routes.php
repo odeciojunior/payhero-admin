@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'layouts', 'namespace' => 'Modules\Layouts\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'layouts', 'namespace' => 'Modules\Layouts\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'LayoutsController@index',
@@ -45,6 +45,16 @@ Route::group(['middleware' => 'web', 'prefix' => 'layouts', 'namespace' => 'Modu
     Route::post('/preview', [
         'as' => 'checkout.preview',
         'uses' => 'PreViewCheckoutController@checkoutPreView',
+    ]);
+
+    Route::post('/getformaddlayout', [
+        'as' => 'checkout.getformaddlayout',
+        'uses' => 'LayoutsController@getFormAddLayout',
+    ]);
+
+    Route::post('/getformeditarlayout', [
+        'as' => 'checkout.getformeditarlayout',
+        'uses' => 'LayoutsController@getFormEditarLayout',
     ]);
 
 });
