@@ -262,18 +262,10 @@
               </ul>
             </li>
             <li class="site-menu-item has-sub">
-              <a href="javascript:void(0)">
+              <a href="{!! route('ferramentas') !!}">
                 <i class="site-menu-icon wb-settings" aria-hidden="true"></i>
                 <span class="site-menu-title">Ferramentas</span>
-                <span class="site-menu-arrow"></span>
               </a>
-              <ul class="site-menu-sub">
-                <li class="site-menu-item">
-                  <a class="animsition-link" href="{!! route('sms') !!}">
-                    <span class="site-menu-title">SMS</span>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="site-menu-item has-sub">
               <a href="#">

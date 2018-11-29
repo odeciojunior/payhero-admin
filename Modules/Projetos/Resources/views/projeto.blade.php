@@ -183,10 +183,12 @@
                                             Adicionar sms
                                         </a>
                                         <thead class="bg-blue-grey-100">
+                                            <th>Plano</th>
                                             <th>Evento</th>
                                             <th>Tempo</th>
                                             <th>Mensagem</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                            <th>Status</th>
+                                            <th style="width: 110px">Opções</th>
                                         </thead>
                                         <tbody>
                                         </tbody>
@@ -556,15 +558,17 @@
             $.ajax({
                 method: "POST",
                 url: "/sms/getformaddsms",
+                data: {projeto: id_projeto},
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 error: function(){
-                    $('#modal_add').hide();
                     alert('Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
+
+                    $('#numero_tempo').mask('0#');
 
                     $('#cadastrar').unbind('click');
     
@@ -1505,9 +1509,20 @@
                 data: {projeto: id_projeto}
             },
             columns: [
-                { data: 'evento', name: 'evento'},
-                { data: 'tempo', name: 'tempo'},
+                { data: 'plano', name: 'plano'},
+                { data: function(data){
+                    return data.evento.replace(new RegExp('_', 'g'), ' ');   
+                }, name: 'evento'},
+                { data: function(data){
+                    return data.tempo + ' ' + data.periodo;
+                }, name: 'tempo'},
                 { data: 'mensagem', name: 'mensagem'},
+                { data: function(data){
+                    if(data.status)
+                        return 'Ativo';
+                    else
+                        return 'Inativo';   
+                }, name: 'status'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
             ],
             "language": {
@@ -1536,7 +1551,7 @@
                 $('.detalhes_sms').on('click', function() {
                     var sms = $(this).attr('sms');
 
-                    $('#modal_detalhes_titulo').html('Detalhes da sms');
+                    $('#modal_detalhes_titulo').html('Detalhes do sms');
 
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
@@ -1562,7 +1577,7 @@
 
                     id_sms = $(this).attr('sms');
                     var name = $(this).closest("tr").find("td:first-child").text();
-                    $('#modal_excluir_titulo').html('Remover do projeto o sms '+name+' ?');        
+                    $('#modal_excluir_titulo').html('Remover do projeto o sms para o plano '+name+' ?');        
 
                     $('#bt_excluir').unbind('click');
 
@@ -1601,9 +1616,8 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: {id: id_sms},
+                        data: {id: id_sms, projeto : id_projeto},
                         error: function(){
-                            $('#modal_editar').hide();
                             alert('Ocorreu algum erro');
                         },
                         success: function(data){
@@ -1613,35 +1627,27 @@
 
                             $('#editar').on('click',function(){
 
-                                var paramObj = {};
-
-                                $.each($('#editar_sms').serializeArray(), function(_, kv) {
-                                    if (paramObj.hasOwnProperty(kv.name)) {
-                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                                        paramObj[kv.name].push(kv.value);
-                                    }
-                                    else {
-                                        paramObj[kv.name] = kv.value;
-                                    }
-                                });
-                                paramObj['id'] = id_sms;
-
+                                var form_data = new FormData(document.getElementById('editar_sms'));
+                                form_data.append('projeto',id_projeto);
+        
                                 $.ajax({
                                     method: "POST",
-                                    url: "/smss/editarsms",
+                                    url: "/sms/editarsms",
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
+                                    data: form_data,
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data: { smsData: paramObj },
                                     error: function(){
-                                        $('#modal_editar').hide();
                                         alert('Ocorreu algum erro');
                                     },
                                     success: function(data){
-                                        $('#modal_editar').hide();
+                                        $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-                                    }
+                                    },
                                 });
                             });
                         }

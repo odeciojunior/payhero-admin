@@ -62,7 +62,7 @@
                 <div class="form-group col-12">
                     <label for="foto">Foto</label>
                     <input name="foto" type="file" class="form-control" id="foto">
-                    <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.$user->foto)!!}" alt="" style="margin-top: 20px; max-height: 400px">
+                    <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.$user->foto)!!}" alt="" style="margin-top: 20px; max-height: 250px">
                 </div>
 
             </div>

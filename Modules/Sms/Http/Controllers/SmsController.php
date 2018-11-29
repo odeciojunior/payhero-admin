@@ -2,14 +2,15 @@
 
 namespace Modules\Sms\Http\Controllers;
 
+use App\Plano;
+use App\ZenviaSms;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use NotificationChannels\Zenvia\Zenvia;
 use Yajra\DataTables\Facades\DataTables;
-use App\ZenviaSms;
 use NotificationChannels\Zenvia\ZenviaChannel;
 use NotificationChannels\Zenvia\ZenviaMessage;
-use NotificationChannels\Zenvia\Zenvia;
 
 class SmsController extends Controller {
 
@@ -65,14 +66,13 @@ class SmsController extends Controller {
         return view('sms::editar',[
             'pixel' => $pixel,
         ]);
-
     }
 
     public function updateSms(Request $request){
 
         $dados = $request->all();
 
-        ZenviaSms::find($dados['smsData']['id'])->update($dados['smsData']);
+        ZenviaSms::find($dados['id'])->update($dados);
 
         return response()->json('Sucesso');
     }
@@ -92,7 +92,8 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        $sms = \DB::table('zenvia_sms as sms');
+        $sms = \DB::table('zenvia_sms as sms')
+                    ->leftJoin('planos', 'planos.id', 'sms.plano');
 
         if(isset($dados['projeto'])){
             $sms = $sms->where('sms.projeto','=', $dados['projeto']);
@@ -102,17 +103,15 @@ class SmsController extends Controller {
                 'sms.id',
                 'sms.evento',
                 'sms.tempo',
+                'sms.periodo',
                 'sms.mensagem',
+                'sms.status',
+                'planos.nome as plano'
         ]);
 
         return Datatables::of($sms)
         ->addColumn('detalhes', function ($sms) {
-            return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_sms' data-placement='top' data-toggle='tooltip' title='Detalhes' sms='".$sms->id."'>
-                            <i class='icon wb-order' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_editar'>
+            return "<span data-toggle='modal' data-target='#modal_editar'>
                         <a class='btn btn-outline btn-primary editar_sms' data-placement='top' data-toggle='tooltip' title='Editar' sms='".$sms->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
@@ -134,6 +133,8 @@ class SmsController extends Controller {
 
         $sms = ZenviaSms::find($dados['id_sms']);
 
+        $plano = Plano::find($sms->plano);
+
         $modal_body = '';
 
         $modal_body .= "<div class='col-xl-12 col-lg-12'>";
@@ -142,18 +143,24 @@ class SmsController extends Controller {
         $modal_body .= "</thead>";
         $modal_body .= "<tbody>";
         $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Plano:</b></td>";
+        $modal_body .= "<td>".$plano['nome']."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
         $modal_body .= "<td><b>Evento:</b></td>";
         $modal_body .= "<td>".$sms->evento."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Tempo:</b></td>";
-        $modal_body .= "<td>".$sms->tempo."</td>";
+        $modal_body .= "<td>".$sms->tempo." ".$sms->periodo."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Período:</b></td>";
-        $modal_body .= "<td>".$sms->periodo."</td>";
+        $modal_body .= "<td><b>Status:</b></td>";
+        if($sms->status)
+            $modal_body .= "<td>Ativo</td>";
+        else
+            $modal_body .= "<td>Inativo</td>";
         $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
         $modal_body .= "<td><b>Mensagem:</b></td>";
         $modal_body .= "<td>".$sms->mensagem."</td>";
         $modal_body .= "</tr>";
@@ -166,9 +173,15 @@ class SmsController extends Controller {
         return response()->json($modal_body);
     }
 
-    public function getFormAddSms(){
+    public function getFormAddSms(Request $request){
 
-        $form = view('sms::cadastro');
+        $dados = $request->all();
+
+        $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
+
+        $form = view('sms::cadastro',[
+            'planos' => $planos
+        ]);
 
         return response()->json($form->render());
 
@@ -178,10 +191,13 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
+        $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
+
         $sms = ZenviaSms::find($dados['id']);
 
         $form = view('sms::editar',[
             'sms' => $sms,
+            'planos' => $planos
         ]);
 
         return response()->json($form->render());
