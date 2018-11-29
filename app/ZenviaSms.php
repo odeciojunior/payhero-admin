@@ -27,7 +27,7 @@ class ZenviaSms extends Model
     /**
      * @var array
      */
-    protected $fillable = ['projeto', 'evento', 'tempo', 'mensagem', 'periodo', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['projeto', 'plano', 'evento', 'tempo', 'mensagem', 'periodo', 'status', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

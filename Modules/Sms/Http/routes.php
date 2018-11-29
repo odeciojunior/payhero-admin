@@ -7,11 +7,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' =>
         'as' => 'sms.enviarmensagem',
     ]);
 
-    Route::get('/', [
-        'uses' => 'SmsController@index',
-        'as' => 'sms',
-    ]);
-
     Route::get('/cadastro', [
         'uses' => 'SmsController@cadastro',
         'as' => 'sms.cadastro',
@@ -60,3 +55,12 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' =>
 
 });
 
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'ferramentas', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
+{
+
+    Route::get('/sms', [
+        'uses' => 'SmsController@index',
+        'as' => 'ferramentas.sms',
+    ]);
+
+});
