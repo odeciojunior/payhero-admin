@@ -29,9 +29,9 @@
 
         <div class="row">
           @foreach($projetos as $projeto)
-            <div class="col-3" style="height: 300px">
-              <div class="card">
-                <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto !!}" alt="Imagem não encontrada" style="height: 180px">
+            <div class="col-3">
+              <div class="card" style="border: 1px solid gray">
+                <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto !!}" alt="Imagem não encontrada" style="height: 180px; margin: 8px 8px 8px 8px">
                 <div class="card-block">
                   <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
                     <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
