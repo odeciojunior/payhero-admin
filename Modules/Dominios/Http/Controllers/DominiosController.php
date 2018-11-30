@@ -152,7 +152,7 @@ class DominiosController extends Controller {
                 'dominio.dominio',
                 'dominio.layout',
                 'dominio.empresa',
-                'empresas.nome as empresa_nome',
+                'empresas.nome_fantasia as empresa_nome',
                 'layouts.descricao as layout_descricao',
         ]);
 
