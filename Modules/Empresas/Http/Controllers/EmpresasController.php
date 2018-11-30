@@ -47,7 +47,7 @@ class EmpresasController extends Controller {
 
         Empresa::find($dados['id'])->update($dados);
 
-        return view('empresas::index');
+        return redirect()->route('perfil');
     }
 
     public function deletarEmpresa($id){
