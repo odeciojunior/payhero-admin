@@ -43,7 +43,7 @@
                                 <select name="empresa" type="text" class="form-control" id="empresa" required>
                                     <option value="" selected>Selecione</option>
                                     @foreach($empresas as $empresa)
-                                        <option value="{{ $empresa['id'] }}">{{ $empresa['nome'] }}</option>
+                                        <option value="{{ $empresa['id'] }}">{{ $empresa['nome_fantasia'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
