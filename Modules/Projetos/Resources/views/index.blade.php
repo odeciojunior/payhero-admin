@@ -6,13 +6,13 @@
   <div class="page">
 
     <div class="page-header">
-        <h1 class="page-title">Projetos</h1>
+        <h1 class="page-title">Meus projetos</h1>
         <div class="page-header-actions">
         </div>
     </div>
 
     <div class="page-content container-fluid">
-      <div class="panel pt-30 p-30" data-plugin="matchHeight">
+      {{--  <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
         <table id="tabela_projetos" class="table-bordered table-hover w-full" style="margin-top: 20px">
           <thead class="bg-blue-grey-100">
@@ -24,7 +24,25 @@
           </thead>
           <tbody>
           </tbody>
-        </table>
+        </table>  --}}
+
+
+        <div class="row">
+          @foreach($projetos as $projeto)
+            <div class="col-3" style="height: 300px">
+              <div class="card">
+                <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto !!}" alt="Imagem não encontrada" style="height: 180px">
+                <div class="card-block">
+                  <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
+                    <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                    <p class="card-text">{!! $projeto['descricao'] !!}</p>
+                  </a>
+                  <a href="#" class="btn btn-primary">Button</a>
+                </div>
+              </div>
+            </div>
+          @endforeach
+        </div>
 
         <!-- Modal com detalhes do projeto -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -69,7 +87,7 @@
           </div>
 
         </div>
-    </div>
+    {{--  </div>  --}}
   </div>
 
   <script>
