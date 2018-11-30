@@ -80,8 +80,8 @@ class VendasDataTable extends DataTable
      *
      * @return \Yajra\DataTables\Html\Builder
      */
-    public function html()
-    {
+    public function html() {
+
         return $this->builder()
                     ->columns($this->getColumns())
                     ->minifiedAjax()

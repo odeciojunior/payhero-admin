@@ -12,7 +12,7 @@
 
       <div class="panel pt-30 p-30 " data-plugin="matchHeight">
 
-        {!! $dataTable->table([], true) !!}
+        {!! $dataTable->table() !!}
 
         <!-- Modal -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
