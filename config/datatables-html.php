@@ -5,7 +5,7 @@ return [
      * Default table attributes when generating the table.
      */
     'table' => [
-        'class' => 'table-bordered table-hover w-full',
+        'class' => 'table table-hover table-striped table-condensed w-full dtr-inline',
         'id'    => 'dataTableBuilder',
     ],
 
