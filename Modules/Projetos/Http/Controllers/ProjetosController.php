@@ -14,7 +14,11 @@ class ProjetosController extends Controller
 {
     public function index() {
 
-        return view('projetos::index'); 
+        $projetos = Projeto::all();
+
+        return view('projetos::index',[
+            'projetos' => $projetos
+        ]); 
     }
 
     public function cadastro() {
