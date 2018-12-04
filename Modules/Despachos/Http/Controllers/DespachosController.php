@@ -19,7 +19,7 @@ class DespachosController extends Controller
     }
 
     public function atualizaEntregas(){
-
+ 
         $vendas = Venda::all();
 
         foreach($vendas as $venda){
@@ -55,14 +55,14 @@ class DespachosController extends Controller
             ->leftjoin('entregas as entrega', 'venda.entrega', '=', 'entrega.id')
             ->leftjoin('transportadoras as transportadora', 'plano.transportadora', '=', 'transportadora.id')
             ->where('entrega.transportadora','2')
-            ->where('venda.mercado_pago_status','approved')
+            ->where('venda.pagamento_status','approved')
             ->get([
                 'venda.id',
                 'plano.nome as plano_nome',
                 'comprador.nome',
                 'venda.meio_pagamento',
                 'venda.forma_pagamento',
-                'venda.mercado_pago_status',
+                'venda.pagamento_status',
                 'venda.data_inicio',
                 'venda.data_finalizada',
                 'venda.valor_plano',
