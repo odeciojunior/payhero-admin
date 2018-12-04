@@ -40,7 +40,7 @@ class RelatoriosController extends Controller {
                 'comprador.nome',
                 'venda.meio_pagamento',
                 'venda.forma_pagamento',
-                'venda.mercado_pago_status',
+                'venda.pagamento_status',
                 'venda.data_inicio',
                 'venda.data_finalizada',
                 'venda.valor_plano',
@@ -59,16 +59,16 @@ class RelatoriosController extends Controller {
         ->editColumn('forma_pagamento', function ($venda) {
             return $venda->forma_pagamento == 'cartao_credito' ? 'cartão de crédito' : $venda->forma_pagamento;
         })
-        ->editColumn('mercado_pago_status', function ($venda) {
-            if($venda->mercado_pago_status == 'approved')
+        ->editColumn('pagamento_status', function ($venda) {
+            if($venda->pagamento_status == 'approved')
                 return 'Aprovada';
-            if($venda->mercado_pago_status == 'rejected')
+            if($venda->pagamento_status == 'rejected')
                 return 'Rejeitada';
-            if($venda->mercado_pago_status == 'in_process')
+            if($venda->pagamento_status == 'in_process')
                 return 'Em processo';
-            if($venda->mercado_pago_status == 'pending')
+            if($venda->pagamento_status == 'pending')
                 return 'Pendente';
-            return $venda->mercado_pago_status;
+            return $venda->pagamento_status;
         })
         ->addColumn('detalhes', function ($venda) {
             return "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button>";

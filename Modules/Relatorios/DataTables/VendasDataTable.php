@@ -66,7 +66,7 @@ class VendasDataTable extends DataTable
                 'plano.nome as plano_nome',
                 'comprador.nome',
                 'venda.forma_pagamento',
-                'venda.mercado_pago_status as status',
+                'venda.pagamento_status as status',
                 'venda.data_inicio',
                 'venda.data_finalizada',
                 'venda.valor_plano',
