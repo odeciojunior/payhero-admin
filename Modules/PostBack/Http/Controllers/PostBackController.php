@@ -37,7 +37,7 @@ class PostBackController extends Controller {
 
         }
 
-        return true;
+        return 'true';
     }
 
 }
