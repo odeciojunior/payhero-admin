@@ -1,0 +1,16 @@
+{
+    "name": "PostBack",
+    "alias": "postback",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\PostBack\\Providers\\PostBackServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

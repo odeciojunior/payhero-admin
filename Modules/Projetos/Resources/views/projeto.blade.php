@@ -1569,7 +1569,6 @@
                             $('#modal_detalhes_body').html(data);
                         }
                     });
-        
 
                 });
 
