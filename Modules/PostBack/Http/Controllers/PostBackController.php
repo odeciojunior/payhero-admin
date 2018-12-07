@@ -23,7 +23,7 @@ class PostBackController extends Controller {
             if($venda != null){
 
                 $venda->update([
-                    'status' => $dados['transaction']['status'],
+                    'pagamento_status' => $dados['transaction']['status'],
                     'pagamento_id' => $dados['id']
                 ]);
             }
