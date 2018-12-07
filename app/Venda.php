@@ -7,30 +7,33 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $comprador
- * @property boolean $status
+ * @property integer $entrega
  * @property string $forma_pagamento
  * @property float $valor_total_pago
  * @property float $valor_recebido_mercado_pago
+ * @property float $valor_frete
  * @property float $valor_plano
  * @property float $valor_cupom
- * @property integer $tipo_cupom
+ * @property boolean $tipo_cupom
+ * @property string $cod_cupom
  * @property string $meio_pagamento
  * @property string $data_inicio
  * @property string $data_finalizada
- * @property string $cod_cupom
- * @property string $mercado_pago_id
- * @property string $mercado_pago_status
+ * @property string $pagamento_id
+ * @property string $pagamento_status
+ * @property int $qtd_parcelas
+ * @property float $valor_parcelas
+ * @property string $bandeira
+ * @property string $link_boleto
  * @property string $created_at
  * @property string $updated_at
- * @property float $valor_frete
- * @property integer $qtd_parcela
- * @property float $valor_parcela
- * @property string $bandeira
+ * @property string $deleted_at
  * @property Compradore $compradore
+ * @property Entrega $entrega
  * @property Boleto[] $boletos
  * @property Comisso[] $comissoes
  * @property PlanosVenda[] $planosVendas
- * @property Entrega[] $entregas
+ * @property Ticket[] $tickets
  */
 class Venda extends Model
 {
@@ -44,7 +47,7 @@ class Venda extends Model
     /**
      * @var array
      */
-    protected $fillable = ['comprador', 'status', 'forma_pagamento', 'valor_total_pago', 'valor_recebido_mercado_pago', 'valor_plano', 'valor_cupom', 'tipo_cupom', 'meio_pagamento', 'data_inicio', 'data_finalizada', 'cod_cupom', 'created_at', 'updated_at', 'mercado_pago_id', 'mercado_pago_status', 'valor_frete', 'qtd_parcela', 'valor_parcela', 'bandeira','entrega', 'link_boleto'];
+    protected $fillable = ['comprador', 'entrega', 'forma_pagamento', 'valor_total_pago', 'valor_recebido_mercado_pago', 'valor_frete', 'valor_plano', 'valor_cupom', 'tipo_cupom', 'cod_cupom', 'meio_pagamento', 'data_inicio', 'data_finalizada', 'pagamento_id', 'pagamento_status', 'qtd_parcelas', 'valor_parcelas', 'bandeira', 'link_boleto', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -52,6 +55,14 @@ class Venda extends Model
     public function compradore()
     {
         return $this->belongsTo('App\Compradore', 'comprador');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function entrega()
+    {
+        return $this->belongsTo('App\Entrega', 'entrega');
     }
 
     /**
@@ -81,8 +92,8 @@ class Venda extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function entregas()
+    public function tickets()
     {
-        return $this->hasMany('App\Entrega', 'entrega');
+        return $this->hasMany('App\Ticket', 'venda');
     }
 }
