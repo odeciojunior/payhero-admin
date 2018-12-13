@@ -97,7 +97,7 @@
                       return 'Digital';
                     return 'null';
                 }, name: 'formato'},
-                { data: 'quntidade', name: 'quntidade'},
+                { data: 'quantidade', name: 'quantidade'},
                 { data: function(data){
                   if(data.disponivel == 1)
                   return 'Disponível';

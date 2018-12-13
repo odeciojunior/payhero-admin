@@ -981,7 +981,7 @@
                       return 'Digital';
                     return 'null';
                 }, name: 'formato'},
-                { data: 'quntidade', name: 'quntidade'},
+                { data: 'quantidade', name: 'quantidade'},
                 { data: function(data){
                   if(data.disponivel == 1)
                   return 'Disponível';
@@ -1203,7 +1203,7 @@
                             $("#foto_plano").change(function(e) {
                     
                                 for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-                    
+
                                     var file = e.originalEvent.srcElement.files[i];
                     
                                     if($('img').length != 0){

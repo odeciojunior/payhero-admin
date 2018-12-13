@@ -127,7 +127,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <input value="10" name="quntidade" type="hidden" class="form-control" id="quntidade" placeholder="Quantidade" required>
+                            <input value="10" name="quantidade" type="hidden" class="form-control" id="quantidade" placeholder="Quantidade" required>
 
                         </div>
 

@@ -78,8 +78,8 @@
                                 <input name="foto" type="file" class="form-control" id="foto">
                             </div>
                             <div class="form-group col-xl-6">
-                                <label for="quntidade">Quantidade</label>
-                                <input name="quntidade" type="text" class="form-control" id="quntidade" placeholder="quantidade">
+                                <label for="quantidade">Quantidade</label>
+                                <input name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade">
                             </div>
                         </div>
 

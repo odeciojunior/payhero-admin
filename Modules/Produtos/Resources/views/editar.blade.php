@@ -86,8 +86,8 @@
                                 <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto->foto)!!}" style="margin-top: 20px">
                             </div>
                             <div class="form-group col-xl-6">
-                                <label for="quntidade">Quantidade</label>
-                                <input value="{!! $produto->quntidade != '' ? $produto->quntidade : '' !!}" name="quntidade" type="text" class="form-control" id="quntidade" placeholder="quantidade">
+                                <label for="quantidade">Quantidade</label>
+                                <input value="{!! $produto->quantidade != '' ? $produto->quantidade : '' !!}" name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade">
                             </div>
                         </div>
 

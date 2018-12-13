@@ -117,7 +117,7 @@ class ProdutosController extends Controller
                 'produto.disponivel',
                 'produto.formato',
                 'categorias.nome as categoria_nome',
-                'produto.quntidade',
+                'produto.quantidade',
                 'projetos_produtos.projeto',
         ]);
 
@@ -185,7 +185,7 @@ class ProdutosController extends Controller
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Quantidade:</b></td>";
-        $modal_body .= "<td>".$produto->quntidade."</td>";
+        $modal_body .= "<td>".$produto->quantidade."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Custo do produto:</b></td>";
@@ -227,7 +227,6 @@ class ProdutosController extends Controller
         return response()->json($produtosDisponiveis);
     }
 
-
     public function addProdutoProjeto(Request $request){
 
         $dados = $request->all();
@@ -243,7 +242,6 @@ class ProdutosController extends Controller
 
         return response()->json('erro');
     }
-
 
     public function deletarProdutoPlano(Request $request){
 
