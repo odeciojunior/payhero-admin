@@ -10,7 +10,7 @@
         <div class="page-header-actions">
             <a class="btn btn-primary float-right" href="/empresas/cadastro">
                 <i class='icon wb-user-add' aria-hidden='true'></i>
-                Cadastrar
+                Cadastrar empresa
             </a>
         </div>
     </div>
@@ -21,12 +21,10 @@
         <table id="tabela_empresas" class="table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
             <tr>
-              <td>Nome</td>
+              <td>Nome fantasia</td>
               <td>CNPJ</td>
-              <td>Email</td>
               <td>Estado</td>
               <td>Município</td>
-              <td>Situacao</td>
               <td>Opções</td>
             </tr>
           </thead>
@@ -96,12 +94,10 @@
                 type: 'POST'
             },
             columns: [
-                { data: 'nome', name: 'nome'},
+                { data: 'nome_fantasia', name: 'nome_fantasia'},
                 { data: 'cnpj', name: 'cnpj'},
-                { data: 'email', name: 'email'},
                 { data: 'uf', name: 'uf'},
                 { data: 'municipio', name: 'municipio'},
-                { data: 'situacao', name: 'situacao'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {

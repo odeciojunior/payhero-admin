@@ -2,19 +2,37 @@
 
 namespace Modules\Projetos\Http\Controllers;
 
+use App\Empresa;
+use App\Projeto;
+use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Projeto;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
+class ProjetosController extends Controller{
 
-class ProjetosController extends Controller
-{
     public function index() {
 
-        $projetos = Projeto::all();
+        $projetos = array();
+
+        if(\Auth::user()->hasRole('administrador geral')){
+            $projetos = Projeto::all();
+        }
+        else{
+            $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
+            if(count($empresas_usuario > 0)){
+                foreach($empresas_usuario as $empresa_usuario){
+                    $projetos_empresa = Projeto::where('empresa',$empresa_usuario['empresa'])->get()->toArray();
+                    if(count($projetos_empresa) > 0){
+                        foreach($projetos_empresa as $projeto){
+                            $projetos[] = $projeto;
+                        }
+                    }
+                }
+            }
+        }
 
         return view('projetos::index',[
             'projetos' => $projetos
@@ -23,7 +41,18 @@ class ProjetosController extends Controller
 
     public function cadastro() {
 
-        return view('projetos::cadastro');
+        $empresas = array();
+
+        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
+
+        foreach($empresas_usuario as $empresa_usuario){
+            $empresas[] = Empresa::find($empresa_usuario['empresa']);
+        }
+
+        return view('projetos::cadastro',[
+            'empresas' => $empresas
+        ]);
+
     }
 
     public function cadastrarProjeto(Request $request){
@@ -51,8 +80,15 @@ class ProjetosController extends Controller
 
         $projeto = Projeto::find($id);
 
+        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
+
+        foreach($empresas_usuario as $empresa_usuario){
+            $empresas[] = Empresa::find($empresa_usuario['empresa']);
+        }
+
         return view('projetos::editar',[
-            'projeto' => $projeto
+            'projeto' => $projeto,
+            'empresas' => $empresas
         ]);
 
     }
@@ -63,6 +99,19 @@ class ProjetosController extends Controller
 
         $projeto = Projeto::find($dados['id']);
         $projeto->update($dados);
+
+        $imagem = $request->file('imagem');
+
+        if ($imagem != null) {
+            $nome_imagem = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+
+            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_imagem);
+
+            $projeto->update([
+                'foto' => $nome_imagem
+            ]);
+        }
+
 
         return redirect()->route('projetos');
     }

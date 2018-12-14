@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $agencia_digito
  * @property string $conta
  * @property string $conta_digito
+ * @property string $bank_account_id
+ * @property string $recipient_id
  * @property DadosHotzapp[] $dadosHotzapps
  * @property Dominio[] $dominios
  * @property Plano[] $planos
@@ -38,7 +40,7 @@ class Empresa extends Model
     /**
      * @var array
      */
-    protected $fillable = ['cnpj', 'cep', 'municipio', 'logradouro', 'complemento', 'bairro', 'numero', 'ultima_atualizacao', 'uf', 'created_at', 'updated_at', 'deleted_at', 'status', 'razao_social', 'nome_fantasia', 'banco', 'agencia', 'agencia_digito', 'conta', 'conta_digito'];
+    protected $fillable = ['cnpj', 'cep', 'municipio', 'logradouro', 'complemento', 'bairro', 'numero', 'ultima_atualizacao', 'uf', 'created_at', 'updated_at', 'deleted_at', 'status', 'razao_social', 'nome_fantasia', 'banco', 'agencia', 'agencia_digito', 'conta', 'conta_digito', 'bank_account_id', 'recipient_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

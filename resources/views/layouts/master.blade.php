@@ -147,7 +147,7 @@
     @if(isset($dataTable))
         {!! $dataTable->scripts() !!}
         <script>
-                
+
                 yadcf.init(window.LaravelDataTables["dataTableBuilder"] ,[{
                         column_number: 0,
                         filter_type: "text"
