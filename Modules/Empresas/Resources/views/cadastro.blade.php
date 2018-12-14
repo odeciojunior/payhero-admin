@@ -20,16 +20,12 @@
             <div class="page-content container-fluid">
                 <div class="panel" data-plugin="matchHeight">
                     <div style="width:100%">
+                        <h4>Dados gerais</h4>
                         <div class="row">
-                            <input type="hidden" name="">
-                            <input type="hidden" name="">
-                            <input type="hidden" name="">
-                            <input type="hidden" name="">
                             <div class="form-group col-xl-6">
-                                <label for="cnpj">CNPJ</label>
-                                <input name="cnpj" type="text" class="form-control" id="cnpj" placeholder="CNPJ">
+                                <label for="cnpj">CNPJ / CPF</label>
+                                <input name="cnpj" type="text" class="form-control" id="cnpj" placeholder="CNPJ / CPF">
                             </div>
-
                             <div class="form-group col-xl-6">
                                 <label for="situacao">Situacao</label>
                                 <select name="situacao" class="form-control" id="situacao" required>
@@ -37,18 +33,12 @@
                                     <option value="inativo">Inativo</option>
                                 </select>
                             </div>
-
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-xl-12">
                                 <label for="nome">Nome fantasia</label>
-                                <input name="nome" type="text" class="form-control" id="nome" placeholder="Nome fantasia">
-                            </div>
-
-                            <div class="form-group col-xl-6">
-                                <label for="email">Email</label>
-                                <input name="email" type="text" class="form-control" id="email" placeholder="Email">
+                                <input name="nome_fantasia" type="text" class="form-control" id="nome" placeholder="Nome fantasia">
                             </div>
                         </div>
 
@@ -97,12 +87,48 @@
                             </div>
 
                         </div>
+                        <h4>Dados bancários</h4>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
+                                <label for="banco">Banco</label>
+                                <select id="banco" name="banco" class="form-control">
+                                    <option value="">Selecione</option>
+                                    @foreach($bancos as $banco)
+                                        <option value="{!! $banco['codigo'] !!}">{!! $banco['codigo'] . ' - ' .$banco['nome'] !!}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-9">
+                                <label for="agencia">Agência</label>
+                                <input name="agencia" type="text" class="form-control" id="agencia" placeholder="Agência">
+                            </div>
+                            <div class="form-group col-xl-3">
+                                <label for="agencia_digito">Dígito</label>
+                                <input name="agencia_digito" type="text" class="form-control" id="agencia_digito" placeholder="Dígito">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-9">
+                                <label for="conta">Conta</label>
+                                <input name="conta" type="text" class="form-control" id="conta" placeholder="Conta">
+                            </div>
+                            <div class="form-group col-xl-3">
+                                <label for="conta_digito">Dígito</label>
+                                <input name="conta_digito" type="text" class="form-control" id="agencia_digito" placeholder="Dígito">
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Salvar</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -113,26 +139,26 @@
 
     $(document).ready( function(){
 
-        $('#cnpj').on('input',function(){
+//        $('#cnpj').on('input',function(){
+//
+//            if($(this).val().replace(/[^0-9]/g,'').length ==  14){
+//
+//                jQuery.support.cors = true;
+//
+//                $.ajax({
+//                    type: 'GET',
+//                    url: 'https://www.receitaws.com.br/v1/cnpj/'+$(this).val(),
+//                    crossDomain: true,
+//                    dataType: 'jsonp',
+//                    success: function(data) {
+//                        alert(data.toSource());
+//                        
+//                    },
+//                });
+//        
+//            }
 
-            if($(this).val().replace(/[^0-9]/g,'').length ==  14){
-
-                jQuery.support.cors = true;
-
-                $.ajax({
-                    type: 'GET',
-                    url: 'https://www.receitaws.com.br/v1/cnpj/'+$(this).val(),
-                    crossDomain: true,
-                    dataType: 'jsonp',
-                    success: function(data) {
-                        alert(data.toSource());
-                        
-                    },
-                });
-        
-            }
-
-        });
+//        });
 
     });
 

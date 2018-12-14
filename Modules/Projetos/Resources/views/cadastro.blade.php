@@ -20,9 +20,18 @@
                     <h4> Dados gerais </h4>
                     <div style="width:100%">
                         <div class="row">
-                            <div class="form-group col-xl-12">
+                            <div class="form-group col-xl-6">
                                 <label for="nome">Nome</label>
                                 <input name="nome" type="text" class="form-control" id="nome" placeholder="Nome do projeto" required>
+                            </div>
+                            <div class="form-group col-xl-6">
+                                <label for="emrpesa">Empresa</label>
+                                <select name="empresa" class="form-control" id="empresa" required>
+                                    <option value="">Selecione</option>
+                                    @foreach($empresas as $empresa)
+                                        <option value="{!! $empresa->id !!}">{!! $empresa->nome_fantasia !!}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 

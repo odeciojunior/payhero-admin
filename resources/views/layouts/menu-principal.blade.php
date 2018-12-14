@@ -273,6 +273,14 @@
                 <span class="site-menu-title">Aplicativos</span>
               </a>
             </li>
+            @if(Auth::user()->hasRole('administrador empresarial'))
+              <li class="site-menu-item has-sub">
+                <a href="{{ route('empresas') }}">
+                  <i class="site-menu-icon wb-briefcase" aria-hidden="true"></i>
+                  <span class="site-menu-title">Minhas empresas</span>
+                </a>
+              </li>
+            @endif
             @if(Auth::user()->hasRole('administrador geral'))
               <li class="site-menu-item has-sub">
                 <a href="{{ route('empresas') }}">
