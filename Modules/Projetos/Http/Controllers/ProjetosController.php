@@ -22,10 +22,10 @@ class ProjetosController extends Controller{
         }
         else{
             $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
-            if(count($empresas_usuario > 0)){
+            if($empresas_usuario != null){
                 foreach($empresas_usuario as $empresa_usuario){
                     $projetos_empresa = Projeto::where('empresa',$empresa_usuario['empresa'])->get()->toArray();
-                    if(count($projetos_empresa) > 0){
+                    if($projetos_empresa != null){
                         foreach($projetos_empresa as $projeto){
                             $projetos[] = $projeto;
                         }
