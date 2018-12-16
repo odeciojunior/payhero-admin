@@ -22,7 +22,7 @@
 
             <div class="row">
                 <div class="col-6">
-                    <form id="form-cadastro" method="post" action="/layouts/cadastrarlayout" enctype='multipart/form-data'>
+                    <form id="cadastrar_layout" method="post" action="/layouts/cadastrarlayout" enctype='multipart/form-data'>
                         @csrf
                         <div class="panel" data-plugin="matchHeight">
                             <div class="row">
@@ -131,7 +131,7 @@
 
   <script>
 
-    $(document).ready( function(){
+    $(document).ready( function(){ 
 
         atualizarPreView();
 

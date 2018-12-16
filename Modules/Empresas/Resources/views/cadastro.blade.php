@@ -13,12 +13,11 @@
                     Voltar
                 </a>
             </div>
-        </div>
-
-        <form method="post" action="/empresas/cadastrarempresa">
-            @csrf
-            <div class="page-content container-fluid">
-                <div class="panel" data-plugin="matchHeight">
+        </div> 
+        <div class="page-content container-fluid">
+            <div class="panel pt-30 p-30" data-plugin="matchHeight">
+                <form method="post" action="/empresas/cadastrarempresa">
+                    @csrf
                     <div style="width:100%">
                         <h4>Dados gerais</h4>
                         <div class="row">
@@ -130,9 +129,9 @@
                         </div>
 
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
   <script>

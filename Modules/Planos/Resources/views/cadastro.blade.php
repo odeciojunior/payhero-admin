@@ -108,7 +108,7 @@
 
                         <div class="row">
 
-                            <div class="form-group col-xl-6">
+                            {{--  <div class="form-group col-xl-6">
                                 <label for="hotzapp_dados">Integração com HotZapp</label>
                                 <select name="hotzapp_dados" id="hotzapp_dados" class="form-control">
                                     <option value="">Sem integração</option>
@@ -116,7 +116,7 @@
                                         <option value="{{ $hotzapp_dados['id'] }}">{{ $hotzapp_dados['descricao'] }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div>  --}}
 
                             <div class="form-group col-xl-6">
                                 <label for="layout">Layout</label>

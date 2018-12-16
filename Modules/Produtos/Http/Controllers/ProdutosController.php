@@ -2,9 +2,11 @@
 
 namespace Modules\Produtos\Http\Controllers;
 
+use App\Empresa;
 use App\Produto;
 use App\Categoria;
 use App\ProjetoProduto;
+use App\UsuarioEmpresa;
 use Faker\Provider\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,20 +14,35 @@ use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
-class ProdutosController extends Controller
-{
+class ProdutosController extends Controller {
+
+
     public function index() {
 
-        return view('produtos::index'); 
+        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
+
+        $produtos = Produto::whereIn('empresa',$empresas_usuario)->get()->toArray();
+
+        return view('produtos::index',[
+            'produtos' => $produtos
+        ]);
     }
 
     public function cadastro() {
 
+        $empresas = array();
+
+        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
+
+        foreach($empresas_usuario as $empresa_usuario){
+            $empresas[] = Empresa::find($empresa_usuario['empresa']);
+        }
+
         $categorias = Categoria::all();
 
-        return view('produtos::cadastro',
-        [
-            'categorias' => $categorias
+        return view('produtos::cadastro',[
+            'categorias' => $categorias,
+            'empresas' => $empresas
         ]);
     }
 
@@ -38,7 +55,7 @@ class ProdutosController extends Controller
         $foto = $request->file('foto');
 
         if ($foto != null) {
-            $nome_foto = 'plano_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
+            $nome_foto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
 
             $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nome_foto);
 
@@ -110,7 +127,7 @@ class ProdutosController extends Controller
             $produtos = $produtos->where('projetos_produtos.projeto','=', $dados['projeto']);
         }
 
-        $produtos = $produtos->get([
+        $produtos = $produtos->select([
                 'produto.id',
                 'produto.nome',
                 'produto.descricao',
@@ -176,6 +193,14 @@ class ProdutosController extends Controller
             $modal_body .= "<td>Insdisponível</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Formato:</b></td>";
+        if($produto->formato == 1)
+            $modal_body .= "<td>Físico</td>";
+        else
+            $modal_body .= "<td>Digital</td>";
+        $modal_body .= "</tr>";
+
+        $modal_body .= "<tr>";
         $modal_body .= "<td><b>Categoria:</b></td>";
         $modal_body .= "<td>".Categoria::find($produto->categoria)->nome."</td>";
         $modal_body .= "</tr>";
@@ -191,12 +216,23 @@ class ProdutosController extends Controller
         $modal_body .= "<td><b>Custo do produto:</b></td>";
         $modal_body .= "<td>".$produto->custo_produto."</td>";
         $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Altura:</b></td>";
+        $modal_body .= "<td>".$produto->altura."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Largura:</b></td>";
+        $modal_body .= "<td>".$produto->largura."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Peso:</b></td>";
+        $modal_body .= "<td>".$produto->peso."</td>";
+        $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
         $modal_body .= "</div>";
- 
         $modal_body .= "<div class='text-center' style='margin-top: 20px'>";
-        $modal_body .= "<img src='".url($produto->foto)."' style='height: 200px'>";
+        $modal_body .= "<img src='".'/'.CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto']."' style='height: 200px'>";
         $modal_body .= "</div>";
         $modal_body .= "</div>";
 
@@ -207,7 +243,11 @@ class ProdutosController extends Controller
 
         $dados = $request->all();
 
-        $produtos = Produto::select('nome','id')->get()->toArray();
+        $empresas = array();
+
+        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
+
+        $produtos = Produto::select('nome','id')->where('empresa',$empresas_usuario)->get()->toArray();
 
         $produtosDisponiveis = [];
 

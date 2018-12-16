@@ -2,8 +2,8 @@
 
 @section('content')
 
-  <!-- Page -->
-  <div class="page">
+    <!-- Page -->
+    <div class="page">
 
         <div class="page-header">
             <h1 class="page-title">Editar produto</h1>
@@ -15,11 +15,12 @@
             </div>
         </div>
 
-        <form method="post" action="/produtos/editarproduto" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" value="{!! $produto->id !!}" name="id">
-            <div class="page-content container-fluid">
-                <div class="panel" data-plugin="matchHeight">
+        <div class="page-content container-fluid">
+            <div class="panel pt-30 p-30" data-plugin="matchHeight">
+
+                <form method="post" action="/produtos/editarproduto" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" value="{!! $produto->id !!}" name="id">
                     <div style="width:100%">
 
                         <div class="row">
@@ -81,13 +82,33 @@
 
                         <div class="row">
                             <div class="form-group col-xl-6">
+                                <label for="quantidade">Quantidade</label>
+                                <input value="{!! $produto->quantidade != '' ? $produto->quantidade : '0' !!}" name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade">
+                            </div>
+
+                            <div class="form-group col-xl-6">
+                                <label for="peso">Peso</label>
+                                <input value="{!! $produto->peso != '' ? $produto->peso : '' !!}" name="peso" type="text" class="form-control" id="peso" placeholder="Peso">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-6">
+                                <label for="altura">Altura</label>
+                                <input value="{!! $produto->altura != '' ? $produto->altura : '' !!}" name="altura" type="text" class="form-control" id="altura" placeholder="Altura">
+                            </div>
+
+                            <div class="form-group col-xl-6">
+                                <label for="largura">largura</label>
+                                <input value="{!! $produto->largura != '' ? $produto->largura : '' !!}" name="largura" type="text" class="form-control" id="largura" placeholder="Largura">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xl-12">
                                 <label for="foto">Foto do produto</label>
                                 <input name="foto" type="file" class="form-control" id="foto">
                                 <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto->foto)!!}" style="margin-top: 20px">
-                            </div>
-                            <div class="form-group col-xl-6">
-                                <label for="quantidade">Quantidade</label>
-                                <input value="{!! $produto->quantidade != '' ? $produto->quantidade : '' !!}" name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade">
                             </div>
                         </div>
 
@@ -97,9 +118,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
   <script>

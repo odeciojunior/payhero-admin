@@ -12,12 +12,11 @@
                 </a>
             </div>
         </div>
-
-        <form method="post" action="/projetos/editarprojeto" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="id" value="{!! $projeto->id !!}">
-            <div class="page-content container-fluid">
-                <div class="panel" data-plugin="matchHeight">
+        <div class="page-content container-fluid">
+            <div class="panel pt-30 p-30" data-plugin="matchHeight">
+                <form method="post" action="/projetos/editarprojeto" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id" value="{!! $projeto->id !!}">
                     <h4> Dados gerais </h4>
                     <div style="width:100%">
                         <div class="row">
@@ -67,7 +66,7 @@
                             <div class="form-group col-xl-6">
                                 <label for="imagem">Imagem do projeto</label>
                                 <input name="imagem" type="file" class="form-control" id="imagem">
-                                <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto)!!}" style="margin-top: 20px">
+                                <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto)!!}" style="margin-top: 20px; height:200px">
                             </div>
                         </div>
 
@@ -78,9 +77,9 @@
                         </div>
 
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
     <script>

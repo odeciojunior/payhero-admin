@@ -2,27 +2,48 @@
 
 @section('content')
 
-  <!-- Page -->
+  <!-- Page --> 
   <div class="page">
+    <div class="page-header">
+        <h1 class="page-title">Meus produto</h1>
+    </div>
+
     <div class="page-content container-fluid">
       <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-        <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 80px">
-          <thead class="bg-blue-grey-100">
-            <tr>
-              <td>Nome</td>
-              <td>Descrição</td>
-              <td>Categoria</td>
-              <td>Formato</td>
-              <td>Quantidade</td>
-              <td>Status</td>
-              <td style="width: 160px">Detalhes</td>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-
+          @if(count($produtos) == 0)
+              <div class="alert alert-warning" role="alert">
+                  <strong>Ops!</strong> Você ainda não possui produtos cadastrados.
+              </div>
+          @else
+            <div class="row">
+                @foreach($produtos as $produto)
+                  <div class="col-3">
+                      <div class="card" style="border: 1px solid gray">
+                          <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                          <div class="card-block">
+                            <a href="#" class="detalhes_produto" produto="{!! $produto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes'>
+                                <h4 class="card-title">{!! $produto['nome'] !!}</h4>
+                                <p class="card-text">{!! $produto['descricao'] !!}</p>
+                            </a>
+                            <hr>
+                            <span data-toggle='modal' data-target='#modal_editar'>
+                                <a href="/produtos/editar/{!! $produto['id'] !!}" class='btn btn-outline btn-primary editar_produto' data-placement='top' data-toggle='tooltip' title='Editar'>
+                                    <i class='icon wb-pencil' aria-hidden='true'></i>
+                                </a>
+                            </span>
+                            <span data-toggle='modal' data-target='#modal_excluir'>
+                                <a class='btn btn-outline btn-danger excluir_produto' data-placement='top' data-toggle='tooltip' title='Excluir' produto="{!! $produto['id'] !!}">
+                                    <i class='icon wb-trash' aria-hidden='true'></i>
+                                </a>
+                            </span>
+                        </div>
+                      </div>
+                  </div>
+                @endforeach
+            </div>
+          @endif
+    
         <!-- Modal com detalhes do usuário -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-simple">
@@ -76,89 +97,33 @@
 
     $(document).ready( function(){
 
-        $("#tabela_produtos").DataTable( {
+        $('.detalhes_produto').on('click', function() {
 
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '/produtos/data-source',
-                type: 'POST'
-            },
-            columns: [
-                { data: 'nome', name: 'nome'},
-                { data: function(data){
-                    return data.descricao.substr(0,25); 
-                }, name: 'descricao'},
-                { data: 'categoria_nome', name: 'categoria_nome'},
-                { data: function(data){
-                    if(data.formato == 1)
-                      return 'Físico';
-                    if(data.formato == 0)
-                      return 'Digital';
-                    return 'null';
-                }, name: 'formato'},
-                { data: 'quantidade', name: 'quantidade'},
-                { data: function(data){
-                  if(data.disponivel == 1)
-                  return 'Disponível';
-                if(data.disponivel == 0)
-                  return 'Indisponível';
-                return 'null';
-                }, name: 'disponivel'},
-                { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
-            ],
-            "language": {
-                "sProcessing":    "Procesando...",
-                "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
-                "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
-                "infoFiltered": "(filtrado por _MAX_ registros)",
-                "sInfoPostFix":   "",
-                "sSearch":        "Procurar :",
-                "sUrl":           "",
-                "sInfoThousands":  ",",
-                "sLoadingRecords": "Carregando...",
-                "oPaginate": {
-                    "sFirst":    "Primeiro",
-                    "sLast":    "Último",
-                    "sNext":    "Próximo",
-                    "sPrevious": "Anterior",
-                },
-            },
-            "drawCallback": function() {
+            var produto = $(this).attr('produto');
 
-                $('.detalhes_produto').on('click', function() {
+            $('#modal_detalhes_titulo').html('Detalhes do produto');
 
-                    var produto = $(this).attr('produto');
+            $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    $('#modal_detalhes_titulo').html('Detalhes da produto');
+            var data = { id_produto : produto };
 
-                    $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+            $.post("/produtos/detalhe", data)
+              .then( function(response, status){
 
-                    var data = { id_produto : produto };
+                $('#modal_detalhes_body').html(response);
+            });
 
-                    $.post("/produtos/detalhe", data)
-                    .then( function(response, status){
+        });
 
-                        $('#modal_detalhes_body').html(response);
+        $('.excluir_produto').on('click', function(){
 
-                    });
+            var id_produto = $(this).attr('produto');
 
-                });
+            $('#form_excluir_produto').attr('action','/produtos/deletarproduto/'+id_produto);
 
-                $('.excluir_produto').on('click', function(){
+            var name = $(this).parent().parent().find(".card-title").html();
 
-                    var id_produto = $(this).attr('produto');
-
-                    $('#form_excluir_produto').attr('action','/produtos/deletarproduto/'+id_produto);
-
-                    var name = $(this).closest("tr").find("td:first-child").text();
-
-                    $('#modal_excluir_titulo').html('Excluir o produto '+name+'?');
-
-                });
-            }
+            $('#modal_excluir_titulo').html('Excluir o produto '+name+'?');
 
         });
 

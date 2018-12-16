@@ -2,8 +2,6 @@
 
 @section('content')
 
-  {{--  <link rel='stylesheet' href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
-  <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js">  --}}
   <!-- Page -->
   <div class="page">
     <div class="page-content container-fluid">

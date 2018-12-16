@@ -6,19 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property int $empresa
  * @property integer $categoria
  * @property string $nome
  * @property string $descricao
- * @property string $email
  * @property string $garantia
  * @property int $quantidade
  * @property boolean $disponivel
  * @property boolean $formato
- * @property string $telefone_suporte
  * @property string $created_at
  * @property string $updated_at
+ * @property float $custo_produto
+ * @property string $foto
+ * @property string $deleted_at
+ * @property string $altura
+ * @property string $largura
+ * @property string $peso
  * @property Categoria $categoria
+ * @property Empresa $empresa
  * @property ProdutosPlano[] $produtosPlanos
+ * @property ProjetosProduto[] $projetosProdutos
  */
 class Produto extends Model
 {
@@ -32,7 +39,7 @@ class Produto extends Model
     /**
      * @var array
      */
-    protected $fillable = ['categoria', 'nome', 'descricao', 'email', 'garantia', 'quantidade', 'disponivel', 'formato', 'telefone_suporte', 'foto','created_at', 'updated_at'];
+    protected $fillable = ['empresa', 'categoria', 'nome', 'descricao', 'garantia', 'quantidade', 'disponivel', 'formato', 'created_at', 'updated_at', 'custo_produto', 'foto', 'deleted_at', 'altura', 'largura', 'peso'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -43,10 +50,26 @@ class Produto extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function empresa()
+    {
+        return $this->belongsTo('App\Empresa', 'empresa');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function produtosPlanos()
     {
         return $this->hasMany('App\ProdutosPlano', 'produto');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function projetosProdutos()
+    {
+        return $this->hasMany('App\ProjetosProduto', 'produto');
     }
 }

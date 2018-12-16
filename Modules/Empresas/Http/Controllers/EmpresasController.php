@@ -150,15 +150,20 @@ class EmpresasController extends Controller {
     }
 
     public function dadosEmpresas() {
-
+        
         $empresas = \DB::table('empresas as empresa')
-            ->get([
+            ->select([
                 'id',
                 'cnpj',
                 'nome_fantasia',
                 'municipio',
                 'uf',
         ]);
+
+        if(!\Auth::user()->hasRole('administrador geral')){
+            $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
+            $empresas = $empresas->whereIn('id',$empresas_usuario);
+        }
 
         return Datatables::of($empresas)
         ->addColumn('detalhes', function ($empresa) {

@@ -16,6 +16,7 @@ use App\DadosHotZapp;
 use App\ProdutoPlano;
 use App\ProjetoProduto;
 use App\Transportadora;
+use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -586,20 +587,13 @@ class PlanosController extends Controller {
 
         $transportadoras = Transportadora::all();
 
-        $produtos = Produto::select('nome','id')->get()->toArray();
+        $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
 
         $produtosDisponiveis = [];
 
-        foreach($produtos as $produto){
+        foreach($produtos_projeto as $produto_projeto){
 
-            $projetoProduto = ProjetoProduto::where([
-                ['produto',$produto['id']],
-                ['projeto',$dados['projeto']]
-            ])->first();
-
-            if($projetoProduto == null)
-                $produtosDisponiveis[] = $produto;
-
+            $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
         }
 
         $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();;
@@ -623,9 +617,7 @@ class PlanosController extends Controller {
         ]);
 
         return response()->json($form->render());
-
     }
-
 
     public function getFormEditarPlano(Request $request){
 
@@ -635,19 +627,32 @@ class PlanosController extends Controller {
         $transportadoras = Transportadora::all();
         $foto = Foto::where('plano',$plano['id'])->first();
 
-        $produtos = Produto::all();
+        $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
+
+        $produtosDisponiveis = [];
+
+        foreach($produtos_projeto as $produto_projeto){
+
+            $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
+        }
+
+        $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();;
+
+        $brindes = Brinde::where('projeto',$dados['projeto'])->get()->toArray();;
+
+        $cupons = Cupom::where('projeto',$dados['projeto'])->get()->toArray();;
+
+        $dados_hotzapp = DadosHotZapp::all(); 
+
+        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
+
         $produtosPlanos = ProdutoPlano::where('plano', $plano['id'])->get()->toArray();
 
-        $pixels = Pixel::all();
         $planoPixels = PlanoPixel::where('plano', $plano['id'])->get()->toArray();
 
-        $cupons = Cupom::all();
         $planoCupons = PlanoCupom::where('plano', $plano['id'])->get()->toArray();
 
-        $brindes = Brinde::all();
         $planoBrindes = PlanoBrinde::where('plano', $plano['id'])->get()->toArray();
-
-        $layouts = Layout::all();
 
         if($foto != null){
             $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
@@ -661,7 +666,7 @@ class PlanosController extends Controller {
             'transportadoras' => $transportadoras,
             'foto' => $caminho_foto,
             'produtos_planos' => $produtosPlanos,
-            'produtos' => $produtos,
+            'produtos' => $produtosDisponiveis,
             'pixels' => $pixels,
             'planoPixels' => $planoPixels,
             'cupons' => $cupons,

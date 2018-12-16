@@ -216,11 +216,11 @@
                     <span class="site-menu-title">Cadastrar produto</span>
                   </a>
                 </li>
-                <li class="site-menu-item">
+                {{--  <li class="site-menu-item">
                   <a class="animsition-link" href="{{ route('categorias') }}">
                     <span class="site-menu-title">Categorias de produtos</span>
                   </a>
-                </li>
+                </li>  --}}
               </ul>
             </li>
             <li class="site-menu-item has-sub">

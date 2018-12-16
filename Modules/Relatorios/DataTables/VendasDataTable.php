@@ -53,26 +53,28 @@ class VendasDataTable extends DataTable
      * @param \App\Venda $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Venda $model)
-    {
-        // return $model->newQuery()->select('id', 'add-your-columns-here', 'created_at', 'updated_at');
+    public function query(Venda $vendas) {
 
-        $vendas = \DB::table('vendas as venda')
-            ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'venda.id')
-            ->leftjoin('compradores as comprador', 'comprador.id', '=', 'venda.comprador')
+        $query = $vendas->newQuery()
+            ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'vendas.id')
+            ->leftjoin('compradores as comprador', 'comprador.id', '=', 'vendas.comprador')
             ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
-            ->get([
-                'venda.id',
+            ->select([
+                'vendas.id',
                 'plano.nome as plano_nome',
                 'comprador.nome',
-                'venda.forma_pagamento',
-                'venda.pagamento_status as status',
-                'venda.data_inicio',
-                'venda.data_finalizada',
-                'venda.valor_plano',
+                'vendas.forma_pagamento',
+                'vendas.pagamento_status as status',
+                'vendas.data_inicio',
+                'vendas.data_finalizada',
+                'vendas.valor_plano',
         ]);
 
-        return $vendas;
+        if(!\Auth::user()->hasRole('administrador geral')){
+            $query = $query->where('proprietario',\Auth::user()->id);
+        }
+
+        return $query;
     }
 
     /**
@@ -83,55 +85,49 @@ class VendasDataTable extends DataTable
     public function html() {
 
         return $this->builder()
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->parameters([
-                        'order' => [ [ 0, 'desc' ] ],
-                        'stateSave' => false,
-                        // 'columnFilters' => $this->getFilters(),
-                        'regexp' => true,
-                        'language'=> [
-                            'sProcessing'=>    'Procesando...',
-                            'lengthMenu'=> 'Apresentando _MENU_ registros por página',
-                            'zeroRecords'=> 'Nenhum registro encontrado no banco de dados',
-                            'info'=> 'Apresentando página _PAGE_ de _PAGES_',
-                            'infoEmpty'=> 'Nenhum registro encontrado no banco de dados',
-                            'infoFiltered'=> '(filtrado por _MAX_ registros)',
-                            'sSearch'=>        'Procurar :',
-                            'sUrl'=>           '',
-                            'sInfoThousands'=>  ',',
-                            'sLoadingRecords'=> 'Carregando...',
-                            'oPaginate'=> [
-                                'sFirst'=>    'Primeiro',
-                                'sLast'=>    'Último',
-                                'sNext'=>    'Próximo',
-                                'sPrevious'=> 'Anterior',
-                            ]
-                        ],
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->parameters([
+                'order' => [ [ 0, 'desc' ] ],
+                'stateSave' => false,
+                'regexp' => true,
+                'language'=> [
+                    'sProcessing'=>    'Procesando...',
+                    'lengthMenu'=> 'Apresentando _MENU_ registros por página',
+                    'zeroRecords'=> 'Nenhum registro encontrado no banco de dados',
+                    'info'=> 'Apresentando página _PAGE_ de _PAGES_',
+                    'infoEmpty'=> 'Nenhum registro encontrado no banco de dados',
+                    'infoFiltered'=> '(filtrado por _MAX_ registros)',
+                    'sSearch'=>        'Procurar :',
+                    'sUrl'=>           '',
+                    'sInfoThousands'=>  ',',
+                    'sLoadingRecords'=> 'Carregando...',
+                    'oPaginate'=> [
+                        'sFirst'=>    'Primeiro',
+                        'sLast'=>    'Último',
+                        'sNext'=>    'Próximo',
+                        'sPrevious'=> 'Anterior',
+                    ]
+                ],
+                'drawCallback' =>  "function() {
+                    $('.detalhes_venda').on('click', function() {
 
-                        'drawCallback' =>  "function() {
-                            $('.detalhes_venda').on('click', function() {
+                        var venda = $(this).attr('venda');
+    
+                        $('#modal_venda_titulo').html('Detalhes da venda #' + venda);
+    
+                        $('#modal_detalhes_body').html('<h5 style=".'"'.'width:100%; text-align: center='.'"'.">Carregando..</h5>');
 
-                                var venda = $(this).attr('venda');
-            
-                                $('#modal_venda_titulo').html('Detalhes da venda #' + venda);
-            
-                                $('#modal_detalhes_body').html('<h5 style=".'"'.'width:100%; text-align: center='.'"'.">Carregando..</h5>');
-            
-                                var data = { id_venda : venda };
-            
-                                $.post('/relatorios/venda/detalhe', data)
-                                .then( function(response, status){
-            
-                                    $('#modal_venda_body').html(response);
-            
-                                });
-                            });
+                        var data = { id_venda : venda };
 
-                        }",
+                        $.post('/relatorios/venda/detalhe', data)
+                        .then( function(response, status){
 
-
-                    ]);
+                            $('#modal_venda_body').html(response);
+                        });
+                    });
+                }",
+        ]);
     }
 
     /**
@@ -139,8 +135,8 @@ class VendasDataTable extends DataTable
      *
      * @return array
      */
-    protected function getColumns()
-    {
+    protected function getColumns() {
+
         return [
             'id' => [
                 'name' => 'id',
@@ -263,14 +259,13 @@ class VendasDataTable extends DataTable
         return $columnFilters;
     }
 
-
     /**
      * Get filename for export.
      *
      * @return string
      */
-    protected function filename()
-    {
+    protected function filename() {
+
         return 'Vendas_' . date('YmdHis');
     }
 }

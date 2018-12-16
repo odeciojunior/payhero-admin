@@ -47,9 +47,6 @@ class RelatoriosController extends Controller {
         ]);
 
         return Datatables::of($vendas)
-        // ->filter('id', function($query, $keyword) {
-        //     $query->where($id, $keyword);
-        // })
         ->editColumn('data_inicio', function ($venda) {
             return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
         })

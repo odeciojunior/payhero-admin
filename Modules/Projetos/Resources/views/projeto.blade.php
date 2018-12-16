@@ -365,7 +365,7 @@
                 }
             });
         });
-
+ 
         $('#adicionar_produto').on('click', function(){
 
             var id_produto = $('#select_produtos').val();
@@ -733,9 +733,58 @@
                     atualizarPreView();
 
                     function atualizarPreView(){
-            
+
                         $('#form-preview').submit();
                     }
+
+                    $('#estilo').on('change',function(){
+
+                        $('#cores_multi_camada').hide();
+                        $('#cores_padrao').hide();
+
+                        if($(this).val() == 'Backgoud Multi Camada'){
+                            $('#cor1-padrao').prop('required', false);
+                            $('#cor1').prop('required', true);
+                            $('#cor2').prop('required', true);
+                            $('#cores_multi_camada').show();
+                        }
+                        else if($(this).val() == 'Padrao'){
+                            $('#cor1-padrao').prop('required', true);
+                            $('#cor1').prop('required', false);
+                            $('#cor2').prop('required', false);
+                            $('#cores_padrao').show();
+                        }
+            
+                        $('#preview_estilo').val($(this).val());
+            
+                        atualizarPreView();
+                    });
+
+                    $('#botoes').on('change',function(){
+                        $('#preview_botoes').val($(this).val());
+                        atualizarPreView();
+                    });
+
+                    $('#cor1').on('blur',function(){
+                        $('#preview_cor1').val($(this).val());
+                        atualizarPreView();
+                    });
+
+                    $('#cor1-padrao').on('blur', function(){
+                        $('#preview_cor1').val($(this).val());
+                        atualizarPreView();
+                    });
+
+                    $('#cor2').on('blur',function(){
+                        $('#preview_cor2').val($(this).val());
+                        atualizarPreView();
+                    });
+
+                    $('#logo').on('change', function(){
+                        var input = $(this).clone();
+                        $('#form-preview').append(input);
+                        atualizarPreView();
+                    });
 
                     $('#cadastrar').unbind('click');
 
@@ -770,7 +819,7 @@
 
         });
 
-        $('#adicionar_plano').on('click', function(){
+        $('#adicionar_plano').on('click', function(){ 
 
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
@@ -1159,7 +1208,7 @@
                     $.ajax({
                         method: "POST",
                         url: "/planos/getformeditarplano",
-                        data: {id: id_plano},
+                        data: {id: id_plano, projeto: id_projeto},
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -1251,8 +1300,8 @@
                     
                             var div_produtos = $('#produtos_div_'+qtd_produtos).parent().clone();
 
-                            $('#add_produtoplano').on('click', function(){
-                    
+                            $('#add_produto').on('click', function(){
+                    alert('to aqui');
                                 qtd_produtos++;
                     
                                 var nova_div = div_produtos.clone();

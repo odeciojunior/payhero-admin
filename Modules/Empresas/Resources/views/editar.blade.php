@@ -23,11 +23,11 @@
             </div>
         @endif
 
-        <form method="post" action="/empresas/editarempresa">
-            @csrf
-            <input type="hidden" value="{!! $empresa->id !!}" name="id">
-            <div class="page-content container-fluid">
-                <div class="panel" data-plugin="matchHeight">
+        <div class="page-content container-fluid">
+            <div class="panel pt-30 p-30" data-plugin="matchHeight">        
+                <form method="post" action="/empresas/editarempresa">
+                    @csrf
+                    <input type="hidden" value="{!! $empresa->id !!}" name="id">
                     <div style="width:100%">
                         <h4>Dados gerais</h4>
 
@@ -156,9 +156,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
   <script>
