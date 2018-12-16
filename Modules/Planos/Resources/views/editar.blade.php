@@ -162,7 +162,7 @@
 
                         <div class="row">
                             <div class="form-group col-xl-12">
-                                <button type="button" id="add_produto" class="btn btn-primary">Adicionar produto</button>
+                                <button type="button" id="add_produto_plano" class="btn btn-primary">Adicionar produto</button>
                             </div>
                         </div>
 

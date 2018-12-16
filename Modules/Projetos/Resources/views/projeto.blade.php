@@ -2,7 +2,7 @@
 
 @section('styles')
 
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 @endsection
 
@@ -287,7 +287,7 @@
 
                     <!-- Modal padrão para editar * no projeto -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_editar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
+                        <div id="modal_editar_tipo" class="modal-dialog modal-simple">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -332,7 +332,7 @@
         </div>
     </div>
 
-  <script>
+  <script> 
 
     $(document).ready( function(){
 
@@ -1200,7 +1200,8 @@
                 });
 
                 $('.editar_plano').on('click', function(){
-
+                    $('#modal_editar_tipo').addClass('modal-lg');
+                    $('#modal_editar_tipo').removeClass('modal-simple');
                     id_plano = $(this).attr('plano');
 
                     $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
@@ -1300,8 +1301,8 @@
                     
                             var div_produtos = $('#produtos_div_'+qtd_produtos).parent().clone();
 
-                            $('#add_produto').on('click', function(){
-                    alert('to aqui');
+                            $('#add_produto_plano').on('click', function(){
+
                                 qtd_produtos++;
                     
                                 var nova_div = div_produtos.clone();
@@ -1482,6 +1483,9 @@
 
                 $('.editar_pixel').on('click', function(){
 
+                    $('#modal_editar_tipo').addClass('modal-simple');
+                    $('#modal_editar_tipo').removeClass('modal-lg');
+
                     id_pixel = $(this).attr('pixel');
 
                     $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
@@ -1594,6 +1598,9 @@
                 },
             },
             "drawCallback": function() {
+
+                $('#modal_editar_tipo').addClass('modal-simple');
+                $('#modal_editar_tipo').removeClass('modal-lg');
 
                 var id_sms = '';
 
@@ -1789,6 +1796,9 @@
             
 
                 $('.editar_brinde').on('click', function(){
+
+                    $('#modal_editar_tipo').addClass('modal-simple');
+                    $('#modal_editar_tipo').removeClass('modal-lg');
 
                     id_brinde = $(this).attr('brinde');
 
@@ -2012,6 +2022,9 @@
 
                 $('.editar_cupom').on('click', function(){
 
+                    $('#modal_editar_tipo').addClass('modal-simple');
+                    $('#modal_editar_tipo').removeClass('modal-lg');
+
                     id_cupom = $(this).attr('cupom');
 
                     $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
@@ -2142,6 +2155,9 @@
 
                 $('.editar_dominio').on('click', function(){
 
+                    $('#modal_editar_tipo').addClass('modal-simple');
+                    $('#modal_editar_tipo').removeClass('modal-lg');
+
                     id_dominio = $(this).attr('dominio');
 
                     $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
@@ -2238,6 +2254,116 @@
                 },
             },
             "drawCallback": function() {
+
+                $('.editar_layout').on('click', function(){
+
+                    $('#modal_editar_tipo').addClass('modal-lg');
+                    $('#modal_editar_tipo').removeClass('modal-simple');
+
+                    id_layout = $(this).attr('layout');
+
+                    $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/layouts/getformeditarlayout",
+                        data: {id: id_layout, projeto: id_projeto},
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function(){
+                            $('#modal_editar').hide();
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(data){
+                            $('#modal_editar_body').html(data);
+
+                            atualizarPreView();
+
+                            function atualizarPreView(){
+                    
+                                $('#form-preview').submit();
+                            }
+
+                            $('#estilo').on('change',function(){
+
+                                $('#cores_multi_camada').hide();
+                                $('#cores_padrao').hide();
+                    
+                                if($(this).val() == 'Backgoud Multi Camada'){
+                                    $('#cor1-padrao').prop('required', false);
+                                    $('#cor1-multi-camadas').prop('required', true);
+                                    $('#cor2-multi-camadas').prop('required', true);
+                                    $('#cores_multi_camada').show();
+                                }
+                                else if($(this).val() == 'Padrao'){
+                                    $('#cor1-padrao').prop('required', true);
+                                    $('#cor1-multi-camadas').prop('required', false);
+                                    $('#cor2-multi-camadas').prop('required', false);
+                                    $('#cores_padrao').show();
+                                }
+                    
+                                $('#preview_estilo').val($(this).val());
+                    
+                                atualizarPreView();
+                            });
+
+                            $('#botoes').on('change',function(){
+                                $('#preview_botoes').val($(this).val());
+                                atualizarPreView();
+                            });
+
+                            $('#cor1-multi-camadas').on('blur',function(){
+                                $('#preview_cor1').val($(this).val());
+                                atualizarPreView();
+                            });
+
+                            $('#cor1-padrao').on('blur', function(){
+                                $('#preview_cor1').val($(this).val());
+                                atualizarPreView();
+                            });
+
+                            $('#cor2-multi-camadas').on('blur',function(){
+                                $('#preview_cor2').val($(this).val());
+                                atualizarPreView();
+                            });
+
+                            $('#logo').on('change', function(){
+                                var input = $(this).clone();
+                                $('#form-preview').append(input);
+                                atualizarPreView();
+                            });
+
+                            $('#editar').unbind('click');
+
+                            $('#editar').on('click',function(){
+
+                                var form_data = new FormData(document.getElementById('editar_layout'));
+                                form_data.append('projeto',id_projeto);
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/layouts/editarlayout",
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
+                                    data: form_data,
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    error: function(){
+                                        alert('Ocorreu algum erro');
+                                    },
+                                    success: function(data){
+                                        $('#modal_add').hide();
+                                        $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                    },
+                                });
+                            });
+                        }
+                    });
+                });
 
             }
 

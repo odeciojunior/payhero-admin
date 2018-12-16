@@ -39,7 +39,7 @@
                             <div class="form-group col-xl-12">
                                 <label for="foto_editar_brinde">Foto do brinde</label>
                                 <input name="foto" type="file" class="form-control" id="foto_editar_brinde">
-                                <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)!!}" style="margin-top: 20px">
+                                <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)!!}" style="margin-top: 20px; height: 200px">
                             </div>
 
                         </div>

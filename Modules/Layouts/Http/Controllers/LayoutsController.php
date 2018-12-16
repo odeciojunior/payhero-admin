@@ -137,7 +137,7 @@ class LayoutsController extends Controller
         return Datatables::of($layouts)
         ->addColumn('detalhes', function ($layout) {
             return "<span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/layouts/editar/$layout->id' class='btn btn-outline btn-primary editar_layout' data-placement='top' data-toggle='tooltip' title='Editar' layout='".$layout->id."'>
+                        <a class='btn btn-outline btn-primary editar_layout' data-placement='top' data-toggle='tooltip' title='Editar' layout='".$layout->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
@@ -158,7 +158,19 @@ class LayoutsController extends Controller
         $form = view('layouts::cadastro');
 
         return response()->json($form->render());
+    }
 
+    public function getFormEditarLayout(Request $request){
+
+        $dados = $request->all();
+
+        $layout = Layout::find($dados['id']);
+
+        $form = view('layouts::editar',[
+            'layout' => $layout
+        ]);
+
+        return response()->json($form->render());
     }
 
 }

@@ -1,18 +1,18 @@
-@extends("layouts.master")
+{{--  @extends("layouts.master")
 
 @section('content')
 
   <!-- Page -->
   <div class="page">
-
+  --}}
         <div class="page-header">
             <h1 class="page-title">Editar layout</h1>
-            <div class="page-header-actions">
+            {{--  <div class="page-header-actions">
                 <a class="btn btn-primary float-right" href="{{ route('layouts') }}">
                     <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
                     Voltar
                 </a>
-            </div>
+            </div>  --}}
         </div>
 
         <div class="row">
@@ -99,11 +99,11 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top: 30px">
+                                    {{--  <div class="row" style="margin-top: 30px">
                                         <div class="form-group col-xl-12">
                                             <input type="submit" class="form-control btn btn-primary" value="Salvar">
                                         </div>
-                                    </div>
+                                    </div>  --}}
 
                                 </div>
                             </div>
@@ -129,9 +129,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    {{--  </div>  --}}
 
-  <script>
+  {{--  <script>
 
     $(document).ready( function(){
 
@@ -214,4 +214,4 @@
 
 
 @endsection
-
+  --}}
