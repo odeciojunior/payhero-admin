@@ -2,6 +2,9 @@
 
 namespace Modules\Projetos\Http\Controllers;
 
+use App\Foto;
+use App\User;
+use App\Plano;
 use App\Empresa;
 use App\Projeto;
 use App\UsuarioEmpresa;
@@ -112,8 +115,7 @@ class ProjetosController extends Controller{
             ]);
         }
 
-
-        return redirect()->route('projetos');
+        return response()->json('sucesso');
     }
 
     public function deletarProjeto($id){
@@ -168,5 +170,46 @@ class ProjetosController extends Controller{
         ]);
     }
 
+    public function getConfiguracoesProjeto($id){
+
+        $projeto = Projeto::find($id);
+
+        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
+
+        foreach($empresas_usuario as $empresa_usuario){
+            $empresas[] = Empresa::find($empresa_usuario['empresa']);
+        }
+
+        $view = view('projetos::editar',[
+            'projeto' => $projeto,
+            'empresas' => $empresas
+        ]);
+
+        return response()->json($view->render());
+    }
+
+
+    public function getDadosProjeto($id){
+
+        $projeto = Projeto::find($id);
+
+        $empresas_usuario = UsuarioEmpresa::where('empresa',$projeto['empresa'])->first();
+        $usuario = User::find($empresas_usuario['user']);
+        $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
+
+        foreach($planos as &$plano){
+            $foto = Foto::where('plano',$plano['id'])->first();
+            $plano['foto'] = $foto->caminho_imagem;
+            $plano['lucro'] = number_format($plano['preco'] * $projeto['porcentagem_afiliados'] / 100, 2);
+        }
+        
+        $view = view('projetos::detalhes',[
+            'projeto' => $projeto,
+            'planos' => $planos,
+            'produtor' => $usuario['name']
+        ]);
+
+        return response()->json($view->render());
+    }
 
 }

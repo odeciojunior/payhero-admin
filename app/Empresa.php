@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -89,4 +90,10 @@ class Empresa extends Model
     {
         return $this->hasMany('App\UsersEmpresa', 'empresa');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
 }

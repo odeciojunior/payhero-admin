@@ -27,10 +27,10 @@
                       <div class="card-block">
                         <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
                             <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                            <hr>
                             <p class="card-text">{!! $projeto['descricao'] !!}</p>
                         </a>
-                        <hr>
-                        <span data-toggle='modal' data-target='#modal_editar'>
+                        {{--  <span data-toggle='modal' data-target='#modal_editar'>
                             <a href="/projetos/editar/{!! $projeto['id'] !!}" class='btn btn-outline btn-primary editar_projeto' data-placement='top' data-toggle='tooltip' title='Editar'>
                                 <i class='icon wb-pencil' aria-hidden='true'></i>
                             </a>
@@ -39,7 +39,7 @@
                             <a class='btn btn-outline btn-danger excluir_projeto' data-placement='top' data-toggle='tooltip' title='Excluir' projeto="{!! $projeto['id'] !!}">
                                 <i class='icon wb-trash' aria-hidden='true'></i>
                             </a>
-                        </span>
+                        </span>  --}}
                     </div>
                   </div>
                 </div>

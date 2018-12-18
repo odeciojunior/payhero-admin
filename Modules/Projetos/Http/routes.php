@@ -42,5 +42,15 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
         'uses' => 'ProjetosController@projeto'
     ]);
 
+    Route::get('/getconfiguracoesprojeto/{id}',[
+        'as' => 'projetos.configuracoes',
+        'uses' => 'ProjetosController@getConfiguracoesProjeto'
+    ]);
+
+    Route::get('/getdadosprojeto/{id}',[
+        'as' => 'projetos.dados',
+        'uses' => 'ProjetosController@getDadosProjeto'
+    ]);
+
 });
 

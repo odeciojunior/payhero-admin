@@ -243,8 +243,6 @@ class ProdutosController extends Controller {
 
         $dados = $request->all();
 
-        $empresas = array();
-
         $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
 
         $produtos = Produto::select('nome','id')->where('empresa',$empresas_usuario)->get()->toArray();

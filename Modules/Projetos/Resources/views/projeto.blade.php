@@ -45,6 +45,8 @@
                                     aria-controls="tab_cupons" role="tab">Sms</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_planos"
                                     aria-controls="tab_planos" role="tab">Planos</a></li>
+                                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_configuracoes"
+                                    aria-controls="tab_planos" role="tab">Configurações</a></li>
                             </ul>
                             <div class="tab-content pt-20">
                                 <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
@@ -212,6 +214,10 @@
                                         <tbody>
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="tab-pane" id="tab_configuracoes" role="tabpanel">
+                                    <div id="configuracoes_projeto" style="padding: 30px">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2374,7 +2380,100 @@
             $($.fn.dataTable.tables( true ) ).css('width', '100%');
             $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
 
-        }); 
+        });
+
+        function updateConfiguracoes(){
+
+            $.ajax({
+                method: "GET",
+                url: "/projetos/getconfiguracoesprojeto/"+id_projeto,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function(){
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+    
+                    $('#configuracoes_projeto').html(data);
+    
+                    $("input:file").change(function(e) {
+
+                        for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+
+                            var file = e.originalEvent.srcElement.files[i];
+
+                            if($('img').length != 0){
+                                $('img').remove();
+                            }
+
+                            var img = document.createElement("img");
+                            var reader = new FileReader();
+
+                            reader.onloadend = function() {
+
+                                img.src = reader.result;
+
+                                $(img).on('load', function (){
+
+                                    var width = img.width, height = img.height;
+
+                                    if (img.width > img.height) {
+                                        if (width > 400) {
+                                            height *= 400 / img.width;
+                                            width = 400;
+                                        }
+                                    } else {
+                                        if (img.height > 200) {
+                                            width *= 200 / img.height;
+                                            height = 200;
+                                        }
+                                    }
+
+                                    $(img).css({
+                                        'width' : width+'px',
+                                        'height' : height+'px',
+                                        'margin-top' : '30px',
+                                    });
+
+                                })
+                            }
+                            reader.readAsDataURL(file);
+
+                            $(this).after(img);
+                        }
+                    });
+
+                    $('#bt_atualizar_configuracoes').on('click',function(){
+
+                        var form_data = new FormData(document.getElementById('atualizar_configuracoes'));
+                        form_data.append('projeto',id_projeto);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/projetos/editarprojeto",
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            data: form_data,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function(){
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                updateConfiguracoes();
+                            },
+                        });
+
+                    });
+
+                }
+            });
+        }
+
+        updateConfiguracoes();
 
     });
 

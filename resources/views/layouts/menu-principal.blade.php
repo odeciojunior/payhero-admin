@@ -151,7 +151,7 @@
               </a>
             </li>
             <li class="site-menu-item has-sub">
-              <a href="#">
+              <a href="{{ route('vitrine') }}">
                 <i class="site-menu-icon wb-grid-9" aria-hidden="true"></i>
                 <span class="site-menu-title">Vitrine</span>
               </a>
@@ -250,12 +250,12 @@
               </a>
               <ul class="site-menu-sub">
                 <li class="site-menu-item">
-                  <a class="animsition-link" href="#">
+                  <a class="animsition-link" href="{!! route('afiliados.minhasafiliacoes') !!}">
                     <span class="site-menu-title">Minhas afiliações</span>
                   </a>
                 </li>
                 <li class="site-menu-item">
-                  <a class="animsition-link" href="#">
+                  <a class="animsition-link" href="{!! route('afiliados.meusafiliados') !!}">
                     <span class="site-menu-title">Meus afiliados</span>
                   </a>
                 </li>
