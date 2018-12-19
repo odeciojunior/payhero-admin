@@ -22,17 +22,22 @@ class CoockieController extends Controller {
         if($link_afiliado['plano'] != ''){
 
             $plano = Plano::find($link_afiliado['plano']);
-    
+
             $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
-    
-            return redirect()->away('https://checkout.'.$dominio['dominio'].'/'.$plano['cod_identificador'])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+
+            $url = 'https://checkout.'.$dominio['dominio'].'/'.$plano['cod_identificador'];
         }
         else{
 
             $projeto = Projeto::find($afiliado['projeto']);
 
-            return redirect()->away('http://'.$projeto['url_pagina'])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+            $url = 'http://'.$projeto['url_pagina'];
         }
+
+        return view('afiliados::cookie_redirect', [
+            'url' => $url   
+        ])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);;
+
     }
 
 
