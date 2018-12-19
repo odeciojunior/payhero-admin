@@ -96,7 +96,7 @@
 
                 $('.detalhes_afiliacao').on('click', function(){
 
-                    var projeto = $(this).attr('projeto'); 
+                    var afiliado = $(this).attr('afiliado'); 
 
                     var titulo = $(this).parent().parent().parent().find('.card-title').html();
 
@@ -106,7 +106,7 @@
 
                     $.ajax({
                         method: "GET",
-                        url: "/afiliados/getdetalhesafiliacao/"+projeto,
+                        url: "/afiliados/getdetalhesafiliacao/"+afiliado,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },

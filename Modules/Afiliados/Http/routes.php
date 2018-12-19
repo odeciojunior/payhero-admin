@@ -29,3 +29,10 @@ Route::group(['middleware' => 'web', 'prefix' => 'afiliados', 'namespace' => 'Mo
     Route::post('/minhasafiliacoes/data-source','AfiliadosController@dadosMinhasAfiliacoes');
 
 });
+
+
+Route::group(['middleware' => 'web', 'prefix' => 'cfredirect', 'namespace' => 'Modules\Afiliados\Http\Controllers'], function()
+{
+    Route::get('/{parametro}', 'CoockieController@setCoockie');
+
+});

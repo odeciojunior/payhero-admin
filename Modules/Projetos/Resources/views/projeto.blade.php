@@ -1525,7 +1525,7 @@
                                     }
                                 });
                                 paramObj['id'] = id_pixel;
-        
+
                                 $.ajax({
                                     method: "POST",
                                     url: "/pixels/editarpixel",
@@ -1546,8 +1546,7 @@
                             });
                         }
                     });
-        
-        
+
                 });
 
             }

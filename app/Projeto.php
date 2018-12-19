@@ -21,7 +21,7 @@ class Projeto extends Model
     /**
      * @var array
      */
-    protected $fillable = ['empresa', 'foto', 'visibilidade', 'status', 'nome', 'descricao','sms_status', 'descricao_fatura','porcentagem_afiliados', 'created_at', 'updated_at'];
+    protected $fillable = ['empresa', 'foto', 'visibilidade', 'status', 'nome', 'descricao','url_pagina','sms_status', 'descricao_fatura','porcentagem_afiliados', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -7,6 +7,7 @@ use App\User;
 use App\Plano;
 use App\Projeto;
 use App\Afiliado;
+use App\LinkAfiliado;
 use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -19,11 +20,26 @@ class AfiliadosController extends Controller {
 
         $projeto = Projeto::find($id_projeto);
 
-        Afiliado::create([
+        $planos = Plano::where('projeto', $id_projeto)->get()->toArray();
+
+        $afiliado = Afiliado::create([
             'user' => \Auth::user()->id,
             'projeto' => $projeto['id'],
             'porcentagem' => $projeto['porcentagem_afiliados']
         ]);
+
+        LinkAfiliado::create([
+            'afiliado' => $afiliado->id,
+            'parametro' => $this->randString(10)
+        ]);
+
+        foreach($planos as $plano){
+            LinkAfiliado::create([
+                'afiliado' => $afiliado->id,
+                'parametro' => $this->randString(10),
+                'plano' => $plano['id']
+            ]);
+        }
 
         return view('afiliados::minhas_afiliacoes');
     }
@@ -85,7 +101,7 @@ class AfiliadosController extends Controller {
         return Datatables::of($afiliados)
         ->addColumn('detalhes', function ($afiliado) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_afiliacao' data-placement='top' data-toggle='tooltip' title='Detalhes' projeto='".$afiliado->projeto."'>
+                        <a class='btn btn-outline btn-success detalhes_afiliacao' data-placement='top' data-toggle='tooltip' title='Detalhes' afiliado='".$afiliado->id."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Detalhes
                         </a>
@@ -118,9 +134,18 @@ class AfiliadosController extends Controller {
 
     }
 
-    public function getDetalhesAfiliacao($id_projeto){
+    public function getDetalhesAfiliacao($id_afiliado){
 
-        $projeto = Projeto::find($id_projeto);
+        $set_coockie_url = "https://cloudfox.app/cfredirect/";
+
+        $afiliado = Afiliado::find($id_afiliado);
+
+        $projeto = Projeto::find($afiliado['projeto']);
+
+        $url_pagina = $set_coockie_url.LinkAfiliado::where([
+            ['afiliado', $id_afiliado],
+            ['plano' , null]
+        ])->first()['parametro'];
 
         $empresas_usuario = UsuarioEmpresa::where('empresa',$projeto['empresa'])->first();
         $usuario = User::find($empresas_usuario['user']);
@@ -130,16 +155,46 @@ class AfiliadosController extends Controller {
             $foto = Foto::where('plano',$plano['id'])->first();
             $plano['foto'] = $foto->caminho_imagem;
             $plano['lucro'] = number_format($plano['preco'] * $projeto['porcentagem_afiliados'] / 100, 2);
+            $plano['url'] = $set_coockie_url.LinkAfiliado::where([
+                ['afiliado', $id_afiliado],
+                ['plano' , $plano['id']]
+            ])->first()['parametro'];
         }
         
         $view = view('afiliados::detalhes_afiliacao',[
             'projeto' => $projeto,
             'planos' => $planos,
-            'produtor' => $usuario['name']
+            'produtor' => $usuario['name'],
+            'url_pagina' => $url_pagina,
         ]);
 
         return response()->json($view->render());
 
+    }
+
+    function randString($size){
+
+        $novo_parametro = false;
+
+        while(!$novo_parametro){
+
+            $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
+
+            $parametro = "";
+
+            for($count= 0; $size > $count; $count++){
+                $parametro.= $basic[rand(0, strlen($basic) - 1)];
+            }
+
+            $novo_link = LinkAfiliado::where('parametro', $parametro)->first();
+
+            if($novo_link == null){
+                $novo_parametro = true;
+            }
+
+        }
+
+        return $parametro;
     }
 
 }
