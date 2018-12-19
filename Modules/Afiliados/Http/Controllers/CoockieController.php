@@ -31,7 +31,7 @@ class CoockieController extends Controller {
 
             $projeto = Projeto::find($afiliado['projeto']);
 
-            return redirect($projeto['url_pagina'])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+            return redirect()->to($projeto['url_pagina'])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
         }
     }
 
