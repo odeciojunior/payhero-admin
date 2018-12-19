@@ -27,7 +27,7 @@ class Afiliado extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'projeto','link_pagina', 'porcentagem', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['user', 'projeto','link_pagina', 'porcentagem', 'empresa', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

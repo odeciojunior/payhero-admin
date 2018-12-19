@@ -5,6 +5,8 @@ namespace Modules\Afiliados\Http\Controllers;
 use App\Foto;
 use App\User;
 use App\Plano;
+use App\Dominio;
+use App\Empresa;
 use App\Projeto;
 use App\Afiliado;
 use App\LinkAfiliado;
@@ -136,16 +138,24 @@ class AfiliadosController extends Controller {
 
     public function getDetalhesAfiliacao($id_afiliado){
 
-        $set_coockie_url = "https://cloudfox.app/cfredirect/";
-
         $afiliado = Afiliado::find($id_afiliado);
 
         $projeto = Projeto::find($afiliado['projeto']);
+
+        $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
+
+        $set_coockie_url = "checkout.".$dominio['dominio']."/"."setcookie/";
 
         $url_pagina = $set_coockie_url.LinkAfiliado::where([
             ['afiliado', $id_afiliado],
             ['plano' , null]
         ])->first()['parametro'];
+
+        $empresas = [];
+        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->get()->toArray();
+        foreach($empresas_usuario as $empresa_usuario){
+            $empresas[] = Empresa::find($empresa_usuario['empresa']);
+        }
 
         $empresas_usuario = UsuarioEmpresa::where('empresa',$projeto['empresa'])->first();
         $usuario = User::find($empresas_usuario['user']);
@@ -160,16 +170,27 @@ class AfiliadosController extends Controller {
                 ['plano' , $plano['id']]
             ])->first()['parametro'];
         }
-        
+
         $view = view('afiliados::detalhes_afiliacao',[
             'projeto' => $projeto,
             'planos' => $planos,
             'produtor' => $usuario['name'],
             'url_pagina' => $url_pagina,
+            'empresas' => $empresas,
+            'afiliado' => $afiliado
         ]);
 
         return response()->json($view->render());
 
+    }
+
+    public function setEmpresaAfiliacao(Request $request){
+
+        $dados = $request->all();
+
+        Afiliado::find($dados['afiliado'])->update($dados);
+
+        return response()->json('sucesso');
     }
 
     function randString($size){

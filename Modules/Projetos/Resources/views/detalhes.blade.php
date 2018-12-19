@@ -21,7 +21,7 @@
             <div class="tab-content pt-20">
                 <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
                     <b>Produtor: </b>{!! $produtor !!}<br>
-                    <b>Página: </b>-<br>
+                    <b>Página: </b>{!! $projeto['url_pagina'] !!}<br>
                     <b>Formato: </b>Físico<br>
                     <b>Comissão: </b>{!! $projeto['porcentagem_afiliados'] !!}%<br>
                 </div>

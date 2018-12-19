@@ -12,7 +12,9 @@
                         aria-controls="tab_info_geral" role="tab">Informações básicas</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_planos"
                         aria-controls="tab_planos" role="tab">Planos</a></li>
-                </ul>
+                    <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_minha_empresa"
+                        aria-controls="tab_minha_empresa" role="tab">Empresa</a></li>
+                    </ul>
                 <div class="tab-content pt-20">
                     <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
                         <b>Produtor: </b>{!! $produtor !!}<br>
@@ -40,6 +42,25 @@
                             </div>
                             <hr>
                         @endforeach
+                    </div>
+                    <div class="tab-pane" id="tab_minha_empresa" role="tabpanel" style="padding: 50px">
+                        <div class="row">
+                            <div class="col-10">
+                                <label for="select_empresas">Minha empresa responsável</label>
+                                <select id="select_empresas" class="form-control">
+                                    <option value="">Selecione</option>
+                                    @foreach($empresas as $empresa)
+                                        <option value="{!! $empresa['id'] !!}" {!! $afiliado['empresa'] == $empresa['id'] ? 'selected' : '' !!} >{!! $empresa['nome_fantasia'] !!}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <div style="margin-top:20px">
+                                    <input id="afiliado" value="{!! $afiliado['id'] !!}" type="hidden">
+                                    <button id="alterar_empresa" class="btn btn-success">Alterar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -115,6 +115,25 @@
                         },
                         success: function(data){
                             $('#modal_detalhes_body').html(data);
+
+                            $('#alterar_empresa').on('click', function(){
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/afiliados/setempresa",
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    data: { empresa: $('#select_empresas').val(), afiliado: $('#afiliado').val() },
+                                    error: function(){
+                                        alert('Ocorreu algum erro');
+                                    },
+                                    success: function(data){
+                                        alert('empresa alterada');
+                                    }
+                                });
+            
+                            });
+
                         }
                     });
 

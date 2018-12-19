@@ -28,6 +28,8 @@ Route::group(['middleware' => 'web', 'prefix' => 'afiliados', 'namespace' => 'Mo
 
     Route::post('/minhasafiliacoes/data-source','AfiliadosController@dadosMinhasAfiliacoes');
 
+    Route::post('/setempresa','AfiliadosController@setEmpresaAfiliacao');
+
 });
 
 
@@ -36,3 +38,5 @@ Route::group(['middleware' => 'web', 'prefix' => 'cfredirect', 'namespace' => 'M
     Route::get('/{parametro}', 'CookieController@setCookie');
 
 });
+
+
