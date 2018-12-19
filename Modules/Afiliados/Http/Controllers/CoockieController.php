@@ -25,7 +25,7 @@ class CoockieController extends Controller {
     
             $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
     
-            return redirect('checkout.'.$dominio['dominio'].'/'.$plano['cod_identificador'])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+            return redirect()->away('checkout.'.$dominio['dominio'].'/'.$plano['cod_identificador'])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
         }
         else{
 
