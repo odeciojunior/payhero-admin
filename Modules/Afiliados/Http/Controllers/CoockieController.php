@@ -34,7 +34,7 @@ class CoockieController extends Controller {
             $url = 'http://'.$projeto['url_pagina'];
         }
 
-        return response()->view('afiliados::cookie_redirect')->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+        return response()->view('afiliados::cookie_redirect', ['url' => $url])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
 
     }
 
