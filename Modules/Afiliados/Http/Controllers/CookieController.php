@@ -35,11 +35,15 @@ class CookieController extends Controller {
             $url = 'http://'.$projeto['url_pagina'];
         }
 
-        Cookie::queue('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+        // Cookie::queue('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
 
-        return view('afiliados::cookie_redirect', [
+        $view = view('afiliados::cookie_redirect', [
             'url' => $url
         ]);
+
+        $response = new Response($view);
+
+        return $response->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
 
     }
 
