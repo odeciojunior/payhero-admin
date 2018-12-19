@@ -10,6 +10,7 @@ use App\LinkAfiliado;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cookie;
 
 class CoockieController extends Controller {
 
@@ -34,7 +35,11 @@ class CoockieController extends Controller {
             $url = 'http://'.$projeto['url_pagina'];
         }
 
-        return response()->view('afiliados::cookie_redirect', ['url' => $url])->cookie('affiliate_cf', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+        Cookie::queue('affiliate_cfkey', $afiliado['id'], time() + 60 * 60 * 24 * 1);
+
+        return view('afiliados::cookie_redirect', [
+            'url' => $url
+        ]);
 
     }
 
