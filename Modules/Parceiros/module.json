@@ -1,0 +1,16 @@
+{
+    "name": "Parceiros",
+    "alias": "parceiros",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Parceiros\\Providers\\ParceirosServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

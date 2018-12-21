@@ -9,6 +9,7 @@ use App\Dominio;
 use App\Empresa;
 use App\Projeto;
 use App\Afiliado;
+use App\UserProjeto;
 use App\LinkAfiliado;
 use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
@@ -58,10 +59,10 @@ class AfiliadosController extends Controller {
 
     public function dadosMeusAfiliados(){
 
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
+        $projetos_usuario = UserProjeto::where('user',\Auth::user()->id)->pluck('projeto')->toArray();
 
         $projetos = \DB::table('projetos as projeto')
-            ->whereIn('projeto.empresa',$empresas_usuario)
+            ->whereIn('projeto.id',$projetos_usuario)
             ->select([
                 'projeto.id',
                 'projeto.porcentagem_afiliados',
@@ -87,7 +88,7 @@ class AfiliadosController extends Controller {
 
         $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
 
-        $projetos_usuario = Projeto::whereIn('empresa',$empresas_usuario)->pluck('id')->toArray();
+        $projetos_usuario = UserProjeto::where('user',\Auth::user()->id)->pluck('id')->toArray();
 
         $afiliados = \DB::table('afiliados as afiliado')
             ->leftJoin('projetos as projeto','projeto.id','=','afiliado.projeto')
@@ -157,8 +158,11 @@ class AfiliadosController extends Controller {
             $empresas[] = Empresa::find($empresa_usuario['empresa']);
         }
 
-        $empresas_usuario = UsuarioEmpresa::where('empresa',$projeto['empresa'])->first();
-        $usuario = User::find($empresas_usuario['user']);
+        $projeto_usuario = UserProjeto::where([
+            ['projeto',$projeto['id']],
+            ['tipo','produtor']
+        ])->first();
+        $usuario = User::find($projeto_usuario['user']);
         $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
 
         foreach($planos as &$plano){

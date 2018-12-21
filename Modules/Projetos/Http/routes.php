@@ -32,11 +32,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
         'as' => 'projetos.cadastrarprojeto',
     ]);
 
-    Route::post('/data-source',[
-        'as' => 'projetos.dadosprojetos',
-        'uses' => 'ProjetosController@dadosProjeto'
-    ]);
-
     Route::get('/projeto/{id}',[
         'as' => 'projetos.detalhes',
         'uses' => 'ProjetosController@projeto'

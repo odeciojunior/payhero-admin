@@ -45,8 +45,10 @@
                                     aria-controls="tab_cupons" role="tab">Sms</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_planos"
                                     aria-controls="tab_planos" role="tab">Planos</a></li>
+                                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_parceiros"
+                                    aria-controls="tab_parceiros" role="tab">Parceiros</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_configuracoes"
-                                    aria-controls="tab_planos" role="tab">Configurações</a></li>
+                                    aria-controls="tab_cofiguracoes" role="tab">Configurações</a></li>    
                             </ul>
                             <div class="tab-content pt-20">
                                 <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
@@ -215,6 +217,22 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="tab-pane" id="tab_parceiros" role="tabpanel">
+                                    <table id="tabela_parceiros" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="adicionar_parceiro" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i>
+                                            Adicionar parceiro
+                                        </a>
+                                        <thead class="bg-blue-grey-100">
+                                            <th>Nome</th>
+                                            <th>Tipo</th>
+                                            <th>Status</th>
+                                            <th style="width: 160px">Opções</th>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div> 
                                 <div class="tab-pane" id="tab_configuracoes" role="tabpanel">
                                     <div id="configuracoes_projeto" style="padding: 30px">
                                     </div>
@@ -371,7 +389,7 @@
                 }
             });
         });
- 
+
         $('#adicionar_produto').on('click', function(){
 
             var id_produto = $('#select_produtos').val();
@@ -1005,6 +1023,55 @@
                     });
         
 
+                }
+            });
+
+        });
+
+        $('#adicionar_parceiro').on('click', function(){
+
+            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+
+            $.ajax({
+                method: "GET",
+                url: "/parceiros/getformaddparceiro",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function(){
+                    $('#modal_add').hide();
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+                    $('#modal_add_body').html(data);
+
+                    $('#cadastrar').unbind('click');
+    
+                    $('#cadastrar').on('click',function(){
+
+                        var form_data = new FormData(document.getElementById('cadastrar_parceiro'));
+                        form_data.append('projeto',id_projeto);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/parceiros/cadastrarparceiro",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            data: form_data,
+                            error: function(){
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#modal_add').hide();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+                    });
                 }
             });
 
@@ -2380,6 +2447,156 @@
             $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
 
         });
+
+        $("#tabela_parceiros").DataTable( {
+            bLengthChange: false,
+            processing: true,
+            responsive: true,
+            serverSide: true,
+            ajax: {
+                url: '/parceiros/data-source',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                data: {projeto: id_projeto}
+            },
+            columns: [
+                { data: 'name', name: 'name'},
+                { data: 'tipo', name: 'tipo'},
+                { data: 'status', name: 'status'},
+                { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
+            ],
+            "language": {
+                "sProcessing":    "Carregando...",
+                "lengthMenu": "Apresentando _MENU_ registros por página",
+                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "info": "Apresentando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoFiltered": "(filtrado por _MAX_ registros)",
+                "sInfoPostFix":   "",
+                "sSearch":        "Procurar :",
+                "sUrl":           "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Carregando...",
+                "oPaginate": {
+                    "sFirst":    "Primeiro",
+                    "sLast":    "Último",
+                    "sNext":    "Próximo",
+                    "sPrevious": "Anterior",
+                },
+            },
+            "drawCallback": function() {
+
+                $('.detalhes_parceiro').on('click', function() {
+                    var parceiro = $(this).attr('parceiro');
+                    $('#modal_detalhes_titulo').html('Detalhes da parceiro');
+                    $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                    var data = { id_parceiro : parceiro };
+                    $.post("/parceiros/detalhe", data)
+                    .then( function(response, status){
+                        $('#modal_detalhes_body').html(response);
+                    });
+                });
+
+                var id_parceiro = '';
+
+                $('.excluir_parceiro').on('click', function(){
+
+                    id_parceiro = $(this).attr('parceiro');
+                    var name = $(this).closest("tr").find("td:first-child").text();
+                    $('#modal_excluir_titulo').html('Remover do projeto o parceiro '+name+' ?');
+
+                    $('#bt_excluir').unbind('click');
+
+                    $('#bt_excluir').on('click', function(){
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/parceiros/deletarparceiro",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: { id: id_parceiro },
+                            error: function(){
+                                $('#fechar_modal_excluir').click();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#fechar_modal_excluir').click();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
+                    });
+                });
+            
+
+                $('.editar_parceiro').on('click', function(){
+
+                    $('#modal_editar_tipo').addClass('modal-simple');
+                    $('#modal_editar_tipo').removeClass('modal-lg');
+
+                    id_parceiro = $(this).attr('parceiro');
+
+                    $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/parceiros/getformeditarparceiro",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {id: id_parceiro},
+                        error: function(){
+                            $('#modal_editar').hide();
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(data){
+                            $('#modal_editar_body').html(data);
+        
+                            $('#editar').unbind('click');
+            
+                            $('#editar').on('click',function(){
+        
+                                var paramObj = {};
+                                $.each($('#editar_parceiro').serializeArray(), function(_, kv) {
+                                    if (paramObj.hasOwnProperty(kv.name)) {
+                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+                                        paramObj[kv.name].push(kv.value);
+                                    }
+                                    else {
+                                        paramObj[kv.name] = kv.value;
+                                    }
+                                });
+                                paramObj['id'] = id_parceiro;
+        
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/parceiros/editarparceiro",
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    data:  paramObj,
+                                    error: function(){
+                                        $('#modal_editar').hide();
+                                        alert('Ocorreu algum erro');
+                                    },
+                                    success: function(data){
+                                        $('#modal_editar').hide();
+                                        $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+                });
+            }
+
+        });
+
 
         function updateConfiguracoes(){
 

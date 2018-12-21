@@ -7,6 +7,7 @@ use App\User;
 use App\Plano;
 use App\Empresa;
 use App\Projeto;
+use App\UserProjeto;
 use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -24,15 +25,10 @@ class ProjetosController extends Controller{
             $projetos = Projeto::all();
         }
         else{
-            $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
-            if($empresas_usuario != null){
-                foreach($empresas_usuario as $empresa_usuario){
-                    $projetos_empresa = Projeto::where('empresa',$empresa_usuario['empresa'])->get()->toArray();
-                    if($projetos_empresa != null){
-                        foreach($projetos_empresa as $projeto){
-                            $projetos[] = $projeto;
-                        }
-                    }
+            $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
+            if($projetos_usuario != null){
+                foreach($projetos_usuario as $projeto_usuario){
+                    $projetos[] = Projeto::find($projeto_usuario['projeto']);
                 }
             }
         }
@@ -75,6 +71,16 @@ class ProjetosController extends Controller{
                 'foto' => $nome_imagem
             ]);
         }
+
+        UserProjeto::create([
+            'user'              => \Auth::user()->id,
+            'projeto'           => $projeto->id,
+            'empresa'           => $dados['empresa'],
+            'tipo'              => 'produtor',
+            'responsavel_frete' => true,
+            'permissao_acesso'  => true,
+            'permissao_editar'  => true
+        ]);
 
         return redirect()->route('projetos');
     }
@@ -128,37 +134,6 @@ class ProjetosController extends Controller{
 
     }
 
-    public function dadosprojeto() {
-
-        $projetos = \DB::table('projetos as projeto')
-            ->get([
-                'projeto.id',
-                'projeto.nome',
-                'projeto.descricao',
-        ]);
-
-        return Datatables::of($projetos)
-        ->addColumn('detalhes', function ($projeto) {
-            return "<span>
-                        <a href='/projetos/projeto/".$projeto->id."' class='btn btn-outline btn-success' data-placement='top' data-toggle='tooltip' title='selecionar'>
-                            <i class='icon wb-check' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/projetos/editar/$projeto->id' class='btn btn-outline btn-primary editar_projeto' data-placement='top' data-toggle='tooltip' title='Editar' projeto='".$projeto->id."'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_projeto' data-placement='top' data-toggle='tooltip' title='Excluir' projeto='".$projeto->id."'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-        })
-        ->rawColumns(['detalhes'])
-        ->make(true);
-    }
-
     public function projeto($id){
 
         $projeto = projeto::find($id);
@@ -187,7 +162,6 @@ class ProjetosController extends Controller{
 
         return response()->json($view->render());
     }
-
 
     public function getDadosProjeto($id){
 
