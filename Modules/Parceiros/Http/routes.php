@@ -24,5 +24,20 @@ Route::group(['middleware' => 'web', 'prefix' => 'parceiros', 'namespace' => 'Mo
         'uses' => 'ParceirosController@cadastrarParceiro'
     ]);
 
+    Route::post('/detalhesparceiro',[
+        'as' => 'parceiros.detalhesparceiro',
+        'uses' => 'ParceirosController@detalhesParceiro'
+    ]);
+
+    Route::post('/editarparceiro',[
+        'as' => 'parceiros.editarparceiro',
+        'uses' => 'ParceirosController@editarParceiro'
+    ]);
+
+    Route::post('/removerparceiro',[
+        'as' => 'parceiros.removerparceiro',
+        'uses' => 'ParceirosController@removerParceiro'
+    ]);
+
 });
 

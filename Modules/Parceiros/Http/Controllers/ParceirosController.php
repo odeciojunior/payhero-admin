@@ -11,36 +11,35 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ParceirosController extends Controller {
 
-
     public function dadosParceiros(Request $request) {
 
         $dados = $request->all();
 
-        $projetos = \DB::table('projetos as projeto')
+        $parceiros = \DB::table('projetos as projeto')
             ->leftJoin('users_projetos as user_projeto','projeto.id','user_projeto.projeto')
             ->leftJoin('users as user','user_projeto.user','user.id')
             ->where('projeto.id',$dados['projeto'])
             ->get([
-                'projeto.id',
+                'user_projeto.id',
                 'user.name',
                 'user_projeto.tipo',
                 'user_projeto.status'
         ]);
 
-        return Datatables::of($projetos)
-        ->addColumn('detalhes', function ($projeto) {
+        return Datatables::of($parceiros)
+        ->addColumn('detalhes', function ($parceiro) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_parceiro' data-placement='top' data-toggle='tooltip' title='selecionar'>
+                        <a class='btn btn-outline btn-success detalhes_parceiro' data-placement='top' data-toggle='tooltip' title='Detalhes' parceiro='".$parceiro->id."'>
                             <i class='icon wb-menu' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_parceiro' data-placement='top' data-toggle='tooltip' title='Editar' projeto='".$projeto->id."'>
+                        <a class='btn btn-outline btn-primary editar_parceiro' data-placement='top' data-toggle='tooltip' title='Editar' parceiro='".$parceiro->id."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_parceiro' data-placement='top' data-toggle='tooltip' title='Excluir' projeto='".$projeto->id."'>
+                        <a class='btn btn-outline btn-danger excluir_parceiro' data-placement='top' data-toggle='tooltip' title='Excluir' parceiro='".$parceiro->id."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -53,7 +52,7 @@ class ParceirosController extends Controller {
 
         $dados = $request->all();
 
-        $user = User::find($dados['email_parceiro']);
+        $user = User::where('email',$dados['email_parceiro'])->first();
 
         if($user != null){
             $dados['user'] = $user['id'];
@@ -68,6 +67,24 @@ class ParceirosController extends Controller {
         return response()->json('sucesso');
     }
 
+    public function editarParceiro(Request $request){
+
+        $dados = $request->all();
+
+        UserProjeto::find($dados['id'])->update($dados);
+
+        return response()->json('sucesso');
+    }
+
+    public function removerParceiro(Request $request){
+
+        $dados = $request->all();
+
+        UserProjeto::find($dados['id'])->delete();
+
+        return response()->json('sucesso');
+    }
+
     public function getFormAddParceiro(){
 
         $form = view('parceiros::cadastro');
@@ -75,5 +92,36 @@ class ParceirosController extends Controller {
         return response()->json($form->render());
     }
 
+    public function getFormEditarParceiro(Request $request){
+
+        $dados = $request->all();
+
+        $parceiro = UserProjeto::find($dados['id_parceiro']);
+
+        $user = User::find($parceiro['user']);
+
+        $form = view('parceiros::editar',[
+            'parceiro' => $parceiro,
+            'user' => $user
+        ]);
+
+        return response()->json($form->render());
+    }
+
+    public function detalhesParceiro(Request $request){
+
+        $dados = $request->all();
+
+        $parceiro = UserProjeto::find($dados['parceiro']);
+
+        $user = User::find($parceiro['user']);
+
+        $detalhes = view('parceiros::detalhesparceiro',[
+            'parceiro' => $parceiro,
+            'user'     => $user,
+        ]);
+
+        return response()->json($detalhes->render());
+    }
 
 }

@@ -2488,14 +2488,26 @@
             },
             "drawCallback": function() {
 
+                $('.detalhes_parceiro').unbind('click');
+
                 $('.detalhes_parceiro').on('click', function() {
-                    var parceiro = $(this).attr('parceiro');
+                    var id_parceiro = $(this).attr('parceiro');
+
                     $('#modal_detalhes_titulo').html('Detalhes da parceiro');
                     $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                    var data = { id_parceiro : parceiro };
-                    $.post("/parceiros/detalhe", data)
-                    .then( function(response, status){
-                        $('#modal_detalhes_body').html(response);
+                    $.ajax({
+                        method: "POST",
+                        url: "/parceiros/detalhesparceiro",
+                        data: {parceiro: id_parceiro},
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function(){
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(response){
+                            $('#modal_detalhes_body').html(response);
+                        }
                     });
                 });
 
@@ -2504,8 +2516,8 @@
                 $('.excluir_parceiro').on('click', function(){
 
                     id_parceiro = $(this).attr('parceiro');
-                    var name = $(this).closest("tr").find("td:first-child").text();
-                    $('#modal_excluir_titulo').html('Remover do projeto o parceiro '+name+' ?');
+
+                    $('#modal_excluir_titulo').html('Remover parceiro do projeto ?');
 
                     $('#bt_excluir').unbind('click');
 
@@ -2513,7 +2525,7 @@
 
                         $.ajax({
                             method: "POST",
-                            url: "/parceiros/deletarparceiro",
+                            url: "/parceiros/removerparceiro",
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -2530,7 +2542,6 @@
                         });
                     });
                 });
-            
 
                 $('.editar_parceiro').on('click', function(){
 
@@ -2547,29 +2558,19 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: {id: id_parceiro},
+                        data: {id_parceiro: id_parceiro},
                         error: function(){
-                            $('#modal_editar').hide();
                             alert('Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
-        
+
                             $('#editar').unbind('click');
             
                             $('#editar').on('click',function(){
         
-                                var paramObj = {};
-                                $.each($('#editar_parceiro').serializeArray(), function(_, kv) {
-                                    if (paramObj.hasOwnProperty(kv.name)) {
-                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                                        paramObj[kv.name].push(kv.value);
-                                    }
-                                    else {
-                                        paramObj[kv.name] = kv.value;
-                                    }
-                                });
-                                paramObj['id'] = id_parceiro;
+                                var form_data = new FormData(document.getElementById('editar_parceiro'));
+                                form_data.append('projeto',id_projeto);
         
                                 $.ajax({
                                     method: "POST",
@@ -2577,7 +2578,7 @@
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data:  paramObj,
+                                    data:  form_data,
                                     error: function(){
                                         $('#modal_editar').hide();
                                         alert('Ocorreu algum erro');
@@ -2591,12 +2592,9 @@
                             });
                         }
                     });
-
                 });
             }
-
         });
-
 
         function updateConfiguracoes(){
 
@@ -2694,7 +2692,6 @@
     });
 
   </script>
-
 
 @endsection
 

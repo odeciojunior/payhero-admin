@@ -32,10 +32,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row"> 
                     <div class="form-group col-xl-6">
-                        <label for="valor">Valor</label>
-                        <input name="valor" type="text" class="form-control" id="valor" placeholder="Valor">
+                        <label for="valor_remuneracao">Valor</label>
+                        <input name="valor_remuneracao" type="text" class="form-control" id="valor_remuneracao" placeholder="Valor">
                     </div>
 
                     <div class="form-group col-xl-12">
