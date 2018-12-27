@@ -17,6 +17,11 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'relatorios', 'namesp
         'uses' => 'RelatoriosController@getDetalhesVenda'
     ]);
 
+    Route::post('/venda/estornar',[
+        'as' => 'relatorios.estornarvenda',
+        'uses' => 'RelatoriosController@estornarVenda'
+    ]);
+
 });
 
 

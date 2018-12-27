@@ -9,10 +9,11 @@ use App\Entrega;
 use App\Comprador;
 use Carbon\Carbon;
 use App\PlanoVenda;
+use PagarMe\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller; 
 use Yajra\DataTables\DataTables;
+use Illuminate\Routing\Controller; 
 use Modules\Relatorios\DataTables\VendasDataTable;
 
 class RelatoriosController extends Controller {
@@ -25,7 +26,6 @@ class RelatoriosController extends Controller {
     public function vendas(VendasDataTable $dataTable) {
 
         return $dataTable->render('relatorios::vendas');
-        return view('relatorios::vendas');
     }
 
     public function dadosVendas(){
@@ -57,7 +57,7 @@ class RelatoriosController extends Controller {
             return $venda->forma_pagamento == 'cartao_credito' ? 'cartão de crédito' : $venda->forma_pagamento;
         })
         ->editColumn('pagamento_status', function ($venda) {
-            if($venda->pagamento_status == 'approved')
+            if($venda->pagamento_status == 'paid')
                 return 'Aprovada';
             if($venda->pagamento_status == 'rejected')
                 return 'Rejeitada';
@@ -68,7 +68,16 @@ class RelatoriosController extends Controller {
             return $venda->pagamento_status;
         })
         ->addColumn('detalhes', function ($venda) {
-            return "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button>";
+            $buttons = "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>
+                           Detalhes
+                        </button>";
+            if($venda->pagamento_status == 'paid'){
+                $buttons .= "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>
+                                Estornar
+                             </button>";
+            }
+
+            return $buttons;
         })
         ->rawColumns(['detalhes'])
         ->make(true);
@@ -190,6 +199,39 @@ class RelatoriosController extends Controller {
         $modal_body .= "</div>";
 
         return response()->json($modal_body);
+    }
+
+    public function estornarVenda(Request $request){
+
+        $dados = $request->all();
+
+        $venda = Venda::find($dados['id_venda']);
+
+        if($venda['pagamento_id'] != ''){
+
+            if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
+                $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
+            }
+            else{
+                $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
+            }
+
+            $transactionRefunds = $pagarMe->transactions()->refund([
+                'id' => $venda['pagamento_id']
+            ]);
+
+            dd($transactionRefunds);
+
+            $retorno = [
+                'sucesso' => 'Estorno realizado com sucesso!'
+            ];
+        }
+        else{
+            $retorno = [
+                'erro' => 'id não encontrado!'
+            ];
+        }
+
     }
 
 }

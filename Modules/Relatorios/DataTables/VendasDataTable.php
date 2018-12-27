@@ -31,7 +31,7 @@ class VendasDataTable extends DataTable
             return $venda->forma_pagamento;
         })
         ->editColumn('status', function ($venda) {
-            if($venda->status == 'approved')
+            if($venda->status == 'paid')
                 return 'Aprovada';
             if($venda->status == 'rejected')
                 return 'Rejeitada';
@@ -42,7 +42,15 @@ class VendasDataTable extends DataTable
             return $venda->status;
         })
         ->addColumn('detalhes', function ($venda) {
-            return "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button>";
+            $buttons = "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>
+                            Detalhes
+                        </button>";
+            if($venda->status == 'paid'){
+                $buttons .= "<button class='btn btn-sm btn-outline btn-danger estornar_venda' venda='".$venda->id."' data-target='#modal_estornar' data-toggle='modal' type='button'>
+                                Estornar
+                             </button>";
+            }
+            return $buttons;
         })
         ->rawColumns(['detalhes']);
     }
@@ -111,6 +119,10 @@ class VendasDataTable extends DataTable
                     ]
                 ],
                 'drawCallback' =>  "function() {
+                    var id_venda = '';
+
+                    $('.detalhes_venda').unbind('click');
+
                     $('.detalhes_venda').on('click', function() {
 
                         var venda = $(this).attr('venda');
@@ -127,6 +139,40 @@ class VendasDataTable extends DataTable
                             $('#modal_venda_body').html(response);
                         });
                     });
+
+                    $('.estornar_venda').unbind('click');
+
+                    $('.estornar_venda').on('click', function() {
+
+                        id_venda = $(this).attr('venda');
+
+                        $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
+                        $('#modal_estornar_body').html('');
+
+                    });
+
+                    $('.bt_estornar_venda').unbind('click');
+
+                    $('.bt_estornar_venda').on('click', function() {
+
+                        $('#modal_estornar_body').html('<h5 style=".'"'.'width:100%; text-align: center='.'"'.">Realizando estorno...</h5>');
+
+                        $.ajax({
+                            method: 'POST',
+                            url: '/relatorios/venda/estornar',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name=".'"'.'csrf-token'.'"'."]').attr('content')
+                            },
+                            data: { id_venda : id_venda },
+                            error: function(){
+                                //
+                            },
+                            success: function(data){
+                                alert(data.toSource());
+                            }
+                        });
+                    });
+                    
                 }",
         ]);
     }
