@@ -18,7 +18,10 @@ class ParceirosController extends Controller {
         $parceiros = \DB::table('projetos as projeto')
             ->leftJoin('users_projetos as user_projeto','projeto.id','user_projeto.projeto')
             ->leftJoin('users as user','user_projeto.user','user.id')
-            ->where('projeto.id',$dados['projeto'])
+            ->where([
+                ['user_projeto.user','!=',\Auth::user()->id],
+                ['projeto.id',$dados['projeto']],
+            ])
             ->get([
                 'user_projeto.id',
                 'user.name',
