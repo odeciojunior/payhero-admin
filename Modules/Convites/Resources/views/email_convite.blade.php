@@ -12,7 +12,7 @@
     <h2>Convite para o cloudfox</h2>
 
     <div class="row">
-        <a href="http://localhost:8000/cadastro/{!! $convite->parametro !!}" class="btn btn-success" style="width: 30%">Entrar para o Cloudfox</a>
+        <a href="https://cloudfox.app/cadastro/{!! $convite->parametro !!}" class="btn btn-success" style="width: 30%">Entrar para o Cloudfox</a>
     </div>
         
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
