@@ -140,6 +140,16 @@
 
         <script src="{{ asset('adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
 
+        <script>
+
+            $(document).ready(function(){
+
+                @if(isset($erro))
+                    alert('{!! $erro !!}');
+                @endif
+            });
+
+        </script>
     </body>
 </html>
 

@@ -29,6 +29,17 @@ class CadastroController extends Controller {
 
         $dados = $request->all();
 
+        $convite = Convite::find($dados['id_convite']);
+
+        $user = User::where('email', $dados['email'])->first();
+
+        if($user != null){
+            return view('cadastro::cadastro', [
+                'convite' => $convite,
+                'erro' => 'Email já esta sendo utilizado'
+            ]);
+        }
+
         $dados['password'] = bcrypt($dados['password']);
 
         $dados['taxa_porcentagem'] = '6.9';
@@ -36,8 +47,6 @@ class CadastroController extends Controller {
         $user = User::create($dados);
 
         $user->assignRole('administrador empresarial');
-
-        $convite = Convite::find($dados['id_convite']);
 
         $convite->update([
             'user_convidado' => $user->id,

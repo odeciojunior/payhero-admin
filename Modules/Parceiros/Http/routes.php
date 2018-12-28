@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'parceiros', 'namespace' => 'Modules\Parceiros\Http\Controllers'], function() {
+Route::group(['middleware' => ['web','auth'], 'prefix' => 'parceiros', 'namespace' => 'Modules\Parceiros\Http\Controllers'], function() {
 
     Route::get('/', 'ParceirosController@index');
 

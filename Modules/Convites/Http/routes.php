@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'convites', 'namespace' => 'Modules\Convites\Http\Controllers'], function()
+Route::group(['middleware' => ['web','auth'], 'prefix' => 'convites', 'namespace' => 'Modules\Convites\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'ConvitesController@index',

@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'afiliados', 'namespace' => 'Modules\Afiliados\Http\Controllers'], function()
+Route::group(['middleware' => ['web','auth'], 'prefix' => 'afiliados', 'namespace' => 'Modules\Afiliados\Http\Controllers'], function()
 {
     Route::get('/afiliar/{id_projeto}', 'AfiliadosController@afiliar');
 
