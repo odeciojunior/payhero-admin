@@ -24,13 +24,13 @@
 
     <body style="margin:0; padding: 0">
         <div class="text-center">
-            <h1>Seja bem vindo ao Cloudfox</h1>
-            <h2>Formulário de cadastro</h2>
+            <h2>Seja bem vindo ao Cloudfox</h2>
         </div>
 
         <div class="page">
             <div class="page-content container-fluid">
                 <form method="post" action="/cadastro/novousuario">
+                    <input type="hidden" name="id_convite" value="{!! $convite->id !!}">
                     @csrf
                     <div class="page-content container-fluid">
                         <div class="panel pt-30 p-30" data-plugin="matchHeight">
@@ -39,7 +39,7 @@
                                 <div class="row">
                                     <div class="form-group col-xl-6">
                                         <label for="email">Email</label>
-                                        <input name="email" type="text" class="form-control" id="email" placeholder="Email">
+                                        <input name="email" value="{!! $convite->email_convidado !!}" type="text" class="form-control" id="email" placeholder="Email">
                                     </div>
                                     <div class="form-group col-xl-6">
                                         <label for="password">Password</label>

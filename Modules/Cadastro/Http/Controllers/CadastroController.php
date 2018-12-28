@@ -3,15 +3,26 @@
 namespace Modules\Cadastro\Http\Controllers;
 
 use App\User;
+use App\Convite;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 class CadastroController extends Controller {
 
-    public function cadastro() {
+    public function cadastro($parametro) {
 
-        return view('cadastro::cadastro');
+        $convite = Convite::where('parametro',$parametro)->first();
+
+        if($convite == null){
+            echo 'convite não encontrado';
+            die;
+        }
+
+        return view('cadastro::cadastro', [
+            'convite' => $convite
+        ]);
     }
 
     public function novoUsuario(Request $request){
@@ -25,6 +36,16 @@ class CadastroController extends Controller {
         $user = User::create($dados);
 
         $user->assignRole('administrador empresarial');
+
+        $convite = Convite::find($dados['id_convite']);
+
+        $convite->update([
+            'user_convidado' => $user->id,
+            'status' => 'Ativo',
+            'data_cadastro' => Carbon::now()->format('Y-m-d'),
+            'data_expiracao' => Carbon::now()->addMonths(6)->format('Y-m-d'),
+            'email_convidado' => $dados['email'],
+        ]);
 
         return redirect('/');
     }

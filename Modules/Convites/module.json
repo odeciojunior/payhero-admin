@@ -1,0 +1,16 @@
+{
+    "name": "Convites",
+    "alias": "convites",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Convites\\Providers\\ConvitesServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

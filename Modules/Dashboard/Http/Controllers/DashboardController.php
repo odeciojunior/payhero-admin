@@ -16,7 +16,7 @@ class DashboardController extends Controller
      * @return Response
      */ 
     public function index() {
-        
+
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
         }

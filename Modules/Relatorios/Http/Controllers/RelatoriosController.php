@@ -220,8 +220,6 @@ class RelatoriosController extends Controller {
                 'id' => $venda['pagamento_id']
             ]);
 
-            dd($transactionRefunds);
-
             $retorno = [
                 'sucesso' => 'Estorno realizado com sucesso!'
             ];
@@ -232,6 +230,7 @@ class RelatoriosController extends Controller {
             ];
         }
 
+        return response()->json($retorno);
     }
 
 }

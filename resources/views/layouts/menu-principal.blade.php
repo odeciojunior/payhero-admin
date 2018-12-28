@@ -276,7 +276,7 @@
             @if(Auth::user()->hasRole('administrador empresarial'))
               <li class="site-menu-item has-sub">
                 <a href="{{ route('empresas') }}">
-                  <i class="site-menu-icon wb-briefcase" aria-hidden="true"></i>
+                  <i class="site-menu-icon wb-home" aria-hidden="true"></i>
                   <span class="site-menu-title">Minhas empresas</span>
                 </a>
               </li>
@@ -314,6 +314,12 @@
                 </a>
               </li>
             @endif
+            <li class="site-menu-item has-sub">
+              <a href="{{ route('convites') }}">
+                <i class="site-menu-icon wb-user-add" aria-hidden="true"></i>
+                <span class="site-menu-title">Convites</span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -168,7 +168,12 @@ class VendasDataTable extends DataTable
                                 //
                             },
                             success: function(data){
-                                alert(data.toSource());
+                                if(data.sucesso){
+                                    $('#modal_estornar_body').html('<h5 style=".'"'.'width:100%; text-align: center='.'"'.">Estorno realizado com sucesso</h5>');
+                                }
+                                else{
+                                    alert('Ocorreu algum erro ao realizar o estorno');
+                                }
                             }
                         });
                     });
