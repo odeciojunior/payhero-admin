@@ -18,10 +18,10 @@ class ParceirosController extends Controller {
         $parceiros = \DB::table('projetos as projeto')
             ->leftJoin('users_projetos as user_projeto','projeto.id','user_projeto.projeto')
             ->leftJoin('users as user','user_projeto.user','user.id')
-            ->where([
-                ['user_projeto.user','!=',\Auth::user()->id],
-                ['projeto.id',$dados['projeto']],
-            ])
+            ->where('user_projeto.user','>',\Auth::user()->id)
+            ->where('user_projeto.user','<',\Auth::user()->id)
+            ->orWhereNull('user_projeto.user')
+            ->where('projeto.id',$dados['projeto'])
             ->get([
                 'user_projeto.id',
                 'user.name',
@@ -63,6 +63,10 @@ class ParceirosController extends Controller {
         }
         else{
             $dados['status'] = 'convite enviado';
+        }
+
+        if(isset($dados['responsavel_frete']) && $dados['responsavel_frete'] == 'on'){
+            $dados['responsavel_frete'] = true;
         }
 
         UserProjeto::create($dados);

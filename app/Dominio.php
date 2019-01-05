@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $layout
- * @property int $empresa
  * @property int $projeto
  * @property string $dominio
  * @property string $created_at
@@ -23,15 +21,7 @@ class Dominio extends Model
     /**
      * @var array
      */
-    protected $fillable = ['layout', 'empresa', 'projeto', 'dominio', 'created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function empresa()
-    {
-        return $this->belongsTo('App\Empresa', 'empresa');
-    }
+    protected $fillable = [ 'projeto', 'dominio','ip_dominio', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -39,14 +29,6 @@ class Dominio extends Model
     public function projeto()
     {
         return $this->belongsTo('App\Projeto', 'projeto');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function layout()
-    {
-        return $this->belongsTo('App\Layout', 'layout');
     }
 
     /**

@@ -26,15 +26,6 @@ class LayoutsController extends Controller
 
         $dados = $request->all();
 
-        if($dados['estilo'] == 'Padrao'){
-            $dados['cor1'] = $dados['cor1-padrao'];
-            $dados['cor2'] = '';
-        }
-        elseif($dados['estilo'] == 'Backgoud Multi Camada'){
-            $dados['cor1'] = $dados['cor1-multi-camadas'];
-            $dados['cor2'] = $dados['cor2-multi-camadas'];
-        }
-
         $layout = Layout::create($dados);
 
         $logo = $request->file('logo');
@@ -106,9 +97,11 @@ class LayoutsController extends Controller
         return redirect()->route('layouts');
     }
 
-    public function deletarLayout($id){
+    public function deletarLayout(Request $request){
 
-        Layout::find($id)->delete();
+        $dados = $request->all();
+
+        Layout::find($dados['id'])->delete();
 
         return redirect()->route('layouts');
 
@@ -128,10 +121,10 @@ class LayoutsController extends Controller
                 'layout.id',
                 'layout.descricao',
                 'layout.logo',
-                'layout.estilo',
-                'layout.cor1',
-                'layout.cor2',
-                'layout.botao',
+                // 'layout.estilo',
+                // 'layout.cor1',
+                // 'layout.cor2',
+                // 'layout.botao',
         ]);
 
         return Datatables::of($layouts)

@@ -64,9 +64,6 @@ class PixelsController extends Controller
 
     }
 
-    /**
-     * Return data for datatable
-     */
     public function dadosPixels(Request $request) {
 
         $dados = $request->all();
@@ -106,7 +103,6 @@ class PixelsController extends Controller
         ->rawColumns(['detalhes'])
         ->make(true);
     }
-
 
     public function getDetalhesPixel(Request $request){
 

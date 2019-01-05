@@ -172,8 +172,6 @@
                                         </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Domínio</th>
-                                            <th>Layout</th>
-                                            <th>Empresa</th>
                                             <th style="width: 100px">Opções</th>
                                         </thead>
                                         <tbody>
@@ -206,11 +204,11 @@
                                         </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Descrição</th>
-                                            <th>Logo 1</th>
-                                            <th>Estilo</th>
+                                            <th>Logo</th>
+                                            {{--  <th>Estilo</th>
                                             <th>Cor 1</th>
                                             <th>Cor 2</th>
-                                            <th>Botões</th>
+                                            <th>Botões</th>  --}}
                                             <th style="width: 110px">Opções</th>
                                         </thead>
                                         <tbody>
@@ -289,7 +287,7 @@
 
                     <!-- Modal padrão para adicionar * no projeto -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
+                        <div id="modal_add_tamanho" class="modal-dialog modal-simple">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -364,6 +362,9 @@
 
         $('#add_produto').on('click', function(){
 
+            $('#modal_add_tamanho').addClass('modal-simple');
+            $('#modal_add_tamanho').removeClass('modal-lg');
+
             $('#select_produtos').html("<option value=''>Selecione</option>");
 
             $.ajax({
@@ -392,6 +393,9 @@
 
         $('#adicionar_produto').on('click', function(){
 
+            $('#modal_add_tamanho').addClass('modal-simple');
+            $('#modal_add_tamanho').removeClass('modal-lg');
+
             var id_produto = $('#select_produtos').val();
 
             if(id_produto == '')
@@ -418,6 +422,9 @@
         });
 
         $('#adicionar_dominio').on('click', function(){
+
+            $('#modal_add_tamanho').addClass('modal-lg');
+            $('#modal_add_tamanho').removeClass('modal-simple');
 
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
@@ -471,6 +478,9 @@
         });
 
         $('#adicionar_pixel').on('click', function(){
+
+            $('#modal_add_tamanho').addClass('modal-simple');
+            $('#modal_add_tamanho').removeClass('modal-lg');
 
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
@@ -528,6 +538,9 @@
 
         $('#adicionar_cupom').on('click', function(){
 
+            $('#modal_add_tamanho').addClass('modal-simple');
+            $('#modal_add_tamanho').removeClass('modal-lg');
+
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
             $.ajax({
@@ -576,6 +589,9 @@
         });
 
         $('#adicionar_sms').on('click', function(){
+
+            $('#modal_add_tamanho').addClass('modal-simple');
+            $('#modal_add_tamanho').removeClass('modal-lg');
 
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
@@ -627,6 +643,9 @@
         });
 
         $('#adicionar_brinde').on('click', function(){
+
+            $('#modal_add_tamanho').addClass('modal-lg');
+            $('#modal_add_tamanho').removeClass('modal-simple');
 
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
@@ -738,6 +757,9 @@
 
         $('#adicionar_layout').on('click', function(){
 
+            $('#modal_add_tamanho').addClass('modal-lg');
+            $('#modal_add_tamanho').removeClass('modal-simple');
+
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
             $.ajax({
@@ -845,6 +867,9 @@
 
         $('#adicionar_plano').on('click', function(){ 
 
+            $('#modal_add_tamanho').addClass('modal-lg');
+            $('#modal_add_tamanho').removeClass('modal-simple');
+            
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
             $.ajax({
@@ -1029,6 +1054,9 @@
         });
 
         $('#adicionar_parceiro').on('click', function(){
+
+            $('#modal_add_tamanho').addClass('modal-lg');
+            $('#modal_add_tamanho').removeClass('modal-simple');
 
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
@@ -1264,6 +1292,9 @@
                                 alert('Ocorreu algum erro');
                             },
                             success: function(data){
+                                if(data != 'sucesso'){
+                                    alert(data);
+                                }
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2163,8 +2194,6 @@
             },
             columns: [
                 { data: 'dominio', name: 'dominio'},
-                { data: 'layout_descricao', name: 'layout_descricao'},
-                { data: 'empresa_nome', name: 'empresa_nome'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
             ],
             "language": {
@@ -2242,7 +2271,6 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function(){
-                            $('#modal_editar').hide();
                             alert('Ocorreu algum erro');
                         },
                         success: function(data){
@@ -2300,10 +2328,10 @@
             columns: [
                 { data: 'descricao', name: 'descricao'},
                 { data: 'logo', name: 'logo'},
-                { data: 'estilo', name: 'estilo'},
+                {{--  { data: 'estilo', name: 'estilo'},
                 { data: 'cor1', name: 'cor1'},
                 { data: 'cor2', name: 'cor2'},
-                { data: 'botao', name: 'botao'},
+                { data: 'botao', name: 'botao'},  --}}
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
             ],
             "language": {
@@ -2353,7 +2381,7 @@
                             atualizarPreView();
 
                             function atualizarPreView(){
-                    
+
                                 $('#form-preview').submit();
                             }
 
@@ -2361,7 +2389,7 @@
 
                                 $('#cores_multi_camada').hide();
                                 $('#cores_padrao').hide();
-                    
+
                                 if($(this).val() == 'Backgoud Multi Camada'){
                                     $('#cor1-padrao').prop('required', false);
                                     $('#cor1-multi-camadas').prop('required', true);
@@ -2434,6 +2462,36 @@
                                 });
                             });
                         }
+                    });
+                });
+
+                $('.excluir_layout').on('click', function(){
+
+                    id_layout = $(this).attr('layout');
+
+                    $('#modal_excluir_titulo').html('Remover layout do projeto ?');
+
+                    $('#bt_excluir').unbind('click');
+
+                    $('#bt_excluir').on('click', function(){
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/layouts/removerlayout",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: { id: id_layout },
+                            error: function(){
+                                $('#fechar_modal_excluir').click();
+                                alert('Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('#fechar_modal_excluir').click();
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            }
+                        });
                     });
                 });
 
@@ -2571,13 +2629,16 @@
         
                                 var form_data = new FormData(document.getElementById('editar_parceiro'));
                                 form_data.append('projeto',id_projeto);
-        
+
                                 $.ajax({
                                     method: "POST",
                                     url: "/parceiros/editarparceiro",
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
                                     data:  form_data,
                                     error: function(){
                                         $('#modal_editar').hide();
@@ -2677,6 +2738,7 @@
                                 alert('Ocorreu algum erro');
                             },
                             success: function(data){
+                                alert('Dados do projeto alterados!');
                                 updateConfiguracoes();
                             },
                         });

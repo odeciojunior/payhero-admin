@@ -27,8 +27,8 @@
 
                         <div class="row">
                             <div class="form-group col-xl-12">
-                                <label for="nome">Nome</label>
-                                <input value="{!! $pixel->nome != '' ? $pixel->nome : '' !!}" name="nome" type="text" class="form-control" id="nome" placeholder="Nome">
+                                <label for="nome">Descrição</label>
+                                <input value="{!! $pixel->nome != '' ? $pixel->nome : '' !!}" name="nome" type="text" class="form-control" id="nome" placeholder="Descrição">
                             </div>
 
                             <div class="form-group col-xl-12">

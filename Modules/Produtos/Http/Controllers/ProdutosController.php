@@ -16,12 +16,9 @@ use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class ProdutosController extends Controller {
 
-
     public function index() {
 
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
-
-        $produtos = Produto::whereIn('empresa',$empresas_usuario)->get()->toArray();
+        $produtos = Produto::where('user',\Auth::user()->id)->get()->toArray();
 
         return view('produtos::index',[
             'produtos' => $produtos
@@ -30,25 +27,18 @@ class ProdutosController extends Controller {
 
     public function cadastro() {
 
-        $empresas = array();
-
-        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
-
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresas[] = Empresa::find($empresa_usuario['empresa']);
-        }
-
         $categorias = Categoria::all();
 
         return view('produtos::cadastro',[
             'categorias' => $categorias,
-            'empresas' => $empresas
         ]);
     }
 
     public function cadastrarProduto(Request $request){
 
         $dados = $request->all();
+
+        $dados['user'] = \Auth::user()->id;
 
         $produto = Produto::create($dados);
 
@@ -243,9 +233,7 @@ class ProdutosController extends Controller {
 
         $dados = $request->all();
 
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
-
-        $produtos = Produto::select('nome','id')->where('empresa',$empresas_usuario)->get()->toArray();
+        $produtos = Produto::select('nome','id')->where('user',\Auth::user()->id)->get()->toArray();
 
         $produtosDisponiveis = [];
 
@@ -299,3 +287,5 @@ class ProdutosController extends Controller {
     }
 
 }
+
+

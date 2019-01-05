@@ -3,6 +3,7 @@
 namespace Modules\Convites\Http\Controllers;
 
 use App\Convite;
+use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -27,6 +28,12 @@ class ConvitesController extends Controller {
         $dados['status'] = "Convite enviado";
         $dados['parametro']  = $this->randString(15);
 
+        $empresa_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->first();
+
+        if($empresa_usuario != null){
+            $dados['empresa'] = $empresa_usuario['empresa'];
+        }
+
         $convite = Convite::create($dados);
 
         Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados) {
@@ -34,10 +41,9 @@ class ConvitesController extends Controller {
 
             $mail->to($dados['email_convidado'], 'Cloudfox')->subject('Convite!');
         });
-        
+
         return redirect()->route('convites');
     }
-
 
     function randString($size){
 
@@ -63,5 +69,5 @@ class ConvitesController extends Controller {
 
         return $parametro;
     }
-    
+
 }

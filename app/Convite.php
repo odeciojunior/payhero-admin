@@ -28,7 +28,7 @@ class Convite extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_convite', 'user_convidado', 'email_convidado', 'status','parametro', 'data_cadastro', 'data_expiracao', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['user_convite', 'user_convidado', 'email_convidado', 'status', 'empresa', 'parametro', 'data_cadastro', 'data_expiracao', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

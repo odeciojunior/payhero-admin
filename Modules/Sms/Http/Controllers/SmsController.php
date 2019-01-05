@@ -32,19 +32,11 @@ class SmsController extends Controller {
         dd($status);
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
     public function index() {
 
         return view('sms::index'); 
     }
 
-    /**
-     * Display a form to store new users.
-     * @return Response
-     */
     public function cadastro() {
 
         return view('sms::cadastro');

@@ -18,28 +18,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DominiosController extends Controller {
 
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
     public function index() {
 
         return view('dominios::index'); 
     }
 
-    /**
-     * Display a form to store new users.
-     * @return Response
-     */
     public function cadastro() {
 
-        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
-        $empresas = Empresa::all();
-
-        return view('dominios::cadastro',[
-            'layouts' => $layouts,
-            'empresas' => $empresas
-        ]);
+        return view('dominios::cadastro');
     }
 
     public function cadastrarDominio(Request $request){
@@ -65,7 +51,7 @@ class DominiosController extends Controller {
 
         $zoneID = $zones->getZoneID($dados['dominio']);
 
-        if ($dns->addRecord($zoneID, "A", $dados['dominio'], '104.248.122.89', 0, true) === true) {
+        if ($dns->addRecord($zoneID, "A", $dados['dominio'], $dados['ip_dominio'], 0, true) === true) {
             // echo "DNS criado.". PHP_EOL;
         }
         if ($dns->addRecord($zoneID, "CNAME", 'www', $dados['dominio'], 0, true) === true) {
@@ -132,16 +118,11 @@ class DominiosController extends Controller {
 
     }
 
-    /**
-     * Return data for datatable
-     */
     public function dadosDominios(Request $request) {
 
         $dados = $request->all();
     
-        $dominios = \DB::table('dominios as dominio')
-            ->leftJoin('layouts', 'dominio.layout', 'layouts.id')
-            ->leftJoin('empresas', 'dominio.empresa', 'empresas.id');
+        $dominios = \DB::table('dominios as dominio');
 
         if(isset($dados['projeto'])){
             $dominios = $dominios->where('dominio.projeto','=', $dados['projeto']);
@@ -150,10 +131,6 @@ class DominiosController extends Controller {
         $dominios = $dominios->get([
                 'dominio.id',
                 'dominio.dominio',
-                'dominio.layout',
-                'dominio.empresa',
-                'empresas.nome_fantasia as empresa_nome',
-                'layouts.descricao as layout_descricao',
         ]);
 
         return Datatables::of($dominios)
@@ -173,7 +150,6 @@ class DominiosController extends Controller {
         ->make(true);
     }
 
-
     public function getFormAddDominio(Request $request){
 
         $dados = $request->all();
@@ -192,8 +168,6 @@ class DominiosController extends Controller {
 
         return response()->json($form->render());
     }
-
-
 
     public function getFormEditarDominio(Request $request){
 

@@ -22,7 +22,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'layouts', 'namespace
         'as' => 'layouts.update',
     ]);
 
-    Route::get('/deletarlayout/{id}', [
+    Route::post('/removerlayout', [
         'uses' => 'LayoutsController@deletarLayout',
         'as' => 'layouts.deletar',
     ]);

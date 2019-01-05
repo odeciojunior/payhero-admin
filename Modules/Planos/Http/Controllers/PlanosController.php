@@ -9,9 +9,11 @@ use App\Plano;
 use App\Brinde;
 use App\Layout;
 use App\Produto;
+use App\ZenviaSms;
 use App\PlanoCupom;
 use App\PlanoPixel;
 use App\PlanoBrinde;
+use App\UserProjeto;
 use App\DadosHotZapp;
 use App\ProdutoPlano;
 use App\ProjetoProduto;
@@ -55,6 +57,12 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
+        $user_projeto = UserProjeto::where([
+            ['projeto',$dados['projeto']],
+            ['tipo','produtor']
+        ])->first();
+
+        $dados['empresa'] = $user_projeto->empresa;
         $dados['preco'] = $this->getValor($dados['preco']);
         $dados['valor_frete'] = $this->getValor($dados['valor_frete']);
 
@@ -282,7 +290,13 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
-        $plano = Plano::find($dados['id']);
+        $servico_sms = ZenviaSms::where('plano',$dados['id'])->first();
+
+        if($servico_sms != null){
+            return response()->json('Impossível excluir, possui serviço de sms integrado.');            
+        }
+
+        $plano = Plano::find($dados['id']); 
 
         $fotos = Foto::where('plano', $plano['id'])->get()->toArray();
 

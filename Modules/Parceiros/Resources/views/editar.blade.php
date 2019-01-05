@@ -2,7 +2,7 @@
     <h4>Editar parceiro</h4>
 </div>
 
-<form id="editar_parceiro" method="post" enctype="multipart/form-data">
+<form id="editar_parceiro" method="post">
     @csrf
     <input type="hidden" name="id" value="{!! $parceiro['id'] !!}">
     <div class="page-content container-fluid">
