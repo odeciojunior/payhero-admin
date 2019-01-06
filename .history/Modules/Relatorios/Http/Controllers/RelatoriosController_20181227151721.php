@@ -62,7 +62,7 @@ class RelatoriosController extends Controller {
             if($venda->pagamento_status == 'rejected')
                 return 'Rejeitada';
             if($venda->pagamento_status == 'in_process')
-                return 'Em processo'; 
+                return 'Em processo';
             if($venda->pagamento_status == 'pending')
                 return 'Pendente';
             return $venda->pagamento_status;
@@ -148,14 +148,14 @@ class RelatoriosController extends Controller {
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Status da venda:</b></td>";
-        if($venda->pagamento_status == 'paid')
+        if($venda->mercado_pago_status == 'approved')
             $modal_body .= "<td>Aprovada</td>";
-        elseif($venda->pagamento_status == 'refused')
+        elseif($venda->mercado_pago_status == 'rejected')
             $modal_body .= "<td>Rejeitada</td>";
-        elseif($venda->pagamento_status == 'waiting_payment')
-            $modal_body .= "<td>Aguardando pagamento</td>";
+        elseif($venda->mercado_pago_status == 'in_process')
+            $modal_body .= "<td>Em processo</td>";
         else
-            $modal_body .= "<td>".$venda->pagamento_status."</td>";
+            $modal_body .= "<td>".$venda->mercado_pago_status."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Código do plano:</b></td>";
@@ -188,6 +188,10 @@ class RelatoriosController extends Controller {
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Ponto de referência:</b></td>";
         $modal_body .= "<td>".$entrega->ponto_referencia."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>id kapsula:</b></td>";
+        $modal_body .= "<td>".$entrega->id_kapsula_pedido."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";

@@ -33,14 +33,12 @@ class VendasDataTable extends DataTable
         ->editColumn('status', function ($venda) {
             if($venda->status == 'paid')
                 return 'Aprovada';
-            if($venda->status == 'refused')
+            if($venda->status == 'rejected')
                 return 'Rejeitada';
-            if($venda->status == 'waiting_payment')
-                return 'Aguardando pagamento';
+            if($venda->status == 'in_process')
+                return 'Em processo';
             if($venda->status == 'pending')
                 return 'Pendente';
-            if($venda->status == '')
-                return '- - -';
             return $venda->status;
         })
         ->addColumn('detalhes', function ($venda) {
@@ -77,7 +75,7 @@ class VendasDataTable extends DataTable
                 'vendas.pagamento_status as status',
                 'vendas.data_inicio',
                 'vendas.data_finalizada',
-                'vendas.valor_total_pago',
+                'vendas.valor_plano',
         ]);
 
         if(!\Auth::user()->hasRole('administrador geral')){
@@ -255,9 +253,9 @@ class VendasDataTable extends DataTable
                 'data_type' => 'text',
                 'filter_type' => 'text'
             ],
-            'valor_total_pago' => [
-                'name' => 'valor_total_pago',
-                'data' => 'valor_total_pago',
+            'valor_plano' => [
+                'name' => 'valor_plano',
+                'data' => 'valor_plano',
                 'title' => 'Valor',
                 'searchable' => true,
                 'orderable' => false,

@@ -22,20 +22,13 @@ class PostBackController extends Controller {
 
             if($venda != null){
 
-                
-                if($dados['transaction']['status'] == 'paid'){
-                    $venda->update([
-                        'pagamento_status' => $dados['transaction']['status'],
-                        'pagamento_id' => $dados['id'],
-                        'data_finalizada' => date('Y-m-d H:i:s')
-                    ]);
-                }
-                else{
-                    $venda->update([
-                        'pagamento_status' => $dados['transaction']['status'],
-                        'pagamento_id' => $dados['id'],
-                    ]);
-                }
+                ($dados['transaction']['status'] == 'paid') ? $data = date('Y-m-d H:i:s') : $data = '';
+
+                $venda->update([
+                    'pagamento_status' => $dados['transaction']['status'],
+                    'pagamento_id' => $dados['id'],
+                    'data_finalizada' => $data
+                ]);
             }
             else{
 

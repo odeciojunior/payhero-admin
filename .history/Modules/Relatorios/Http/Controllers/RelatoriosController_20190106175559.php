@@ -189,6 +189,10 @@ class RelatoriosController extends Controller {
         $modal_body .= "<td><b>Ponto de referência:</b></td>";
         $modal_body .= "<td>".$entrega->ponto_referencia."</td>";
         $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>id kapsula:</b></td>";
+        $modal_body .= "<td>".$entrega->id_kapsula_pedido."</td>";
+        $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
         $modal_body .= "</div>";

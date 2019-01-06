@@ -165,14 +165,10 @@ class ProjetosController extends Controller{
 
     public function getDadosProjeto($id){
 
-        $projeto = Projeto::find($id); 
+        $projeto = Projeto::find($id);
 
-        $user_projeto = UserProjeto::where([
-            ['projeto',$id],
-            ['tipo','produtor']
-        ])->first();
-
-        $usuario = User::find($user_projeto['user']);
+        $empresas_usuario = UsuarioEmpresa::where('empresa',$projeto['empresa'])->first();
+        $usuario = User::find($empresas_usuario['user']);
         $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
 
         foreach($planos as &$plano){

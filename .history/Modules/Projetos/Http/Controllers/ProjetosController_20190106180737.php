@@ -174,7 +174,7 @@ class ProjetosController extends Controller{
 
         $usuario = User::find($user_projeto['user']);
         $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
-
+dd($user);
         foreach($planos as &$plano){
             $foto = Foto::where('plano',$plano['id'])->first();
             $plano['foto'] = $foto->caminho_imagem;

@@ -167,14 +167,10 @@ class ProjetosController extends Controller{
 
         $projeto = Projeto::find($id); 
 
-        $user_projeto = UserProjeto::where([
-            ['projeto',$id],
-            ['tipo','produtor']
-        ])->first();
-
-        $usuario = User::find($user_projeto['user']);
+        $empresas_usuario = UsuarioEmpresa::where('empresa',$projeto['empresa'])->first();
+        $usuario = User::find($empresas_usuario['user']);
         $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
-
+dd($usuario);
         foreach($planos as &$plano){
             $foto = Foto::where('plano',$plano['id'])->first();
             $plano['foto'] = $foto->caminho_imagem;

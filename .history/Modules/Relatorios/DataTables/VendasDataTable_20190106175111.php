@@ -77,7 +77,7 @@ class VendasDataTable extends DataTable
                 'vendas.pagamento_status as status',
                 'vendas.data_inicio',
                 'vendas.data_finalizada',
-                'vendas.valor_total_pago',
+                'vendas.valor_plano',
         ]);
 
         if(!\Auth::user()->hasRole('administrador geral')){
@@ -255,9 +255,9 @@ class VendasDataTable extends DataTable
                 'data_type' => 'text',
                 'filter_type' => 'text'
             ],
-            'valor_total_pago' => [
-                'name' => 'valor_total_pago',
-                'data' => 'valor_total_pago',
+            'valor_plano' => [
+                'name' => 'valor_plano',
+                'data' => 'valor_plano',
                 'title' => 'Valor',
                 'searchable' => true,
                 'orderable' => false,

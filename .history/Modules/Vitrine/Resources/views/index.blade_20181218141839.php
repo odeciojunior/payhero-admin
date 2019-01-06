@@ -22,7 +22,7 @@
                     <div class="card-block">
                       <a>
                           <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
-                          <p class="card-text">{!! substr($projeto['descricao'],0,50) !!}</p>
+                          <p class="card-text">{!! $projeto['descricao'] !!}</p>
                       </a>
                       <hr>
                       <span><b>Produtor : </b>{!! $projeto['produtor'] !!}</span>
