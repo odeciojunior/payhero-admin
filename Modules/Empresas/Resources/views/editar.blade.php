@@ -35,7 +35,7 @@
 
                             <div class="form-group col-xl-6">
                                 <label for="cnpj">CNPJ</label>
-                                <input value="{!! $empresa->cnpj != '' ? $empresa->cnpj : '' !!}" name="cnpj" type="text" class="form-control" id="cnpj" placeholder="CNPJ">
+                                <input value="{!! $empresa->cnpj != '' ? $empresa->cnpj : '' !!}" name="cnpj" type="text" class="form-control" id="cnpj" placeholder="CNPJ/CPF" data-mask="0#">
                             </div>
 
                             <div class="form-group col-xl-6">
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="form-group col-xl-6">
+                            <div class="form-group col-12">
                                 <label for="nome">Nome fantasia</label>
                                 <input value="{!! $empresa->nome_fantasia != '' ? $empresa->nome_fantasia : '' !!}" name="nome_fantasia" type="text" class="form-control" id="nome" placeholder="Nome fantasia">
                             </div>
@@ -58,7 +58,7 @@
                         <div class="row">
                             <div class="form-group col-xl-6">
                                 <label for="cep">CEP</label>
-                                <input value="{!! $empresa->cep != '' ? $empresa->cep : '' !!}" name="cep" type="text" class="form-control" id="cep" placeholder="CEP">
+                                <input value="{!! $empresa->cep != '' ? $empresa->cep : '' !!}" name="cep" type="text" class="form-control" id="cep" placeholder="CEP" data-mask="0#">
                             </div>
 
                             <div class="form-group col-xl-6">
@@ -87,7 +87,7 @@
 
                             <div class="form-group col-xl-6">
                                 <label for="numero">Número</label>
-                                <input value="{!! $empresa->numero != '' ? $empresa->numero : '' !!}" name="numero" type="text" class="form-control" id="numero" placeholder="Número">
+                                <input value="{!! $empresa->numero != '' ? $empresa->numero : '' !!}" name="numero" type="text" class="form-control" id="numero" placeholder="Número" data-mask="0#">
                             </div>
  
                         </div>
@@ -131,22 +131,22 @@
                         <div class="row">
                             <div class="form-group col-xl-9">
                                 <label for="agencia">Agência</label>
-                                <input name="agencia" value="{!! $empresa->agencia !!}" type="text" class="form-control" id="agencia" placeholder="Agência">
+                                <input name="agencia" value="{!! $empresa->agencia !!}" type="text" class="form-control" id="agencia" placeholder="Agência" data-mask="0#">
                             </div>
                             <div class="form-group col-xl-3">
                                 <label for="agencia_digito">Dígito</label>
-                                <input name="agencia_digito" value="{!! $empresa->agencia_digito !!}" type="text" class="form-control" id="agencia_digito" placeholder="Dígito">
+                                <input name="agencia_digito" value="{!! $empresa->agencia_digito !!}" type="text" class="form-control" id="agencia_digito" placeholder="Dígito" data-mask="0#">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-xl-9">
                                 <label for="conta">Conta</label>
-                                <input name="conta" value="{!! $empresa->conta !!}" type="text" class="form-control" id="conta" placeholder="Conta">
+                                <input name="conta" value="{!! $empresa->conta !!}" type="text" class="form-control" id="conta" placeholder="Conta" data-mask="0#">
                             </div>
                             <div class="form-group col-xl-3">
                                 <label for="conta_digito">Dígito</label>
-                                <input name="conta_digito" value="{!! $empresa->conta_digito !!}" type="text" class="form-control" id="agencia_digito" placeholder="Dígito">
+                                <input name="conta_digito" value="{!! $empresa->conta_digito !!}" type="text" class="form-control" id="agencia_digito" placeholder="Dígito" data-mask="0#">
                             </div>
                         </div>
 

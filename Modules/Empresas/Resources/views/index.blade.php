@@ -18,14 +18,13 @@
     <div class="page-content container-fluid">
       <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-        <table id="tabela_empresas" class="table-bordered table-hover w-full" style="margin-top: 80px">
+        <table id="tabela_empresas" class="table table-bordered table-hover w-full" style="margin-top: 80px">
           <thead class="bg-blue-grey-100">
             <tr>
               <td>Nome fantasia</td>
-              <td>CNPJ</td>
-              <td>Estado</td>
-              <td>Município</td>
-              <td>Opções</td>
+              <td>CNPJ/CPF</td>
+              <td>Status conta bancária</td>
+              <td style="width: 160px">Opções</td>
             </tr>
           </thead>
           <tbody>
@@ -96,16 +95,20 @@
             columns: [
                 { data: 'nome_fantasia', name: 'nome_fantasia'},
                 { data: 'cnpj', name: 'cnpj'},
-                { data: 'uf', name: 'uf'},
-                { data: 'municipio', name: 'municipio'},
+                { data: function(data){
+                  if(data.recipient_id != '')
+                    return 'Ativa';
+                  else
+                    return 'Inativa';
+              }, name: 'recipient_id'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {
                 "sProcessing":    "Procesando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",

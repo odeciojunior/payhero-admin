@@ -65,35 +65,35 @@
                             <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="custo_produto">Custo do produto</label>
-                                    <input name="custo_produto" type="text" class="form-control" id="custo_produto" placeholder="Custo do produto">
+                                    <input name="custo_produto" type="text" class="form-control" id="custo_produto" placeholder="Custo do produto" data-mask="0#">
                                 </div>
                                 <div class="form-group col-xl-6">
                                     <label for="garantia">Garantia (em dias)</label>
-                                    <input name="garantia" type="text" class="form-control" id="garantia" placeholder="Garantia">
+                                    <input name="garantia" type="text" class="form-control" id="garantia" placeholder="Garantia" data-mask="0#">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="quantidade">Quantidade (em estoque)</label>
-                                    <input name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade">
+                                    <input name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade" data-mask="0#">
                                 </div>
 
                                 <div class="form-group col-xl-6">
                                     <label for="peso">Peso</label>
-                                    <input name="peso" type="text" class="form-control" id="peso" placeholder="Peso">
+                                    <input name="peso" type="text" class="form-control" id="peso" placeholder="Peso" data-mask="0#">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="altura">Altura</label>
-                                    <input name="altura" type="text" class="form-control" id="altura" placeholder="Altura">
+                                    <input name="altura" type="text" class="form-control" id="altura" placeholder="Altura" data-mask="0#">
                                 </div>
 
                                 <div class="form-group col-xl-6">
                                     <label for="largura">largura</label>
-                                    <input name="largura" type="text" class="form-control" id="largura" placeholder="Largura">
+                                    <input name="largura" type="text" class="form-control" id="largura" placeholder="Largura" data-mask="0#">
                                 </div>
                             </div>
 

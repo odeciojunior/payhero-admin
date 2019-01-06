@@ -46,22 +46,33 @@ class DominiosController extends Controller {
             $zones->addZone($dados['dominio']);
         }
         catch(Exception $e){
-            return response()->json('Não foi possível adicionar o domínio, domínio não registrado!');
+            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
         }
 
         $zoneID = $zones->getZoneID($dados['dominio']);
 
-        if ($dns->addRecord($zoneID, "A", $dados['dominio'], $dados['ip_dominio'], 0, true) === true) {
-            // echo "DNS criado.". PHP_EOL;
+        try{
+            if ($dns->addRecord($zoneID, "A", $dados['dominio'], $dados['ip_dominio'], 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
+            if ($dns->addRecord($zoneID, "CNAME", 'www', $dados['dominio'], 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
+            if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
+            if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
         }
-        if ($dns->addRecord($zoneID, "CNAME", 'www', $dados['dominio'], 0, true) === true) {
-            // echo "DNS criado.". PHP_EOL;
-        }
-        if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-            // echo "DNS criado.". PHP_EOL;
-        }
-        if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-            // echo "DNS criado.". PHP_EOL;
+        catch(Exception $e){
+            try{
+                $zones->deleteZone($zoneID);
+            }
+            catch(Exception $e){
+                //
+            }
+            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
         }
 
         Dominio::create($dados);
@@ -131,6 +142,7 @@ class DominiosController extends Controller {
         $dominios = $dominios->get([
                 'dominio.id',
                 'dominio.dominio',
+                'dominio.ip_dominio',
         ]);
 
         return Datatables::of($dominios)

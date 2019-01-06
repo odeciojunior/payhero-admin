@@ -63,6 +63,7 @@ class AfiliadosController extends Controller {
 
         $projetos = \DB::table('projetos as projeto')
             ->whereIn('projeto.id',$projetos_usuario)
+            ->where('projeto.visibilidade','publico')
             ->select([
                 'projeto.id',
                 'projeto.porcentagem_afiliados',

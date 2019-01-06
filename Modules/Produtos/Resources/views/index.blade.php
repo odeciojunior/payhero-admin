@@ -15,7 +15,7 @@
               <div class="alert alert-warning" role="alert">
                   <strong>Ops!</strong> Você ainda não possui produtos cadastrados.
               </div>
-          @else
+          @else 
             <div class="row">
                 @foreach($produtos as $produto)
                   <div class="col-3">
@@ -24,7 +24,7 @@
                           <div class="card-block">
                             <a href="#" class="detalhes_produto" produto="{!! $produto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes'>
                                 <h4 class="card-title">{!! $produto['nome'] !!}</h4>
-                                <p class="card-text">{!! $produto['descricao'] !!}</p>
+                                <p class="card-text">{!! substr($produto['descricao'],0,52) !!}</p>
                             </a>
                             <hr>
                             <span data-toggle='modal' data-target='#modal_editar'>

@@ -18,7 +18,7 @@ class ProdutosController extends Controller {
 
     public function index() {
 
-        $produtos = Produto::where('user',\Auth::user()->id)->get()->toArray();
+        $produtos = Produto::where('user',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
         return view('produtos::index',[
             'produtos' => $produtos

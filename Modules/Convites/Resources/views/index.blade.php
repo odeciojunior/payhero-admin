@@ -40,6 +40,12 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @if(count($convites) == 0)
+                                    <div style="width:100%; text-center">
+                                        <h4> Nenhum convite enviado </h4>
+                                    </div>
+                                @endif
+
                             </div>
                             <div class="tab-pane" id="tab_enviar_convites" role="tabpanel">
 

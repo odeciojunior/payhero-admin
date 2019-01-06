@@ -76,9 +76,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",

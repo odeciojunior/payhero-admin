@@ -156,8 +156,7 @@ class EmpresasController extends Controller {
                 'id',
                 'cnpj',
                 'nome_fantasia',
-                'municipio',
-                'uf',
+                // 'recipient_id',
         ]);
 
         if(!\Auth::user()->hasRole('administrador geral')){
@@ -201,8 +200,11 @@ class EmpresasController extends Controller {
         $modal_body .= "</thead>";
         $modal_body .= "<tbody>";
         $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Status:</b></td>";
-        $modal_body .= "<td>".$empresa->status."</td>";
+        $modal_body .= "<td><b>Status da conta bancária:</b></td>";
+        if($empresa->recipient_id != '')
+            $modal_body .= "<td>Ativa</td>";
+        else
+            $modal_body .= "<td>Inativa</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>CNPJ:</b></td>";
@@ -247,18 +249,6 @@ class EmpresasController extends Controller {
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Complemento:</b></td>";
         $modal_body .= "<td>".$empresa->complemento."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Atividade principal:</b></td>";
-        $modal_body .= "<td>".$empresa->atividade_principal."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Capital social:</b></td>";
-        $modal_body .= "<td>".$empresa->capital_social."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Data de abertura:</b></td>";
-        $modal_body .= "<td>".$empresa->abertura."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
