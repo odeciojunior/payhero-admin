@@ -3,9 +3,7 @@
 namespace Modules\Parceiros\Http\Controllers;
 
 use App\User;
-use App\Empresa;
 use App\UserProjeto;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -20,9 +18,9 @@ class ParceirosController extends Controller {
         $parceiros = \DB::table('projetos as projeto')
             ->leftJoin('users_projetos as user_projeto','projeto.id','user_projeto.projeto')
             ->leftJoin('users as user','user_projeto.user','user.id')
-            ->where('tipo','!=','produtor')
-            // ->where('user_projeto.user','<',\Auth::user()->id)
-            // ->orWhereNull('user_projeto.user')
+            ->where('user_projeto.user','>',\Auth::user()->id)
+            ->where('user_projeto.user','<',\Auth::user()->id)
+            ->orWhereNull('user_projeto.user')
             ->where('projeto.id',$dados['projeto'])
             ->get([
                 'user_projeto.id',
@@ -55,24 +53,14 @@ class ParceirosController extends Controller {
 
     public function cadastrarParceiro(Request $request){
 
-        $dados = $request->all();
+        $dados = $request->all();        return response()->json('lala');
+
 
         $user = User::where('email',$dados['email_parceiro'])->first();
 
         if($user != null){
             $dados['user'] = $user['id'];
             $dados['status'] = 'ativo';
-            $empresas_usuario = UsuarioEmpresa::where('user',$user['id'])->get()->toArray();
-
-            if(count($empresas_usuario) > 0){
-                foreach($empresas_usuario as $empresa_usuario){
-                    $usuario_empresa = Empresa::find($empresa_usuario['empresa']);
-                    if($usuario_empresa['recipient_id'] != ''){
-                        $dados['empresa'] = $usuario_empresa['id'];
-                        break;
-                    }
-                }
-            }
         }
         else{
             $dados['status'] = 'convite enviado';

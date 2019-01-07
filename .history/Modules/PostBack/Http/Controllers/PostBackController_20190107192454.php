@@ -18,8 +18,6 @@ class PostBackController extends Controller {
 
         if(isset($dados['event']) && $dados['event'] = 'transaction_status_changed'){
 
-            Log::write('info', 'entrou no if ');
-
             $venda = Venda::find($dados['transaction']['metadata']['id_venda']);
 
             if($venda != null){
@@ -45,7 +43,7 @@ class PostBackController extends Controller {
 
         }
 
-        return 'sucesso';
+        return 'true';
     }
 
 }

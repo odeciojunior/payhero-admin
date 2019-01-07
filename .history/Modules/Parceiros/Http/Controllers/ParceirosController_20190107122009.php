@@ -68,7 +68,8 @@ class ParceirosController extends Controller {
                 foreach($empresas_usuario as $empresa_usuario){
                     $usuario_empresa = Empresa::find($empresa_usuario['empresa']);
                     if($usuario_empresa['recipient_id'] != ''){
-                        $dados['empresa'] = $usuario_empresa['id'];
+                        dd($usuario_empresa);
+                        $dados['empresa'] = $usuario_empresa['empresa'];
                         break;
                     }
                 }
