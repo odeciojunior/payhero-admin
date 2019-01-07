@@ -55,9 +55,7 @@ class DashboardController extends Controller
         $saldo_disponivel = substr_replace($saldo_disponivel, '.',strlen($saldo_disponivel) - 2, 0 );
         $saldo_disponivel = number_format($saldo_disponivel,2);
         $saldo_transferido = substr_replace($saldo_transferido, '.',strlen($saldo_transferido) - 2, 0 );
-        $saldo_transferido = number_format($saldo_transferido,2);
         $saldo_futuro = substr_replace($saldo_futuro, '.',strlen($saldo_futuro) - 2, 0 );
-        $saldo_futuro = number_format($saldo_futuro,2);
 
         return view('dashboard::dashboard',[
             'saldo_disponivel' => $saldo_disponivel,
