@@ -132,6 +132,10 @@ class RelatoriosController extends Controller {
         $modal_body .= "<td>#".$venda['id']."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Meio de pagamento:</b></td>";
+        $modal_body .= "<td>".$venda['meio_pagamento']."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
         $modal_body .= "<td><b>Forma de pagamento:</b></td>";
         $modal_body .= "<td>".$venda['forma_pagamento']."</td>";
         $modal_body .= "</tr>";
@@ -155,16 +159,6 @@ class RelatoriosController extends Controller {
         $modal_body .= "<td>".$plano['cod_identificador']."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
-        if($venda['forma_pagamento'] == 'Boleto'){
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Link do boleto:</b></td>";
-            $modal_body .= "<td>".$venda['link_boleto']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Linha digitável do boleto:</b></td>";
-            $modal_body .= "<td>".$venda['linha_digitavel_boleto']."</td>";
-            $modal_body .= "</tr>";
-        }
         if($plano['entrega']){
             $modal_body .= "<tr>";
             $modal_body .= "<td><b>Frete:</b></td>";

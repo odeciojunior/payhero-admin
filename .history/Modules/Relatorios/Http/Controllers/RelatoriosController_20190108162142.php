@@ -119,10 +119,13 @@ class RelatoriosController extends Controller {
         $modal_body .= "<td><b>Produto:</b></td>";
         $modal_body .= "<td>".$plano['nome']."</td>";
         $modal_body .= "</tr>";
-        // $modal_body .= "<tr>";
-        // $modal_body .= "<td><b>Preço:</b></td>";
-        // $modal_body .= "<td>".$plano['preco']."</td>";
-        // $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Preço:</b></td>";
+        $modal_body .= "<td>".$plano['preco']."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Frete:</b></td>";
+        $modal_body .= "<td>".$venda['valor_frete']."</td>";
         // $modal_body .= "</tr>";
         // $modal_body .= "<td><b>Valor total:</b></td>";
         // $modal_body .= "<td>".(int) $venda['valor_frete'] + (int) $plano->preco."</td>";
@@ -130,6 +133,10 @@ class RelatoriosController extends Controller {
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Código da transação:</b></td>";
         $modal_body .= "<td>#".$venda['id']."</td>";
+        $modal_body .= "</tr>";
+        $modal_body .= "<tr>";
+        $modal_body .= "<td><b>Meio de pagamento:</b></td>";
+        $modal_body .= "<td>".$venda['meio_pagamento']."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
         $modal_body .= "<td><b>Forma de pagamento:</b></td>";
@@ -155,26 +162,7 @@ class RelatoriosController extends Controller {
         $modal_body .= "<td>".$plano['cod_identificador']."</td>";
         $modal_body .= "</tr>";
         $modal_body .= "<tr>";
-        if($venda['forma_pagamento'] == 'Boleto'){
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Link do boleto:</b></td>";
-            $modal_body .= "<td>".$venda['link_boleto']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Linha digitável do boleto:</b></td>";
-            $modal_body .= "<td>".$venda['linha_digitavel_boleto']."</td>";
-            $modal_body .= "</tr>";
-        }
         if($plano['entrega']){
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Frete:</b></td>";
-            $modal_body .= "<td>".$venda['valor_frete']."</td>";
-            $modal_body .= "</tr>";
-            // $modal_body .= "</tr>";
-            // $modal_body .= "<td><b>Valor total:</b></td>";
-            // $modal_body .= "<td>".(int) $venda['valor_frete'] + (int) $plano->preco."</td>";
-            // $modal_body .= "</tr>";
-            $modal_body .= "<tr>";    
             $modal_body .= "<td><b>CEP:</b></td>";
             $modal_body .= "<td>".$entrega['cep']."</td>";
             $modal_body .= "</tr>";

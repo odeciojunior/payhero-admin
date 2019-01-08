@@ -29,15 +29,9 @@ class PostBackController extends Controller {
 
             if($venda == null){
                 Log::write('info', 'VENDA NÃO ENCONTRADA!!!');
-                return 'sucesso';
             }
 
-            if($dados['transaction']['status'] == $venda['pagamento_status']){
-                Log::write('info', 'VENDA COM MESMO STATUS!!!');
-                return 'sucesso';
-            }
-
-            if($dados['transaction']['status'] == 'paid'){
+            if($dados['transaction']['status'] == 'paid' && $venda['pagamento_status'] != 'paid'){
                 date_default_timezone_set('America/Sao_Paulo');
                 $venda->update([
                     'pagamento_status' => $dados['transaction']['status'],

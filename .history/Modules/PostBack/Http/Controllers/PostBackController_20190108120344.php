@@ -37,7 +37,7 @@ class PostBackController extends Controller {
                 return 'sucesso';
             }
 
-            if($dados['transaction']['status'] == 'paid'){
+            if($dados['transaction']['status'] == 'paid' && $venda['pagamento_status'] != 'paid'){
                 date_default_timezone_set('America/Sao_Paulo');
                 $venda->update([
                     'pagamento_status' => $dados['transaction']['status'],
