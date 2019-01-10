@@ -239,10 +239,10 @@
                 },
                 success: function(data){
 
-                    $('#tabela_taxa').html('R$ '+data.taxa);
-                    $('#tabela_taxa_antecipacao').html('R$ '+data.taxa_antecipacao);
-                    $('#tabela_valor_total').html('R$ '+data.valor_total);
-                    $('#tabela_data_pagamento').html('R$ '+data.data_liberacao);
+                    $('#tabela_taxa').html(data.taxa);
+                    $('#tabela_taxa_antecipacao').html(data.taxa_antecipacao);
+                    $('#tabela_valor_total').html(data.valor_total);
+                    $('#tabela_data_pagamento').html(data.data_liberacao);
 
                     $("#carregando").html("");
                     $('#tabela_antecipacao').show();

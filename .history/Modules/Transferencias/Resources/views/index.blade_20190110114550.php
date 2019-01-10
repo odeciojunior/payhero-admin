@@ -150,22 +150,20 @@
                             </button>
                             <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center">Simulação de antecipação de </h4>
                         </div>
-                        <div id="carregando">
-                        </div>
                         <div id="modal_detalhes_body" class="modal-body">
-                            <table id="tabela_antecipacao" class='table table-bordered table-hover'>
+                            <table class='table table-bordered table-hover'>
                                 <tbody>
                                     <tr>
-                                        <td><b>Valor total</b></td>
-                                        <td id="tabela_valor_total"></td>
+                                        <td><b>Taxa</b></td>
+                                        <td id="tabela_taxa"></td>
                                     </tr>
                                     <tr>
                                         <td><b>Taxa de antecipação</b></td>
                                         <td id="tabela_taxa_antecipacao"></td>
                                     </tr>
                                     <tr>
-                                        <td><b>Taxa</b></td>
-                                        <td id="tabela_taxa"></td>
+                                        <td><b>Valor total</b></td>
+                                        <td id="tabela_valor_total"></td>
                                     </tr>
                                     <tr>
                                         <td><b>Data do pagamento</b></td>
@@ -175,7 +173,6 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button id="confirmar_antecipacao" type="button" class="btn btn-success">Confirmar antecipação</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
@@ -224,8 +221,7 @@
 
             $("#modal_detalhes_titulo").html("Simulação da antecipação de um valor de "+$('#valor_simulacao').val());
 
-            $("#carregando").html("<div class='text-center'>Carregando...</div>");
-            $('#tabela_antecipacao').hide();
+            $("#modal_detalhes_body").html("<div class='text-center'>Carregando...</div>");
 
             $.ajax({
                 method: "POST",
@@ -239,14 +235,10 @@
                 },
                 success: function(data){
 
-                    $('#tabela_taxa').html('R$ '+data.taxa);
-                    $('#tabela_taxa_antecipacao').html('R$ '+data.taxa_antecipacao);
-                    $('#tabela_valor_total').html('R$ '+data.valor_total);
-                    $('#tabela_data_pagamento').html('R$ '+data.data_liberacao);
-
-                    $("#carregando").html("");
-                    $('#tabela_antecipacao').show();
-        
+                    $('#tabela_taxa').val(data.taxa);
+                    $('#tabela_taxa_antecipacao').val(data.taxa_antecipacao);
+                    $('#tabela_valor_total').val(data.valor_total);
+                    $('#tabela_data_pagamento').val(data.data_liberacao);
                 }
             });
 

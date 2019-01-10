@@ -21,19 +21,9 @@ Route::group(['middleware' => 'web', 'prefix' => 'extrato', 'namespace' => 'Modu
         'as' => 'extrato'
     ]);
 
-    Route::post('/detalhessaldofuturo', [
-        'uses' => 'TransferenciasController@detalhesSaldoFuturo',
-        'as' => 'transferencias.detalhessaldofuturo'
+    Route::post('/detalhesantecipacao', [
+        'uses' => 'TransferenciasController@detalhesAntecipacao',
+        'as' => 'transferencias.detalhesantecipacao'
     ]);
     
-    Route::post('/historico', [
-        'uses' => 'TransferenciasController@historico',
-        'as' => 'transferencias.historico'
-    ]);
-
-    Route::post('/getsaldos', [
-        'uses' => 'TransferenciasController@getSaldos',
-        'as' => 'transferencias.getsaldos'
-    ]);
-
 });

@@ -156,16 +156,16 @@
                             <table id="tabela_antecipacao" class='table table-bordered table-hover'>
                                 <tbody>
                                     <tr>
-                                        <td><b>Valor total</b></td>
-                                        <td id="tabela_valor_total"></td>
+                                        <td><b>Taxa</b></td>
+                                        <td id="tabela_taxa"></td>
                                     </tr>
                                     <tr>
                                         <td><b>Taxa de antecipação</b></td>
                                         <td id="tabela_taxa_antecipacao"></td>
                                     </tr>
                                     <tr>
-                                        <td><b>Taxa</b></td>
-                                        <td id="tabela_taxa"></td>
+                                        <td><b>Valor total</b></td>
+                                        <td id="tabela_valor_total"></td>
                                     </tr>
                                     <tr>
                                         <td><b>Data do pagamento</b></td>
@@ -175,7 +175,6 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button id="confirmar_antecipacao" type="button" class="btn btn-success">Confirmar antecipação</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
@@ -239,10 +238,10 @@
                 },
                 success: function(data){
 
-                    $('#tabela_taxa').html('R$ '+data.taxa);
-                    $('#tabela_taxa_antecipacao').html('R$ '+data.taxa_antecipacao);
-                    $('#tabela_valor_total').html('R$ '+data.valor_total);
-                    $('#tabela_data_pagamento').html('R$ '+data.data_liberacao);
+                    $('#tabela_taxa').html(data.taxa);
+                    $('#tabela_taxa_antecipacao').html(data.taxa_antecipacao);
+                    $('#tabela_valor_total').html(data.valor_total);
+                    $('#tabela_data_pagamento').html(data.data_liberacao);
 
                     $("#carregando").html("");
                     $('#tabela_antecipacao').show();

@@ -322,7 +322,7 @@ class TransferenciasController extends Controller {
             'recipient_id' => $empresa['recipient_id'],
         ]);
 
-        $historicos = [];
+        $lancamentos_futuros = [];
 
         $hoje = date('Y-m-d');
 
@@ -360,26 +360,26 @@ class TransferenciasController extends Controller {
                 if($transactionPayable->payment_method == 'credit_card'){
                     $dados_transacao['metodo'] = 'Cartão de crédito';
                 }
-                elseif($transactionPayable->payment_method == 'boleto'){
+                if($transactionPayable->payment_method == 'boleto'){
                     $dados_transacao['metodo'] = 'Boleto';
                 }
                 else{
                     $dados_transacao['metodo'] = $transactionPayable->payment_method;
                 }
 
-                $historicos[] = $dados_transacao;
+                $lancamentos_futuros[] = $dados_transacao;
             }
         }
 
         $array_data = [];
-        foreach($historicos as &$historico){
-            $array_data[] = $historico['data_pagamento'];
-            $historico['data_pagamento'] = date('d/m/Y',strtotime($historico['data_pagamento']));
+        foreach($lancamentos_futuros as &$lancamentos_futuro){
+            $array_data[] = $lancamentos_futuro['data_pagamento'];
+            $lancamentos_futuro['data_pagamento'] = date('d/m/Y',strtotime($lancamentos_futuro['data_pagamento']));
         }
 
-        array_multisort($historicos,$array_data);
+        array_multisort($lancamentos_futuros,$array_data);
 
-        return response()->json($historicos);
+        return response()->json($lancamentos_futuros);
 
     }
 
@@ -401,34 +401,43 @@ class TransferenciasController extends Controller {
 
         $empresa = Empresa::find($dados['empresa']);
 
+        $empresas[] = [
+            'id' => $empresa['id'],
+            'nome' => $empresa['nome_fantasia']
+        ];
+
         if($empresa['recipient_id'] == ''){
-            return response()->json("Configurações da conta bancaria não encontradas");
+            continue;
         }
 
+        if(!$empresa_selecionada){
+            $empresa_ativa = $empresa['id'];
+            $empresa_selecionada = true;
 
-        $anticipationLimits = $pagarMe->bulkAnticipations()->getList([
-            // 'requested_amount' => $dados['valor'],
-            // 'build' => 'true',
-            'recipient_id' => $empresa['recipient_id'],
-            // 'payment_date' => strtotime(Carbon::now()->addDays(7)->format('Y-m-d')) * 1000,
-            // 'timeframe' => 'start',
-        ]);
+            $anticipationLimits = $pagarMe->bulkAnticipations()->getList([
+                // 'requested_amount' => $dados['valor'],
+                // 'build' => 'true',
+                'recipient_id' => $empresa['recipient_id'],
+                // 'payment_date' => strtotime(Carbon::now()->addDays(7)->format('Y-m-d')) * 1000,
+                // 'timeframe' => 'start',
+            ]);
 
-        $recipientBalance = $pagarMe->recipients()->getBalance([
-            'recipient_id' => $empresa['recipient_id'],
-        ]);
+            $recipientBalance = $pagarMe->recipients()->getBalance([
+                'recipient_id' => $empresa['recipient_id'],
+            ]);
 
-        $saldo_disponivel  += $recipientBalance->available->amount;
-        $saldo_transferido += $recipientBalance->transferred->amount;
-        $saldo_futuro      += $recipientBalance->waiting_funds->amount;
+            $saldo_disponivel  += $recipientBalance->available->amount;
+            $saldo_transferido += $recipientBalance->transferred->amount;
+            $saldo_futuro      += $recipientBalance->waiting_funds->amount;
 
-        $anticipationLimits = $pagarMe->bulkAnticipations()->getLimits([
-            'recipient_id' => $empresa['recipient_id'],
-            'payment_date' => strtotime(Carbon::now()->addDays(5)->format('Y-m-d')) * 1000,
-            'timeframe' => 'start'
-        ]);
+            $anticipationLimits = $pagarMe->bulkAnticipations()->getLimits([
+                'recipient_id' => $empresa['recipient_id'],
+                'payment_date' => strtotime(Carbon::now()->addDays(7)->format('Y-m-d')) * 1000,
+                'timeframe' => 'start'
+            ]);
 
-        $saldo_antecipavel = $anticipationLimits->maximum->amount;
+            $saldo_antecipavel = $anticipationLimits->maximum->amount;
+        }
 
         if($saldo_disponivel == 0){
             $saldo_disponivel = '000';

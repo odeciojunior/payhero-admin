@@ -158,13 +158,13 @@
                 </a>
                 <ul class="site-menu-sub">
                   <li class="site-menu-item">
-                    <a class="animsition-link" href="{{ route('extrato') }}">
-                      <span class="site-menu-title">Extrato</span>
+                    <a class="animsition-link" href="{{ route('transferencias') }}">
+                      <span class="site-menu-title">Transferências</span>
                     </a>
                   </li>
                   <li class="site-menu-item">
-                    <a class="animsition-link" href="{{ route('transferencias') }}">
-                      <span class="site-menu-title">Transferências</span>
+                    <a class="animsition-link" href="{{ route('extrato') }}">
+                      <span class="site-menu-title">Extrato</span>
                     </a>
                   </li>
                 </ul>

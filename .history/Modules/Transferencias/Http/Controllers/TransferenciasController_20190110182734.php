@@ -322,7 +322,7 @@ class TransferenciasController extends Controller {
             'recipient_id' => $empresa['recipient_id'],
         ]);
 
-        $historicos = [];
+        $lancamentos_futuros = [];
 
         $hoje = date('Y-m-d');
 
@@ -360,26 +360,26 @@ class TransferenciasController extends Controller {
                 if($transactionPayable->payment_method == 'credit_card'){
                     $dados_transacao['metodo'] = 'Cartão de crédito';
                 }
-                elseif($transactionPayable->payment_method == 'boleto'){
+                if($transactionPayable->payment_method == 'boleto'){
                     $dados_transacao['metodo'] = 'Boleto';
                 }
                 else{
                     $dados_transacao['metodo'] = $transactionPayable->payment_method;
                 }
 
-                $historicos[] = $dados_transacao;
+                $lancamentos_futuros[] = $dados_transacao;
             }
         }
 
         $array_data = [];
-        foreach($historicos as &$historico){
-            $array_data[] = $historico['data_pagamento'];
-            $historico['data_pagamento'] = date('d/m/Y',strtotime($historico['data_pagamento']));
+        foreach($lancamentos_futuros as &$lancamentos_futuro){
+            $array_data[] = $lancamentos_futuro['data_pagamento'];
+            $lancamentos_futuro['data_pagamento'] = date('d/m/Y',strtotime($lancamentos_futuro['data_pagamento']));
         }
 
-        array_multisort($historicos,$array_data);
+        array_multisort($lancamentos_futuros,$array_data);
 
-        return response()->json($historicos);
+        return response()->json($lancamentos_futuros);
 
     }
 

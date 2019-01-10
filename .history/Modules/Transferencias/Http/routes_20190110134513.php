@@ -31,9 +31,4 @@ Route::group(['middleware' => 'web', 'prefix' => 'extrato', 'namespace' => 'Modu
         'as' => 'transferencias.historico'
     ]);
 
-    Route::post('/getsaldos', [
-        'uses' => 'TransferenciasController@getSaldos',
-        'as' => 'transferencias.getsaldos'
-    ]);
-
 });
