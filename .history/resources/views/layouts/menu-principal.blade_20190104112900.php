@@ -151,12 +151,6 @@
               </a>
             </li>
             <li class="site-menu-item has-sub">
-              <a href="{{ route('transferencias') }}">
-                <i class="site-menu-icon wb-plus" aria-hidden="true"></i>
-                <span class="site-menu-title">Transferências</span>
-              </a>
-            </li>
-            <li class="site-menu-item has-sub">
               <a href="{{ route('vitrine') }}">
                 <i class="site-menu-icon wb-grid-9" aria-hidden="true"></i>
                 <span class="site-menu-title">Vitrine</span>

@@ -1,21 +1,26 @@
 <?php
 
-namespace Modules\Dashboard\Http\Controllers;
+namespace Modules\Transferencias\Http\Controllers;
 
 use App\Empresa;
+use Carbon\Carbon;
 use PagarMe\Client;
 use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
-class DashboardController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */ 
+class TransferenciasController extends Controller {
+
+
     public function index() {
+
+        // $data = Carbon::now()->addMonths(6)->format('Y-m-d');
+
+        // echo strtotime(Carbon::now()->addMonths(6)->format('Y-m-d')) * 1000;
+
+        // die;
+
 
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
@@ -29,6 +34,12 @@ class DashboardController extends Controller
         $saldo_futuro = 0;
 
         $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->get()->toArray();
+
+        // $anticipationLimits = $pagarMe->bulkAnticipations()->getLimits([
+        //     'recipient_id' => $empresa['recipient_id'],
+        //     'payment_date' => strtotime(Carbon::now()->addDays(7)->format('Y-m-d')) * 1000,
+        //     'timeframe' => 'start'
+        // ]);
 
         foreach($empresas_usuario as $empresa_usuario){
             $empresa = Empresa::find($empresa_usuario['empresa']);
@@ -59,13 +70,12 @@ class DashboardController extends Controller
         $saldo_futuro = substr_replace($saldo_futuro, '.',strlen($saldo_futuro) - 2, 0 );
         $saldo_futuro = number_format($saldo_futuro,2);
 
-        return view('dashboard::dashboard',[
+        return view('transferencias::index',[
             'saldo_disponivel' => $saldo_disponivel,
             'saldo_transferido' => $saldo_transferido,
             'saldo_futuro' => $saldo_futuro
         ]);
-
-
+        
     }
 
 }
