@@ -109,7 +109,7 @@
                                     <!-- Carregado dinamicamente -->
                                 </tbody>
                             </table>
-                            <div id="nav-tabela_saldo_futuro"></div>
+                            <div id="nav"></div>
                         </div>
                         <div class="tab-pane" id="tab_historico" role="tabpanel">
                             <table id="tabela_historico" class="table table-hover table-bordered">
@@ -123,7 +123,6 @@
                                     <!-- Carregado dinamicamente -->
                                 </tbody>
                             </table>
-                            <div id="nav-tabela_historico"></div>
                         </div>
                     </div>
                 </div>
@@ -257,11 +256,8 @@
             $('#label_saldo_futuro').html("");
             $('#label_saldo_antecipavel').html("");
 
-            $('#dados_tabela_historico').html("");
-            $('#dados_tabela_saldo_futuro').html("");
-            $('#nav-tabela_historico').html('');
-            $('#nav-tabela_saldo_futuro').html('');
-
+            $('#tabela_historico').html("");
+            $('#tabela_saldo_futuro').html("");
 
             atualizarSaldos($(this).val());
             atualizarTabelaSaldoFuturo($(this).val());
@@ -283,20 +279,20 @@
             var rowsShown = 8;
             var rowsTotal = $('#'+id_tabela+' tbody tr').length;
             var numPages = rowsTotal/rowsShown;
-            $('#nav-'+id_tabela).html('');
+            $("#nav").html('');
             for(i = 0;i < numPages;i++) {
                 var pageNum = i + 1;
-                $('#nav-'+id_tabela).append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
+                $('#nav').append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
             }
             $('#'+id_tabela+' tbody tr').hide();
             $('#'+id_tabela+' tbody tr').slice(0, rowsShown).show();
-            $('#nav-'+id_tabela+' a:first').addClass('active');
-            $('#nav-'+id_tabela+' a:first').addClass('btn-primary');
-            $('#nav-'+id_tabela+' a').bind('click', function(){
+            $('#nav a:first').addClass('active');
+            $('#nav a:first').addClass('btn-primary');
+            $('#nav a').bind('click', function(){
 
-                $('#nav-'+id_tabela+' a').removeClass('active');
-                $('#nav-'+id_tabela+' a').removeClass('btn-primary');
-                $('#nav-'+id_tabela+' a').addClass('btn');
+                $('#nav a').removeClass('active');
+                $('#nav a').removeClass('btn-primary');
+                $('#nav a').addClass('btn');
                 $(this).addClass('active');
                 $(this).addClass('btn-primary');
                 var currPage = $(this).attr('rel');

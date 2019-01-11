@@ -280,7 +280,7 @@
 
         function paginarTabela(id_tabela){
 
-            var rowsShown = 8;
+            var rowsShown = 2;
             var rowsTotal = $('#'+id_tabela+' tbody tr').length;
             var numPages = rowsTotal/rowsShown;
             $('#nav-'+id_tabela).html('');

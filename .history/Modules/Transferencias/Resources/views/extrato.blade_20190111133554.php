@@ -257,11 +257,8 @@
             $('#label_saldo_futuro').html("");
             $('#label_saldo_antecipavel').html("");
 
-            $('#dados_tabela_historico').html("");
-            $('#dados_tabela_saldo_futuro').html("");
-            $('#nav-tabela_historico').html('');
-            $('#nav-tabela_saldo_futuro').html('');
-
+            $('#tabela_historico').html("");
+            $('#tabela_saldo_futuro').html("");
 
             atualizarSaldos($(this).val());
             atualizarTabelaSaldoFuturo($(this).val());
@@ -280,23 +277,23 @@
 
         function paginarTabela(id_tabela){
 
-            var rowsShown = 8;
+            var rowsShown = 2;
             var rowsTotal = $('#'+id_tabela+' tbody tr').length;
             var numPages = rowsTotal/rowsShown;
-            $('#nav-'+id_tabela).html('');
+            $("#nav-"+id_tabela).html('');
             for(i = 0;i < numPages;i++) {
                 var pageNum = i + 1;
-                $('#nav-'+id_tabela).append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
+                $('#nav').append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
             }
             $('#'+id_tabela+' tbody tr').hide();
             $('#'+id_tabela+' tbody tr').slice(0, rowsShown).show();
-            $('#nav-'+id_tabela+' a:first').addClass('active');
-            $('#nav-'+id_tabela+' a:first').addClass('btn-primary');
-            $('#nav-'+id_tabela+' a').bind('click', function(){
+            $('#nav a:first').addClass('active');
+            $('#nav a:first').addClass('btn-primary');
+            $('#nav a').bind('click', function(){
 
-                $('#nav-'+id_tabela+' a').removeClass('active');
-                $('#nav-'+id_tabela+' a').removeClass('btn-primary');
-                $('#nav-'+id_tabela+' a').addClass('btn');
+                $('#nav a').removeClass('active');
+                $('#nav a').removeClass('btn-primary');
+                $('#nav a').addClass('btn');
                 $(this).addClass('active');
                 $(this).addClass('btn-primary');
                 var currPage = $(this).attr('rel');

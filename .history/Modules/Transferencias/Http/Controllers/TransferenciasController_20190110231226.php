@@ -188,7 +188,7 @@ class TransferenciasController extends Controller {
     public function detalhesSaldoFuturo(Request $request){
 
         $dados = $request->all();
-
+dd($dados);
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
         }
@@ -201,8 +201,8 @@ class TransferenciasController extends Controller {
         $transactionPayables = $pagarMe->payables()->getList([
             'recipient_id' => $empresa['recipient_id'],
             'count' => 200,
-            'payment_date' =>  '>='.strtotime($dados['filtro_inicio']) * 1000,
-            'payment_date' =>  '<='.strtotime($dados['filtro_fim']) * 1000
+            'payment_date' =>  '>='.strtotime(Carbon::now()->format('Y-m-d')) * 1000,
+            'payment_date' =>  '<='.strtotime(Carbon::now()->addMonths(2)->format('Y-m-d')) * 1000
         ]);
 
         $lancamentos_futuros = [];
@@ -242,14 +242,11 @@ class TransferenciasController extends Controller {
         $array_data = [];
         foreach($lancamentos_futuros as &$lancamentos_futuro){
             $array_data[] = $lancamentos_futuro['data_pagamento'];
+            $lancamentos_futuro['data_pagamento'] = date('d/m/Y',strtotime($lancamentos_futuro['data_pagamento']));
         }
 
         array_multisort($lancamentos_futuros,$array_data);
 
-        foreach($lancamentos_futuros as &$lancamentos_futuro){
-            $lancamentos_futuro['data_pagamento'] = date('d/m/Y',strtotime($lancamentos_futuro['data_pagamento']));
-        }
-        
         return response()->json($lancamentos_futuros);
 
     }

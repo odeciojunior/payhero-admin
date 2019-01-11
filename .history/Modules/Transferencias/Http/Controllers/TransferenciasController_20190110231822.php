@@ -242,6 +242,7 @@ class TransferenciasController extends Controller {
         $array_data = [];
         foreach($lancamentos_futuros as &$lancamentos_futuro){
             $array_data[] = $lancamentos_futuro['data_pagamento'];
+            $lancamentos_futuro['data_pagamento'] = date('d/m/Y',strtotime($lancamentos_futuro['data_pagamento']));
         }
 
         array_multisort($lancamentos_futuros,$array_data);

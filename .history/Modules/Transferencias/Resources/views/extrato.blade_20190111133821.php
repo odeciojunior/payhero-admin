@@ -257,11 +257,8 @@
             $('#label_saldo_futuro').html("");
             $('#label_saldo_antecipavel').html("");
 
-            $('#dados_tabela_historico').html("");
-            $('#dados_tabela_saldo_futuro').html("");
-            $('#nav-tabela_historico').html('');
-            $('#nav-tabela_saldo_futuro').html('');
-
+            $('#tabela_historico').html("");
+            $('#tabela_saldo_futuro').html("");
 
             atualizarSaldos($(this).val());
             atualizarTabelaSaldoFuturo($(this).val());
@@ -280,7 +277,7 @@
 
         function paginarTabela(id_tabela){
 
-            var rowsShown = 8;
+            var rowsShown = 2;
             var rowsTotal = $('#'+id_tabela+' tbody tr').length;
             var numPages = rowsTotal/rowsShown;
             $('#nav-'+id_tabela).html('');

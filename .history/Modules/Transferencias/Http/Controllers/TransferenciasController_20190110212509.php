@@ -173,14 +173,9 @@ class TransferenciasController extends Controller {
 
         }
 
-        $filtro_data_inicio = Carbon::now()->format('Y-m-d');
-        $filtro_data_fim = Carbon::now()->addMonths(1)->format('Y-m-d');
-
         return view('transferencias::extrato',[
             'empresa'            => $empresa_pre_selecionada,
             'empresas'           => $empresas,
-            'filtro_data_inicio' => $filtro_data_inicio,
-            'filtro_data_fim'    => $filtro_data_fim,
         ]);
 
     }
@@ -200,10 +195,12 @@ class TransferenciasController extends Controller {
 
         $transactionPayables = $pagarMe->payables()->getList([
             'recipient_id' => $empresa['recipient_id'],
-            'count' => 200,
-            'payment_date' =>  '>='.strtotime($dados['filtro_inicio']) * 1000,
-            'payment_date' =>  '<='.strtotime($dados['filtro_fim']) * 1000
+            'end_date' => strtotime(Carbon::now()->addDays(11)->format('Y-m-d')) * 1000,
+            'start_date' => strtotime(Carbon::now()->format('Y-m-d')) * 1000,
+            'count' => 200
         ]);
+        $operationList = $pagarMe->balanceOperation()->getList();
+        dd($operationList);
 
         $lancamentos_futuros = [];
 
@@ -242,14 +239,11 @@ class TransferenciasController extends Controller {
         $array_data = [];
         foreach($lancamentos_futuros as &$lancamentos_futuro){
             $array_data[] = $lancamentos_futuro['data_pagamento'];
+            $lancamentos_futuro['data_pagamento'] = date('d/m/Y',strtotime($lancamentos_futuro['data_pagamento']));
         }
 
         array_multisort($lancamentos_futuros,$array_data);
 
-        foreach($lancamentos_futuros as &$lancamentos_futuro){
-            $lancamentos_futuro['data_pagamento'] = date('d/m/Y',strtotime($lancamentos_futuro['data_pagamento']));
-        }
-        
         return response()->json($lancamentos_futuros);
 
     }

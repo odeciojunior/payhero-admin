@@ -84,46 +84,43 @@
                     </ul>
                     <div class="tab-content pt-20">
                         <div class="tab-pane active" id="tab_saldo_futuro" role="tabpanel">
-                            <div id="dados_saldo_futuro" tabindex="-1"></div>
                             <div class="row">
                                 <div class="col-2">
-                                    <h5>Filtro por data :</h5>
+                                    <h5>Filtros por data :</h5>
                                 </div>
                                 <div class="form-group col-3">
                                     <label for="data_inicio_futuros_lancamentos">Data inicial</label>
-                                    <input id="data_inicio_futuros_lancamentos" type="date" value="{!! $filtro_data_inicio !!}" class="form-control">
+                                    <input id="data_inicio_futuros_lancamentos" type="date" class="form-control">
                                 </div>
                                 <div class="form-group col-3">
                                     <label for="data_fim_futuros_lancamentos">Data final</label>
-                                    <input id="data_fim_futuros_lancamentos" type="date" value="{!! $filtro_data_fim !!}" class="form-control">
+                                    <input id="data_fim_futuros_lancamentos" type="date" class="form-control">
                                 </div>
                             </div>
-                            <table id="tabela_saldo_futuro" class="table table-hover table-bordered">
+                            <table class="table table-hover table-bordered">
                                 <thead>
                                     <th>Data</th>
                                     <th>Status</th>
                                     <th>Valor</th>
                                     <th>Método de pagamento</th>
                                 </thead>
-                                <tbody id="dados_tabela_saldo_futuro">
+                                <tbody id="tabela_saldo_futuro">
                                     <!-- Carregado dinamicamente -->
                                 </tbody>
                             </table>
-                            <div id="nav-tabela_saldo_futuro"></div>
                         </div>
                         <div class="tab-pane" id="tab_historico" role="tabpanel">
-                            <table id="tabela_historico" class="table table-hover table-bordered">
+                            <table class="table table-hover table-bordered">
                                 <thead>
                                     <th>Data</th>
                                     <th>Status</th>
                                     <th>Valor</th>
                                     <th>Método de pagamento</th>
                                 </thead>
-                                <tbody id="dados_tabela_historico">
+                                <tbody id="tabela_historico">
                                     <!-- Carregado dinamicamente -->
                                 </tbody>
                             </table>
-                            <div id="nav-tabela_historico"></div>
                         </div>
                     </div>
                 </div>
@@ -173,7 +170,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: { empresa: id_empresa, filtro_inicio: $("#data_inicio_futuros_lancamentos").val(), filtro_fim: $("#data_fim_futuros_lancamentos").val()},
+                data: { empresa: id_empresa},
                 error: function(){
                     alert('Ocorreu algum erro');
                 },
@@ -199,8 +196,7 @@
                         dados_tabela += "<td>"+data[i].metodo+"</td>";
                         dados_tabela += "</tr>";
                     });
-                    $('#dados_tabela_saldo_futuro').html(dados_tabela);
-                    paginarTabela("tabela_saldo_futuro");
+                    $('#tabela_saldo_futuro').html(dados_tabela);
                 }
 
             });
@@ -240,8 +236,7 @@
                         dados_tabela += "<td>"+data[i].metodo+"</td>";
                         dados_tabela += "</tr>";
                     });
-                    $('#dados_tabela_historico').html(dados_tabela);
-                    paginarTabela("tabela_historico");
+                    $('#tabela_historico').html(dados_tabela);
                 }
 
             });
@@ -257,57 +252,13 @@
             $('#label_saldo_futuro').html("");
             $('#label_saldo_antecipavel').html("");
 
-            $('#dados_tabela_historico').html("");
-            $('#dados_tabela_saldo_futuro').html("");
-            $('#nav-tabela_historico').html('');
-            $('#nav-tabela_saldo_futuro').html('');
-
+            $('#tabela_historico').html("");
+            $('#tabela_saldo_futuro').html("");
 
             atualizarSaldos($(this).val());
             atualizarTabelaSaldoFuturo($(this).val());
             atualizarTabelaHistorico($(this).val());
         });
-
-        $("#data_inicio_futuros_lancamentos").on("change", function(){
-
-            atualizarTabelaSaldoFuturo($('#select_empresas').val());
-        });
-
-        $("#data_fim_futuros_lancamentos").on("change", function(){
-
-            atualizarTabelaSaldoFuturo($('#select_empresas').val());
-        });
-
-        function paginarTabela(id_tabela){
-
-            var rowsShown = 8;
-            var rowsTotal = $('#'+id_tabela+' tbody tr').length;
-            var numPages = rowsTotal/rowsShown;
-            $('#nav-'+id_tabela).html('');
-            for(i = 0;i < numPages;i++) {
-                var pageNum = i + 1;
-                $('#nav-'+id_tabela).append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
-            }
-            $('#'+id_tabela+' tbody tr').hide();
-            $('#'+id_tabela+' tbody tr').slice(0, rowsShown).show();
-            $('#nav-'+id_tabela+' a:first').addClass('active');
-            $('#nav-'+id_tabela+' a:first').addClass('btn-primary');
-            $('#nav-'+id_tabela+' a').bind('click', function(){
-
-                $('#nav-'+id_tabela+' a').removeClass('active');
-                $('#nav-'+id_tabela+' a').removeClass('btn-primary');
-                $('#nav-'+id_tabela+' a').addClass('btn');
-                $(this).addClass('active');
-                $(this).addClass('btn-primary');
-                var currPage = $(this).attr('rel');
-                var startItem = currPage * rowsShown;
-                var endItem = startItem + rowsShown;
-                $('#'+id_tabela+' tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
-                        css('display','table-row').animate({opacity:1}, 300);
-
-            });
-        }
-
     });
 
   </script>
