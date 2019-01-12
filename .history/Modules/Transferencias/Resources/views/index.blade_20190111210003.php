@@ -139,7 +139,7 @@
                                 </div>
                                 <div class="col-7">
                                     <div class="text-center">
-                                        <h4> Simular antecipação </h4>
+                                        <h4> Simulação de antecipação </h4>
                                     </div>
                                     <div class="row">
                                         <div class="col-8">
@@ -152,27 +152,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr style="margin-top:30px">
-
-                            <h3 style="margin-top: 30px"> Histórico de antecipações </h3>
-
-                            <div class="row" style="margin-top: 30px">
-                                <div class="col-12">
-                                    <table id="tabela_antecipacoes" class="table table-hover table-bordered">
-                                        <thead>
-                                            <th>Data de solicitação</th>
-                                            <th>Data de liberação</th>
-                                            <th>Valor</th>
-                                            <th>Status</th>
-                                        </thead>
-                                        <tbody id="dados_tabela_antecipacoes">
-                                            <!-- Carregado dinamicamente -->
-                                        </tbody>
-                                    </table>
-                                    <div id="nav-tabela_antecipacoes"></div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -365,38 +344,8 @@
                         dados_tabela += "</tr>";
                     });
                     $('#dados_tabela_transferencias').html(dados_tabela);
-                    paginarTabela("tabela_transferencias");
+                    {{--  paginarTabela("tabela_saldo_futuro");  --}}
                 }
-
-            });
-        }
-
-        function paginarTabela(id_tabela){
-
-            var rowsShown = 8;
-            var rowsTotal = $('#'+id_tabela+' tbody tr').length;
-            var numPages = rowsTotal/rowsShown;
-            $('#nav-'+id_tabela).html('');
-            for(i = 0;i < numPages;i++) {
-                var pageNum = i + 1;
-                $('#nav-'+id_tabela).append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
-            }
-            $('#'+id_tabela+' tbody tr').hide();
-            $('#'+id_tabela+' tbody tr').slice(0, rowsShown).show();
-            $('#nav-'+id_tabela+' a:first').addClass('active');
-            $('#nav-'+id_tabela+' a:first').addClass('btn-primary');
-            $('#nav-'+id_tabela+' a').bind('click', function(){
-
-                $('#nav-'+id_tabela+' a').removeClass('active');
-                $('#nav-'+id_tabela+' a').removeClass('btn-primary');
-                $('#nav-'+id_tabela+' a').addClass('btn');
-                $(this).addClass('active');
-                $(this).addClass('btn-primary');
-                var currPage = $(this).attr('rel');
-                var startItem = currPage * rowsShown;
-                var endItem = startItem + rowsShown;
-                $('#'+id_tabela+' tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
-                        css('display','table-row').animate({opacity:1}, 300);
 
             });
         }

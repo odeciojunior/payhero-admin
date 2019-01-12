@@ -158,18 +158,18 @@
 
                             <div class="row" style="margin-top: 30px">
                                 <div class="col-12">
-                                    <table id="tabela_antecipacoes" class="table table-hover table-bordered">
+                                    <table id="tabela_transferencias" class="table table-hover table-bordered">
                                         <thead>
                                             <th>Data de solicitação</th>
                                             <th>Data de liberação</th>
                                             <th>Valor</th>
                                             <th>Status</th>
                                         </thead>
-                                        <tbody id="dados_tabela_antecipacoes">
+                                        <tbody id="dados_tabela_transferencias">
                                             <!-- Carregado dinamicamente -->
                                         </tbody>
                                     </table>
-                                    <div id="nav-tabela_antecipacoes"></div>
+                                    <div id="nav-tabela_transferencias"></div>
                                 </div>
                             </div>
 

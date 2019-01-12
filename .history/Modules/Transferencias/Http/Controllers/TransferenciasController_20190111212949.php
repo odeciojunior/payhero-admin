@@ -162,7 +162,7 @@ class TransferenciasController extends Controller {
         return response()->json($dados);
     }
 
-    public function realizarAntecipacao(Request $request){
+    public function confirmarAntecipacao(Request $request){
 
         $dados = $request->all();
 

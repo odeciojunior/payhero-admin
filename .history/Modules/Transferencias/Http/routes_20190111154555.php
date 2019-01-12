@@ -17,11 +17,6 @@ Route::group(['middleware' => 'web', 'prefix' => 'transferencias', 'namespace' =
         'as' => 'transferencias.detalhesantecipacao'
     ]);
     
-    Route::post('/historicotransferencias', [
-        'uses' => 'TransferenciasController@getTransferencias',
-        'as' => 'transferencias.historicotransferencias'
-    ]);
-
 });
 
 Route::group(['middleware' => 'web', 'prefix' => 'extrato', 'namespace' => 'Modules\Transferencias\Http\Controllers'], function()

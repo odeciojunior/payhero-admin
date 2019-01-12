@@ -91,30 +91,7 @@ class TransferenciasController extends Controller {
             'recipient_id' => $empresa['recipient_id']
         ]);
 
-        $historico_transferencias = [];
-
-        foreach($recipientTransfers as $recipientTransfer){
-
-            $historico = []; 
-            $historico['valor'] = $recipientTransfer->amount;
-            $historico['valor'] = substr_replace($historico['valor'], '.',strlen($historico['valor']) - 2, 0 );
-            $historico['valor'] = number_format($historico['valor'],2);
-
-            $historico['data_solicitacao'] = $recipientTransfer->date_created;
-            $historico['data_solicitacao'] = Carbon::parse($historico['data_solicitacao'])->format('d/m/Y');
-
-            $historico['data_liberacao'] = $recipientTransfer->funding_estimated_date;
-            $historico['data_liberacao'] = Carbon::parse($historico['data_liberacao'])->format('d/m/Y');
-
-            $historico['status'] = $recipientTransfer->status;
-            if($historico['status'] == 'pending_transfer'){
-                $historico['status'] = 'Transferência pendente';
-            }
-
-            $historico_transferencias[] = $historico;
-        }
-
-        return response()->json($historico_transferencias);
+        return response()->JSON($recipientTransfers);
     }
 
     public function detalhesAntecipacao(Request $request){
@@ -162,7 +139,7 @@ class TransferenciasController extends Controller {
         return response()->json($dados);
     }
 
-    public function realizarAntecipacao(Request $request){
+    public function confirmarAntecipacao(Request $request){
 
         $dados = $request->all();
 

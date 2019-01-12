@@ -70,8 +70,8 @@
                                 <div class="col-7">
                                     <div class="row">
                                         <div class="col-7">
-                                            <label for="valor_saque">Valor do saque (taxa de R$ 3.67)</label>
-                                            <input class="form-control dinheiro" type="text" id="valor_saque" placeholder="R$ 0.00">
+                                            <label for="valor_saque">Valor do saque</label>
+                                            <input class="form-control dinheiro" type="text" id="valor_saque" placeholder="Valor">
                                         </div>
                                         <div class="col-5 text-center">
                                             <button class="btn btn-success" id="sacar_dinheiro" style="margin-top: 25px" disabled>Sacar dinheiro</button>
@@ -98,27 +98,6 @@
                                 <div class="col-7">
                                 </div>
                             </div>
-
-                            <hr style="margin-top:30px">
-
-                            <h3 style="margin-top: 30px"> Histórico de transferências </h3>
-
-                            <div class="row" style="margin-top: 30px">
-                                <div class="col-12">
-                                    <table id="tabela_transferencias" class="table table-hover table-bordered">
-                                        <thead>
-                                            <th>Data de solicitação</th>
-                                            <th>Data de liberação</th>
-                                            <th>Valor</th>
-                                            <th>Status</th>
-                                        </thead>
-                                        <tbody id="dados_tabela_transferencias">
-                                            <!-- Carregado dinamicamente -->
-                                        </tbody>
-                                    </table>
-                                    <div id="nav-tabela_transferencias"></div>
-                                </div>
-                            </div>
                         </div>
                         <div class="tab-pane" id="tab_antecipacoes" role="tabpanel">
                             <div class="row" style="margin-top: 30px">
@@ -139,12 +118,12 @@
                                 </div>
                                 <div class="col-7">
                                     <div class="text-center">
-                                        <h4> Simular antecipação </h4>
+                                        <h4> Simulação de antecipação </h4>
                                     </div>
                                     <div class="row">
                                         <div class="col-8">
                                             <label for="valor_saque">Valor da simulação</label>
-                                            <input id="valor_simulacao" class="form-control dinheiro" type="text" id="valor_saque" placeholder="R$ 0.00">
+                                            <input id="valor_simulacao" class="form-control dinheiro" type="text" id="valor_saque" placeholder="Valor">
                                         </div>
                                         <div class="col-4 text-center">
                                             <button class="btn btn-success" id="visualizar_simulacao" style="margin-top: 25px" data-toggle='modal' data-target='#detalhes_simulacao' disabled>Realizar simulação</button>
@@ -152,27 +131,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr style="margin-top:30px">
-
-                            <h3 style="margin-top: 30px"> Histórico de antecipações </h3>
-
-                            <div class="row" style="margin-top: 30px">
-                                <div class="col-12">
-                                    <table id="tabela_antecipacoes" class="table table-hover table-bordered">
-                                        <thead>
-                                            <th>Data de solicitação</th>
-                                            <th>Data de liberação</th>
-                                            <th>Valor</th>
-                                            <th>Status</th>
-                                        </thead>
-                                        <tbody id="dados_tabela_antecipacoes">
-                                            <!-- Carregado dinamicamente -->
-                                        </tbody>
-                                    </table>
-                                    <div id="nav-tabela_antecipacoes"></div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -229,9 +187,9 @@
 
     $(document).ready(function(){
 
-        var saldo_disponivel_antecipacao = "0";
+        var saldo_disponivel_antecipacao = "";
 
-        var saldo_disponivel_saque = "0";
+        var saldo_disponivel_saque = "";
 
         $('.dinheiro').mask('###,###,###.#0', {reverse: true});
 
@@ -263,19 +221,22 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: { empresa: $("#select_empresas").val(), valor: $("#valor_saque").val().replace(/[^0-9]/g,'')},
+                data: { empresa: id_empresa, valor: $("#valor_saque").val().replace(/[^0-9]/g,'')},
                 error: function(){
                     alert('Ocorreu algum erro');
                 },
                 success: function(data){
 
-                    $('#valor_saque').val('');
-                    atualizarSaldos($("#select_empresas").val());
+                    $('#label_saldo_disponivel').html('R$ '+data.saldo_disponivel);
+                    $('#label_saldo_futuro').html('R$ '+data.saldo_futuro);
+                    $('#label_saldo_transferido').html('R$ '+data.saldo_transferido);
+                    $('#label_saldo_antecipavel').html('R$ '+data.saldo_antecipavel);
                 }
 
             });
 
         });
+
 
         $('#visualizar_simulacao').on('click', function(){
 
@@ -328,81 +289,14 @@
                     $('#label_saldo_transferido').html('R$ '+data.saldo_transferido);
                     $('#label_saldo_antecipavel').html('R$ '+data.saldo_antecipavel);
 
-                    saldo_disponivel_antecipacao = data.saldo_antecipavel.replace(/[^0-9]/g,'');
-                    saldo_disponivel_saque = data.saldo_disponivel.replace(/[^0-9]/g,'');
+                    saldo_disponivel_antecipacao = data.saldo_antecipavel.replace(/[^0-9]/g,'');  --}}
 
                 }
-
-            });
-        }
-
-        function atualizarHistoricoTransferencias(){
-
-            $.ajax({
-                method: "POST",
-                url: "/transferencias/historicotransferencias",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: { empresa: $('#select_empresas').val() },
-                error: function(){
-                    alert('Ocorreu algum erro');
-                },
-                success: function(data){
-
-                    var dados_tabela = "";
-                    $.each(data, function(i, item) {
-                        dados_tabela += "<tr>";
-                        dados_tabela += "<td>"+data[i].data_solicitacao+"</td>";
-                        dados_tabela += "<td>"+data[i].data_liberacao+"</td>";
-                        dados_tabela += "<td>"+data[i].valor+"</td>";
-                        if(data[i].status == "Transferência pendente"){
-                            dados_tabela += "<td><span class='badge  badge-info'>"+data[i].status+"</span></td>";
-                        }
-                        else{
-                            dados_tabela += "<td><span class='badge badge-default'>"+data[i].status+"</span></td>";
-                        }
-                        dados_tabela += "</tr>";
-                    });
-                    $('#dados_tabela_transferencias').html(dados_tabela);
-                    paginarTabela("tabela_transferencias");
-                }
-
-            });
-        }
-
-        function paginarTabela(id_tabela){
-
-            var rowsShown = 8;
-            var rowsTotal = $('#'+id_tabela+' tbody tr').length;
-            var numPages = rowsTotal/rowsShown;
-            $('#nav-'+id_tabela).html('');
-            for(i = 0;i < numPages;i++) {
-                var pageNum = i + 1;
-                $('#nav-'+id_tabela).append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
-            }
-            $('#'+id_tabela+' tbody tr').hide();
-            $('#'+id_tabela+' tbody tr').slice(0, rowsShown).show();
-            $('#nav-'+id_tabela+' a:first').addClass('active');
-            $('#nav-'+id_tabela+' a:first').addClass('btn-primary');
-            $('#nav-'+id_tabela+' a').bind('click', function(){
-
-                $('#nav-'+id_tabela+' a').removeClass('active');
-                $('#nav-'+id_tabela+' a').removeClass('btn-primary');
-                $('#nav-'+id_tabela+' a').addClass('btn');
-                $(this).addClass('active');
-                $(this).addClass('btn-primary');
-                var currPage = $(this).attr('rel');
-                var startItem = currPage * rowsShown;
-                var endItem = startItem + rowsShown;
-                $('#'+id_tabela+' tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
-                        css('display','table-row').animate({opacity:1}, 300);
 
             });
         }
 
         atualizarSaldos($("#select_empresas").val());
-        atualizarHistoricoTransferencias();
 
         $("#select_empresas").on("change", function(){
 
