@@ -153,7 +153,7 @@ class TransferenciasController extends Controller {
 
         $empresa = Empresa::find($dados['empresa']);
 
-        $canceledAnticipation = $pagarMe->bulkAnticipations()->cancel([
+        $canceledAnticipation = $pagarMe->bulkAnticipations()->delete([
             'recipient_id' => $empresa['recipient_id'],
             'bulk_anticipation_id' => $dados['id_antecipacao']
         ]);
@@ -271,12 +271,6 @@ class TransferenciasController extends Controller {
             $historico['status'] = $antecipacao->status;
             if($historico['status'] == 'building'){
                 $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'pending'){
-                $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'canceled'){
-                $historico['status'] = 'Cancelada';
             }
 
             $historico['id'] = $antecipacao->id;

@@ -272,12 +272,6 @@ class TransferenciasController extends Controller {
             if($historico['status'] == 'building'){
                 $historico['status'] = 'Transferência pendente';
             }
-            elseif($historico['status'] == 'pending'){
-                $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'canceled'){
-                $historico['status'] = 'Cancelada';
-            }
 
             $historico['id'] = $antecipacao->id;
 

@@ -227,7 +227,7 @@ class TransferenciasController extends Controller {
             'timeframe' => 'start',
         ]);
 
-        $confirmedAnticipation = $pagarMe->bulkAnticipations()->confirm([
+        $confirmedAnticipation = $pagarme->bulkAnticipations()->confirm([
             'recipient_id' => $empresa['recipient_id'],
             'bulk_anticipation_id' => $anticipationLimits->id,
         ]);
@@ -271,12 +271,6 @@ class TransferenciasController extends Controller {
             $historico['status'] = $antecipacao->status;
             if($historico['status'] == 'building'){
                 $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'pending'){
-                $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'canceled'){
-                $historico['status'] = 'Cancelada';
             }
 
             $historico['id'] = $antecipacao->id;

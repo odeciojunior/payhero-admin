@@ -32,11 +32,6 @@ Route::group(['middleware' => 'web', 'prefix' => 'transferencias', 'namespace' =
         'as' => 'transferencias.cancelartransferencia'
     ]);
 
-    Route::post('/cancelarantecipacao', [
-        'uses' => 'TransferenciasController@cancelarAntecipacao',
-        'as' => 'transferencias.cancelarantecipacao'
-    ]);
-
     Route::post('/historicoantecipacoes', [
         'uses' => 'TransferenciasController@getAntecipacoes',
         'as' => 'transferencias.historicoantecipacoes'

@@ -27,21 +27,6 @@ Route::group(['middleware' => 'web', 'prefix' => 'transferencias', 'namespace' =
         'as' => 'transferencias.historicotransferencias'
     ]);
 
-    Route::post('/cancelartransferencia', [
-        'uses' => 'TransferenciasController@cancelarTransferencia',
-        'as' => 'transferencias.cancelartransferencia'
-    ]);
-
-    Route::post('/cancelarantecipacao', [
-        'uses' => 'TransferenciasController@cancelarAntecipacao',
-        'as' => 'transferencias.cancelarantecipacao'
-    ]);
-
-    Route::post('/historicoantecipacoes', [
-        'uses' => 'TransferenciasController@getAntecipacoes',
-        'as' => 'transferencias.historicoantecipacoes'
-    ]);
-
 });
 
 Route::group(['middleware' => 'web', 'prefix' => 'extrato', 'namespace' => 'Modules\Transferencias\Http\Controllers'], function()

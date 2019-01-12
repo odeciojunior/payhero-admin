@@ -151,11 +151,8 @@ class TransferenciasController extends Controller {
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
         }
 
-        $empresa = Empresa::find($dados['empresa']);
-
-        $canceledAnticipation = $pagarMe->bulkAnticipations()->cancel([
-            'recipient_id' => $empresa['recipient_id'],
-            'bulk_anticipation_id' => $dados['id_antecipacao']
+        $canceledTransfer = $pagarMe->transfers()->cancel([
+            'id' => $dados['id_antecipacao']
         ]);
 
         return response()->json('sucesso');
@@ -227,11 +224,6 @@ class TransferenciasController extends Controller {
             'timeframe' => 'start',
         ]);
 
-        $confirmedAnticipation = $pagarMe->bulkAnticipations()->confirm([
-            'recipient_id' => $empresa['recipient_id'],
-            'bulk_anticipation_id' => $anticipationLimits->id,
-        ]);
-
         return response()->json('sucesso');
 
     }
@@ -272,14 +264,6 @@ class TransferenciasController extends Controller {
             if($historico['status'] == 'building'){
                 $historico['status'] = 'Transferência pendente';
             }
-            elseif($historico['status'] == 'pending'){
-                $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'canceled'){
-                $historico['status'] = 'Cancelada';
-            }
-
-            $historico['id'] = $antecipacao->id;
 
             $historico_antecipacoes[] = $historico;
         }

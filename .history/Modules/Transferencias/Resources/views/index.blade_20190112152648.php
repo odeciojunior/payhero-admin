@@ -494,11 +494,7 @@
                         dados_tabela += "<td>"+data[i].valor+"</td>";
                         if(data[i].status == "Transferência pendente"){
                             dados_tabela += "<td><span class='badge  badge-info'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td><button type='button' class='btn btn-danger btn-sm cancelar_antecipacao' antecipacao='"+data[i].id+"' data-toggle='modal' data-target='#modal_cancelar'>Cancelar antecipação</button></td>";
-                        }
-                        else if(data[i].status == "Cancelada"){
-                            dados_tabela += "<td><span class='badge badge-danger'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td></td>";
+                            dados_tabela += "<td><button type='button' class='btn btn-danger btn-sm cancelar_transferencia' transferencia='"+data[i].id+"' data-toggle='modal' data-target='#modal_cancelar'>Cancelar antecipação</button></td>";
                         }
                         else{
                             dados_tabela += "<td><span class='badge badge-default'>"+data[i].status+"</span></td>";
@@ -508,38 +504,6 @@
                     });
                     $('#dados_tabela_antecipacoes').html(dados_tabela);
                     paginarTabela("tabela_antecipacoes");
-
-                    $(".cancelar_antecipacao").unbind("click");
-
-                    $(".cancelar_antecipacao").on("click", function(){
-                        var id_antecipacao = $(this).attr('antecipacao');
-
-                        $("#modal_excluir_titulo").html("Cancelar antecipação ?");
-
-                        $("#bt_cancelar").unbind("click");
-
-                        $("#bt_cancelar").on("click", function(){
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/transferencias/cancelarantecipacao",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: { id_antecipacao: id_antecipacao, empresa: $("#select_empresas").val() },
-                                error: function(){
-                                    //
-                                },
-                                success: function(data){
-                
-                                    atualizarHistoricoAntecipacoes();
-                                    atualizarSaldos($("#select_empresas").val());
-                                }
-                
-                            });
-                        });
-                    });
-
                 }
 
             });

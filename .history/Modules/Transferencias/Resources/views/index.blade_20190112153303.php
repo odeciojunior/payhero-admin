@@ -496,10 +496,6 @@
                             dados_tabela += "<td><span class='badge  badge-info'>"+data[i].status+"</span></td>";
                             dados_tabela += "<td><button type='button' class='btn btn-danger btn-sm cancelar_antecipacao' antecipacao='"+data[i].id+"' data-toggle='modal' data-target='#modal_cancelar'>Cancelar antecipação</button></td>";
                         }
-                        else if(data[i].status == "Cancelada"){
-                            dados_tabela += "<td><span class='badge badge-danger'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td></td>";
-                        }
                         else{
                             dados_tabela += "<td><span class='badge badge-default'>"+data[i].status+"</span></td>";
                             dados_tabela += "<td></td>";
@@ -526,7 +522,7 @@
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
-                                data: { id_antecipacao: id_antecipacao, empresa: $("#select_empresas").val() },
+                                data: { id_antecipacao: id_antecipacao },
                                 error: function(){
                                     //
                                 },

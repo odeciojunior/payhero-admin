@@ -111,7 +111,6 @@
                                             <th>Data de liberação</th>
                                             <th>Valor</th>
                                             <th>Status</th>
-                                            <th>Opções</th>
                                         </thead>
                                         <tbody id="dados_tabela_transferencias">
                                             <!-- Carregado dinamicamente -->
@@ -165,7 +164,6 @@
                                             <th>Data de liberação</th>
                                             <th>Valor</th>
                                             <th>Status</th>
-                                            <th>Opções</th>
                                         </thead>
                                         <tbody id="dados_tabela_antecipacoes">
                                             <!-- Carregado dinamicamente -->
@@ -180,6 +178,7 @@
                 </div>
             </div>
 
+            <!-- Modal para ver detalhes de * no projeto -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="detalhes_simulacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-simple">
                     <div class="modal-content">
@@ -214,32 +213,13 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button id="confirmar_antecipacao" type="button" class="btn btn-success" data-dismiss="modal">Confirmar antecipação</button>
+                            <button id="confirmar_antecipacao" type="button" class="btn btn-success">Confirmar antecipação</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_cancelar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-simple">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
-                        </div>
-                        <div id="modal_excluir_body" class="modal-body">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                            <button id="bt_cancelar" type="button" class="btn btn-success" data-dismiss="modal">Confirmar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
+                
         </div>
     @endif
 </div>
@@ -357,7 +337,6 @@
                     
                                         $("#valor_simulacao").val("R$ 0.00");
                                         atualizarSaldos($("#select_empresas").val());
-                                        atualizarHistoricoAntecipacoes();
                                         $('#visualizar_simulacao').attr('disabled',true);
 
                                     }
@@ -422,51 +401,14 @@
                         dados_tabela += "<td>"+data[i].valor+"</td>";
                         if(data[i].status == "Transferência pendente"){
                             dados_tabela += "<td><span class='badge  badge-info'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td><button type='button' class='btn btn-danger btn-sm cancelar_transferencia' transferencia='"+data[i].id+"' data-toggle='modal' data-target='#modal_cancelar'>Cancelar transferência</button></td>";
-                        }
-                        else if(data[i].status == "Cancelada"){
-                            dados_tabela += "<td><span class='badge  badge-danger'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td></td>";
                         }
                         else{
                             dados_tabela += "<td><span class='badge badge-default'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td></td>";
                         }
                         dados_tabela += "</tr>";
                     });
                     $('#dados_tabela_transferencias').html(dados_tabela);
                     paginarTabela("tabela_transferencias");
-
-                    $(".cancelar_transferencia").unbind("click");
-
-                    $(".cancelar_transferencia").on("click", function(){
-                        var id_transferencia = $(this).attr('transferencia');
-
-                        $("#modal_excluir_titulo").html("Cancelar transferência ?");
-
-                        $("#bt_cancelar").unbind("click");
-
-                        $("#bt_cancelar").on("click", function(){
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/transferencias/cancelartransferencia",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: { id_transferencia: id_transferencia },
-                                error: function(){
-                                    //
-                                },
-                                success: function(data){
-                
-                                    atualizarHistoricoTransferencias();
-                                    atualizarSaldos($("#select_empresas").val());
-                                }
-                
-                            });
-                        });
-                    });
                 }
 
             });
@@ -482,7 +424,7 @@
                 },
                 data: { empresa: $('#select_empresas').val() },
                 error: function(){
-                    //
+                    alert('Ocorreu algum erro');
                 },
                 success: function(data){
 
@@ -494,52 +436,14 @@
                         dados_tabela += "<td>"+data[i].valor+"</td>";
                         if(data[i].status == "Transferência pendente"){
                             dados_tabela += "<td><span class='badge  badge-info'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td><button type='button' class='btn btn-danger btn-sm cancelar_antecipacao' antecipacao='"+data[i].id+"' data-toggle='modal' data-target='#modal_cancelar'>Cancelar antecipação</button></td>";
-                        }
-                        else if(data[i].status == "Cancelada"){
-                            dados_tabela += "<td><span class='badge badge-danger'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td></td>";
                         }
                         else{
                             dados_tabela += "<td><span class='badge badge-default'>"+data[i].status+"</span></td>";
-                            dados_tabela += "<td></td>";
                         }
                         dados_tabela += "</tr>";
                     });
                     $('#dados_tabela_antecipacoes').html(dados_tabela);
                     paginarTabela("tabela_antecipacoes");
-
-                    $(".cancelar_antecipacao").unbind("click");
-
-                    $(".cancelar_antecipacao").on("click", function(){
-                        var id_antecipacao = $(this).attr('antecipacao');
-
-                        $("#modal_excluir_titulo").html("Cancelar antecipação ?");
-
-                        $("#bt_cancelar").unbind("click");
-
-                        $("#bt_cancelar").on("click", function(){
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/transferencias/cancelarantecipacao",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: { id_antecipacao: id_antecipacao, empresa: $("#select_empresas").val() },
-                                error: function(){
-                                    //
-                                },
-                                success: function(data){
-                
-                                    atualizarHistoricoAntecipacoes();
-                                    atualizarSaldos($("#select_empresas").val());
-                                }
-                
-                            });
-                        });
-                    });
-
                 }
 
             });

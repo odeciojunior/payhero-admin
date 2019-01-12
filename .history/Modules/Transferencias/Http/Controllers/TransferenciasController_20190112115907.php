@@ -110,55 +110,11 @@ class TransferenciasController extends Controller {
             if($historico['status'] == 'pending_transfer'){
                 $historico['status'] = 'Transferência pendente';
             }
-            elseif($historico['status'] == 'canceled'){
-                $historico['status'] = 'Cancelada';
-            }
-
-            $historico['id'] = $recipientTransfer->id;
 
             $historico_transferencias[] = $historico;
         }
 
         return response()->json($historico_transferencias);
-    }
-
-    public function cancelarTransferencia(Request $request){
-
-        $dados = $request->all();
-
-        if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
-        }
-        else{
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
-        }
-
-        $canceledTransfer = $pagarMe->transfers()->cancel([
-            'id' => $dados['id_transferencia']
-        ]);
-
-        return response()->json('sucesso');
-    }
-
-    public function cancelarAntecipacao(Request $request){
-
-        $dados = $request->all();
-
-        if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
-        }
-        else{
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
-        }
-
-        $empresa = Empresa::find($dados['empresa']);
-
-        $canceledAnticipation = $pagarMe->bulkAnticipations()->cancel([
-            'recipient_id' => $empresa['recipient_id'],
-            'bulk_anticipation_id' => $dados['id_antecipacao']
-        ]);
-
-        return response()->json('sucesso');
     }
 
     public function detalhesAntecipacao(Request $request){
@@ -227,11 +183,6 @@ class TransferenciasController extends Controller {
             'timeframe' => 'start',
         ]);
 
-        $confirmedAnticipation = $pagarMe->bulkAnticipations()->confirm([
-            'recipient_id' => $empresa['recipient_id'],
-            'bulk_anticipation_id' => $anticipationLimits->id,
-        ]);
-
         return response()->json('sucesso');
 
     }
@@ -249,37 +200,29 @@ class TransferenciasController extends Controller {
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
         }
 
-        $antecipacoes = $pagarMe->bulkAnticipations()->getList([
+        $anticipations = $pagarMe->bulkAnticipations()->getList([
             'recipient_id' => $empresa['recipient_id']
         ]);
 
         $historico_antecipacoes = [];
 
-        foreach($antecipacoes as $antecipacao){
+        foreach($recipientTransfers as $recipientTransfer){
 
             $historico = []; 
-            $historico['valor'] = $antecipacao->amount;
+            $historico['valor'] = $recipientTransfer->amount;
             $historico['valor'] = substr_replace($historico['valor'], '.',strlen($historico['valor']) - 2, 0 );
             $historico['valor'] = number_format($historico['valor'],2);
 
-            $historico['data_solicitacao'] = $antecipacao->date_created;
+            $historico['data_solicitacao'] = $recipientTransfer->date_created;
             $historico['data_solicitacao'] = Carbon::parse($historico['data_solicitacao'])->format('d/m/Y');
 
-            $historico['data_liberacao'] = $antecipacao->payment_date;
+            $historico['data_liberacao'] = $recipientTransfer->payment_date;
             $historico['data_liberacao'] = Carbon::parse($historico['data_liberacao'])->format('d/m/Y');
 
-            $historico['status'] = $antecipacao->status;
+            $historico['status'] = $recipientTransfer->status;
             if($historico['status'] == 'building'){
                 $historico['status'] = 'Transferência pendente';
             }
-            elseif($historico['status'] == 'pending'){
-                $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'canceled'){
-                $historico['status'] = 'Cancelada';
-            }
-
-            $historico['id'] = $antecipacao->id;
 
             $historico_antecipacoes[] = $historico;
         }

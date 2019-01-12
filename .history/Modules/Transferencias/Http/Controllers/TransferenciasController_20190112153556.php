@@ -219,17 +219,12 @@ class TransferenciasController extends Controller {
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
         }
 
-        $anticipationLimits = $pagarMe->bulkAnticipations()->create([
+        $anticipationLimits = $pagarMe->bulkAnticipations()->delete([
             'requested_amount' => $dados['valor'],
             'build' => 'true',
             'recipient_id' => $empresa['recipient_id'],
             'payment_date' => strtotime(Carbon::now()->addDays(3)->format('Y-m-d')) * 1000,
             'timeframe' => 'start',
-        ]);
-
-        $confirmedAnticipation = $pagarMe->bulkAnticipations()->confirm([
-            'recipient_id' => $empresa['recipient_id'],
-            'bulk_anticipation_id' => $anticipationLimits->id,
         ]);
 
         return response()->json('sucesso');
@@ -271,12 +266,6 @@ class TransferenciasController extends Controller {
             $historico['status'] = $antecipacao->status;
             if($historico['status'] == 'building'){
                 $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'pending'){
-                $historico['status'] = 'Transferência pendente';
-            }
-            elseif($historico['status'] == 'canceled'){
-                $historico['status'] = 'Cancelada';
             }
 
             $historico['id'] = $antecipacao->id;
