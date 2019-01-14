@@ -4,6 +4,7 @@ namespace Modules\Sms\Http\Controllers;
 
 use App\Plano;
 use App\ZenviaSms;
+use App\CompraUsuario;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -34,7 +35,19 @@ class SmsController extends Controller {
 
     public function index() {
 
-        return view('sms::index'); 
+        $qtd_sms_disponiveis = \Auth::user()->sms_zenvia_qtd;
+
+        $compras = CompraUsuario::where('comprador',\Auth::user()->id)->get()->toArray();
+
+        foreach($compras as &$compra){
+            $compra['data_inicio'] = date('d/m/Y',strtotime($compra['data_inicio']));
+
+        }
+
+        return view('sms::index',[
+            'sms_disponiveis' => $qtd_sms_disponiveis,
+            'compras' => $compras
+        ]); 
     }
 
     public function cadastro() {
@@ -77,9 +90,6 @@ class SmsController extends Controller {
 
     }
 
-    /**
-     * Return data for datatable
-     */
     public function dadosSms(Request $request) {
 
         $dados = $request->all();
@@ -117,7 +127,6 @@ class SmsController extends Controller {
         ->rawColumns(['detalhes'])
         ->make(true);
     }
-
 
     public function getDetalhesSms(Request $request){
 

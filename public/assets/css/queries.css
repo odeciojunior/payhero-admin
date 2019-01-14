@@ -1,0 +1,67 @@
+/* Telefones em paisagem e abaixo */
+@media (max-width: 480px) {
+    
+    .hidden-m {
+        display: none;
+    }
+
+
+    #holderValores {
+        max-width: 100%;
+    }
+
+    .formHolder  {
+
+        max-width: 100%;
+
+    }
+
+    #corpoForm {
+        max-width: 100%;
+        padding: 5px 30px;
+    }
+
+    .wrap { 
+        max-width: 100%;
+    }
+
+    .btn {
+        max-width: 100%;
+    }
+
+    .credit-card-box, .credit-card-box .front, .credit-card-box .back {
+        max-width: 100%;
+    }
+
+    .m-flex {
+        flex-direction: column;
+
+        & col-8 {
+            max-width: 100%;
+        }
+    }
+
+
+    
+
+}
+    
+
+  /* estilos aqui */
+}
+
+/* Telefones em paisagem a tablet em retrato */
+@media (max-width: 767px) {
+  /* estilos aqui */
+}
+
+/* Tablet em retrato a paisagem e desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+  /* estilos aqui */
+}
+
+/* Desktop grande */
+@media (min-width: 1200px) {
+ /* estilos aqui */
+}
+

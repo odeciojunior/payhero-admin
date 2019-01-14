@@ -1,0 +1,61 @@
+/* Tira o estilo padrão das listas  */
+ul {
+	display: inline-block;
+	width: 100%;
+}
+
+/* Base do Accordion */
+ .accordion {
+	 width: 100%;
+	 list-style-type: none;
+ 	-webkit-border-radius: 3px;
+ 	-moz-border-radius: 3px;
+ 	border-radius: 3px;
+ }
+
+ /* Os links clicáveis para abrir as Tabs de conteúdo do Accordion */
+.accordion .link {
+	width: 100%;
+	cursor: pointer;
+	padding: 20px 20px 20px 30px;
+	background-color: #efefef;
+	color: #1a1a1a;
+	font-size: 18px;
+	font-weight: 700;
+	border-radius: 3px;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li:last-child .link {
+	border-bottom: 0;
+}
+
+
+.accordion li.open .link {
+	color: #000000;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+.accordion li.open .chevron-down {
+	-webkit-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.accordion li.default .tabpag {display: block;}
+
+/**
+  TABS QUE ENVOLVE O CONTEÚDO PARA PAGAMENTO
+ -----------------------------*/
+ .tabpag {
+	display: none;
+	width: 100%;
+ 	background: #f9f9f9;
+	 padding: 20px 20px;
+ }
+
+

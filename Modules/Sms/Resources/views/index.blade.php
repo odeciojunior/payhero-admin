@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-9">
                                 <div class="blue-grey-700" style="margin-top: 20px; font-size: 35px">
-                                    482 SMS disponíveis
+                                    {!! $sms_disponiveis !!} sms disponíveis
                                 </div>
                             </div>
                             <div class="col-3 text-right">
@@ -58,7 +58,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="blue-grey-700" style="margin-top: 20px; font-size: 25px">
-                                    27 sms enviados
+                                    0 sms enviados
                                 </div>
                             </div>
                             <div class="col-6 text-right">
@@ -78,7 +78,7 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="blue-grey-700" style="margin-top: 20px; font-size: 25px">
-                                    19 sms recebidos
+                                    0 sms recebidos
                                 </div>
                             </div>
                             <div class="col-4 text-right">
@@ -95,28 +95,33 @@
 
             <h3 style="margin: 30px 0 20px 0">Histórico de compras</h3>
 
-            <table class="table table-hover table-stripped table-bordered">
+            <table id="tabela_compras" class="table table-hover table-stripped table-bordered">
                 <thead>
                     <th>Quantidade</th>
                     <th>Data</th>
-                    <th>Hora</th>
                     <th>Valor</th>
+                    <th>Forma de pagamento</th>
+                    <th>Status</th>
+                    <th>Detalhes</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>2.000</td>
-                        <td>20/11/2018</td>
-                        <td>14:40</td>
-                        <td>R$ 180,00</td>
-                    </tr>
-                    <tr>
-                        <td>4.000</td>
-                        <td>28/11/2018</td>
-                        <td>10:04</td>
-                        <td>R$ 360,00</td>
-                    </tr>
+                    @if(count($compras) > 0)
+                        @foreach($compras as $compra)
+                            <tr>
+                                <td>{!! $compra['quantidade'] !!}</td>
+                                <td>{!! $compra['data_inicio'] !!}</td>
+                                <td>{!! $compra['valor_total_pago'] !!}</td>
+                                <td>{!! $compra['forma_pagamento'] !!}</td>
+                                <td>{!! $compra['status'] !!}</td>
+                                <td></td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr> <td colspan="6">Nenhuma compra encontrada</td></tr>
+                    @endif
                 </tbody>
             </table>
+            <div id="nav-tabela_compras"></div>
 
         </div>
 
@@ -147,22 +152,9 @@
                             </tbody>
                         </table>
 
-                        <div class="example-wrap" style="margin: 20px 0 20px 0">
-                            <div class="text-center">
-                                <h4 class="example-title">Forma de pagamento</h4>
-                            </div>
-                            <div class="radio-custom radio-primary">
-                                <input type="radio" id="saldo" name="inputRadios">
-                                <label for="saldo">Saldo cloudfox</label>
-                            </div>
-                            <div class="radio-custom radio-primary">
-                                <input type="radio" id="boleto_cartao" name="inputRadios" checked="">
-                                <label for="boleto_cartao">Cartão / Boleto</label>
-                            </div>
-                        </div>                    
                     </div>
                     <div class="modal-footer text-center">
-                        <button id="comprar" type="button" class="btn btn-success" style="width: 30%; margin: auto">Comprar</button>
+                        <button id="comprar" type="button" class="btn btn-success" style="width: 30%; margin: auto" disabled>Comprar</button>
                     </div>
                 </div>
             </div>
@@ -179,9 +171,14 @@
 
         $('#quantidade').mask('0#');
 
+        paginarTabela("tabela_compras");
+
+        var quantidade = 0;
+        var valor_total = 0;
+
         $('#quantidade').on('keyup', function(){
 
-            var quantidade = $(this).val();
+            quantidade = $(this).val();
 
             if( quantidade == '' || (! $.isNumeric(quantidade)) ){
                 $('#total').html('0');
@@ -190,23 +187,59 @@
 
             var resultado = parseFloat(quantidade) * 0.09;
 
-            resultado = resultado.toLocaleString('pt-BR');
+            resultado = resultado.toFixed(2).toLocaleString('pt-BR');
 
             $('#total').html('R$ '+resultado);
 
+            valor_total = resultado;
+
+            if(resultado.replace(/[^0-9]/g,'') > 2000){
+                $("#comprar").attr('disabled', false);
+            }
+            else{
+                $("#comprar").attr('disabled', true);
+            }
         });
 
         $('#comprar').on('click', function(){
 
-            if($('#saldo').is(':checked')){
+            var form = "<input type='hidden' name='valor' value='"+valor_total+"'>";
+            form += "<input type='hidden' name='quantidade' value='"+quantidade+"'>";
+            form += "<input type='hidden' name='servico' value='SMS'>";
+            $("<form action='/checkout' method='POST'>" + form + "</form>").appendTo($(document.body)).submit();
 
-                alert('aqui vai ser descontado do saldo.. (aguardando integração com pagar.me)');
-            }
-            else if($('#boleto_cartao').is(':checked')){
-                
-                alert('aqui vai ser redirecionado para o checkout em outra aba.. (aguardando integração com pagar.me)');
-            }
         });
+
+        function paginarTabela(id_tabela){
+
+            var rowsShown = 8;
+            var rowsTotal = $('#'+id_tabela+' tbody tr').length;
+            var numPages = rowsTotal/rowsShown;
+            $('#nav-'+id_tabela).html('');
+            for(i = 0;i < numPages;i++) {
+                var pageNum = i + 1;
+                $('#nav-'+id_tabela).append('<a href="#" class="btn" rel="'+i+'">'+pageNum+'</a> ');
+            }
+            $('#'+id_tabela+' tbody tr').hide();
+            $('#'+id_tabela+' tbody tr').slice(0, rowsShown).show();
+            $('#nav-'+id_tabela+' a:first').addClass('active');
+            $('#nav-'+id_tabela+' a:first').addClass('btn-primary');
+            $('#nav-'+id_tabela+' a').bind('click', function(){
+
+                $('#nav-'+id_tabela+' a').removeClass('active');
+                $('#nav-'+id_tabela+' a').removeClass('btn-primary');
+                $('#nav-'+id_tabela+' a').addClass('btn');
+                $(this).addClass('active');
+                $(this).addClass('btn-primary');
+                var currPage = $(this).attr('rel');
+                var startItem = currPage * rowsShown;
+                var endItem = startItem + rowsShown;
+                $('#'+id_tabela+' tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
+                        css('display','table-row').animate({opacity:1}, 300);
+
+            });
+        }
+
 
     });
 
