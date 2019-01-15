@@ -113,7 +113,7 @@
                                 <td>{!! $compra['valor_total_pago'] !!}</td>
                                 <td>{!! $compra['forma_pagamento'] !!}</td>
                                 <td>{!! $compra['status'] !!}</td>
-                                <td></td>
+                                <td><button class="btn btn-success detalhes" data-toggle='modal' data-target='#modal_detalhes_historico' compra-id="{!! $compra['id'] !!}">Detalhes</button></td>
                             </tr>
                         @endforeach
                     @else
@@ -160,6 +160,29 @@
             </div>
         </div>
 
+        <div id="modal_detalhes_historico" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-simple">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" style="width: 100%; text-align:center">Detalhes da compra</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover table-stripped table-bordered" style="margin: 60px 0 40px 0">
+                            <tbody id="detalhes_body">
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-danger" style="width: 30%; margin: auto" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
       </div>
     </div>
   </div>
@@ -240,6 +263,29 @@
             });
         }
 
+        $(".detalhes").on("click", function(){
+
+            $("#detalhes_body").html("<div class='text-center'>Carregando...</div>");
+
+            var id = $(this).attr('compra-id');
+
+            $.ajax({
+                method: "POST",
+                url: "/sms/detalhescompra",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: { id_compra: id },
+                error: function(){
+                    alert('Ocorreu algum erro');
+                },
+                success: function(data){
+
+                    $("#detalhes_body").html(data);
+                }
+            });
+
+        });
 
     });
 

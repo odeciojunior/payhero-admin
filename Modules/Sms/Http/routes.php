@@ -52,6 +52,15 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' =>
         'uses' => 'SmsController@getFormEditarSms'
     ]);
 
+    Route::post('/getformeditarsms',[
+        'as' => 'sms.getformeditarsms',
+        'uses' => 'SmsController@getFormEditarSms'
+    ]);
+
+    Route::post('/detalhescompra',[
+        'as' => 'sms.detalhescompra',
+        'uses' => 'SmsController@detalhesCompra'
+    ]);
 
 });
 
@@ -62,5 +71,5 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'ferramentas', 'names
         'uses' => 'SmsController@index',
         'as' => 'ferramentas.sms',
     ]);
-
+    
 });

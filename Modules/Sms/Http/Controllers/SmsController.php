@@ -40,7 +40,7 @@ class SmsController extends Controller {
         $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
         foreach($compras as &$compra){
-            $compra['data_inicio'] = date('d/m/Y',strtotime($compra['data_inicio']));
+            $compra['data_inicio'] = date('d/m/Y',strtotime($compra['data_inicio'])); 
 
             if($compra['status'] == 'paid')
                 $compra['status'] = 'Paga';
@@ -208,5 +208,62 @@ class SmsController extends Controller {
         return response()->json($form->render());
 
     }
+
+    public function detalhesCompra(Request $request){
+
+        $dados = $request->all();
+
+        $compra = CompraUsuario::find($dados['id_compra']);
+
+        if($compra['status'] == 'paid')
+            $compra['status'] = 'Paga';
+        if($compra['status'] == 'waiting_payment')
+            $compra['status'] = 'Aguardando pagamento';
+
+        $detalhes = "
+            <tr>
+                <td><b>Forma de pagamento</b></td>
+                <td>".$compra['forma_pagamento']."</td>
+            </tr>
+        ";
+        if($compra['forma_pagamento'] == "Boleto"){
+            $detalhes .= "
+                <tr>
+                    <td><b>Link do boleto</b></td>
+                    <td>".$compra['link_boleto']."</td>
+                </tr>
+            ";
+        }
+        $detalhes .= "
+            <tr>
+                <td><b>Quantidade</b></td>
+                <td>".$compra['quantidade']."</td>
+            </tr>
+            <tr>
+            <td><b>Valor</b></td>
+                <td>R$ ".$compra['valor_total_pago']."</td>
+            </tr>
+            <tr>
+                <td><b>Status</b></td>
+                <td>".$compra['status']."</td>
+            </tr>
+            <tr>
+                <td><b>Data da compra</b></td>
+                <td>".date('d/m/Y',strtotime($compra['data_inicio']))."</td>
+            </tr>
+        ";            
+        if($compra['forma_pagamento'] == "Boleto"){
+            $detalhes .= "
+                <tr>
+                    <td><b>Data de pagamento</b></td>
+                    <td>".date('d/m/Y',strtotime($compra['data_inicio']))."</td>
+                </tr>
+            ";
+        }
+
+        return response()->json($detalhes);
+    }
+
+
 
 }

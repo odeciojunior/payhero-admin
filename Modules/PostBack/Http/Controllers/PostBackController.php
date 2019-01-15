@@ -38,11 +38,14 @@ class PostBackController extends Controller {
                 $compra_usuario->update([
                     'status' => $dados['transaction']['status'],
                     'plataforma_id' => $dados['id'],
-                    'data_finalizada' => \Carbon\Carbon::now()->subHour()->subHour()
                 ]);
 
                 if($dados['transaction']['status'] == 'paid'){
 
+                    $compra_usuario->update([
+                        'data_finalizada' => \Carbon\Carbon::now()->subHour()->subHour()
+                    ]);
+    
                     $user = User::find($compra_usuario['comprador']);
 
                     $qtd_sms = $user['sms_zenvia_qtd'] + $compra_usuario['quantidade'];
