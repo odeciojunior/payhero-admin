@@ -235,7 +235,7 @@ class CheckoutController extends Controller {
                 'email' => $dados['email']
             ],
             'billing' => [
-                'name' => $dados['card_name'],
+                'name' => $dados['nome'],
                 'address' => [
                     "country" => "br",
                     "street" => 'sem frete',
@@ -290,8 +290,6 @@ class CheckoutController extends Controller {
 
         $retorno = [
             'sucesso' => true,
-            'link'    => $link_boleto,
-            'venda'   => $venda['id']
         ];
 
         return response()->json($retorno);
