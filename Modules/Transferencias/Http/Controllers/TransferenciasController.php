@@ -174,13 +174,24 @@ class TransferenciasController extends Controller {
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
         }
 
-        $anticipationLimits = $pagarMe->bulkAnticipations()->create([
-            'requested_amount' => $dados['valor'],
-            'build' => 'true',
-            'recipient_id' => $empresa['recipient_id'],
-            'payment_date' => strtotime(Carbon::now()->addDays(7)->format('Y-m-d')) * 1000,
-            'timeframe' => 'start',
-        ]);
+        $antecipacao = false;
+        $qtd_dias = 1;
+
+        while(!$antecipacao){
+            try{
+                $anticipationLimits = $pagarMe->bulkAnticipations()->create([
+                    'requested_amount' => $dados['valor'],
+                    'build' => 'true',
+                    'recipient_id' => $empresa['recipient_id'],
+                    'payment_date' => strtotime(Carbon::now()->addDays($qtd_dias)->format('Y-m-d')) * 1000,
+                    'timeframe' => $dados['data_simulacao'],
+                ]);
+                $antecipacao = true;
+            }
+            catch(\Exception $e){
+                $qtd_dias++;
+            }
+        }
 
         $canceledAnticipation = $pagarMe->bulkAnticipations()->delete([
             'recipient_id' => $empresa['recipient_id'],
@@ -219,13 +230,24 @@ class TransferenciasController extends Controller {
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
         }
 
-        $anticipationLimits = $pagarMe->bulkAnticipations()->create([
-            'requested_amount' => $dados['valor'],
-            'build' => 'true',
-            'recipient_id' => $empresa['recipient_id'],
-            'payment_date' => strtotime(Carbon::now()->addDays(3)->format('Y-m-d')) * 1000,
-            'timeframe' => 'start',
-        ]);
+        $antecipacao = false;
+        $qtd_dias = 1;
+
+        while(!$antecipacao){
+            try{
+                $anticipationLimits = $pagarMe->bulkAnticipations()->create([
+                    'requested_amount' => $dados['valor'],
+                    'build' => 'true',
+                    'recipient_id' => $empresa['recipient_id'],
+                    'payment_date' => strtotime(Carbon::now()->addDays($qtd_dias)->format('Y-m-d')) * 1000,
+                    'timeframe' => $dados['data_simulacao'],
+                ]);
+                $antecipacao = true;
+            }
+            catch(\Exception $e){
+                $qtd_dias++;
+            }
+        }
 
         $confirmedAnticipation = $pagarMe->bulkAnticipations()->confirm([
             'recipient_id' => $empresa['recipient_id'],
@@ -278,8 +300,8 @@ class TransferenciasController extends Controller {
             elseif($historico['status'] == 'canceled'){
                 $historico['status'] = 'Cancelada';
             }
-
-            $historico['id'] = $antecipacao->id;
+    
+            $historico['id'] = $antecipacao->id;    
 
             $historico_antecipacoes[] = $historico;
         }

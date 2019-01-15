@@ -123,7 +123,7 @@
                         </div>
                         <div class="tab-pane" id="tab_antecipacoes" role="tabpanel">
                             <div class="row" style="margin-top: 30px">
-                                <div class="col-5">
+                                <div class="col-5" style="margin-top: 50px">
                                     <div style="border: 1px solid green">
                                         <div class="card-header bg-green-600 white px-30 py-10">
                                             <span>Disponível para antecipação</span>
@@ -145,10 +145,15 @@
                                     <div class="row">
                                         <div class="col-8">
                                             <label for="valor_saque">Valor da simulação</label>
-                                            <input id="valor_simulacao" class="form-control dinheiro" type="text" id="valor_saque" placeholder="R$ 0.00">
+                                            <input id="valor_simulacao" class="form-control dinheiro" type="text" placeholder="R$ 0.00">
+                                            <label for="data_simulacao" style="margin-top: 5px">Antecipar a partir dos</label>
+                                            <select id="data_simulacao" class="form-control">
+                                                <option value="start">Próximos lançamentos</option>
+                                                <option value="end">Últimos lançamentos</option>
+                                            </select>
                                         </div>
                                         <div class="col-4 text-center">
-                                            <button class="btn btn-success" id="visualizar_simulacao" style="margin-top: 25px" data-toggle='modal' data-target='#detalhes_simulacao' disabled>Realizar simulação</button>
+                                            <button class="btn btn-success" id="visualizar_simulacao" style="margin-top: 70px" data-toggle='modal' data-target='#detalhes_simulacao' disabled>Realizar simulação</button>
                                         </div>
                                     </div>
                                 </div>
@@ -313,59 +318,52 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data: { empresa: $("#select_empresas").val(), valor: $("#valor_simulacao").val().replace(/[^0-9]/g,'') },
+                data: { 
+                    empresa: $("#select_empresas").val(), 
+                    valor: $("#valor_simulacao").val().replace(/[^0-9]/g,''),
+                    data_simulacao: $("#data_simulacao").val()
+                },
                 error: function(){
                     //
                 },
                 success: function(data){
 
-                    $.ajax({
-                        method: "POST",
-                        url: "/transferencias/detalhesantecipacao",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: { empresa: $("#select_empresas").val(), valor: $("#valor_simulacao").val().replace(/[^0-9]/g,'') },
-                        error: function(){
-                            //
-                        },
-                        success: function(data){
+                    $('#tabela_taxa').html('R$ '+data.taxa);
+                    $('#tabela_taxa_antecipacao').html('R$ '+data.taxa_antecipacao);
+                    $('#tabela_valor_total').html('R$ '+data.valor_total);
+                    $('#tabela_data_pagamento').html(data.data_liberacao);
 
-                            $('#tabela_taxa').html('R$ '+data.taxa);
-                            $('#tabela_taxa_antecipacao').html('R$ '+data.taxa_antecipacao);
-                            $('#tabela_valor_total').html('R$ '+data.valor_total);
-                            $('#tabela_data_pagamento').html('R$ '+data.data_liberacao);
+                    $("#carregando").html("");
+                    $('#tabela_antecipacao').show();
 
-                            $("#carregando").html("");
-                            $('#tabela_antecipacao').show();
+                    $("#confirmar_antecipacao").unbind("click");
 
-                            $("#confirmar_antecipacao").unbind("click");
+                    $("#confirmar_antecipacao").on("click", function(){
 
-                            $("#confirmar_antecipacao").on("click", function(){
+                        $.ajax({
+                            method: "POST",
+                            url: "/transferencias/confirmarantecipacao",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: { 
+                                empresa: $("#select_empresas").val(), 
+                                valor: $("#valor_simulacao").val().replace(/[^0-9]/g,''),
+                                data_simulacao: $("#data_simulacao").val()
+                            },
+                            error: function(){
+                                //
+                            },
+                            success: function(data){
+            
+                                $("#valor_simulacao").val("R$ 0.00");
+                                atualizarSaldos($("#select_empresas").val());
+                                atualizarHistoricoAntecipacoes();
+                                $('#visualizar_simulacao').attr('disabled',true);
 
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/transferencias/confirmarantecipacao",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: { empresa: $("#select_empresas").val(), valor: $("#valor_simulacao").val().replace(/[^0-9]/g,'') },
-                                    error: function(){
-                                        //
-                                    },
-                                    success: function(data){
-                    
-                                        $("#valor_simulacao").val("R$ 0.00");
-                                        atualizarSaldos($("#select_empresas").val());
-                                        atualizarHistoricoAntecipacoes();
-                                        $('#visualizar_simulacao').attr('disabled',true);
-
-                                    }
-                                });
-                                    
-                            });
-                
-                        }
+                            }
+                        });
+                            
                     });
         
                 }
