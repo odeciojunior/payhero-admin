@@ -41,6 +41,11 @@ class SmsController extends Controller {
 
         foreach($compras as &$compra){
             $compra['data_inicio'] = date('d/m/Y',strtotime($compra['data_inicio']));
+
+            if($compra['status'] == 'paid')
+                $compra['status'] = 'Paga';
+            elseif($compra['status'] == 'waiting_payment')
+                $compra['status'] = 'Aguardando pagamento';
         }
 
         return view('sms::index',[

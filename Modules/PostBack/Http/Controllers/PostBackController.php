@@ -31,20 +31,26 @@ class PostBackController extends Controller {
 
                 $compra_usuario = CompraUsuario::find($dados['transaction']['metadata']['id_venda']);
 
+                if($compra_usuario['status'] == $dados['transaction']['status']){
+                    return 'Sucesso';
+                }
+
                 $compra_usuario->update([
                     'status' => $dados['transaction']['status'],
                     'plataforma_id' => $dados['id'],
                     'data_finalizada' => \Carbon\Carbon::now()->subHour()->subHour()
                 ]);
 
-                $user = User::find($compra_usuario['comprador']);
+                if($dados['transaction']['status'] == 'paid'){
 
-                $qtd_sms = $user['sms_zenvia_qtd'] + $compra_usuario['quantidade'];
+                    $user = User::find($compra_usuario['comprador']);
 
-                $user->update([
-                    'sms_zenvia_qtd' => $qtd_sms
-                ]);
+                    $qtd_sms = $user['sms_zenvia_qtd'] + $compra_usuario['quantidade'];
 
+                    $user->update([
+                        'sms_zenvia_qtd' => $qtd_sms
+                    ]);
+                }
             }
             else{
                 $venda = Venda::find($dados['transaction']['metadata']['id_venda']);
@@ -55,11 +61,10 @@ class PostBackController extends Controller {
                 }
 
                 if($dados['transaction']['status'] == $venda['pagamento_status']){
-                    Log::write('info', 'VENDA COM MESMO STATUS!!!');
                     return 'sucesso';
                 }
 
-                if($dados['transaction']['status'] == 'paid'){
+                if($dados['transaction']['status'] == 'paid' && $venda['status']){
                     date_default_timezone_set('America/Sao_Paulo');
                     $venda->update([
                         'pagamento_status' => $dados['transaction']['status'],
