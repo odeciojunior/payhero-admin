@@ -37,11 +37,10 @@ class SmsController extends Controller {
 
         $qtd_sms_disponiveis = \Auth::user()->sms_zenvia_qtd;
 
-        $compras = CompraUsuario::where('comprador',\Auth::user()->id)->get()->toArray();
+        $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
         foreach($compras as &$compra){
             $compra['data_inicio'] = date('d/m/Y',strtotime($compra['data_inicio']));
-
         }
 
         return view('sms::index',[
