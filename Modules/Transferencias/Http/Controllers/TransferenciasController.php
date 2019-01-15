@@ -491,15 +491,6 @@ class TransferenciasController extends Controller {
             return response()->json("Configurações da conta bancaria não encontradas");
         }
 
-
-        $anticipationLimits = $pagarMe->bulkAnticipations()->getList([
-            // 'requested_amount' => $dados['valor'],
-            // 'build' => 'true',
-            'recipient_id' => $empresa['recipient_id'],
-            // 'payment_date' => strtotime(Carbon::now()->addDays(7)->format('Y-m-d')) * 1000,
-            'timeframe' => 'start',
-        ]);
-
         $recipientBalance = $pagarMe->recipients()->getBalance([
             'recipient_id' => $empresa['recipient_id'],
         ]);
@@ -508,11 +499,22 @@ class TransferenciasController extends Controller {
         $saldo_transferido += $recipientBalance->transferred->amount;
         $saldo_futuro      += $recipientBalance->waiting_funds->amount;
 
-        $anticipationLimits = $pagarMe->bulkAnticipations()->getLimits([
-            'recipient_id' => $empresa['recipient_id'],
-            'payment_date' => strtotime(Carbon::now()->addDays(5)->format('Y-m-d')) * 1000,
-            'timeframe' => 'start'
-        ]);
+        $antecipacao = false;
+        $qtd_dias = 1;
+        while(!$antecipacao){
+            try{
+                $anticipationLimits = $pagarMe->bulkAnticipations()->getLimits([
+                    'recipient_id' => $empresa['recipient_id'],
+                    'payment_date' => strtotime(Carbon::now()->addDays($qtd_dias)->format('Y-m-d')) * 1000,
+                    'timeframe' => 'start'
+                ]);
+
+                $antecipacao = true;
+            }
+            catch(\Exception $e){
+                $qtd_dias++;
+            }
+        }
 
         $saldo_antecipavel = $anticipationLimits->maximum->amount;
 
