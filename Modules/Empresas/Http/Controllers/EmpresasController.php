@@ -156,7 +156,6 @@ class EmpresasController extends Controller {
                 'id',
                 'cnpj',
                 'nome_fantasia',
-                // 'recipient_id',
         ]);
 
         if(!\Auth::user()->hasRole('administrador geral')){
@@ -165,6 +164,13 @@ class EmpresasController extends Controller {
         }
 
         return Datatables::of($empresas)
+        ->editColumn('cnpj', function ($empresa) {
+            if(strlen($empresa->cnpj) == '14')
+                return vsprintf("%s%s.%s%s%s.%s%s%s/%s%s%s%s-%s%s", str_split($empresa->cnpj));
+            elseif(strlen($empresa->cnpj) == '11')
+                return vsprintf("%s%s%s.%s%s%s.%s%s%s-%s%s", str_split($empresa->cnpj));
+            return $empresa->cnpj;
+        })
         ->addColumn('detalhes', function ($empresa) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
                         <a class='btn btn-outline btn-success detalhes_empresa' data-placement='top' data-toggle='tooltip' title='Detalhes' empresa='".$empresa->id."'>

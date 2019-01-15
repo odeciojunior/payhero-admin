@@ -23,23 +23,15 @@
               @foreach($projetos as $projeto)
                 <div class="col-3">
                   <div class="card" style="border: 1px solid gray">
-                      <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                      <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
+                        <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                      </a>
                       <div class="card-block">
                         <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
                             <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
                             <hr>
                             <p class="card-text">{!! $projeto['descricao'] !!}</p>
                         </a>
-                        {{--  <span data-toggle='modal' data-target='#modal_editar'>
-                            <a href="/projetos/editar/{!! $projeto['id'] !!}" class='btn btn-outline btn-primary editar_projeto' data-placement='top' data-toggle='tooltip' title='Editar'>
-                                <i class='icon wb-pencil' aria-hidden='true'></i>
-                            </a>
-                        </span>
-                        <span data-toggle='modal' data-target='#modal_excluir'>
-                            <a class='btn btn-outline btn-danger excluir_projeto' data-placement='top' data-toggle='tooltip' title='Excluir' projeto="{!! $projeto['id'] !!}">
-                                <i class='icon wb-trash' aria-hidden='true'></i>
-                            </a>
-                        </span>  --}}
                     </div>
                   </div>
                 </div>
@@ -94,7 +86,7 @@
 
     $(document).ready( function(){
 
-        $('.excluir_projeto').on('click', function(){
+      {{--  $('.excluir_projeto').on('click', function(){
 
             var projeto = $(this).attr('projeto');
 
@@ -104,7 +96,7 @@
 
             $('#excluir_projeto').attr('href','/projetos/deletarprojeto/'+projeto);
 
-        });
+        });  --}}
 
     });
 

@@ -294,6 +294,7 @@
                 },
                 success: function(data){
 
+                    alertPersonalizado('success', 'Sucesso ao realizar transferência !');
                     $('#valor_saque').val('');
                     atualizarSaldos($("#select_empresas").val());
                     atualizarHistoricoTransferencias();
@@ -356,6 +357,7 @@
                             },
                             success: function(data){
             
+                                alertPersonalizado('success', 'Sucesso ao agendar antecipação !');
                                 $("#valor_simulacao").val("R$ 0.00");
                                 atualizarSaldos($("#select_empresas").val());
                                 atualizarHistoricoAntecipacoes();
@@ -588,6 +590,19 @@
             atualizarHistoricoTransferencias();
             atualizarHistoricoAntecipacoes();
         });
+
+        function alertPersonalizado(tipo, mensagem){
+
+            swal({
+                position: 'bottom',
+                type: tipo,
+                toast: 'true',
+                title: mensagem,
+                showConfirmButton: false,
+                timer: 6000
+            });
+        }
+
     });
 
   </script>

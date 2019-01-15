@@ -5,7 +5,7 @@
   <!-- Page --> 
   <div class="page">
     <div class="page-header">
-        <h1 class="page-title">Meus produto</h1>
+        <h1 class="page-title">Meus produtos</h1>
     </div>
 
     <div class="page-content container-fluid">

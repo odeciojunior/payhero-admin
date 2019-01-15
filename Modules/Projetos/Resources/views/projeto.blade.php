@@ -376,10 +376,9 @@
                 },
                 data: { projeto: id_projeto },
                 error: function(){
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
-
                     var options = "<option value=''>Selecione</option>";
                     $.each(data, function(key, d){
 
@@ -411,12 +410,13 @@
                 data: { projeto: id_projeto, produto: id_produto },
                 error: function(){
                     $('#modal_add_produto').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_produto').hide();
                     $($.fn.dataTable.tables( true ) ).css('width', '100%');
                     $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                    alertPersonalizado('success','Produto adicionado!');
                 }
             });
 
@@ -438,7 +438,7 @@
                 data: { projeto: id_projeto },
                 error: function(){
                     $('#modal_add').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
@@ -450,7 +450,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#ip_dominio').val() == '' || $('#dominio').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -468,11 +468,14 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
                                 if(data != 'sucesso'){
-                                    alert(data);
+                                    alertPersonalizado('error',data);
+                                }
+                                else{
+                                    alertPersonalizado('success','Domínio adicionado!');
                                 }
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -500,7 +503,7 @@
                 },
                 error: function(){
                     $('#modal_add').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
@@ -510,7 +513,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#nome').val() == '' || $('#cod_pixel').val() == '' || $('#plataforma').val() == '' || $('#status_pixel').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -535,9 +538,10 @@
                             data: { pixelData: paramObj },
                             error: function(){
                                 $('#modal_add_produto').hide();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Pixel adicionado!');
                                 $('#modal_add_produto').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -564,7 +568,7 @@
                 },
                 error: function(){
                     $('#modal_add').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
@@ -574,7 +578,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#nome_cupom').val() == '' || $('#descricao_cupom').val() == '' || $('#tipo_cupom').val() == '' || $('#valor_cupom').val() == '' || $('#cod_cupom').val() == '' || $('#status_cupom').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -592,9 +596,10 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Cupom de desconto adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -621,7 +626,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 error: function(){
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
@@ -633,7 +638,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#plano_sms').val() == '' || $('#evento_sms').val() == '' || $('#tempo_sms').val() == '' || $('#periodo_sms').val() == '' || $('#status_sms').val() == '' || $('#mensagem_sms').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -651,9 +656,10 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','SMS adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -680,7 +686,7 @@
                 },
                 error: function(){
                     $('#modal_add').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
@@ -690,7 +696,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#titulo_brinde').val() == '' || $('#descricao_brinde').val() == '' || $('#foto_brinde').val() == '' || $('#tipo_brinde').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -708,9 +714,10 @@
                             cache: false,
                             data: form_data,
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Brinde adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -798,7 +805,7 @@
                 },
                 error: function(){
                     $('#modal_add').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
 
@@ -865,7 +872,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#descricao').val() == '' || $('#logo').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -883,9 +890,10 @@
                             cache: false,
                             data: form_data,
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Layout adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -914,7 +922,7 @@
                 data: {projeto: id_projeto},
                 error: function(){
                     $('#modal_add').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
@@ -924,7 +932,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#nome_plano').val() == '' || $('#preco_plano').val() == '' || $('#descricao_plano').val() == '' || $('#status_plano').val() == '' || $('#frete_plano').val() == '' || $('#transportadora_plano').val() == '' || $('#frete_fixo_plano').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -942,9 +950,10 @@
                             cache: false,
                             data: form_data,
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Plano adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1105,7 +1114,7 @@
                 },
                 error: function(){
                     $('#modal_add').hide();
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
                     $('#modal_add_body').html(data);
@@ -1117,7 +1126,7 @@
                     $('#cadastrar').on('click',function(){
 
                         if($('#email_parceiro').val() == '' || $('#valor_remuneracao').val() == ''){
-                            alert('Dados informados inválidos');
+                            alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
 
@@ -1135,9 +1144,10 @@
                             cache: false,
                             data: form_data,
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Parceiro adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1238,9 +1248,10 @@
                             data: { projeto: id_projeto, produto: id_produto },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Produto removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1333,11 +1344,14 @@
                             },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
                                 if(data != 'sucesso'){
-                                    alert(data);
+                                    alertPersonalizado('error',data);
+                                }
+                                else{
+                                    alertPersonalizado('success','Plano removido!');
                                 }
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -1363,7 +1377,7 @@
                         },
                         error: function(){
                             $('#modal_editar').hide();
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -1386,9 +1400,10 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        alertPersonalizado('success','Plano atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1616,9 +1631,10 @@
                             },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Pixel removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1630,6 +1646,8 @@
                 });
 
                 $('.editar_pixel').on('click', function(){
+
+                    alertPersonalizado('error','Não vai editar esse pixel FDP');
 
                     $('#modal_editar_tipo').addClass('modal-simple');
                     $('#modal_editar_tipo').removeClass('modal-lg');
@@ -1647,7 +1665,7 @@
                         data: {id: id_pixel},
                         error: function(){
                             $('#modal_editar').hide();
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -1677,9 +1695,10 @@
                                     data: { pixelData: paramObj },
                                     error: function(){
                                         $('#modal_editar').hide();
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        alertPersonalizado('success','Pixel atualizado!');
                                         $('#modal_editar').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1766,7 +1785,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function(){
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_detalhes_body').html(data);
@@ -1793,9 +1812,10 @@
                             },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','SMS removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1820,7 +1840,7 @@
                         },
                         data: {id: id_sms, projeto : id_projeto},
                         error: function(){
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -1843,9 +1863,10 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        alertPersonalizado('success','SMS atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1930,9 +1951,10 @@
                             data: { id: id_brinde },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Brinde removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1960,7 +1982,7 @@
                         data: {id: id_brinde},
                         error: function(){
                             $('#modal_editar').hide();
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -1990,9 +2012,10 @@
                                     data:  paramObj,
                                     error: function(){
                                         $('#modal_editar').hide();
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        alertPersonalizado('success','Brinde atualizado!');
                                         $('#modal_editar').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2156,9 +2179,10 @@
                             data: { id: id_cupom },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Cupom removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2185,7 +2209,7 @@
                         },
                         error: function(){
                             $('#modal_editar').hide();
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -2208,9 +2232,10 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        alertPersonalizado('success','Cupom atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2283,12 +2308,13 @@
                             },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
                                 if(data != 'sucesso'){
-                                    alert(data);
+                                    alertPersonalizado('error',data);
                                 }
+                                alertPersonalizado('success','Domínio removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2318,7 +2344,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function(){
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -2341,9 +2367,10 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        alertPersonalizado('success','Domínio atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2420,7 +2447,7 @@
                         },
                         error: function(){
                             $('#modal_editar').hide();
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -2499,9 +2526,10 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        alertPersonalizado('success','Layout atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2531,9 +2559,10 @@
                             data: { id: id_layout },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                alertPersonalizado('success','Layout removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2613,7 +2642,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function(){
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(response){
                             $('#modal_detalhes_body').html(response);
@@ -2642,7 +2671,7 @@
                             data: { id: id_parceiro },
                             error: function(){
                                 $('#fechar_modal_excluir').click();
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
                                 $('#fechar_modal_excluir').click();
@@ -2670,7 +2699,7 @@
                         },
                         data: {id_parceiro: id_parceiro},
                         error: function(){
-                            alert('Ocorreu algum erro');
+                            alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
@@ -2694,7 +2723,7 @@
                                     data:  form_data,
                                     error: function(){
                                         $('#modal_editar').hide();
-                                        alert('Ocorreu algum erro');
+                                        alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
                                         $('#modal_editar').hide();
@@ -2718,7 +2747,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 error: function(){
-                    alert('Ocorreu algum erro');
+                    alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
     
@@ -2787,10 +2816,10 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
-                                alert('Ocorreu algum erro');
+                                alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
-                                alert('Dados do projeto alterados!');
+                                alertPersonalizado('success','Dados do projeto alterados!');
                                 updateConfiguracoes();
                             },
                         });
@@ -2802,6 +2831,18 @@
         }
 
         updateConfiguracoes();
+
+        function alertPersonalizado(tipo, mensagem){
+
+            swal({
+                position: 'bottom',
+                type: tipo,
+                toast: 'true',
+                title: mensagem,
+                showConfirmButton: false,
+                timer: 6000
+            });
+        }
 
     });
 
