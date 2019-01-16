@@ -26,10 +26,17 @@
                         
                                     <input type="hidden" name="id" value="{!! $user->id !!}">
                         
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Informações básicas</h3>
+                                    <div class="row">
+                                        <div class="panel-heading col-10">
+                                            <h3 class="panel-title">Informações básicas</h3>
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-success" data-toggle='modal' data-target='#modal_alterar_senha'>
+                                                Aterar senha
+                                            </button>
+                                        </div>
+
                                     </div>
-                        
                                     <div class="row">
                                         <div class="form-group col-xl-6">
                                             <label for="name">Nome</label>
@@ -140,6 +147,32 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_alterar_senha" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" style="width: 100%; text-align:center">Alterar senha</h4>
+                            </div>
+                            <div class="modal-body" style="margin-top: 50px">
+                                <label for="nova_senha">Nova senha (mínimo 6 caracteres)</label>
+                                <input id="nova_senha" type="password" class="form-control" placeholder="Nova senha">
+                                <label for="nova_senha_confirmacao" style="margin-top: 20px">Nova senha (confirmação)</label>
+                                <input id="nova_senha_confirmacao" type="password" class="form-control" placeholder="Nova senha (confirmação)">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                <button id="atualizar_senha" type="button" class="btn btn-success" data-dismiss="modal" disabled>Alterar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+
             </div>
         </div>
     </div>
@@ -194,6 +227,62 @@
         
                 $(this).after(img);
             }
+        });
+
+        $("#nova_senha").on("input", function(){
+
+            if($("#nova_senha").val().length > 5 && $("#nova_senha_confirmacao").val().length > 5 && $("#nova_senha").val() == $("#nova_senha_confirmacao").val()){
+                $("#atualizar_senha").attr("disabled",false);
+            }
+            else{
+                $("#atualizar_senha").attr("disabled",true);
+            }
+        });
+
+        $("#nova_senha_confirmacao").on("input", function(){
+
+            if($("#nova_senha").val().length > 5 && $("#nova_senha_confirmacao").val().length > 5 && $("#nova_senha").val() == $("#nova_senha_confirmacao").val()){
+                $("#atualizar_senha").attr("disabled",false);
+            }
+            else{
+                $("#atualizar_senha").attr("disabled",true);
+            }
+        });
+
+        $("#atualizar_senha").on('click', function(){
+
+            if($("#nova_senha").val().length > 5 && $("#nova_senha_confirmacao").val().length > 5 && $("#nova_senha").val() == $("#nova_senha_confirmacao").val()){
+
+                $.ajax({
+                    method: "POST",
+                    url: "/perfil/alterarsenha",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: { nova_senha: $("#nova_senha").val() },
+                    error: function(){
+                        //
+                    },
+                    success: function(data){
+    
+                        swal({
+                            position: 'bottom',
+                            type: 'success',
+                            toast: 'true',
+                            title: 'Senha alterada com sucesso !',
+                            showConfirmButton: false,
+                            timer: 6000
+                        });
+
+                        $('#nova_senha').val('');
+                        $('#nova_senha_confirmacao').val('');
+
+                    }
+    
+                });
+    
+            }
+
         });
 
     });

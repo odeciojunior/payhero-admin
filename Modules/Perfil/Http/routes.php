@@ -12,4 +12,9 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'perfil', 'namespace'
         'as'   => 'perfil.update'
     ]);
 
+    Route::post('/alterarsenha', [
+        'uses' => 'PerfilController@alterarSenha',
+        'as'   => 'perfil.alterarsenha'
+    ]);
+
 });

@@ -45,6 +45,21 @@ class PerfilController extends Controller {
         return redirect()->route('perfil');
     }
 
+    public function alterarSenha(Request $request){
+
+        $dados = $request->all();
+
+        $user = \Auth::user();
+
+        $user->update([
+            'password' => bcrypt($dados['nova_senha'])
+        ]);
+
+        return response()->json("sucesso");
+
+    }
+
+
 }
 
 
