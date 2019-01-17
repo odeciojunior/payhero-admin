@@ -47,4 +47,14 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dominios', 'namespac
         'as' => 'dominios.getformeditardominio',
     ]);
 
+    Route::post('/detalhesdominio', [
+        'uses' => 'DominiosController@detalhesDominio',
+        'as' => 'dominios.detalhesdominio',
+    ]);
+
+    Route::post('/removerregistrodns', [
+        'uses' => 'DominiosController@removerRegistroDns',
+        'as' => 'dominios.removerregistrodns',
+    ]);
+
 });

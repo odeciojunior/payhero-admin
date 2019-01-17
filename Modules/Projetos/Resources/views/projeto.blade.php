@@ -173,7 +173,8 @@
                                         <thead class="bg-blue-grey-100">
                                             <th>Domínio</th>
                                             <th>Ip do domínio</th>
-                                            <th style="width: 100px">Opções</th>
+                                            <th>Status</th>
+                                            <th style="width: 160px">Opções</th>
                                         </thead>
                                         <tbody>
                                         </tbody>
@@ -323,7 +324,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button id="editar" type="button" class="btn btn-success" data-dismiss="modal">Editar</button>
+                                    <button id="editar" type="button" class="btn btn-success" data-dismiss="modal">Salvar alterações</button>
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                                 </div>
                             </div>
@@ -409,7 +410,6 @@
                 },
                 data: { projeto: id_projeto, produto: id_produto },
                 error: function(){
-                    $('#modal_add_produto').hide();
                     alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
@@ -437,7 +437,6 @@
                 },
                 data: { projeto: id_projeto },
                 error: function(){
-                    $('#modal_add').hide();
                     alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
@@ -2264,6 +2263,7 @@
             columns: [
                 { data: 'dominio', name: 'dominio'},
                 { data: 'ip_dominio', name: 'ip_dominio'},
+                { data: 'status', name: 'status'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
             ],
             "language": {
@@ -2289,6 +2289,7 @@
 
                 var id_dominio = '';
 
+                $("#excluir_dominio").unbind("click");
                 $('.excluir_dominio').on('click', function(){
 
                     id_dominio = $(this).attr('dominio');
@@ -2327,10 +2328,10 @@
 
                 $('#editar').unbind('click');
 
-                {{--  $('.editar_dominio').on('click', function(){
+                $('.editar_dominio').on('click', function(){
 
-                    $('#modal_editar_tipo').addClass('modal-simple');
-                    $('#modal_editar_tipo').removeClass('modal-lg');
+                    $('#modal_editar_tipo').addClass('modal-lg');
+                    $('#modal_editar_tipo').removeClass('modal-simple');
 
                     id_dominio = $(this).attr('dominio');
 
@@ -2348,6 +2349,66 @@
                         },
                         success: function(data){
                             $('#modal_editar_body').html(data);
+
+                            var qtd_novos_registros = 1;
+
+                            $("#bt_adicionar_entrada").on("click", function(){
+                    
+                                $("#novos_registros").after("<tr registro='"+qtd_novos_registros+"'><td>"+$("#tipo_registro").val()+"</td><td>"+$("#nome_registro").val()+"</td><td>"+$("#valor_registro").val()+"</td><td><button type='button' class='btn btn-danger remover_entrada'>Remover</button></td></tr>");
+                    
+                                $('#editar_dominio').append('<input type="hidden" name="tipo_registro_'+qtd_novos_registros+'" id="tipo_registro_'+qtd_novos_registros+'" value="'+$("#tipo_registro").val()+'" />');
+                                $('#editar_dominio').append('<input type="hidden" name="nome_registro_'+qtd_novos_registros+'" id="nome_registro_'+qtd_novos_registros+'" value="'+$("#nome_registro").val()+'" />');
+                                $('#editar_dominio').append('<input type="hidden" name="valor_registro_'+qtd_novos_registros+'" id="valor_registro_'+( qtd_novos_registros++) +'" value="'+$("#valor_registro").val()+'" />');
+                    
+                                $(".remover_entrada").unbind("click");
+                    
+                                $(".remover_entrada").on("click", function(){
+                    
+                                    var novo_registro = $(this).parent().parent();
+                                    var id_registro = novo_registro.attr('registro');
+                                    novo_registro.remove();
+                                    alert(id_registro);
+                                    $("#tipo_registro_"+id_registro).remove();
+                                    $("#nome_registro_"+id_registro).remove();
+                                    $("#valor_registro_"+id_registro).remove();
+                                });
+                    
+                                $("#tipo_registro").val("A");
+                                $("#nome_registro").val("");
+                                $("#valor_registro").val("");
+                            });
+                    
+                            $(".remover_registro").on("click", function(){
+                    
+                                var id_registro = $(this).attr('id-registro');
+                    
+                                var row = $(this).parent().parent();
+                    
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/dominios/removerregistrodns",
+                                    data: {
+                                        id_registro: id_registro, 
+                                        id_dominio: $("#id_dominio").val()
+                                    },
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    error: function(){
+                                        alert('error','Ocorreu algum erro');
+                                    },
+                                    success: function(data){
+                                        if(data == 'sucesso'){
+                                            row.remove();
+                                            alertPersonalizado('success','Registro removido!');
+                                        }
+                                        else{
+                                            alertPersonalizado('error',data);
+                                        }
+                                    },
+                                });
+                    
+                            });
 
                             $('#editar').unbind('click');
 
@@ -2370,7 +2431,11 @@
                                         alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
-                                        alertPersonalizado('success','Domínio atualizado!');
+                                        if(data == 'sucesso')
+                                            alertPersonalizado('success','Domínio atualizado!');
+                                        else
+                                            alertPersonalizado('error',data);
+                                        
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -2379,8 +2444,30 @@
                             });
                         }
                     });
-                });  --}}
+                });
 
+                $('.detalhes_dominio').unbind('click');
+
+                $('.detalhes_dominio').on('click', function() {
+                    var id_dominio = $(this).attr('dominio');
+
+                    $('#modal_detalhes_titulo').html('Detalhes do domínio');
+                    $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                    $.ajax({
+                        method: "POST",
+                        url: "/dominios/detalhesdominio",
+                        data: {dominio: id_dominio},
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function(){
+                            alertPersonalizado('error','Ocorreu algum erro');
+                        },
+                        success: function(response){
+                            $('#modal_detalhes_body').html(response);
+                        }
+                    });
+                });
 
             }
 
