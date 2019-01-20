@@ -24,10 +24,10 @@ class PostBackController extends Controller {
         $dados = $request->all();
 
         Log::write('info', 'retorno do pagar.me : '. print_r($dados, true));
-
+ 
         if(isset($dados['event']) && $dados['event'] = 'transaction_status_changed'){
 
-            if($dados['transaction']['metadata']['servico']){
+            if(isset($dados['transaction']['metadata']['servico'])){
 
                 $compra_usuario = CompraUsuario::find($dados['transaction']['metadata']['id_venda']);
 
