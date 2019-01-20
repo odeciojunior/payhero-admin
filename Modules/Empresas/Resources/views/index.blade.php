@@ -85,7 +85,8 @@
     $(document).ready( function(){
 
         $("#tabela_empresas").DataTable( {
-
+            bLengthChange: false,
+            ordering: false,
             processing: true,
             serverSide: true,
             ajax: {

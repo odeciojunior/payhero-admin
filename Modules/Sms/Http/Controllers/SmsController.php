@@ -4,7 +4,10 @@ namespace Modules\Sms\Http\Controllers;
 
 use App\Plano;
 use App\ZenviaSms;
+use App\MensagemSms;
+use App\UserProjeto;
 use App\CompraUsuario;
+use Zenvia\Model\SmsFacade;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -14,24 +17,6 @@ use NotificationChannels\Zenvia\ZenviaChannel;
 use NotificationChannels\Zenvia\ZenviaMessage;
 
 class SmsController extends Controller {
-
-    public function enviarMensagem(){
-
-        $dados = [
-            'from'           => 'Cloudfox app',
-            'msg'            => 'Cloudfox is growing up',
-            'id'             => '26',
-            'schedule'       => '2018-11-26T18:35:45',
-            'callbackOption' => 'NONE',
-            'flashSms'       => true
-        ];
-
-        $msg = new Zenvia('healthlab.corp','hLQNVb7VQk',null,false,32);
-
-        $status = $msg->sendMessage('5555996931098', $dados);
-
-        dd($status);
-    }
 
     public function index() {
 
@@ -63,7 +48,29 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        ZenviaSms::create($dados);
+        if($dados['tempo'] == ''){
+            $dados['tempo'] = '0';
+        }
+
+        if($dados['tempo'] == '1'){
+            if($dados['periodo'] == 'minutes')
+                $dados['periodo'] = 'minute';
+            elseif($dados['periodo'] == 'hours')
+                $dados['periodo'] = 'hour';
+            elseif($dados['periodo'] == 'days')
+                $dados['periodo'] = 'day';
+        }
+
+        if($dados['plano'] == 'todos'){
+            $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
+            foreach($planos as $plano){
+                $dados['plano'] = $plano['id'];
+                ZenviaSms::create($dados);
+            }
+        }
+        else{
+            ZenviaSms::create($dados);
+        }
 
         return response()->json('Sucesso');
     }
@@ -80,6 +87,19 @@ class SmsController extends Controller {
     public function updateSms(Request $request){
 
         $dados = $request->all();
+
+        if($dados['tempo'] == ''){
+            $dados['tempo'] = '0';
+        }
+
+        if($dados['tempo'] == '1'){
+            if($dados['periodo'] == 'minutes')
+                $dados['periodo'] = 'minute';
+            elseif($dados['periodo'] == 'hours')
+                $dados['periodo'] = 'hour';
+            elseif($dados['periodo'] == 'days')
+                $dados['periodo'] = 'day';
+        }
 
         ZenviaSms::find($dados['id'])->update($dados);
 
@@ -264,6 +284,97 @@ class SmsController extends Controller {
         return response()->json($detalhes);
     }
 
+    public function smsAtendimento(Request $request){
 
+        $dados = $request->all();
+
+        $smsFacade = new SmsFacade('healthlab.corp','hLQNVb7VQk');
+        try {
+            $response = $smsFacade->listMessagesReceived();
+
+            if ($response->hasMessages()) {
+                $messages = $response->getReceivedMessages();
+                foreach ($messages as $smsReceived) {
+
+                    $mensagem_enviada = MensagemSms::where('id_zenvia',$smsReceived->getSmsOriginId())->first();
+
+                    MensagemSms::create([
+                        'id_zenvia' => $smsReceived->getSmsOriginId(),
+                        'plano' => @$mensagem_enviada->plano,
+                        'para' => $smsReceived->getMobile(),
+                        'mensagem' => $smsReceived->getBody(),
+                        'data' => $smsReceived->getDateReceived(),
+                        'status' => 'Ok',
+                        'evento' => 'Mensagem recebida',
+                        'tipo' => 'Recebida'
+                    ]);
+
+                }
+            } 
+        } catch (\Exception $ex) {
+            //
+        }
+
+        return view("sms::sms");
+
+    }
+
+    public function dadosMensagens(Request $request){
+
+        $user_projetos = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor']
+        ])->get()->toArray();
+
+        $planos_usuario = [];
+        foreach($user_projetos as $user_projeto){
+            $planos = Plano::where('projeto',$user_projeto['projeto'])->pluck('id')->toArray();
+            if(count($planos) > 0){
+                foreach($planos as $plano){
+                    $planos_usuario[] = $plano;
+                }
+            }
+        }
+
+        $mensagens = \DB::table('mensagens_sms as mensagem')
+        ->leftJoin('planos as plano', 'plano.id', 'mensagem.plano')
+        ->whereIn('plano.id',$planos_usuario)
+        ->select([
+            'mensagem.id',
+            'mensagem.para',
+            'mensagem.mensagem',
+            'mensagem.data',
+            'mensagem.status',
+            'plano.nome as plano',
+            'mensagem.evento',
+            'mensagem.tipo',
+        ])->orderBy('mensagem.id','DESC');
+
+        return Datatables::of($mensagens)
+        ->editColumn('evento', function ($mensagem) {
+            if($mensagem->evento == 'venda_realizada')
+                return "Venda realizada";
+            if($mensagem->evento == 'boleto_gerado')
+                return "Boleto gerado";
+            if($mensagem->evento == 'boleto_vencido')
+                return "Boleto vencido";
+
+            return $mensagem->evento;
+        })
+        ->editColumn('para', function ($mensagem) {
+            $qtd_numeros = (strlen($mensagem->para) -4);
+            $string = "(%s%s)";
+            for($x = 0; $x < $qtd_numeros; $x++){
+                $string .= "%s";
+            }
+            return vsprintf($string, str_split(substr($mensagem->para, 2)));
+        })
+        ->editColumn('data', function ($mensagem) {
+
+            return date_format(date_create($mensagem->data),"d/m/Y H:i:s");
+        })
+        ->make(true);
+
+    }
 
 }

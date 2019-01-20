@@ -83,7 +83,7 @@
     @yield('content')
     <footer class="site-footer">
 
-        <div class="site-footer-right">© 2018 - CloudFox</div>
+        <div class="site-footer-right">© 2019 - CloudFox</div>
 
     </footer>
 

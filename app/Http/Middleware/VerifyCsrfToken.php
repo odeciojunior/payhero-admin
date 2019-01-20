@@ -36,6 +36,7 @@ class VerifyCsrfToken extends Middleware
         '/transportadoras/data-source',
         '/tiposbrindes/data-source',
         '/pixels/data-source',
+        '/sms/dadosmensagens',
         '/pixels/getformaddpixel',
         '/categorias/data-source',
         '/planos/data-source',

@@ -12,7 +12,7 @@
                     <div class="form-group col-12">
                         <label for="plano">Plano</label>
                         <select name="plano" type="text" class="form-control" id="plano" required>
-                            <option value="">Selecione</option>
+                            <option value="todos">Todos planos</option>
                             @foreach($planos as $plano)
                                 <option value="{!! $plano['id'] !!}" {!! $sms->plano == $plano['id'] ? 'selected' : '' !!}>{!! $plano['nome'] !!}</option>
                             @endforeach
@@ -24,7 +24,6 @@
                     <div class="form-group col-12">
                         <label for="evento">Evento</label>
                         <select name="evento" type="text" class="form-control" id="evento" required>
-                            <option value="">Selecione</option>
                             <option value="boleto_gerado" {!! ($sms->evento == 'boleto_gerado') ? 'selected' : '' !!}>Boleto gerado</option>
                             <option value="boleto_vencendo" {!! ($sms->evento == 'boleto_vencendo') ? 'selected' : '' !!}>Boleto no dia do vencimento</option>
                             <option value="boleto_vencido" {!! ($sms->evento == 'boleto_vencido') ? 'selected' : '' !!}>Boleto vencido</option>
@@ -49,10 +48,9 @@
 
                     <div class="col-9">
                         <select name="periodo" class="form-control" id="periodo" required>
-                            <option value="" selected>Selecione</option>
-                            <option value="minutos" {!! ($sms->periodo == 'minutos') ? 'selected' : '' !!}>Minutos</option>
-                            <option value="horas" {!! ($sms->periodo == 'horas') ? 'selected' : '' !!}>Horas</option>
-                            <option value="dias" {!! ($sms->periodo == 'dias') ? 'selected' : '' !!}>Dias</option>
+                            <option value="minutes" {!! ($sms->periodo == 'minutos') ? 'selected' : '' !!}>Minutos</option>
+                            <option value="hours" {!! ($sms->periodo == 'horas') ? 'selected' : '' !!}>Horas</option>
+                            <option value="days" {!! ($sms->periodo == 'dias') ? 'selected' : '' !!}>Dias</option>
                         </select>
                     </div>
                 </div>
@@ -61,7 +59,6 @@
                     <div class="col-12">
                         <label for="status">Status</label>
                         <select name="status" type="text" class="form-control" id="status" required>
-                            <option value="">Selecione</option>
                             <option value="1" {!! $sms->status ? 'selected' : '' !!}>Ativo</option>
                             <option value="0" {!! !$sms->status ? 'selected' : '' !!}>Inativo</option>
                         </select>
@@ -71,7 +68,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="mensagem">Mensagem</label>
-                        <textarea name="mensagem" class="form-control" rows="5" id="mensagem" placeholder="mensagem">
+                        <textarea name="mensagem" class="form-control" rows="5" id="mensagem" maxlength="120" placeholder="mensagem">
                             {!! $sms->mensagem != '' ? $sms->mensagem : '' !!}
                         </textarea>
                     </div>
@@ -84,6 +81,7 @@
                         <i class="site-menu-icon wb-info-circle" aria-hidden="true"></i>  Variáveis (ajuda)
                         <p style="margin-top: 20px">
                             {primeiro_nome} = Primeiro nome do cliente<br>
+                            {nome_completo} = Nome completo do cliente<br>
                             {email} = Email do cliente<br>
                             {url_checkout} = Link para o checkout do produto<br>
                             {url_boleto} = Url com o boleto<br>

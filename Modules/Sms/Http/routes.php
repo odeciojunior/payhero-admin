@@ -62,14 +62,28 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' =>
         'uses' => 'SmsController@detalhesCompra'
     ]);
 
+    Route::post('/dadosmensagens',[
+        'as' => 'sms.dadosmensagens',
+        'uses' => 'SmsController@dadosMensagens'
+    ]);
+
 });
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'ferramentas', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
 {
-
     Route::get('/sms', [
         'uses' => 'SmsController@index',
         'as' => 'ferramentas.sms',
     ]);
     
 });
+
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'atendimento', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
+{
+    Route::get('/sms', [
+        'uses' => 'SmsController@smsAtendimento',
+        'as' => 'atendimento.sms',
+    ]);
+
+});
+

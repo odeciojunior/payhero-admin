@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34600b0a2830bedb122b429d536c9f09",
+    "content-hash": "b1420b66d24bfddbcb1462d6fe4f2744",
     "packages": [
         {
             "name": "cloudflare/sdk",
@@ -1278,52 +1278,6 @@
                 "rest"
             ],
             "time": "2017-06-12T11:04:56+00:00"
-        },
-        {
-            "name": "luisdalmolin/laravel-zenvia-channel",
-            "version": "0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/luisdalmolin/laravel-zenvia-channel.git",
-                "reference": "d2eddf2c9f457ad12ccaaa6d4d7c9314ce5a4cfb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/luisdalmolin/laravel-zenvia-channel/zipball/d2eddf2c9f457ad12ccaaa6d4d7c9314ce5a4cfb",
-                "reference": "d2eddf2c9f457ad12ccaaa6d4d7c9314ce5a4cfb",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.2",
-                "php": ">=5.6.4"
-            },
-            "require-dev": {
-                "illuminate/notifications": "^5.3",
-                "illuminate/support": "^5.1|^5.2|^5.3",
-                "mockery/mockery": "^0.9.5",
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "NotificationChannels\\Zenvia\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Luís Dalmolin",
-                    "email": "luis.nh@gmail.com",
-                    "homepage": "http://luisdalmolin.com.br",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Send SMS messages with Zenvia",
-            "homepage": "https://github.com/luisdalmolin/laravel-zenvia-channel",
-            "time": "2018-08-12T03:11:23+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -3501,6 +3455,47 @@
             "time": "2017-11-27T11:13:29+00:00"
         },
         {
+            "name": "vitorccsiqueira/zenvia-php",
+            "version": "v2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vitorccs/zenvia-php.git",
+                "reference": "db84b5e48cf37629940874279c822889de735cef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vitorccs/zenvia-php/zipball/db84b5e48cf37629940874279c822889de735cef",
+                "reference": "db84b5e48cf37629940874279c822889de735cef",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "php": ">=5.3.0"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Zenvia\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Zenvia",
+                    "email": "contato@zenvia.com"
+                }
+            ],
+            "description": "PHP SDK Zenvia API 2.0",
+            "homepage": "http://zenvia.com",
+            "keywords": [
+                "sms",
+                "zenvia"
+            ],
+            "time": "2018-08-10T19:53:43+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v2.5.2",
             "source": {
@@ -5125,16 +5120,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.1",
+            "version": "7.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f"
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c23d78776ad415d5506e0679723cb461d71f488f",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7c89093bd00f7d5ddf0ab81dee04f801416b4944",
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944",
                 "shasum": ""
             },
             "require": {
@@ -5205,7 +5200,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-12-12T07:20:32+00:00"
+            "time": "2019-01-15T08:19:08+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

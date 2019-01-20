@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/atendimento",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Atendimento\\Providers\\AtendimentoServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Atendimento\\": ""
+        }
+    }
+}

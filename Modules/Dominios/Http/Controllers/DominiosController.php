@@ -24,7 +24,6 @@ use Cloudflare\API\Endpoints\Zones;
 use Yajra\DataTables\Facades\DataTables;
 
 
-
 class DominiosController extends Controller {
 
     public function index() {
@@ -170,7 +169,7 @@ class DominiosController extends Controller {
         return Datatables::of($dominios)
             ->addColumn('status', function ($dominio) use($zones) {
                 try{
-                    $zoneID = $zones->getZoneID($dominio->dominio);
+                    $zoneID = $zones->getZoneID($dominio->dominio); 
                     $status = $zones->activationCheck($zoneID);
                     if($status){
                         return "<span class='badge badge-success'>Conectado</span>";
@@ -240,18 +239,10 @@ class DominiosController extends Controller {
         foreach($zones->listZones()->result as $zone){
             if($zone->name == $dominio['dominio']){
 
-                // $x = 1;
-                // foreach($zone->original_name_servers as $original_name_server){
-                //     $modal_body .= "<tr>";
-                //     $modal_body .= "<td><b>DNS original ". $x++ .":</b></td>";
-                //     $modal_body .= "<td>".$original_name_server."</td>";
-                //     $modal_body .= "</tr>";
-                // }
-
                 $x = 1;
                 foreach($zone->name_servers as $new_name_server){
                     $modal_body .= "<tr>";
-                    $modal_body .= "<td><b>Novo DNS ". $x++ .":</b></td>";
+                    $modal_body .= "<td><b>Novo servidor DNS ". $x++ .":</b></td>";
                     $modal_body .= "<td>".$new_name_server."</td>";
                     $modal_body .= "</tr>";
                 }

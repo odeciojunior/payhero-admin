@@ -121,7 +121,7 @@
                             <div class="form-group col-xl-6">
                                 <label for="layout">Layout</label>
                                 <select name="layout" type="text" class="form-control" id="layout" required>
-                                    <option value="">Selecione</option>
+                                    <option value="">Layout padrão</option>
                                     @foreach($layouts as $layout)
                                         <option value="{{ $layout['id'] }}">{{ $layout['descricao'] }}</option>
                                     @endforeach

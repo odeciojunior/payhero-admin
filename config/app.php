@@ -163,7 +163,6 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        NotificationChannels\Zenvia\ZenviaServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
     ],
 

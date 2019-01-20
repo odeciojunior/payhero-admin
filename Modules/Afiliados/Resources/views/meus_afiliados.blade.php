@@ -57,7 +57,8 @@
     $(document).ready( function(){
 
         $("#tabela_meus_afiliados").DataTable( {
-
+            bLengthChange: false,
+            ordering: false,
             processing: true,
             serverSide: true,
             ajax: {
