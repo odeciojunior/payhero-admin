@@ -72,7 +72,7 @@ class PostBackController extends Controller {
                     $venda->update([
                         'pagamento_status' => $dados['transaction']['status'],
                         'pagamento_id' => $dados['id'],
-                        'data_finalizada' => \Carbon\Carbon::now()->subHour()->subHour()
+                        'data_finalizada' => \Carbon\Carbon::now()
                     ]);
 
                     $comprador = Comprador::find($venda['comprador']);//
