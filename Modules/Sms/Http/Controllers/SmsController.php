@@ -22,6 +22,25 @@ class SmsController extends Controller {
 
         $qtd_sms_disponiveis = \Auth::user()->sms_zenvia_qtd;
 
+        $user_projetos = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor']
+        ])->get()->toArray();
+
+        $planos_usuario = [];
+        foreach($user_projetos as $user_projeto){
+            $planos = Plano::where('projeto',$user_projeto['projeto'])->pluck('id')->toArray();
+            if(count($planos) > 0){
+                foreach($planos as $plano){
+                    $planos_usuario[] = $plano;
+                }
+            }
+        }
+
+        $qtd_sms_enviados = MensagemSms::whereIn('plano',$planos_usuario)->where('tipo','Enviada')->count();
+
+        $qtd_sms_recebidos = MensagemSms::whereIn('plano',$planos_usuario)->where('tipo','Recebida')->count();
+
         $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
         foreach($compras as &$compra){
@@ -35,8 +54,10 @@ class SmsController extends Controller {
 
         return view('sms::index',[
             'sms_disponiveis' => $qtd_sms_disponiveis,
+            'sms_enviados' => $qtd_sms_enviados,
+            'sms_recebidos' => $qtd_sms_recebidos,
             'compras' => $compras
-        ]); 
+        ]);
     }
 
     public function cadastro() {

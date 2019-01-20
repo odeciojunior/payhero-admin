@@ -58,7 +58,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="blue-grey-700" style="margin-top: 20px; font-size: 25px">
-                                    0 sms enviados
+                                    {!! $sms_enviados !!} sms enviados
                                 </div>
                             </div>
                             <div class="col-6 text-right">
@@ -78,7 +78,7 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="blue-grey-700" style="margin-top: 20px; font-size: 25px">
-                                    0 sms recebidos
+                                    {!! $sms_recebidos !!} sms recebidos
                                 </div>
                             </div>
                             <div class="col-4 text-right">

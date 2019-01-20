@@ -75,7 +75,7 @@ class PostBackController extends Controller {
                         'data_finalizada' => \Carbon\Carbon::now()
                     ]);
 
-                    $comprador = Comprador::find($venda['comprador']);//
+                    $comprador = Comprador::find($venda['comprador']);
                     $plano_venda = PlanoVenda::where('venda', $venda['id'])->first();
 
                     $plano = Plano::find($plano_venda->plano);
