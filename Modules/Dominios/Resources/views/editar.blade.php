@@ -23,54 +23,60 @@
 
             </div>
 
-            <div class="row" style="margin-top: 30px">
-                <h4>Entradas</h4>
-            </div>
+            @if(isset($registros))
+            
+                <div class="row" style="margin-top: 30px">
+                    <h4>Entradas</h4>
+                </div>
 
-            <div class="row" style="margin-top: 30px">
+                <div class="row" style="margin-top: 30px">
 
-                <table class="table table-hover table-bordered table-stripped" style="padding:20px">
-                    <thead>
-                        <th>Tipo</th>
-                        <th>Nome</th>
-                        <th>Conteúdo</th>
-                        <th></th>
-                    </thead>
-                    <tbody id="registros">
-                        @foreach($registros as $registro)
-                            <tr>
-                                <td>{!! $registro['tipo'] !!}</td>
-                                <td>{!! $registro['nome'] !!}</td>
-                                <td>{!! $registro['valor'] !!}</td>
-                                <td><button type="button" id-registro="{!! $registro['id'] !!}" class="btn btn-danger remover_registro" {!! !$registro['deletar'] ? 'disabled' : '' !!}>Remover</button></td>
+                    <table class="table table-hover table-bordered table-stripped" style="padding:20px">
+                        <thead>
+                            <th>Tipo</th>
+                            <th>Nome</th>
+                            <th>Conteúdo</th>
+                            <th></th>
+                        </thead>
+                        <tbody id="registros">
+                            @foreach($registros as $registro)
+                                <tr>
+                                    <td>{!! $registro['tipo'] !!}</td>
+                                    <td>{!! $registro['nome'] !!}</td>
+                                    <td>{!! $registro['valor'] !!}</td>
+                                    <td><button type="button" id-registro="{!! $registro['id'] !!}" class="btn btn-danger remover_registro" {!! !$registro['deletar'] ? 'disabled' : '' !!}>Remover</button></td>
+                                </tr>
+                            @endforeach
+                            <tr id="novos_registros">
+                                <td colspan="4"></td>
                             </tr>
-                        @endforeach
-                        <tr id="novos_registros">
-                            <td colspan="4"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4"><div class="text-center"><h5>Adicionar nova entrada</h5></div></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <select id="tipo_registro" class="form-control">
-                                    <option value="A">A</option>
-                                    <option value="AAA">AAA</option>
-                                    <option value="CNAME">CNAME</option>
-                                    <option value="TXT">TXT</option>
-                                    <option value="MX">MX</option>
-                                </select>
-                            </td>
-                            <td><input id="nome_registro" class="form-control" placeholder="Nome"></td>
-                            <td><input id="valor_registro" class="form-control" placeholder="Valor"></td>
-                            <td><button id="bt_adicionar_entrada" type="button" class="btn btn-primary">Adicionar</button></td>
-                        </tr>
-                        
-                    </tbody>
-                </table>
-            </div>
+                            <tr>
+                                <td colspan="4"><div class="text-center"><h5>Adicionar nova entrada</h5></div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select id="tipo_registro" class="form-control">
+                                        <option value="A">A</option>
+                                        <option value="AAA">AAA</option>
+                                        <option value="CNAME">CNAME</option>
+                                        <option value="TXT">TXT</option>
+                                        <option value="MX">MX</option>
+                                    </select>
+                                </td>
+                                <td><input id="nome_registro" class="form-control" placeholder="Nome"></td>
+                                <td><input id="valor_registro" class="form-control" placeholder="Valor"></td>
+                                <td><button id="bt_adicionar_entrada" type="button" class="btn btn-primary">Adicionar</button></td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
 
-
+            @else
+                <div class="row text-center" style="padding: 20px">
+                    <h5>erro na conexão com domínio</h5>
+                </div>
+            @endif
 
         </div>
     </div>

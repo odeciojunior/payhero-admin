@@ -283,14 +283,24 @@ class DominiosController extends Controller {
         $adapter = new Guzzle($key);
         $dns = new DNS($adapter);
         $zones = new Zones($adapter);
-        $zoneID = $zones->getZoneID($dominio['dominio']);
+
+        try{
+            $zoneID = $zones->getZoneID($dominio['dominio']);
+        }
+        catch(\Exception $e){
+            $form = view('dominios::editar',[
+                'dominio' => $dominio,
+            ]);
+    
+            return response()->json($form->render());   
+        }
 
         $registros = [];
 
         foreach($dns->listRecords($zoneID)->result as $record){
 
             $novo_registro['id'] = $record->id;
-            $novo_registro['tipo'] = $record->type;
+            $novo_registro['tipo'] = $record->type; 
 
             if($record->name == $dominio['dominio']){
                 $novo_registro['nome'] = $record->name;
