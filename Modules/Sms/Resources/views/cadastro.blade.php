@@ -41,7 +41,7 @@
 
                 <div class="row">
                     <div class="form-group col-3">
-                        <input id="numero_tempo" name="tempo" type="text" class="form-control" id="tempo_sms" value="0" placeholder="0">
+                        <input name="tempo" type="text" class="form-control" id="tempo_sms_cadastrar" value="0" placeholder="0">
                     </div>
 
                     <div class="form-group col-9">

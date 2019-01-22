@@ -33,7 +33,7 @@
 
                     <div class="form-group col-xl-6">
                         <label for="valor">Valor</label>
-                        <input value="{!! $cupom->valor != '' ? $cupom->valor : '' !!}" name="valor" type="text" class="form-control" id="valor" placeholder="Valor" data-mask="0#">
+                        <input value="{!! $cupom->valor != '' ? $cupom->valor : '' !!}" name="valor" type="text" class="form-control" id="valor_cupom_editar" placeholder="Valor" data-mask="0#">
                     </div>
                 </div>
 

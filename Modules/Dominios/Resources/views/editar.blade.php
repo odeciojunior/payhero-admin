@@ -17,7 +17,7 @@
 
                     <div class="form-group col-6">
                         <label for="ip_dominio">Ip que o domínio aponta</label>
-                        <input value="{!! $dominio->ip_dominio != '' ? $dominio->ip_dominio : '' !!}" name="ip_dominio" type="text" class="form-control" id="ip_dominio" placeholder="Ip do domínio" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$">
+                        <input value="{!! $dominio->ip_dominio != '' ? $dominio->ip_dominio : '' !!}" name="ip_dominio" type="text" class="form-control" id="ip_dominio_editar" placeholder="Ip do domínio">
                     </div>
                 </div>
 

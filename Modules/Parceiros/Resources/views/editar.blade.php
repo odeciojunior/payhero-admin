@@ -35,7 +35,7 @@
                 <div class="row">
                     <div class="form-group col-xl-6">
                         <label for="valor_remuneracao">Valor</label>
-                        <input name="valor_remuneracao" value="{!! $parceiro['valor_remuneracao'] !!}" type="text" class="form-control" id="valor" placeholder="Valor">
+                        <input name="valor_remuneracao" value="{!! $parceiro['valor_remuneracao'] !!}" type="text" class="form-control" id="valor_parceiro_editar" placeholder="Valor">
                     </div>
                     <div class="form-group col-xl-12">
                         <input name="responsavel_frete" type="checkbox" id="responsavel_frete">

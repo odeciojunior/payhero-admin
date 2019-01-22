@@ -43,7 +43,7 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <input value="{!! $sms->tempo != '' ? $sms->tempo : '' !!}" name="tempo" type="text" class="form-control" id="tempo" placeholder="Número">
+                        <input value="{!! $sms->tempo != '' ? $sms->tempo : '' !!}" name="tempo" type="text" class="form-control" id="tempo_sms_editar" placeholder="Número">
                     </div>
 
                     <div class="col-9">

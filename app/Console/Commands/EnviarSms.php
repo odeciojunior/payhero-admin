@@ -42,4 +42,6 @@ class EnviarSms extends Command
 
         AgendamentosSms::verificarBoletosVencidos();
     }
+
+    
 }

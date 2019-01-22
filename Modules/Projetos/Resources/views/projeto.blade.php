@@ -442,7 +442,7 @@
                 success: function(data){
                     $('#modal_add_body').html(data);
 
-                    $('#ip_dominio').mask('0ZZ.0ZZ.0ZZ.0ZZ', {translation: {'Z': {pattern: /[0-9]/, optional: true}}});
+                    $('#ip_dominio_cadastrar').mask('0ZZ.0ZZ.0ZZ.0ZZ', {translation: {'Z': {pattern: /[0-9]/, optional: true}}});
 
                     $('#cadastrar').unbind('click');
 
@@ -572,6 +572,8 @@
                 success: function(data){
                     $('#modal_add_body').html(data);
 
+                    $("#valor_cupom_cadastrar").mask("0#");
+
                     $('#cadastrar').unbind('click');
     
                     $('#cadastrar').on('click',function(){
@@ -630,7 +632,7 @@
                 success: function(data){
                     $('#modal_add_body').html(data);
 
-                    $('#numero_tempo').mask('0#');
+                    $('#tempo_sms_cadastrar').mask('0#');
 
                     $('#cadastrar').unbind('click');
     
@@ -926,6 +928,8 @@
                 success: function(data){
                     $('#modal_add_body').html(data);
 
+                    $(".qtd-produtos").mask("0#");
+
                     $('#cadastrar').unbind('click');
 
                     $('#cadastrar').on('click',function(){
@@ -1025,12 +1029,15 @@
         
                         select.attr('id', 'produto_'+qtd_produtos);            
                         select.attr('name', 'produto_'+qtd_produtos);            
-                        input.attr('name', 'produto_qtd_'+qtd_produtos);            
+                        input.attr('name', 'produto_qtd_'+qtd_produtos);
+                        input.addClass('qtd-produtos');       
         
                         div_produtos = nova_div;
         
                         $('#produtos').append(nova_div.html());
         
+                        $(".qtd-produtos").mask("0#");
+
                     });
         
                     var qtd_pixels = 1;
@@ -1160,6 +1167,7 @@
 
         $("#tabela_produtos").DataTable( {
             bLengthChange: false,
+            ordering: false,
             responsive: true,
             processing: true,
             serverSide: true,
@@ -1266,6 +1274,7 @@
 
         $("#tabela_planos").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -1381,6 +1390,8 @@
                         success: function(data){
                             $('#modal_editar_body').html(data);
 
+                            $(".qtd-produtos").mask("0#");
+
                             $('#editar').unbind('click');
 
                             $('#editar').on('click',function(){
@@ -1475,11 +1486,14 @@
                                 select.attr('id', 'produto_'+qtd_produtos);            
                                 select.attr('name', 'produto_'+qtd_produtos);            
                                 input.attr('name', 'produto_qtd_'+qtd_produtos);            
-                    
+                                input.addClass('qtd-produtos');            
+
                                 div_produtos = nova_div;
-                    
+
                                 $('#produtos').append(nova_div.html());
-                    
+
+                                $(".qtd-produtos").mask("0#");
+
                             });
 
                             var qtd_pixels = '1';
@@ -1553,6 +1567,7 @@
 
         $("#tabela_pixels").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -1646,8 +1661,6 @@
 
                 $('.editar_pixel').on('click', function(){
 
-                    alertPersonalizado('error','Não vai editar esse pixel FDP');
-
                     $('#modal_editar_tipo').addClass('modal-simple');
                     $('#modal_editar_tipo').removeClass('modal-lg');
 
@@ -1715,6 +1728,7 @@
 
         $("#tabela_sms").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -1844,6 +1858,8 @@
                         success: function(data){
                             $('#modal_editar_body').html(data);
 
+                            $('#tempo_sms_editar').mask('0#');
+
                             $('#editar').unbind('click');
 
                             $('#editar').on('click',function(){
@@ -1880,6 +1896,7 @@
 
         $("#tabela_brindes").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -2104,6 +2121,7 @@
 
         $("#tabela_cuponsdesconto").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -2213,6 +2231,8 @@
                         success: function(data){
                             $('#modal_editar_body').html(data);
 
+                            $("#valor_cupom_editar").mask("0#");
+
                             $('#editar').unbind('click');
 
                             $('#editar').on('click',function(){
@@ -2249,6 +2269,7 @@
 
         $("#tabela_dominios").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -2351,6 +2372,8 @@
                             $('#modal_editar_body').html(data);
 
                             var qtd_novos_registros = 1;
+
+                            $('#ip_dominio_editar').mask('0ZZ.0ZZ.0ZZ.0ZZ', {translation: {'Z': {pattern: /[0-9]/, optional: true}}});
 
                             $("#bt_adicionar_entrada").on("click", function(){
                     
@@ -2475,6 +2498,7 @@
 
         $("#tabela_layouts").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             serverSide: true,
             responsive: true,
@@ -2662,15 +2686,9 @@
 
         });
 
-        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-
-            $($.fn.dataTable.tables( true ) ).css('width', '100%');
-            $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-
-        });
-
         $("#tabela_parceiros").DataTable( {
             bLengthChange: false,
+            ordering: false,
             processing: true,
             responsive: true,
             serverSide: true,
@@ -2791,6 +2809,8 @@
                         success: function(data){
                             $('#modal_editar_body').html(data);
 
+                            $("#valor_parceiro_editar").mask("0#");
+
                             $('#editar').unbind('click');
             
                             $('#editar').on('click',function(){
@@ -2825,6 +2845,13 @@
             }
         });
 
+        $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+
+            $($.fn.dataTable.tables( true ) ).css('width', '100%');
+            $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+
+        });
+
         function updateConfiguracoes(){
 
             $.ajax({
@@ -2840,6 +2867,8 @@
     
                     $('#configuracoes_projeto').html(data);
     
+                    $("#porcentagem_afiliados").mask("0#");
+
                     $("input:file").change(function(e) {
 
                         for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {

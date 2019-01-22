@@ -49,7 +49,7 @@
 
                             <div class="form-group col-xl-6">
                                 <label for="valor">Valor</label>
-                                <input name="valor" type="text" class="form-control" id="valor_cupom" placeholder="Valor" data-mask="0#">
+                                <input name="valor" type="text" class="form-control" id="valor_cupom_cadastrar" placeholder="Valor" data-mask="0#">
                             </div>
                         </div>
 
