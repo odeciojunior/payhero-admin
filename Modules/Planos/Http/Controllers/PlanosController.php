@@ -22,6 +22,8 @@ use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
@@ -80,19 +82,30 @@ class PlanosController extends Controller {
 
         $plano = Plano::create($dados);
 
-        $foto = $request->file('plano_foto');
+        $foto = $request->file('foto_plano_cadastrar');
 
         if ($foto != null) {
             $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
 
+            Storage::delete('public/upload/plano/'.$nome_foto);
+ 
             $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $nome_foto);
 
-            Foto::create([
-                'caminho_imagem' => $nome_foto,
-                'plano' => $plano['id'],
-            ]);
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
 
+            $img->crop($dados['foto_plano_cadastrar_w'], $dados['foto_plano_cadastrar_h'], $dados['foto_plano_cadastrar_x1'], $dados['foto_plano_cadastrar_y1']);
+
+            $img->resize(200, 200);
+
+            Storage::delete('public/upload/plano/'.$nome_foto);
+            
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+
+            $plano->update([
+                'foto' => $nome_foto,
+            ]);
         }
+
 
         $qtd_produto = 1;
 
@@ -142,7 +155,6 @@ class PlanosController extends Controller {
 
         $plano = Plano::find($id);
         $transportadoras = Transportadora::all();
-        $foto = Foto::where('plano',$plano['id'])->first();
 
         $produtos = Produto::all();
         $produtosPlanos = ProdutoPlano::where('plano', $plano['id'])->get()->toArray();
@@ -159,7 +171,7 @@ class PlanosController extends Controller {
         $layouts = Layout::all();
 
         if($foto != null){
-            $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
+            $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano['foto']);
         }
         else{
             $caminho_foto = null;
@@ -192,25 +204,28 @@ class PlanosController extends Controller {
         $plano = Plano::find($dados['id']);
         $plano->update($dados);
 
-        $foto = $request->file('foto_plano');
+        $foto = $request->file('foto_plano_editar');
 
         if ($foto != null) {
-            $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
+            $nome_foto = 'plano_' . $plano['id'] . '_.' . $foto->getClientOriginalExtension();
 
+            Storage::delete('public/upload/plano/'.$nome_foto);
+ 
             $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $nome_foto);
 
-            $imagem = Foto::where('plano', $plano['id'])->first();
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
 
-            if($imagem != null){
-                $imagem->update(['caminho_imagem' => $nome_foto]);
-            }
-            else{
-                Foto::create([
-                    'caminho_imagem' => $nome_foto,
-                    'plano' => $plano['id'],
-                ]);
-            }
+            $img->crop($dados['foto_plano_editar_w'], $dados['foto_plano_editar_h'], $dados['foto_plano_editar_x1'], $dados['foto_plano_editar_y1']);
 
+            $img->resize(200, 200);
+
+            Storage::delete('public/upload/plano/'.$nome_foto);
+
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+
+            $plano->update([
+                'foto' => $nome_foto,
+            ]);
         }
 
         $produtos_planos = ProdutoPlano::where('plano', $plano['id'])->get()->toArray();
@@ -357,7 +372,7 @@ class PlanosController extends Controller {
                 'plano.cod_identificador',
                 'plano.preco',
         ]);
-
+ 
         return Datatables::of($planos)
         ->addColumn('detalhes', function ($plano) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
@@ -484,12 +499,6 @@ class PlanosController extends Controller {
                 $modal_body .= "</tr>";
             }
         }
-        // else{
-
-        //     $modal_body .= "<tr class='text-center'>";
-        //     $modal_body .= "<td colspan='2'><b>Plano sem nenhum brinde</b></td>";
-        //     $modal_body .= "</tr>";
-        // }
 
         $planoPixels = PlanoPixel::where('plano',$plano->id)->get()->toArray();
 
@@ -509,12 +518,6 @@ class PlanosController extends Controller {
                 $modal_body .= "</tr>";
             }
         }
-        // else{
-
-        //     $modal_body .= "<tr class='text-center'>";
-        //     $modal_body .= "<td colspan='2'><b>Plano sem nenhum pixel</b></td>";
-        //     $modal_body .= "</tr>";
-        // }
 
         $planoCupons = PlanoCupom::where('plano',$plano->id)->get()->toArray();
 
@@ -534,23 +537,12 @@ class PlanosController extends Controller {
                 $modal_body .= "</tr>";
             }
         }
-        // else{
-
-        //     $modal_body .= "<tr class='text-center'>";
-        //     $modal_body .= "<td colspan='2'><b>Plano sem nenhum cupom de desconto</b></td>";
-        //     $modal_body .= "</tr>";
-        // }
 
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
-        $foto = Foto::where('plano', $plano->id)->first();
-        if($foto != null){
-            $modal_body .= "<div class='text-center'>";
-            $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem)."' style='height: 250px'>";
-            $modal_body .= "</div>";
-        }
-        else
-            $modal_body .= "<img src='' alt='Imagem não encontrada'>";
+        $modal_body .= "<div class='text-center'>";
+        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto)."?dummy=".uniqid()."' style='height: 250px'>";
+        $modal_body .= "</div>";
         $modal_body .= "</div>";
 
         return response()->json($modal_body);
@@ -639,7 +631,6 @@ class PlanosController extends Controller {
 
         $plano = Plano::find($dados['id']);
         $transportadoras = Transportadora::all();
-        $foto = Foto::where('plano',$plano['id'])->first();
 
         $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
 
@@ -668,12 +659,7 @@ class PlanosController extends Controller {
 
         $planoBrindes = PlanoBrinde::where('plano', $plano['id'])->get()->toArray();
 
-        if($foto != null){
-            $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto->caminho_imagem);
-        }
-        else{
-            $caminho_foto = null;
-        }
+        $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano['foto']."?dummy=".uniqid());
 
         $form = view('planos::editar',[
             'plano' => $plano,

@@ -100,13 +100,25 @@ class BrindesController extends Controller {
         $brinde = Brinde::find($dados['id']);
         $brinde->update($dados);
 
-        $foto = $request->file('foto_brinde');
+        $foto = $request->file('foto_brinde_editar');
 
         if ($foto != null) {
-            $nome_foto = 'brinde_' . $brinde->id . '_.' . $foto->getClientOriginalExtension();
- 
+            $nome_foto = 'brinde_' . $brinde['id'] . '_.' . $foto->getClientOriginalExtension();
+
+            Storage::delete('public/upload/brindes/fotos/'.$brinde['foto']);
+
             $foto->move(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO, $nome_foto);
- 
+
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO . $nome_foto);
+
+            $img->crop($dados['foto_brinde_editar_w'], $dados['foto_brinde_editar_h'], $dados['foto_brinde_editar_x1'], $dados['foto_brinde_editar_y1']);
+
+            $img->resize(200, 200);
+
+            Storage::delete('public/upload/brindes/fotos/'.$nome_foto);
+
+            $img->save(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO . $nome_foto);
+
             $brinde->update([
                 'foto' => $nome_foto,
             ]);
@@ -131,7 +143,11 @@ class BrindesController extends Controller {
 
         $dados = $request->all();
 
-        Brinde::find($dados['id'])->delete();
+        $brinde = Brinde::find($dados['id']);
+
+        // Storage::delete('public/upload/brindes/fotos/'.$brinde['foto']);
+
+        $brinde->delete();
 
         return response()->json('Sucesso');
 
@@ -206,7 +222,7 @@ class BrindesController extends Controller {
         $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
-        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)."'>";
+        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)."?dummy=".uniqid()."'>";
         $modal_body .= "</div>";
         $modal_body .= "</div>";
 
@@ -240,3 +256,5 @@ class BrindesController extends Controller {
     }
 
 }
+
+

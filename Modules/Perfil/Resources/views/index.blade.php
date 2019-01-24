@@ -201,24 +201,24 @@
                     var img = document.getElementById('previewimage');
                     var x1, x2, y1, y2;
     
-                    if (img.clientWidth > img.clientHeight) {
-                        y1 = Math.floor(img.clientHeight / 100 * 10);
-                        y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
-                        x1 = Math.floor(img.clientWidth / 2) - Math.floor((y2 - y1) / 2);
+                    if (img.naturalWidth > img.naturalHeight) {
+                        y1 = Math.floor(img.naturalHeight / 100 * 10);
+                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                        x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
                         x2 = x1 + (y2 - y1);
                     }
                     else {
-                        if (img.clientWidth < img.clientHeight) {
-                            x1 = Math.floor(img.clientWidth / 100 * 10);;
-                            x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
-                            y1 = Math.floor(img.clientHeight / 2) - Math.floor((x2 - x1) / 2);
+                        if (img.naturalWidth < img.naturalHeight) {
+                            x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                            y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                             y2 = y1 + (x2 - x1);
                         }
                         else {
-                            x1 = Math.floor(img.clientWidth / 100 * 10);
-                            x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
-                            y1 = Math.floor(img.clientHeight / 100 * 10);
-                            y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                            x1 = Math.floor(img.naturalWidth / 100 * 10);
+                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                            y1 = Math.floor(img.naturalHeight / 100 * 10);
+                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
                         }
                     }
 
@@ -229,7 +229,10 @@
 
                     $('#previewimage').imgAreaSelect({
                         x1: x1, y1: y1, x2: x2, y2: y2,
-                        aspectRatio: '4:4',
+                        aspectRatio: '1:1',
+                        handles: true,
+                        imageHeight: this.naturalHeight,
+                        imageWidth: this.naturalWidth,
                         onSelectEnd: function (img, selection) {
                             $('input[name="foto_x1"]').val(selection.x1);
                             $('input[name="foto_y1"]').val(selection.y1);

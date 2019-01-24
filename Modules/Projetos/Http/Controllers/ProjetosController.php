@@ -133,7 +133,7 @@ class ProjetosController extends Controller{
 
             $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_foto);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto); 
 
             $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
@@ -164,7 +164,7 @@ class ProjetosController extends Controller{
     public function projeto($id){
 
         $projeto = projeto::find($id);
-        $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto;
+        $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto."?dummy=".uniqid();
 
         return view('projetos::projeto',[
             'projeto' => $projeto,

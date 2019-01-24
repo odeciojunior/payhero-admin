@@ -312,7 +312,7 @@
                     <!-- Modal padrão para editar * no projeto -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_editar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div id="modal_editar_tipo" class="modal-dialog modal-simple">
-                            <div class="modal-content">
+                            <div class="modal-content" id="conteudo_modal_editar">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
@@ -701,8 +701,6 @@
                             return false;
                         }
 
-                        $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
-
                         var form_data = new FormData(document.getElementById('cadastrar_brinde'));
                         form_data.append('projeto',id_projeto);
 
@@ -718,12 +716,14 @@
                             data: form_data,
                             error: function(){
                                 alertPersonalizado('error','Ocorreu algum erro');
+                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
                             },
                             success: function(data){
                                 alertPersonalizado('success','Brinde adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
                             },
                         });
                     });
@@ -741,25 +741,25 @@
             
                                 var img = document.getElementById('previewimage_brinde_cadastrar');
                                 var x1, x2, y1, y2;
-                
-                                if (img.clientWidth > img.clientHeight) {
-                                    y1 = Math.floor(img.clientHeight / 100 * 10);
-                                    y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
-                                    x1 = Math.floor(img.clientWidth / 2) - Math.floor((y2 - y1) / 2);
+
+                                if (img.naturalWidth > img.naturalHeight) {
+                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
                                     x2 = x1 + (y2 - y1);
                                 }
                                 else {
-                                    if (img.clientWidth < img.clientHeight) {
-                                        x1 = Math.floor(img.clientWidth / 100 * 10);;
-                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
-                                        y1 = Math.floor(img.clientHeight / 2) - Math.floor((x2 - x1) / 2);
+                                    if (img.naturalWidth < img.naturalHeight) {
+                                        x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                                         y2 = y1 + (x2 - x1);
                                     }
                                     else {
-                                        x1 = Math.floor(img.clientWidth / 100 * 10);
-                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
-                                        y1 = Math.floor(img.clientHeight / 100 * 10);
-                                        y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
                                     }
                                 }
 
@@ -770,7 +770,10 @@
 
                                 $('#previewimage_brinde_cadastrar').imgAreaSelect({
                                     x1: x1, y1: y1, x2: x2, y2: y2,
-                                    aspectRatio: '4:4',
+                                    aspectRatio: '1:1',
+                                    handles: true,
+                                    imageHeight: this.naturalHeight,
+                                    imageWidth: this.naturalWidth,
                                     onSelectEnd: function (img, selection) {
                                         $('input[name="foto_brinde_cadastrar_x1"]').val(selection.x1);
                                         $('input[name="foto_brinde_cadastrar_y1"]').val(selection.y1);
@@ -926,7 +929,7 @@
 
             $('#modal_add_tamanho').addClass('modal-lg');
             $('#modal_add_tamanho').removeClass('modal-simple');
-            
+
             $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
             $.ajax({
@@ -944,6 +947,7 @@
                     $('#modal_add_body').html(data);
 
                     $(".qtd-produtos").mask("0#");
+                    $('.dinheiro').mask('#.###,#0', {reverse: true});
 
                     $('#cadastrar').unbind('click');
 
@@ -969,64 +973,81 @@
                             data: form_data,
                             error: function(){
                                 alertPersonalizado('error','Ocorreu algum erro');
+                                $('#preview_image_plano_cadastrar').imgAreaSelect({remove:true});
                             },
                             success: function(data){
                                 alertPersonalizado('success','Plano adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-
+                                $('#preview_image_plano_cadastrar').imgAreaSelect({remove:true});
                             },
                         });
                     });
 
-                    $('.dinheiro').mask('#.###,#0', {reverse: true});
+                    var p = $("#preview_image_plano_cadastrar");
+                    $("#foto_plano_cadastrar").on("change", function(){
 
-                    $("#plano_foto").change(function(e) {
-        
-                        for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-        
-                            var file = e.originalEvent.srcElement.files[i];
-        
-                            if($('img').length != 0){
-                                $('img').remove();
-                            }
-        
-                            var img = document.createElement("img");
-                            var reader = new FileReader();
-        
-                            reader.onloadend = function() {
-                    
-                                img.src = reader.result;
-                    
-                                $(img).on('load', function (){
-                    
-                                    var width = img.width, height = img.height;
-                    
-                                    if (img.width > img.height) {
-                                        if (width > 400) {
-                                        height *= 400 / img.width;
-                                        width = 400;
-                                        }
-                                    } else {
-                                        if (img.height > 200) {
-                                        width *= 200 / img.height;
-                                        height = 200;
-                                        }
+                        var imageReader = new FileReader();
+                        imageReader.readAsDataURL(document.getElementById("foto_plano_cadastrar").files[0]);
+
+                        imageReader.onload = function (oFREvent) {
+
+                            p.attr('src', oFREvent.target.result).fadeIn();
+
+                            p.on('load', function(){
+            
+                                var img = document.getElementById('preview_image_plano_cadastrar');
+                                var x1, x2, y1, y2;
+
+                                if (img.naturalWidth > img.naturalHeight) {
+                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                                    x2 = x1 + (y2 - y1);
+                                }
+                                else {
+                                    if (img.naturalWidth < img.naturalHeight) {
+                                        x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                                        y2 = y1 + (x2 - x1);
                                     }
-                        
-                                    $(img).css({
-                                        'width' : width+'px',
-                                        'height' : height+'px',
-                                        'margin-top' : '30px',
-                                    });
-                    
-                                })    
-                            }
-                            reader.readAsDataURL(file);
-                    
-                            $(this).after(img);
-                        }
+                                    else {
+                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                    }
+                                }
+
+                                $('input[name="foto_plano_cadastrar_x1"]').val(x1);
+                                $('input[name="foto_plano_cadastrar_y1"]').val(y1);
+                                $('input[name="foto_plano_cadastrar_w"]').val(x2 - x1);
+                                $('input[name="foto_plano_cadastrar_h"]').val(y2 - y1);
+
+                                $('#preview_image_plano_cadastrar').imgAreaSelect({
+                                    x1: x1, y1: y1, x2: x2, y2: y2,
+                                    aspectRatio: '1:1',
+                                    handles: true,
+                                    imageHeight: this.naturalHeight,
+                                    imageWidth: this.naturalWidth,
+                                    onSelectEnd: function (img, selection) {
+                                        $('input[name="foto_plano_cadastrar_x1"]').val(selection.x1);
+                                        $('input[name="foto_plano_cadastrar_y1"]').val(selection.y1);
+                                        $('input[name="foto_plano_cadastrar_w"]').val(selection.width);
+                                        $('input[name="foto_plano_cadastrar_h"]').val(selection.height);
+                                    },
+                                    parent: $('#conteudo_modal_add'),
+                                });
+                                
+                            })
+                        };
+            
+                    });
+            
+                    $("#selecionar_foto_plano_cadastrar").on("click", function(){
+                        $("#foto_plano_cadastrar").click();
                     });
 
                     var qtd_produtos = 1;
@@ -1399,7 +1420,6 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function(){
-                            $('#modal_editar').hide();
                             alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
@@ -1426,65 +1446,83 @@
                                     },
                                     error: function(){
                                         alertPersonalizado('error','Ocorreu algum erro');
+                                        $('#previewimage_plano_editar').imgAreaSelect({remove:true});
                                     },
                                     success: function(data){
                                         alertPersonalizado('success','Plano atualizado!');
-                                        $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                        $('#previewimage_plano_editar').imgAreaSelect({remove:true});
                                     },
                                 });
                             });
 
                             $('.dinheiro').mask('#.###,#0', {reverse: true});
 
-                            $("#foto_plano").change(function(e) {
-                    
-                                for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+                            var p = $("#previewimage_plano_editar");
+                            $("#foto_plano_editar").on("change", function(){
 
-                                    var file = e.originalEvent.srcElement.files[i];
-                    
-                                    if($('img').length != 0){
-                                        $('img').remove();
-                                    }
-                    
-                                    var img = document.createElement("img");
-                                    var reader = new FileReader();
-                    
-                                    reader.onloadend = function() {
-                    
-                                        img.src = reader.result;
-                    
-                                        $(img).on('load', function (){
-                    
-                                            var width = img.width, height = img.height;
-                    
-                                            if (img.width > img.height) {
-                                                if (width > 400) {
-                                                  height *= 400 / img.width;
-                                                  width = 400;
-                                                }
-                                            } else {
-                                                if (img.height > 200) {
-                                                  width *= 200 / img.height;
-                                                  height = 200;
-                                                }
+                                var imageReader = new FileReader();
+                                imageReader.readAsDataURL(document.getElementById("foto_plano_editar").files[0]);
+
+                                imageReader.onload = function (oFREvent) {
+
+                                    p.attr('src', oFREvent.target.result).fadeIn();
+
+                                    p.on('load', function(){
+
+                                        var img = document.getElementById('previewimage_plano_editar');
+                                        var x1, x2, y1, y2;
+
+                                        if (img.naturalWidth > img.naturalHeight) {
+                                            y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                            x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                                            x2 = x1 + (y2 - y1);
+                                        }
+                                        else {
+                                            if (img.naturalWidth < img.naturalHeight) {
+                                                x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                                y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                                                y2 = y1 + (x2 - x1);
                                             }
-                    
-                                            $(img).css({
-                                                'width' : width+'px',
-                                                'height' : height+'px',
-                                                'margin-top' : '30px',
-                                            });
-                    
-                                        })    
-                                    }
-                                    reader.readAsDataURL(file);
-                    
-                                    $(this).after(img);
-                                }
+                                            else {
+                                                x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                                y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                            }
+                                        }
+
+                                        $('input[name="foto_plano_editar_x1"]').val(x1);
+                                        $('input[name="foto_plano_editar_y1"]').val(y1);
+                                        $('input[name="foto_plano_editar_w"]').val(x2 - x1);
+                                        $('input[name="foto_plano_editar_h"]').val(y2 - y1);
+
+                                        $('#previewimage_plano_editar').imgAreaSelect({
+                                            x1: x1, y1: y1, x2: x2, y2: y2,
+                                            aspectRatio: '1:1',
+                                            handles: true,
+                                            imageHeight: this.naturalHeight,
+                                            imageWidth: this.naturalWidth,
+                                            onSelectEnd: function (img, selection) {
+                                                $('input[name="foto_plano_editar_x1"]').val(selection.x1);
+                                                $('input[name="foto_plano_editar_y1"]').val(selection.y1);
+                                                $('input[name="foto_plano_editar_w"]').val(selection.width);
+                                                $('input[name="foto_plano_editar_h"]').val(selection.height);
+                                            },
+                                            parent: $('#conteudo_modal_editar'),
+                                        });
+                                    })
+                                };
+
                             });
-                    
+
+                            $("#selecionar_foto_plano_editar").on("click", function(){
+                                $("#foto_plano_editar").click();
+                            });
+
                             var qtd_produtos = '1';
                     
                             var div_produtos = $('#produtos_div_'+qtd_produtos).parent().clone();
@@ -1691,7 +1729,6 @@
                         },
                         data: {id: id_pixel},
                         error: function(){
-                            $('#modal_editar').hide();
                             alertPersonalizado('error','Ocorreu algum erro');
                         },
                         success: function(data){
@@ -1721,12 +1758,10 @@
                                     },
                                     data: { pixelData: paramObj },
                                     error: function(){
-                                        $('#modal_editar').hide();
                                         alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
                                         alertPersonalizado('success','Pixel atualizado!');
-                                        $('#modal_editar').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                                     }
@@ -2022,86 +2057,97 @@
             
                             $('#editar').on('click',function(){
         
-                                var paramObj = {};
-                                $.each($('#editar_brinde').serializeArray(), function(_, kv) {
-                                    if (paramObj.hasOwnProperty(kv.name)) {
-                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                                        paramObj[kv.name].push(kv.value);
-                                    }
-                                    else {
-                                        paramObj[kv.name] = kv.value;
-                                    }
-                                });
-                                paramObj['id'] = id_brinde;
-        
+                                var form_data = new FormData(document.getElementById('editar_brinde'));
+                                form_data.append('projeto',id_projeto);
+
                                 $.ajax({
                                     method: "POST",
                                     url: "/brindes/editarbrinde",
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data:  paramObj,
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
+                                    data:  form_data,
                                     error: function(){
                                         $('#modal_editar').hide();
                                         alertPersonalizado('error','Ocorreu algum erro');
+                                        $('#previewimage_brinde_editar').imgAreaSelect({remove:true});
                                     },
                                     success: function(data){
                                         alertPersonalizado('success','Brinde atualizado!');
                                         $('#modal_editar').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                        $('#previewimage_brinde_editar').imgAreaSelect({remove:true});
                                     }
                                 });
                             });
 
-                            $("#foto_editar_brinde").change(function(e) {
+                            var p = $("#previewimage_brinde_editar");
+                            $("#foto_brinde_editar").on("change", function(){
 
-                                for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+                                var imageReader = new FileReader();
+                                imageReader.readAsDataURL(document.getElementById("foto_brinde_editar").files[0]);
+        
+                                imageReader.onload = function (oFREvent) {
+                                    p.attr('src', oFREvent.target.result).fadeIn();
+        
+                                    p.on('load', function(){
                     
-                                    var file = e.originalEvent.srcElement.files[i];
-                    
-                                    if($('img').length != 0){
-                                        $('img').remove();
-                                    }
-                    
-                                    var img = document.createElement("img");
-                                    var reader = new FileReader();
-                    
-                                    reader.onloadend = function() {
-                            
-                                        img.src = reader.result;
-                            
-                                        $(img).on('load', function (){
-                            
-                                            var width = img.width, height = img.height;
-                            
-                                            if (img.width > img.height) {
-                                                if (width > 400) {
-                                                  height *= 400 / img.width;
-                                                  width = 400;
-                                                }
-                                            } else {
-                                                if (img.height > 200) {
-                                                  width *= 200 / img.height;
-                                                  height = 200;
-                                                }
+                                        var img = document.getElementById('previewimage_brinde_editar');
+                                        var x1, x2, y1, y2;
+
+                                        if (img.naturalWidth > img.naturalHeight) {
+                                            y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                            x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                                            x2 = x1 + (y2 - y1);
+                                        }
+                                        else {
+                                            if (img.naturalWidth < img.naturalHeight) {
+                                                x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                                y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                                                y2 = y1 + (x2 - x1);
                                             }
-                                
-                                            $(img).css({
-                                                'width' : width+'px',
-                                                'height' : height+'px',
-                                                'margin-top' : '30px',
-                                            });
+                                            else {
+                                                x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                                y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                            }
+                                        }
+
+                                        $('input[name="foto_brinde_editar_x1"]').val(x1);
+                                        $('input[name="foto_brinde_editar_y1"]').val(y1);
+                                        $('input[name="foto_brinde_editar_w"]').val(x2 - x1);
+                                        $('input[name="foto_brinde_editar_h"]').val(y2 - y1);
+        
+                                        $('#previewimage_brinde_editar').imgAreaSelect({
+                                            x1: x1, y1: y1, x2: x2, y2: y2,
+                                            aspectRatio: '1:1',
+                                            handles: true,
+                                            imageHeight: this.naturalHeight,
+                                            imageWidth: this.naturalWidth,
+                                            onSelectEnd: function (img, selection) {
+                                                $('input[name="foto_brinde_editar_x1"]').val(selection.x1);
+                                                $('input[name="foto_brinde_editar_y1"]').val(selection.y1);
+                                                $('input[name="foto_brinde_editar_w"]').val(selection.width);
+                                                $('input[name="foto_brinde_editar_h"]').val(selection.height);
+                                            },
+                                            parent: $('#conteudo_modal_editar'),
+                                        });
+                                    })
+                                };
                     
-                                        })    
-                                    }
-                                    reader.readAsDataURL(file);
-                    
-                                    $(this).after(img);
-                                }
                             });
                     
-                    
+                            $("#selecionar_foto_brinde_editar").on("click", function(){
+                                $("#foto_brinde_editar").click();
+                            });
+                            
                             $('#tipo_brinde').on('change', function(){
                     
                                 if($(this).val() == 1){
@@ -2123,7 +2169,6 @@
                             if(tipo_brinde == '2'){
                                 $('#div_input_link').show();
                             }
-                    
 
                         }
                     });
@@ -2869,13 +2914,6 @@
 
         function updateConfiguracoes(){
 
-            $('#configuracoes_projeto').html('');
-            $(".imgareaselect-outer").remove();
-            $(".imgareaselect-border4").remove();
-            $(".imgareaselect-border3").remove();
-            $(".imgareaselect-border2").remove();
-            $(".imgareaselect-border1").remove();
-
             $.ajax({
                 method: "GET",
                 url: "/projetos/getconfiguracoesprojeto/"+id_projeto,
@@ -2893,7 +2931,7 @@
 
                     var p = $("#previewimage");
                     $("#foto_projeto").on("change", function(){
-            
+
                         var imageReader = new FileReader();
                         imageReader.readAsDataURL(document.getElementById("foto_projeto").files[0]);
             
@@ -2901,31 +2939,31 @@
                             p.attr('src', oFREvent.target.result).fadeIn();
 
                             p.on('load', function(){
-
+                    
                                 var img = document.getElementById('previewimage');
                                 var x1, x2, y1, y2;
 
-                                if (img.clientWidth > img.clientHeight) {
-                                    y1 = Math.floor(img.clientHeight / 100 * 10);
-                                    y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
-                                    x1 = Math.floor(img.clientWidth / 2) - Math.floor((y2 - y1) / 2);
+                                if (img.naturalWidth > img.naturalHeight) {
+                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
                                     x2 = x1 + (y2 - y1);
                                 }
                                 else {
-                                    if (img.clientWidth < img.clientHeight) {
-                                        x1 = Math.floor(img.clientWidth / 100 * 10);;
-                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
-                                        y1 = Math.floor(img.clientHeight / 2) - Math.floor((x2 - x1) / 2);
+                                    if (img.naturalWidth < img.naturalHeight) {
+                                        x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                                         y2 = y1 + (x2 - x1);
                                     }
                                     else {
-                                        x1 = Math.floor(img.clientWidth / 100 * 10);
-                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
-                                        y1 = Math.floor(img.clientHeight / 100 * 10);
-                                        y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
                                     }
                                 }
-            
+
                                 $('input[name="foto_x1"]').val(x1);
                                 $('input[name="foto_y1"]').val(y1);
                                 $('input[name="foto_w"]').val(x2 - x1);
@@ -2933,7 +2971,10 @@
             
                                 $('#previewimage').imgAreaSelect({
                                     x1: x1, y1: y1, x2: x2, y2: y2,
-                                    aspectRatio: '4:4',
+                                    aspectRatio: '1:1',
+                                    handles: true,
+                                    imageHeight: this.naturalHeight,
+                                    imageWidth: this.naturalWidth,
                                     onSelectEnd: function (img, selection) {
                                         $('input[name="foto_x1"]').val(selection.x1);
                                         $('input[name="foto_y1"]').val(selection.y1);
@@ -2941,7 +2982,7 @@
                                         $('input[name="foto_h"]').val(selection.height);
                                     }
                                 });
-                            })
+                            });
                         };
             
                     });
@@ -2967,9 +3008,11 @@
                             },
                             error: function(){
                                 alertPersonalizado('error','Ocorreu algum erro');
+                                $('#previewimage').imgAreaSelect({remove:true});
                             },
                             success: function(data){
                                 alertPersonalizado('success','Dados do projeto alterados!');
+                                $('#previewimage').imgAreaSelect({remove:true});
                                 updateConfiguracoes();
                             },
                         });

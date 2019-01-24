@@ -107,22 +107,30 @@
 
                         <div class="row">
                             <div class="form-group col-xl-6">
-                                <label for="foto_plano">Foto do produto</label>
-                                <input name="foto_plano" type="file" class="form-control" id="foto_plano">
-                                @if($foto != null)
-                                    <img src="{{ $foto }}" style="margin-top: 20px;height: 250px">
-                                @endif
-                            </div>
-                            <div class="form-group col-xl-6">
                                 <label for="layout">Layout</label>
                                 <select name="layout" type="text" class="form-control" id="layout" required>
-                                    <option value="">Selecione</option>
+                                    <option value="">Layout padrão</option>
                                     @foreach($layouts as $layout)
                                         <option value="{{ $layout['id'] }}" {!! ($plano->layout == $layout['id']) ? 'selected' : '' !!}>{{ $layout['descricao'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <input value="10" name="quantidade" type="hidden" class="form-control" id="quantidade" placeholder="Quantidade" required>
+                            {{--  <input value="10" name="quantidade" type="hidden" class="form-control" id="quantidade" placeholder="Quantidade" required>  --}}
+                        </div>
+
+                        <div class="row"> 
+                            <div class="form-group col-12">
+                                <label for="selecionar_foto_plano_editar">Foto do plano</label><br>
+                                <input type="button" id="selecionar_foto_plano_editar" class="btn btn-default" value="Alterar foto do plano">
+                                <input name="foto_plano_editar" type="file" class="form-control" id="foto_plano_editar" accept="image/*" style="display:none">
+                                <div  style="margin: 20px 0 0 30px;">
+                                    <img id="previewimage_plano_editar" src="{!! $foto !!}" alt="Selecione a foto do plano" style="max-height: 250px; max-width: 350px;"/>
+                                </div> 
+                                <input type="hidden" name="foto_plano_editar_x1"/>
+                                <input type="hidden" name="foto_plano_editar_y1"/>
+                                <input type="hidden" name="foto_plano_editar_w"/>
+                                <input type="hidden" name="foto_plano_editar_h"/>
+                            </div>
                         </div>
 
                         <h4> Produtos </h4>

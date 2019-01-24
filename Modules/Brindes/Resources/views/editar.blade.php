@@ -1,4 +1,4 @@
-<form id="editar_brinde" method="post" action="/brindes/editarbrinde"  enctype="multipart/form-data">
+<form id="editar_brinde" method="post" action="/brindes/editarbrinde" enctype="multipart/form-data">
     @csrf
     <input type="hidden" value="{!! $brinde->id !!}" name="id">
     <div class="page-content container-fluid">
@@ -18,13 +18,18 @@
                 </div>
 
                 <div class="row">
-
-                    <div class="form-group col-xl-12">
-                        <label for="foto_editar_brinde">Foto do brinde</label>
-                        <input name="foto" type="file" class="form-control" id="foto_editar_brinde">
-                        <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)!!}" style="margin-top: 20px; height: 200px">
+                    <div class="form-group col-12">
+                        <label for="selecionar_foto_brinde_editar">Foto do brinde</label><br>
+                        <input type="button" id="selecionar_foto_brinde_editar" class="btn btn-default" value="Alterar foto do brinde">
+                        <input name="foto_brinde_editar" type="file" class="form-control" id="foto_brinde_editar" accept="image/*" style="display:none">
+                        <div  style="margin: 20px 0 0 30px;">
+                            <img id="previewimage_brinde_editar" src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)!!}?dummy={!! uniqid() !!}" alt="Selecione a foto do brinde" style="max-height: 250px; max-width: 350px;"/>
+                        </div>
+                        <input type="hidden" name="foto_brinde_editar_x1"/>
+                        <input type="hidden" name="foto_brinde_editar_y1"/>
+                        <input type="hidden" name="foto_brinde_editar_w"/>
+                        <input type="hidden" name="foto_brinde_editar_h"/>
                     </div>
-
                 </div>
 
                 <div class="row">

@@ -63,7 +63,7 @@
                 <input type="button" id="selecionar_foto" class="btn btn-default" value="Alterar foto do projeto">
                 <input name="foto_projeto" type="file" class="form-control" id="foto_projeto" style="display:none" accept="image/*">
                 <div  style="margin: 20px 0 0 30px;">
-                    <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;" src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto)!!}"/>
+                    <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;" src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto)!!}?dummy={!! uniqid() !!}"/>
                 </div>
                 <input type="hidden" name="foto_x1"/>
                 <input type="hidden" name="foto_y1"/>
