@@ -101,7 +101,7 @@
                     return 'Ativa';
                   else
                     return 'Inativa';
-              }, name: 'recipient_id'},
+                }, name: 'recipient_id'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {

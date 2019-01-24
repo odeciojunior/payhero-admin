@@ -7,10 +7,11 @@ use App\Produto;
 use App\Categoria;
 use App\ProjetoProduto;
 use App\UsuarioEmpresa;
-use Faker\Provider\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
@@ -42,17 +43,33 @@ class ProdutosController extends Controller {
 
         $produto = Produto::create($dados);
 
-        $foto = $request->file('foto');
+        $foto = $request->file('foto_produto');
 
         if ($foto != null) {
-            $nome_foto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
+            try{
+                $nome_foto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
 
-            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nome_foto);
+                Storage::delete('public/upload/produto/'.$nome_foto);
 
-            $produto->update([
-                'foto' => $nome_foto
-            ]);
+                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nome_foto);
 
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+
+                $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
+
+                $img->resize(200, 200);
+
+                Storage::delete('public/upload/produto/'.$nome_foto);
+                
+                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+
+                $produto->update([
+                    'foto' => $nome_foto
+                ]);
+            }
+            catch(\Exception $e){
+                //
+            }
         }
 
         return redirect()->route('produtos');
@@ -81,16 +98,34 @@ class ProdutosController extends Controller {
         $produto = Produto::find($dados['id']);
         $produto->update($dados);
 
-        $foto = $request->file('foto');
+        $foto = $request->file('foto_produto');
 
         if ($foto != null) {
-            $nome_foto = 'plano_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
 
-            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nome_foto);
+            try{
+                $nome_foto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
 
-            $produto->update([
-                'foto' => $nome_foto
-            ]);
+                Storage::delete('public/upload/produto/'.$nome_foto);
+
+                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nome_foto);
+
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+
+                $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
+
+                $img->resize(200, 200);
+
+                Storage::delete('public/upload/produto/'.$nome_foto);
+                
+                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+
+                $produto->update([
+                    'foto' => $nome_foto
+                ]);
+            }
+            catch(\Exception $e){
+                //
+            }
 
         }
 

@@ -153,10 +153,10 @@ class EmpresasController extends Controller {
         
         $empresas = \DB::table('empresas as empresa')
             ->select([
-                'id',
-                'cnpj',
-                'nome_fantasia',
-        ]);
+                'empresa.id',
+                'empresa.cnpj',
+                'empresa.nome_fantasia',
+        ]); 
 
         if(!\Auth::user()->hasRole('administrador geral')){
             $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();

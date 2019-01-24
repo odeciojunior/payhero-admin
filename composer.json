@@ -22,7 +22,7 @@
         "intervention/image": "^2.4",
         "pagarme/pagarme-php": "4.0.0-alpha",
         "laracasts/utilities": "3.0",
-        "vitorccsiqueira/zenvia-php": "2.1"
+        "vitorccsiqueira/zenvia-php": "2.1",
     },
     "require-dev": {
         "filp/whoops": "^2.0",

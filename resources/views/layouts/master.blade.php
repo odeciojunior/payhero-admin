@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/jquery-datatable/yadcf/jquery.dataTables.yadcf.js') }}">
 
     <!-- Plugins -->
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/ascolorpicker/asColorPicker.min.css?v4.0.2') }}">    
+    {{--  <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/ascolorpicker/asColorPicker.min.css?v4.0.2') }}">      --}}
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/asscrollable/asScrollable.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/switchery/switchery.css') }}">
@@ -55,11 +55,13 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/brand-icons/brand-icons.min.css') }}">
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
-    
+
+    <link rel="stylesheet" href="{{ asset('jquery-imgareaselect/css/imgareaselect-default.css') }}">
+
     <!--[if lt IE 9]>
     <script src="../../global/vendor/html5shiv/html5shiv.min.js"></script>
     <![endif]-->
-    
+
     <!--[if lt IE 10]>
     <script src="../../global/vendor/media-match/media.match.min.js"></script>
     <script src="../../global/vendor/respond/respond.min.js"></script>
@@ -106,7 +108,7 @@
     <script src="{{ asset('adminremark/global/vendor/skycons/skycons.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/chartist/chartist.min.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.js') }}"></script>
-    <script src="{{ asset('adminremark/global/vendor/aspieprogress/jquery-asPieProgress.min.js') }}"></script>
+    {{--  <script src="{{ asset('adminremark/global/vendor/aspieprogress/jquery-asPieProgress.min.js') }}"></script>  --}}
     <script src="{{ asset('adminremark/global/vendor/jvectormap/jquery-jvectormap.min.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/jvectormap/maps/jquery-jvectormap-au-mill-en.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
@@ -117,10 +119,10 @@
     <script src="{{ asset('adminremark/global/js/Plugin.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Base.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Config.js') }}"></script>
-    <script src="{{ asset('adminremark/global/vendor/clockpicker/bootstrap-clockpicker.min.js?v4.0.2') }}"></script>
-    <script src="{{ asset('adminremark/global/vendor/ascolor/jquery-asColor.min.js?v4.0.2') }}"></script>
-    <script src="{{ asset('adminremark/global/vendor/ascolorpicker/jquery-asColorPicker.min.js?v4.0.2') }}"></script>
-    <script src="{{ asset('adminremark/global/js/Plugin/ascolorpicker.js') }}"></script>
+    {{--  <script src="{{ asset('adminremark/global/vendor/clockpicker/bootstrap-clockpicker.min.js?v4.0.2') }}"></script>  --}}
+    {{--  <script src="{{ asset('adminremark/global/vendor/ascolor/jquery-asColor.min.js?v4.0.2') }}"></script>  --}}
+    {{--  <script src="{{ asset('adminremark/global/vendor/ascolorpicker/jquery-asColorPicker.min.js?v4.0.2') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/ascolorpicker.js') }}"></script>  --}}
     <script src="{{ asset('adminremark/global/js/Plugin/tabs.js') }}"></script>
     
     <script src="{{ asset('adminremark/assets/js/Section/Menubar.js') }}"></script>
@@ -144,6 +146,8 @@
     <script src="{{ asset('vendor/jquery-datatable/yadcf/i18n.js') }}"></script>
     <script src="{{ asset('vendor/jquery-datatable/yadcf/jquery.dataTables.yadcf.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
+
+    <script src="{{ asset('jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 
     @yield('scripts')
 

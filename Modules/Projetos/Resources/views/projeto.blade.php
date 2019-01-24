@@ -290,7 +290,7 @@
                     <!-- Modal padrão para adicionar * no projeto -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div id="modal_add_tamanho" class="modal-dialog modal-simple">
-                            <div class="modal-content">
+                            <div class="modal-content" id="conteudo_modal_add">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
@@ -356,7 +356,7 @@
         </div>
     </div>
 
-  <script> 
+  <script>
 
     $(document).ready( function(){
 
@@ -701,6 +701,8 @@
                             return false;
                         }
 
+                        $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+
                         var form_data = new FormData(document.getElementById('cadastrar_brinde'));
                         form_data.append('projeto',id_projeto);
 
@@ -726,53 +728,66 @@
                         });
                     });
 
-                    $("#foto_brinde").change(function(e) {
+                    var p = $("#previewimage_brinde_cadastrar");
+                    $("#foto_brinde_cadastrar").on("change", function(){
 
-                        for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-            
-                            var file = e.originalEvent.srcElement.files[i];
-            
-                            if($('img').length != 0){
-                                $('img').remove();
-                            }
-            
-                            var img = document.createElement("img");
-                            var reader = new FileReader();
-            
-                            reader.onloadend = function() {
-                    
-                                img.src = reader.result;
-                    
-                                $(img).on('load', function (){
+                        var imageReader = new FileReader();
+                        imageReader.readAsDataURL(document.getElementById("foto_brinde_cadastrar").files[0]);
 
-                                    var width = img.width, height = img.height;
+                        imageReader.onload = function (oFREvent) {
+                            p.attr('src', oFREvent.target.result).fadeIn();
 
-                                    if (img.width > img.height) {
-                                        if (width > 400) {
-                                          height *= 400 / img.width;
-                                          width = 400;
-                                        }
-                                    } else {
-                                        if (img.height > 200) {
-                                          width *= 200 / img.height;
-                                          height = 200;
-                                        }
+                            p.on('load', function(){
+            
+                                var img = document.getElementById('previewimage_brinde_cadastrar');
+                                var x1, x2, y1, y2;
+                
+                                if (img.clientWidth > img.clientHeight) {
+                                    y1 = Math.floor(img.clientHeight / 100 * 10);
+                                    y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                                    x1 = Math.floor(img.clientWidth / 2) - Math.floor((y2 - y1) / 2);
+                                    x2 = x1 + (y2 - y1);
+                                }
+                                else {
+                                    if (img.clientWidth < img.clientHeight) {
+                                        x1 = Math.floor(img.clientWidth / 100 * 10);;
+                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
+                                        y1 = Math.floor(img.clientHeight / 2) - Math.floor((x2 - x1) / 2);
+                                        y2 = y1 + (x2 - x1);
                                     }
+                                    else {
+                                        x1 = Math.floor(img.clientWidth / 100 * 10);
+                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
+                                        y1 = Math.floor(img.clientHeight / 100 * 10);
+                                        y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                                    }
+                                }
 
-                                    $(img).css({
-                                        'width' : width+'px',
-                                        'height' : height+'px',
-                                        'margin-top' : '30px',
-                                    });
-                                })    
-                            }
-                            reader.readAsDataURL(file);
+                                $('input[name="foto_brinde_cadastrar_x1"]').val(x1);
+                                $('input[name="foto_brinde_cadastrar_y1"]').val(y1);
+                                $('input[name="foto_brinde_cadastrar_w"]').val(x2 - x1);
+                                $('input[name="foto_brinde_cadastrar_h"]').val(y2 - y1);
 
-                            $(this).after(img);
-                        }
-
+                                $('#previewimage_brinde_cadastrar').imgAreaSelect({
+                                    x1: x1, y1: y1, x2: x2, y2: y2,
+                                    aspectRatio: '4:4',
+                                    onSelectEnd: function (img, selection) {
+                                        $('input[name="foto_brinde_cadastrar_x1"]').val(selection.x1);
+                                        $('input[name="foto_brinde_cadastrar_y1"]').val(selection.y1);
+                                        $('input[name="foto_brinde_cadastrar_w"]').val(selection.width);
+                                        $('input[name="foto_brinde_cadastrar_h"]').val(selection.height);
+                                    },
+                                    parent: $('#conteudo_modal_add'),
+                                });
+                            })
+                        };
+            
                     });
-
+            
+                    $("#selecionar_foto_brinde_cadastrar").on("click", function(){
+                        $("#foto_brinde_cadastrar").click();
+                    });
+            
                     $('#tipo_brinde').on('change', function(){
             
                         if($(this).val() == 1){
@@ -1205,9 +1220,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -1301,9 +1316,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -1596,9 +1611,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -1760,9 +1775,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -1917,9 +1932,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -2145,9 +2160,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -2290,9 +2305,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -2522,9 +2537,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -2714,9 +2729,9 @@
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "infoEmpty": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -2854,6 +2869,13 @@
 
         function updateConfiguracoes(){
 
+            $('#configuracoes_projeto').html('');
+            $(".imgareaselect-outer").remove();
+            $(".imgareaselect-border4").remove();
+            $(".imgareaselect-border3").remove();
+            $(".imgareaselect-border2").remove();
+            $(".imgareaselect-border1").remove();
+
             $.ajax({
                 method: "GET",
                 url: "/projetos/getconfiguracoesprojeto/"+id_projeto,
@@ -2869,53 +2891,65 @@
     
                     $("#porcentagem_afiliados").mask("0#");
 
-                    $("input:file").change(function(e) {
+                    var p = $("#previewimage");
+                    $("#foto_projeto").on("change", function(){
+            
+                        var imageReader = new FileReader();
+                        imageReader.readAsDataURL(document.getElementById("foto_projeto").files[0]);
+            
+                        imageReader.onload = function (oFREvent) {
+                            p.attr('src', oFREvent.target.result).fadeIn();
 
-                        for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+                            p.on('load', function(){
 
-                            var file = e.originalEvent.srcElement.files[i];
+                                var img = document.getElementById('previewimage');
+                                var x1, x2, y1, y2;
 
-                            if($('img').length != 0){
-                                $('img').remove();
-                            }
-
-                            var img = document.createElement("img");
-                            var reader = new FileReader();
-
-                            reader.onloadend = function() {
-
-                                img.src = reader.result;
-
-                                $(img).on('load', function (){
-
-                                    var width = img.width, height = img.height;
-
-                                    if (img.width > img.height) {
-                                        if (width > 400) {
-                                            height *= 400 / img.width;
-                                            width = 400;
-                                        }
-                                    } else {
-                                        if (img.height > 200) {
-                                            width *= 200 / img.height;
-                                            height = 200;
-                                        }
+                                if (img.clientWidth > img.clientHeight) {
+                                    y1 = Math.floor(img.clientHeight / 100 * 10);
+                                    y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                                    x1 = Math.floor(img.clientWidth / 2) - Math.floor((y2 - y1) / 2);
+                                    x2 = x1 + (y2 - y1);
+                                }
+                                else {
+                                    if (img.clientWidth < img.clientHeight) {
+                                        x1 = Math.floor(img.clientWidth / 100 * 10);;
+                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
+                                        y1 = Math.floor(img.clientHeight / 2) - Math.floor((x2 - x1) / 2);
+                                        y2 = y1 + (x2 - x1);
                                     }
-
-                                    $(img).css({
-                                        'width' : width+'px',
-                                        'height' : height+'px',
-                                        'margin-top' : '30px',
-                                    });
-
-                                })
-                            }
-                            reader.readAsDataURL(file);
-
-                            $(this).after(img);
-                        }
+                                    else {
+                                        x1 = Math.floor(img.clientWidth / 100 * 10);
+                                        x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
+                                        y1 = Math.floor(img.clientHeight / 100 * 10);
+                                        y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                                    }
+                                }
+            
+                                $('input[name="foto_x1"]').val(x1);
+                                $('input[name="foto_y1"]').val(y1);
+                                $('input[name="foto_w"]').val(x2 - x1);
+                                $('input[name="foto_h"]').val(y2 - y1);
+            
+                                $('#previewimage').imgAreaSelect({
+                                    x1: x1, y1: y1, x2: x2, y2: y2,
+                                    aspectRatio: '4:4',
+                                    onSelectEnd: function (img, selection) {
+                                        $('input[name="foto_x1"]').val(selection.x1);
+                                        $('input[name="foto_y1"]').val(selection.y1);
+                                        $('input[name="foto_w"]').val(selection.width);
+                                        $('input[name="foto_h"]').val(selection.height);
+                                    }
+                                });
+                            })
+                        };
+            
                     });
-
+            
+                    $("#selecionar_foto").on("click", function(){
+                        $("#foto_projeto").click();
+                    });
+            
                     $('#bt_atualizar_configuracoes').on('click',function(){
 
                         var form_data = new FormData(document.getElementById('atualizar_configuracoes'));

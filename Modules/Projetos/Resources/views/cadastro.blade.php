@@ -68,13 +68,21 @@
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-xl-6">
-                                    <label for="imagem">Imagem do projeto</label>
-                                    <input name="imagem" type="file" class="form-control" id="imagem">
+                                <div class="form-group col-12">
+                                    <label for="selecionar_foto">Imagem do projeto</label><br>
+                                    <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto">
+                                    <input name="foto_projeto" type="file" class="form-control" id="foto" style="display:none" accept="image/*">
+                                    <div  style="margin: 20px 0 0 30px;">
+                                        <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;"/>
+                                    </div>
+                                    <input type="hidden" name="foto_x1"/>
+                                    <input type="hidden" name="foto_y1"/>
+                                    <input type="hidden" name="foto_w"/>
+                                    <input type="hidden" name="foto_h"/>
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" style="margin-top: 30px">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success">Salvar</button>
                                 </div>
@@ -91,53 +99,65 @@
 
         $(document).ready( function(){
 
-            $("input:file").change(function(e) {
-
-                for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-
-                    var file = e.originalEvent.srcElement.files[i];
-
-                    if($('img').length != 0){
-                        $('img').remove();
-                    }
-
-                    var img = document.createElement("img");
-                    var reader = new FileReader();
-
-                    reader.onloadend = function() {
-            
-                        img.src = reader.result;
-            
-                        $(img).on('load', function (){
-            
-                            var width = img.width, height = img.height;
-            
-                            if (img.width > img.height) {
-                                if (width > 400) {
-                                height *= 400 / img.width;
-                                width = 400;
-                                }
-                            } else {
-                                if (img.height > 200) {
-                                width *= 200 / img.height;
-                                height = 200;
-                                }
+            var p = $("#previewimage");
+            $("#foto").on("change", function(){
+    
+                var imageReader = new FileReader();
+                imageReader.readAsDataURL(document.getElementById("foto").files[0]);
+    
+                imageReader.onload = function (oFREvent) {
+                    p.attr('src', oFREvent.target.result).fadeIn();
+    
+                    p.on('load', function(){
+    
+                        var img = document.getElementById('previewimage');
+                        var x1, x2, y1, y2;
+        
+                        if (img.clientWidth > img.clientHeight) {
+                            y1 = Math.floor(img.clientHeight / 100 * 10);
+                            y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                            x1 = Math.floor(img.clientWidth / 2) - Math.floor((y2 - y1) / 2);
+                            x2 = x1 + (y2 - y1);
+                        }
+                        else {
+                            if (img.clientWidth < img.clientHeight) {
+                                x1 = Math.floor(img.clientWidth / 100 * 10);;
+                                x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
+                                y1 = Math.floor(img.clientHeight / 2) - Math.floor((x2 - x1) / 2);
+                                y2 = y1 + (x2 - x1);
                             }
-                
-                            $(img).css({
-                                'width' : width+'px',
-                                'height' : height+'px',
-                                'margin-top' : '30px',
-                            });
-            
-                        })    
-                    }
-                    reader.readAsDataURL(file);
-            
-                    $(this).after(img);
-                }
+                            else {
+                                x1 = Math.floor(img.clientWidth / 100 * 10);
+                                x2 = img.clientWidth - Math.floor(img.clientWidth / 100 * 10);
+                                y1 = Math.floor(img.clientHeight / 100 * 10);
+                                y2 = img.clientHeight - Math.floor(img.clientHeight / 100 * 10);
+                            }
+                        }
+    
+                        $('input[name="foto_x1"]').val(x1);
+                        $('input[name="foto_y1"]').val(y1);
+                        $('input[name="foto_w"]').val(x2 - x1);
+                        $('input[name="foto_h"]').val(y2 - y1);
+    
+                        $('#previewimage').imgAreaSelect({
+                            x1: x1, y1: y1, x2: x2, y2: y2,
+                            aspectRatio: '4:4',
+                            onSelectEnd: function (img, selection) {
+                                $('input[name="foto_x1"]').val(selection.x1);
+                                $('input[name="foto_y1"]').val(selection.y1);
+                                $('input[name="foto_w"]').val(selection.width);
+                                $('input[name="foto_h"]').val(selection.height);
+                            }
+                        });
+                    })
+                };
+    
             });
-
+    
+            $("#selecionar_foto").on("click", function(){
+                $("#foto").click();
+            });
+    
         });
 
     </script>

@@ -7,11 +7,13 @@ use App\TipoBrinde;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
-class BrindesController extends Controller
-{
+class BrindesController extends Controller {
+
 
     public function index() {
 
@@ -33,13 +35,25 @@ class BrindesController extends Controller
 
         $brinde = Brinde::create($dados);
 
-        $foto = $request->file('foto_brinde');
+        $foto = $request->file('foto_brinde_cadastrar');
 
         if ($foto != null) {
             $nome_foto = 'brinde_' . $brinde->id . '_.' . $foto->getClientOriginalExtension();
+
+            Storage::delete('public/upload/brindes/fotos/'.$nome_foto);
  
             $foto->move(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO, $nome_foto);
- 
+
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO . $nome_foto);
+
+            $img->crop($dados['foto_brinde_cadastrar_w'], $dados['foto_brinde_cadastrar_h'], $dados['foto_brinde_cadastrar_x1'], $dados['foto_brinde_cadastrar_y1']);
+
+            $img->resize(200, 200);
+
+            Storage::delete('public/upload/brindes/fotos/'.$nome_foto);
+            
+            $img->save(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO . $nome_foto);
+
             $brinde->update([
                 'foto' => $nome_foto,
             ]);
@@ -123,7 +137,6 @@ class BrindesController extends Controller
 
     }
 
-
     public function dadosBrindes(Request $request) {
 
         $dados = $request->all();
@@ -165,7 +178,6 @@ class BrindesController extends Controller
         ->make(true);
     }
 
-
     public function getDetalhesBrinde(Request $request){
 
         $dados = $request->all();
@@ -194,13 +206,12 @@ class BrindesController extends Controller
         $modal_body .= "</tr>";
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
-        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)."' style='width: 100%'>";
+        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)."'>";
         $modal_body .= "</div>";
         $modal_body .= "</div>";
 
         return response()->json($modal_body);
     }
-
 
     public function getFormAddBrinde(){
 
@@ -212,7 +223,6 @@ class BrindesController extends Controller
 
         return response()->json($form->render());
     }
-
 
     public function getFormEditarBrinde(Request $request){
 
@@ -228,6 +238,5 @@ class BrindesController extends Controller
 
         return response()->json($form->render());
     }
-
 
 }

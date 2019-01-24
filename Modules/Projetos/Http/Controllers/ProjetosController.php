@@ -12,6 +12,8 @@ use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
@@ -60,15 +62,27 @@ class ProjetosController extends Controller{
 
         $projeto = Projeto::create($dados);
 
-        $imagem = $request->file('imagem');
+        $imagem = $request->file('foto_projeto');
 
         if ($imagem != null) {
-            $nome_imagem = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+            $nome_foto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_imagem);
+            Storage::delete('public/upload/projeto/'.$nome_foto);
+
+            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_foto);
+
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+
+            $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
+
+            $img->resize(200, 200);
+
+            Storage::delete('public/upload/projeto/'.$nome_foto);
+
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
 
             $projeto->update([
-                'foto' => $nome_imagem
+                'foto' => $nome_foto
             ]);
         }
 
@@ -79,7 +93,8 @@ class ProjetosController extends Controller{
             'tipo'              => 'produtor',
             'responsavel_frete' => true,
             'permissao_acesso'  => true,
-            'permissao_editar'  => true
+            'permissao_editar'  => true,
+            'status'            => 'ativo'
         ]);
 
         return redirect()->route('projetos');
@@ -109,15 +124,27 @@ class ProjetosController extends Controller{
         $projeto = Projeto::find($dados['id']);
         $projeto->update($dados);
 
-        $imagem = $request->file('imagem');
+        $imagem = $request->file('foto_projeto');
 
         if ($imagem != null) {
-            $nome_imagem = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+            $nome_foto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_imagem);
+            Storage::delete('public/upload/projeto/'.$nome_foto);
+
+            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_foto);
+
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+
+            $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
+
+            $img->resize(200, 200);
+
+            Storage::delete('public/upload/projeto/'.$nome_foto);
+
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
 
             $projeto->update([
-                'foto' => $nome_imagem
+                'foto' => $nome_foto
             ]);
         }
 

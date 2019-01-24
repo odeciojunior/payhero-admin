@@ -58,18 +58,26 @@
         </div>
 
         <div class="row">
-            <div class="form-group col-xl-6">
-                <label for="imagem">Imagem do projeto</label>
-                <input name="imagem" type="file" class="form-control" id="imagem">
-                <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto)!!}" style="margin-top: 20px; height:200px">
+            <div class="form-group col-12">
+                <label for="selecionar_foto">Imagem do projeto</label><br>
+                <input type="button" id="selecionar_foto" class="btn btn-default" value="Alterar foto do projeto">
+                <input name="foto_projeto" type="file" class="form-control" id="foto_projeto" style="display:none" accept="image/*">
+                <div  style="margin: 20px 0 0 30px;">
+                    <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;" src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto)!!}"/>
+                </div>
+                <input type="hidden" name="foto_x1"/>
+                <input type="hidden" name="foto_y1"/>
+                <input type="hidden" name="foto_w"/>
+                <input type="hidden" name="foto_h"/>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin-top: 30px">
             <div class="form-group">
-                <button id="bt_atualizar_configuracoes" type="button" class="btn btn-success">Atualizar</button>
+                <button id="bt_atualizar_configuracoes" type="button" class="btn btn-success">Atualizar dados do projeto</button>
             </div>
         </div>
 
     </div>
 </form>
+
