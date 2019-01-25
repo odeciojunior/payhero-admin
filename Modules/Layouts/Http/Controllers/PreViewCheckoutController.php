@@ -8,6 +8,7 @@ use App\Layout;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Intervention\Image\Facades\Image;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class PreViewCheckoutController extends Controller {
@@ -16,12 +17,19 @@ class PreViewCheckoutController extends Controller {
 
         $dados = $request->all();
 
-        $logo = $request->file('logo');
+        $logo = $request->file('foto_checkout_cadastrar');
 
         if($logo != null){
-            $mime = mime_content_type($_FILES['logo']['tmp_name']);
-            $data = file_get_contents($_FILES['logo']['tmp_name']);
+            $mime = mime_content_type($_FILES['foto_checkout_cadastrar']['tmp_name']);
+            $data = file_get_contents($_FILES['foto_checkout_cadastrar']['tmp_name']);
             $logo = 'data:' . $mime . ';base64,' . base64_encode($data);
+            $img = Image::make(file_get_contents($logo));
+            $img->crop($dados['preview_logo_w'], $dados['preview_logo_h'], $dados['preview_logo_x1'], $dados['preview_logo_y1']);
+            if($dados['logo_formato'] == 'quadrado')
+                $img->resize(150, 150);
+            else
+                $img->resize(300, 150);
+            $logo = $img->encode('data-url');
         }
         elseif($dados['tipo'] == 'editar'){
             $layout = Layout::find($dados['layout']);
@@ -30,31 +38,16 @@ class PreViewCheckoutController extends Controller {
 
         $plano = Plano::where('id', '19')->first();
 
-        $foto = Foto::where('plano', $plano->id)->first();
-        $foto = CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$foto['caminho_imagem'];
-
-        $estilo = $dados['estilo'];
-        $cor1 = $dados['cor1'];
-        $cor2 = $dados['cor2'];
-        $botoes = $dados['botoes'];
+        $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto;
 
         $layout = Layout::find($plano->layout);
         $layout["padrao"] = "";
         $layout["multi"] = "";
 
-        if ($estilo == "Padrao"){
-           $layout["padrao"] = "class='".$cor1."'";
-        }
-        if ($estilo == "Backgoud Multi Camada"){
-               $layout["multi"] = "<style> .definebg:before { background: ".$cor1.";  } .definebg:after { background: ".$cor2."; } </style>";
-        }
 
         return view('layouts::checkout_pre_view', [
                 'layout' => $layout,
                 'logo' => $logo,
-                'botoes' => $botoes,
-                'cor1' => $cor1,
-                'cor2' => $cor2,
                 'plano' => $plano,  
                 'foto' => $foto,
             ]

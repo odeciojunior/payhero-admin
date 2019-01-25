@@ -1,9 +1,9 @@
 
 <div style="text-align: center">
-    <h4> Cadastrar layout </h4>
+    <h4> Cadastrar layout personalizado </h4>
 </div>
 
-<div class="row">
+<div class="row" style="margin-top: 30px">
     <div class="col-6">
         <form id="cadastrar_layout" method="post" action="/layouts/cadastrarlayout" enctype='multipart/form-data' style="padding: 10px">
             @csrf
@@ -16,74 +16,36 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-xl-12">
-                        <label for="logo">Logo</label>
-                        <input name="logo" id="logo" type="file" class="form-control" required>
-                    </div>
-                </div>
-                {{--  <div class="row">
-                    <div class="form-group col-xl-12">
-                        <label for="estilo">Estilo</label>
-                        <select name="estilo" id="estilo" class="form-control" required>
-                            <option value="">Selecione</option>
-                            <option value="Padrao">Padrão</option>
-                            <option value="Backgoud Multi Camada">Background multi-camadas</option>
+                        <label for="formato_logo">Formato do logo</label>
+                        <select name="formato_logo" class="form-control" id="formato_logo_cadastrar">
+                            <option value="quadrado">Quadrado</option>
+                            <option value="retangulo">Retangular</option>
                         </select>
-                    </div>
-                </div>
-                <div id="cores_multi_camada" style="display: none">
-                    <div class="row">
-                        <div class="form-group col-xl-12">
-                            <label for="cor1">Cor 1</label><br>
-                            <input id="cor1" name="cor1-multi-camadas" type="text" style="width: 100%" class="asColorpicker form-control colorInputUi-input" data-plugin="asColorPicker" data-mode="simple" value="#ff666b">
-                            <a href="#" class="colorInputUi-clear">
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-xl-12">
-                            <label for="cor2">Cor 2</label><br>
-                            <input id="cor2" name="cor2-multi-camadas" type="text" style="width: 100%" class="asColorpicker form-control colorInputUi-input" data-plugin="asColorPicker" data-mode="simple" value="#ff666b">
-                            <a href="#" class="colorInputUi-clear">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div id="cores_padrao" style="display: none">
-                    <div class="row">
-                        <div class="form-group col-xl-12">
-                            <label for="cor1-padrao">Background</label>
-                            <select name="cor1-padrao" id="cor1-padrao" class="form-control" id="cor1-padrao">
-                                <option value="">Selecione</option>
-                                <option value="bg-azul">Azul 1</option>
-                                <option value="bg-azul2">Azul 2</option>
-                                <option value="bg-vermelho">Vermelho</option>
-                                <option value="bg-vermelho2">Vermelho2</option>
-                                <option value="bg-roxo">Roxo</option>
-                                <option value="bg-roxo2">Roxo2</option>
-                                <option value="bg-verde">Verde</option>
-                                <option value="bg-verde2">Verde2</option>
-                                <option value="bg-pink">Rosa</option>
-                                <option value="bg-laranja">Laranja</option>
-                                <option value="bg-cinza">Cinza</option>
-                                <option value="bg-cinzaescuro">Cinza escuro</option>
-                                <option value="bg-preto">Preto</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-xl-12">
-                        <label for="botao">Botões</label>
-                        <select name="botao" id="botoes" class="form-control" id="botao" required>
-                            <option value="">Selecione</option>
-                            <option value="btn-laranja">Laranja</option>
-                            <option value="btn-roxo">Roxo</option>
-                            <option value="btn-vermelho">Vermelho</option>
-                            <option value="btn-azul">Azul</option>
-                        </select>
+                    <div class="form-group col-12">
+                        <label for="selecionar_foto_checkout_cadastrar">Logo</label><br>
+                        <input type="button" id="selecionar_foto_checkout_cadastrar" class="btn btn-default" value="Selecionar logo do checkout">
+                        <input name="foto_checkout_cadastrar" type="file" class="form-control" id="foto_checkout_cadastrar" accept="image/*" style="display:none">
+                        <div  style="margin: 20px 0 0 30px;">
+                            <img id="previewimage_checkout_cadastrar" alt="Selecione a logo do checkout" style="max-height: 250px; max-width: 350px;"/>
+                        </div>
+                        <input type="hidden" name="foto_checkout_cadastrar_x1"/>
+                        <input type="hidden" name="foto_checkout_cadastrar_y1"/>
+                        <input type="hidden" name="foto_checkout_cadastrar_w"/>
+                        <input type="hidden" name="foto_checkout_cadastrar_h"/>
                     </div>
                 </div>
-  --}}
+    
+                <div class="row" style="margin-top: 50px">
+                    <div class="form-group col-xl-12 text-center">
+                        <button type="button" id="atualizar_preview_cadastro" class="btn btn-primary">
+                            Atualizar pré visualização do checkout
+                        </button>
+                    </div>
+                </div>
+                    
             </div>
         </form>
     </div>
@@ -97,10 +59,12 @@
 
 <form id="form-preview" target="iframe-preview" action="/layouts/preview" method="POST" enctype='multipart/form-data' style="display: none">
     <input id="preview_logo" type="hidden" name="tipo" value="cadastrar"/>
-    <input id="preview_estilo" type="hidden" name="estilo"/>
-    <input id="preview_cor1" type="hidden" name="cor1"/>
-    <input id="preview_cor2" type="hidden" name="cor2"/>
-    <input id="preview_botoes" type="hidden" name="botoes"/>
+    <input type="hidden" name="logo_formato" id="preview_logo_formato" value="quadrado"/>
+    <input type="hidden" name="preview_logo_x1"/>
+    <input type="hidden" name="preview_logo_y1"/>
+    <input type="hidden" name="preview_logo_w"/>
+    <input type="hidden" name="preview_logo_h"/>
+{{--  <input id="preview_botoes" type="hidden" name="botoes"/>  --}}
     {{ csrf_field() }}
     <input type="submit">
 </form>

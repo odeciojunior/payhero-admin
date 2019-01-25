@@ -9,15 +9,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $projeto
  * @property string $descricao
  * @property string $logo
- * @property string $estilo
- * @property string $cor1
- * @property string $cor2
- * @property string $botao
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property string $formato_logo
  * @property Projeto $projeto
- * @property Dominio[] $dominios
  * @property Plano[] $planos
  */
 class Layout extends Model
@@ -25,7 +21,7 @@ class Layout extends Model
     /**
      * @var array
      */
-    protected $fillable = ['projeto', 'descricao', 'logo', 'estilo', 'cor1', 'cor2', 'botao', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['projeto', 'descricao', 'logo', 'created_at', 'updated_at', 'deleted_at', 'formato_logo'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -33,14 +29,6 @@ class Layout extends Model
     public function projeto()
     {
         return $this->belongsTo('App\Projeto', 'projeto');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function dominios()
-    {
-        return $this->hasMany('App\Dominio', 'layout');
     }
 
     /**

@@ -3,10 +3,11 @@
 namespace Modules\Layouts\Http\Controllers;
 
 use App\Layout;
-use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
@@ -28,21 +29,30 @@ class LayoutsController extends Controller
 
         $layout = Layout::create($dados);
 
-        $logo = $request->file('logo');
+        $foto = $request->file('foto_checkout_cadastrar');
 
-        if ($logo != null) {
-            $nome_logo = 'logo_' . $layout->id . '_.' . $logo->getClientOriginalExtension();
+        if ($foto != null) {
+            $nome_logo = 'logo_' . $layout->id . '_.' . $foto->getClientOriginalExtension();
 
-            $logo->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
+            Storage::delete('public/upload/logo/'.$nome_logo);
+            
+            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
 
-            $img = Image::make(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo)->resize(
-                200,
-                200
-            );
-            $img->save(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo);
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO . $nome_logo);
+
+            $img->crop($dados['foto_checkout_cadastrar_w'], $dados['foto_checkout_cadastrar_h'], $dados['foto_checkout_cadastrar_x1'], $dados['foto_checkout_cadastrar_y1']);
+
+            if($dados['formato_logo'] == 'quadrado')
+                $img->resize(150, 150);
+            else
+                $img->resize(300, 150);
+
+            Storage::delete('public/upload/logo/'.$nome_logo);
+
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO . $nome_logo);
 
             $layout->update([
-                'logo' => $nome_logo
+                'logo' => $nome_logo,
             ]);
         }
 
