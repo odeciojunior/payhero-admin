@@ -6,7 +6,6 @@ use Auth;
 use App\User;
 use App\Empresa;
 use PagarMe\Client;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -32,12 +31,9 @@ class EmpresasController extends Controller {
 
         $dados = $request->all();
 
-        $empresa = Empresa::create($dados);
+        $dados['user'] = \Auth::user()->id;
 
-        UsuarioEmpresa::create([
-            'user' => \Auth::user()->id,
-            'empresa' => $empresa->id
-        ]);
+        $empresa = Empresa::create($dados);
 
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
@@ -119,7 +115,7 @@ class EmpresasController extends Controller {
                 ]);
             }
             catch(\Exception $e){
-                dd($e);
+
                 return redirect()->route('empresas.editar',[
                     'id' => $empresa->id
                 ])->with('error', 'Dados bancários informados inválidos');
@@ -143,14 +139,14 @@ class EmpresasController extends Controller {
 
     public function deletarEmpresa($id){
 
-        Empresa::find($id)->delete();
+        $empresa = Empresa::find($id)->delete();
 
         return redirect()->route('empresas');
 
     }
 
     public function dadosEmpresas() {
-        
+
         $empresas = \DB::table('empresas as empresa')
             ->select([
                 'empresa.id',
@@ -159,8 +155,7 @@ class EmpresasController extends Controller {
         ]); 
 
         if(!\Auth::user()->hasRole('administrador geral')){
-            $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
-            $empresas = $empresas->whereIn('id',$empresas_usuario);
+            $empresas = $empresas->where('user',\Auth::user()->id);
         }
 
         return Datatables::of($empresas)

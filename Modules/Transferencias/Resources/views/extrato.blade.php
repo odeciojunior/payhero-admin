@@ -157,9 +157,16 @@
                 },
                 success: function(data){
 
-                    $('#label_saldo_disponivel').html('R$ '+data.saldo_disponivel);
-                    $('#label_saldo_futuro').html('R$ '+data.saldo_futuro);
-                    $('#label_saldo_antecipavel').html('R$ '+data.saldo_antecipavel);
+                    if(data.saldo_disponivel){
+                        $('#label_saldo_disponivel').html('R$ '+data.saldo_disponivel);
+                        $('#label_saldo_futuro').html('R$ '+data.saldo_futuro);
+                        $('#label_saldo_antecipavel').html('R$ '+data.saldo_antecipavel);
+                    }
+                    else{
+                        $('#label_saldo_disponivel').html('R$ 0.00');
+                        $('#label_saldo_futuro').html('R$ 0.00');
+                        $('#label_saldo_antecipavel').html('R$ 0.00');
+                    }
                 }
 
             });

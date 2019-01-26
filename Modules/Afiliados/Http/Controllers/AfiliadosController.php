@@ -11,7 +11,6 @@ use App\Projeto;
 use App\Afiliado;
 use App\UserProjeto;
 use App\LinkAfiliado;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -25,10 +24,16 @@ class AfiliadosController extends Controller {
 
         $planos = Plano::where('projeto', $id_projeto)->get()->toArray();
 
+        $empresa = Empresa::where([
+            ['user', \Auth::user()->id],
+            ['recipient_id','!=','']
+        ])->first();
+
         $afiliado = Afiliado::create([
             'user' => \Auth::user()->id,
             'projeto' => $projeto['id'],
-            'porcentagem' => $projeto['porcentagem_afiliados']
+            'porcentagem' => $projeto['porcentagem_afiliados'],
+            'empresa'  => $empresa->id
         ]);
 
         LinkAfiliado::create([
@@ -87,7 +92,7 @@ class AfiliadosController extends Controller {
 
     public function dadosMinhasAfiliacoes(){
 
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->pluck('empresa')->toArray();
+        $empresas_usuario = Empresa::where('user',\Auth::user()->id)->pluck('id')->toArray();
 
         $projetos_usuario = UserProjeto::where('user',\Auth::user()->id)->pluck('id')->toArray();
 
@@ -120,8 +125,6 @@ class AfiliadosController extends Controller {
 
         $projeto = Projeto::find($id_projeto);
 
-        $empresas_usuario = UsuarioEmpresa::where('empresa',$projeto['empresa'])->first();
-
         $afiliados = Afiliado::where('projeto',$id_projeto)->get()->toArray();
 
         foreach($afiliados as &$afiliado){
@@ -153,11 +156,7 @@ class AfiliadosController extends Controller {
             ['plano' , null]
         ])->first()['parametro'];
 
-        $empresas = [];
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->get()->toArray();
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresas[] = Empresa::find($empresa_usuario['empresa']);
-        }
+        $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
         $projeto_usuario = UserProjeto::where([
             ['projeto',$projeto['id']],

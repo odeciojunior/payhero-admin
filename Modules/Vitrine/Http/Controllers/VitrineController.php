@@ -7,7 +7,6 @@ use App\Empresa;
 use App\Projeto;
 use App\Afiliado;
 use App\UserProjeto;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

@@ -8,7 +8,6 @@ use App\Plano;
 use App\Empresa;
 use App\Projeto;
 use App\UserProjeto;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -44,11 +43,7 @@ class ProjetosController extends Controller{
 
         $empresas = array();
 
-        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
-
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresas[] = Empresa::find($empresa_usuario['empresa']);
-        }
+        $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         return view('projetos::cadastro',[
             'empresas' => $empresas
@@ -104,11 +99,7 @@ class ProjetosController extends Controller{
 
         $projeto = Projeto::find($id);
 
-        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
-
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresas[] = Empresa::find($empresa_usuario['empresa']);
-        }
+        $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         return view('projetos::editar',[
             'projeto' => $projeto,
@@ -176,11 +167,7 @@ class ProjetosController extends Controller{
 
         $projeto = Projeto::find($id);
 
-        $empresas_usuario = UsuarioEmpresa::where('user', \Auth::user()->id)->get()->toArray();
-
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresas[] = Empresa::find($empresa_usuario['empresa']);
-        }
+        $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         $view = view('projetos::editar',[
             'projeto' => $projeto,

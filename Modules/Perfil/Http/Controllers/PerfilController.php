@@ -4,7 +4,6 @@ namespace Modules\Perfil\Http\Controllers;
 
 use App\User;
 use App\Empresa;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

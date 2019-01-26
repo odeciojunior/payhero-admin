@@ -6,7 +6,6 @@ use App\Empresa;
 use App\Produto;
 use App\Categoria;
 use App\ProjetoProduto;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

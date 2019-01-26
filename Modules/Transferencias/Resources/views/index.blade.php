@@ -387,11 +387,19 @@
                 },
                 success: function(data){
 
-                    $('#label_saldo_disponivel').html('R$ '+data.saldo_disponivel);
-                    $('#label_saldo_futuro').html('R$ '+data.saldo_futuro);
-                    $('#label_saldo_transferido').html('R$ '+data.saldo_transferido);
-                    $('#label_saldo_antecipavel').html('R$ '+data.saldo_antecipavel);
-
+                    if(data.saldo_disponivel){
+                        $('#label_saldo_disponivel').html('R$ '+data.saldo_disponivel);
+                        $('#label_saldo_futuro').html('R$ '+data.saldo_futuro);
+                        $('#label_saldo_transferido').html('R$ '+data.saldo_transferido);
+                        $('#label_saldo_antecipavel').html('R$ '+data.saldo_antecipavel);
+                    }
+                    else{
+                        $('#label_saldo_disponivel').html('R$ 0.00');
+                        $('#label_saldo_futuro').html('R$ 0.00');
+                        $('#label_saldo_transferido').html('R$ 0.00');
+                        $('#label_saldo_antecipavel').html('R$ 0.00');
+                        alertPersonalizado('error','Dados bancários da empresa não encontrados!');
+                    }
                     saldo_disponivel_antecipacao = data.saldo_antecipavel.replace(/[^0-9]/g,'');
                     saldo_disponivel_saque = data.saldo_disponivel.replace(/[^0-9]/g,'');
 

@@ -4,7 +4,6 @@ namespace Modules\Dashboard\Http\Controllers;
 
 use App\Empresa;
 use PagarMe\Client;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -28,10 +27,13 @@ class DashboardController extends Controller
         $saldo_transferido = 0;
         $saldo_futuro = 0;
 
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->get()->toArray();
+        $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresa = Empresa::find($empresa_usuario['empresa']);
+        foreach($empresas as $empresa){
+
+            if(!$empresa['recipient_id']){
+                continue;
+            }
 
             $recipientBalance = $pagarMe->recipients()->getBalance([
                 'recipient_id' => $empresa['recipient_id'],

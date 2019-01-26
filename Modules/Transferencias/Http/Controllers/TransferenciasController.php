@@ -5,7 +5,6 @@ namespace Modules\Transferencias\Http\Controllers;
 use App\Empresa;
 use Carbon\Carbon;
 use PagarMe\Client;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -22,13 +21,12 @@ class TransferenciasController extends Controller {
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
         }
 
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->orderBy('id')->get()->toArray();
+        $empresas_usuario = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         $empresa_selecionada = false;
         $empresas = [];
 
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresa = Empresa::find($empresa_usuario['empresa']);
+        foreach($empresas_usuario as $empresa){
 
             $empresas[] = [
                 'id' => $empresa['id'],
@@ -264,6 +262,10 @@ class TransferenciasController extends Controller {
 
         $empresa = Empresa::find($dados['empresa']);
 
+        if(!$empresa['recipient_id']){
+            return response()->json("Dados bancários não encontrados");
+        }
+
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
         }
@@ -311,14 +313,13 @@ class TransferenciasController extends Controller {
 
     public function extrato(Request $request){
 
-        $empresas_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->orderBy('id')->get()->toArray();
+        $empresas_usuario = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         $empresa_selecionada = false;
         $empresa_pre_selecionada;
         $empresas = [];
 
-        foreach($empresas_usuario as $empresa_usuario){
-            $empresa = Empresa::find($empresa_usuario['empresa']);
+        foreach($empresas_usuario as $empresa){
 
             $empresas[] = [
                 'id' => $empresa['id'],
@@ -425,6 +426,10 @@ class TransferenciasController extends Controller {
         }
 
         $empresa = Empresa::find($dados['empresa']);
+
+        if(!$empresa['recipient_id']){
+            return response()->json('Conta bancária não configurada!');
+        }
 
         $transactionPayables = $pagarMe->payables()->getList([
             'recipient_id' => $empresa['recipient_id'],

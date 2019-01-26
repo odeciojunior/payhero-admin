@@ -5,7 +5,6 @@ namespace Modules\Parceiros\Http\Controllers;
 use App\User;
 use App\Empresa;
 use App\UserProjeto;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -62,13 +61,12 @@ class ParceirosController extends Controller {
         if($user != null){
             $dados['user'] = $user['id'];
             $dados['status'] = 'ativo';
-            $empresas_usuario = UsuarioEmpresa::where('user',$user['id'])->get()->toArray();
+            $empresas = Empresa::where('user',$user['id'])->get()->toArray();
 
-            if(count($empresas_usuario) > 0){
-                foreach($empresas_usuario as $empresa_usuario){
-                    $usuario_empresa = Empresa::find($empresa_usuario['empresa']);
-                    if($usuario_empresa['recipient_id'] != ''){
-                        $dados['empresa'] = $usuario_empresa['id'];
+            if(count($empresas) > 0){
+                foreach($empresas as $empresa){
+                    if($empresa['recipient_id'] != ''){
+                        $dados['empresa'] = $empresa['id'];
                         break;
                     }
                 }

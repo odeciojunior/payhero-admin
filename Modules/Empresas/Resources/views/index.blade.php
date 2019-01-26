@@ -146,9 +146,9 @@
 
                 $('.excluir_empresa').on('click', function(){
 
-                    var id_user = $(this).attr('empresa');
+                    var id_empresa = $(this).attr('empresa');
 
-                    $('#form_excluir_empresa').attr('action','/empresas/deletarempresa/'+id_user);
+                    $('#form_excluir_empresa').attr('action','/empresas/deletarempresa/'+id_empresa);
 
                     var name = $(this).closest("tr").find("td:first-child").text();
 

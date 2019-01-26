@@ -41,7 +41,7 @@ class Empresa extends Model
     /**
      * @var array
      */
-    protected $fillable = ['cnpj', 'cep', 'municipio', 'logradouro', 'complemento', 'bairro', 'numero', 'ultima_atualizacao', 'uf', 'created_at', 'updated_at', 'deleted_at', 'status', 'razao_social', 'nome_fantasia', 'banco', 'agencia', 'agencia_digito', 'conta', 'conta_digito', 'bank_account_id', 'recipient_id'];
+    protected $fillable = ['cnpj', 'cep', 'municipio', 'logradouro', 'complemento', 'bairro', 'numero', 'ultima_atualizacao', 'uf', 'created_at', 'updated_at', 'deleted_at', 'status', 'razao_social', 'nome_fantasia', 'banco', 'agencia', 'agencia_digito', 'conta', 'conta_digito', 'bank_account_id', 'recipient_id', 'user'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

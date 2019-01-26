@@ -768,6 +768,11 @@
                                 $('input[name="foto_brinde_cadastrar_w"]').val(x2 - x1);
                                 $('input[name="foto_brinde_cadastrar_h"]').val(y2 - y1);
 
+                                $('#modal_editar').on('hidden.bs.modal', function () {
+                                    $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+                                });
+                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+
                                 $('#previewimage_brinde_cadastrar').imgAreaSelect({
                                     x1: x1, y1: y1, x2: x2, y2: y2,
                                     aspectRatio: '1:1',
@@ -942,7 +947,6 @@
                                         x2 = img.naturalWidth - 2;
                                         y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
                                         y2 = y1 + Math.floor((x2 - x1) / 2 );
-                                        {{--  alert('altura = ' + img.naturalHeight + ' lartura = ' + img.naturalWidth + ' x1 = ' + x1 + ' x2 = ' + x2 + ' y1 = ' + y1 + ' y2 = ' + y2);  --}}
                                     }
 
                                 }
@@ -964,6 +968,9 @@
                                     formato = '2:1';
                                 }
 
+                                $('#modal_editar').on('hidden.bs.modal', function () {
+                                    $('#previewimage_checkout_cadastrar').imgAreaSelect({remove:true});
+                                });
                                 $('#previewimage_checkout_cadastrar').imgAreaSelect({remove:true});
 
                                 $('#previewimage_checkout_cadastrar').imgAreaSelect({
@@ -1098,6 +1105,11 @@
                                 $('input[name="foto_plano_cadastrar_y1"]').val(y1);
                                 $('input[name="foto_plano_cadastrar_w"]').val(x2 - x1);
                                 $('input[name="foto_plano_cadastrar_h"]').val(y2 - y1);
+
+                                $('#modal_editar').on('hidden.bs.modal', function () {
+                                    $('#preview_image_plano_cadastrar').imgAreaSelect({remove:true});
+                                });
+                                $('#preview_image_plano_cadastrar').imgAreaSelect({remove:true});
 
                                 $('#preview_image_plano_cadastrar').imgAreaSelect({
                                     x1: x1, y1: y1, x2: x2, y2: y2,
@@ -1572,6 +1584,11 @@
                                         $('input[name="foto_plano_editar_y1"]').val(y1);
                                         $('input[name="foto_plano_editar_w"]').val(x2 - x1);
                                         $('input[name="foto_plano_editar_h"]').val(y2 - y1);
+
+                                        $('#modal_editar').on('hidden.bs.modal', function () {
+                                            $('#previewimage_plano_editar').imgAreaSelect({remove:true});
+                                        });
+                                        $('#previewimage_plano_editar').imgAreaSelect({remove:true});
 
                                         $('#previewimage_plano_editar').imgAreaSelect({
                                             x1: x1, y1: y1, x2: x2, y2: y2,
@@ -2197,6 +2214,11 @@
                                         $('input[name="foto_brinde_editar_y1"]').val(y1);
                                         $('input[name="foto_brinde_editar_w"]').val(x2 - x1);
                                         $('input[name="foto_brinde_editar_h"]').val(y2 - y1);
+
+                                        $('#modal_editar').on('hidden.bs.modal', function () {
+                                            $('#previewimage_brinde_editar').imgAreaSelect({remove:true});
+                                        });
+                                        $('#previewimage_brinde_editar').imgAreaSelect({remove:true});
         
                                         $('#previewimage_brinde_editar').imgAreaSelect({
                                             x1: x1, y1: y1, x2: x2, y2: y2,
@@ -2789,7 +2811,9 @@
                                         }
         
                                         $('#previewimage_checkout_editar').imgAreaSelect({remove:true});
-        
+                                        $('#modal_editar').on('hidden.bs.modal', function () {
+                                            $('#previewimage_checkout_editar').imgAreaSelect({remove:true});
+                                        });
                                         $('#previewimage_checkout_editar').imgAreaSelect({
                                             x1: x1, y1: y1, x2: x2, y2: y2,
                                             aspectRatio: formato,
@@ -3112,7 +3136,9 @@
                                 $('input[name="foto_y1"]').val(y1);
                                 $('input[name="foto_w"]').val(x2 - x1);
                                 $('input[name="foto_h"]').val(y2 - y1);
-            
+
+                                $('#previewimage').imgAreaSelect({remove:true});
+
                                 $('#previewimage').imgAreaSelect({
                                     x1: x1, y1: y1, x2: x2, y2: y2,
                                     aspectRatio: '1:1',

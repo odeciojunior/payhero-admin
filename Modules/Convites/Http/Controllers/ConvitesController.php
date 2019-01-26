@@ -3,7 +3,6 @@
 namespace Modules\Convites\Http\Controllers;
 
 use App\Convite;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -28,11 +27,7 @@ class ConvitesController extends Controller {
         $dados['status'] = "Convite enviado";
         $dados['parametro']  = $this->randString(15);
 
-        $empresa_usuario = UsuarioEmpresa::where('user',\Auth::user()->id)->first();
-
-        if($empresa_usuario != null){
-            $dados['empresa'] = $empresa_usuario['empresa'];
-        }
+        $dados['empresa'] = Empresa::where('user', \Auth::user()->id)->first();
 
         $convite = Convite::create($dados);
 

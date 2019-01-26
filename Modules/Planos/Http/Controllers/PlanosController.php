@@ -18,7 +18,6 @@ use App\DadosHotZapp;
 use App\ProdutoPlano;
 use App\ProjetoProduto;
 use App\Transportadora;
-use App\UsuarioEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
