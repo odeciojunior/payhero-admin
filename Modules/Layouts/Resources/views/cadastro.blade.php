@@ -5,7 +5,7 @@
 
 <div class="row" style="margin-top: 30px">
     <div class="col-6">
-        <form id="cadastrar_layout" method="post" action="/layouts/cadastrarlayout" enctype='multipart/form-data' style="padding: 10px">
+        <form id="cadastrar_layout" method="post" enctype='multipart/form-data' style="padding: 10px">
             @csrf
             <div class="panel" data-plugin="matchHeight">
                 <div class="row">
@@ -27,7 +27,7 @@
                     <div class="form-group col-12">
                         <label for="selecionar_foto_checkout_cadastrar">Logo</label><br>
                         <input type="button" id="selecionar_foto_checkout_cadastrar" class="btn btn-default" value="Selecionar logo do checkout">
-                        <input name="foto_checkout_cadastrar" type="file" class="form-control" id="foto_checkout_cadastrar" accept="image/*" style="display:none">
+                        <input name="foto_checkout" type="file" class="form-control" id="foto_checkout" accept="image/*" style="display:none">
                         <div  style="margin: 20px 0 0 30px;">
                             <img id="previewimage_checkout_cadastrar" alt="Selecione a logo do checkout" style="max-height: 250px; max-width: 350px;"/>
                         </div>

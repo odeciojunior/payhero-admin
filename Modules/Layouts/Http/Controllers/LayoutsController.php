@@ -29,7 +29,7 @@ class LayoutsController extends Controller
 
         $layout = Layout::create($dados);
 
-        $foto = $request->file('foto_checkout_cadastrar');
+        $foto = $request->file('foto_checkout');
 
         if ($foto != null) {
             $nome_logo = 'logo_' . $layout->id . '_.' . $foto->getClientOriginalExtension();
@@ -73,34 +73,35 @@ class LayoutsController extends Controller
 
         $dados = $request->all();
 
-        if($dados['estilo'] == 'Padrao'){
-            $dados['cor1'] = $dados['cor1-padrao'];
-            $dados['cor2'] = '';
-        }
-        elseif($dados['estilo'] == 'Backgoud Multi Camada'){
-            $dados['cor1'] = $dados['cor1-multi-camadas'];
-            $dados['cor2'] = $dados['cor2-multi-camadas'];
-        }
-
         $layout = Layout::find($dados['id']);
 
         $layout->update($dados);
 
-        $logo = $request->file('logo');
+        $foto = $request->file('foto_checkout');
 
-        if ($logo != null) {
-            $nome_logo = 'logo_' . $layout->id . '_.' . $logo->getClientOriginalExtension();
+        if ($foto != null) {
 
-            $logo->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
+            $nome_logo = 'logo_' . $layout->id . '_.' . $foto->getClientOriginalExtension();
 
-            $img = Image::make(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo)->resize(
-                200,
-                200
-            );
-            $img->save(base_path() . '/public/' . CaminhoArquivosHelper::CAMINHO_FOTO_LOGO. $nome_logo);
+            Storage::delete('public/upload/logo/'.$nome_logo);
+            
+            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO, $nome_logo);
+
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO . $nome_logo);
+
+            $img->crop($dados['foto_checkout_editar_w'], $dados['foto_checkout_editar_h'], $dados['foto_checkout_editar_x1'], $dados['foto_checkout_editar_y1']);
+
+            if($dados['formato_logo'] == 'quadrado')
+                $img->resize(150, 150);
+            else
+                $img->resize(300, 150);
+
+            Storage::delete('public/upload/logo/'.$nome_logo);
+
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_LOGO . $nome_logo);
 
             $layout->update([
-                'logo' => $nome_logo
+                'logo' => $nome_logo,
             ]);
         }
 

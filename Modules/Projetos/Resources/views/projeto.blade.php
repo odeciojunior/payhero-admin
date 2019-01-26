@@ -878,20 +878,20 @@
                     });
 
                     $("#formato_logo_cadastrar").on("change", function(){
-                        $("#foto_checkout_cadastrar").val('');
+                        $("#foto_checkout").val('');
                         $('#previewimage_checkout_cadastrar').imgAreaSelect({remove:true});
                         $('#previewimage_checkout_cadastrar').attr('src', '#');
                         $("#preview_logo_formato").val($(this).val());
                     });
 
                     var p = $("#previewimage_checkout_cadastrar");
-                    $("#foto_checkout_cadastrar").on("change", function(){
+                    $("#foto_checkout").on("change", function(){
 
                         var input = $(this).clone();
                         $('#form-preview').append(input);
 
                         var imageReader = new FileReader();
-                        imageReader.readAsDataURL(document.getElementById("foto_checkout_cadastrar").files[0]);
+                        imageReader.readAsDataURL(document.getElementById("foto_checkout").files[0]);
 
                         imageReader.onload = function (oFREvent) {
                             p.attr('src', oFREvent.target.result).fadeIn();
@@ -990,7 +990,7 @@
                     });
             
                     $("#selecionar_foto_checkout_cadastrar").on("click", function(){
-                        $("#foto_checkout_cadastrar").click();
+                        $("#foto_checkout").click();
                     });
 
                 }
@@ -2700,58 +2700,127 @@
 
                             function atualizarPreView(){
 
-                                $('#form-preview').submit();
+                                $('#form_preview_editar').submit();
                             }
 
-                            $('#estilo').on('change',function(){
-
-                                $('#cores_multi_camada').hide();
-                                $('#cores_padrao').hide();
-
-                                if($(this).val() == 'Backgoud Multi Camada'){
-                                    $('#cor1-padrao').prop('required', false);
-                                    $('#cor1-multi-camadas').prop('required', true);
-                                    $('#cor2-multi-camadas').prop('required', true);
-                                    $('#cores_multi_camada').show();
-                                }
-                                else if($(this).val() == 'Padrao'){
-                                    $('#cor1-padrao').prop('required', true);
-                                    $('#cor1-multi-camadas').prop('required', false);
-                                    $('#cor2-multi-camadas').prop('required', false);
-                                    $('#cores_padrao').show();
-                                }
-                    
-                                $('#preview_estilo').val($(this).val());
-                    
-                                atualizarPreView();
+                            $("#formato_logo_editar").on("change", function(){
+                                $("#foto_checkout").val('');
+                                $('#previewimage_checkout_editar').imgAreaSelect({remove:true});
+                                $('#previewimage_checkout_editar').attr('src', '#');
+                                $("#preview_logo_formato").val($(this).val());
                             });
-
-                            $('#botoes').on('change',function(){
-                                $('#preview_botoes').val($(this).val());
-                                atualizarPreView();
-                            });
-
-                            $('#cor1-multi-camadas').on('blur',function(){
-                                $('#preview_cor1').val($(this).val());
-                                atualizarPreView();
-                            });
-
-                            $('#cor1-padrao').on('blur', function(){
-                                $('#preview_cor1').val($(this).val());
-                                atualizarPreView();
-                            });
-
-                            $('#cor2-multi-camadas').on('blur',function(){
-                                $('#preview_cor2').val($(this).val());
-                                atualizarPreView();
-                            });
-
-                            $('#logo').on('change', function(){
+        
+                            var p = $("#previewimage_checkout_editar");
+                            $("#foto_checkout").on("change", function(){
+        
                                 var input = $(this).clone();
-                                $('#form-preview').append(input);
-                                atualizarPreView();
+                                $('#form_preview_editar').append(input);
+        
+                                var imageReader = new FileReader();
+                                imageReader.readAsDataURL(document.getElementById("foto_checkout").files[0]);
+        
+                                imageReader.onload = function (oFREvent) {
+                                    p.attr('src', oFREvent.target.result).fadeIn();
+        
+                                    p.on('load', function(){
+                    
+                                        var img = document.getElementById('previewimage_checkout_editar');
+                                        var x1, x2, y1, y2;
+        
+                                        if($("#formato_logo_editar").val() == 'quadrado'){
+                                            if (img.naturalWidth > img.naturalHeight) {
+                                                y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                                x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                                                x2 = x1 + (y2 - y1);
+                                            }
+                                            else {
+                                                if (img.naturalWidth < img.naturalHeight) {
+                                                    x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                                    y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                                                    y2 = y1 + (x2 - x1);
+                                                }
+                                                else {
+                                                    x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            if (img.naturalWidth > img.naturalHeight) {
+                                                y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                                x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1));
+                                                if(x1 < 0)
+                                                    x1 = 2;
+                                                x2 = x1 + ((y2 - y1) * 2);
+                                                if(x2 > img.naturalWidth){
+                                                    x2 = img.naturalWidth - 2;
+                                                    y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
+                                                    y2 = y1 + Math.floor(( x2 - x1) / 2);
+                                                }
+                                            }
+                                            else {
+                                                x1 = 2
+                                                x2 = img.naturalWidth - 2;
+                                                y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
+                                                y2 = y1 + Math.floor((x2 - x1) / 2 );
+                                            }
+                                        }
+
+                                        $('input[name="foto_checkout_editar_x1"]').val(x1);
+                                        $('input[name="foto_checkout_editar_y1"]').val(y1);
+                                        $('input[name="foto_checkout_editar_w"]').val(x2 - x1);
+                                        $('input[name="foto_checkout_editar_h"]').val(y2 - y1);
+                                        $('input[name="preview_logo_x1"]').val(x1);
+                                        $('input[name="preview_logo_y1"]').val(y1);
+                                        $('input[name="preview_logo_w"]').val(x2 - x1);
+                                        $('input[name="preview_logo_h"]').val(y2 - y1);
+        
+                                        var formato = '';
+                                        if($("#formato_logo_editar").val() == 'quadrado'){
+                                            formato = '1:1';
+                                        }
+                                        else{
+                                            formato = '2:1';
+                                        }
+        
+                                        $('#previewimage_checkout_editar').imgAreaSelect({remove:true});
+        
+                                        $('#previewimage_checkout_editar').imgAreaSelect({
+                                            x1: x1, y1: y1, x2: x2, y2: y2,
+                                            aspectRatio: formato,
+                                            handles: true,
+                                            imageHeight: this.naturalHeight,
+                                            imageWidth: this.naturalWidth,
+                                            onSelectEnd: function (img, selection) {
+                                                $('input[name="foto_checkout_editar_x1"]').val(selection.x1);
+                                                $('input[name="foto_checkout_editar_y1"]').val(selection.y1);
+                                                $('input[name="foto_checkout_editar_w"]').val(selection.width);
+                                                $('input[name="foto_checkout_editar_h"]').val(selection.height);
+                                                $('input[name="preview_logo_x1"]').val(selection.x1);
+                                                $('input[name="preview_logo_y1"]').val(selection.y1);
+                                                $('input[name="preview_logo_w"]').val(selection.width);
+                                                $('input[name="preview_logo_h"]').val(selection.height);
+                                            },
+                                            parent: $('#conteudo_modal_editar'),
+                                        });
+                                    })
+                                };
+                    
                             });
 
+                            $("#selecionar_foto_checkout_editar").on("click", function(){
+                                $("#foto_checkout").click();
+                            });
+
+                            $("#atualizar_preview_editar").on("click", function(){
+                                atualizarPreView();
+                            });
+        
                             $('#editar').unbind('click');
 
                             $('#editar').on('click',function(){
@@ -2771,12 +2840,14 @@
                                     },
                                     error: function(){
                                         alertPersonalizado('error','Ocorreu algum erro');
+                                        $('#previewimage_checkout_editar').imgAreaSelect({remove:true});
                                     },
                                     success: function(data){
                                         alertPersonalizado('success','Layout atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                        $('#previewimage_checkout_editar').imgAreaSelect({remove:true});
                                     },
                                 });
                             });

@@ -17,11 +17,11 @@ class PreViewCheckoutController extends Controller {
 
         $dados = $request->all();
 
-        $logo = $request->file('foto_checkout_cadastrar');
+        $logo = $request->file('foto_checkout');
 
         if($logo != null){
-            $mime = mime_content_type($_FILES['foto_checkout_cadastrar']['tmp_name']);
-            $data = file_get_contents($_FILES['foto_checkout_cadastrar']['tmp_name']);
+            $mime = mime_content_type($_FILES['foto_checkout']['tmp_name']);
+            $data = file_get_contents($_FILES['foto_checkout']['tmp_name']);
             $logo = 'data:' . $mime . ';base64,' . base64_encode($data);
             $img = Image::make(file_get_contents($logo));
             $img->crop($dados['preview_logo_w'], $dados['preview_logo_h'], $dados['preview_logo_x1'], $dados['preview_logo_y1']);
@@ -40,13 +40,7 @@ class PreViewCheckoutController extends Controller {
 
         $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto;
 
-        $layout = Layout::find($plano->layout);
-        $layout["padrao"] = "";
-        $layout["multi"] = "";
-
-
         return view('layouts::checkout_pre_view', [
-                'layout' => $layout,
                 'logo' => $logo,
                 'plano' => $plano,  
                 'foto' => $foto,

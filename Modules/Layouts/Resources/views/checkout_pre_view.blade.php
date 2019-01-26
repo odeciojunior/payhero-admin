@@ -25,7 +25,6 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/accordion.css') }}"> 
     <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
 
-
 </head>
 
 <body>
@@ -56,8 +55,8 @@
 
                         </button>
 
-                            <button id="fecharTopbar" class="btn btn-outline-primary botao-topbar" type="button">
-                            
+                        <button id="fecharTopbar" class="btn btn-outline-primary botao-topbar" type="button">
+
                             <i data-feather="x" class="align-middle"></i>
                             <span id="preco-botao" class="hidden-m"> Fechar </span>
 
