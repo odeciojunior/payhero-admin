@@ -3,6 +3,7 @@
 namespace Modules\Convites\Http\Controllers;
 
 use App\Convite;
+use App\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
