@@ -52,28 +52,32 @@
                             </ul>
                             <div class="tab-content pt-20">
                                 <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
-                                    <div class="col-md-10">
-                                        <table class="table table-bordered table-hover table-striped">
-                                            <tbody>
-                                                <tr>
-                                                    <td><b>Nome</b></td>
-                                                    <td>{{ $projeto->nome }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Descrição</b></td>
-                                                    <td>{{ $projeto->descricao }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Visibilidade</b></td>
-                                                    <td>{{ ($projeto->visibilidade == 'publico') ? 'Projeto público' : 'Projeto privado' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Status</b></td>
-                                                    <td>{{ $projeto->status ? 'Ativo' : 'Inativo' }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <img src="{{ $foto }}" alt="Imagem não encontrada" style="height: 200px; width: 200px"/>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-xl-3">
+                                            <img src="{{ $foto }}" alt="Imagem não encontrada" style="height: 200px; width: 200px"/>
+                                        </div>
+                                        <div class="col-lg-9 col-xl-9">
+                                            <table class="table table-bordered table-hover table-striped">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><b>Nome</b></td>
+                                                        <td>{{ $projeto->nome }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Descrição</b></td>
+                                                        <td>{{ $projeto->descricao }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Visibilidade</b></td>
+                                                        <td>{{ ($projeto->visibilidade == 'publico') ? 'Projeto público' : 'Projeto privado' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Status</b></td>
+                                                        <td>{{ $projeto->status ? 'Ativo' : 'Inativo' }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="tab_produtos" role="tabpanel">

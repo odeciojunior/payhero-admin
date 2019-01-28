@@ -39,7 +39,6 @@
                     <div class="form-group col-xl-6">
                         <label for="tipo_brinde">Tipo do brinde</label>
                         <select name="tipo_brinde" type="text" class="form-control" id="tipo_brinde">
-                            <option value="" selected>Selecione</option>
                             @foreach($tipo_brindes as $tipo_brinde)
                                 <option value="{{ $tipo_brinde['id'] }}">{{ $tipo_brinde['descricao'] }}</option>
                             @endforeach

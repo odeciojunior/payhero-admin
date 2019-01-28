@@ -25,7 +25,6 @@
                     <div class="form-group col-xl-6">
                         <label for="tipo">Tipo</label>
                         <select name="tipo" class="form-control" id="tipo" required>
-                            <option value="">Selecione</option>
                             <option value="0" {!! ($cupom->tipo == '0') ? 'selected' : '' !!}>Porcentagem</option>
                             <option value="1" {!! ($cupom->tipo == '1') ? 'selected' : '' !!}>Valor</option>
                         </select>
@@ -46,7 +45,6 @@
                     <div class="form-group col-xl-6">
                         <label for="status">Status</label>
                         <select name="status" class="form-control" id="status" required>
-                            <option value="">Selecione</option>
                             <option value="1" {!! ($cupom->status == '1') ? 'selected' : '' !!}>Ativo</option>
                             <option value="0" {!! ($cupom->status == '0') ? 'selected' : '' !!}>Inativo</option>
                         </select>

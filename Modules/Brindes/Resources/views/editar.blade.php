@@ -36,7 +36,6 @@
                     <div class="form-group col-xl-12">
                         <label for="tipo_brinde">Tipo de brinde</label>
                         <select name="tipo_brinde" type="text" class="form-control" id="tipo_brinde">
-                            <option value="">Selecione</option>
                             @foreach($tipo_brindes as $tipo_brinde)
                                 <option value="{{ $tipo_brinde['id'] }}" {!! ($brinde->tipo_brinde == $tipo_brinde['id']) ? 'selected' : '' !!}>{{ $tipo_brinde['descricao'] }}</option>
                             @endforeach

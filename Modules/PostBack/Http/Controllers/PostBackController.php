@@ -100,29 +100,25 @@ class PostBackController extends Controller {
                         //     HotZapp::cartaoPago($plano,$venda,$entrega,$comprador);
                         // }
                     }
-
+ 
                     if($plano->transportadora == 1) {
                         $cliente_id = Kapsula::cadastarCliente($entrega, $comprador);
                         $response = Kapsula::realizarPedido($cliente_id, $plano->id_plano_trasnportadora);
                         $entrega->update($response);
-
                     }
                     if($plano->transportadora == 3) {
                         $response = LiftGold::realizarPedido($venda, $plano, $entrega, $comprador);
                         $entrega->update($response);
                     }
-
                 }
                 else{
                     $venda->update([
                         'pagamento_status' => $dados['transaction']['status'],
                         'pagamento_id' => $dados['id'],
                     ]);
-
                 }
             }
         }
-
         return 'sucesso';
     }
 

@@ -75,7 +75,7 @@ class Kapsula {
     }
 
     static function realizarPedido($cliente_id, $id_pacote_kapsula){
-        
+
         $dados_transporte = [
             "cliente_id" => $cliente_id,
             "pacote_id"  => $id_pacote_kapsula,
@@ -121,9 +121,7 @@ class Kapsula {
     }
 
     static function rastrearPedido($entrega){
-                
 
-        
         $curl = curl_init();
         curl_setopt_array($curl, array(
             //1806873   1811973   /clientes/11604
@@ -172,9 +170,5 @@ class Kapsula {
          }
  
          return $retorno;
-
-
-
-
     }
 }   

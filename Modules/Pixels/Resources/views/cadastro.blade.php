@@ -23,7 +23,6 @@
                     <div class="form-group col-12">
                         <label for="plataforma">Plataforma</label>
                         <select name="plataforma" type="text" class="form-control" id="plataforma">
-                            <option value="" selected>Selecione</option>
                             <option value="facebook">Facebook</option>
                             <option value="google">Google</option>
                             <option value="taboola">Taboola</option>
@@ -34,7 +33,6 @@
                     <div class="form-group col-xl-12">
                         <label for="status">Status</label>
                         <select name="status" type="text" class="form-control" id="status_pixel">
-                            <option value="" selected>Selecione</option>
                             <option value="1">Ativo</option>
                             <option value="0">Inativo</option>
                         </select>

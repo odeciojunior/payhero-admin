@@ -30,7 +30,6 @@
                     <div class="form-group col-xl-6">
                         <label for="status">Status</label>
                         <select name="status" type="text" class="form-control" id="status_plano" required>
-                            <option value="">Selecione</option>
                             <option value="1">Ativo</option>
                             <option value="0">Inativo</option>
                         </select>
@@ -41,7 +40,6 @@
                     <div class="form-group col-xl-6">
                         <label for="disponivel">Status cupons</label>
                         <select name="disponivel" type="text" class="form-control" id="disponivel" required>
-                            <option value="">Selecione o status</option>
                             <option value="1">Disponível</option>
                             <option value="0">Indisponível</option>
                         </select>
@@ -61,7 +59,6 @@
                     <div class="form-group col-xl-6">
                         <label for="frete_fixo">Frete fixo</label>
                         <select name="frete_fixo" type="text" class="form-control" id="frete_fixo_plano" required>
-                            <option value="">Selecione</option>
                             <option value="1">Sim</option>
                             <option value="0">Não</option>
                         </select>
@@ -77,7 +74,6 @@
                     <div class="form-group col-xl-6">
                         <label for="transportadora">Transportadora</label>
                         <select name="transportadora" type="text" class="form-control" id="transportadora_plano" required>
-                            <option value="">Selecione</option>
                             @foreach($transportadoras as $transportadora)
                                 <option value="{{ $transportadora['id'] }}">{{ $transportadora['name'] }}</option>
                             @endforeach
