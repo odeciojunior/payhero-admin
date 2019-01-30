@@ -190,8 +190,6 @@ class ProjetosController extends Controller{
         $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
 
         foreach($planos as &$plano){
-            $foto = Foto::where('plano',$plano['id'])->first();
-            $plano['foto'] = $foto->caminho_imagem;
             $plano['lucro'] = number_format($plano['preco'] * $projeto['porcentagem_afiliados'] / 100, 2);
         }
         

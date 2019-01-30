@@ -3247,6 +3247,15 @@
                     $("#selecionar_foto").on("click", function(){
                         $("#foto_projeto").click();
                     });
+
+                    $("#visibilidade").on("change", function(){
+                        if($(this).val() == 'publico'){
+                            $("#div_dados_afiliados").show();
+                        }
+                        else{
+                            $("#div_dados_afiliados").hide();
+                        }
+                    });
             
                     $('#bt_atualizar_configuracoes').on('click',function(){
 

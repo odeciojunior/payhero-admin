@@ -29,7 +29,6 @@
             <div class="form-group col-xl-6">
                 <label for="visibilidade">Visibilidade</label>
                 <select name="visibilidade" class="form-control" id="visibilidade" required>
-                    <option value="">Selecione</option>
                     <option value="publico" {!! $projeto->visibilidade == 'publico' ? 'selected' : '' !!}>Projeto público</option>
                     <option value="privado" {!! $projeto->visibilidade == 'privado' ? 'selected' : '' !!}>Projeto privado</option>
                 </select>
@@ -45,18 +44,27 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" id="div_dados_afiliados" {!! $projeto->visibilidade == 'privado' ? "style='display:none'" : '' !!}>
             <div class="form-group col-xl-6">
                 <label for="porcentagem_afiliados">Porcentagem para afiliados</label>
                 <input name="porcentagem_afiliados" value="{!! $projeto->porcentagem_afiliados !!}" type="text" class="form-control" id="porcentagem_afiliados" placeholder="Porcentagem">
             </div>
+            <div class="form-group col-xl-6">
+                <label for="afiliacao_automatica">Afiliação automática</label>
+                <select name="afiliacao_automatica" class="form-control" id="afiliacao_automatica" required>
+                    <option value="1" {!! $projeto->afiliacao_automatica == '1' ? 'selected' : '' !!}>Sim</option>
+                    <option value="0" {!! $projeto->afiliacao_automatica == '0' ? 'selected' : '' !!}>Não</option>
+                </select>
+            </div>
+    
+        </div>
 
+        <div class="row">
             <div class="form-group col-xl-6">
                 <label for="descricao_fatura">Descrição na fatura</label>
                 <input name="descricao_fatura" value="{!! $projeto->descricao_fatura !!}" type="text" class="form-control" id="descricao_fatura" placeholder="Descrição do projeto na fatura">
             </div>
         </div>
-
         <div class="row">
             <div class="form-group col-12">
                 <label for="selecionar_foto">Imagem do projeto</label><br>

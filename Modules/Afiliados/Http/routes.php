@@ -26,7 +26,13 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'afiliados', 'namespac
 
     Route::post('/meusafiliados/data-source','AfiliadosController@dadosMeusAfiliados');
 
+    Route::post('/minhassolicitacoesafiliados/data-source','AfiliadosController@dadosAfiliacoesPendentes');
+
     Route::post('/minhasafiliacoes/data-source','AfiliadosController@dadosMinhasAfiliacoes');
+
+    Route::post('/minhasafiliacoespendentes/data-source','AfiliadosController@dadosMinhasAfiliacoesPendentes');
+
+    Route::post('/minhasafiliacoespendentes/confirmar','AfiliadosController@confirmarAfiliacao');
 
     Route::post('/setempresa','AfiliadosController@setEmpresaAfiliacao');
 

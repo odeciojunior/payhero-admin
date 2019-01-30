@@ -19,6 +19,6 @@ class Projeto extends Model
     /**
      * @var array
      */
-    protected $fillable = [ 'foto', 'visibilidade', 'status', 'nome', 'descricao','url_pagina','sms_status', 'descricao_fatura','porcentagem_afiliados', 'created_at', 'updated_at'];
+    protected $fillable = [ 'foto', 'visibilidade', 'status', 'nome', 'descricao','url_pagina','sms_status', 'descricao_fatura','porcentagem_afiliados','afiliacao_automatica', 'created_at', 'updated_at'];
 
 }

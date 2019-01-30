@@ -14,20 +14,48 @@
     <div class="page-content container-fluid">
         <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-            <table id="tabela_meus_afiliados" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                <thead class="bg-blue-grey-100">
-                    <tr>
-                        <td>Projeto</td>
-                        <td>Visibilidade</td>
-                        <td>Porcentagem</td>
-                        <td>Opções</td>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-      
-          <!-- Modal com detalhes do projeto -->
+            <div class="nav-tabs-horizontal" data-plugin="tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_meus_afiliados"
+                        aria-controls="tab_meus_afiliados" role="tab">Meus afiliados</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_solicitacoes_pendentes"
+                        aria-controls="tab_solicitacoes_pendentes" role="tab">Solicitações pendentes</a></li>
+                </ul>
+                <div class="tab-content pt-20">
+                    <div class="tab-pane active" id="tab_meus_afiliados" role="tabpanel">
+                    
+                        <table id="tabela_meus_afiliados" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                            <thead class="bg-blue-grey-100">
+                                <tr>
+                                    <td>Afiliado</td>
+                                    <td>Projeto</td>
+                                    <td>Porcentagem</td>
+                                    <td>Detalhes</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="tab_solicitacoes_pendentes" role="tabpanel">
+                        <table id="tabela_minhas_afiliacoes_pendentes" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                            <thead class="bg-blue-grey-100">
+                                <tr>
+                                    <td>Usuário</td>
+                                    <td>Projeto</td>
+                                    <td>Data de solicitação</td>
+                                    <td>Porcentagem</td>
+                                    <td>Detalhes</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>    
+
+            <!-- Modal com detalhes do projeto -->
           <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
@@ -69,17 +97,15 @@
                 },
             },
             columns: [
+                { data: 'name', name: 'name'},
                 { data: 'nome', name: 'nome'},
-                { data: 'visibilidade', name: 'visibilidade'},
-                { data: 'porcentagem_afiliados', name: 'porcentagem_afiliados'},
+                { data: 'porcentagem', name: 'porcentagem'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
             ],
             "language": {
                 "sProcessing":    "Carregando...",
                 "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado no banco de dados",
-                "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado no banco de dados",
+                "zeroRecords": "Nenhum registro encontrado",
                 "infoFiltered": "(filtrado por _MAX_ registros)",
                 "sInfoPostFix":   "",
                 "sSearch":        "Procurar :",
@@ -95,15 +121,15 @@
             },
             "drawCallback": function() {
 
-                $('.detalhes_projeto').on('click', function(){
+                $('.detalhes_afiliado').on('click', function(){
 
-                    var projeto = $(this).attr('projeto');
+                    var afiliado = $(this).attr('afiliado');
         
-                    $('#modal_detalhes_titulo').html('Detalhes do projeto');
+                    $('#modal_detalhes_titulo').html('Detalhes do afiliado');
         
                     $('#modal_detalhes_body').html('Carregando...');
 
-                    $.ajax({
+                    {{--  $.ajax({
                         method: "GET",
                         url: "/afiliados/getafiliadosprojeto/"+projeto,
                         headers: {
@@ -115,9 +141,76 @@
                         success: function(data){
                             $('#modal_detalhes_body').html(data);
                         }
+                    });  --}}
+
+                });
+
+            }
+
+        });
+
+        $("#tabela_minhas_afiliacoes_pendentes").DataTable( {
+            bLengthChange: false,
+            ordering: false,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/afiliados/minhassolicitacoesafiliados/data-source',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            },
+            columns: [
+                { data: 'name', name: 'name'},
+                { data: 'nome', name: 'nome'},
+                { data: 'data_solicitacao', name: 'data_solicitacao'},
+                { data: 'porcentagem_afiliados', name: 'porcentagem_afiliados'},
+                { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
+            ],
+            "language": {
+                "sProcessing":    "Carregando...",
+                "lengthMenu": "Apresentando _MENU_ registros por página",
+                "zeroRecords": "Nenhum registro encontrado",
+                "info": "Apresentando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Nenhum registro encontrado",
+                "infoFiltered": "(filtrado por _MAX_ registros)",
+                "sInfoPostFix":   "",
+                "sSearch":        "Procurar :",
+                "sUrl":           "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Carregando...",
+                "oPaginate": {
+                    "sFirst":    "Primeiro",
+                    "sLast":    "Último",
+                    "sNext":    "Próximo",
+                    "sPrevious": "Anterior",
+                },
+            },
+            "drawCallback": function() {
+
+                $('.confirmar_afiliacao').on('click', function(){
+
+                    var solicitacao_afiliacao = $(this).attr('solicitacao_afiliacao');
+        
+                    $.ajax({
+                        method: "POST",
+                        url: "/afiliados/minhasafiliacoespendentes/confirmar",
+                        data: { id: solicitacao_afiliacao },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function(){
+                            alert('Ocorreu algum erro');
+                        },
+                        success: function(data){
+                            location.reload();
+                        }
                     });
 
                 });
+
+
             }
 
         });
