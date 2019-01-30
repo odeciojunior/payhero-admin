@@ -3,11 +3,13 @@
 namespace Modules\Parceiros\Http\Controllers;
 
 use App\User;
+use App\Convite;
 use App\Empresa;
 use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 
 class ParceirosController extends Controller {
@@ -74,6 +76,23 @@ class ParceirosController extends Controller {
         }
         else{
             $dados['status'] = 'convite enviado';
+
+            $dados_convite['email_convidado'] = $dados['email_parceiro'];
+            $dados_convite['user_convite'] = \Auth::user()->id;
+            $dados_convite['status'] = "Convite enviado";
+            $dados_convite['parametro']  = $this->randString(15);
+
+            $dados_convite['empresa'] = @Empresa::where('user', \Auth::user()->id)->first()->id;
+
+            $convite = Convite::create($dados_convite);
+
+            Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados_convite) {
+                $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
+
+                $mail->to($dados_convite['email_convidado'], 'Cloudfox')->subject('Convite para participar de um projeto no Cloudfox!');
+            });
+    
+
         }
 
         if(isset($dados['responsavel_frete']) && $dados['responsavel_frete'] == 'on'){
@@ -140,6 +159,31 @@ class ParceirosController extends Controller {
         ]);
 
         return response()->json($detalhes->render());
+    }
+
+    function randString($size){
+
+        $novo_parametro = false;
+
+        while(!$novo_parametro){
+
+            $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
+
+            $parametro = "";
+
+            for($count= 0; $size > $count; $count++){
+                $parametro.= $basic[rand(0, strlen($basic) - 1)];
+            }
+
+            $convite = Convite::where('parametro', $parametro)->first();
+
+            if($convite == null){
+                $novo_parametro = true;
+            }
+
+        }
+
+        return $parametro;
     }
 
 }

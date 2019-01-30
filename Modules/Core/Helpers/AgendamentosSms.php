@@ -51,7 +51,6 @@ class AgendamentosSms {
 
     }
 
-
     public static function verificarBoletosVencidos(){
 
         $boletos = Venda::whereDate('vencimento_boleto', '<', Carbon::today()->toDateString())
@@ -98,7 +97,5 @@ class AgendamentosSms {
         }
 
     }
-
-
 
 }

@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Projeto $projeto
  * @property PlanosCupon[] $planosCupons
  */
-class Cupom extends Model
-{
+class Cupom extends Model {
+
     /**
      * The table associated with the model.
      * 
@@ -30,7 +30,7 @@ class Cupom extends Model
 
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
     protected $keyType = 'integer';
@@ -38,7 +38,7 @@ class Cupom extends Model
     /**
      * @var array
      */
-    protected $fillable = ['projeto', 'nome', 'descricao', 'tipo', 'valor', 'cod_cupom', 'status', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['projeto', 'nome', 'tipo', 'valor', 'cod_cupom', 'status', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

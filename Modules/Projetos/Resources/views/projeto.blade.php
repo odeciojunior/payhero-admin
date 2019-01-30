@@ -29,8 +29,8 @@
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_info_geral"
                                     aria-controls="tab_info_geral" role="tab">Informações gerais</a></li>
-                                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_produtos"
-                                    aria-controls="tab_produtos" role="tab">Produtos</a></li>
+                                {{--  <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_produtos"
+                                    aria-controls="tab_produtos" role="tab">Produtos</a></li>  --}}
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_dominios"
                                     aria-controls="tab_cupons" role="tab">Domínios</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_layouts"
@@ -80,7 +80,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab_produtos" role="tabpanel">
+                                {{--  <div class="tab-pane" id="tab_produtos" role="tabpanel">
                                     <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 20px">
                                         <a id="add_produto" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add_produto' style="color: white">
                                             <i class='icon wb-user-add' aria-hidden='true'></i>
@@ -98,7 +98,7 @@
                                         <tbody>
                                         </tbody>
                                     </table>
-                                </div>
+                                </div>  --}}
                                 <div class="tab-pane" id="tab_planos" role="tabpanel">
                                     <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_plano" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -157,7 +157,6 @@
                                         </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Nome</th>
-                                            <th>Descrição</th>
                                             <th>Tipo</th>
                                             <th>Valor</th>
                                             <th>Código</th>
@@ -1009,7 +1008,7 @@
 
         });
 
-        $('#adicionar_plano').on('click', function(){ 
+        $('#adicionar_plano').on('click', function(){
 
             $('#modal_add_tamanho').addClass('modal-lg');
             $('#modal_add_tamanho').removeClass('modal-simple');
@@ -1032,6 +1031,49 @@
 
                     $(".qtd-produtos").mask("0#");
                     $('.dinheiro').mask('#.###,#0', {reverse: true});
+
+                    $("#frete_plano_cadastrar").on("change", function(){
+
+                        if($(this).val() == '0'){
+                            $("#div_frete_fixo_cadastrar").hide();
+                            $("#div_valor_frete_fixo_cadastrar").hide();
+                            $("#div_transportadora_cadastrar").hide();
+                            $("#div_responsavel_frete_cadastrar").hide();
+                            $("#div_id_plano_transportadora").hide();
+                        }
+                        else{
+                            $("#div_frete_fixo_cadastrar").show();
+                            if($("#frete_fixo_plano_cadastrar").val() == '1'){
+                                $("#div_valor_frete_fixo_cadastrar").show();
+                            }
+                            $("#div_transportadora_cadastrar").show();
+                            $("#div_responsavel_frete_cadastrar").show();
+                            if($("#transportadora_plano_cadastrar").val() != '2'){
+                                $("#div_id_plano_transportadora_cadastrar").show();
+                            }
+                        }
+                    });
+
+                    $("#frete_fixo_plano_cadastrar").on("change", function(){
+                        if($(this).val() == '1'){
+                            $("#div_valor_frete_fixo_cadastrar").show();
+                        }
+                        else{
+                            $("#div_valor_frete_fixo_cadastrar").hide();
+                        }
+                    });
+
+                    $("#transportadora_plano_cadastrar").on("change", function(){
+                        if($(this).val() != '2'){
+                            $("#div_id_plano_transportadora_cadastrar").show();
+                            $("#responsavel_frete_cadastrar").append(new Option($(this).find("option:selected").text(), $(this).find("option:selected").text()));
+                        }
+                        else{
+                            $("#div_id_plano_transportadora_cadastrar").hide();
+                            $("#responsavel_frete_cadastrar option[value='Kapsula']").remove();
+                            $("#responsavel_frete_cadastrar option[value='Lift Gold']").remove();
+                        }
+                    });
 
                     $('#cadastrar').unbind('click');
 
@@ -1455,7 +1497,6 @@
                     });
                 });
 
-
                 var id_cupom = '';
 
                 $('.excluir_plano').on('click', function(){
@@ -1515,6 +1556,49 @@
                             $('#modal_editar_body').html(data);
 
                             $(".qtd-produtos").mask("0#");
+
+                            $("#frete_plano_editar").on("change", function(){
+
+                                if($(this).val() == '0'){
+                                    $("#div_frete_fixo_editar").hide();
+                                    $("#div_valor_frete_fixo_editar").hide();
+                                    $("#div_transportadora_editar").hide();
+                                    $("#div_responsavel_frete_editar").hide();
+                                    $("#div_id_plano_transportadora_editar").hide();
+                                }
+                                else{
+                                    $("#div_frete_fixo_editar").show();
+                                    if($("#frete_fixo_plano_editar").val() == '1'){
+                                        $("#div_valor_frete_fixo_editar").show();
+                                    }
+                                    $("#div_transportadora_editar").show();
+                                    $("#div_responsavel_frete_editar").show();
+                                    if($("#transportadora_plano_editar").val() != '2'){
+                                        $("#div_id_plano_transportadora_editar_editar").show();
+                                    }
+                                }
+                            });
+
+                            $("#frete_fixo_plano_editar").on("change", function(){
+                                if($(this).val() == '1'){
+                                    $("#div_valor_frete_fixo_editar").show();
+                                }
+                                else{
+                                    $("#div_valor_frete_fixo_editar").hide();
+                                }
+                            });
+
+                            $("#transportadora_plano_editar").on("change", function(){
+                                if($(this).val() != '2'){
+                                    $("#div_id_plano_transportadora_editar").show();
+                                    $("#responsavel_frete_editar").append(new Option($(this).find("option:selected").text(), $(this).find("option:selected").text()));
+                                }
+                                else{
+                                    $("#div_id_plano_transportadora_editar").hide();
+                                    $("#responsavel_frete_editar option[value='Kapsula']").remove();
+                                    $("#responsavel_frete_editar option[value='Lift Gold']").remove();
+                                }
+                            });
 
                             $('#editar').unbind('click');
 
@@ -2294,7 +2378,6 @@
             },
             columns: [
                 { data: 'nome', name: 'nome'},
-                { data: 'descricao', name: 'descricao'},
                 { data: 'tipo', name: 'tipo'},
                 { data: 'valor', name: 'valor'},
                 { data: 'cod_cupom', name: 'cod_cupom'},

@@ -20,8 +20,6 @@
                         <select id="tipo" name="tipo" class="form-control">
                             <option value="gerente" {!! $parceiro['tipo'] == 'gerente' ? 'selected' : '' !!}>Gerente</option>
                             <option value="socio" {!! $parceiro['tipo'] == 'socio' ? 'selected' : '' !!}>Sócio</option>
-                            <option value="fabricante/distribuidora" {!! $parceiro['tipo'] == 'fabricante/distribuidora' ? 'selected' : '' !!}>Fabricante/Distribuidora</option>
-                            <option value="afiliado" {!! $parceiro['tipo'] == 'afiliado' ? 'selected' : '' !!}>Afiliado</option>
                         </select>
                     </div>
                     <div class="col-6">
@@ -36,10 +34,6 @@
                     <div class="form-group col-xl-6">
                         <label for="valor_remuneracao">Valor</label>
                         <input name="valor_remuneracao" value="{!! $parceiro['valor_remuneracao'] !!}" type="text" class="form-control" id="valor_parceiro_editar" placeholder="Valor">
-                    </div>
-                    <div class="form-group col-xl-12">
-                        <input name="responsavel_frete" type="checkbox" id="responsavel_frete">
-                        <label for="responsavel_frete" {!! $parceiro['reponsavel_frete'] ? 'checked' : '' !!}>Responsável pelo frete</label>
                     </div>
                 </div>
             </div>

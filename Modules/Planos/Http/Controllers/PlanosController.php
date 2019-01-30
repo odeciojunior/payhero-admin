@@ -594,18 +594,20 @@ class PlanosController extends Controller {
 
         $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
 
-        $produtosDisponiveis = [];
+        // $produtosDisponiveis = [];
 
-        foreach($produtos_projeto as $produto_projeto){
+        // foreach($produtos_projeto as $produto_projeto){
 
-            $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
-        }
+        //     $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
+        // }
 
-        $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();;
+        $produtos = Produto::where('user', \Auth::user()->id)->get()->toArray();
 
-        $brindes = Brinde::where('projeto',$dados['projeto'])->get()->toArray();;
+        $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();
 
-        $cupons = Cupom::where('projeto',$dados['projeto'])->get()->toArray();;
+        $brindes = Brinde::where('projeto',$dados['projeto'])->get()->toArray();
+
+        $cupons = Cupom::where('projeto',$dados['projeto'])->get()->toArray();
 
         $dados_hotzapp = DadosHotZapp::all(); 
 
@@ -613,7 +615,7 @@ class PlanosController extends Controller {
 
         $form = view('planos::cadastro',[
             'transportadoras' => $transportadoras,
-            'produtos' => $produtosDisponiveis,
+            'produtos' => $produtos,
             'pixels' => $pixels,
             'brindes' => $brindes,
             'cupons' => $cupons,
@@ -633,20 +635,22 @@ class PlanosController extends Controller {
 
         $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
 
-        $produtosDisponiveis = [];
+        // $produtosDisponiveis = [];
 
-        foreach($produtos_projeto as $produto_projeto){
+        // foreach($produtos_projeto as $produto_projeto){
 
-            $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
-        }
+        //     $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
+        // }
 
-        $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();;
+        $produtos = Produto::where('user',\Auth::user()->id)->get()->toArray();
 
-        $brindes = Brinde::where('projeto',$dados['projeto'])->get()->toArray();;
+        $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();
 
-        $cupons = Cupom::where('projeto',$dados['projeto'])->get()->toArray();;
+        $brindes = Brinde::where('projeto',$dados['projeto'])->get()->toArray();
 
-        $dados_hotzapp = DadosHotZapp::all(); 
+        $cupons = Cupom::where('projeto',$dados['projeto'])->get()->toArray();
+
+        $dados_hotzapp = DadosHotZapp::all();
 
         $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
 
@@ -665,7 +669,7 @@ class PlanosController extends Controller {
             'transportadoras' => $transportadoras,
             'foto' => $caminho_foto,
             'produtos_planos' => $produtosPlanos,
-            'produtos' => $produtosDisponiveis,
+            'produtos' => $produtos,
             'pixels' => $pixels,
             'planoPixels' => $planoPixels,
             'cupons' => $cupons,

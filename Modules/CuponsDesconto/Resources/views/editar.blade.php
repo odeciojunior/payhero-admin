@@ -10,15 +10,11 @@
             <div style="width:100%">
 
                 <div class="row">
-                    <div class="form-group col-xl-6">
+                    <div class="form-group col-xl-12">
                         <label for="nome">Nome</label>
                         <input value="{!! $cupom->nome != '' ? $cupom->nome : '' !!}" name="nome" type="text" class="form-control" id="nome" placeholder="Nome">
                     </div>
 
-                    <div class="form-group col-xl-6">
-                        <label for="descricao">Descrição</label>
-                        <input value="{!! $cupom->descricao != '' ? $cupom->descricao : '' !!}" name="descricao" type="text" class="form-control" id="descricao" placeholder="Descrição">
-                    </div>
                 </div>
 
                 <div class="row">

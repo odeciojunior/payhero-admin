@@ -8,21 +8,13 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
-class CuponsDescontoController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
+class CuponsDescontoController extends Controller {
+
     public function index() {
 
         return view('cuponsdesconto::index'); 
     }
 
-    /**
-     * Display a form to store new users.
-     * @return Response
-     */
     public function cadastro() {
 
         return view('cuponsdesconto::cadastro');
@@ -66,9 +58,6 @@ class CuponsDescontoController extends Controller
 
     }
 
-    /**
-     * Return data for datatable
-     */
     public function dadosCuponsDesconto(Request $request) {
 
         $dados = $request->all();
@@ -82,7 +71,6 @@ class CuponsDescontoController extends Controller
         $cupons = $cupons->get([
                 'cupom.id',
                 'cupom.nome',
-                'cupom.descricao',
                 'cupom.tipo',
                 'cupom.valor',
                 'cupom.cod_cupom',

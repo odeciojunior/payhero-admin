@@ -10,9 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $projeto
  * @property int $empresa
  * @property string $tipo
- * @property string $tipo_remuneracao
  * @property string $valor_remuneracao
- * @property boolean $responsavel_frete
  * @property boolean $permissao_acesso
  * @property boolean $permissao_editar
  * @property string $created_at
@@ -32,7 +30,7 @@ class UserProjeto extends Model
     /**
      * @var array
      */
-    protected $fillable = [ 'user', 'projeto', 'empresa', 'tipo', 'tipo_remuneracao', 'valor_remuneracao', 'responsavel_frete', 'permissao_acesso', 'permissao_editar', 'created_at', 'updated_at', 'deleted_at', 'status'];
+    protected $fillable = [ 'user', 'projeto', 'empresa', 'tipo', 'valor_remuneracao', 'permissao_acesso', 'permissao_editar', 'created_at', 'updated_at', 'deleted_at', 'status'];
 
     protected $guarded = ['id'];
 }
