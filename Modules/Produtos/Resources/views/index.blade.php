@@ -18,7 +18,7 @@
           @else 
             <div class="row">
                 @foreach($produtos as $produto)
-                  <div class="col-3">
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                       <div class="card" style="border: 1px solid gray">
                           <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                           <div class="card-block">

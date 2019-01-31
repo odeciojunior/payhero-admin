@@ -75,35 +75,42 @@
                                 <input value="{!! $produto->custo_produto != '' ? $produto->custo_produto : '' !!}" name="custo_produto" type="text" class="form-control" id="custo_produto" placeholder="Custo do produto" data-mask="0#">
                             </div>
                             <div class="form-group col-xl-6">
-                                <label for="garantia">Garantia</label>
-                                <input value="{!! $produto->garantia != '' ? $produto->garantia : '' !!}" name="garantia" type="text" class="form-control" id="garantia" placeholder="Garantia" data-mask="0#">
+                                <label for="recebedor_custo">Recebedor do custo</label>
+                                <select name="recebedor_custo" class="form-control" id="recebedor_custo">
+                                    <option value="" {!! $produto->recebedor_custo == '' ? 'selected' : '' !!}>Produtor</option>
+                                    <option value="kapsula" {!! $produto->recebedor_custo == 'kapsula' ? 'selected' : '' !!}>Kapsula</option>
+                                    <option value="liftgold" {!! $produto->recebedor_custo == 'liftgold' ? 'selected' : '' !!}>Lift Gold</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="row">
+                            <div class="form-group col-xl-6">
+                                <label for="garantia">Garantia</label>
+                                <input value="{!! $produto->garantia != '' ? $produto->garantia : '' !!}" name="garantia" type="text" class="form-control" id="garantia" placeholder="Garantia" data-mask="0#">
+                            </div>
                             <div class="form-group col-xl-6">
                                 <label for="quantidade">Quantidade</label>
                                 <input value="{!! $produto->quantidade != '' ? $produto->quantidade : '0' !!}" name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade" data-mask="0#">
                             </div>
-
-                            <div class="form-group col-xl-6">
-                                <label for="peso">Peso</label>
-                                <input value="{!! $produto->peso != '' ? $produto->peso : '' !!}" name="peso" type="text" class="form-control" id="peso" placeholder="Peso" data-mask="0#">
-                            </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-xl-6">
+                                <label for="peso">Peso</label>
+                                <input value="{!! $produto->peso != '' ? $produto->peso : '' !!}" name="peso" type="text" class="form-control" id="peso" placeholder="Peso" data-mask="0#">
+                            </div>
+                            <div class="form-group col-xl-6">
                                 <label for="altura">Altura</label>
                                 <input value="{!! $produto->altura != '' ? $produto->altura : '' !!}" name="altura" type="text" class="form-control" id="altura" placeholder="Altura" data-mask="0#">
                             </div>
-
+                        </div>
+                        <div class="row">
                             <div class="form-group col-xl-6">
                                 <label for="largura">largura</label>
                                 <input value="{!! $produto->largura != '' ? $produto->largura : '' !!}" name="largura" type="text" class="form-control" id="largura" placeholder="Largura" data-mask="0#">
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="form-group col-12">
                                 <label for="selecionar_foto">Foto do produto</label><br>

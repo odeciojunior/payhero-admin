@@ -39,7 +39,7 @@ class Produto extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'categoria', 'nome', 'descricao', 'garantia', 'quantidade', 'disponivel', 'formato', 'created_at', 'updated_at', 'custo_produto', 'foto', 'deleted_at', 'altura', 'largura', 'peso'];
+    protected $fillable = ['user', 'categoria', 'nome', 'descricao', 'garantia', 'quantidade', 'disponivel', 'formato', 'created_at', 'updated_at', 'custo_produto','recebedor_custo', 'foto', 'deleted_at', 'altura', 'largura', 'peso'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

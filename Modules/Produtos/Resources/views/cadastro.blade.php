@@ -65,40 +65,48 @@
                             <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="custo_produto">Custo do produto</label>
-                                    <input name="custo_produto" type="text" class="form-control" id="custo_produto" placeholder="Custo do produto" data-mask="0#">
+                                    <input name="custo_produto" type="text" class="form-control dinheiro" id="custo_produto" placeholder="Custo do produto">
                                 </div>
+                                <div class="form-group col-xl-6">
+                                    <label for="recebedor_custo">Recebedor do custo</label>
+                                    <select name="recebedor_custo" class="form-control" id="recebedor_custo">
+                                        <option value="">Produtor</option>
+                                        <option value="kapsula">Kapsula</option>
+                                        <option value="liftgold">Lift Gold</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="garantia">Garantia (em dias)</label>
                                     <input name="garantia" type="text" class="form-control" id="garantia" placeholder="Garantia" data-mask="0#">
                                 </div>
+        
+                                <div class="form-group col-xl-6">
+                                    <label for="quantidade">Quantidade (em estoque)</label>
+                                    <input name="quantidade" type="text" class="form-control" id="quantidade" placeholder="Quantidade" data-mask="0#">
+                                </div>
                             </div>
 
                             <div class="row">
-                                <div class="form-group col-xl-6">
-                                    <label for="quantidade">Quantidade (em estoque)</label>
-                                    <input name="quantidade" type="text" class="form-control" id="quantidade" placeholder="quantidade" data-mask="0#">
-                                </div>
-
                                 <div class="form-group col-xl-6">
                                     <label for="peso">Peso</label>
                                     <input name="peso" type="text" class="form-control" id="peso" placeholder="Peso" data-mask="0#">
                                 </div>
-                            </div>
-
-                            <div class="row">
+        
                                 <div class="form-group col-xl-6">
                                     <label for="altura">Altura</label>
                                     <input name="altura" type="text" class="form-control" id="altura" placeholder="Altura" data-mask="0#">
                                 </div>
-
+                            </div>
+                            <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="largura">largura</label>
                                     <input name="largura" type="text" class="form-control" id="largura" placeholder="Largura" data-mask="0#">
                                 </div>
                             </div>
-
                             <div class="row">
-
                                 <div class="form-group col-12">
                                     <label for="selecionar_foto">Foto do produto</label><br>
                                     <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do produto">
@@ -190,6 +198,8 @@
         $("#selecionar_foto").on("click", function(){
             $("#foto").click();
         });
+
+        $('.dinheiro').mask('#.###,#0', {reverse: true});
 
     });
 
