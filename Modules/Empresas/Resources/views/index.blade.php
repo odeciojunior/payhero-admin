@@ -97,7 +97,7 @@
                 { data: 'nome_fantasia', name: 'nome_fantasia'},
                 { data: 'cnpj', name: 'cnpj'},
                 { data: function(data){
-                  if(data.recipient_id != '')
+                  if(data.recipient_id != null)
                     return 'Ativa';
                   else
                     return 'Inativa';
@@ -143,7 +143,7 @@
                     });
 
                 });
-
+ 
                 $('.excluir_empresa').on('click', function(){
 
                     var id_empresa = $(this).attr('empresa');

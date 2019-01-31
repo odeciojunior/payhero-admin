@@ -152,6 +152,7 @@ class EmpresasController extends Controller {
                 'empresa.id',
                 'empresa.cnpj',
                 'empresa.nome_fantasia',
+                'empresa.recipient_id',
         ]); 
 
         if(!\Auth::user()->hasRole('administrador geral')){

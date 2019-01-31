@@ -67,6 +67,11 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' =>
         'uses' => 'SmsController@dadosMensagens'
     ]);
 
+    Route::post('/enviarsmsmanual',[
+        'as' => 'sms.enviarsmsmanual',
+        'uses' => 'SmsController@enviarSmsManual'
+    ]);
+
 });
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'ferramentas', 'namespace' => 'Modules\Sms\Http\Controllers'], function()

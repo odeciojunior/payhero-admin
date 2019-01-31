@@ -3,9 +3,11 @@
 namespace Modules\Sms\Http\Controllers;
 
 use App\Plano;
+use DateTimeZone;
 use App\ZenviaSms;
 use App\MensagemSms;
 use App\UserProjeto;
+use Zenvia\Model\Sms;
 use App\CompraUsuario;
 use Zenvia\Model\SmsFacade;
 use Illuminate\Http\Request;
@@ -64,7 +66,7 @@ class SmsController extends Controller {
 
         return view('sms::cadastro');
     }
-
+ 
     public function cadastrarSms(Request $request){
 
         $dados = $request->all();
@@ -360,6 +362,7 @@ class SmsController extends Controller {
         $mensagens = \DB::table('mensagens_sms as mensagem')
         ->leftJoin('planos as plano', 'plano.id', 'mensagem.plano')
         ->whereIn('plano.id',$planos_usuario)
+        ->orWhere('user', \Auth::user()->id)
         ->select([
             'mensagem.id',
             'mensagem.para',
@@ -396,6 +399,67 @@ class SmsController extends Controller {
         })
         ->make(true);
 
+    }
+
+    public static function enviarSmsManual(Request $request){
+
+        $user = \Auth::user();
+
+        if($user->sms_zenvia_qtd > 0){
+            $dados = $request->all();
+
+            $smsFacade = new SmsFacade('healthlab.corp','hLQNVb7VQk');
+            $sms = new Sms();
+            $sms->setTo('55'.preg_replace("/[^0-9]/", "", $dados['telefone']));
+            $sms->setMsg($dados['mensagem']);
+            $id_sms = uniqid();
+            $sms->setId($id_sms);
+            $sms->setCallbackOption(Sms::CALLBACK_NONE);
+            $date = new \DateTime();
+            $date->setTimeZone(new DateTimeZone('America/Sao_Paulo'));
+            $schedule = $date->format("Y-m-d\TH:i:s");
+            $sms->setSchedule($schedule);
+
+            try{
+                $response = $smsFacade->send($sms);
+
+                MensagemSms::create([
+                    'id_zenvia' => $id_sms,
+                    'para' => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
+                    'mensagem' => $dados['mensagem'],
+                    'data' => $schedule,
+                    'status' => $response->getStatusDescription(),
+                    'evento' => 'Mensagem manual',
+                    'tipo' => 'Enviada',
+                    'user' => \Auth::user()->id
+                ]);
+
+                $user->update([
+                    'sms_zenvia_qtd' => $user->sms_zenvia_qtd - 1
+                ]);
+
+                return response()->json('Sucesso');
+            }
+            catch(\Exception $ex){
+
+                MensagemSms::create([
+                    'id_zenvia' => $id_sms,
+                    'para' => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
+                    'mensagem' => $dados['mensagem'],
+                    'data' => $schedule,
+                    'status' => 'Erro',
+                    'evento' => 'Mensagem manual',
+                    'tipo' => 'Enviada',
+                    'user' => \Auth::user()->id
+                ]);
+
+                return response()->json('Ocorreu algum erro, verifique os dados informados!');
+            }
+        }
+        else{
+
+            return response()->json('Você não possui mensagens disponíveis!');
+        }
     }
 
 }

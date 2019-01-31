@@ -39,7 +39,7 @@ class MensagemSms extends Model
     /**
      * @var array
      */
-    protected $fillable = ['plano', 'id_zenvia', 'para', 'mensagem', 'data', 'recebida_de', 'status', 'deleted_at', 'created_at', 'updated_at', 'evento', 'tipo'];
+    protected $fillable = ['plano', 'id_zenvia', 'para', 'mensagem', 'data', 'recebida_de', 'status', 'user', 'deleted_at', 'created_at', 'updated_at', 'evento', 'tipo'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

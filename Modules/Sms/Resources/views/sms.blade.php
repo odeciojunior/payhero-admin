@@ -8,9 +8,15 @@
     <div class="page-content container-fluid">
       <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-        <h3 style="margin: 30px 0 20px 0">Histórico de SMS</h3>
-
-          <div class="row">
+        <div class="row">
+            <div class="col-9">
+                <h3 style="margin: 30px 0 20px 0">Histórico de SMS</h3>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary" data-toggle='modal' data-target='#modal_enviar_sms_manual'>Enviar SMS manual</button>
+            </div>
+        </div>
+        <div class="row">
 
             <div class="col-12">
                 <table id="tabela_sms" class="display w-full table-stripped" style="width:100%">
@@ -29,29 +35,38 @@
             </div>
         </div>
 
-        <div id="modal_detalhes_historico" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div id="modal_enviar_sms_manual" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-simple">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
-                        <h4 class="modal-title" style="width: 100%; text-align:center">Detalhes da compra</h4>
+                        <h4 class="modal-title" style="width: 100%; text-align:center">Enviar SMS</h4>
                     </div>
                     <div class="modal-body">
-                        <table class="table table-hover table-stripped table-bordered" style="margin: 60px 0 40px 0">
-                            <tbody id="detalhes_body">
-                            </tbody>
-                        </table>
-
+                        <form id="form_sms_manual" style="margin-top: 40px">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="telefone">Celular</label>
+                                    <input name="telefone" class="form-control" id="telefone" placeholder="celular">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="mensagem">Mensagem</label>
+                                    <input name="mensagem" class="form-control" id="mensagem" placeholder="mensagem">
+                                </div>
+                            </div>    
+                        </form>
                     </div>
                     <div class="modal-footer text-center">
-                        <button type="button" class="btn btn-danger" style="width: 30%; margin: auto" data-dismiss="modal">Fechar</button>
+                        <button id="enviar_mensagem_manual" type="button" class="btn btn-success" data-dismiss="modal">Enviar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
             </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -59,6 +74,8 @@
   <script>
 
     $(document).ready( function(){
+
+        $("#telefone").mask("(00) 00000-0000");
 
         $("#tabela_sms").DataTable( {
             bLengthChange: false,
@@ -80,12 +97,6 @@
                 { data: 'data', name: 'data', orderable: "false"},
                 { data: 'evento', name: 'evento', orderable: "false"},
                 { data: 'status', name: 'status', orderable: "false"},
-                {{--  { data: function(data){
-                  if(data.recipient_id != '')
-                    return 'Ativa';
-                  else
-                    return 'Inativa';
-                }, name: 'recipient_id'},  --}}
             ],
             "language": {
                 "sProcessing":    "Procesando...",
@@ -108,6 +119,52 @@
             },
         });
 
+        $("#enviar_mensagem_manual").on("click", function(){
+
+            var form_data = new FormData(document.getElementById('form_sms_manual'));
+
+            $.ajax({
+                method: "POST",
+                url: "/sms/enviarsmsmanual",
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: form_data,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function(){
+                    //
+                },
+                success: function(data){
+
+                    if(data == 'Sucesso'){
+                        swal({
+                            position: 'bottom',
+                            type: 'success',
+                            toast: 'true',
+                            title: 'Mensagem enviada',
+                            showConfirmButton: false,
+                            timer: 6000
+                        });                
+                    }
+                    else{
+                        swal({
+                            position: 'bottom',
+                            type: 'error',
+                            toast: 'true',
+                            title: data,
+                            showConfirmButton: false,
+                            timer: 6000
+                        });                
+                    }
+
+                    $("#tabela_sms").DataTable().ajax.reload();
+
+                },
+            });
+
+        });
     });
 
   </script>
