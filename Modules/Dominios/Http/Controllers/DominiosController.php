@@ -26,17 +26,22 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DominiosController extends Controller {
 
-    public function index() {
+    // public function index() {
 
-        return view('dominios::index'); 
-    }
+    //     return view('dominios::index'); 
+    // }
 
-    public function cadastro() {
+    // public function cadastro() {
 
-        return view('dominios::cadastro');
-    }
+    //     return view('dominios::cadastro');
+    // }
 
     public function cadastrarDominio(Request $request){
+
+        $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        $adapter = new Guzzle($key);
+        $dns = new DNS($adapter);
+        $zones = new Zones($adapter);
 
         try{
             $zones->addZone($dados['dominio']);

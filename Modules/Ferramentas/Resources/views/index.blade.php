@@ -31,6 +31,25 @@
             </div>
         </a>
 
+        <a href="{!! route('ferramentas.shopify') !!}">
+            <div class="card-columns">
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title">Shopify</h4>
+                        <div class="row">
+                            <div class="col-10">
+                                <p class="card-text">
+                                  Integração com Shopify.
+                                </p>
+                            </div>
+                            <div class="col-2">
+                                <i class="icon wb-plugin" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
 
     </div>
     {{--  <div class="page-content container-fluid">
