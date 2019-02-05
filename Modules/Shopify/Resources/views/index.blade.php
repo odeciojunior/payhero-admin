@@ -205,7 +205,7 @@
                 },
                 success: function(data){
                     if(data == 'Sucesso'){
-                      alertPersonalizado('success','Brinde adicionado!');
+                      alertPersonalizado('success','Integração adicionada!');
                     }
                     else{
                       alertPersonalizado('error',data);
