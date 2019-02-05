@@ -79,47 +79,48 @@ class ShopifyController extends Controller {
         $dns = new DNS($adapter);
         $zones = new Zones($adapter);
 
-        try{
-            $zones->addZone($client->getShopManager()->get()->getDomain());
-        }
-        catch(\Exception $e){
-            $projeto->delete();
-            return response()->json($e);
-            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        }
+        // try{
+        //     $zones->addZone($client->getShopManager()->get()->getDomain());
+        // }
+        // catch(\Exception $e){
+        //     $projeto->delete();
+        //     return response()->json($e);
+        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
+        // }
 
-        $zoneID = $zones->getZoneID($client->getShopManager()->get()->getDomain());
+        // $zoneID = $zones->getZoneID($client->getShopManager()->get()->getDomain());
 
-        try{
-            if ($dns->addRecord($zoneID, "A", $client->getShopManager()->get()->getDomain(),'23.227.38.32', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-        }
-        catch(Exception $e){
-            try{
-                $zones->deleteZone($zoneID); 
-            }
-            catch(Exception $e){
-                //
-            }
-            $projeto->delete();
-            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        }
+        // try{
+        //     if ($dns->addRecord($zoneID, "A", $client->getShopManager()->get()->getDomain(),'23.227.38.32', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        //     if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        //     if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        //     if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        // }
 
-        Dominio::create([
-            'projeto' => $projeto->id,
-            'dominio' => $client->getShopManager()->get()->getDomain(),
-            'ip_dominio' => 'Shopify',
-        ]);
+        // catch(Exception $e){
+        //     try{
+        //         $zones->deleteZone($zoneID); 
+        //     }
+        //     catch(Exception $e){
+        //         //
+        //     }
+        //     $projeto->delete();
+        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
+        // }
+
+        // Dominio::create([
+        //     'projeto' => $projeto->id,
+        //     'dominio' => $client->getShopManager()->get()->getDomain(),
+        //     'ip_dominio' => 'Shopify',
+        // ]);
 
         $imagem = $request->file('foto_projeto');
 
