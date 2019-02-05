@@ -29,6 +29,50 @@ class ShopifyController extends Controller {
 
     public function index() {
 
+        // try{
+        //     // $credential = new PublicAppCredential($dados['token']);
+        //     $credential = new PublicAppCredential('0fc0fea41cc38c989749dc9040794bb4');
+
+        //     $client = new Client($credential, 'canto-infantil.myshopify.com', [
+        //     // $client = new Client($credential, $dados['url_loja'], [
+        //         'metaCacheDir' => './tmp' // Metadata cache dir, required
+        //     ]);
+        // }
+        // catch(\Exception $e){
+        //     return response()->json('Dados do shopify inválidos, revise os dados informados');
+        // }
+
+        // $order = $client->getOrderManager()->create([
+        //     "accepts_marketing" => false,
+        //     "currency" => "BRL",
+        //     "email" => "fulano@mail.com",
+        //     "first_name" => "fulano",
+        //     "last_name" => "funalo",
+        //     "buyer_accepts_marketing" => false,
+        //     "line_items" => [
+        //         [
+        //             "fulfillable_quantity" => 1,
+        //             "fulfillment_service" => "amazon",
+        //             "fulfillment_status" => "fulfilled",
+        //             "grams" => 500,
+        //             "id" => 1116009398308,
+        //             "price" => "199.99",
+        //             "product_id" => 1116009398308,
+        //             "quantity" => 1,
+        //             "requires_shipping" => true,
+        //             "sku" => "IPOD-342-N",
+        //             "title" => "IPod Nano",
+        //             "variant_id" => 10092927713316,
+        //             "variant_title" => "Produto",
+        //             // "vendor" => "Apple",
+        //             "name" => "IPod Nano - Produto",
+        //             "gift_card" => false,
+        //         ]
+        //     ]
+        // ]);
+
+        // dd($order);
+
         $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
         $integracoes_shopify = IntegracaoShopify::where('user',\Auth::user()->id)->get()->toArray();
@@ -73,48 +117,46 @@ class ShopifyController extends Controller {
             'afiliacao_automatica' => false,
         ]);
 
-        $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        $adapter = new Guzzle($key);
-        $dns = new DNS($adapter);
-        $zones = new Zones($adapter);
+        // $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        // $adapter = new Guzzle($key);
+        // $dns = new DNS($adapter);
+        // $zones = new Zones($adapter);
 
-        try{
-            $zones->addZone($client->getShopManager()->get()->getDomain());
-        }
-        catch(\Exception $e){
-            $projeto->delete();
-            dd($e);
-            return response()->json($e);
-            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        }
+        // try{
+        //     $zones->addZone($client->getShopManager()->get()->getDomain());
+        // }
+        // catch(\Exception $e){
+        //     $projeto->delete();
+        //     return response()->json($e);
+        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
+        // }
 
-        $zoneID = $zones->getZoneID($client->getShopManager()->get()->getDomain());
+        // $zoneID = $zones->getZoneID($client->getShopManager()->get()->getDomain());
 
-        try{
-            if ($dns->addRecord($zoneID, "A", $client->getShopManager()->get()->getDomain(),'23.227.38.32', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-        }
-        catch(Exception $e){
-            try{
-                $zones->deleteZone($zoneID); 
-            }
-            catch(Exception $e){
-                //
-            }
-            $projeto->delete();
-            return response()->json($e);
-            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        }
+        // try{
+        //     if ($dns->addRecord($zoneID, "A", $client->getShopManager()->get()->getDomain(),'23.227.38.32', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        //     if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        //     if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        //     if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+        //         // echo "DNS criado.". PHP_EOL;
+        //     }
+        // }
+        // catch(Exception $e){
+        //     try{
+        //         $zones->deleteZone($zoneID); 
+        //     }
+        //     catch(Exception $e){
+        //         //
+        //     }
+        //     $projeto->delete();
+        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
+        // }
 
         Dominio::create([
             'projeto' => $projeto->id,
@@ -198,11 +240,13 @@ class ShopifyController extends Controller {
 
             foreach($product->getVariants() as $variant){
                 $preco = $variant->getPrice();
+                $variant_id = $variant->getId();
                 break;
             }
 
             $plano = Plano::create([
                 'shopify_id' => $product->getId(),
+                'shopify_variant_id' => $variant_id,
                 'empresa' => $dados['empresa'],
                 'projeto' => $projeto->id,
                 'nome' => $product->getTitle(),
@@ -244,7 +288,6 @@ class ShopifyController extends Controller {
         ]);
 
         return response()->json('Sucesso');
-
     }
 
     function randString($size){

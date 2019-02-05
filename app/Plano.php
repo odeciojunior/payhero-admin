@@ -56,7 +56,7 @@ class Plano extends Model
     /**
      * @var array
      */
-    protected $fillable = ['empresa', 'layout', 'hotzapp_dados', 'transportadora', 'projeto', 'nome', 'descricao', 'quantidade', 'cod_identificador', 'preco', 'frete_fixo', 'valor_frete', 'frete', 'cartao', 'boleto', 'desconto', 'valor_desconto', 'mensagen_desconto', 'status', 'id_plano_trasnportadora','foto','responsavel_frete','shopify_id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['empresa', 'layout', 'hotzapp_dados', 'transportadora', 'projeto', 'nome', 'descricao', 'quantidade', 'cod_identificador', 'preco', 'frete_fixo', 'valor_frete', 'frete', 'cartao', 'boleto', 'desconto', 'valor_desconto', 'mensagen_desconto', 'status', 'id_plano_trasnportadora','foto','responsavel_frete','shopify_id','shopify_variant_id', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
