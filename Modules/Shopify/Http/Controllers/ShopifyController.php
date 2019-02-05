@@ -49,7 +49,7 @@ class ShopifyController extends Controller {
 
         $dados = $request->all();
 
-        try{
+        // try{
             $credential = new PublicAppCredential($dados['token']);
             //$credential = new PublicAppCredential('0fc0fea41cc38c989749dc9040794bb4');
 
@@ -57,11 +57,11 @@ class ShopifyController extends Controller {
             $client = new Client($credential, $dados['url_loja'], [
                 'metaCacheDir' => './tmp' // Metadata cache dir, required
             ]);
-        }
-        catch(\Exception $e){
-            return response()->json($e);
-            return response()->json('Dados do shopify inválidos, revise os dados informados');
-        }
+        // }
+        // catch(\Exception $e){
+        //     return response()->json($e);
+        //     return response()->json('Dados do shopify inválidos, revise os dados informados');
+        // }
 
         $projeto = Projeto::create([
             'nome' => $client->getShopManager()->get()->getName(),
