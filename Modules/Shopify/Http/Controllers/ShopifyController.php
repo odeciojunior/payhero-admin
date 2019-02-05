@@ -29,50 +29,6 @@ class ShopifyController extends Controller {
 
     public function index() {
 
-        // try{
-        //     // $credential = new PublicAppCredential($dados['token']);
-        //     $credential = new PublicAppCredential('0fc0fea41cc38c989749dc9040794bb4');
-
-        //     $client = new Client($credential, 'canto-infantil.myshopify.com', [
-        //     // $client = new Client($credential, $dados['url_loja'], [
-        //         'metaCacheDir' => './tmp' // Metadata cache dir, required
-        //     ]);
-        // }
-        // catch(\Exception $e){
-        //     return response()->json('Dados do shopify inválidos, revise os dados informados');
-        // }
-
-        // $order = $client->getOrderManager()->create([
-        //     "accepts_marketing" => false,
-        //     "currency" => "BRL",
-        //     "email" => "fulano@mail.com",
-        //     "first_name" => "fulano",
-        //     "last_name" => "funalo",
-        //     "buyer_accepts_marketing" => false,
-        //     "line_items" => [
-        //         [
-        //             "fulfillable_quantity" => 1,
-        //             "fulfillment_service" => "amazon",
-        //             "fulfillment_status" => "fulfilled",
-        //             "grams" => 500,
-        //             "id" => 1116009398308,
-        //             "price" => "199.99",
-        //             "product_id" => 1116009398308,
-        //             "quantity" => 1,
-        //             "requires_shipping" => true,
-        //             "sku" => "IPOD-342-N",
-        //             "title" => "IPod Nano",
-        //             "variant_id" => 10092927713316,
-        //             "variant_title" => "Produto",
-        //             // "vendor" => "Apple",
-        //             "name" => "IPod Nano - Produto",
-        //             "gift_card" => false,
-        //         ]
-        //     ]
-        // ]);
-
-        // dd($order);
-
         $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
         $integracoes_shopify = IntegracaoShopify::where('user',\Auth::user()->id)->get()->toArray();

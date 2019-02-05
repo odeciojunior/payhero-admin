@@ -204,7 +204,7 @@ class VendasDataTable extends DataTable
                 'filter_type' => 'text'
             ],
             'plano_nome' => [
-                'name' => 'plano_nome',
+                'name' => 'plano.nome',
                 'data' => 'plano_nome',
                 'title' => 'Plano',
                 'searchable' => true,
@@ -213,7 +213,7 @@ class VendasDataTable extends DataTable
                 'filter_type' => 'text'
             ],
             'nome' => [
-                'name' => 'nome',
+                'name' => 'comprador.nome',
                 'data' => 'nome',
                 'title' => 'Comprador',
                 'searchable' => true,
@@ -231,7 +231,7 @@ class VendasDataTable extends DataTable
                 'filter_type' => 'text'
             ],
             'status' => [
-                'name' => 'status',
+                'name' => 'vendas.pagamento_status',
                 'data' => 'status',
                 'title' => 'Status',
                 'searchable' => true,
