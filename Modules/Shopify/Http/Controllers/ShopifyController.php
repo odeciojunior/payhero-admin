@@ -73,46 +73,46 @@ class ShopifyController extends Controller {
             'afiliacao_automatica' => false,
         ]);
 
-        // $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        // $adapter = new Guzzle($key);
-        // $dns = new DNS($adapter);
-        // $zones = new Zones($adapter);
+        $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        $adapter = new Guzzle($key);
+        $dns = new DNS($adapter);
+        $zones = new Zones($adapter);
 
-        // try{
-        //     $zones->addZone($client->getShopManager()->get()->getDomain());
-        // }
-        // catch(\Exception $e){
-        //     $projeto->delete();
-        //     return response()->json($e);
-        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        // }
+        try{
+            $zones->addZone($client->getShopManager()->get()->getDomain());
+        }
+        catch(\Exception $e){
+            $projeto->delete();
+            return response()->json($e);
+            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
+        }
 
-        // $zoneID = $zones->getZoneID($client->getShopManager()->get()->getDomain());
+        $zoneID = $zones->getZoneID($client->getShopManager()->get()->getDomain());
 
-        // try{
-        //     if ($dns->addRecord($zoneID, "A", $client->getShopManager()->get()->getDomain(),'23.227.38.32', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        //     if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        //     if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        //     if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        // }
-        // catch(Exception $e){
-        //     try{
-        //         $zones->deleteZone($zoneID); 
-        //     }
-        //     catch(Exception $e){
-        //         //
-        //     }
-        //     $projeto->delete();
-        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        // }
+        try{
+            if ($dns->addRecord($zoneID, "A", $client->getShopManager()->get()->getDomain(),'23.227.38.32', 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
+            if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
+            if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
+            if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+                // echo "DNS criado.". PHP_EOL;
+            }
+        }
+        catch(Exception $e){
+            try{
+                $zones->deleteZone($zoneID); 
+            }
+            catch(Exception $e){
+                //
+            }
+            $projeto->delete();
+            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
+        }
 
         Dominio::create([
             'projeto' => $projeto->id,
@@ -182,7 +182,6 @@ class ShopifyController extends Controller {
                 'foto' => $nome_foto
             ]);
 
-
             $novo_codigo_identificador = false;
 
             while($novo_codigo_identificador == false){
@@ -195,39 +194,38 @@ class ShopifyController extends Controller {
             }
 
             foreach($product->getVariants() as $variant){
-                $preco = $variant->getPrice();
-                $variant_id = $variant->getId();
-                break;
+
+                $plano = Plano::create([
+                    'shopify_id' => $product->getId(),
+                    'shopify_variant_id' => $variant->getId(),
+                    'empresa' => $dados['empresa'],
+                    'projeto' => $projeto->id,
+                    'nome' => $product->getTitle(),
+                    'descricao' => $product->getBodyHtml(),
+                    'cod_identificador' => $codigo_identificador,
+                    'preco' => $variant->getPrice(),
+                    'frete_fixo' => '1',
+                    'valor_frete' => '0.00',
+                    'pagamento_cartao' => true,
+                    'pagamento_boleto' => true,
+                    'status' => '1',
+                    'transportadora' => '2',
+                ]);
+    
+                $img = Image::make($product->getImage()->getSrc());
+    
+                $nome_foto = 'plano_' . $plano->id . '_.png';
+    
+                Storage::delete('public/upload/plano/'.$nome_foto);
+    
+                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+    
+                $plano->update([
+                    'foto' => $nome_foto
+                ]);
+
             }
 
-            $plano = Plano::create([
-                'shopify_id' => $product->getId(),
-                'shopify_variant_id' => $variant_id,
-                'empresa' => $dados['empresa'],
-                'projeto' => $projeto->id,
-                'nome' => $product->getTitle(),
-                'descricao' => $product->getBodyHtml(),
-                'cod_identificador' => $codigo_identificador,
-                'preco' => $preco,
-                'frete_fixo' => '1',
-                'valor_frete' => '0.00',
-                'pagamento_cartao' => true,
-                'pagamento_boleto' => true,
-                'status' => '1',
-                'transportadora' => '2',
-            ]);
-
-            $img = Image::make($product->getImage()->getSrc());
-
-            $nome_foto = 'plano_' . $plano->id . '_.png';
-
-            Storage::delete('public/upload/plano/'.$nome_foto);
-
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-
-            $plano->update([
-                'foto' => $nome_foto
-            ]);
 
             ProdutoPlano::create([
                 'produto' => $produto->id,
