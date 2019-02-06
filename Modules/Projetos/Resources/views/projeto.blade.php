@@ -37,14 +37,23 @@
                                     aria-controls="tab_cupons" role="tab">Layouts</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_pixels"
                                     aria-controls="tab_pixels" role="tab">Pixels</a></li>
-                                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_brindes"
-                                    aria-controls="tab_brindes" role="tab">Brindes</a></li>
+                                @if($projeto->shopify_id == '')
+                                    <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_brindes"
+                                        aria-controls="tab_brindes" role="tab">Brindes</a></li>
+                                @endif
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_cupons"
                                     aria-controls="tab_cupons" role="tab">Cupons de desconto</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_sms"
                                     aria-controls="tab_cupons" role="tab">Sms</a></li>
-                                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_planos"
-                                    aria-controls="tab_planos" role="tab">Planos</a></li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_planos"aria-controls="tab_planos" role="tab">
+                                        @if($projeto->shopify_id == '')
+                                            Planos
+                                        @else
+                                            Produtos
+                                        @endif
+                                    </a>
+                                </li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_parceiros"
                                     aria-controls="tab_parceiros" role="tab">Parceiros</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_configuracoes"
@@ -133,22 +142,24 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="tab-pane" id="tab_brindes" role="tabpanel">
-                                    <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_brinde" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i>
-                                            Adicionar brinde
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Título</th>
-                                            <th>Descrição</th>
-                                            <th>Tipo</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                @if($projeto->shopify_id == '')
+                                    <div class="tab-pane" id="tab_brindes" role="tabpanel">
+                                        <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                            <a id="adicionar_brinde" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
+                                                <i class='icon wb-user-add' aria-hidden='true'></i>
+                                                Adicionar brinde
+                                            </a>
+                                            <thead class="bg-blue-grey-100">
+                                                <th>Título</th>
+                                                <th>Descrição</th>
+                                                <th>Tipo</th>
+                                                <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
                                 <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                     <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_cupom" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -451,10 +462,18 @@
 
                     $('#cadastrar').on('click',function(){
 
-                        if($('#ip_dominio').val() == '' || $('#dominio').val() == ''){
+                        if($('#dominio').val() == ''){
                             alertPersonalizado('error','Dados informados inválidos');
                             return false;
                         }
+
+                        @if($projeto->shopify_id == '')
+                            if($('#ip_dominio').val() == ''){
+                                alertPersonalizado('error','Dados informados inválidos');
+                                return false;
+                            }
+                        @endif
+
 
                         var form_data = new FormData(document.getElementById('cadastrar_dominio'));
                         form_data.append('projeto',id_projeto);
@@ -675,147 +694,149 @@
 
         });
 
-        $('#adicionar_brinde').on('click', function(){
+        @if($projeto->shopify_id == '')
+            $('#adicionar_brinde').on('click', function(){
 
-            $('#modal_add_tamanho').addClass('modal-lg');
-            $('#modal_add_tamanho').removeClass('modal-simple');
+                $('#modal_add_tamanho').addClass('modal-lg');
+                $('#modal_add_tamanho').removeClass('modal-simple');
 
-            $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
+                $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
-            $.ajax({
-                method: "GET",
-                url: "/brindes/getformaddbrinde",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                error: function(){
-                    $('#modal_add').hide();
-                    alertPersonalizado('error','Ocorreu algum erro');
-                },
-                success: function(data){
-                    $('#modal_add_body').html(data);
+                $.ajax({
+                    method: "GET",
+                    url: "/brindes/getformaddbrinde",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    error: function(){
+                        $('#modal_add').hide();
+                        alertPersonalizado('error','Ocorreu algum erro');
+                    },
+                    success: function(data){
+                        $('#modal_add_body').html(data);
 
-                    $('#cadastrar').unbind('click');
+                        $('#cadastrar').unbind('click');
 
-                    $('#cadastrar').on('click',function(){
+                        $('#cadastrar').on('click',function(){
 
-                        if($('#titulo_brinde').val() == '' || $('#descricao_brinde').val() == '' || $('#foto_brinde').val() == '' || $('#tipo_brinde').val() == ''){
-                            alertPersonalizado('error','Dados informados inválidos');
-                            return false;
-                        }
+                            if($('#titulo_brinde').val() == '' || $('#descricao_brinde').val() == '' || $('#foto_brinde').val() == '' || $('#tipo_brinde').val() == ''){
+                                alertPersonalizado('error','Dados informados inválidos');
+                                return false;
+                            }
 
-                        var form_data = new FormData(document.getElementById('cadastrar_brinde'));
-                        form_data.append('projeto',id_projeto);
+                            var form_data = new FormData(document.getElementById('cadastrar_brinde'));
+                            form_data.append('projeto',id_projeto);
 
-                        $.ajax({
-                            method: "POST",
-                            url: "/brindes/cadastrarbrinde",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            processData: false,
-                            contentType: false,
-                            cache: false,
-                            data: form_data,
-                            error: function(){
-                                alertPersonalizado('error','Ocorreu algum erro');
-                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
-                            },
-                            success: function(data){
-                                alertPersonalizado('success','Brinde adicionado!');
-                                $('#modal_add').hide();
-                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
-                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
-                            },
+                            $.ajax({
+                                method: "POST",
+                                url: "/brindes/cadastrarbrinde",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                data: form_data,
+                                error: function(){
+                                    alertPersonalizado('error','Ocorreu algum erro');
+                                    $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+                                },
+                                success: function(data){
+                                    alertPersonalizado('success','Brinde adicionado!');
+                                    $('#modal_add').hide();
+                                    $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                    $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                                    $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+                                },
+                            });
                         });
-                    });
 
-                    var p = $("#previewimage_brinde_cadastrar");
-                    $("#foto_brinde_cadastrar").on("change", function(){
+                        var p = $("#previewimage_brinde_cadastrar");
+                        $("#foto_brinde_cadastrar").on("change", function(){
 
-                        var imageReader = new FileReader();
-                        imageReader.readAsDataURL(document.getElementById("foto_brinde_cadastrar").files[0]);
+                            var imageReader = new FileReader();
+                            imageReader.readAsDataURL(document.getElementById("foto_brinde_cadastrar").files[0]);
 
-                        imageReader.onload = function (oFREvent) {
-                            p.attr('src', oFREvent.target.result).fadeIn();
+                            imageReader.onload = function (oFREvent) {
+                                p.attr('src', oFREvent.target.result).fadeIn();
 
-                            p.on('load', function(){
-            
-                                var img = document.getElementById('previewimage_brinde_cadastrar');
-                                var x1, x2, y1, y2;
+                                p.on('load', function(){
+                
+                                    var img = document.getElementById('previewimage_brinde_cadastrar');
+                                    var x1, x2, y1, y2;
 
-                                if (img.naturalWidth > img.naturalHeight) {
-                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                    x2 = x1 + (y2 - y1);
-                                }
-                                else {
-                                    if (img.naturalWidth < img.naturalHeight) {
-                                        x1 = Math.floor(img.naturalWidth / 100 * 10);;
-                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                        y2 = y1 + (x2 - x1);
-                                    }
-                                    else {
-                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                    if (img.naturalWidth > img.naturalHeight) {
                                         y1 = Math.floor(img.naturalHeight / 100 * 10);
                                         y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                        x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                                        x2 = x1 + (y2 - y1);
                                     }
-                                }
+                                    else {
+                                        if (img.naturalWidth < img.naturalHeight) {
+                                            x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                            y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                                            y2 = y1 + (x2 - x1);
+                                        }
+                                        else {
+                                            x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                            y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                        }
+                                    }
 
-                                $('input[name="foto_brinde_cadastrar_x1"]').val(x1);
-                                $('input[name="foto_brinde_cadastrar_y1"]').val(y1);
-                                $('input[name="foto_brinde_cadastrar_w"]').val(x2 - x1);
-                                $('input[name="foto_brinde_cadastrar_h"]').val(y2 - y1);
+                                    $('input[name="foto_brinde_cadastrar_x1"]').val(x1);
+                                    $('input[name="foto_brinde_cadastrar_y1"]').val(y1);
+                                    $('input[name="foto_brinde_cadastrar_w"]').val(x2 - x1);
+                                    $('input[name="foto_brinde_cadastrar_h"]').val(y2 - y1);
 
-                                $('#modal_editar').on('hidden.bs.modal', function () {
+                                    $('#modal_editar').on('hidden.bs.modal', function () {
+                                        $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+                                    });
                                     $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
-                                });
-                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
 
-                                $('#previewimage_brinde_cadastrar').imgAreaSelect({
-                                    x1: x1, y1: y1, x2: x2, y2: y2,
-                                    aspectRatio: '1:1',
-                                    handles: true,
-                                    imageHeight: this.naturalHeight,
-                                    imageWidth: this.naturalWidth,
-                                    onSelectEnd: function (img, selection) {
-                                        $('input[name="foto_brinde_cadastrar_x1"]').val(selection.x1);
-                                        $('input[name="foto_brinde_cadastrar_y1"]').val(selection.y1);
-                                        $('input[name="foto_brinde_cadastrar_w"]').val(selection.width);
-                                        $('input[name="foto_brinde_cadastrar_h"]').val(selection.height);
-                                    },
-                                    parent: $('#conteudo_modal_add'),
-                                });
-                            })
-                        };
-            
-                    });
-            
-                    $("#selecionar_foto_brinde_cadastrar").on("click", function(){
-                        $("#foto_brinde_cadastrar").click();
-                    });
-            
-                    $('#tipo_brinde').on('change', function(){
-            
-                        if($(this).val() == 1){
-                            $('#div_input_arquivo').show();
-                            $('#div_input_link').hide();
-                        }
-                        if($(this).val() == 2){
-                            $('#div_input_arquivo').hide();
-                            $('#div_input_link').show();
-            
-                        }
-                    });
+                                    $('#previewimage_brinde_cadastrar').imgAreaSelect({
+                                        x1: x1, y1: y1, x2: x2, y2: y2,
+                                        aspectRatio: '1:1',
+                                        handles: true,
+                                        imageHeight: this.naturalHeight,
+                                        imageWidth: this.naturalWidth,
+                                        onSelectEnd: function (img, selection) {
+                                            $('input[name="foto_brinde_cadastrar_x1"]').val(selection.x1);
+                                            $('input[name="foto_brinde_cadastrar_y1"]').val(selection.y1);
+                                            $('input[name="foto_brinde_cadastrar_w"]').val(selection.width);
+                                            $('input[name="foto_brinde_cadastrar_h"]').val(selection.height);
+                                        },
+                                        parent: $('#conteudo_modal_add'),
+                                    });
+                                })
+                            };
+                
+                        });
+                
+                        $("#selecionar_foto_brinde_cadastrar").on("click", function(){
+                            $("#foto_brinde_cadastrar").click();
+                        });
+                
+                        $('#tipo_brinde').on('change', function(){
+                
+                            if($(this).val() == 1){
+                                $('#div_input_arquivo').show();
+                                $('#div_input_link').hide();
+                            }
+                            if($(this).val() == 2){
+                                $('#div_input_arquivo').hide();
+                                $('#div_input_link').show();
+                
+                            }
+                        });
 
-                }
+                    }
+                });
+
             });
-
-        });
+        @endif
 
         $('#adicionar_layout').on('click', function(){
 

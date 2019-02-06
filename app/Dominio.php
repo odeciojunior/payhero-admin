@@ -21,7 +21,7 @@ class Dominio extends Model
     /**
      * @var array
      */
-    protected $fillable = [ 'projeto', 'dominio','ip_dominio', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [ 'projeto', 'dominio','ip_dominio','status', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -206,6 +206,7 @@
                 success: function(data){
                     if(data == 'Sucesso'){
                       alertPersonalizado('success','Integração adicionada!');
+                      window.location.reload(true); 
                     }
                     else{
                       alertPersonalizado('error',data);

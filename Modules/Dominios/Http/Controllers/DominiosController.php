@@ -13,6 +13,7 @@ use Exception;
 use App\Layout;
 use App\Dominio;
 use App\Empresa;
+use App\Projeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Cloudflare\API\Auth\APIKey;
@@ -26,17 +27,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DominiosController extends Controller {
 
-    // public function index() {
-
-    //     return view('dominios::index'); 
-    // }
-
-    // public function cadastro() {
-
-    //     return view('dominios::cadastro');
-    // }
-
     public function cadastrarDominio(Request $request){
+
+        $dados = $request->all();
+
+        $projeto = Projeto::find($dados['projeto']);
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
         $adapter = new Guzzle($key);
@@ -53,17 +48,34 @@ class DominiosController extends Controller {
         $zoneID = $zones->getZoneID($dados['dominio']);
 
         try{
-            if ($dns->addRecord($zoneID, "A", $dados['dominio'], $dados['ip_dominio'], 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
+            if($projeto['shopify_id'] == ''){
+                if ($dns->addRecord($zoneID, "A", $dados['dominio'], $dados['ip_dominio'], 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
+                if ($dns->addRecord($zoneID, "CNAME", 'www', $dados['dominio'], 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
+                if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
+                if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
             }
-            if ($dns->addRecord($zoneID, "CNAME", 'www', $dados['dominio'], 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
-            }
-            if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-                // echo "DNS criado.". PHP_EOL;
+            else{
+                $dados['ip_dominio'] = 'Domínio Shopify';
+                if ($dns->addRecord($zoneID, "A", $dados['dominio'],'23.227.38.32', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
+                if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
+                if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
+                if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
             }
         }
         catch(Exception $e){
@@ -76,6 +88,7 @@ class DominiosController extends Controller {
             return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
         }
 
+        $dados['status'] = "Conectado";
         Dominio::create($dados);
 
         return response()->json('sucesso');
@@ -108,7 +121,7 @@ class DominiosController extends Controller {
         $zoneID = $zones->getZoneID($dominio['dominio']);
 
         for($x = 1; $x < 10; $x++){
-
+ 
             if(isset($dados['tipo_registro_'.$x])){
  
                 try{
@@ -164,6 +177,7 @@ class DominiosController extends Controller {
                 'dominio.id',
                 'dominio.dominio',
                 'dominio.ip_dominio',
+                'dominio.status'
         ]);
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
@@ -177,15 +191,20 @@ class DominiosController extends Controller {
                     $zoneID = $zones->getZoneID($dominio->dominio); 
                     $status = $zones->activationCheck($zoneID);
                     if($status){
+                        Dominio::find($dominio->id)->update(['status' => 'Conectado']);
                         return "<span class='badge badge-success'>Conectado</span>";
                     }
                     else{
+                        Dominio::find($dominio->id)->update(['status' => 'Desconectado']);
                         return "<span class='badge badge-warning'>Desconectado</span>";
                     }
                     return $status;
                 }
                 catch(\Exception $e){
-                    return "<span class='badge badge-danger'>Limite de 1 requisição por hora atingido</span>";
+                    if($dominio->status == 'Conectado')
+                        return "<span class='badge badge-success'>".$dominio->status."</span>";
+                    else
+                        return "<span class='badge badge-warning'>".$dominio->status."</span>";
                 }
             })
             ->addColumn('detalhes', function ($dominio) {
@@ -267,12 +286,10 @@ class DominiosController extends Controller {
             return response()->json('Erro, projeto não encontrado');
         }        
 
-        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray(); 
-        $empresas = Empresa::all();
+        $projeto = Projeto::find($dados['projeto']);
 
         $form = view('dominios::cadastro',[
-            'layouts' => $layouts,
-            'empresas' => $empresas
+            'projeto' => $projeto,
         ]);
 
         return response()->json($form->render());

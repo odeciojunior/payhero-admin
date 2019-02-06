@@ -12,12 +12,14 @@
                         <input name="dominio" type="text" class="form-control" id="dominio" placeholder="Domínio">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-12">
-                        <label for="ip_dominio">Ip que o domínio aponta</label>
-                        <input name="ip_dominio" type="text" class="form-control" id="ip_dominio_cadastrar" placeholder="Ip do domínio" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$">
+                @if($projeto['shopify_id'] == '')
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label for="ip_dominio">Ip que o domínio aponta</label>
+                            <input name="ip_dominio" type="text" class="form-control" id="ip_dominio_cadastrar" placeholder="Ip do domínio" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$">
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
