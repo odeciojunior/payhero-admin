@@ -433,6 +433,7 @@ class TransferenciasController extends Controller {
 
         $transactionPayables = $pagarMe->payables()->getList([
             'recipient_id' => $empresa['recipient_id'],
+            'count' => 200,
         ]);
 
         $historicos = [];
