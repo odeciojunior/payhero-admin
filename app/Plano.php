@@ -7,22 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property int $empresa
+ * @property int $projeto
  * @property int $layout
  * @property int $hotzapp_dados
  * @property int $transportadora
- * @property int $layoutss
- * @property int $projeto
  * @property string $nome
  * @property string $descricao
  * @property int $quantidade
- * @property boolean $status_cupom
  * @property string $cod_identificador
  * @property float $preco
  * @property boolean $frete_fixo
  * @property float $valor_frete
  * @property boolean $frete
- * @property boolean $cartao
- * @property boolean $boleto
+ * @property boolean $pagamento_cartao
+ * @property boolean $pagamento_boleto
  * @property string $desconto
  * @property int $valor_desconto
  * @property string $mensagen_desconto
@@ -31,18 +29,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property string $qtd_parcelas
+ * @property string $parcelas_sem_juros
+ * @property string $foto
+ * @property string $responsavel_frete
+ * @property string $shopify_id
+ * @property string $shopify_variant_id
  * @property Empresa $empresa
  * @property DadosHotzapp $dadosHotzapp
  * @property Layout $layout
  * @property Projeto $projeto
  * @property Transportadora $transportadora
- * @property ViewCheckout $viewCheckout
  * @property Foto[] $fotos
+ * @property LinksAfiliado[] $linksAfiliados
+ * @property MensagensSm[] $mensagensSms
  * @property PlanosBrinde[] $planosBrindes
  * @property PlanosCupon[] $planosCupons
  * @property PlanosPixel[] $planosPixels
  * @property PlanosVenda[] $planosVendas
  * @property ProdutosPlano[] $produtosPlanos
+ * @property ZenviaSm[] $zenviaSms
  */
 class Plano extends Model
 {
@@ -56,7 +62,7 @@ class Plano extends Model
     /**
      * @var array
      */
-    protected $fillable = ['empresa', 'layout', 'hotzapp_dados', 'transportadora', 'projeto', 'nome', 'descricao', 'quantidade', 'cod_identificador', 'preco', 'frete_fixo', 'valor_frete', 'frete', 'cartao', 'boleto', 'desconto', 'valor_desconto', 'mensagen_desconto', 'status', 'id_plano_trasnportadora','foto','responsavel_frete','shopify_id','shopify_variant_id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['empresa', 'projeto', 'layout', 'hotzapp_dados', 'transportadora', 'nome', 'descricao', 'quantidade', 'cod_identificador', 'preco', 'frete_fixo', 'valor_frete', 'frete', 'pagamento_cartao', 'pagamento_boleto', 'desconto', 'valor_desconto', 'mensagen_desconto', 'status', 'id_plano_trasnportadora', 'created_at', 'updated_at', 'deleted_at', 'qtd_parcelas', 'parcelas_sem_juros', 'foto', 'responsavel_frete', 'shopify_id', 'shopify_variant_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -99,19 +105,27 @@ class Plano extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function viewCheckout()
-    {
-        return $this->belongsTo('App\ViewCheckout', 'layoutss');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function fotos()
     {
         return $this->hasMany('App\Foto', 'plano');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function linksAfiliados()
+    {
+        return $this->hasMany('App\LinksAfiliado', 'plano');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function mensagensSms()
+    {
+        return $this->hasMany('App\MensagensSm', 'plano');
     }
 
     /**
@@ -152,5 +166,13 @@ class Plano extends Model
     public function produtosPlanos()
     {
         return $this->hasMany('App\ProdutosPlano', 'plano');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function zenviaSms()
+    {
+        return $this->hasMany('App\ZenviaSm', 'plano');
     }
 }

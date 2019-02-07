@@ -120,7 +120,6 @@ class ShopifyController extends Controller {
                     'garantia' => '0',
                     'disponivel' => true,
                     'quantidade' => '0',
-                    'disponivel' => true,
                     'formato' => 1,
                     'categoria' => '1',
                     'custo_produto' => '',
@@ -154,37 +153,65 @@ class ShopifyController extends Controller {
                     'transportadora' => '2',
                 ]);
 
-                foreach($product->getImages() as $image){
+                if(count($product->getVariants()) > 1){
+                    foreach($product->getImages() as $image){
 
-                    foreach($image->getVariantIds() as $variant_id){
-                        if($variant_id == $variant->getId()){
+                        foreach($image->getVariantIds() as $variant_id){
+                            if($variant_id == $variant->getId()){
 
-                            $img = Image::make($image->getSrc());
-        
-                            $nome_foto = 'plano_' . $plano->id . '_.png';
-        
-                            Storage::delete('public/upload/plano/'.$nome_foto);
-        
-                            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-        
-                            $plano->update([
-                                'foto' => $nome_foto
-                            ]);
+                                $img = Image::make($image->getSrc());
+            
+                                $nome_foto = 'plano_' . $plano->id . '_.png';
+            
+                                Storage::delete('public/upload/plano/'.$nome_foto);
+            
+                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+            
+                                $plano->update([
+                                    'foto' => $nome_foto
+                                ]);
 
-                            $img = Image::make($image->getSrc());
-    
-                            $nome_foto = 'produto_' . $produto->id . '_.png';
-                
-                            Storage::delete('public/upload/produto/'.$nome_foto);
-                
-                            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
-                
-                            $produto->update([
-                                'foto' => $nome_foto
-                            ]);
-    
+                                $img = Image::make($image->getSrc());
+        
+                                $nome_foto = 'produto_' . $produto->id . '_.png';
+                    
+                                Storage::delete('public/upload/produto/'.$nome_foto);
+                    
+                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                    
+                                $produto->update([
+                                    'foto' => $nome_foto
+                                ]);
+        
+                            }
                         }
                     }
+                }
+                else{
+
+                    $img = Image::make($product->getImage()->getSrc());
+            
+                    $nome_foto = 'plano_' . $plano->id . '_.png';
+
+                    Storage::delete('public/upload/plano/'.$nome_foto);
+
+                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+
+                    $plano->update([
+                        'foto' => $nome_foto
+                    ]);
+
+                    $img = Image::make($product->getImage()->getSrc());
+
+                    $nome_foto = 'produto_' . $produto->id . '_.png';
+        
+                    Storage::delete('public/upload/produto/'.$nome_foto);
+        
+                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+        
+                    $produto->update([
+                        'foto' => $nome_foto
+                    ]);
                 }
 
                 ProdutoPlano::create([
@@ -257,10 +284,16 @@ class ShopifyController extends Controller {
                         }
                     }
 
+                    $user_projeto = UserProjeto::where([
+                        ['user', \Auth::user()->id],
+                        ['projeto',$dados['projeto']],
+                        ['tipo', 'produtor']
+                    ])->first();
+
                     $plano = Plano::create([
                         'shopify_id' => $product->getId(),
                         'shopify_variant_id' => $variant->getId(),
-                        'empresa' => $dados['empresa'],
+                        'empresa' => $user_projeto->empresa,
                         'projeto' => $projeto->id,
                         'nome' => $product->getTitle(),
                         'descricao' => $product->getBodyHtml(),
@@ -274,37 +307,67 @@ class ShopifyController extends Controller {
                         'transportadora' => '2',
                     ]);
 
-                    foreach($product->getImages() as $image){
+                    if(count($product->getVariants()) > 1){
 
-                        foreach($image->getVariantIds() as $variant_id){
-                            if($variant_id == $variant->getId()){
+                        foreach($product->getImages() as $image){
 
-                                $img = Image::make($image->getSrc());
-            
-                                $nome_foto = 'plano_' . $plano->id . '_.png';
-            
-                                Storage::delete('public/upload/plano/'.$nome_foto);
-            
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-            
-                                $plano->update([
-                                    'foto' => $nome_foto
-                                ]);
+                            foreach($image->getVariantIds() as $variant_id){
+                                if($variant_id == $variant->getId()){
 
-                                $img = Image::make($image->getSrc());
-        
-                                $nome_foto = 'produto_' . $produto->id . '_.png';
-                    
-                                Storage::delete('public/upload/produto/'.$nome_foto);
-                    
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
-                    
-                                $produto->update([
-                                    'foto' => $nome_foto
-                                ]);
-        
+                                    $img = Image::make($image->getSrc());
+                
+                                    $nome_foto = 'plano_' . $plano->id . '_.png';
+                
+                                    Storage::delete('public/upload/plano/'.$nome_foto);
+                
+                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                
+                                    $plano->update([
+                                        'foto' => $nome_foto
+                                    ]);
+
+                                    $img = Image::make($image->getSrc());
+            
+                                    $nome_foto = 'produto_' . $produto->id . '_.png';
+                        
+                                    Storage::delete('public/upload/produto/'.$nome_foto);
+                        
+                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                        
+                                    $produto->update([
+                                        'foto' => $nome_foto
+                                    ]);
+            
+                                }
                             }
                         }
+                    }
+                    else{
+
+                        $img = Image::make($product->getImage()->getSrc());
+                
+                        $nome_foto = 'plano_' . $plano->id . '_.png';
+    
+                        Storage::delete('public/upload/plano/'.$nome_foto);
+    
+                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+    
+                        $plano->update([
+                            'foto' => $nome_foto
+                        ]);
+
+                        $img = Image::make($product->getImage()->getSrc());
+
+                        $nome_foto = 'produto_' . $produto->id . '_.png';
+            
+                        Storage::delete('public/upload/produto/'.$nome_foto);
+            
+                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+            
+                        $produto->update([
+                            'foto' => $nome_foto
+                        ]);
+
                     }
 
                     ProdutoPlano::create([
