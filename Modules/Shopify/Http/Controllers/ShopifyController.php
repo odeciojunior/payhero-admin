@@ -116,7 +116,7 @@ class ShopifyController extends Controller {
                 $produto = Produto::create([
                     'user' => \Auth::user()->id,
                     'nome' => $product->getTitle(),
-                    'descricao' => $product->getBodyHtml(),
+                    'descricao' => substr($product->getBodyHtml(),0,240),
                     'garantia' => '0',
                     'disponivel' => true,
                     'quantidade' => '0',
@@ -124,7 +124,7 @@ class ShopifyController extends Controller {
                     'categoria' => '1',
                     'custo_produto' => '',
                 ]);
-                        
+
                 $novo_codigo_identificador = false;
 
                 while($novo_codigo_identificador == false){
@@ -142,7 +142,7 @@ class ShopifyController extends Controller {
                     'empresa' => $dados['empresa'],
                     'projeto' => $projeto->id,
                     'nome' => $product->getTitle(),
-                    'descricao' => $product->getBodyHtml(),
+                    'descricao' => substr($product->getBodyHtml(),0,240),
                     'cod_identificador' => $codigo_identificador,
                     'preco' => $variant->getPrice(),
                     'frete_fixo' => '1',
