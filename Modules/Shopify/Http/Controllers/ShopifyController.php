@@ -206,6 +206,127 @@ class ShopifyController extends Controller {
         return response()->json('Sucesso');
     }
 
+    public function sincronizarIntegracao(Request $request){
+
+        $dados = $request->all();
+
+        $projeto = Projeto::find($dados['projeto']);
+        $integracao = IntegracaoShopify::where('projeto',$dados['projeto'])->first();
+        
+        try{
+            $credential = new PublicAppCredential($integracao['token']);
+
+            $client = new Client($credential, $integracao['url_loja'], [
+                'metaCacheDir' => './tmp'
+            ]);
+        }
+        catch(\Exception $e){
+            return response()->json('Dados do shopify inválidos, revise os dados informados');
+        }
+
+        $products = $client->getProductManager()->findAll([]);
+
+        foreach($products as $product){
+
+            foreach($product->getVariants() as $variant){
+
+                $plano = Plano::where('shopify_variant_id' , $variant->getId())->first();
+
+                if($plano == null){
+                    $produto = Produto::create([
+                        'user' => \Auth::user()->id,
+                        'nome' => $product->getTitle(),
+                        'descricao' => $product->getBodyHtml(),
+                        'garantia' => '0',
+                        'disponivel' => true,
+                        'quantidade' => '0',
+                        'disponivel' => true,
+                        'formato' => 1,
+                        'categoria' => '1',
+                        'custo_produto' => '',
+                    ]);
+                            
+                    $novo_codigo_identificador = false;
+
+                    while($novo_codigo_identificador == false){
+
+                        $codigo_identificador = $this->randString(3).rand(100,999);
+                        $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
+                        if($plano == null){
+                            $novo_codigo_identificador = true;
+                        }
+                    }
+
+                    $plano = Plano::create([
+                        'shopify_id' => $product->getId(),
+                        'shopify_variant_id' => $variant->getId(),
+                        'empresa' => $dados['empresa'],
+                        'projeto' => $projeto->id,
+                        'nome' => $product->getTitle(),
+                        'descricao' => $product->getBodyHtml(),
+                        'cod_identificador' => $codigo_identificador,
+                        'preco' => $variant->getPrice(),
+                        'frete_fixo' => '1',
+                        'valor_frete' => '0.00',
+                        'pagamento_cartao' => true,
+                        'pagamento_boleto' => true,
+                        'status' => '1',
+                        'transportadora' => '2',
+                    ]);
+
+                    foreach($product->getImages() as $image){
+
+                        foreach($image->getVariantIds() as $variant_id){
+                            if($variant_id == $variant->getId()){
+
+                                $img = Image::make($image->getSrc());
+            
+                                $nome_foto = 'plano_' . $plano->id . '_.png';
+            
+                                Storage::delete('public/upload/plano/'.$nome_foto);
+            
+                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+            
+                                $plano->update([
+                                    'foto' => $nome_foto
+                                ]);
+
+                                $img = Image::make($image->getSrc());
+        
+                                $nome_foto = 'produto_' . $produto->id . '_.png';
+                    
+                                Storage::delete('public/upload/produto/'.$nome_foto);
+                    
+                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                    
+                                $produto->update([
+                                    'foto' => $nome_foto
+                                ]);
+        
+                            }
+                        }
+                    }
+
+                    ProdutoPlano::create([
+                        'produto' => $produto->id,
+                        'plano' => $plano->id,
+                        'quantidade_produto' => '1'
+                    ]);
+                }
+                else{
+                    $plano->update([
+                        'nome' => $product->getTitle(),
+                        'descricao' => $product->getBodyHtml(),
+                        'preco' => $variant->getPrice(),
+                    ]);
+                }
+            }
+
+        }
+
+        return response()->json('Sucesso');
+    }
+
     function randString($size){
 
         $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -222,55 +343,3 @@ class ShopifyController extends Controller {
 
 
 }
-
-
-
-
-
-        // $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        // $adapter = new Guzzle($key);
-        // $dns = new DNS($adapter);
-        // $zones = new Zones($adapter);
-
-        // try{
-        //     $zones->addZone($client->getShopManager()->get()->getDomain());
-        // }
-        // catch(\Exception $e){
-        //     $projeto->delete();
-        //     return response()->json($e);
-        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        // }
-
-        // $zoneID = $zones->getZoneID($client->getShopManager()->get()->getDomain());
-
-        // try{
-        //     if ($dns->addRecord($zoneID, "A", $client->getShopManager()->get()->getDomain(),'23.227.38.32', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        //     if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        //     if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        //     if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-        //         // echo "DNS criado.". PHP_EOL;
-        //     }
-        // }
-
-        // catch(Exception $e){
-        //     try{
-        //         $zones->deleteZone($zoneID); 
-        //     }
-        //     catch(Exception $e){
-        //         //
-        //     }
-        //     $projeto->delete();
-        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        // }
-
-        // Dominio::create([
-        //     'projeto' => $projeto->id,
-        //     'dominio' => $client->getShopManager()->get()->getDomain(),
-        //     'ip_dominio' => 'Shopify',
-        // ]);

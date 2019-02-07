@@ -34,80 +34,84 @@
                         </a>
                         <div class="card-block">
                           <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
-                              <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
-                              <hr>
-                              <p class="card-text">{!! $projeto['descricao'] !!}</p>
+                              <div class="text-center">
+                                  <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                              </div>
                           </a>
-                      </div>
+                          <hr>
+                          <div class="text-center">
+                              <button class="btn btn-success sincronizar" type="button" projeto="{!! $projeto['id'] !!}">Sincronizar dados</button>
+                          </div>
+                        </div>
                     </div>
                   </div>
                 @endforeach
             </div>
           @endif
 
-
-          <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <!-- Modal add integração -->
+        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
             <div class="modal-dialog modal-lg">
-              <div class="modal-content" id="conteudo_modal_add">
+                <div class="modal-content" id="conteudo_modal_add">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
-                  </button>
-                  <h4 class="modal-title" style="width: 100%; text-align:center">Adicionar nova integração com Shopify</h4>
+                    </button>
+                    <h4 class="modal-title" style="width: 100%; text-align:center">Adicionar nova integração com Shopify</h4>
                 </div>
                 <div class="modal-body" style="padding: 30px">
                     <form id='form_add_integracao' method="post" action="#">
-                      @csrf
+                        @csrf
                         <div style="width:100%">
-                          <div class="row">
-                              <div class="col-12">
-                                  <label for="token">Token</label>
-                                  <input type="text" class="form-control" name="token" id="token" placeholder="Digite seu token">
-                              </div>
-                          </div>
-                          <div class="row" style="margin-top:30px">
-                              <div class="col-12">
-                                  <label for="token">URL da sua loja no Shopify</label>
-                                  <input type="text" class="form-control" name="url_loja" id="url_loja" placeholder="Digite a URL da sua loja">
-                              </div>
-                          </div>
-                          <div class="row" style="margin-top:30px">
-                              <div class="col-12">
-                                  <label for="empresa">Selecione sua empresa</label>
-                                  <select class="form-control" id="empresa" name="empresa">
-                                     @foreach($empresas as $empresa)
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="token">Token</label>
+                                    <input type="text" class="form-control" name="token" id="token" placeholder="Digite seu token">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:30px">
+                                <div class="col-12">
+                                    <label for="token">URL da sua loja no Shopify</label>
+                                    <input type="text" class="form-control" name="url_loja" id="url_loja" placeholder="Digite a URL da sua loja">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:30px">
+                                <div class="col-12">
+                                    <label for="empresa">Selecione sua empresa</label>
+                                    <select class="form-control" id="empresa" name="empresa">
+                                        @foreach($empresas as $empresa)
                                         <option value="{!! $empresa['id'] !!}">{!! $empresa['nome_fantasia'] !!}</option>
-                                     @endforeach
-                                  </select>
-                              </div>
-                          </div>
-                          <div class="row" style="margin-top:30px">
-                              <div class="form-group col-12">
-                                  <label for="selecionar_foto">Foto do projeto</label><br>
-                                  <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto">
-                                  <input name="foto_projeto" type="file" class="form-control" id="foto" style="display:none">
-                                  <div  style="margin: 20px 0 0 30px;">
-                                      <img id="previewimage" alt="Selecione a foto do projeto" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
-                                  </div>
-                                  <input type="hidden" name="foto_x1"/>
-                                  <input type="hidden" name="foto_y1"/>
-                                  <input type="hidden" name="foto_w"/>
-                                  <input type="hidden" name="foto_h"/>
-                              </div>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:30px">
+                                <div class="form-group col-12">
+                                    <label for="selecionar_foto">Foto do projeto</label><br>
+                                    <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto">
+                                    <input name="foto_projeto" type="file" class="form-control" id="foto" style="display:none">
+                                    <div  style="margin: 20px 0 0 30px;">
+                                        <img id="previewimage" alt="Selecione a foto do projeto" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
+                                    </div>
+                                    <input type="hidden" name="foto_x1"/>
+                                    <input type="hidden" name="foto_y1"/>
+                                    <input type="hidden" name="foto_w"/>
+                                    <input type="hidden" name="foto_h"/>
+                                </div>
 
-                          </div>
+                            </div>
 
-                      </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                  <button id="bt_adicionar_integracao" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button id="bt_adicionar_integracao" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                 </div>
-              </div>
+                </div>
             </div>
-          </div>
-          <!-- End Modal -->
+        </div>
+        <!-- End Modal -->
 
         </div>
       </div>
@@ -211,9 +215,33 @@
                     else{
                       alertPersonalizado('error',data);
                     }
-                    $($.fn.dataTable.tables( true ) ).css('width', '100%');
-                    $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                     $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+                },
+            });
+
+        });
+
+        $(".sincronizar").on("click", function(){
+
+            var id_projeto = $(this).attr('projeto');
+
+            $.ajax({
+                method: "POST",
+                url: "/ferramentas/shopify/sincronizarintegracao",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {projeto: id_projeto},
+                error: function(){
+                    alertPersonalizado('error','Ocorreu algum erro');
+                },
+                success: function(data){
+                    if(data == 'Sucesso'){
+                      alertPersonalizado('success','Dados do projeto sincronizados!');
+                    }
+                    else{
+                      alertPersonalizado('error',data);
+                    }
                 },
             });
 

@@ -12,4 +12,10 @@ Route::group(['middleware' => 'web', 'prefix' => 'ferramentas/shopify', 'namespa
         'as' => 'shopify.adicionarintegracao'
     ]);
 
+    Route::post('/sincronizarintegracao', [
+        'uses' => 'ShopifyController@sincronizarIntegracao',
+        'as' => 'shopify.sincronizarintegracao'
+    ]);
+
+
 });
