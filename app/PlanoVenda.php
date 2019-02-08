@@ -30,7 +30,7 @@ class PlanoVenda extends Model
     /**
      * @var array
      */
-    protected $fillable = ['plano', 'venda'];
+    protected $fillable = ['plano', 'venda','valor_plano'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

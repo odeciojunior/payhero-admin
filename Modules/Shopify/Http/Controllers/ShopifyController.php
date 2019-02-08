@@ -4,7 +4,6 @@ namespace Modules\Shopify\Http\Controllers;
 
 use App\Plano;
 use Exception;
-use App\Dominio;
 use App\Empresa;
 use App\Produto;
 use App\Projeto;
@@ -239,7 +238,7 @@ class ShopifyController extends Controller {
 
         $projeto = Projeto::find($dados['projeto']);
         $integracao = IntegracaoShopify::where('projeto',$dados['projeto'])->first();
-        
+
         try{
             $credential = new PublicAppCredential($integracao['token']);
 
