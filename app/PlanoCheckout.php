@@ -6,19 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property integer $checkout
  * @property integer $plano
- * @property integer $venda
+ * @property string $quantidade
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
+ * @property Checkout $checkout
  * @property Plano $plano
- * @property Venda $venda
  */
-class PlanoVenda extends Model
+class PlanoCheckout extends Model
 {
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'planos_vendas';
+    protected $table = 'planos_checkout';
 
     /**
      * The "type" of the auto-incrementing ID.
@@ -30,7 +34,15 @@ class PlanoVenda extends Model
     /**
      * @var array
      */
-    protected $fillable = ['plano', 'venda','valor_plano','quantidade'];
+    protected $fillable = ['checkout', 'plano', 'quantidade', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function checkout()
+    {
+        return $this->belongsTo('App\Checkout', 'checkout');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -38,13 +50,5 @@ class PlanoVenda extends Model
     public function plano()
     {
         return $this->belongsTo('App\Plano', 'plano');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function venda()
-    {
-        return $this->belongsTo('App\Venda', 'venda');
     }
 }

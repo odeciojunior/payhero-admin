@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Logs\Entities;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
