@@ -36,7 +36,7 @@ class PreViewCheckoutController extends Controller {
             $logo = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_LOGO.$layout["logo"];
         }
 
-        $plano = Plano::where('id', '19')->first();
+        $plano = Plano::where('id', '24')->first();
 
         $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto;
 

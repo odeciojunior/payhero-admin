@@ -27,10 +27,13 @@ class RecuperacaoCarrinhoController extends Controller {
         $checkouts = \DB::table('checkouts as checkout')
         ->select([
             'checkout.id',
+            'checkout.status',
             'checkout.id_sessao_log',
             'checkout.created_at',
         ])
-        ->where('status','Carrinho abandonado'); 
+        ->where('status','Carrinho abandonado')
+        ->orWhere('status', 'Recuperado')
+        ->orderBy('id','DESC');
 
         return Datatables::of($checkouts)
         ->editColumn('created_at', function ($checkout) {
@@ -49,7 +52,12 @@ class RecuperacaoCarrinhoController extends Controller {
             return "Não enviado";
         })
         ->addColumn('status_recuperacao', function ($checkout) {
-            return "Não recuperado";
+            if($checkout->status == 'Carrinho abandonado'){
+                return "Não recuperado";
+            }
+            else{
+                return "Recuperado";
+            }
         })
         ->addColumn('valor', function ($checkout) {
             $valor = 0;
