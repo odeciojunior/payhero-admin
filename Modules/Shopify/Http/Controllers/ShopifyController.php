@@ -271,7 +271,7 @@ class ShopifyController extends Controller {
                         'categoria' => '1',
                         'custo_produto' => '',
                     ]);
-                            
+
                     $novo_codigo_identificador = false;
 
                     while($novo_codigo_identificador == false){
@@ -295,7 +295,7 @@ class ShopifyController extends Controller {
                         'empresa' => $user_projeto->empresa,
                         'projeto' => $projeto->id,
                         'nome' => $product->getTitle(),
-                        'descricao' => $product->getBodyHtml(),
+                        'descricao' => '',
                         'cod_identificador' => $codigo_identificador,
                         'preco' => $variant->getPrice(),
                         'frete_fixo' => '1',
@@ -314,29 +314,29 @@ class ShopifyController extends Controller {
                                 if($variant_id == $variant->getId()){
 
                                     $img = Image::make($image->getSrc());
-                
+
                                     $nome_foto = 'plano_' . $plano->id . '_.png';
-                
+
                                     Storage::delete('public/upload/plano/'.$nome_foto);
-                
+
                                     $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-                
+
                                     $plano->update([
                                         'foto' => $nome_foto
                                     ]);
 
                                     $img = Image::make($image->getSrc());
-            
+
                                     $nome_foto = 'produto_' . $produto->id . '_.png';
-                        
+
                                     Storage::delete('public/upload/produto/'.$nome_foto);
-                        
+
                                     $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
-                        
+
                                     $produto->update([
                                         'foto' => $nome_foto
                                     ]);
-            
+
                                 }
                             }
                         }
@@ -378,7 +378,7 @@ class ShopifyController extends Controller {
                 else{
                     $plano->update([
                         'nome' => $product->getTitle(),
-                        'descricao' => $product->getBodyHtml(),
+                        'descricao' => '',
                         'preco' => $variant->getPrice(),
                     ]);
                 }
