@@ -7,7 +7,7 @@
 
 @endsection
 
-
+ 
 <div class="page">
   <div class="page-content container-fluid">
     <div class="row" data-plugin="matchHeight" data-by-row="true">
@@ -17,7 +17,7 @@
           <div class="card-block p-0">
             <div class="pt-30 p-30" style="height:calc(100% - 250px);">
               <h3 style="margin-bottom: 40px"> Saldos </h3>
-              <div class="row" style="margin-bottom: 200px">
+              <div class="row" style="margin-bottom: 20px">
 
                   <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
                     <!-- Widget Sale Bar -->
@@ -77,7 +77,30 @@
                     <!-- End Widget Sale Bar -->
                   </div>
               </div>
+
+              <hr>
+
+              <h3 style="margin-bottom: 20px">Acompanhamento de vendas em tempo real</h3>
+  
+              <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
+                    <div id="mapa" style="height:500px">
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
+                    <div id="tabela">
+                      <table class="table table-hover table-bordered">
+                          <thead>
+                            <th>Hora</th>
+                            <th>Projeto</th>
+                            <th>Valor</th>
+                          </thead>
+                      </table>
+                    </div>
+                  </div>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -90,8 +113,27 @@
 
 @section('scripts')
 
-  <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
+  {{--  <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
   <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
-  <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
+  <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>  --}}
+  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+  <script>
 
+    $(document).ready(function(){
+
+      var map = new ol.Map({
+        target: 'mapa',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-47.7, -23.7]),
+          zoom: 3
+        })
+      });
+    });
+
+  </script>
 @endsection
