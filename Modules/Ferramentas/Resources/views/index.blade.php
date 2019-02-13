@@ -1,117 +1,75 @@
 @extends("layouts.master")
-
+@section('title', '- Dashboard')
 @section('content')
+@section('styles')
+@endsection
+ 
+<div class="page">
+  <div class="page-content container-fluid">
+    <div class="row" data-plugin="matchHeight" data-by-row="true">
+      <div class="col-xxl-12 col-lg-12">
+        <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+          <div class="card-block p-0">
+            <div class="pt-30 p-30" style="height:calc(100% - 250px);">
+              <h3 style="margin-bottom: 40px"> Ferramentas </h3>
+              <div class="row" style="margin-bottom: 200px">
 
-  <!-- Page -->
-  <div class="page">
-
-    <div class="page-header">
-        <h1 class="page-title">Ferramentas</h1>
-    </div>
-
-    <div class="page-content container-fluid">
-
-        <a href="{!! route('ferramentas.sms') !!}">
-            <div class="card-columns">
-                <div class="card">
-                    <div class="card-block">
-                        <h4 class="card-title">SMS</h4>
-                        <div class="row">
-                            <div class="col-10">
-                                <p class="card-text">
-                                  Serviço de envio de sms.
-                                </p>
-                            </div>
-                            <div class="col-2">
-                                <i class="icon wb-envelope" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        <a href="{!! route('ferramentas.shopify') !!}">
-            <div class="card-columns">
-                <div class="card">
-                    <div class="card-block">
-                        <h4 class="card-title">Shopify</h4>
-                        <div class="row">
-                            <div class="col-10">
-                                <p class="card-text">
-                                  Integração com Shopify.
-                                </p>
-                            </div>
-                            <div class="col-2">
-                                <i class="icon wb-plugin" aria-hidden="true"></i>
+                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
+                    <a href="{!! route('ferramentas.sms') !!}">
+                      <div class="card card-inverse card-shadow bg-green-600 white" id="widgetSaleBar">
+                        <div class="card-block p-0">
+                            <div class="row no-space">
+                              <div class="card-block">
+                                <h4 class="card-title">SMS</h4>
+                                <div class="row">
+                                    <div class="col-10">
+                                        <p class="card-text">
+                                          Serviço de envio de sms.
+                                        </p>
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="icon wb-envelope" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                              </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </a>
+                      </div>
+                    </a>
+                  </div>
 
-    </div>
-    {{--  <div class="page-content container-fluid">
-      <div class="panel pt-30 p-30" data-plugin="matchHeight">  --}}
+                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
+                    <a href="{!! route('ferramentas.shopify') !!}">
+                      <div class="card card-inverse card-shadow bg-blue-600 white" id="widgetSaleBar">
+                        <div class="card-block p-0">
+                            <div class="row no-space">
+                              <div class="card-block">
+                                <h4 class="card-title">Shopify</h4>
+                                <div class="row">
+                                    <div class="col-10">
+                                        <p class="card-text">
+                                          Integração com shopify.
+                                        </p>
+                                    </div>
+                                    <div class="col-2">
+                                        <i class="icon wb-plugin" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </a>
 
-        <!-- Modal com detalhes do usuário -->
-        {{--  <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-          <div class="modal-dialog modal-simple">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-                <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-              </div>
-              <div id="modal_detalhes_body" class="modal-body">
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                  </div>
               </div>
             </div>
           </div>
-        </div>  --}}
-        <!-- End Modal -->
-
-        <!-- Modal de confirmação da exclusão do domínio -->
-        {{--  <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-simple">
-              <div class="modal-content">
-                <form id="form_excluir_dominio" method="GET" action="/deletardominio">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
-                  </div>
-                  <div id="modal_excluir_body" class="modal-body">
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-success">Confirmar</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>  --}}
-          <!-- End Modal -->
-
-        {{--  </div>
-    </div>--}}
+        </div>
+      </div>
+    </div>
   </div>
-
-
-  <script>
-
-    $(document).ready( function(){
-
-
-    });
-
-  </script>
+</div>
 
 
 @endsection

@@ -53,10 +53,10 @@ class RecuperacaoCarrinhoController extends Controller {
         })
         ->addColumn('status_recuperacao', function ($checkout) {
             if($checkout->status == 'Carrinho abandonado'){
-                return "Não recuperado";
+                return "<span class='badge badge-danger'>Não recuperado</span>";
             }
             else{
-                return "Recuperado";
+                return "<span class='badge badge-success'>Recuperado</span>";
             }
         })
         ->addColumn('valor', function ($checkout) {
@@ -75,7 +75,7 @@ class RecuperacaoCarrinhoController extends Controller {
                         </a>
                     </span>";
         })
-        ->rawColumns(['detalhes'])
+        ->rawColumns(['detalhes','status_recuperacao'])
         ->make(true);
     }
 
