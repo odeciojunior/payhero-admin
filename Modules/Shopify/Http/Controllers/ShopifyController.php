@@ -114,8 +114,8 @@ class ShopifyController extends Controller {
 
                 $produto = Produto::create([
                     'user' => \Auth::user()->id,
-                    'nome' => $product->getTitle(),
-                    'descricao' => substr($product->getBodyHtml(),0,240),
+                    'nome' => substr($product->getTitle(),0,100),
+                    'descricao' => '',
                     'garantia' => '0',
                     'disponivel' => true,
                     'quantidade' => '0',
@@ -140,8 +140,8 @@ class ShopifyController extends Controller {
                     'shopify_variant_id' => $variant->getId(),
                     'empresa' => $dados['empresa'],
                     'projeto' => $projeto->id,
-                    'nome' => $product->getTitle(),
-                    'descricao' => substr($product->getBodyHtml(),0,240),
+                    'nome' => substr($product->getTitle(),0,100),
+                    'descricao' => '',
                     'cod_identificador' => $codigo_identificador,
                     'preco' => $variant->getPrice(),
                     'frete_fixo' => '1',
@@ -261,8 +261,8 @@ class ShopifyController extends Controller {
                 if($plano == null){
                     $produto = Produto::create([
                         'user' => \Auth::user()->id,
-                        'nome' => $product->getTitle(),
-                        'descricao' => $product->getBodyHtml(),
+                        'nome' => substr($product->getTitle(),0,100),
+                        'descricao' => '',
                         'garantia' => '0',
                         'disponivel' => true,
                         'quantidade' => '0',
@@ -294,7 +294,7 @@ class ShopifyController extends Controller {
                         'shopify_variant_id' => $variant->getId(),
                         'empresa' => $user_projeto->empresa,
                         'projeto' => $projeto->id,
-                        'nome' => $product->getTitle(),
+                        'nome' => substr($product->getTitle(),0,100),
                         'descricao' => '',
                         'cod_identificador' => $codigo_identificador,
                         'preco' => $variant->getPrice(),
@@ -377,7 +377,7 @@ class ShopifyController extends Controller {
                 }
                 else{
                     $plano->update([
-                        'nome' => $product->getTitle(),
+                        'nome' => substr($product->getTitle(),0,100),
                         'descricao' => '',
                         'preco' => $variant->getPrice(),
                     ]);
