@@ -39,7 +39,7 @@ class VendasDataTable extends DataTable
             }
         })
         ->addColumn('valor_liquido', function ($venda) {
-            return "10.00";
+            return $venda->valor_total - $venda->valor_frete;
         })
         ->editColumn('data_inicio', function ($venda) {
             return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
@@ -49,7 +49,7 @@ class VendasDataTable extends DataTable
         })
         ->editColumn('forma_pagamento', function ($venda) {
             if($venda->forma_pagamento == 'cartao_credito') 
-                return 'Cartão de crédito';
+                return 'Cartão';
             if($venda->forma_pagamento == 'boleto') 
                 return 'Boleto';
             return $venda->forma_pagamento;
