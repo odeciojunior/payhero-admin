@@ -39,7 +39,12 @@ class VendasDataTable extends DataTable
             }
         })
         ->addColumn('valor_liquido', function ($venda) {
-            return $venda->valor_total - $venda->valor_frete;
+            $valor_frete = str_replace('.','',$venda->valor_frete);
+            if($valor_frete == ''){
+                return $venda->valor_total_pago;
+            }
+            $valor_liquido = str_replace('.','',$venda->valor_total_pago) - $valor_frete;
+            return substr_replace($valor_liquido, '.',strlen($valor_liquido) - 2, 0 );
         })
         ->editColumn('data_inicio', function ($venda) {
             return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
@@ -48,7 +53,7 @@ class VendasDataTable extends DataTable
             return $venda->data_finalizada ? with(new Carbon($venda->data_finalizada))->format('d/m/Y H:i:s') : '';
         })
         ->editColumn('forma_pagamento', function ($venda) {
-            if($venda->forma_pagamento == 'cartao_credito') 
+            if($venda->forma_pagamento == 'Cartão de crédito') 
                 return 'Cartão';
             if($venda->forma_pagamento == 'boleto') 
                 return 'Boleto';
@@ -354,6 +359,10 @@ class VendasDataTable extends DataTable
         ];
         $columnFilters[] = [
             'column_number' => 7,
+            'filter_type' => 'text'
+        ];
+        $columnFilters[] = [
+            'column_number' => 8,
             'filter_type' => 'text'
         ];
 
