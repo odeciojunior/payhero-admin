@@ -125,7 +125,16 @@
               </span>
             </a>
             <div class="dropdown-menu" role="menu">
-              <a class="dropdown-item" href="{!! route('perfil') !!}" role="menuitem"><i class="icon wb-user" aria-hidden="true"></i> Perfil </a>
+              <a class="dropdown-item" href="{!! route('perfil') !!}" role="menuitem">
+                <i class="icon wb-user" aria-hidden="true"></i> 
+                Perfil 
+              </a>
+              @if(Auth::user()->hasRole('administrador empresarial'))
+                <a class="dropdown-item" href="{{ route('empresas') }}" role="menuitem">
+                  <i class="icon wb-home" aria-hidden="true"></i>
+                  Minhas empresas
+                </a>
+              @endif
               <div class="dropdown-divider" role="presentation"></div>
               <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon wb-power" aria-hidden="true"></i> Logout </a>
               <form id="logout-form" action="/logout" method="POST" style="display: none;">
@@ -151,25 +160,6 @@
               </a>
             </li>
             <li class="site-menu-item has-sub">
-                <a href="javascript:void(0)">
-                  <i class="site-menu-icon wb-plus" aria-hidden="true"></i>
-                  <span class="site-menu-title">Finanças</span>
-                  <span class="site-menu-arrow"></span>
-                </a>
-                <ul class="site-menu-sub">
-                  <li class="site-menu-item">
-                    <a class="animsition-link" href="{{ route('extrato') }}">
-                      <span class="site-menu-title">Extrato</span>
-                    </a>
-                  </li>
-                  <li class="site-menu-item">
-                    <a class="animsition-link" href="{{ route('transferencias') }}">
-                      <span class="site-menu-title">Transferências</span>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="site-menu-item has-sub">
               <a href="{{ route('vitrine') }}">
                 <i class="site-menu-icon wb-grid-9" aria-hidden="true"></i>
                 <span class="site-menu-title">Vitrine</span>
@@ -281,6 +271,25 @@
               </ul>
             </li>
             <li class="site-menu-item has-sub">
+              <a href="javascript:void(0)">
+                <i class="site-menu-icon wb-plus" aria-hidden="true"></i>
+                <span class="site-menu-title">Finanças</span>
+                <span class="site-menu-arrow"></span>
+              </a>
+              <ul class="site-menu-sub">
+                <li class="site-menu-item">
+                  <a class="animsition-link" href="{{ route('extrato') }}">
+                    <span class="site-menu-title">Extrato</span>
+                  </a>
+                </li>
+                <li class="site-menu-item">
+                  <a class="animsition-link" href="{{ route('transferencias') }}">
+                    <span class="site-menu-title">Transferências</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="site-menu-item has-sub">
               <a href="{!! route('ferramentas') !!}">
                 <i class="site-menu-icon wb-settings" aria-hidden="true"></i>
                 <span class="site-menu-title">Ferramentas</span>
@@ -292,14 +301,6 @@
                 <span class="site-menu-title">Aplicativos</span>
               </a>
             </li>
-            @if(Auth::user()->hasRole('administrador empresarial'))
-              <li class="site-menu-item has-sub">
-                <a href="{{ route('empresas') }}">
-                  <i class="site-menu-icon wb-home" aria-hidden="true"></i>
-                  <span class="site-menu-title">Minhas empresas</span>
-                </a>
-              </li>
-            @endif
             @if(Auth::user()->hasRole('administrador geral'))
               <li class="site-menu-item has-sub">
                 <a href="{{ route('empresas') }}">
