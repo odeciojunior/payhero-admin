@@ -34,7 +34,6 @@ class LogsController extends Controller {
                 'log.navegador',
                 'log.hora_acesso',
                 'log.horario',
-                'log.forward',
                 'log.referencia',
                 'log.nome',
                 'log.email',
@@ -54,6 +53,10 @@ class LogsController extends Controller {
             ])
         )->editColumn('created_at', function ($log) {
             return $log->created_at ? with(new Carbon($log->created_at))->format('d/m/Y H:i:s') : '';
+        })->editColumn('plano_nome', function ($log) {
+            return substr($log->plano_nome,0,20);
+        })->editColumn('sistema_operacional', function ($log) {
+            return substr($log->sistema_operacional,0,20);
         })->toJson();
 
     }

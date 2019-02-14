@@ -18,7 +18,6 @@
               <td>sistema operacional</td>
               <td>navegador</td>
               <td>descrição</td>
-              <td>forward</td>
               <td>referencia</td>
               <td>nome</td>
               <td>email</td>
@@ -57,7 +56,6 @@
             {data: 'sistema_operacional', name: 'sistema_operacional'},
             {data: 'navegador', name: 'navegador'},
             {data: 'plano', name: 'plano'},
-            {data: 'forward', name: 'forward'},
             {data: 'referencia', name: 'referencia'},
             {data: 'nome', name: 'nome'},
             {data: 'email', name: 'email'},

@@ -2,8 +2,11 @@
 
 namespace Modules\Relatorios\DataTables;
 
+use App\Plano;
 use App\Venda;
+use App\Projeto;
 use Carbon\Carbon;
+use App\PlanoVenda;
 use Yajra\DataTables\Services\DataTable;
 
 class VendasDataTable extends DataTable
@@ -17,6 +20,27 @@ class VendasDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables($query)
+        ->addColumn('projeto', function ($venda) {
+            $planos_venda = PlanoVenda::where('venda',$venda->id)->get()->toArray();
+            foreach($planos_venda as $plano_venda){
+                $plano = Plano::find($plano_venda['plano']);
+                $projeto = Projeto::find($plano['projeto']);
+                return $projeto['nome'];
+            }
+        })
+        ->addColumn('plano_nome', function ($venda) {
+            $planos_venda = PlanoVenda::where('venda',$venda->id)->get()->toArray();
+            if(count($planos_venda) > 1){
+                return "Carrinho";
+            }
+            foreach($planos_venda as $plano_venda){
+                $plano = Plano::find($plano_venda['plano']);
+                return @$plano['nome'];
+            }
+        })
+        ->addColumn('valor_liquido', function ($venda) {
+            return "10.00";
+        })
         ->editColumn('data_inicio', function ($venda) {
             return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
         })
@@ -32,17 +56,15 @@ class VendasDataTable extends DataTable
         })
         ->editColumn('status', function ($venda) {
             if($venda->status == 'paid')
-                return 'Aprovada';
+                return "<span class='badge badge-round badge-success'>Aprovada</span>";
             if($venda->status == 'refused')
-                return 'Rejeitada';
+                return "<span class='badge badge-round badge-danger'>Rejeitada</span>";
             if($venda->status == 'waiting_payment')
-                return 'Aguardando pagamento';
-            if($venda->status == 'pending')
-                return 'Pendente';
+                return "<span class='badge badge-round badge-info'>Aguardando pagamento</span>";
             if($venda->status == 'refunded')
-                return 'Estornada';
+                return "<span class='badge badge-round badge-default'>Estornada</span>";
             if($venda->status == '')
-                return '- - -';
+                return "<span class='badge-round badge-info'>- - - -</span>";
             return $venda->status;
         })
         ->addColumn('detalhes', function ($venda) {
@@ -56,7 +78,7 @@ class VendasDataTable extends DataTable
             }
             return $buttons;
         })
-        ->rawColumns(['detalhes']);
+        ->rawColumns(['detalhes','status']);
     }
 
     /**
@@ -68,13 +90,12 @@ class VendasDataTable extends DataTable
     public function query(Venda $vendas) {
 
         $query = $vendas->newQuery()
-            ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'vendas.id')
+            // ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'vendas.id')
             ->leftjoin('compradores as comprador', 'comprador.id', '=', 'vendas.comprador')
-            ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
+            // ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
             ->select([
                 'vendas.id',
-                'plano.nome as plano_nome',
-                'comprador.nome',
+                'comprador.nome as nome',
                 'vendas.forma_pagamento',
                 'vendas.pagamento_status as status',
                 'vendas.data_inicio',
@@ -85,6 +106,8 @@ class VendasDataTable extends DataTable
         if(!\Auth::user()->hasRole('administrador geral')){
             $query = $query->where('proprietario',\Auth::user()->id);
         }
+
+        $query = $query->orderBy('id','DESC');
 
         return $query;
     }
@@ -197,16 +220,25 @@ class VendasDataTable extends DataTable
             'id' => [
                 'name' => 'id',
                 'data' => 'id',
-                'title' => 'Venda',
+                'title' => 'Transação',
                 'searchable' => true,
-                'orderable' => true,
+                'orderable' => false,
+                'data_type' => 'text',
+                'filter_type' => 'text'
+            ],
+            'projeto' => [
+                'name' => 'projeto',
+                'data' => 'projeto',
+                'title' => 'Projeto',
+                'searchable' => true,
+                'orderable' => false,
                 'data_type' => 'text',
                 'filter_type' => 'text'
             ],
             'plano_nome' => [
                 'name' => 'plano.nome',
                 'data' => 'plano_nome',
-                'title' => 'Plano',
+                'title' => 'Descrição',
                 'searchable' => true,
                 'orderable' => false,
                 'data_type' => 'text',
@@ -257,10 +289,19 @@ class VendasDataTable extends DataTable
                 'data_type' => 'text',
                 'filter_type' => 'text'
             ],
+            'valor_liquido' => [
+                'name' => 'valor_liquido',
+                'data' => 'valor_liquido',
+                'title' => 'Valor líquido',
+                'searchable' => true,
+                'orderable' => false,
+                'data_type' => 'text',
+                'filter_type' => 'text'
+            ],
             'valor_total_pago' => [
                 'name' => 'valor_total_pago',
                 'data' => 'valor_total_pago',
-                'title' => 'Valor',
+                'title' => 'Valor total',
                 'searchable' => true,
                 'orderable' => false,
                 'data_type' => 'text',
@@ -309,6 +350,10 @@ class VendasDataTable extends DataTable
         ];
         $columnFilters[] = [
             'column_number' => 6,
+            'filter_type' => 'text'
+        ];
+        $columnFilters[] = [
+            'column_number' => 7,
             'filter_type' => 'text'
         ];
 

@@ -31,12 +31,9 @@ class RelatoriosController extends Controller {
     public function dadosVendas(){
 
         $vendas = \DB::table('vendas as venda')
-            ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'venda.id')
             ->leftjoin('compradores as comprador', 'comprador.id', '=', 'venda.comprador')
-            ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
             ->get([
                 'venda.id',
-                'plano.nome as plano_nome',
                 'comprador.nome',
                 'venda.meio_pagamento',
                 'venda.forma_pagamento',
@@ -47,6 +44,16 @@ class RelatoriosController extends Controller {
         ]);
 
         return Datatables::of($vendas)
+        ->addColumn('plano_nome', function ($venda) {
+            $planos_venda = PlanoVendad::where('venda',$venda->id)->get()->toArray();
+            if(count($planos_venda) > 1){
+                return "Carrinho";
+            }
+            foreach($planos_venda as $plano_venda){
+                $plano = Plano::find($plano_venda);
+                return $plano['nome'];
+            }
+        })
         ->editColumn('data_inicio', function ($venda) {
             return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
         })

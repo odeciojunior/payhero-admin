@@ -132,7 +132,7 @@
               @if(Auth::user()->hasRole('administrador empresarial'))
                 <a class="dropdown-item" href="{{ route('empresas') }}" role="menuitem">
                   <i class="icon wb-home" aria-hidden="true"></i>
-                  Minhas empresas
+                  Empresas
                 </a>
               @endif
               <div class="dropdown-divider" role="presentation"></div>

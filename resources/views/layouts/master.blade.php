@@ -196,11 +196,14 @@
                     }, {
                         column_number: 7,
                         filter_type: "text"
+                    }, {
+                        column_number: 8,
+                        filter_type: "text"
                     }
                 ]);
 
                 $("th").css('padding','7px');
-            
+
         </script>
     @endif
 
