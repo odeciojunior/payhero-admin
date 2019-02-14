@@ -21,7 +21,7 @@ class Layout extends Model
     /**
      * @var array
      */
-    protected $fillable = ['projeto', 'descricao', 'logo', 'created_at', 'updated_at', 'deleted_at', 'formato_logo'];
+    protected $fillable = ['projeto', 'descricao', 'status', 'logo', 'created_at', 'updated_at', 'deleted_at', 'formato_logo'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

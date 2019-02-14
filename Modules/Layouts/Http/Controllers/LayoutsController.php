@@ -27,6 +27,17 @@ class LayoutsController extends Controller
 
         $dados = $request->all();
 
+        if($dados['status'] == 'Ativo'){
+            $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
+            foreach($layouts as $l){
+                if($l['status'] == 'Ativo'){
+                    Layout::find($l['id'])->update([
+                        'status' => 'Desativado'
+                    ]);
+                }
+            }
+        }
+
         $layout = Layout::create($dados);
 
         $foto = $request->file('foto_checkout');
@@ -76,6 +87,21 @@ class LayoutsController extends Controller
         $layout = Layout::find($dados['id']);
 
         $layout->update($dados);
+
+        if($dados['status'] == 'Ativo'){
+            $layouts = Layout::where([
+                ['projeto',$dados['projeto']],
+                ['id','!=',$layout['id']]
+            ])->get()->toArray();
+
+            foreach($layouts as $l){
+                if($l['status'] == 'Ativo'){
+                    Layout::find($l['id'])->update([
+                        'status' => 'Desativado'
+                    ]);
+                }
+            }
+        }
 
         $foto = $request->file('foto_checkout');
 
@@ -131,11 +157,7 @@ class LayoutsController extends Controller
         $layouts = $layouts->get([
                 'layout.id',
                 'layout.descricao',
-                'layout.logo',
-                // 'layout.estilo',
-                // 'layout.cor1',
-                // 'layout.cor2',
-                // 'layout.botao',
+                'layout.status',
         ]);
 
         return Datatables::of($layouts)

@@ -85,21 +85,6 @@
                     </div>
                 </div>
 
-                <h4> Layout do checkout </h4>
-
-                <div class="row">
-                    <div class="form-group col-12">
-                        <label for="layout">Layout</label>
-                        <select name="layout" type="text" class="form-control" id="layout" required>
-                            <option value="">Layout padrão</option>
-                            @foreach($layouts as $layout)
-                                <option value="{{ $layout['id'] }}">{{ $layout['descricao'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                </div>
-
                 <h4> Foto do plano </h4>
 
                 <div class="row">

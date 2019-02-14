@@ -594,13 +594,6 @@ class PlanosController extends Controller {
 
         $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
 
-        // $produtosDisponiveis = [];
-
-        // foreach($produtos_projeto as $produto_projeto){
-
-        //     $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
-        // }
-
         $produtos = Produto::where('user', \Auth::user()->id)->get()->toArray();
 
         $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();
@@ -611,8 +604,6 @@ class PlanosController extends Controller {
 
         $dados_hotzapp = DadosHotZapp::all(); 
 
-        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
-
         $form = view('planos::cadastro',[
             'transportadoras' => $transportadoras,
             'produtos' => $produtos,
@@ -620,7 +611,6 @@ class PlanosController extends Controller {
             'brindes' => $brindes,
             'cupons' => $cupons,
             'dados_hotzapp' => $dados_hotzapp,
-            'layouts' => $layouts,
         ]);
 
         return response()->json($form->render());
@@ -635,13 +625,6 @@ class PlanosController extends Controller {
 
         $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
 
-        // $produtosDisponiveis = [];
-
-        // foreach($produtos_projeto as $produto_projeto){
-
-        //     $produtosDisponiveis[] = Produto::find($produto_projeto['produto']);
-        // }
-
         $produtos = Produto::where('user',\Auth::user()->id)->get()->toArray();
 
         $pixels = Pixel::where('projeto',$dados['projeto'])->get()->toArray();
@@ -651,8 +634,6 @@ class PlanosController extends Controller {
         $cupons = Cupom::where('projeto',$dados['projeto'])->get()->toArray();
 
         $dados_hotzapp = DadosHotZapp::all();
-
-        $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
 
         $produtosPlanos = ProdutoPlano::where('plano', $plano['id'])->get()->toArray();
 
@@ -676,7 +657,6 @@ class PlanosController extends Controller {
             'planoCupons' => $planoCupons,
             'brindes' => $brindes,
             'planoBrindes' => $planoBrindes,
-            'layouts' => $layouts,
         ]);
 
         return response()->json($form->render());

@@ -16,6 +16,15 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-xl-12">
+                        <label for="descricao">Status</label>
+                        <select name="status" class="form-control" id="status">
+                            <option value="Ativo">Ativo</option>
+                            <option value="Desativado">Desativado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xl-12">
                         <label for="formato_logo">Formato do logo</label>
                         <select name="formato_logo" class="form-control" id="formato_logo_cadastrar">
                             <option value="quadrado">Quadrado</option>

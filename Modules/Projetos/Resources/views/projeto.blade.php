@@ -220,11 +220,7 @@
                                         </a>
                                         <thead class="bg-blue-grey-100">
                                             <th>Descrição</th>
-                                            <th>Logo</th>
-                                            {{--  <th>Estilo</th>
-                                            <th>Cor 1</th>
-                                            <th>Cor 2</th>
-                                            <th>Botões</th>  --}}
+                                            <th>Status</th>
                                             <th style="width: 110px">Opções</th>
                                         </thead>
                                         <tbody>
@@ -2775,11 +2771,7 @@
             },
             columns: [
                 { data: 'descricao', name: 'descricao'},
-                { data: 'logo', name: 'logo'},
-                {{--  { data: 'estilo', name: 'estilo'},
-                { data: 'cor1', name: 'cor1'},
-                { data: 'cor2', name: 'cor2'},
-                { data: 'botao', name: 'botao'},  --}}
+                { data: 'status', name: 'status'},
                 { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
             ],
             "language": {
