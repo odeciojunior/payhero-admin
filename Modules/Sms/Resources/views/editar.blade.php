@@ -87,6 +87,7 @@
                             {url_boleto} = Url com o boleto<br>
                             {data_vencimento} = Data de vencimento do boleto<br>
                             {linha_digitavel} = Linha digitável do boleto<br>
+                            {url_carrinho_abandonado} = Link do carrinho abandonado<br>
                         </p>
                     </div>
                 </div>

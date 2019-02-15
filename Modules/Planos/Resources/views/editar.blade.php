@@ -143,41 +143,6 @@
                     </div>
                 </div>
 
-                <h4> Pixels </h4>
-                <div id="pixels">
-                    @if(count($pixels) > 0)
-                        @foreach($pixels as $key => $pixel)
-                            <div id="pixels_div_{{ $key + 1 }}" class="row">
-                                <div class="form-group col-xl-12">
-                                    <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
-                                        <option value="">Selecione</option>
-                                        @foreach($pixels as $pixel)
-                                            <option value="{{ $pixel['id'] }}"  {!! ($pixel['id'] == $pixel['pixel']) ? 'selected' : '' !!}>{{ $pixel['nome'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div id="pixels_div_1" class="row">
-                            <div class="form-group col-xl-12">
-                                <select id="pixel_1" name="pixel_1" class="form-control">
-                                    <option value="" selected>Selecione</option>
-                                    @foreach($pixels as $pixel)
-                                        <option value="{{ $pixel['id'] }}">{{ $pixel['nome'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-xl-12">
-                        <button type="button" id="add_pixel" class="btn btn-primary">Adicionar pixel</button>
-                    </div>
-                </div>
-
                 @if(count($planoBrindes) > 0)
                     <h4> Brindes </h4>
                     <div id="brindes">
