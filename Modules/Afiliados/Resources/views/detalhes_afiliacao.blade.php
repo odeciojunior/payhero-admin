@@ -45,10 +45,6 @@
                                                 <td>{!! $produtor !!}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Página</b></td>
-                                                <td>{!! $url_pagina !!}</td>
-                                            </tr>
-                                            <tr>
                                                 <td><b>Formato</b></td> 
                                                 <td>Físico</td>
                                             <tr>
