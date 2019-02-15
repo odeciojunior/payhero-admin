@@ -19,6 +19,11 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'afiliados', 'namespac
         'as'   => 'afiliados.getafiliadosprojeto'
     ]);
 
+    Route::get('/minhasafiliacoes/{id_afiliacao}', [
+        'uses' => 'AfiliadosController@afiliacao',
+        'as'   => 'afiliados.afiliacao'
+    ]);
+
     Route::get('/getdetalhesafiliacao/{id_projeto}', [
         'uses' => 'AfiliadosController@getDetalhesAfiliacao',
         'as'   => 'afiliados.getdetalhesafiliacao'
@@ -27,8 +32,6 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'afiliados', 'namespac
     Route::post('/meusafiliados/data-source','AfiliadosController@dadosMeusAfiliados');
 
     Route::post('/minhassolicitacoesafiliados/data-source','AfiliadosController@dadosAfiliacoesPendentes');
-
-    Route::post('/minhasafiliacoes/data-source','AfiliadosController@dadosMinhasAfiliacoes');
 
     Route::post('/minhasafiliacoespendentes/data-source','AfiliadosController@dadosMinhasAfiliacoesPendentes');
 

@@ -115,8 +115,65 @@ class AfiliadosController extends Controller {
     }
 
     public function minhasAfiliacoes(){
+ 
+        $afiliacoes = Afiliado::where('user',\Auth::user()->id)->get()->toArray();
 
-        return view('afiliados::minhas_afiliacoes');
+        $projetos = [];
+
+        if(count($afiliacoes) > 0){
+            foreach($afiliacoes as $afiliacao){
+                $projeto = Projeto::find($afiliacao['projeto']);
+                $projeto['id_afiliacao'] = $afiliacao['id'];
+                $projetos[] = $projeto;
+
+            }
+        }
+
+        return view('afiliados::minhas_afiliacoes',[
+            'projetos' => $projetos
+        ]);
+    }
+
+    public function afiliacao($id_afiliacao){
+
+        $afiliado = Afiliado::find($id_afiliacao);
+
+        $projeto = Projeto::find($afiliado['projeto']);
+
+        $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
+
+        $set_coockie_url = "checkout.".$dominio['dominio']."/"."setcookie/";
+
+        $url_pagina = $set_coockie_url.LinkAfiliado::where([
+            ['afiliado', $id_afiliacao],
+            ['plano' , null]
+        ])->first()['parametro'];
+
+        $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
+
+        $projeto_usuario = UserProjeto::where([
+            ['projeto',$projeto['id']],
+            ['tipo','produtor']
+        ])->first();
+        $usuario = User::find($projeto_usuario['user']);
+        $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
+
+        foreach($planos as &$plano){
+            $plano['lucro'] = number_format($plano['preco'] * $projeto['porcentagem_afiliados'] / 100, 2);
+            $plano['url'] = $set_coockie_url.LinkAfiliado::where([
+                ['afiliado', $id_afiliacao],
+                ['plano' , $plano['id']]
+            ])->first()['parametro'];
+        }
+
+        return view('afiliados::detalhes_afiliacao',[
+            'projeto' => $projeto,
+            'planos' => $planos,
+            'produtor' => $usuario['name'],
+            'url_pagina' => $url_pagina,
+            'empresas' => $empresas,
+            'afiliado' => $afiliado
+        ]);
     }
 
     public function dadosMeusAfiliados(){
@@ -188,40 +245,6 @@ class AfiliadosController extends Controller {
 
     }
 
-    public function dadosMinhasAfiliacoes(){
-
-        $empresas_usuario = Empresa::where('user',\Auth::user()->id)->pluck('id')->toArray();
-
-        $projetos_usuario = UserProjeto::where('user',\Auth::user()->id)->pluck('id')->toArray();
-
-        $afiliados = \DB::table('afiliados as afiliado')
-            ->leftJoin('projetos as projeto','projeto.id','=','afiliado.projeto')
-            ->where('afiliado.user',\Auth::user()->id)
-            ->select([
-                'afiliado.id',
-                'afiliado.porcentagem',
-                'afiliado.projeto',
-                'projeto.nome',
-                'afiliado.created_at as data_afiliacao',
-        ]);
-
-        return Datatables::of($afiliados)
-        ->editColumn('data_afiliacao', function($afiliado){
-            return Carbon::parse($afiliado->data_afiliacao)->format('d/m/Y H:i');
-        })
-        ->addColumn('detalhes', function ($afiliado) {
-            return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_afiliacao' data-placement='top' data-toggle='tooltip' title='Detalhes' afiliado='".$afiliado->id."'>
-                            <i class='icon wb-order' aria-hidden='true'></i>
-                            Detalhes
-                        </a>
-                    </span>";
-        })
-        ->rawColumns(['detalhes'])
-        ->make(true);
-
-    }
-
     public function dadosMinhasAfiliacoesPendentes(){
 
         $empresas_usuario = Empresa::where('user',\Auth::user()->id)->pluck('id')->toArray();
@@ -262,51 +285,6 @@ class AfiliadosController extends Controller {
         $view = view('afiliados::afiliados_projeto',[
             'projeto' => $projeto,
             'afiliados' => $afiliados
-        ]);
-
-        return response()->json($view->render());
-
-    }
-
-    public function getDetalhesAfiliacao($id_afiliado){
-
-        $afiliado = Afiliado::find($id_afiliado);
-
-        $projeto = Projeto::find($afiliado['projeto']);
-
-        $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
-
-        $set_coockie_url = "checkout.".$dominio['dominio']."/"."setcookie/";
-
-        $url_pagina = $set_coockie_url.LinkAfiliado::where([
-            ['afiliado', $id_afiliado],
-            ['plano' , null]
-        ])->first()['parametro'];
-
-        $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
-
-        $projeto_usuario = UserProjeto::where([
-            ['projeto',$projeto['id']],
-            ['tipo','produtor']
-        ])->first();
-        $usuario = User::find($projeto_usuario['user']);
-        $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
-
-        foreach($planos as &$plano){
-            $plano['lucro'] = number_format($plano['preco'] * $projeto['porcentagem_afiliados'] / 100, 2);
-            $plano['url'] = $set_coockie_url.LinkAfiliado::where([
-                ['afiliado', $id_afiliado],
-                ['plano' , $plano['id']]
-            ])->first()['parametro'];
-        }
-
-        $view = view('afiliados::detalhes_afiliacao',[
-            'projeto' => $projeto,
-            'planos' => $planos,
-            'produtor' => $usuario['name'],
-            'url_pagina' => $url_pagina,
-            'empresas' => $empresas,
-            'afiliado' => $afiliado
         ]);
 
         return response()->json($view->render());

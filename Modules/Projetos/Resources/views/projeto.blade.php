@@ -18,7 +18,7 @@
                     Meus projetos
                 </a>
             </div>
-        </div>
+        </div> 
 
         <div class="page-content container-fluid">
             <div class="panel pt-10 p-10" data-plugin="matchHeight">
@@ -29,8 +29,6 @@
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_info_geral"
                                     aria-controls="tab_info_geral" role="tab">Informações gerais</a></li>
-                                {{--  <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_produtos"
-                                    aria-controls="tab_produtos" role="tab">Produtos</a></li>  --}}
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_dominios"
                                     aria-controls="tab_cupons" role="tab">Domínios</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_layouts"
@@ -89,25 +87,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{--  <div class="tab-pane" id="tab_produtos" role="tabpanel">
-                                    <table id="tabela_produtos" class="table-bordered table-hover w-full" style="margin-top: 20px">
-                                        <a id="add_produto" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add_produto' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i>
-                                            Adicionar produto
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Categoria</th>
-                                            <th>Formato</th>
-                                            <th>Quantidade</th>
-                                            <th>Status</th>
-                                            <th style="width: 110px">Detalhes</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>  --}}
                                 <div class="tab-pane" id="tab_planos" role="tabpanel">
                                     <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_plano" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add' style="color: white">

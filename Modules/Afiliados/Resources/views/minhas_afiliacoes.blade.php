@@ -23,18 +23,23 @@
                 </ul>
                 <div class="tab-content pt-20">
                     <div class="tab-pane active" id="tab_minhas_afiliacoes" role="tabpanel">
-                        <table id="tabela_minhas_afiliacoes" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                            <thead class="bg-blue-grey-100">
-                                <tr>
-                                    <td>Projeto</td>
-                                    <td>Porcentagem</td>
-                                    <td>Data de afiliação</td>
-                                    <td>Opções</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            @foreach($projetos as $projeto)
+                                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                    <div class="card" style="border: 1px solid #E6E6FA">
+                                        <a href='/afiliados/minhasafiliacoes/{!! $projeto['id_afiliacao'] !!}'>
+                                            <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                                        </a>
+                                        <div class="card-block">
+                                            <a href='/projetos/projeto/{!! $projeto['id'] !!}' class="text-center">
+                                                <hr>
+                                                <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                     <div class="tab-pane" id="tab_solicitacoes_pendentes" role="tabpanel">
                         <table id="tabela_minhas_afiliacoes_pendentes" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -93,93 +98,6 @@
             });
 
         @endif
-
-        $("#tabela_minhas_afiliacoes").DataTable( {
-            bLengthChange: false,
-            ordering: false,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '/afiliados/minhasafiliacoes/data-source',
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },  
-            },
-            columns: [
-                { data: 'nome', name: 'nome'},
-                { data: 'porcentagem', name: 'porcentagem'},
-                { data: 'data_afiliacao', name: 'data_afiliacao'},
-                { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false },
-            ],
-            "language": {
-                "sProcessing":    "Carregando...",
-                "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado",
-                "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado",
-                "infoFiltered": "(filtrado por _MAX_ registros)",
-                "sInfoPostFix":   "",
-                "sSearch":        "Procurar :",
-                "sUrl":           "",
-                "sInfoThousands":  ",",
-                "sLoadingRecords": "Carregando...",
-                "oPaginate": {
-                    "sFirst":    "Primeiro",
-                    "sLast":    "Último",
-                    "sNext":    "Próximo",
-                    "sPrevious": "Anterior",
-                },
-            },
-            "drawCallback": function() {
-
-                $('.detalhes_afiliacao').on('click', function(){
-
-                    var afiliado = $(this).attr('afiliado'); 
-
-                    var titulo = $(this).parent().parent().parent().find('.card-title').html();
-
-                    $('#modal_detalhes_titulo').html('Detalhes da afiliação');
-
-                    $('#modal_detalhes_body').html('Carregando...');
-
-                    $.ajax({
-                        method: "GET",
-                        url: "/afiliados/getdetalhesafiliacao/"+afiliado,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function(){
-                            alert('Ocorreu algum erro');
-                        },
-                        success: function(data){
-                            $('#modal_detalhes_body').html(data);
-
-                            $('#alterar_empresa').on('click', function(){
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/afiliados/setempresa",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: { empresa: $('#select_empresas').val(), afiliado: $('#afiliado').val() },
-                                    error: function(){
-                                        alert('Ocorreu algum erro');
-                                    },
-                                    success: function(data){
-                                        alert('empresa alterada');
-                                    }
-                                });
-            
-                            });
-
-                        }
-                    });
-
-                });
-            }
-
-        });
 
         $("#tabela_minhas_afiliacoes_pendentes").DataTable( {
             bLengthChange: false,
