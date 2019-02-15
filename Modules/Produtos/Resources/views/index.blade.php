@@ -19,10 +19,10 @@
             <div class="row">
                 @foreach($produtos as $produto)
                   <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                      <div class="card" style="border: 1px solid gray">
+                      <div class="card" style="border: 1px solid #E6E6FA">
                           <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                           <div class="card-block">
-                            <a href="#" class="detalhes_produto" produto="{!! $produto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes'>
+                            <a href="#" class="detalhes_produto text-center" produto="{!! $produto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes'>
                                 <h4 class="card-title">{!! $produto['nome'] !!}</h4>
                                 <p class="card-text">{!! substr($produto['descricao'],0,52) !!}</p>
                             </a>
@@ -32,7 +32,7 @@
                                     <i class='icon wb-pencil' aria-hidden='true'></i>
                                 </a>
                             </span>
-                            <span data-toggle='modal' data-target='#modal_excluir'>
+                            <span data-toggle='modal' data-target='#modal_excluir' style="float:right">
                                 <a class='btn btn-outline btn-danger excluir_produto' data-placement='top' data-toggle='tooltip' title='Excluir' produto="{!! $produto['id'] !!}">
                                     <i class='icon wb-trash' aria-hidden='true'></i>
                                 </a>

@@ -22,12 +22,12 @@
             <div class="row">
               @foreach($projetos as $projeto)
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                  <div class="card" style="border: 1px solid gray">
+                  <div class="card" style="border: 1px solid #E6E6FA">
                       <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
                         <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                       </a>
                       <div class="card-block">
-                        <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
+                        <a href='/projetos/projeto/{!! $projeto['id'] !!}' class="text-center">
                             <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
                             <hr>
                             <p class="card-text">{!! $projeto['descricao'] !!}</p>
