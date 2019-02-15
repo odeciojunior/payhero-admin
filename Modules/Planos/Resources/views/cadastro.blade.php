@@ -125,66 +125,27 @@
                     </div>
                 </div>
 
-                <h4> Pixels do plano </h4>
-                <div id="pixels">
-                    <div id="pixels_div_1" class="row">
-
-                        <div class="form-group col-xl-12">
-                            <select id="pixel_1" name="pixel_1" class="form-control">
-                                <option value="" selected>Selecione</option>
-                                @foreach($pixels as $pixel)
-                                    <option value="{{ $pixel['id'] }}">{{ $pixel['nome'] }}</option>
-                                @endforeach
-                            </select>
+                @if(count($brindes) > 0)
+                    <h4> Brindes do plano</h4>
+                    <div id="brindes">
+                        <div id="brindes_div_1" class="row">
+                            <div class="form-group col-xl-12">
+                                <select id="brinde_1" name="brinde_1" class="form-control">
+                                    <option value="" selected>Selecione</option>
+                                    @foreach($brindes as $brinde)
+                                        <option value="{{ $brinde['id'] }}">{{ $brinde['descricao'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="form-group col-xl-12">
-                        <button type="button" id="add_pixel" class="btn btn-primary">Adicionar pixel</button>
-                    </div>
-                </div>
-
-                <h4> Brindes do plano</h4>
-                <div id="brindes">
-                    <div id="brindes_div_1" class="row">
+                    <div class="row">
                         <div class="form-group col-xl-12">
-                            <select id="brinde_1" name="brinde_1" class="form-control">
-                                <option value="" selected>Selecione</option>
-                                @foreach($brindes as $brinde)
-                                    <option value="{{ $brinde['id'] }}">{{ $brinde['descricao'] }}</option>
-                                @endforeach
-                            </select>
+                            <button type="button" id="add_brinde" class="btn btn-primary">Adicionar brinde</button>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-xl-12">
-                        <button type="button" id="add_brinde" class="btn btn-primary">Adicionar brinde</button>
-                    </div>
-                </div>
-
-                <h4> Cupons de desconto do plano</h4>
-                <div id="cupons">
-                    <div id="cupons_div_1" class="row">
-                        <div class="form-group col-xl-12">
-                            <select id="cupom_1" name="cupom_1" class="form-control">
-                                <option value="" selected>Selecione</option>
-                                @foreach($cupons as $cupom)
-                                    <option value="{{ $cupom['id'] }}">{{ $cupom['nome'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-xl-12">
-                        <button type="button" id="add_cupom" class="btn btn-primary">Adicionar cupom de desconto</button>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>

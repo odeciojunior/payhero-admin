@@ -107,11 +107,7 @@
                         </span>
                     @endif
               </div>
-              <div class="form-group clearfix">
-                <div class="checkbox-custom checkbox-inline checkbox-primary checkbox-lg float-left">
-                  <input type="checkbox" id="inputCheckbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                  <label for="inputCheckbox">{{ __('Lembrar login') }}</label>
-                </div>
+              <div class="form-group clearfix" style="margin-bottom:30px">
                 {{-- <a class="float-right" href="{{ route('password.request') }}">{{ __('Esqueceu sua Senha?') }}</a> --}}
               </div>
               <button type="submit" class="btn btn-primary btn-block btn-lg mt-40">{{ __('Sign in') }}</button>

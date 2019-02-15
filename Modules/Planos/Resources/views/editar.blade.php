@@ -145,14 +145,14 @@
 
                 <h4> Pixels </h4>
                 <div id="pixels">
-                    @if(count($planoPixels) > 0)
-                        @foreach($planoPixels as $key => $planoPixel)
+                    @if(count($pixels) > 0)
+                        @foreach($pixels as $key => $pixel)
                             <div id="pixels_div_{{ $key + 1 }}" class="row">
                                 <div class="form-group col-xl-12">
                                     <select id="pixel_{{ $key + 1 }}" name="pixel_{{ $key + 1 }}" class="form-control">
                                         <option value="">Selecione</option>
                                         @foreach($pixels as $pixel)
-                                            <option value="{{ $pixel['id'] }}"  {!! ($pixel['id'] == $planoPixel['pixel']) ? 'selected' : '' !!}>{{ $pixel['nome'] }}</option>
+                                            <option value="{{ $pixel['id'] }}"  {!! ($pixel['id'] == $pixel['pixel']) ? 'selected' : '' !!}>{{ $pixel['nome'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -178,75 +178,41 @@
                     </div>
                 </div>
 
-                <h4> Brindes </h4>
-                <div id="brindes">
-                    @if(count($planoBrindes) > 0)
-                        @foreach($planoBrindes as $key => $planoBrinde)
-                            <div id="brindes_div_{{ $key + 1 }}" class="row">
+                @if(count($planoBrindes) > 0)
+                    <h4> Brindes </h4>
+                    <div id="brindes">
+                        @if(count($planoBrindes) > 0)
+                            @foreach($planoBrindes as $key => $planoBrinde)
+                                <div id="brindes_div_{{ $key + 1 }}" class="row">
+                                    <div class="form-group col-xl-12">
+                                        <select id="brinde_{{ $key + 1 }}" name="brinde_{{ $key + 1 }}" class="form-control">
+                                            <option value="">Selecione</option>
+                                            @foreach($brindes as $brinde)
+                                                <option value="{{ $brinde['id'] }}"  {!! ($brinde['id'] == $planoBrinde['brinde']) ? 'selected' : '' !!}>{{ $brinde['descricao'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div id="brindes_div_1" class="row">
                                 <div class="form-group col-xl-12">
-                                    <select id="brinde_{{ $key + 1 }}" name="brinde_{{ $key + 1 }}" class="form-control">
-                                        <option value="">Selecione</option>
+                                    <select id="brinde_1" name="brinde_1" class="form-control">
+                                        <option value="" selected>Selecione</option>
                                         @foreach($brindes as $brinde)
-                                            <option value="{{ $brinde['id'] }}"  {!! ($brinde['id'] == $planoBrinde['brinde']) ? 'selected' : '' !!}>{{ $brinde['descricao'] }}</option>
+                                            <option value="{{ $brinde['id'] }}">{{ $brinde['descricao'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                        @endforeach
-                    @else
-                        <div id="brindes_div_1" class="row">
-                            <div class="form-group col-xl-12">
-                                <select id="brinde_1" name="brinde_1" class="form-control">
-                                    <option value="" selected>Selecione</option>
-                                    @foreach($brindes as $brinde)
-                                        <option value="{{ $brinde['id'] }}">{{ $brinde['descricao'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-xl-12">
-                        <button type="button" id="add_brinde" class="btn btn-primary">Adicionar brinde</button>
+                        @endif
                     </div>
-                </div>
-
-                <h4> Cupons de desconto </h4>
-                <div id="cupons">
-                    @if(count($planoCupons) > 0)
-                        @foreach($planoCupons as $key => $planoCupom)
-                            <div id="cupons_div_{{ $key + 1 }}" class="row">
-                                <div class="form-group col-xl-12">
-                                    <select id="cupom_{{ $key + 1 }}" name="cupom_{{ $key + 1 }}" class="form-control">
-                                        <option value="">Selecione</option>
-                                        @foreach($cupons as $cupom)
-                                            <option value="{{ $cupom['id'] }}"  {!! ($cupom['id'] == $planoCupom['cupom']) ? 'selected' : '' !!}>{{ $cupom['nome'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div id="cupons_div_1" class="row">
-                            <div class="form-group col-xl-12">
-                                <select id="cupom_1" name="cupom_1" class="form-control">
-                                    <option value="" selected>Selecione</option>
-                                    @foreach($cupons as $cupom)
-                                        <option value="{{ $cupom['id'] }}">{{ $cupom['nome'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                    <div class="row">
+                        <div class="form-group col-xl-12">
+                            <button type="button" id="add_brinde" class="btn btn-primary">Adicionar brinde</button>
                         </div>
-                    @endif
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-xl-12">
-                        <button type="button" id="add_cupom" class="btn btn-primary">Adicionar cupom</button>
                     </div>
-                </div>
+                @endif
 
             </div>
         </div>

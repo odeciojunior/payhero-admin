@@ -1040,7 +1040,6 @@
                 },
                 data: {projeto: id_projeto},
                 error: function(){
-                    $('#modal_add').hide();
                     alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
@@ -1193,7 +1192,7 @@
                         };
             
                     });
-            
+
                     $("#selecionar_foto_plano_cadastrar").on("click", function(){
                         $("#foto_plano_cadastrar").click();
                     });
@@ -1224,26 +1223,6 @@
 
                     });
         
-                    var qtd_pixels = 1;
-        
-                    var div_pixels = $('#pixels_div_1').parent().clone();
-        
-                    $('#add_pixel').on('click', function(){
-        
-                        qtd_pixels++;
-        
-                        var nova_div = div_pixels.clone();
-        
-                        var select = nova_div.find('select');
-        
-                        select.attr('id', 'pixel_'+qtd_pixels);            
-                        select.attr('name', 'pixel_'+qtd_pixels);            
-        
-                        div_pixels = nova_div;
-        
-                        $('#pixels').append(nova_div.html());
-                    });
-        
                     var qtd_brindes = 1;
         
                     var div_brindes = $('#brindes_div_1').parent().clone();
@@ -1264,26 +1243,6 @@
                         $('#brindes').append(nova_div.html());
                     });
         
-                    var qtd_cupons = 1;
-        
-                    var div_cupons = $('#cupons_div_1').parent().clone();
-        
-                    $('#add_cupom').on('click', function(){
-        
-                        qtd_cupons++;
-        
-                        var nova_div = div_cupons.clone();
-        
-                        var select = nova_div.find('select');
-        
-                        select.attr('id', 'cupom_'+qtd_cupons);            
-                        select.attr('name', 'cupom_'+qtd_cupons);            
-        
-                        div_cupons = nova_div;
-        
-                        $('#cupons').append(nova_div.html());
-                    });
-
                 }
             });
 
@@ -1744,27 +1703,6 @@
 
                             });
 
-                            var qtd_pixels = '1';
-
-                            var div_pixels = $('#pixels_div_'+qtd_pixels).clone();
-
-                            $('#add_pixel').on('click', function(){
-                    
-                                qtd_pixels++;
-                    
-                                var nova_div = div_pixels;
-                    
-                                var select = nova_div.find('select');
-                    
-                                select.attr('id', 'pixel_'+qtd_pixels);            
-                                select.attr('name', 'pixel_'+qtd_pixels);         
-                                select.val('');
-                    
-                                div_pixels = nova_div;
-                    
-                                $('#pixels').append('<div class="row">'+nova_div.html()+'</div>');
-                            });
-
                             var qtd_brindes = '1';
 
                             var div_brindes = $('#brindes_div_'+qtd_brindes).clone();
@@ -1784,27 +1722,6 @@
                     
                                 $('#brindes').append('<div class="row">'+nova_div.html()+'</div>');
                             });
-
-                            var qtd_cupons = '1';
-
-                            var div_cupons = $('#cupons_div_'+qtd_cupons).clone();
-
-                            $('#add_cupom').on('click', function(){
-                    
-                                qtd_cupons++;
-                    
-                                var nova_div = div_cupons.clone();
-                    
-                                var select = nova_div.find('select');
-                    
-                                select.attr('id', 'cupom_'+qtd_cupons);            
-                                select.attr('name', 'cupom_'+qtd_cupons);            
-                    
-                                div_cupons = nova_div;
-                    
-                                $('#cupons').append('<div class="row">'+nova_div.html()+'</div>');
-                            });
-
                         }
                     });
                 });
