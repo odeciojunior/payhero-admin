@@ -1,0 +1,242 @@
+<?php
+
+namespace Modules\Afiliados\Http\Controllers;
+
+use App\User;
+use App\Pixel;
+use App\Plano;
+use App\Dominio;
+use App\Projeto;
+use App\Afiliado;
+use App\Campanha;
+use Carbon\Carbon;
+use App\PlanoVenda;
+use App\UserProjeto;
+use App\LinkAfiliado;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Yajra\DataTables\Facades\DataTables;
+
+class CampanhasController extends Controller {
+
+
+    public function getDadosCampanhas(Request $request){
+
+        $dados = $request->all();
+
+        $campanhas = \DB::table('campanhas as campanha')
+        ->get([
+            'id',
+            'descricao',
+            'afiliado',
+        ])
+        ->where('afiliado',$dados['afiliado']);
+
+        return Datatables::of($campanhas)
+        ->addColumn('qtd_cliques', function ($campanha) {
+            $links_afiliado = LinkAfiliado::where('campanha',$campanha->id)->get()->toArray();
+            if(count($links_afiliado) < 1){
+                return "0";
+            }
+            $qtd_cliques = 0;
+            foreach($links_afiliado as $link_afiliado){
+                $qtd_cliques += $link_afiliado['qtd_cliques'];
+            }
+            return $qtd_cliques;
+        })
+        ->addColumn('detalhes', function ($campanha) {
+            return "<span data-toggle='modal' data-target='#modal_dados_campanha'>
+                        <a class='btn btn-outline btn-success dados_campanha' data-placement='top' data-toggle='tooltip' title='Dados da campanha' campanha='".$campanha->id."'>
+                            <i class='icon wb-order' aria-hidden='true'></i>
+                            Dados da campanha
+                        </a>
+                    </span>";
+        })
+        ->rawColumns(['detalhes'])
+        ->make(true);
+
+    }
+
+    public function campanha(Request $request){
+
+        $dados = $request->all();
+
+        $campanha = Campanha::find($dados['campanha']);
+
+        $afiliado = Afiliado::find($campanha['afiliado']);
+
+        $projeto = Projeto::find($afiliado['projeto']);
+
+        $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
+
+        $set_coockie_url = "checkout.".$dominio['dominio']."/"."setcookie/";
+
+        $url_pagina = $set_coockie_url.LinkAfiliado::where([
+            ['afiliado', $afiliado['id']],
+            ['plano' , null]
+        ])->first()['parametro'];
+
+        $projeto_usuario = UserProjeto::where([
+            ['projeto',$projeto['id']],
+            ['tipo','produtor']
+        ])->first();
+        $usuario = User::find($projeto_usuario['user']);
+        $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
+
+        foreach($planos as &$plano){
+            $plano['lucro'] = number_format($plano['preco'] * $projeto['porcentagem_afiliados'] / 100, 2);
+            $plano['url'] = $set_coockie_url.LinkAfiliado::where([
+                ['afiliado', $afiliado['id']],
+                ['plano' , $plano['id']]
+            ])->first()['parametro'];
+        }
+
+        $pixels = Pixel::where('campanha',$campanha['id'])->get()->toArray();
+
+        $dados_campanha = view('afiliados::campanha',[
+            'planos' => $planos,
+            'url_pagina' => $url_pagina,
+            'projeto' => $projeto,
+            'pixels' => $pixels,
+            'id_campanha' => $campanha['id']
+        ]);
+
+        return response()->json($dados_campanha->render());
+
+    }
+
+    public function cadastrar(Request $request){
+
+        $dados = $request->all();
+
+        $afiliado = Afiliado::find($dados['afiliado']);
+
+        $projeto = Projeto::find($afiliado['projeto']);
+
+        $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
+
+        $campanha = Campanha::create($dados);
+
+        LinkAfiliado::create([
+            'afiliado' => $afiliado->id,
+            'parametro' => $this->randString(12),
+            'campanha' => $campanha->id
+        ]);
+
+        foreach($planos as $plano){
+            LinkAfiliado::create([
+                'afiliado' => $afiliado->id,
+                'parametro' => $this->randString(12),
+                'plano' => $plano['id'],
+                'campanha' => $campanha->id
+            ]);
+        }
+
+        return response()->json('sucesso');
+    }
+
+    public function vendas(Request $request){
+
+        $dados = $request->all();
+
+        $vendas = \DB::table('vendas')
+            // ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'vendas.id')
+            ->leftjoin('compradores as comprador', 'comprador.id', '=', 'vendas.comprador')
+            // ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
+            ->get([
+                'vendas.id as transacao',
+                'comprador.nome as comprador',
+                'vendas.forma_pagamento as forma',
+                'vendas.pagamento_status as status',
+                'vendas.data_inicio as data',
+                'vendas.data_finalizada as pagamento',
+                'vendas.valor_total_pago as valor_total',
+                'vendas.afiliado',
+        ])
+        ->where('vendas.afiliado',$dados['afiliado']);
+
+        return Datatables::of($vendas)
+        ->addColumn('descricao', function ($venda) {
+            $planos_venda = PlanoVenda::where('venda',$venda->id)->get()->toArray();
+            if(count($planos_venda) > 1){
+                return "Carrinho";
+            }
+            foreach($planos_venda as $plano_venda){
+                $plano = Plano::find($plano_venda['plano']);
+                return substr($plano['nome'],0,25);
+            }
+        })
+        ->addColumn('valor_liquido', function ($venda) {
+            $valor_frete = str_replace('.','',$venda->valor_frete);
+            if($valor_frete == ''){
+                return $venda->valor_total_pago;
+            }
+            $valor_liquido = str_replace('.','',$venda->valor_total_pago) - $valor_frete;
+            return substr_replace($valor_liquido, '.',strlen($valor_liquido) - 2, 0 );
+        })
+        ->editColumn('data', function ($venda) {
+            return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
+        })
+        ->editColumn('pagamento', function ($venda) {
+            return $venda->data_finalizada ? with(new Carbon($venda->data_finalizada))->format('d/m/Y H:i:s') : '';
+        })
+        ->editColumn('forma', function ($venda) {
+            if($venda->forma_pagamento == 'Cartão de crédito') 
+                return 'Cartão';
+            if($venda->forma_pagamento == 'boleto') 
+                return 'Boleto';
+            return $venda->forma_pagamento;
+        })
+        ->editColumn('status', function ($venda) {
+            if($venda->status == 'paid')
+                return "<span class='badge badge-round badge-success'>Aprovada</span>";
+            if($venda->status == 'refused')
+                return "<span class='badge badge-round badge-danger'>Rejeitada</span>";
+            if($venda->status == 'waiting_payment')
+                return "<span class='badge badge-round badge-info'>Aguardando pagamento</span>";
+            if($venda->status == 'refunded')
+                return "<span class='badge badge-round badge-default'>Estornada</span>";
+            if($venda->status == '')
+                return "<span class='badge-round badge-info'>- - - -</span>";
+            return $venda->status;
+        })
+        ->addColumn('detalhes', function ($venda) {
+            $buttons = "<button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='".$venda->id."' data-target='#modal_detalhes' data-toggle='modal' type='button'>
+                            Detalhes
+                        </button>";
+            return $buttons;
+        })
+        ->rawColumns(['detalhes','status'])
+        ->make(true);
+
+    }
+
+    function randString($size){
+
+        $novo_parametro = false;
+
+        while(!$novo_parametro){
+
+            $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
+
+            $parametro = '';
+
+            for($count= 0; $size > $count; $count++){
+                $parametro.= $basic[rand(0, strlen($basic) - 1)];
+            }
+
+            $novo_link = LinkAfiliado::where('parametro', $parametro)->first();
+
+            if($novo_link == null){
+                $novo_parametro = true;
+            }
+
+        }
+
+        return $parametro;
+    }
+
+
+
+}

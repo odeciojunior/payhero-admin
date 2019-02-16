@@ -7,23 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $afiliado
- * @property integer $plano
- * @property string $parametro
+ * @property string $descricao
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
  * @property Afiliado $afiliado
- * @property Plano $plano
  */
-class LinkAfiliado extends Model
+class Campanha extends Model
 {
-    /**
-     * The table associated with the model.
-     * 
-     * @var string
-     */
-    protected $table = 'links_afiliados';
-
     /**
      * The "type" of the auto-incrementing ID.
      * 
@@ -34,7 +25,7 @@ class LinkAfiliado extends Model
     /**
      * @var array
      */
-    protected $fillable = ['afiliado', 'plano', 'parametro','campanha','qtd_cliques', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['afiliado', 'descricao', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -42,13 +33,5 @@ class LinkAfiliado extends Model
     public function afiliado()
     {
         return $this->belongsTo('App\Afiliado', 'afiliado');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function plano()
-    {
-        return $this->belongsTo('App\Plano', 'plano');
     }
 }

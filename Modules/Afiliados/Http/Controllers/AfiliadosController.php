@@ -36,7 +36,7 @@ class AfiliadosController extends Controller {
             return view('afiliados::minhas_afiliacoes');
         }
 
-        $planos = Plano::where('projeto', $id_projeto)->get()->toArray();
+        // $planos = Plano::where('projeto', $id_projeto)->get()->toArray();
 
         $empresa = Empresa::where([
             ['user', \Auth::user()->id],
@@ -50,18 +50,18 @@ class AfiliadosController extends Controller {
             'empresa'  => @$empresa->id
         ]);
 
-        LinkAfiliado::create([
-            'afiliado' => $afiliado->id,
-            'parametro' => $this->randString(10)
-        ]);
+        // LinkAfiliado::create([
+        //     'afiliado' => $afiliado->id,
+        //     'parametro' => $this->randString(10)
+        // ]);
 
-        foreach($planos as $plano){
-            LinkAfiliado::create([
-                'afiliado' => $afiliado->id,
-                'parametro' => $this->randString(10),
-                'plano' => $plano['id']
-            ]);
-        }
+        // foreach($planos as $plano){
+        //     LinkAfiliado::create([
+        //         'afiliado' => $afiliado->id,
+        //         'parametro' => $this->randString(10),
+        //         'plano' => $plano['id']
+        //     ]);
+        // }
 
         \Session::flash('success', "Afiliação realizada com sucesso!");
         return view('afiliados::minhas_afiliacoes');
@@ -75,7 +75,7 @@ class AfiliadosController extends Controller {
 
         $projeto = Projeto::find($solicitacao_afiliacao['projeto']);
 
-        $planos = Plano::where('projeto', $solicitacao_afiliacao['projeto'])->get()->toArray();
+        // $planos = Plano::where('projeto', $solicitacao_afiliacao['projeto'])->get()->toArray();
 
         $empresa = Empresa::where([
             ['user', $solicitacao_afiliacao['user']],
@@ -89,18 +89,18 @@ class AfiliadosController extends Controller {
             'empresa'  => @$empresa->id
         ]);
 
-        LinkAfiliado::create([
-            'afiliado' => $afiliado->id,
-            'parametro' => $this->randString(10)
-        ]);
+        // LinkAfiliado::create([
+        //     'afiliado' => $afiliado->id,
+        //     'parametro' => $this->randString(10)
+        // ]);
 
-        foreach($planos as $plano){
-            LinkAfiliado::create([
-                'afiliado' => $afiliado->id,
-                'parametro' => $this->randString(10),
-                'plano' => $plano['id']
-            ]);
-        }
+        // foreach($planos as $plano){
+        //     LinkAfiliado::create([
+        //         'afiliado' => $afiliado->id,
+        //         'parametro' => $this->randString(10),
+        //         'plano' => $plano['id']
+        //     ]);
+        // }
 
         $solicitacao_afiliacao->update([
             'status' => 'Confirmada'
@@ -140,15 +140,6 @@ class AfiliadosController extends Controller {
 
         $projeto = Projeto::find($afiliado['projeto']);
 
-        $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
-
-        $set_coockie_url = "checkout.".$dominio['dominio']."/"."setcookie/";
-
-        $url_pagina = $set_coockie_url.LinkAfiliado::where([
-            ['afiliado', $id_afiliacao],
-            ['plano' , null]
-        ])->first()['parametro'];
-
         $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
         $projeto_usuario = UserProjeto::where([
@@ -156,21 +147,10 @@ class AfiliadosController extends Controller {
             ['tipo','produtor']
         ])->first();
         $usuario = User::find($projeto_usuario['user']);
-        $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
-
-        foreach($planos as &$plano){
-            $plano['lucro'] = number_format($plano['preco'] * $projeto['porcentagem_afiliados'] / 100, 2);
-            $plano['url'] = $set_coockie_url.LinkAfiliado::where([
-                ['afiliado', $id_afiliacao],
-                ['plano' , $plano['id']]
-            ])->first()['parametro'];
-        }
 
         return view('afiliados::detalhes_afiliacao',[
             'projeto' => $projeto,
-            'planos' => $planos,
             'produtor' => $usuario['name'],
-            'url_pagina' => $url_pagina,
             'empresas' => $empresas,
             'afiliado' => $afiliado
         ]);

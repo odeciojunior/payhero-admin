@@ -513,17 +513,8 @@
                             return false;
                         }
 
-                        var paramObj = {};
-                        $.each($('#cadastrar_pixel').serializeArray(), function(_, kv) {
-                            if (paramObj.hasOwnProperty(kv.name)) {
-                                paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                                paramObj[kv.name].push(kv.value);
-                            }
-                            else {
-                                paramObj[kv.name] = kv.value;
-                            }
-                        });
-                        paramObj['projeto'] = id_projeto;
+                        var form_data = new FormData(document.getElementById('cadastrar_dominio'));
+                        form_data.append('projeto',id_projeto);
 
                         $.ajax({
                             method: "POST",
@@ -531,7 +522,10 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            data: { pixelData: paramObj },
+                            data: form_data,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
                             error: function(){
                                 $('#modal_add_produto').hide();
                                 alertPersonalizado('error','Ocorreu algum erro');

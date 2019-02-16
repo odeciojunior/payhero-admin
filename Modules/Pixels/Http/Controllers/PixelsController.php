@@ -30,9 +30,9 @@ class PixelsController extends Controller
 
     public function cadastrarPixel(Request $request){
 
-        $dados = $request->all();
+        $dados = $request->all(); 
 
-        Pixel::create($dados['pixelData']);
+        Pixel::create($dados);
 
         return response()->json('Sucesso');
     }

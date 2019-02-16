@@ -22,7 +22,7 @@ class Pixel extends Model
     /**
      * @var array
      */
-    protected $fillable = ['projeto', 'nome', 'cod_pixel', 'plataforma', 'status', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['projeto', 'nome', 'cod_pixel', 'plataforma', 'status','campanha', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
