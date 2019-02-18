@@ -25,7 +25,7 @@ class AfiliadosController extends Controller {
         $projeto = Projeto::find($id_projeto);
 
         if(!$projeto['afiliacao_automatica']){
-
+ 
             SolicitacaoAfiliacao::create([
                 'user'      => \Auth::user()->id,
                 'projeto'   => $projeto['id'],
@@ -33,7 +33,7 @@ class AfiliadosController extends Controller {
             ]);
 
             \Session::flash('success', "Solicitação de afiliação enviada para o produtor do projeto!");
-            return view('afiliados::minhas_afiliacoes');
+            return redirect()->route('afiliados.minhasafiliacoes');
         }
 
         // $planos = Plano::where('projeto', $id_projeto)->get()->toArray();
