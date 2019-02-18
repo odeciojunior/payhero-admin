@@ -36,8 +36,6 @@ class AfiliadosController extends Controller {
             return redirect()->route('afiliados.minhasafiliacoes');
         }
 
-        // $planos = Plano::where('projeto', $id_projeto)->get()->toArray();
-
         $empresa = Empresa::where([
             ['user', \Auth::user()->id],
             ['recipient_id','!=','']
@@ -49,19 +47,6 @@ class AfiliadosController extends Controller {
             'porcentagem' => $projeto['porcentagem_afiliados'],
             'empresa'  => @$empresa->id
         ]);
-
-        // LinkAfiliado::create([
-        //     'afiliado' => $afiliado->id,
-        //     'parametro' => $this->randString(10)
-        // ]);
-
-        // foreach($planos as $plano){
-        //     LinkAfiliado::create([
-        //         'afiliado' => $afiliado->id,
-        //         'parametro' => $this->randString(10),
-        //         'plano' => $plano['id']
-        //     ]);
-        // }
 
         \Session::flash('success', "Afiliação realizada com sucesso!");
         return view('afiliados::minhas_afiliacoes');
@@ -75,8 +60,6 @@ class AfiliadosController extends Controller {
 
         $projeto = Projeto::find($solicitacao_afiliacao['projeto']);
 
-        // $planos = Plano::where('projeto', $solicitacao_afiliacao['projeto'])->get()->toArray();
-
         $empresa = Empresa::where([
             ['user', $solicitacao_afiliacao['user']],
             ['recipient_id','!=','']
@@ -88,19 +71,6 @@ class AfiliadosController extends Controller {
             'porcentagem' => $projeto['porcentagem_afiliados'],
             'empresa'  => @$empresa->id
         ]);
-
-        // LinkAfiliado::create([
-        //     'afiliado' => $afiliado->id,
-        //     'parametro' => $this->randString(10)
-        // ]);
-
-        // foreach($planos as $plano){
-        //     LinkAfiliado::create([
-        //         'afiliado' => $afiliado->id,
-        //         'parametro' => $this->randString(10),
-        //         'plano' => $plano['id']
-        //     ]);
-        // }
 
         $solicitacao_afiliacao->update([
             'status' => 'Confirmada'

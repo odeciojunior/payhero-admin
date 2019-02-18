@@ -360,7 +360,7 @@
                     },
                 },
                 columns: [
-                    { data: 'transacao', name: 'transacao'},
+                    { data: 'id', name: 'id'},
                     { data: 'descricao', name: 'descricao'},
                     { data: 'comprador', name: 'comprador'},
                     { data: 'forma', name: 'forma'},

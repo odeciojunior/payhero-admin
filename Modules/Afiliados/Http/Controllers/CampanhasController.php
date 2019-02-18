@@ -141,20 +141,19 @@ class CampanhasController extends Controller {
         $dados = $request->all();
 
         $vendas = \DB::table('vendas')
-            // ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'vendas.id')
             ->leftjoin('compradores as comprador', 'comprador.id', '=', 'vendas.comprador')
-            // ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
+            ->where('vendas.afiliado',$dados['afiliado'])
             ->get([
-                'vendas.id as transacao',
+                'vendas.id',
                 'comprador.nome as comprador',
                 'vendas.forma_pagamento as forma',
                 'vendas.pagamento_status as status',
                 'vendas.data_inicio as data',
                 'vendas.data_finalizada as pagamento',
                 'vendas.valor_total_pago as valor_total',
+                'vendas.valor_frete',
                 'vendas.afiliado',
-        ])
-        ->where('vendas.afiliado',$dados['afiliado']);
+        ]);
 
         return Datatables::of($vendas)
         ->addColumn('descricao', function ($venda) {
@@ -170,23 +169,23 @@ class CampanhasController extends Controller {
         ->addColumn('valor_liquido', function ($venda) {
             $valor_frete = str_replace('.','',$venda->valor_frete);
             if($valor_frete == ''){
-                return $venda->valor_total_pago;
+                return $venda->valor_total;
             }
-            $valor_liquido = str_replace('.','',$venda->valor_total_pago) - $valor_frete;
+            $valor_liquido = str_replace('.','',$venda->valor_total) - $valor_frete;
             return substr_replace($valor_liquido, '.',strlen($valor_liquido) - 2, 0 );
         })
         ->editColumn('data', function ($venda) {
-            return $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
+            return $venda->data ? with(new Carbon($venda->data))->format('d/m/Y H:i:s') : '';
         })
         ->editColumn('pagamento', function ($venda) {
-            return $venda->data_finalizada ? with(new Carbon($venda->data_finalizada))->format('d/m/Y H:i:s') : '';
+            return $venda->pagamento ? with(new Carbon($venda->pagamento))->format('d/m/Y H:i:s') : '';
         })
         ->editColumn('forma', function ($venda) {
-            if($venda->forma_pagamento == 'Cartão de crédito') 
+            if($venda->forma == 'Cartão de crédito') 
                 return 'Cartão';
-            if($venda->forma_pagamento == 'boleto') 
+            if($venda->forma == 'boleto') 
                 return 'Boleto';
-            return $venda->forma_pagamento;
+            return $venda->forma;
         })
         ->editColumn('status', function ($venda) {
             if($venda->status == 'paid')
