@@ -384,6 +384,8 @@ class ShopifyController extends Controller {
                         'nome' => substr($product->getTitle(),0,100),
                         'descricao' => '',
                         'preco' => $variant->getPrice(),
+                        'qtd_parcelas' => '12',
+                        'parcelas_sem_juros' => '1'
                     ]);
                 }
             }
