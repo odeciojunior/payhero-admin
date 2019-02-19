@@ -249,6 +249,7 @@ class ShopifyController extends Controller {
             ]);
         }
         catch(\Exception $e){
+            dd($e);
             return response()->json('Dados do shopify inválidos, revise os dados informados');
         }
 
