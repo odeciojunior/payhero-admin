@@ -150,6 +150,8 @@ class ShopifyController extends Controller {
                     'pagamento_boleto' => true,
                     'status' => '1',
                     'transportadora' => '2',
+                    'qtd_parcelas' => '12',
+                    'parcelas_sem_juros' => '1'
                 ]);
 
                 if(count($product->getVariants()) > 1){
@@ -296,7 +298,7 @@ class ShopifyController extends Controller {
                         'projeto' => $projeto->id,
                         'nome' => substr($product->getTitle(),0,100),
                         'descricao' => '',
-                        'cod_identificador' => $codigo_identificador,
+                        'cod_identificador' => $codigo_identificador, 
                         'preco' => $variant->getPrice(),
                         'frete_fixo' => '1',
                         'valor_frete' => '0.00',
@@ -304,6 +306,8 @@ class ShopifyController extends Controller {
                         'pagamento_boleto' => true,
                         'status' => '1',
                         'transportadora' => '2',
+                        'qtd_parcelas' => '12',
+                        'parcelas_sem_juros' => '1'
                     ]);
 
                     if(count($product->getVariants()) > 1){
