@@ -1021,49 +1021,6 @@
                     $(".qtd-produtos").mask("0#");
                     $('.dinheiro').mask('#.###,#0', {reverse: true});
 
-                    $("#frete_plano_cadastrar").on("change", function(){
-
-                        if($(this).val() == '0'){
-                            $("#div_frete_fixo_cadastrar").hide();
-                            $("#div_valor_frete_fixo_cadastrar").hide();
-                            $("#div_transportadora_cadastrar").hide();
-                            $("#div_responsavel_frete_cadastrar").hide();
-                            $("#div_id_plano_transportadora").hide();
-                        }
-                        else{
-                            $("#div_frete_fixo_cadastrar").show();
-                            if($("#frete_fixo_plano_cadastrar").val() == '1'){
-                                $("#div_valor_frete_fixo_cadastrar").show();
-                            }
-                            $("#div_transportadora_cadastrar").show();
-                            $("#div_responsavel_frete_cadastrar").show();
-                            if($("#transportadora_plano_cadastrar").val() != '2'){
-                                $("#div_id_plano_transportadora_cadastrar").show();
-                            }
-                        }
-                    });
-
-                    $("#frete_fixo_plano_cadastrar").on("change", function(){
-                        if($(this).val() == '1'){
-                            $("#div_valor_frete_fixo_cadastrar").show();
-                        }
-                        else{
-                            $("#div_valor_frete_fixo_cadastrar").hide();
-                        }
-                    });
-
-                    $("#transportadora_plano_cadastrar").on("change", function(){
-                        if($(this).val() != '2'){
-                            $("#div_id_plano_transportadora_cadastrar").show();
-                            $("#responsavel_frete_cadastrar").append(new Option($(this).find("option:selected").text(), $(this).find("option:selected").text()));
-                        }
-                        else{
-                            $("#div_id_plano_transportadora_cadastrar").hide();
-                            $("#responsavel_frete_cadastrar option[value='Kapsula']").remove();
-                            $("#responsavel_frete_cadastrar option[value='Lift Gold']").remove();
-                        }
-                    });
-
                     $('#cadastrar').unbind('click');
 
                     $('#cadastrar').on('click',function(){
@@ -1505,49 +1462,6 @@
                             $('#modal_editar_body').html(data);
 
                             $(".qtd-produtos").mask("0#");
-
-                            $("#frete_plano_editar").on("change", function(){
-
-                                if($(this).val() == '0'){
-                                    $("#div_frete_fixo_editar").hide();
-                                    $("#div_valor_frete_fixo_editar").hide();
-                                    $("#div_transportadora_editar").hide();
-                                    $("#div_responsavel_frete_editar").hide();
-                                    $("#div_id_plano_transportadora_editar").hide();
-                                }
-                                else{
-                                    $("#div_frete_fixo_editar").show();
-                                    if($("#frete_fixo_plano_editar").val() == '1'){
-                                        $("#div_valor_frete_fixo_editar").show();
-                                    }
-                                    $("#div_transportadora_editar").show();
-                                    $("#div_responsavel_frete_editar").show();
-                                    if($("#transportadora_plano_editar").val() != '2'){
-                                        $("#div_id_plano_transportadora_editar_editar").show();
-                                    }
-                                }
-                            });
-
-                            $("#frete_fixo_plano_editar").on("change", function(){
-                                if($(this).val() == '1'){
-                                    $("#div_valor_frete_fixo_editar").show();
-                                }
-                                else{
-                                    $("#div_valor_frete_fixo_editar").hide();
-                                }
-                            });
-
-                            $("#transportadora_plano_editar").on("change", function(){
-                                if($(this).val() != '2'){
-                                    $("#div_id_plano_transportadora_editar").show();
-                                    $("#responsavel_frete_editar").append(new Option($(this).find("option:selected").text(), $(this).find("option:selected").text()));
-                                }
-                                else{
-                                    $("#div_id_plano_transportadora_editar").hide();
-                                    $("#responsavel_frete_editar option[value='Kapsula']").remove();
-                                    $("#responsavel_frete_editar option[value='Lift Gold']").remove();
-                                }
-                            });
 
                             $('#editar').unbind('click');
 
@@ -3151,15 +3065,49 @@
                         $("#foto_projeto").click();
                     });
 
-                    $("#visibilidade").on("change", function(){
-                        if($(this).val() == 'publico'){
-                            $("#div_dados_afiliados").show();
+                    $("#frete_plano_editar").on("change", function(){
+
+                        if($(this).val() == '0'){
+                            $("#div_frete_fixo_editar").hide();
+                            $("#div_valor_frete_fixo_editar").hide();
+                            $("#div_transportadora_editar").hide();
+                            $("#div_responsavel_frete_editar").hide();
+                            $("#div_id_plano_transportadora_editar").hide();
                         }
                         else{
-                            $("#div_dados_afiliados").hide();
+                            $("#div_frete_fixo_editar").show();
+                            if($("#frete_fixo_plano_editar").val() == '1'){
+                                $("#div_valor_frete_fixo_editar").show();
+                            }
+                            $("#div_transportadora_editar").show();
+                            $("#div_responsavel_frete_editar").show();
+                            if($("#transportadora_plano_editar").val() != '2'){
+                                $("#div_id_plano_transportadora_editar_editar").show();
+                            }
                         }
                     });
-            
+
+                    $("#frete_fixo_plano_editar").on("change", function(){
+                        if($(this).val() == '1'){
+                            $("#div_valor_frete_fixo_editar").show();
+                        }
+                        else{
+                            $("#div_valor_frete_fixo_editar").hide();
+                        }
+                    });
+
+                    $("#transportadora_projeto").on("change", function(){
+                        if($(this).val() != '2'){
+                            $("#div_id_plano_transportadora_editar").show();
+                            $("#responsavel_frete_editar").append(new Option($(this).find("option:selected").text(), $(this).find("option:selected").text()));
+                        }
+                        else{
+                            $("#div_id_plano_transportadora_editar").hide();
+                            $("#responsavel_frete_editar option[value='Kapsula']").remove();
+                            $("#responsavel_frete_editar option[value='Lift Gold']").remove();
+                        }
+                    });
+    
                     $('#bt_atualizar_configuracoes').on('click',function(){
 
                         var form_data = new FormData(document.getElementById('atualizar_configuracoes'));
