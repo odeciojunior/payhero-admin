@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-xl-6 col-lg-6">
+                    <div class="form-group col-12">
                         <label for="status">Status</label>
                         <select name="status" type="text" class="form-control" id="status" required>
                             <option value="1" {!! ($plano->status == '1') ? 'selected' : '' !!}>Ativo</option>
@@ -40,50 +40,10 @@
                     </div>
                 </div>
 
-                <h4> Configurações do frete </h4>
-
-                <div class="row">
-                    <div class="form-group col-xl-6 col-lg-6">
-                        <label for="frete_plano_editar">Possui frete</label>
-                        <select name="frete" type="text" class="form-control" id="frete_plano_editar" required>
-                            <option value="1" {!! ($plano->frete == '1') ? 'selected' : '' !!}>Sim</option>
-                            <option value="0" {!! ($plano->frete == '0') ? 'selected' : '' !!}>Não</option>
-                        </select>
-                    </div>
-                    <div id="div_frete_fixo_editar" class="form-group col-xl-6 col-lg-6" style="{!! !$plano->frete ? 'display:none' : '' !!}">
-                        <label for="frete_fixo_plano_editar">Frete fixo</label>
-                        <select name="frete_fixo" type="text" class="form-control" id="frete_fixo_plano_editar" required>
-                            <option value="1" {!! ($plano->frete_fixo == '1') ? 'selected' : '' !!}>Sim</option>
-                            <option value="0" {!! ($plano->frete_fixo == '0') ? 'selected' : '' !!}>Não</option>
-                        </select>
-                    </div>
-                    <div id="div_valor_frete_fixo_editar" class="form-group col-xl-6 col-lg-6" style="{!! (!$plano->frete || !$plano->frete_fixo ) ? 'display:none' : '' !!}">
-                        <label for="valor_frete_editar">Valor frete fixo</label>
-                        <input value="{!! $plano->valor_frete != '' ? $plano->valor_frete : '' !!}" name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete_editar" placeholder="valor fixo">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div id="div_transportadora_editar" class="form-group col-xl-6 col-lg-6" style="{!! !$plano->frete ? 'display:none' : '' !!}">
-                        <label for="transportadora_plano_editar">Transportadora</label>
-                        <select name="transportadora" type="text" class="form-control" id="transportadora_plano_editar" required>
-                            @foreach($transportadoras as $transportadora)
-                                <option value="{{ $transportadora['id'] }}" {!! ($plano->transportadora == $transportadora['id']) ? 'selected' : '' !!}>{{ $transportadora['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div id="div_responsavel_frete_editar" class="form-group col-xl-6 col-lg-6" style="{!! !$plano->frete ? 'display:none' : '' !!}">
-                        <label for="responsavel_frete_editar">Responsável pelo frete</label>
-                        <select name="responsavel_frete" type="text" class="form-control" id="responsavel_frete_editar">
-                            <option value="proprietario" {!! $plano->responsavel_frete == 'proprietario' ? 'selected' : '' !!}>Proprietário</option>
-                            <option value="parceiros" {!! $plano->responsavel_frete == 'parceiros' ? 'selected' : '' !!}>Proprietário + parceiros</option>
-                        </select>
-                    </div>
-                    <div id="div_id_plano_transportadora_editar" class="form-group col-xl-6 col-lg-6" style="{!! (!$plano->frete || $plano->transportadora == 2 ) ? 'display:none' : '' !!}">
-                        <label for="id_plano_transportadora">Id da transportadora</label>
-                        <input value="{!! $plano->id_plano_transportadora != '' ? $plano->id_plano_transportadora : '' !!}" name="id_plano_transportadora" type="text" class="form-control" id="id_plano_transportadora" placeholder="id da transportadora">
-                    </div>
-                </div>
+                {{--  <div id="div_id_plano_transportadora_editar" class="form-group col-xl-6 col-lg-6" style="{!! (!$plano->frete || $plano->transportadora == 2 ) ? 'display:none' : '' !!}">
+                    <label for="id_plano_transportadora">Id da transportadora</label>
+                    <input value="{!! $plano->id_plano_transportadora != '' ? $plano->id_plano_transportadora : '' !!}" name="id_plano_transportadora" type="text" class="form-control" id="id_plano_transportadora" placeholder="id da transportadora">
+                </div>  --}}
 
                 <h4> Foto do plano </h4>
 

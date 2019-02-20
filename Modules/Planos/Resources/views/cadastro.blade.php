@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-xl-6 col-lg-6">
+                    <div class="form-group col-xl-12">
                         <label for="status">Status</label>
                         <select name="status" type="text" class="form-control" id="status_plano" required>
                             <option value="1">Ativo</option>
@@ -37,55 +37,14 @@
                     </div>
                 </div>
 
-                <h4> Configurações do frete </h4>
-
-                <div class="row">
-                    <div class="form-group col-xl-6 col-lg-6">
-                        <label for="frete_plano_cadastrar">Possui frete</label>
-                        <select name="frete" type="text" class="form-control" id="frete_plano_cadastrar">
-                            <option value="1">Sim</option>
-                            <option value="0">Não</option>
-                        </select>
-                    </div>
-                    <div id="div_frete_fixo_cadastrar" class="form-group col-xl-6 col-lg-6">
-                        <label for="frete_fixo_plano_cadastrar">Frete fixo</label>
-                        <select name="frete_fixo" type="text" class="form-control" id="frete_fixo_plano_cadastrar">
-                            <option value="0" selected>Não</option>
-                            <option value="1">Sim</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="div_valor_frete_fixo_cadastrar" class="row" style="display:none">
-                    <div class="form-group col-xl-6 col-lg-6">
-                        <label for="valor_frete_cadastrar">Valor frete fixo</label>
-                        <input name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete_cadastrar" value="0" placeholder="valor fixo">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div id="div_transportadora_cadastrar" class="form-group col-xl-6 col-lg-6">
-                        <label for="transportadora">Transportadora</label>
-                        <select name="transportadora" type="text" class="form-control" id="transportadora_plano_cadastrar" required>
-                            @foreach($transportadoras as $transportadora)
-                                <option value="{{ $transportadora['id'] }}" {!! $transportadora['name'] == 'Despacho Proprio' ? 'selected' : '' !!}>{{ $transportadora['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div id="div_responsavel_frete_cadastrar" class="form-group col-xl-6 col-lg-6">
-                        <label for="responsavel_frete_cadastrar">Responsável pelo frete</label>
-                        <select name="responsavel_frete" type="text" class="form-control" id="responsavel_frete_cadastrar">
-                            <option value="proprietario">Proprietário</option>
-                            <option value="parceiros">Proprietário + parceiros</option>
-                        </select>
-                    </div>
+                {{--  <div class="row">
                     <div id="div_id_plano_transportadora_cadastrar" class="form-group col-xl-6 col-lg-6" style="display:none">
                         <label for="id_plano_transportadora_cadastrar">Id da transportadora</label>
                         <input name="id_plano_transportadora" type="text" class="form-control" id="id_plano_transportadora_cadastrar" placeholder="id da transportadora">
                     </div>
-                </div>
+                </div>  --}}
 
-                <h4> Foto do plano </h4>
+                <h4> Foto do plano </h4> 
 
                 <div class="row">
                     <div class="form-group col-12">
