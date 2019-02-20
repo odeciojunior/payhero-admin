@@ -42,7 +42,6 @@ class PlanosController extends Controller {
 
         $dados['empresa'] = $user_projeto->empresa;
         $dados['preco'] = $this->getValor($dados['preco']);
-        $dados['valor_frete'] = $this->getValor($dados['valor_frete']);
 
         $novo_codigo_identificador = false;
 
@@ -112,7 +111,6 @@ class PlanosController extends Controller {
         $dados = $request->all();
 
         $dados['preco'] = $this->getValor($dados['preco']);
-        $dados['valor_frete'] = $this->getValor($dados['valor_frete']);
 
         $plano = Plano::find($dados['id']);
         $plano->update($dados);
