@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        <div id="div_valor_frete_fixo_cadastrar" class="row" style="{!! (!$projeto->frete || !$projeto->frete_fixo ) ? 'display:none' : '' !!}">
+        <div id="div_valor_frete_fixo_editar" class="row" style="{!! (!$projeto->frete || !$projeto->frete_fixo ) ? 'display:none' : '' !!}">
             <div class="form-group col-xl-6 col-lg-6">
                 <label for="valor_frete_cadastrar">Valor frete fixo</label>
                 <input name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete_cadastrar" value="0" placeholder="valor fixo">
