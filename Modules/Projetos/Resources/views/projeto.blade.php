@@ -513,7 +513,7 @@
                             return false;
                         }
 
-                        var form_data = new FormData(document.getElementById('cadastrar_dominio'));
+                        var form_data = new FormData(document.getElementById('cadastrar_pixel'));
                         form_data.append('projeto',id_projeto);
 
                         $.ajax({
