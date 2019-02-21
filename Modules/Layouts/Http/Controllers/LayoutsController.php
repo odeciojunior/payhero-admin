@@ -140,7 +140,7 @@ class LayoutsController extends Controller
 
         Layout::find($dados['id'])->delete();
 
-        return redirect()->route('layouts');
+        return response()->json('sucesso');
 
     }
 
