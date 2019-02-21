@@ -29,7 +29,10 @@ class ProjetosController extends Controller{
             $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
             if($projetos_usuario != null){
                 foreach($projetos_usuario as $projeto_usuario){
-                    $projetos[] = Projeto::find($projeto_usuario['projeto']);
+                    $projeto = Projeto::find($projeto_usuario['projeto']);
+                    if($projeto){
+                        $projetos[] = $projeto;
+                    }
                 }
             }
         }
@@ -142,13 +145,15 @@ class ProjetosController extends Controller{
         return response()->json('sucesso');
     }
 
-    public function deletarProjeto($id){
+    public function deletarProjeto(Request $request){
 
-        $projeto = Projeto::find($id);
+        $dados = $request->all();
+
+        $projeto = Projeto::find($dados['projeto']);
 
         $projeto->delete();
 
-        return redirect()->route('projetos');
+        return response()->json('sucesso');
 
     }
 

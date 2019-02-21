@@ -5,7 +5,7 @@
         <h4>Configurações básicas</h4>
         <div class="row">
             <div class="form-group col-xl-12">
-                <label for="nome">Nome</label>
+                <label for="nome">Nome do projeto</label>
                 <input name="nome" value="{!! $projeto->nome !!}" type="text" class="form-control" id="nome" placeholder="Nome do projeto" required>
             </div>
             {{--  <div class="form-group col-xl-6">
@@ -167,8 +167,9 @@
         </div>
 
         <div class="row" style="margin-top: 30px">
-            <div class="form-group">
+            <div class="form-group" style="width:100%">
                 <button id="bt_atualizar_configuracoes" type="button" class="btn btn-success">Atualizar dados do projeto</button>
+                <button id="bt_deletar_projeto" type="button" class="btn btn-danger" style="float: right" data-toggle='modal' data-target='#modal_excluir'>Deletar projeto</button>
             </div>
         </div>
 

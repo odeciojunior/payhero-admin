@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -16,9 +17,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Projeto extends Model
 {
+    use SoftDeletes;
     /**
      * @var array
      */
     protected $fillable = [ 'foto', 'visibilidade', 'status', 'nome', 'descricao','url_pagina','sms_status', 'descricao_fatura','porcentagem_afiliados','afiliacao_automatica','shopify_id', 'created_at', 'updated_at','frete','frete_fixo','valor_frete','responsavel_frete','transportadora','qtd_parcelas','parcelas_sem_juros'];
 
+    protected $dates = [ 'deleted_at' ];
 }

@@ -35,7 +35,10 @@ class ShopifyController extends Controller {
         $projetos = [];
 
         foreach($integracoes_shopify as $integracao_shopify){
-            $projetos[] = Projeto::find($integracao_shopify['projeto']);
+            $projeto = Projeto::find($integracao_shopify['projeto']);
+            if($projeto){
+                $projetos[] = $projeto;
+            }
         }
 
         return view('shopify::index',[

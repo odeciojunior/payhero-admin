@@ -143,16 +143,17 @@ class DominiosController extends Controller {
 
         $dominio = Dominio::find($dados['id']);
 
-        $key = new APIKey('adm@healthlab.io', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
 
         $adapter = new Guzzle($key);
 
-        $zones = new Zones($adapter);
+        $zones = new Zones($adapter); 
 
         try{
             $zones->deleteZone($zones->getZoneID($dominio['dominio']));
         }
         catch(Exception $e){
+            dd($e);
             flash('Não foi possível deletar o domínio!')->error();
             return response()->json('Não foi possível deletar o domínio!');
         }

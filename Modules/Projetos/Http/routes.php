@@ -22,7 +22,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
         'as' => 'projetos.update',
     ]);
 
-    Route::get('/deletarprojeto/{id}', [
+    Route::post('/deletarprojeto', [
         'uses' => 'ProjetosController@deletarProjeto',
         'as' => 'projetos.deletar',
     ]);

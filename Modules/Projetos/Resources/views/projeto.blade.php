@@ -3136,6 +3136,39 @@
 
                     });
 
+                    $('#bt_deletar_projeto').on('click', function(){
+
+                        var name = $(this).closest("tr").find("td:first-child").text();
+                        $('#modal_excluir_titulo').html('Excluir o projeto ?');        
+    
+                        $('#bt_excluir').unbind('click');
+    
+                        $('#bt_excluir').on('click', function(){
+    
+                            $.ajax({
+                                method: "POST",
+                                url: "/projetos/deletarprojeto",
+                                data: { projeto: id_projeto },
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                error: function(){
+                                    $('#fechar_modal_excluir').click();
+                                    alertPersonalizado('error','Ocorreu algum erro');
+                                },
+                                success: function(data){
+                                    if(data != 'sucesso'){
+                                        alertPersonalizado('error',data);
+                                    }
+                                    else{
+                                        window.location = "/projetos";
+                                    }
+                                }
+                            });
+        
+                        });
+                    });
+
                 }
             });
         }
