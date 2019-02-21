@@ -14,7 +14,7 @@
                     <option value="">Selecione</option>
                     @foreach($empresas as $empresa)
                         <option value="{!! $empresa->id !!}" {!! ($empresa->id == $projeto->empresa) ? 'selected' : '' !!}>{!! $empresa->nome_fantasia !!}</option>
-                    @endforeach
+                    @endforeach 
                 </select>
             </div>  --}}
         </div>
@@ -31,7 +31,7 @@
                 <label for="visibilidade">Visibilidade</label>
                 <select name="visibilidade" class="form-control" id="visibilidade" required>
                     <option value="publico" {!! $projeto->visibilidade == 'publico' ? 'selected' : '' !!}>Projeto público (visível na vitrine e disponível para afiliações)</option>
-                    <option value="privado" {!! $projeto->visibilidade == 'privado' ? 'selected' : '' !!}>Projeto privado (completamente invisível para outros usuários, afiliações somente por covite)</option>
+                    <option value="privado" {!! $projeto->visibilidade == 'privado' ? 'selected' : '' !!}>Projeto privado (completamente invisível para outros usuários, afiliações somente por convite)</option>
                 </select>
             </div>
         </div>
@@ -63,30 +63,30 @@
 
         <div class="row">
             <div class="form-group col-xl-6 col-lg-6">
-                <label for="frete_plano_cadastrar">Possui frete</label>
-                <select name="frete" type="text" class="form-control" id="frete_plano_cadastrar">
+                <label for="frete_projeto">Possui frete</label>
+                <select name="frete" type="text" class="form-control" id="frete_projeto">
                     <option value="1" {!! $projeto['frete'] == '1' ? 'selected' : '' !!}>Sim</option>
                     <option value="0" {!! $projeto['frete'] == '0' ? 'selected' : '' !!}>Não</option>
                 </select>
             </div>
-            <div id="div_frete_fixo_cadastrar" class="form-group col-xl-6 col-lg-6" style="{!! !$projeto->frete ? 'display:none' : '' !!}">
-                <label for="frete_fixo_plano_cadastrar">Frete fixo</label>
-                <select name="frete_fixo" type="text" class="form-control" id="frete_fixo_plano_cadastrar">
-                    <option value="0" {!! $projeto['frete_fixo'] == '0' ? 'selected' : '' !!}>Não</option>
-                    <option value="1" {!! $projeto['frete_fixo'] == '1' ? 'selected' : '' !!}>Sim</option>
+            <div id="div_frete_fixo_projeto" class="form-group col-xl-6 col-lg-6" style="{!! !$projeto->frete ? 'display:none' : '' !!}">
+                <label for="frete_fixo_projeto">Frete fixo</label>
+                <select name="frete_fixo" type="text" class="form-control" id="frete_fixo_projeto">
+                    <option value="0" {!! $projeto['frete_fixo'] == '0' ? 'selected' : '' !!}>Não (frete calculado pela API)</option>
+                    <option value="1" {!! $projeto['frete_fixo'] == '1' ? 'selected' : '' !!}>Sim (você define o valor do frete)</option>
                 </select>
             </div>
         </div>
 
-        <div id="div_valor_frete_fixo_editar" class="row">
+        <div id="div_valor_frete_fixo_projeto" class="row">
             <div class="form-group col-xl-6 col-lg-6">
-                <label for="valor_frete_cadastrar">Valor frete fixo</label>
-                <input name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete_cadastrar" value="0" placeholder="valor fixo">
+                <label for="valor_frete_projeto">Valor frete fixo</label>
+                <input name="valor_frete" type="text" class="form-control dinheiro" id="valor_frete_projeto" value="0" placeholder="valor fixo">
             </div>
         </div>
 
         <div class="row">
-            <div id="div_transportadora_cadastrar" class="form-group col-xl-6 col-lg-6" style="{!! !$projeto->frete ? 'display:none' : '' !!}">
+            <div id="div_transportadora_projeto" class="form-group col-xl-6 col-lg-6" style="{!! !$projeto->frete ? 'display:none' : '' !!}">
                 <label for="transportadora">Transportadora</label>
                 <select name="transportadora" type="text" class="form-control" id="transportadora_projeto" required>
                     <option value="1" {!! $projeto['transportadora'] == '1' ? 'selected' : '' !!}>Kapsula</option>
@@ -94,9 +94,9 @@
                     <option value="3" {!! $projeto['transportadora'] == '3' ? 'selected' : '' !!}>Lift Gold</option>
                 </select>
             </div>
-            <div id="div_responsavel_frete_cadastrar" class="form-group col-xl-6 col-lg-6" style="{!! !$projeto->frete ? 'display:none' : '' !!}">
-                <label for="responsavel_frete_cadastrar">Responsável pelo frete</label>
-                <select name="responsavel_frete" type="text" class="form-control" id="responsavel_frete_editar">
+            <div id="div_responsavel_frete_projeto" class="form-group col-xl-6 col-lg-6" style="{!! !$projeto->frete ? 'display:none' : '' !!}">
+                <label for="responsavel_frete_projeto">Responsável pelo frete</label>
+                <select name="responsavel_frete" type="text" class="form-control" id="responsavel_frete_projeto">
                     <option value="proprietario" {!! $projeto['responsavel_frete'] == 'proprietario' ? 'selected' : '' !!}>Proprietário</option>
                     <option value="parceiros" {!! $projeto['responsavel_frete'] == 'parceiros' ? 'selected' : '' !!}>Proprietário + parceiros</option>
                 </select>

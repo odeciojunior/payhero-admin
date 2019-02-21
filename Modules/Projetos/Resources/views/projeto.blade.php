@@ -3065,46 +3065,46 @@
                         $("#foto_projeto").click();
                     });
 
-                    $("#frete_plano_editar").on("change", function(){
+                    $("#frete_projeto").on("change", function(){
 
                         if($(this).val() == '0'){
-                            $("#div_frete_fixo_editar").hide();
-                            $("#div_valor_frete_fixo_editar").hide();
-                            $("#div_transportadora_editar").hide();
-                            $("#div_responsavel_frete_editar").hide();
-                            $("#div_id_plano_transportadora_editar").hide();
+                            $("#div_frete_fixo_projeto").hide();
+                            $("#div_valor_frete_fixo_projeto").hide();
+                            $("#div_transportadora_projeto").hide();
+                            $("#div_responsavel_frete_projeto").hide();
+                            $("#div_id_plano_transportadora_projeto").hide();
                         }
                         else{
-                            $("#div_frete_fixo_editar").show();
-                            if($("#frete_fixo_plano_editar").val() == '1'){
-                                $("#div_valor_frete_fixo_editar").show();
+                            $("#div_frete_fixo_projeto").show();
+                            if($("#frete_fixo_projeto").val() == '1'){
+                                $("#div_valor_frete_fixo_projeto").show();
                             }
-                            $("#div_transportadora_editar").show();
-                            $("#div_responsavel_frete_editar").show();
-                            if($("#transportadora_plano_editar").val() != '2'){
-                                $("#div_id_plano_transportadora_editar_editar").show();
+                            $("#div_transportadora_projeto").show();
+                            $("#div_responsavel_frete_projeto").show();
+                            if($("#transportadora_projeto").val() != '2'){
+                                $("#div_id_plano_transportadora_projeto_projeto").show();
                             }
                         }
                     });
 
-                    $("#frete_fixo_plano_editar").on("change", function(){
+                    $("#frete_fixo_projeto").on("change", function(){
                         if($(this).val() == '1'){
-                            $("#div_valor_frete_fixo_editar").show();
+                            $("#div_valor_frete_fixo_projeto").show();
                         }
                         else{
-                            $("#div_valor_frete_fixo_editar").hide();
+                            $("#div_valor_frete_fixo_projeto").hide();
                         }
                     });
 
                     $("#transportadora_projeto").on("change", function(){
+                        $("#responsavel_frete_projeto option[value='Kapsula']").remove();
+                        $("#responsavel_frete_projeto option[value='Lift Gold']").remove();
                         if($(this).val() != '2'){
-                            $("#div_id_plano_transportadora_editar").show();
-                            $("#responsavel_frete_editar").append(new Option($(this).find("option:selected").text(), $(this).find("option:selected").text()));
+                            $("#div_id_plano_transportadora_projeto").show();
+                            $("#responsavel_frete_projeto").append(new Option($(this).find("option:selected").text(), $(this).find("option:selected").text()));
                         }
                         else{
-                            $("#div_id_plano_transportadora_editar").hide();
-                            $("#responsavel_frete_editar option[value='Kapsula']").remove();
-                            $("#responsavel_frete_editar option[value='Lift Gold']").remove();
+                            $("#div_id_plano_transportadora_projeto").hide();
                         }
                     });
     
