@@ -67,7 +67,7 @@ class LayoutsController extends Controller
             ]);
         }
 
-        return redirect()->route('layouts');
+        return response()->json('sucesso');
     }
 
     public function editarLayout($id){

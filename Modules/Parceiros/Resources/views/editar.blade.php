@@ -22,17 +22,8 @@
                             <option value="socio" {!! $parceiro['tipo'] == 'socio' ? 'selected' : '' !!}>Sócio</option>
                         </select>
                     </div>
-                    <div class="col-6">
-                        <label for="tipo_remuneracao">Tipo de remuneração</label>
-                        <select id="tipo_remuneracao" name="tipo_remuneracao" class="form-control">
-                            <option value="dinheiro" {!! $parceiro['tipo_remuneracao'] == 'dinheiro' ? 'selected' : '' !!}>Dinheiro</option>
-                            <option value="porcentagem" {!! $parceiro['tipo_remuneracao'] == 'porcentagem' ? 'selected' : '' !!}>Porcentagem</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-xl-6">
-                        <label for="valor_remuneracao">Valor</label>
+                        <label for="valor_remuneracao">Valor (porcentagem)</label>
                         <input name="valor_remuneracao" value="{!! $parceiro['valor_remuneracao'] !!}" type="text" class="form-control" id="valor_parceiro_editar" placeholder="Valor">
                     </div>
                 </div>
