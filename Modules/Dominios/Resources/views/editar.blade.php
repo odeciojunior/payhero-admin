@@ -17,7 +17,11 @@
 
                     <div class="form-group col-6">
                         <label for="ip_dominio">Ip que o domínio aponta</label>
-                        <input value="{!! $dominio->ip_dominio != '' ? $dominio->ip_dominio : '' !!}" name="ip_dominio" type="text" class="form-control" id="ip_dominio_editar" placeholder="Ip do domínio">
+                        @if($projeto['shopify_id'] != '')
+                            <input value="Ip do shopify" type="text" class="form-control" disabled>
+                        @else
+                            <input value="{!! $dominio->ip_dominio != '' ? $dominio->ip_dominio : '' !!}" name="ip_dominio" type="text" class="form-control" id="ip_dominio_editar" placeholder="Ip do domínio">
+                        @endif
                     </div>
                 </div>
 

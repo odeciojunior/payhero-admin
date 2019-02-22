@@ -302,6 +302,8 @@ class DominiosController extends Controller {
 
         $dominio = Dominio::find($dados['id']);
 
+        $projeto = Projeto::find($dominio['projeto']);
+
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
         $adapter = new Guzzle($key);
         $dns = new DNS($adapter);
@@ -349,7 +351,8 @@ class DominiosController extends Controller {
 
         $form = view('dominios::editar',[
             'dominio' => $dominio,
-            'registros' => $registros
+            'registros' => $registros,
+            'projeto' => $projeto
         ]);
 
         return response()->json($form->render());

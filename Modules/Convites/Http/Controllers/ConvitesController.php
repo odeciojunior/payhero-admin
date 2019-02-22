@@ -30,13 +30,18 @@ class ConvitesController extends Controller {
 
         $dados['empresa'] = @Empresa::where('user', \Auth::user()->id)->first()->id;
 
-        $convite = Convite::create($dados);
+        try{
+            $convite = Convite::create($dados);
 
-        Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados) {
-            $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
+            Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados) {
+                $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
 
-            $mail->to($dados['email_convidado'], 'Cloudfox')->subject('Convite!');
-        });
+                $mail->to($dados['email_convidado'], 'Cloudfox')->subject('Convite!');
+            });
+        }
+        catch(\Exception $e){
+
+        }
 
         return redirect()->route('convites');
     }

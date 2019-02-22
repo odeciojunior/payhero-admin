@@ -12,6 +12,7 @@
     <title>CloudFox @yield('title')</title> 
     <link rel="apple-touch-icon" href="{{ asset('adminremark/assets/images/apple-touch-icon.png') }}">
     <link rel="shortcut icon" href="{{ asset('adminremark/assets/images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/loading.css') }}">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap.min.css') }}">
@@ -79,6 +80,10 @@
     </script>
   </head>
   <body class="animsition dashboard">
+
+    <div class="loading">
+        <div class="loader"></div>
+    </div>
 
     @include("layouts.menu-principal")
 

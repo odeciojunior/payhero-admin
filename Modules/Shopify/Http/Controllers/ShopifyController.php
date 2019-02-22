@@ -64,18 +64,23 @@ class ShopifyController extends Controller {
             return response()->json('Dados do shopify inválidos, revise os dados informados');
         }
 
-        $projeto = Projeto::create([
-            'nome' => $client->getShopManager()->get()->getName(),
-            'status' => '1',
-            'visibilidade' => 'privado',
-            'porcentagem_afiliados' => '0',
-            'descricao' =>  $client->getShopManager()->get()->getName(),
-            'descricao_fatura' => $client->getShopManager()->get()->getName(),
-            'url_pagina' =>  'https://'.$client->getShopManager()->get()->getDomain(),
-            'afiliacao_automatica' => false,
-            'shopify_id' => $client->getShopManager()->get()->getId(),
-        ]);
-
+        try{
+            $projeto = Projeto::create([
+                'nome' => $client->getShopManager()->get()->getName(),
+                'status' => '1',
+                'visibilidade' => 'privado',
+                'porcentagem_afiliados' => '0',
+                'descricao' =>  $client->getShopManager()->get()->getName(),
+                'descricao_fatura' => $client->getShopManager()->get()->getName(),
+                'url_pagina' =>  'https://'.$client->getShopManager()->get()->getDomain(),
+                'afiliacao_automatica' => false,
+                'shopify_id' => $client->getShopManager()->get()->getId(),
+            ]);
+        }
+        catch(\Exception $e){
+            return response()->json('Dados do shopify inválidos, revise os dados informados');
+        }
+        
         $imagem = $request->file('foto_projeto');
 
         if ($imagem != null) {

@@ -190,6 +190,7 @@
                 alertPersonalizado('error','Dados informados inválidos');
                 return false;
             }
+            $('.loading').css("visibility", "visible");
 
             var form_data = new FormData(document.getElementById('form_add_integracao'));
 
@@ -204,10 +205,12 @@
                 cache: false,
                 data: form_data,
                 error: function(){
+                    $('.loading').css("visibility", "hidden");
                     alertPersonalizado('error','Ocorreu algum erro');
                     $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
                 },
                 success: function(data){
+                    $('.loading').css("visibility", "hidden");
                     if(data == 'Sucesso'){
                       alertPersonalizado('success','Integração adicionada!');
                       window.location.reload(true); 

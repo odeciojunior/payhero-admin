@@ -10,7 +10,6 @@
 
     <!-- Page -->
     <div class="page">
-
         <div class="page-header">
             <h1 class="page-title">Projeto {{ $projeto->nome }}</h1>
             <div class="page-header-actions">
@@ -449,6 +448,7 @@
                             }
                         @endif
 
+                        $('.loading').css("visibility", "visible");
 
                         var form_data = new FormData(document.getElementById('cadastrar_dominio'));
                         form_data.append('projeto',id_projeto);
@@ -464,6 +464,7 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
@@ -473,6 +474,7 @@
                                 else{
                                     alertPersonalizado('success','Domínio adicionado!');
                                 }
+                                $('.loading').css("visibility", "hidden");
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -513,6 +515,8 @@
                             return false;
                         }
 
+                        $('.loading').css("visibility", "visible");
+
                         var form_data = new FormData(document.getElementById('cadastrar_pixel'));
                         form_data.append('projeto',id_projeto);
 
@@ -528,9 +532,11 @@
                             cache: false,
                             error: function(){
                                 $('#modal_add_produto').hide();
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Pixel adicionado!');
                                 $('#modal_add_produto').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -574,6 +580,8 @@
                             return false;
                         }
 
+                        $('.loading').css("visibility", "visible");
+
                         var form_data = new FormData(document.getElementById('cadastrar_cupom'));
                         form_data.append('projeto',id_projeto);
 
@@ -588,9 +596,11 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Cupom de desconto adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -634,6 +644,8 @@
                             return false;
                         }
 
+                        $('.loading').css("visibility", "visible");
+
                         var form_data = new FormData(document.getElementById('cadastrar_sms'));
                         form_data.append('projeto',id_projeto);
 
@@ -648,9 +660,11 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','SMS adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -693,6 +707,8 @@
                                 return false;
                             }
 
+                            $('.loading').css("visibility", "visible");
+
                             var form_data = new FormData(document.getElementById('cadastrar_brinde'));
                             form_data.append('projeto',id_projeto);
 
@@ -707,10 +723,12 @@
                                 cache: false,
                                 data: form_data,
                                 error: function(){
+                                    $('.loading').css("visibility", "hidden");
                                     alertPersonalizado('error','Ocorreu algum erro');
                                     $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
                                 },
                                 success: function(data){
+                                    $('.loading').css("visibility", "hidden");
                                     alertPersonalizado('success','Brinde adicionado!');
                                     $('#modal_add').hide();
                                     $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -848,6 +866,8 @@
                             return false;
                         }
 
+                        $('.loading').css("visibility", "visible");
+
                         var form_data = new FormData(document.getElementById('cadastrar_layout'));
                         form_data.append('projeto',id_projeto);
 
@@ -862,10 +882,12 @@
                             cache: false,
                             data: form_data,
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                                 $('#previewimage_checkout_cadastrar').imgAreaSelect({remove:true});
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Layout adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -1030,6 +1052,8 @@
                             return false;
                         }
 
+                        $('.loading').css("visibility", "visible");
+
                         var form_data = new FormData(document.getElementById('cadastrar_plano'));
                         form_data.append('projeto',id_projeto);
 
@@ -1044,10 +1068,12 @@
                             cache: false,
                             data: form_data,
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                                 $('#preview_image_plano_cadastrar').imgAreaSelect({remove:true});
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Plano adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -1209,6 +1235,8 @@
                             return false;
                         }
 
+                        $('.loading').css("visibility", "visible");
+
                         var form_data = new FormData(document.getElementById('cadastrar_parceiro'));
                         form_data.append('projeto',id_projeto);
 
@@ -1223,9 +1251,11 @@
                             cache: false,
                             data: form_data,
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Parceiro adicionado!');
                                 $('#modal_add').hide();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -1319,6 +1349,8 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+
                         $.ajax({
                             method: "POST",
                             url: "/produtos/deletarprodutoplano",
@@ -1327,10 +1359,12 @@
                             },
                             data: { projeto: id_projeto, produto: id_produto },
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 $('#fechar_modal_excluir').click();
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Produto removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -1415,6 +1449,9 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+                        $('#fechar_modal_excluir').click();
+
                         $.ajax({
                             method: "POST",
                             url: "/planos/deletarplano",
@@ -1423,17 +1460,17 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
-                                $('#fechar_modal_excluir').click();
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 if(data != 'sucesso'){
                                     alertPersonalizado('error',data);
                                 }
                                 else{
                                     alertPersonalizado('success','Plano removido!');
                                 }
-                                $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                             }
@@ -1467,6 +1504,8 @@
 
                             $('#editar').on('click',function(){
 
+                                $('.loading').css("visibility", "visible");
+
                                 var form_data = new FormData(document.getElementById('editar_plano'));
                                 form_data.append('projeto',id_projeto);
 
@@ -1481,10 +1520,12 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('error','Ocorreu algum erro');
                                         $('#previewimage_plano_editar').imgAreaSelect({remove:true});
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('success','Plano atualizado!');
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1689,6 +1730,9 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+                        $('#fechar_modal_excluir').click();
+
                         $.ajax({
                             method: "GET",
                             url: "/pixels/deletarpixel/"+id_pixel,
@@ -1696,12 +1740,12 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
-                                $('#fechar_modal_excluir').click();
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Pixel removido!');
-                                $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                             }
@@ -1736,7 +1780,9 @@
                             $('#editar').unbind('click');
             
                             $('#editar').on('click',function(){
-        
+
+                                $('.loading').css("visibility", "visible");
+
                                 var paramObj = {};
                                 $.each($('#editar_pixel').serializeArray(), function(_, kv) {
                                     if (paramObj.hasOwnProperty(kv.name)) {
@@ -1757,9 +1803,11 @@
                                     },
                                     data: { pixelData: paramObj },
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('success','Pixel atualizado!');
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -1866,6 +1914,9 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+                        $('#fechar_modal_excluir').click();
+
                         $.ajax({
                             method: "GET",
                             url: "/sms/deletarsms/"+id_sms,
@@ -1873,12 +1924,12 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
-                                $('#fechar_modal_excluir').click();
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','SMS removido!');
-                                $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                             }
@@ -1913,6 +1964,8 @@
 
                             $('#editar').on('click',function(){
 
+                                $('.loading').css("visibility", "visible");
+
                                 var form_data = new FormData(document.getElementById('editar_sms'));
                                 form_data.append('projeto',id_projeto);
         
@@ -1927,9 +1980,11 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('success','SMS atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -2007,6 +2062,8 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+
                         $.ajax({
                             method: "POST",
                             url: "/brindes/deletarbrinde",
@@ -2015,10 +2072,12 @@
                             },
                             data: { id: id_brinde },
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 $('#fechar_modal_excluir').click();
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Brinde removido!');
                                 $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -2055,7 +2114,9 @@
                             $('#editar').unbind('click');
             
                             $('#editar').on('click',function(){
-        
+
+                                $('.loading').css("visibility", "visible");
+
                                 var form_data = new FormData(document.getElementById('editar_brinde'));
                                 form_data.append('projeto',id_projeto);
 
@@ -2070,11 +2131,13 @@
                                     cache: false,
                                     data:  form_data,
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         $('#modal_editar').hide();
                                         alertPersonalizado('error','Ocorreu algum erro');
                                         $('#previewimage_brinde_editar').imgAreaSelect({remove:true});
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('success','Brinde atualizado!');
                                         $('#modal_editar').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -2250,6 +2313,9 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+                        $('#fechar_modal_excluir').click();
+
                         $.ajax({
                             method: "POST",
                             url: "/cuponsdesconto/deletarcupom",
@@ -2258,12 +2324,12 @@
                             },
                             data: { id: id_cupom },
                             error: function(){
-                                $('#fechar_modal_excluir').click();
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Cupom removido!');
-                                $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                             }
@@ -2300,6 +2366,8 @@
 
                             $('#editar').on('click',function(){
 
+                                $('.loading').css("visibility", "visible");
+
                                 var form_data = new FormData(document.getElementById('editar_cupom'));
                                 form_data.append('projeto',id_projeto);
 
@@ -2314,9 +2382,11 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('success','Cupom atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -2384,6 +2454,8 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+
                         $.ajax({
                             method: "POST",
                             url: "/dominios/deletardominio",
@@ -2392,10 +2464,12 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 $('#fechar_modal_excluir').click();
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 if(data != 'sucesso'){
                                     alertPersonalizado('error',data);
                                 }
@@ -2500,6 +2574,8 @@
 
                             $('#editar').on('click',function(){
 
+                                $('.loading').css("visibility", "visible");
+
                                 var form_data = new FormData(document.getElementById('editar_dominio'));
                                 form_data.append('projeto',id_projeto);
 
@@ -2514,9 +2590,11 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         if(data == 'sucesso')
                                             alertPersonalizado('success','Domínio atualizado!');
                                         else
@@ -2753,6 +2831,8 @@
 
                             $('#editar').on('click',function(){
 
+                                $('.loading').css("visibility", "visible");
+
                                 var form_data = new FormData(document.getElementById('editar_layout'));
                                 form_data.append('projeto',id_projeto);
 
@@ -2767,10 +2847,12 @@
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('error','Ocorreu algum erro');
                                         $('#previewimage_checkout_editar').imgAreaSelect({remove:true});
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         alertPersonalizado('success','Layout atualizado!');
                                         $('#modal_add').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
@@ -2793,6 +2875,9 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+                        $('#fechar_modal_excluir').click();
+
                         $.ajax({
                             method: "POST",
                             url: "/layouts/removerlayout",
@@ -2801,12 +2886,12 @@
                             },
                             data: { id: id_layout },
                             error: function(){
-                                $('#fechar_modal_excluir').click();
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Layout removido!');
-                                $('#fechar_modal_excluir').click();
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                             }
@@ -2899,6 +2984,9 @@
 
                     $('#bt_excluir').on('click', function(){
 
+                        $('.loading').css("visibility", "visible");
+                        $('#fechar_modal_excluir').click();
+
                         $.ajax({
                             method: "POST",
                             url: "/parceiros/removerparceiro",
@@ -2907,11 +2995,11 @@
                             },
                             data: { id: id_parceiro },
                             error: function(){
-                                $('#fechar_modal_excluir').click();
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                             },
                             success: function(data){
-                                $('#fechar_modal_excluir').click();
+                                $('.loading').css("visibility", "hidden");
                                 $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                 $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                             }
@@ -2947,6 +3035,8 @@
             
                             $('#editar').on('click',function(){
         
+                                $('.loading').css("visibility", "visible");
+
                                 var form_data = new FormData(document.getElementById('editar_parceiro'));
                                 form_data.append('projeto',id_projeto);
 
@@ -2961,10 +3051,12 @@
                                     cache: false,
                                     data:  form_data,
                                     error: function(){
+                                        $('.loading').css("visibility", "hidden");
                                         $('#modal_editar').hide();
                                         alertPersonalizado('error','Ocorreu algum erro');
                                     },
                                     success: function(data){
+                                        $('.loading').css("visibility", "hidden");
                                         $('#modal_editar').hide();
                                         $($.fn.dataTable.tables( true ) ).css('width', '100%');
                                         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -3110,6 +3202,8 @@
     
                     $('#bt_atualizar_configuracoes').on('click',function(){
 
+                        $('.loading').css("visibility", "visible");
+
                         var form_data = new FormData(document.getElementById('atualizar_configuracoes'));
                         form_data.append('projeto',id_projeto);
 
@@ -3124,10 +3218,12 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function(){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('error','Ocorreu algum erro');
                                 $('#previewimage').imgAreaSelect({remove:true});
                             },
                             success: function(data){
+                                $('.loading').css("visibility", "hidden");
                                 alertPersonalizado('success','Dados do projeto alterados!');
                                 $('#previewimage').imgAreaSelect({remove:true});
                                 updateConfiguracoes();
@@ -3145,6 +3241,8 @@
     
                         $('#bt_excluir').on('click', function(){
     
+                            $('.loading').css("visibility", "visible");
+
                             $.ajax({
                                 method: "POST",
                                 url: "/projetos/deletarprojeto",
@@ -3153,10 +3251,12 @@
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
                                 error: function(){
+                                    $('.loading').css("visibility", "hidden");
                                     $('#fechar_modal_excluir').click();
                                     alertPersonalizado('error','Ocorreu algum erro');
                                 },
                                 success: function(data){
+                                    $('.loading').css("visibility", "hidden");
                                     if(data != 'sucesso'){
                                         alertPersonalizado('error',data);
                                     }
