@@ -35,7 +35,7 @@ class VendasDataTable extends DataTable
             }
             foreach($planos_venda as $plano_venda){
                 $plano = Plano::find($plano_venda['plano']);
-                return substr($plano['nome'],0,25);
+                return substr($plano['nome'],0,24);
             }
         })
         ->addColumn('valor_liquido', function ($venda) {
