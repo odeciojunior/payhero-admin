@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -17,8 +18,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Afiliado extends Model
 {
+    use SoftDeletes;
+
     /**
-     * The "type" of the auto-incrementing ID.
+     * The "type" of the auto-incrementing ID. 
      * 
      * @var string
      */
@@ -27,7 +30,9 @@ class Afiliado extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'projeto','link_pagina', 'porcentagem', 'empresa', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['user', 'projeto','link_pagina', 'porcentagem', 'empresa', 'created_at', 'updated_at'];
+
+    protected $dates = [ 'deleted_at' ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

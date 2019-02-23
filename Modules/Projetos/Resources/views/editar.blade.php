@@ -46,15 +46,34 @@
         <h4>Configurações de afiliados</h4>
 
         <div class="row" id="div_dados_afiliados">
-            <div class="form-group col-xl-6">
+            <div class="form-group col-xl-6 col-lg-6">
                 <label for="porcentagem_afiliados">Porcentagem para afiliados</label>
                 <input name="porcentagem_afiliados" value="{!! $projeto->porcentagem_afiliados !!}" type="text" class="form-control" id="porcentagem_afiliados" placeholder="Porcentagem">
             </div>
-            <div class="form-group col-xl-6">
+            <div class="form-group col-xl-6 col-lg-6">
                 <label for="afiliacao_automatica">Afiliação automática</label>
                 <select name="afiliacao_automatica" class="form-control" id="afiliacao_automatica" required>
                     <option value="1" {!! $projeto->afiliacao_automatica == '1' ? 'selected' : '' !!}>Sim</option>
                     <option value="0" {!! $projeto->afiliacao_automatica == '0' ? 'selected' : '' !!}>Não</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" id="div_dados_afiliados">
+            <div class="form-group col-xl-6 col-lg-6">
+                <label for="duracao_cookie">Duração do cookie</label>
+                <select name="duracao_cookie" class="form-control">
+                    <option value="60" {!! $projeto->duracao_cookie == '60' ? 'selected' : '' !!}>60</option>
+                    <option value="90" {!! $projeto->duracao_cookie == '90' ? 'selected' : '' !!}>90</option>
+                    <option value="120" {!! $projeto->duracao_cookie == '120' ? 'selected' : '' !!}>120</option>
+                    <option value="180" {!! $projeto->duracao_cookie == '180' ? 'selected' : '' !!}>180</option>
+                    <option value="-1" {!! $projeto->duracao_cookie == '-1' ? 'selected' : '' !!}>Pra sempre</option>
+                </select>
+            </div>
+            <div class="form-group col-xl-6 col-lg-6">
+                <label for="url_cookies_checkout">Criar URL do checkout dos produtos</label>
+                <select name="url_cookies_checkout" class="form-control" id="url_cookies_checkout" required>
+                    <option value="1" {!! $projeto->url_cookie_checkout == '1' ? 'selected' : '' !!}>Sim</option>
+                    <option value="0" {!! $projeto->url_cookie_checkout == '0' ? 'selected' : '' !!}>Não</option>
                 </select>
             </div>
         </div>

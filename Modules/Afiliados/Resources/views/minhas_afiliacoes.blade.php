@@ -48,6 +48,7 @@
                                     <td>Projeto</td>
                                     <td>Data de solicitação</td>
                                     <td>Status</td>
+                                    <td style="width: 140px">Opções</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,26 +58,48 @@
                 </div>
             </div>
 
-          <!-- Modal com detalhes do projeto -->
-          <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                  <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                </div>
-                <div id="modal_detalhes_body" class="modal-body" style="padding: 30px">
+            <!-- Modal com detalhes da afiliacao -->
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
+                        </div>
+                        <div id="modal_detalhes_body" class="modal-body" style="padding: 30px">
 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                </div>
-              </div>
             </div>
-          </div>
-          <!-- End Modal -->
+            <!-- End Modal -->
+
+            <!-- Modal cancelar solicitação -->
+            <div class="modal fade modal-3d-flip-vertical" id="modal_cancelar_solicitacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" style="width: 100%; text-align:center">Cancelar solicitação de afiliação ?</h4>
+                        </div>
+                        <div class="modal-body" style="padding: 30px">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button id="bt_cancelar_solicitacao" type="button" class="btn btn-success" data-dismiss="modal">Confirmar</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal -->
 
         </div>
       </div>
@@ -115,6 +138,7 @@
                 { data: 'nome', name: 'nome'},
                 { data: 'data_solicitacao', name: 'data_solicitacao'},
                 { data: 'status', name: 'status'},
+                { data: 'detalhes', name: 'detalhes'},
             ],
             "language": {
                 "sProcessing":    "Carregando...",
@@ -136,10 +160,54 @@
                 },
             },
             "drawCallback": function() {
+                
+                var solicitacao_afiliacao = '';
+
+                $(".cancelar_solicitacao").on("click", function(){
+
+                    solicitacao_afiliacao = $(this).attr('solicitacao_afiliacao');
+
+                    $("#bt_cancelar_solicitacao").on("click", function(){
+
+                        $('.loading').css("visibility", "visible");
+    
+                        $.ajax({
+                            method: "POST",
+                            url: "/afiliados/cancelarsolicitacao",
+                            data: { id_solicitacao: solicitacao_afiliacao },
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function(){
+                                $('.loading').css("visibility", "hidden");
+                                alertPersonalizado('error','Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                alertPersonalizado('success','Solicitação cancelada!');
+                                $('.loading').css("visibility", "hidden");
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            },
+                        });
+                    });
+
+                });
             }
 
         });
-        
+
+        function alertPersonalizado(tipo, mensagem){
+
+            swal({
+                position: 'bottom',
+                type: tipo,
+                toast: 'true',
+                title: mensagem,
+                showConfirmButton: false,
+                timer: 6000
+            });
+        }
+
     });
 
   </script>

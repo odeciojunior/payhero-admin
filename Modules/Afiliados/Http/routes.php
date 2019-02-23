@@ -29,6 +29,21 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'afiliados', 'namespac
         'as'   => 'afiliados.getdetalhesafiliacao'
     ]);
 
+    Route::post('/excluirafiliacao', [
+        'uses' => 'AfiliadosController@excluirAfiliacao',
+        'as'   => 'afiliados.excluirafiliacao'
+    ]);
+
+    Route::post('/cancelarsolicitacao', [
+        'uses' => 'AfiliadosController@cancelarSolicitacao',
+        'as'   => 'afiliados.cancelarsolicitacao'
+    ]);
+
+    Route::post('/negarsolicitacao', [
+        'uses' => 'AfiliadosController@negarSolicitacao',
+        'as'   => 'afiliados.negarsolicitacao'
+    ]);
+
     Route::post('/meusafiliados/data-source','AfiliadosController@dadosMeusAfiliados');
 
     Route::post('/minhassolicitacoesafiliados/data-source','AfiliadosController@dadosAfiliacoesPendentes');

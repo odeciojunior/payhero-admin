@@ -49,7 +49,7 @@ class AfiliadosController extends Controller {
         ]);
 
         \Session::flash('success', "Afiliação realizada com sucesso!");
-        return view('afiliados::minhas_afiliacoes');
+        return redirect()->route('afiliados.minhasafiliacoes');
     }
 
     public function confirmarAfiliacao(Request $request) {
@@ -77,6 +77,15 @@ class AfiliadosController extends Controller {
         ]);
 
         return response()->json('Sucesso');
+    }
+
+    public function excluirAfiliacao(Request $request){
+
+        $dados = $request->all();
+
+        Afiliado::find($dados['afiliado'])->delete();
+
+        return response()->json('sucesso');
     }
 
     public function meusAfiliados(){
@@ -137,8 +146,10 @@ class AfiliadosController extends Controller {
             ->leftJoin('users as user','afiliado.user','user.id')
             ->leftJoin('projetos as projeto','afiliado.projeto','projeto.id')
             ->whereIn('projeto.id',$projetos_usuario)
+            ->whereNull('afiliado.deleted_at')
             ->select([
                 'afiliado.id',
+                'afiliado.deleted_at',
                 'user.name',
                 'afiliado.porcentagem',
                 'projeto.nome',
@@ -151,13 +162,19 @@ class AfiliadosController extends Controller {
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Detalhes
                         </a>
+                    </span>
+                    <span data-toggle='modal' data-target='#modal_remover_afiliado' style='margin-left:10px'>
+                        <a class='remover_afiliado btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='Remover afiliado' afiliado='".$afiliado->id."'>
+                            <i class='icon wb-trash' aria-hidden='true'></i>
+                            Remover afiliado
+                        </a>
                     </span>";
         })
         ->rawColumns(['detalhes'])
         ->make(true);
 
     }
-
+ 
     public function dadosAfiliacoesPendentes(){
 
         $projetos_usuario = UserProjeto::where([
@@ -169,6 +186,7 @@ class AfiliadosController extends Controller {
             ->leftJoin('users as user','solicitacao_afiliacao.user','user.id')
             ->leftJoin('projetos as projeto','solicitacao_afiliacao.projeto','projeto.id')
             ->whereIn('solicitacao_afiliacao.projeto',$projetos_usuario)
+            ->whereNull('solicitacao_afiliacao.deleted_at')
             ->where('solicitacao_afiliacao.status','Pendente')
             ->select([
                 'solicitacao_afiliacao.id',
@@ -184,9 +202,15 @@ class AfiliadosController extends Controller {
         })
         ->addColumn('detalhes', function ($solicitacao_afiliacao) {
             return "<span>
-                        <a class='btn btn-outline btn-success confirmar_afiliacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".$solicitacao_afiliacao->id."'>
+                        <a class='btn btn-outline btn-success cancelar_solicitacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".$solicitacao_afiliacao->id."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Confirmar afiliação
+                        </a>
+                    </span>
+                    <span data-toggle='modal' data-target='#modal_cancelar_solicitacao'>
+                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".$solicitacao_afiliacao->id."'>
+                            <i class='icon wb-trash' aria-hidden='true'></i>
+                            Negar solicitação
                         </a>
                     </span>";
         })
@@ -203,8 +227,9 @@ class AfiliadosController extends Controller {
 
         $solicitacoes_afiliacoes = \DB::table('solicitacoes_afiliacoes as solicitacao_afiliacao')
             ->leftJoin('projetos as projeto','projeto.id','=','solicitacao_afiliacao.projeto')
+            ->whereNull('solicitacao_afiliacao.deleted_at')
             ->where('solicitacao_afiliacao.user',\Auth::user()->id)
-            ->where('solicitacao_afiliacao.status','Pendente')
+            ->whereIn('solicitacao_afiliacao.status',['Pendente','Negada'])
             ->select([
                 'solicitacao_afiliacao.id',
                 'solicitacao_afiliacao.projeto',
@@ -217,6 +242,15 @@ class AfiliadosController extends Controller {
         ->editColumn('data_solicitacao', function($solicitacao_afiliacao){
             return Carbon::parse($solicitacao_afiliacao->data_solicitacao)->format('d/m/Y H:i');
         })
+        ->addColumn('detalhes', function ($solicitacao_afiliacao) {
+            return "<span data-toggle='modal' data-target='#modal_cancelar_solicitacao'>
+                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".$solicitacao_afiliacao->id."'>
+                            <i class='icon wb-trash' aria-hidden='true'></i>
+                            Cancelar solicitação
+                        </a>
+                    </span>";
+        })
+        ->rawColumns(['detalhes'])
         ->make(true);
 
     }
@@ -246,6 +280,28 @@ class AfiliadosController extends Controller {
         $dados = $request->all();
 
         Afiliado::find($dados['afiliado'])->update($dados);
+
+        return response()->json('sucesso');
+    }
+
+    public function cancelarSolicitacao(Request $request){
+
+        $dados = $request->all();
+
+        SolicitacaoAfiliacao::find($dados['id_solicitacao'])->delete();
+
+        return response()->json('sucesso');
+    }
+
+    public function negarSolicitacao(Request $request){
+
+        $dados = $request->all();
+
+        $solicitacao = SolicitacaoAfiliacao::find($dados['id_solicitacao']);
+
+        $solicitacao->update([
+            'status' => 'Negada'
+        ]);
 
         return response()->json('sucesso');
     }

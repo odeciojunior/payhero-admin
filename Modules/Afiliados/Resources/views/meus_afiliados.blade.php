@@ -30,7 +30,7 @@
                                     <td>Afiliado</td>
                                     <td>Projeto</td>
                                     <td>Porcentagem</td>
-                                    <td>Detalhes</td>
+                                    <td style="width: 260px">Opções</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,25 +56,66 @@
             </div>    
 
             <!-- Modal com detalhes do projeto -->
-          <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                  <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                </div>
-                <div id="modal_detalhes_body" class="modal-body" style="padding: 30px">
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
+                        </div>
+                        <div id="modal_detalhes_body" class="modal-body" style="padding: 30px">
 
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                </div>
-              </div>
             </div>
-          </div>
-          <!-- End Modal -->
+            <!-- End Modal -->
+
+            <!-- Modal remover afiliado do projeto -->
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_remover_afiliado" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" style="width: 100%; text-align:center">Remover afiliado do projeto?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="bt_remover_afiliado" type="button" class="btn btn-success" data-dismiss="modal">Confirmar</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal -->
+
+            <!-- Modal cancelar solicitação -->
+            <div class="modal fade modal-3d-flip-vertical" id="modal_cancelar_solicitacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" style="width: 100%; text-align:center">Cancelar solicitação de afiliação ?</h4>
+                        </div>
+                        <div class="modal-body" style="padding: 30px">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button id="bt_cancelar_solicitacao" type="button" class="btn btn-success" data-dismiss="modal">Confirmar</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal -->
 
         </div>
       </div>
@@ -83,6 +124,8 @@
   <script>
 
     $(document).ready( function(){
+
+        var id_afiliado = '';
 
         $("#tabela_meus_afiliados").DataTable( {
             bLengthChange: false,
@@ -143,6 +186,12 @@
                         }
                     });  --}}
 
+                });
+
+                $(".remover_afiliado").on("click",function(){
+
+                    var afiliado = $(this).attr('afiliado');
+                    id_afiliado = afiliado;
                 });
 
             }
@@ -210,10 +259,75 @@
 
                 });
 
+                var solicitacao_afiliacao = '';
+
+                $(".cancelar_solicitacao").on("click", function(){
+
+                    solicitacao_afiliacao = $(this).attr('solicitacao_afiliacao');
+
+                    $("#bt_cancelar_solicitacao").on("click", function(){
+
+                        $('.loading').css("visibility", "visible");
+    
+                        $.ajax({
+                            method: "POST",
+                            url: "/afiliados/negarsolicitacao",
+                            data: { id_solicitacao: solicitacao_afiliacao },
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function(){
+                                $('.loading').css("visibility", "hidden");
+                                alertPersonalizado('error','Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('.loading').css("visibility", "hidden");
+                                alertPersonalizado('success','Solicitação negada!');
+                                $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                                $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+                            },
+                        });
+                    });
+
+                });
 
             }
 
         });
+
+        $("#bt_remover_afiliado").on("click", function(){
+
+            $.ajax({
+                method: "POST",
+                url: "/afiliados/excluirafiliacao",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: { afiliado: id_afiliado },
+                error: function(){
+                    alertPersonalizado('error','Ocorreu algum erro');
+                },
+                success: function(data){
+                    if(data == 'sucesso'){
+                        window.location = '/afiliados/meusafiliados';
+                    }
+                }
+            });
+
+        });
+
+
+        function alertPersonalizado(tipo, mensagem){
+
+            swal({
+                position: 'bottom',
+                type: tipo,
+                toast: 'true',
+                title: mensagem,
+                showConfirmButton: false,
+                timer: 6000
+            });
+        }
 
     });
 

@@ -124,13 +124,15 @@ class CampanhasController extends Controller {
             'campanha' => $campanha->id
         ]);
 
-        foreach($planos as $plano){
-            LinkAfiliado::create([
-                'afiliado' => $afiliado->id,
-                'parametro' => $this->randString(12),
-                'plano' => $plano['id'],
-                'campanha' => $campanha->id
-            ]);
+        if($projeto['url_cookies_checkout']){
+            foreach($planos as $plano){
+                LinkAfiliado::create([
+                    'afiliado' => $afiliado->id,
+                    'parametro' => $this->randString(12),
+                    'plano' => $plano['id'],
+                    'campanha' => $campanha->id
+                ]);
+            }
         }
 
         return response()->json('sucesso');
@@ -235,7 +237,5 @@ class CampanhasController extends Controller {
 
         return $parametro;
     }
-
-
 
 }

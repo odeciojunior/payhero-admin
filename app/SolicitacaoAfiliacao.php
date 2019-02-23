@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SolicitacaoAfiliacao extends Model
 {
+    use SoftDeletes;
+
     /**
      * The table associated with the model.
      * 
@@ -34,7 +37,9 @@ class SolicitacaoAfiliacao extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'projeto', 'status', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['user', 'projeto', 'status', 'created_at', 'updated_at'];
+
+    protected $dates = [ 'deleted_at' ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

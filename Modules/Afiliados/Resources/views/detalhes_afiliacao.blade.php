@@ -104,6 +104,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div style="width:100%">
+                                    <button type="button" class="btn btn-danger" style="float: right" data-toggle='modal' data-target='#modal_excluir_afiliacao'>Excluir afiliação</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -163,6 +168,33 @@
                     </div>
                 </div>
 
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir_afiliacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <div class="page-content container-fluid">
+                                        <div class="panel" data-plugin="matchHeight">
+                                            <div style="text-align:center;margin-bottom: 50px">
+                                                <h4>Excluir afiliação no projeto {{ $projeto['nome'] }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="excluir_afiliacao" type="button" class="btn btn-success" data-dismiss="modal">Excluir</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
             </div>
         </div>
     </div>
@@ -329,6 +361,7 @@
             });
 
             $('#alterar_empresa').on('click', function(){
+
                 $.ajax({
                     method: "POST",
                     url: "/afiliados/setempresa",
@@ -414,6 +447,27 @@
 
                     });
                 }    
+            });
+
+            $("#excluir_afiliacao").on("click", function(){
+
+                $.ajax({
+                    method: "POST",
+                    url: "/afiliados/excluirafiliacao",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: { afiliado: id_afiliado },
+                    error: function(){
+                        alertPersonalizado('error','Ocorreu algum erro');
+                    },
+                    success: function(data){
+                        if(data == 'sucesso'){
+                            window.location = '/afiliados/minhasafiliacoes';
+                        }
+                    }
+                });
+
             });
 
             function alertPersonalizado(tipo, mensagem){
