@@ -259,7 +259,7 @@ class ShopifyController extends Controller {
         catch(\Exception $e){
             return response()->json('Dados do shopify inválidos, revise os dados informados');
         }
-
+ 
         $products = $client->getProductManager()->findAll([]);
 
         foreach($products as $product){
@@ -268,11 +268,29 @@ class ShopifyController extends Controller {
 
                 $plano = Plano::where('shopify_variant_id' , $variant->getId())->first();
 
+                $descricao = '';
+
+                try{
+                    $descricao = $variant->getOption1();
+                    if($descricao == 'Default Title'){
+                        $descricao = '';
+                    }
+                    if($variant->getOption2() != ''){
+                        $descricao .= ' - '. $$variant->getOption2();
+                    }
+                    if($variant->getOption3() != ''){
+                        $descricao .= ' - '. $$variant->getOption3();
+                    }
+                }
+                catch(\Exception $e){
+                    //
+                }
+
                 if($plano == null){
                     $produto = Produto::create([
                         'user' => \Auth::user()->id,
                         'nome' => substr($product->getTitle(),0,100),
-                        'descricao' => '',
+                        'descricao' => $descricao,
                         'garantia' => '0',
                         'disponivel' => true,
                         'quantidade' => '0',
@@ -305,7 +323,7 @@ class ShopifyController extends Controller {
                         'empresa' => $user_projeto->empresa,
                         'projeto' => $projeto->id,
                         'nome' => substr($product->getTitle(),0,100),
-                        'descricao' => '',
+                        'descricao' => $descricao,
                         'cod_identificador' => $codigo_identificador, 
                         'preco' => $variant->getPrice(),
                         'frete_fixo' => '1',
@@ -390,7 +408,7 @@ class ShopifyController extends Controller {
                 else{
                     $plano->update([
                         'nome' => substr($product->getTitle(),0,100),
-                        'descricao' => '',
+                        'descricao' => $descricao,
                         'preco' => $variant->getPrice(),
                     ]);
                 }

@@ -226,6 +226,8 @@
 
         $(".sincronizar").on("click", function(){
 
+            $('.loading').css("visibility", "visible");
+
             var id_projeto = $(this).attr('projeto');
 
             $.ajax({
@@ -236,9 +238,11 @@
                 },
                 data: {projeto: id_projeto},
                 error: function(){
+                    $('.loading').css("visibility", "hidden");
                     alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
+                    $('.loading').css("visibility", "hidden");
                     if(data == 'Sucesso'){
                       alertPersonalizado('success','Dados do projeto sincronizados!');
                     }
