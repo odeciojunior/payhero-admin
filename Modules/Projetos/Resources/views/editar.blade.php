@@ -126,7 +126,7 @@
 
         <div class="row">
             <div class="form-group col-12">
-                <label for="descricao_fatura">Descrição na fatura</label>
+                <label for="descricao_fatura">Descrição na fatura (máximo 13 caracteres)</label>
                 <input name="descricao_fatura" value="{!! $projeto->descricao_fatura !!}" type="text" class="form-control" id="descricao_fatura" placeholder="Descrição do projeto na fatura">
             </div>
         </div>
