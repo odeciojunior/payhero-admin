@@ -95,9 +95,7 @@ class VendasDataTable extends DataTable
     public function query(Venda $vendas) {
 
         $query = $vendas->newQuery()
-            // ->leftjoin('planos_vendas as plano_venda', 'plano_venda.venda', '=', 'vendas.id')
             ->leftjoin('compradores as comprador', 'comprador.id', '=', 'vendas.comprador')
-            // ->leftjoin('planos as plano', 'plano_venda.plano', '=', 'plano.id')
             ->select([
                 'vendas.id',
                 'comprador.nome as nome',
@@ -241,7 +239,7 @@ class VendasDataTable extends DataTable
                 'filter_type' => 'text'
             ],
             'plano_nome' => [
-                'name' => 'plano.nome',
+                'name' => 'plano_nome',
                 'data' => 'plano_nome',
                 'title' => 'Descrição',
                 'searchable' => true,

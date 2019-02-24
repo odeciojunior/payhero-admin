@@ -160,57 +160,53 @@
         {!! $dataTable->scripts() !!}
         <script>
 
-                yadcf.init(window.LaravelDataTables["dataTableBuilder"] ,[{
-                        column_number: 0,
-                        filter_type: "text"
+            yadcf.init(window.LaravelDataTables["dataTableBuilder"] ,[{
+                    column_number: 0,
+                    filter_type: "text"
+                }, {
+                    column_number: 1,
+                    filter_type: "text"
+                }, {
+                    column_number: 2,
+                    filter_type: "text"
+                }, {
+                    column_number: 3,
+                    filter_type: "text"
+                }, {
+                    column_number: 4,
+                    filter_type: 'select',
+                    data: [{
+                        value: 'Boleto',
+                        label: 'Boleto'
                     }, {
-                        column_number: 1,
-                        filter_type: "text"
+                        value: 'Cartão de crédito',
+                        label: 'Cartão de crédito'
+                    }],
+                }, {
+                    column_number: 5,
+                    filter_type: 'select',
+                    data: [{
+                        value: 'paid',
+                        label: 'Aprovada'
                     }, {
-                        column_number: 2,
-                        filter_type: "text"
+                        value: 'refused',
+                        label: 'Rejeitada'
                     }, {
-                        column_number: 3,
-                        filter_type: 'select',
-                        data: [{
-                            value: 'Boleto',
-                            label: 'Boleto'
-                        }, {
-                            value: 'Cartão de crédito',
-                            label: 'Cartão de crédito'
-                        }],
-                    }, {
-                        column_number: 4,
-                        filter_type: 'select',
-                        data: [{
-                            value: 'Aprovada',
-                            label: 'Aprovada'
-                        }, {
-                            value: 'Rejeitada',
-                            label: 'Rejeitada'
-                        }, {
-                            value: 'Pendente',
-                            label: 'Pendente'
-                        }],
-                    }, {
-                        column_number: 5,
-                        filter_type: "text"
-                    }, {
-                        column_number: 6,
-                        filter_type: "text"
-                    }, {
-                        column_number: 7,
-                        filter_type: "text"
-                    }, {
-                        column_number: 8,
-                        filter_type: "text"
-                    }, {
-                        column_number: 9,
-                        filter_type: "text"
-                    }
-                ]);
+                        value: 'waiting_payment',
+                        label: 'Pendente'
+                    }],
+                }, {
+                    column_number: 6,
+                    filter_type: "text"
+                }, {
+                    column_number: 7,
+                    filter_type: "text"
+                }
+            ]);
 
-                $("th").css('padding','7px');
+            $.fn.dataTable.ext.errMode = 'none';
+
+            $("th").css('padding','7px');
 
         </script>
     @endif
