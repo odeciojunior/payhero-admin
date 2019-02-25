@@ -9,6 +9,7 @@ use App\Entrega;
 use App\Comprador;
 use App\PlanoVenda;
 use App\CompraUsuario;
+use App\IntegracaoShopify;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -119,10 +120,6 @@ class PostBackController extends Controller {
                         $integracao_shopify = IntegracaoShopify::where('projeto',$plano['projeto'])->first();
 
                         $planos_venda = PlanoVenda::where('venda', $venda['id'])->get()->toArray();
-                        $planos = [];
-                        foreach($planos_venda as $plano_venda){
-                            $planos[] = Plano::find($plano_venda['plano']);
-                        }
 
                         try{
                             $credential = new PublicAppCredential($integracao_shopify['token']);
@@ -130,30 +127,32 @@ class PostBackController extends Controller {
                             $client = new Client($credential, $integracao_shopify['url_loja'], [
                                 'metaCacheDir' => './tmp'
                             ]);
-            
+
                             $nomes = explode(" ",$comprador['nome']);
                             $telefone = str_replace("+",'',$comprador['telefone']);
-                            if(strlen($telefone) == 11){
-                                $telefone = substr($telefone,0,2).substr($telefone,3,strlen($telefone) - 1);
-                            }
+                            // if(strlen($telefone) == 11){
+                            //     $telefone = substr($telefone,0,2).substr($telefone,3,strlen($telefone) - 1);
+                            // }
+
                             $telefone = "+55".$telefone;
                             if(strlen($telefone) != 14){
                                 $telefone = "+557734881234";
                             }
-            
+
                             $items = [];
-                            $qtd_planos = 0;
-                            foreach($planos as $plano){
-            
+
+                            foreach($planos_venda as $plano_venda){
+                                $plano = Plano::find($plano_venda['plano']);
+                
                                 $items[] = [
                                     "fulfillable_quantity" => 1,
                                     "fulfillment_service" => "cloudfox",
-                                    "fulfillment_status" => "fulfilled",
+                                    "fulfillment_status" => "null",
                                     "grams" => 500,
                                     "id" => $plano['id'],
                                     "price" => $plano['preco'],
                                     "product_id" => $plano['shopify_id'],
-                                    "quantity" => $dados['qtd_'.$qtd_planos++],
+                                    "quantity" => $plano_venda['quantidade'],
                                     "requires_shipping" => true,
                                     "sku" => $plano['nome'],
                                     "title" => $plano['nome'],
@@ -163,12 +162,14 @@ class PostBackController extends Controller {
                                     "gift_card" => false,
                                 ];
                             }
-            
+
+                            $entrega = Entrega::find($venda['entrega']);
+
                             $shipping_address = [
-                                "address1"=> $entrega['rua'] . ' - ' . $entrega['bairro'] . ' - ' . $entrega['numero'] . ' - ' .$entrega['ponto_referencia'],
+                                "address1"=> $entrega['rua'] . ' - ' . $entrega['numero'] . ' - ' . $entrega['ponto_referencia'] . ' - ' .$entrega['bairro'],
                                 "address2"=> "",
                                 "city"=> $entrega['cidade'],
-                                "company"=> null,
+                                "company"=> $comprador['cpf'],
                                 "country"=> "Brasil",
                                 "first_name"=> $nomes[0],
                                 "last_name"=> $nomes[count($nomes) - 1],
@@ -179,11 +180,11 @@ class PostBackController extends Controller {
                                 "country_code"=> "BR",
                                 "province_code"=> $entrega['estado']
                             ];
-            
+
                             $order = $client->getOrderManager()->create([
                                 "accepts_marketing" => false,
                                 "currency" => "BRL",
-                                "email" => $dados['email'],
+                                "email" => $comprador['email'],
                                 "first_name" => $nomes[0],
                                 "last_name" => $nomes[count($nomes) - 1],
                                 "buyer_accepts_marketing" => false,
@@ -192,7 +193,8 @@ class PostBackController extends Controller {
                             ]);
                         }
                         catch(\Exception $e){
-                            Log::write('info', 'erro ao gerar pedido no shopify com a venda '.$venda['id']. ' - '. print_r($e) );
+                            Log::write('info', 'erro ao gerar pedido no shopify com a venda '.$venda['id']);
+                            Log::write('info',  print_r($e, true) );
                         }
 
                     }
