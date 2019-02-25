@@ -147,7 +147,6 @@ class PostBackController extends Controller {
                                 $items[] = [
                                     "fulfillable_quantity" => 1,
                                     "fulfillment_service" => "cloudfox",
-                                    "fulfillment_status" => "null",
                                     "grams" => 500,
                                     "id" => $plano['id'],
                                     "price" => $plano['preco'],

@@ -39,6 +39,32 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="form-group col-12">
+                        <label for="checkout">Rodar pixel no checkout</label>
+                        <select name="checkout" class="form-control" id="checkout">
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label for="purchase_cartao">Rodar pixel no purchase (cartão)</label>
+                        <select name="purchase_cartao" class="form-control" id="purchase_cartao">
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="purchase_boleto">Rodar pixel no purchase (boleto)</label>
+                        <select name="purchase_boleto" class="form-control" id="purchase_boleto">
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>
