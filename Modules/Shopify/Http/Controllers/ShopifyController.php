@@ -249,281 +249,177 @@ class ShopifyController extends Controller {
 
     public function sincronizarIntegracao(Request $request){
 
-        // $dados = $request->all();
+        $dados = $request->all();
 
-        // $projeto = Projeto::find($dados['projeto']);
-        // $integracao = IntegracaoShopify::where('projeto',$dados['projeto'])->first();
+        $projeto = Projeto::find($dados['projeto']);
+        $integracao = IntegracaoShopify::where('projeto',$dados['projeto'])->first();
 
-        // try{
-        //     $credential = new PublicAppCredential($integracao['token']);
-
-        //     $client = new Client($credential, $integracao['url_loja'], [
-        //         'metaCacheDir' => './tmp'
-        //     ]);
-        // }
-        // catch(\Exception $e){
-        //     return response()->json('Dados do shopify inválidos, revise os dados informados');
-        // }
-
-        $venda = Venda::find(957);
-
-        $comprador = Comprador::find($venda['comprador']);
-
-        $entrega = Entrega::find($venda['entrega']);
-
-        $integracao_shopify = IntegracaoShopify::where('projeto',52)->first();
-//958240620626
         try{
-            $credential = new PublicAppCredential($integracao_shopify['token']);
+            $credential = new PublicAppCredential($integracao['token']);
 
-            $client = new Client($credential, $integracao_shopify['url_loja'], [
+            $client = new Client($credential, $integracao['url_loja'], [
                 'metaCacheDir' => './tmp'
             ]);
-
-            $order = $client->getOrderManager()->find(958240620626);
-
-            dd($order);
-
-            // $transaction = $client->getTransactionManager()->update(958240620626,[
-            //     "kind" => "sale",
-            //     "currency" => "BRL",
-            //     "amount" => "20.00",            
-            // ]);
-
-            // dd($order);
-
-            // dd($transaction);
-
-
-///////////////////////////////////////////////////////////////////////////////////////////
-            $nomes = explode(" ",$comprador['nome']);
-            $telefone = str_replace("+",'',$comprador['telefone']);
-            $telefone = "+55".$telefone;
-            if(strlen($telefone) != 14){
-                $telefone = "+557734881234";
-            }
-
-            $items = [];
-            $planos_venda = PlanoVenda::where('venda',$venda['id'])->get()->toArray();
-
-            foreach($planos_venda as $plano_venda){
-
-                $plano = Plano::find($plano_venda['plano']);
-
-                $items[] = [
-                    "grams" => 500,
-                    "id" => $plano['id'],
-                    "price" => 20.00,
-                    "product_id" => $plano['shopify_id'],
-                    "quantity" => $plano_venda['quantidade'],
-                    "requires_shipping" => true,
-                    "sku" => $plano['nome'],
-                    "title" => $plano['nome'],
-                    "variant_id" => $plano['shopify_variant_id'],
-                    "variant_title" => $plano['nome'],
-                    "name" => $plano['nome'],
-                    "gift_card" => false,
-                ];
-            }
-
-            $shipping_address = [
-                "address1"=> $entrega['rua'] . ' - ' . $entrega['numero'] . ' - ' . $entrega['ponto_referencia'] . ' - ' .$entrega['bairro'],
-                "address2"=> "",
-                "city"=> $entrega['cidade'],
-                "company"=> $comprador['cpf'],
-                "country"=> "Brasil",
-                "first_name"=> $nomes[0],
-                "last_name"=> $nomes[count($nomes) - 1],
-                "phone"=> $telefone,
-                "province"=> $entrega['estado'],
-                "zip"=> $entrega['cep'],
-                "name"=> $comprador['nome'],
-                "country_code"=> "BR",
-                "province_code"=> $entrega['estado']
-            ];
-
-            $order = $client->getOrderManager()->create([
-                "accepts_marketing" => false,
-                "currency" => "BRL",
-                "email" => $comprador['email'],
-                "first_name" => $nomes[0],
-                "last_name" => $nomes[count($nomes) - 1],
-                "buyer_accepts_marketing" => false,
-                "line_items" => $items,
-                "shipping_address" => $shipping_address,
-                "financial_status" => "pending",
-                "transactions" => [
-                    [
-                        "kind" => "sale",
-                        "amount" => 50.0
-                    ]
-                ],
-            ]);
-
-            echo $order->getId();
-            die;
         }
         catch(\Exception $e){
-            dd($e);
-            Log::write('info', 'erro ao gerar pedido no shopify com a venda '.$venda['id']. ' - '. @$e->getMessage() );
+            return response()->json('Dados do shopify inválidos, revise os dados informados');
         }
 
-        echo 'to aqui'; die;
         $products = $client->getProductManager()->findAll([]);
 
-        // foreach($products as $product){
+        foreach($products as $product){
 
-        //     foreach($product->getVariants() as $variant){
+            foreach($product->getVariants() as $variant){
 
-        //         $plano = Plano::where('shopify_variant_id' , $variant->getId())->first();
+                $plano = Plano::where('shopify_variant_id' , $variant->getId())->first();
 
-        //         $descricao = '';
+                $descricao = '';
 
-        //         try{
-        //             $descricao = $variant->getOption1();
-        //             if($descricao == 'Default Title'){
-        //                 $descricao = '';
-        //             }
-        //             if($variant->getOption2() != ''){
-        //                 $descricao .= ' - '. $$variant->getOption2();
-        //             }
-        //             if($variant->getOption3() != ''){
-        //                 $descricao .= ' - '. $$variant->getOption3();
-        //             }
-        //         }
-        //         catch(\Exception $e){
-        //             //
-        //         }
+                try{
+                    $descricao = $variant->getOption1();
+                    if($descricao == 'Default Title'){
+                        $descricao = '';
+                    }
+                    if($variant->getOption2() != ''){
+                        $descricao .= ' - '. $$variant->getOption2();
+                    }
+                    if($variant->getOption3() != ''){
+                        $descricao .= ' - '. $$variant->getOption3();
+                    }
+                }
+                catch(\Exception $e){
+                    //
+                }
 
-        //         if($plano == null){
-        //             $produto = Produto::create([
-        //                 'user' => \Auth::user()->id,
-        //                 'nome' => substr($product->getTitle(),0,100),
-        //                 'descricao' => $descricao,
-        //                 'garantia' => '0',
-        //                 'disponivel' => true,
-        //                 'quantidade' => '0',
-        //                 'disponivel' => true,
-        //                 'formato' => 1,
-        //                 'categoria' => '1',
-        //                 'custo_produto' => '',
-        //             ]);
+                if($plano == null){
+                    $produto = Produto::create([
+                        'user' => \Auth::user()->id,
+                        'nome' => substr($product->getTitle(),0,100),
+                        'descricao' => $descricao,
+                        'garantia' => '0',
+                        'disponivel' => true,
+                        'quantidade' => '0',
+                        'disponivel' => true,
+                        'formato' => 1,
+                        'categoria' => '1',
+                        'custo_produto' => '',
+                    ]);
 
-        //             $novo_codigo_identificador = false;
+                    $novo_codigo_identificador = false;
 
-        //             while($novo_codigo_identificador == false){
+                    while($novo_codigo_identificador == false){
 
-        //                 $codigo_identificador = $this->randString(3).rand(100,999);
-        //                 $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
-        //                 if($plano == null){
-        //                     $novo_codigo_identificador = true;
-        //                 }
-        //             }
+                        $codigo_identificador = $this->randString(3).rand(100,999);
+                        $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
+                        if($plano == null){
+                            $novo_codigo_identificador = true;
+                        }
+                    }
 
-        //             $user_projeto = UserProjeto::where([
-        //                 ['user', \Auth::user()->id],
-        //                 ['projeto',$dados['projeto']],
-        //                 ['tipo', 'produtor']
-        //             ])->first();
+                    $user_projeto = UserProjeto::where([
+                        ['user', \Auth::user()->id],
+                        ['projeto',$dados['projeto']],
+                        ['tipo', 'produtor']
+                    ])->first();
 
-        //             $plano = Plano::create([
-        //                 'shopify_id' => $product->getId(),
-        //                 'shopify_variant_id' => $variant->getId(),
-        //                 'empresa' => $user_projeto->empresa,
-        //                 'projeto' => $projeto->id,
-        //                 'nome' => substr($product->getTitle(),0,100),
-        //                 'descricao' => $descricao,
-        //                 'cod_identificador' => $codigo_identificador, 
-        //                 'preco' => $variant->getPrice(),
-        //                 'frete_fixo' => '1',
-        //                 'valor_frete' => '0.00',
-        //                 'pagamento_cartao' => true,
-        //                 'pagamento_boleto' => true,
-        //                 'status' => '1',
-        //                 'transportadora' => '2',
-        //                 'qtd_parcelas' => '12',
-        //                 'parcelas_sem_juros' => '1'
-        //             ]);
+                    $plano = Plano::create([
+                        'shopify_id' => $product->getId(),
+                        'shopify_variant_id' => $variant->getId(),
+                        'empresa' => $user_projeto->empresa,
+                        'projeto' => $projeto->id,
+                        'nome' => substr($product->getTitle(),0,100),
+                        'descricao' => $descricao,
+                        'cod_identificador' => $codigo_identificador, 
+                        'preco' => $variant->getPrice(),
+                        'frete_fixo' => '1',
+                        'valor_frete' => '0.00',
+                        'pagamento_cartao' => true,
+                        'pagamento_boleto' => true,
+                        'status' => '1',
+                        'transportadora' => '2',
+                        'qtd_parcelas' => '12',
+                        'parcelas_sem_juros' => '1'
+                    ]);
 
-        //             if(count($product->getVariants()) > 1){
+                    if(count($product->getVariants()) > 1){
 
-        //                 foreach($product->getImages() as $image){
+                        foreach($product->getImages() as $image){
 
-        //                     foreach($image->getVariantIds() as $variant_id){
-        //                         if($variant_id == $variant->getId()){
+                            foreach($image->getVariantIds() as $variant_id){
+                                if($variant_id == $variant->getId()){
 
-        //                             $img = Image::make($image->getSrc());
+                                    $img = Image::make($image->getSrc());
 
-        //                             $nome_foto = 'plano_' . $plano->id . '_.png';
+                                    $nome_foto = 'plano_' . $plano->id . '_.png';
 
-        //                             Storage::delete('public/upload/plano/'.$nome_foto);
+                                    Storage::delete('public/upload/plano/'.$nome_foto);
 
-        //                             $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
 
-        //                             $plano->update([
-        //                                 'foto' => $nome_foto
-        //                             ]);
+                                    $plano->update([
+                                        'foto' => $nome_foto
+                                    ]);
 
-        //                             $img = Image::make($image->getSrc());
+                                    $img = Image::make($image->getSrc());
 
-        //                             $nome_foto = 'produto_' . $produto->id . '_.png';
+                                    $nome_foto = 'produto_' . $produto->id . '_.png';
 
-        //                             Storage::delete('public/upload/produto/'.$nome_foto);
+                                    Storage::delete('public/upload/produto/'.$nome_foto);
 
-        //                             $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
 
-        //                             $produto->update([
-        //                                 'foto' => $nome_foto
-        //                             ]);
+                                    $produto->update([
+                                        'foto' => $nome_foto
+                                    ]);
 
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //             else{
+                                }
+                            }
+                        }
+                    }
+                    else{
 
-        //                 $img = Image::make($product->getImage()->getSrc());
+                        $img = Image::make($product->getImage()->getSrc());
                 
-        //                 $nome_foto = 'plano_' . $plano->id . '_.png';
+                        $nome_foto = 'plano_' . $plano->id . '_.png';
     
-        //                 Storage::delete('public/upload/plano/'.$nome_foto);
+                        Storage::delete('public/upload/plano/'.$nome_foto);
     
-        //                 $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
     
-        //                 $plano->update([
-        //                     'foto' => $nome_foto
-        //                 ]);
+                        $plano->update([
+                            'foto' => $nome_foto
+                        ]);
 
-        //                 $img = Image::make($product->getImage()->getSrc());
+                        $img = Image::make($product->getImage()->getSrc());
 
-        //                 $nome_foto = 'produto_' . $produto->id . '_.png';
+                        $nome_foto = 'produto_' . $produto->id . '_.png';
             
-        //                 Storage::delete('public/upload/produto/'.$nome_foto);
+                        Storage::delete('public/upload/produto/'.$nome_foto);
             
-        //                 $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
             
-        //                 $produto->update([
-        //                     'foto' => $nome_foto
-        //                 ]);
+                        $produto->update([
+                            'foto' => $nome_foto
+                        ]);
 
-        //             }
+                    }
 
-        //             ProdutoPlano::create([
-        //                 'produto' => $produto->id,
-        //                 'plano' => $plano->id,
-        //                 'quantidade_produto' => '1'
-        //             ]);
-        //         }
-        //         else{
-        //             $plano->update([
-        //                 'nome' => substr($product->getTitle(),0,100),
-        //                 'descricao' => $descricao,
-        //                 'preco' => $variant->getPrice(),
-        //             ]);
-        //         }
-        //     }
+                    ProdutoPlano::create([
+                        'produto' => $produto->id,
+                        'plano' => $plano->id,
+                        'quantidade_produto' => '1'
+                    ]);
+                }
+                else{
+                    $plano->update([
+                        'nome' => substr($product->getTitle(),0,100),
+                        'descricao' => $descricao,
+                        'preco' => $variant->getPrice(),
+                    ]);
+                }
+            }
 
-        // }
+        }
 
         return response()->json('Sucesso');
     }
