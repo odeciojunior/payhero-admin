@@ -385,11 +385,14 @@ class TransferenciasController extends Controller {
                 if($transactionPayable->payment_method == 'credit_card'){
                     $dados_transacao['metodo'] = 'Cartão de crédito';
                 }
+                else if($transactionPayable->payment_method == 'boleto'){
+                    $dados_transacao['metodo'] = 'Boleto';
+                }
                 else{
-                    $dados_transacao['metodo'] = $transactionPayable->amount;
+                    $dados_transacao['metodo'] = $transactionPayable->payment_method;
                 }
 
-                if($transactionPayable->status == 'waiting_funds'){
+                if($transactionPayable->status == 'waiting_funds' || $transactionPayable->status == 'prepaid'){
                     $dados_transacao['status'] = 'Aguardando pagamento';
                 }
                 else{

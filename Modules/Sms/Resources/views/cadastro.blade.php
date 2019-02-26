@@ -46,9 +46,9 @@
 
                     <div class="form-group col-9">
                         <select name="periodo" class="form-control" id="periodo_sms" required>
-                            <option value="minutes">Minutos</option>
-                            <option value="hours">Horas</option>
-                            <option value="days">Dias</option>
+                            <option value="minutes">Minuto(s)</option>
+                            <option value="hours">Hora(s)</option>
+                            <option value="days">Dia(s)</option>
                         </select>
                     </div>
                 </div>

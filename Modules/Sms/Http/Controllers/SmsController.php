@@ -85,15 +85,10 @@ class SmsController extends Controller {
         }
 
         if($dados['plano'] == 'todos'){
-            $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
-            foreach($planos as $plano){
-                $dados['plano'] = $plano['id'];
-                ZenviaSms::create($dados);
-            }
+            unset($dados['plano']);
         }
-        else{
-            ZenviaSms::create($dados);
-        }
+
+        ZenviaSms::create($dados);
 
         return response()->json('Sucesso');
     }
@@ -122,6 +117,10 @@ class SmsController extends Controller {
                 $dados['periodo'] = 'hour';
             elseif($dados['periodo'] == 'days')
                 $dados['periodo'] = 'day';
+        }
+
+        if($dados['plano'] == 'todos'){
+            unset($dados['plano']);
         }
 
         ZenviaSms::find($dados['id'])->update($dados);
@@ -159,6 +158,12 @@ class SmsController extends Controller {
         ]);
 
         return Datatables::of($sms)
+        ->editColumn('plano', function ($sms) {
+            if($sms->plano == ''){
+                return 'Todos planos';
+            }
+            return $sms->plano;
+        })
         ->addColumn('detalhes', function ($sms) {
             return "<span data-toggle='modal' data-target='#modal_editar'>
                         <a class='btn btn-outline btn-primary editar_sms' data-placement='top' data-toggle='tooltip' title='Editar' sms='".$sms->id."'>
@@ -226,6 +231,12 @@ class SmsController extends Controller {
         $dados = $request->all();
 
         $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
+
+        foreach($planos as &$plano){
+            if($plano['descricao'] != ''){
+                $plano['nome'] = $plano['nome'] . ' - ' . $plano['descricao'];
+            }
+        }
 
         $form = view('sms::cadastro',[
             'planos' => $planos

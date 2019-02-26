@@ -48,9 +48,9 @@
 
                     <div class="col-9">
                         <select name="periodo" class="form-control" id="periodo" required>
-                            <option value="minutes" {!! ($sms->periodo == 'minutos') ? 'selected' : '' !!}>Minutos</option>
-                            <option value="hours" {!! ($sms->periodo == 'horas') ? 'selected' : '' !!}>Horas</option>
-                            <option value="days" {!! ($sms->periodo == 'dias') ? 'selected' : '' !!}>Dias</option>
+                            <option value="minutes" {!! ($sms->periodo == 'minutos') ? 'selected' : '' !!}>Minuto(s)</option>
+                            <option value="hours" {!! ($sms->periodo == 'horas') ? 'selected' : '' !!}>Hora(s)</option>
+                            <option value="days" {!! ($sms->periodo == 'dias') ? 'selected' : '' !!}>Dia(s)</option>
                         </select>
                     </div>
                 </div>
