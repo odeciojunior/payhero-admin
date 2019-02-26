@@ -47,7 +47,7 @@ class Venda extends Model
     /**
      * @var array
      */
-    protected $fillable = ['proprietario','comprador','afiliado', 'entrega', 'forma_pagamento', 'valor_total_pago', 'valor_recebido_mercado_pago', 'valor_frete', 'valor_plano', 'valor_cupom', 'tipo_cupom', 'cod_cupom', 'meio_pagamento', 'data_inicio', 'data_finalizada', 'pagamento_id', 'pagamento_status', 'qtd_parcelas', 'valor_parcelas', 'bandeira', 'link_boleto', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['proprietario','comprador','afiliado', 'entrega', 'forma_pagamento', 'valor_total_pago', 'valor_recebido_mercado_pago', 'valor_frete', 'valor_plano', 'valor_cupom', 'tipo_cupom', 'cod_cupom', 'meio_pagamento', 'data_inicio', 'data_finalizada', 'pagamento_id', 'pagamento_status', 'qtd_parcelas', 'valor_parcelas', 'bandeira', 'link_boleto', 'created_at', 'updated_at', 'deleted_at','pedido_shopify'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -130,9 +130,6 @@ class PostBackController extends Controller {
 
                             $nomes = explode(" ",$comprador['nome']);
                             $telefone = str_replace("+",'',$comprador['telefone']);
-                            // if(strlen($telefone) == 11){
-                            //     $telefone = substr($telefone,0,2).substr($telefone,3,strlen($telefone) - 1);
-                            // }
 
                             $telefone = "+55".$telefone;
                             if(strlen($telefone) != 14){
@@ -145,8 +142,6 @@ class PostBackController extends Controller {
                                 $plano = Plano::find($plano_venda['plano']);
                 
                                 $items[] = [
-                                    "fulfillable_quantity" => 1,
-                                    "fulfillment_service" => "cloudfox",
                                     "grams" => 500,
                                     "id" => $plano['id'],
                                     "price" => $plano['preco'],
