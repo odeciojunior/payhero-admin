@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12">
+                    <div class="form-group col-12">
                         <label for="status">Status</label>
                         <select name="status" type="text" class="form-control" id="status" required>
                             <option value="1" {!! $sms->status ? 'selected' : '' !!}>Ativo</option>

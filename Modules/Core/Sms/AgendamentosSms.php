@@ -1,6 +1,6 @@
 <?php 
 
-namespace Modules\Core\Helpers;
+namespace Modules\Core\Sms;
 
 use App\User;
 use App\Plano;
@@ -38,6 +38,17 @@ class AgendamentosSms {
                     ['evento', 'boleto_vencendo'],
                     ['status', '1']
                 ])->first();
+
+                if(!$servico_sms){
+                    $plano = Plano::find($planoVenda['plano']);
+                    $servico_sms = ZenviaSms::where([
+                        ['projeto', $plano['projeto']],
+                        ['evento', 'boleto_vencendo'],
+                        ['status', '1']
+                    ])
+                    ->whereNull('plano')
+                    ->first();
+                }
 
                 if($servico_sms){
                     if(ServicoSmsHelper::enviarSms($servico_sms,Venda::find($boleto['id']))){

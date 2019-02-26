@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Helpers\AgendamentosSms;
+use Modules\Core\Sms\AgendamentosSms;
 
 class EnviarSms extends Command
 {
@@ -38,9 +38,9 @@ class EnviarSms extends Command
      */
     public function handle()
     {
-        AgendamentosSms::verificarBoletosVencendo();
+        AgendamentosSms::verificarBoletosVencendo(); 
 
-        AgendamentosSms::verificarBoletosVencidos();
+        // AgendamentosSms::verificarBoletosVencidos();
     }
 
     
