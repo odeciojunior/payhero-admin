@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule) {
 
-        $schedule->command('enviar:sms')->everyMinute();
+        $schedule->command('enviar:sms')->dailyAt('10:00');
     }
 
     /**
