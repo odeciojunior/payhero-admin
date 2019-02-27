@@ -16,7 +16,6 @@
         <div class="card card-shadow card-responsive" id="widgetLineareaColor">
           <div class="card-block p-0">
             <div class="pt-30 p-30" style="height:calc(100% - 250px);">
-              <h3 style="margin-bottom: 40px"> Saldos </h3>
               <div class="row" style="margin-bottom: 20px">
 
                   <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
@@ -80,8 +79,10 @@
 
               <hr>
 
-              <h3 style="margin-bottom: 20px">Acompanhamento de vendas em tempo real</h3>
-  
+              <div style="width: 100%; text-align: center">
+                <h3 style="margin-bottom: 20px">Últimas vendas</h3>
+              </div>
+
               <div class="row">
                   <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
                     <div id="mapa" style="height:500px">
