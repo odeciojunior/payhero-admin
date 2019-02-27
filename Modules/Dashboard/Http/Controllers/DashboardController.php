@@ -2,18 +2,19 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use App\Plano;
+use App\Venda;
 use App\Empresa;
+use App\Projeto;
+use Carbon\Carbon;
+use App\PlanoVenda;
 use PagarMe\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
-class DashboardController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */ 
+class DashboardController extends Controller {
+
     public function index() {
 
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
@@ -68,6 +69,29 @@ class DashboardController extends Controller
         ]);
 
 
+    }
+
+    public function ultimasVendas(Request $request){
+
+        $dados = $request->all();
+
+        $vendas = Venda::select('id','data_inicio','valor_total_pago','forma_pagamento')
+        ->where([
+            [ 'proprietario', \Auth::user()->id ],
+            [ 'pagamento_status', '!=', 'refused']
+        ])->orderBy('id', 'DESC')
+        ->limit(10)
+        ->get()->toArray();
+
+        foreach($vendas as &$venda){
+            $plano_venda = PlanoVenda::where('venda',$venda['id'])->first();
+            $plano = Plano::find($plano_venda->plano);
+            $projeto = Projeto::find($plano['projeto']);
+            $venda['projeto'] = $projeto['nome'];
+            $venda['data_inicio'] = (new Carbon($venda['data_inicio']))->format('d/m/Y H:i:s');
+        }
+
+        return response()->json($vendas);
     }
 
 }

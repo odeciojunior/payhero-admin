@@ -94,7 +94,10 @@
                             <th>Hora</th>
                             <th>Projeto</th>
                             <th>Valor</th>
+                            <th>Forma</th>
                           </thead>
+                          <tbody id="tabela_ultimas_vendas">
+                          </tbody>
                       </table>
                     </div>
                   </div>
@@ -116,7 +119,8 @@
   {{--  <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
   <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
   <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>  --}}
-  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+  <script src="{{ asset('assets/js/OpenLayers.js') }}"></script>
+  {{--  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>  --}}
   <script>
 
     $(document).ready(function(){
@@ -133,6 +137,64 @@
           zoom: 3
         })
       });
+
+      function add_map_point(lat, lng) {
+        var vectorLayer = new ol.layer.Vector({
+          source:new ol.source.Vector({
+            features: [new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.transform(
+                [parseFloat(lng), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857')),
+            })]
+          }),
+          style: new ol.style.Style({
+            image: new ol.style.Icon({
+              anchor: [0.5, 0.5],
+              anchorXUnits: "fraction",
+              anchorYUnits: "fraction",
+              src: "/assets/img/marker.png"
+            })
+          })
+        });
+
+        map.addLayer(vectorLayer);
+      }
+  
+      add_map_point(-23.7,-47.7);
+      add_map_point(-23.9,-48.7);
+
+      function atualizaTabelaUltimasVendas(){
+
+        $.ajax({
+          method: "POST",
+          url: "/dashboard/ultimasvendas",
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: { empresa: $('#select_empresas').val() },
+          error: function(){
+              //
+          },
+          success: function(data){
+
+              var dados_tabela = "";
+              $.each(data, function(i, item) {
+                  dados_tabela += "<tr>";
+                  dados_tabela += "<td>"+data[i].data_inicio+"</td>";
+                  dados_tabela += "<td>"+data[i].projeto+"</td>";
+                  dados_tabela += "<td>"+data[i].valor_total_pago+"</td>";
+                  dados_tabela += "<td>"+data[i].forma_pagamento+"</td>";
+                  dados_tabela += "</tr>";
+              });
+
+              $('#tabela_ultimas_vendas').html(dados_tabela);
+          }
+
+        });
+
+      }
+
+      atualizaTabelaUltimasVendas();
+
     });
 
   </script>
