@@ -148,9 +148,9 @@
           }),
           style: new ol.style.Style({
             image: new ol.style.Icon({
-              anchor: [0.5, 0.5],
+              anchor: [0.5, 35],
               anchorXUnits: "fraction",
-              anchorYUnits: "fraction",
+              anchorYUnits: "pixels",
               src: "/assets/img/marker.png"
             })
           })
@@ -158,9 +158,6 @@
 
         map.addLayer(vectorLayer);
       }
-  
-      add_map_point(-23.7,-47.7);
-      add_map_point(-23.9,-48.7);
 
       function atualizaTabelaUltimasVendas(){
 
@@ -183,7 +180,18 @@
                   dados_tabela += "<td>"+data[i].projeto+"</td>";
                   dados_tabela += "<td>"+data[i].valor_total_pago+"</td>";
                   dados_tabela += "<td>"+data[i].forma_pagamento+"</td>";
-                  dados_tabela += "</tr>";
+                  dados_tabela += "</tr>"; 
+
+                  if(data[i].ip != null){
+                    $.ajax({
+                        url : "http://ip-api.com/json/"+data[i].ip, 
+                        type : "GET",
+                        success : function(response) {
+                          add_map_point(response.lat, response.lon);
+                        }
+            
+                    });
+                  }
               });
 
               $('#tabela_ultimas_vendas').html(dados_tabela);

@@ -75,7 +75,7 @@ class DashboardController extends Controller {
 
         $dados = $request->all();
 
-        $vendas = Venda::select('id','data_inicio','valor_total_pago','forma_pagamento')
+        $vendas = Venda::select('id','data_inicio','valor_total_pago','forma_pagamento','ip')
         ->where([
             [ 'proprietario', \Auth::user()->id ],
             [ 'pagamento_status', '!=', 'refused']
