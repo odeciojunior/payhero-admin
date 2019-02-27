@@ -184,10 +184,10 @@
 
                   if(data[i].ip != null){
                     $.ajax({
-                        url : "http://ip-api.com/json/"+data[i].ip, 
+                        url : "https://ipapi.co/"+data[i].ip+"/json",
                         type : "GET",
                         success : function(response) {
-                          add_map_point(response.lat, response.lon);
+                          add_map_point(response.latitude, response.longitude);
                         }
             
                     });
