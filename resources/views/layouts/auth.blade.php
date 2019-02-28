@@ -10,21 +10,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-     <title>CloudFox @yield('title')</title> 
-
-    <!-- Scripts -->
-    {{-- <script src="{{ asset('adminremark/assets/js/app.js') }}" defer></script> --}}
-
-
+    <title>CloudFox @yield('title')</title> 
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
-    <!-- Styles -->
-    {{-- <link href="{{ asset('adminremark/css/app.css') }}" rel="stylesheet">
-     --}}
-    
     
     <link rel="apple-touch-icon" href="{{ asset('adminremark/assets/images/apple-touch-icon.png') }}">
     <link rel="shortcut icon"  href="{{ asset('adminremark/assets/images/favicon.ico') }}">
@@ -46,41 +36,28 @@
 
     <link rel="stylesheet" href="{{ asset('adminremark/assets/css/style.css') }}">
     
-    
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/material-design/material-design.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/brand-icons/brand-icons.min.css') }}">
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
-    
-    <!--[if lt IE 9]>
-    <script src="../../../global/vendor/html5shiv/html5shiv.min.js"></script>
-    <![endif]-->
-    
-    <!--[if lt IE 10]>
-    <script src="../../../global/vendor/media-match/media.match.min.js"></script>
-    <script src="../../../global/vendor/respond/respond.min.js"></script>
-    <![endif]-->
     
     <!-- Scripts -->
     <script src="{{ asset('adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
       Breakpoints();
     </script>
+
   </head>
   <body class="animsition page-login-v3 layout-full">
-    <!--[if lt IE 8]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
 
     <!-- Page -->   
         @yield('content')
     <!-- End Page -->
 
-
     <!-- Core  -->
     <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
+
     <script src="{{ asset('adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/animsition/animsition.js') }}"></script>
@@ -118,9 +95,9 @@
     <script src="{{ asset('adminremark/global/js/Plugin/asscrollable.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/slidepanel.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/switchery.js') }}"></script>
-        <script src="{{ asset('adminremark/global/js/Plugin/jquery-placeholder.js') }}"></script>
-        <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
-    
+    <script src="{{ asset('adminremark/global/js/Plugin/jquery-placeholder.js') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
+
     <script>
       (function(document, window, $){
         'use strict';

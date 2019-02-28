@@ -122,6 +122,8 @@
   <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>  --}}
   <script src="{{ asset('assets/js/OpenLayers.js') }}"></script>
   {{--  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>  --}}
+  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+
   <script>
 
     $(document).ready(function(){
@@ -138,6 +140,8 @@
           zoom: 3
         })
       });
+
+      var vectorLayers = new Array();
 
       function add_map_point(lat, lng) {
         var vectorLayer = new ol.layer.Vector({
@@ -158,9 +162,21 @@
         });
 
         map.addLayer(vectorLayer);
+        vectorLayers.push(vectorLayer);
+
       }
 
-      function atualizaTabelaUltimasVendas(){
+      function clear_map_points(){
+        vectorLayers.forEach((vectorLayer) => {
+          var features = vectorLayer.getSource().getFeatures();
+          features.forEach((feature) => {
+              vectorLayer.getSource().removeFeature(feature);
+          });
+        });
+        vectorLayers.length = 0;
+      }
+
+      function atualizarUltimasVendas(){
 
         $.ajax({
           method: "POST",
@@ -173,6 +189,8 @@
               //
           },
           success: function(data){
+
+              $('#tabela_ultimas_vendas').html(dados_tabela);
 
               var dados_tabela = "";
               $.each(data, function(i, item) {
@@ -196,13 +214,42 @@
               });
 
               $('#tabela_ultimas_vendas').html(dados_tabela);
+
           }
 
         });
 
       }
 
-      atualizaTabelaUltimasVendas();
+      atualizarUltimasVendas();
+
+      Pusher.logToConsole = false;
+
+      var pusher = new Pusher('339254dee7e0c0a31840', {
+          cluster: 'us2',
+          forceTLS: true
+      });
+
+      var channel = pusher.subscribe('channel-{!! \Auth::user()->id !!}');
+
+      channel.bind('my-event', function(data) {
+        alertPersonalizado('success','Nova venda realizada');
+        clear_map_points();
+        atualizarUltimasVendas();
+      });
+
+      function alertPersonalizado(tipo, mensagem){
+
+          swal({
+              position: 'bottom',
+              type: tipo,
+              toast: 'true',
+              title: mensagem,
+              showConfirmButton: false,
+              timer: 6000
+          });
+      }
+
 
     });
 

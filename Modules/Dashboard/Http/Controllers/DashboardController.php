@@ -7,6 +7,7 @@ use App\Venda;
 use App\Empresa;
 use App\Projeto;
 use Carbon\Carbon;
+use Pusher\Pusher;
 use App\PlanoVenda;
 use PagarMe\Client;
 use Illuminate\Http\Request;

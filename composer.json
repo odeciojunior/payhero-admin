@@ -24,7 +24,8 @@
         "laracasts/utilities": "3.0",
         "vitorccsiqueira/zenvia-php": "2.1",
         "slince/shopify-api-php": "2.2.0",
-        "jenssegers/agent": "2.6.3"
+        "jenssegers/agent": "2.6.3",
+        "pusher/pusher-php-server": "3.3.1"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
