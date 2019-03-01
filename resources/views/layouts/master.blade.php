@@ -153,6 +153,7 @@
     <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
 
     <script src="{{ asset('jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
+    <script src="{{ asset('assets/js/notificacoes.js') }}"></script>
 
     @yield('scripts')
 
