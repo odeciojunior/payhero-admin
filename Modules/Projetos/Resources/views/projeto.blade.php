@@ -339,6 +339,79 @@
                         </div>
                     </div>
 
+                    <!-- Modal para adicionar materiais extras no projeto -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_material_extra" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div style="text-align: center">
+                                    <h4>Adicionar material extra</h4>
+                                </div>
+
+                                <div class="page-content container-fluid">
+                                    <div class="panel" data-plugin="matchHeight">
+                                        <div style="width:100%">
+                                            <form id="add_material_extra" method="post" enctype="multipart/form-data">
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="descricao">Descrição</label>
+                                                        <input name="descricao_material_extra" id="descricao_material_extra" type="text" class="form-control" placeholder="Descrição">
+                                                    </div>
+                                                </div>
+                                
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="tipo">Tipo</label>
+                                                        <select name="tipo" class="form-control" id="tipo_material_extra">
+                                                            <option value="" selected>Selecione</option>
+                                                            <option value="imagem">Imagem</option>
+                                                            <option value="video">Vídeo (url)</option>
+                                                            <option value="pdf">PDF</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div id="div_material_extra_imagem" class="row" style="display:none">
+                                                    <div class="form-group col-12">
+                                                        <label for="valor">Imagem</label><br>
+                                                        <input type="button" id="selecionar_imagem_material_extra" class="btn btn-default" value="Selecionar imagem">
+                                                        <input name="material_extra_imagem" id="material_extra_imagem" type="file" style="display:none" accept="image/*">
+                                                    </div>
+                                                    <div  style="margin: 20px 0 0 30px;">
+                                                        <img id="previewimage_material_extra" alt="Selecione a foto" style="max-height: 250px; max-width: 350px;"/>
+                                                    </div>
+                                                </div>
+                                                <div id="div_material_extra_pdf" class="row" style="display:none">
+                                                    <div class="form-group col-12">
+                                                        <label for="valor">PDF</label><br>
+                                                        <input type="button" id="selecionar_pdf_material_extra" class="btn btn-default" value="Selecionar arquivo">
+                                                        <input name="material_extra_pdf" id="material_extra_pdf" type="file" style="display:none" accept="application/pdf">
+                                                    </div>
+                                                    <div  style="margin: 20px 0 0 30px;">
+                                                        <label id="label_pdf_material_extra"> Selecione o arquivo</label>
+                                                    </div>    
+                                                </div>
+                                                <div id="div_material_extra_video" class="row" style="display:none">
+                                                    <div class="form-group col-12">
+                                                        <label for="valor">Vídeo (url)</label>
+                                                        <input name="material_extra_video" id="material_extra_video" type="text" class="form-control" placeholder="Url do vídeo">
+                                                    </div>
+                                                </div>
+                                            </form>                     
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="bt_adicionar_material_extra" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -3076,6 +3149,102 @@
 
         });
 
+        $("#tipo_material_extra").on("change", function(){
+
+            $("#div_material_extra_imagem").css('display','none');
+            $("#div_material_extra_pdf").css('display','none');
+            $("#div_material_extra_video").css('display','none');
+
+            if($(this).val() == 'imagem'){
+                $("#div_material_extra_imagem").css('display','block');
+            }
+            else if($(this).val() == 'pdf'){
+                $("#div_material_extra_pdf").css('display','block');
+            }
+            else if($(this).val() == 'video'){
+                $("#div_material_extra_video").css('display','block');
+            }
+        });
+
+        $("#selecionar_imagem_material_extra").on("click", function(){
+            $("#material_extra_imagem").click();
+        });
+        $("#selecionar_pdf_material_extra").on("click", function(){
+            $("#material_extra_pdf").click();
+        });
+
+        $("#material_extra_imagem").on("change", function(){
+
+            var imageReader = new FileReader();
+            imageReader.readAsDataURL(document.getElementById("material_extra_imagem").files[0]);
+
+            imageReader.onload = function (oFREvent) {
+                $("#previewimage_material_extra").attr('src', oFREvent.target.result).fadeIn();
+            };
+        });
+
+        $("#material_extra_pdf").on('change', function(){
+            $("#label_pdf_material_extra").html('Arquivo selecionado');
+        });
+
+        $("#bt_adicionar_material_extra").on("click", function(){
+
+            if($("#descricao_material_extra").val() == ''){
+                $("#fechar_modal_material_extra").click();
+                alertPersonalizado('error','Descrição não informada');
+                return false;
+            }
+            if($("#tipo_material_extra").val() == ''){
+                $("#fechar_modal_material_extra").click();
+                alertPersonalizado('error','Informe o tipo do material extra');
+                return false;
+            }
+            if($("#tipo_material_extra").val() == 'imagem' &&  document.getElementById("material_extra_imagem").files.length == 0){
+                $("#fechar_modal_material_extra").click();
+                alertPersonalizado('error','Imagem não selecionada');
+                return false;
+            }
+            if($("#tipo_material_extra").val() == 'pdf' && document.getElementById("material_extra_pdf").files.length == 0){
+                $("#fechar_modal_material_extra").click();
+                alertPersonalizado('error','Arquivo não selecionado');
+                return false;
+            }
+            if($("#tipo_material_extra").val() == 'video' && $("#material_extra_video").val() == ''){
+                $("#fechar_modal_material_extra").click();
+                alertPersonalizado('error','Url do vídeo não informada');
+                return false;
+            }
+
+            $('.loading').css("visibility", "visible");
+
+            var form_data = new FormData(document.getElementById('add_material_extra'));
+            form_data.append('projeto',id_projeto);
+
+            $.ajax({
+                method: "POST",
+                url: "/projetos/addmaterialextra",
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: form_data,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function(){
+                    $('.loading').css("visibility", "hidden");
+                    alertPersonalizado('error','Ocorreu algum erro');
+                    $('#previewimage').imgAreaSelect({remove:true});
+                },
+                success: function(data){
+                    $('.loading').css("visibility", "hidden");
+                    alertPersonalizado('success','Material extra adicionado!');
+                    $('#previewimage').imgAreaSelect({remove:true});
+                    updateConfiguracoes();
+                },
+            });
+
+        });
+
         function updateConfiguracoes(){
 
             $.ajax({
@@ -3269,6 +3438,30 @@
                         });
                     });
 
+                    $(".excluir_material_extra").on("click", function(){
+
+                        $('.loading').css("visibility", "visible");
+                        var id_material_extra = $(this).attr('material-extra');
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/projetos/deletarmaterialextra",
+                            data: {id_material_extra: id_material_extra},
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function(){
+                                $('.loading').css("visibility", "hidden");
+                                alertPersonalizado('error','Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('.loading').css("visibility", "hidden");
+                                alertPersonalizado('success','Material extra removido!');
+                                updateConfiguracoes();
+                            }
+                        });
+
+                    });
                 }
             });
         }

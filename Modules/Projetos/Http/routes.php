@@ -47,5 +47,15 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
         'uses' => 'ProjetosController@getDadosProjeto'
     ]);
 
+    Route::post('/addmaterialextra',[
+        'as' => 'projetos.addmaterialextra',
+        'uses' => 'ProjetosController@addMaterialExtra'
+    ]);
+
+    Route::post('/deletarmaterialextra',[
+        'as' => 'projetos.deletarmaterialextra',
+        'uses' => 'ProjetosController@deletarMaterialExtra'
+    ]);
+
 });
 

@@ -159,8 +159,14 @@ class PostBackController extends Controller {
 
                             $entrega = Entrega::find($venda['entrega']);
 
+                            $address = $entrega['rua'] . ' - ' . $entrega['numero'];
+                            if($entrega['ponto_referencia'] != ''){
+                                $address .= ' - ' . $entrega['ponto_referencia'];
+                            }
+                            $address .= ' - ' .$entrega['bairro'];
+
                             $shipping_address = [
-                                "address1"=> $entrega['rua'] . ' - ' . $entrega['numero'] . ' - ' . $entrega['ponto_referencia'] . ' - ' .$entrega['bairro'],
+                                "address1"=> $address,
                                 "address2"=> "",
                                 "city"=> $entrega['cidade'],
                                 "company"=> $comprador['cpf'],

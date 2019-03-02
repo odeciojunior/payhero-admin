@@ -78,6 +78,40 @@
             </div>
         </div>
 
+        <div class="row" style="margin: 0 2% 0 2%">
+            <div style="width:100%">
+                <a id="adicionar_material_extra" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add_material_extra' style="color: white">
+                    <i class='icon wb-user-add' aria-hidden='true'></i>
+                    Adicionar material extra
+                </a>
+            </div>
+            <div class="row">
+                <h5>Materiais extras</h5>
+            </div>
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <th>Descrição</th>
+                    <th>Tipo</th>
+                    <th>Remover</th>
+                </thead>
+                <tbody>
+                    @if(count($materiais_extras) == 0)
+                        <tr>
+                            <td colspan="3" style="text-align:center">Nenhum material extra adicionado</td>
+                        </tr>
+                    @else
+                        @foreach($materiais_extras as $material_extra)
+                            <tr>
+                                <td>{!! $material_extra['descricao'] !!}</td>
+                                <td>{!! $material_extra['tipo'] !!}</td>
+                                <td style="width:70px"><button type="button" class="btn btn-danger excluir_material_extra" material-extra="{!! $material_extra['id'] !!}">Excluir</button></td>
+                            </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+            </table>
+        </div>
+
         <h4> Configurações do frete </h4>
 
         <div class="row">

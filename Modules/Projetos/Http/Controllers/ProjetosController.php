@@ -8,6 +8,7 @@ use App\Plano;
 use App\Empresa;
 use App\Projeto;
 use App\UserProjeto;
+use App\MaterialExtra;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -172,16 +173,19 @@ class ProjetosController extends Controller{
 
         $projeto = Projeto::find($id);
 
+        $materiais_extras = MaterialExtra::where('projeto',$projeto['id'])->get()->toArray();
+
         $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         $view = view('projetos::editar',[
             'projeto' => $projeto,
-            'empresas' => $empresas
+            'empresas' => $empresas,
+            'materiais_extras' => $materiais_extras
         ]);
 
         return response()->json($view->render());
     }
-
+ 
     public function getDadosProjeto($id){
 
         $projeto = Projeto::find($id); 
@@ -207,4 +211,76 @@ class ProjetosController extends Controller{
         return response()->json($view->render());
     }
 
+    public function addMaterialExtra(Request $request){
+
+        $dados = $request->all();
+
+        $dados['descricao'] = $dados['descricao_material_extra'];
+
+        if($dados['tipo'] == 'video'){
+            $dados['material'] = $dados['material_extra_video'];
+            MaterialExtra::create($dados);
+        }
+        else if($dados['tipo'] == 'imagem'){
+
+            $material_extra = MaterialExtra::create($dados);
+
+            $imagem = $request->file('material_extra_imagem');
+
+            if ($imagem != null) {
+                $nome_foto = 'foto_' . $material_extra->id . '_.' . $imagem->getClientOriginalExtension();
+    
+                Storage::delete('public/upload/materialextra/fotos/'.$nome_foto);
+    
+                $imagem->move(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO, $nome_foto);
+    
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nome_foto);
+
+                Storage::delete('public/upload/materialextra/fotos/'.$nome_foto);
+
+                $img->save(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nome_foto);
+
+                $material_extra->update([
+                    'material' => $nome_foto
+                ]);
+            }
+
+        }
+        else if($dados['tipo'] == 'pdf'){
+
+            $material_extra = MaterialExtra::create($dados);
+
+            $arquivo = $request->file('material_extra_pdf');
+
+            if ($arquivo != null) {
+                $nome_pdf = 'pdf_' . $material_extra->id . '_.' . $arquivo->getClientOriginalExtension();
+
+                Storage::delete('public/upload/materialextra/pdfs/'.$nome_pdf);
+
+                $arquivo->move(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO, $nome_pdf);
+
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nome_pdf);
+
+                Storage::delete('public/upload/materialextra/pdfs/'.$nome_pdf);
+
+                $img->save(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nome_pdf);
+
+                $material_extra->update([
+                    'material' => $nome_pdf
+                ]);
+            }
+
+        }
+
+        return response()->json('sucesso');
+    }
+
+    public function deletarMaterialExtra(Request $request){
+
+        $dados = $request->all();
+
+        MaterialExtra::find($dados['id_material_extra'])->delete();
+
+        return response()->json('sucesso');
+    }
 }
