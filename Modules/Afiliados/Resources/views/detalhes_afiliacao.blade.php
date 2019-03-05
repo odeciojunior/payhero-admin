@@ -26,6 +26,8 @@
                             aria-controls="tab_campanhas" role="tab">Campanhas</a></li>
                         <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_vendas"
                             aria-controls="tab_vendas" role="tab">Vendas</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_materiais_extras"
+                            aria-controls="materiais_extras" role="tab">Materiais extras</a></li>    
                         <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_configuracoes"
                             aria-controls="tab_configuracoes" role="tab">Configurações</a></li>
                     </ul>
@@ -86,6 +88,32 @@
                                 <tbody>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="tab-pane" id="tab_materiais_extras" role="tabpanel">
+                            <div style="margin:15px 20px 0 20px">
+                                <table id="tabela_campanhas" class="table table-hover table-bordered w-full">
+                                    <thead>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th style="width:150px">Ver detalhes</th>
+                                    </thead>
+                                    <tbody>
+                                        @if(count($materiais_extras) == 0)
+                                            <tr style="text-align: center">
+                                                <td colspan="3"> Nenhum material extra disponível</td>
+                                            </tr>
+                                        @else
+                                            @foreach($materiais_extras as $material_extra)
+                                                <tr>
+                                                    <td>{!! $material_extra['descricao'] !!}</td>
+                                                    <td>{!! $material_extra['tipo'] !!}</td>
+                                                    <td><a class="btn btn-success material_extra" material-id="{!! $material_extra['id'] !!}"  data-toggle='modal' data-target='#modal_material_extra'>Ver detalhes</a></td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="tab-pane" id="tab_configuracoes" role="tabpanel" style="padding: 50px">
                             <div class="row">
@@ -168,6 +196,31 @@
                     </div>
                 </div>
 
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_material_extra" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button id="fechar_modal_dados" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" style="width: 100%; text-align:center">Material extra</h4>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <div class="page-content container-fluid">
+                                        <div id="body_modal_material_extra" class="panel" data-plugin="matchHeight">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
                 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir_afiliacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                     <div class="modal-dialog modal-simple">
                         <div class="modal-content">
@@ -470,6 +523,10 @@
 
             });
 
+            $(".material_extra").on("click", function(){
+                id_material_extra = $(this).attr('material-id');
+            });
+
             function alertPersonalizado(tipo, mensagem){
 
                 swal({
@@ -481,7 +538,6 @@
                     timer: 6000
                 });
             }
-    
 
         });
 

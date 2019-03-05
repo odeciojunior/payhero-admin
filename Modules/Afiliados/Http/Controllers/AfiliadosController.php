@@ -12,6 +12,7 @@ use App\Afiliado;
 use Carbon\Carbon;
 use App\UserProjeto;
 use App\LinkAfiliado;
+use App\MaterialExtra;
 use Illuminate\Http\Request;
 use App\SolicitacaoAfiliacao;
 use Illuminate\Http\Response;
@@ -127,11 +128,14 @@ class AfiliadosController extends Controller {
         ])->first();
         $usuario = User::find($projeto_usuario['user']);
 
+        $materiais_extras = MaterialExtra::where('projeto',$projeto['id'])->get()->toArray();
+
         return view('afiliados::detalhes_afiliacao',[
             'projeto' => $projeto,
             'produtor' => $usuario['name'],
             'empresas' => $empresas,
-            'afiliado' => $afiliado
+            'afiliado' => $afiliado,
+            'materiais_extras' => $materiais_extras,
         ]);
     }
 
