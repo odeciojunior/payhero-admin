@@ -70,7 +70,7 @@ class CampanhasController extends Controller {
 
         $dominio = Dominio::where('projeto',$afiliado['projeto'])->first();
 
-        $set_coockie_url = "checkout.".$dominio['dominio']."/"."setcookie/";
+        $set_coockie_url = "affiliate.".$dominio['dominio']."/"."setcookie/";
 
         $url_pagina = $set_coockie_url.LinkAfiliado::where([
             ['afiliado', $afiliado['id']],

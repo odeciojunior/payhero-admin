@@ -61,6 +61,9 @@ class DominiosController extends Controller {
                 if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
                     // echo "DNS criado.". PHP_EOL;
                 }
+                if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
             }
             else{
                 $dados['ip_dominio'] = 'Domínio Shopify';
@@ -74,6 +77,9 @@ class DominiosController extends Controller {
                     // echo "DNS criado.". PHP_EOL;
                 }
                 if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+                    // echo "DNS criado.". PHP_EOL;
+                }
+                if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
                     // echo "DNS criado.". PHP_EOL;
                 }
             }
@@ -339,7 +345,7 @@ class DominiosController extends Controller {
             else
                 $novo_registro['valor'] = $record->content;
 
-            if($novo_registro['nome'] == 'checkout' || $novo_registro['nome'] == 'sac' || $novo_registro['nome'] == 'www' || $novo_registro['nome'] == $dominio['dominio']){
+            if($novo_registro['nome'] == 'checkout' || $novo_registro['nome'] == 'sac' || $novo_registro['nome'] == 'affiliate' || $novo_registro['nome'] == 'www' || $novo_registro['nome'] == $dominio['dominio']){
                 $novo_registro['deletar'] = false; 
             }
             else{
