@@ -25,7 +25,8 @@
         "vitorccsiqueira/zenvia-php": "2.1",
         "slince/shopify-api-php": "2.2.0",
         "jenssegers/agent": "2.6.3",
-        "pusher/pusher-php-server": "3.3.1"
+        "pusher/pusher-php-server": "3.3.1",
+        "laravel/passport": "7.2.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
