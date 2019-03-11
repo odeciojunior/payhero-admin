@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AutenticacaoController extends Controller {
 
@@ -23,7 +24,7 @@ class AutenticacaoController extends Controller {
             return response(['status'=>'error', 'message'=>'Usuário não encontrado']);
         }
 
-        if(hash()->check($request->password, $user->password)){
+        if(Hash::check($request->password, $user->password)){
 
             $http = new Client;
 
