@@ -65,6 +65,7 @@
 
                 $.ajax({
                     method: "GET",
+                    dataType: 'json',
                     url: "http://cloudfoxapi.tk/api/user",
                     headers: {
                         'Accept': 'application/json',
