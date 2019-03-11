@@ -43,13 +43,13 @@ class AutenticacaoController extends Controller {
 
             return response()->json([
                 'data' => json_decode((string) $response->getBody(), true)
-            ]);
+            ])->header('Access-Control-Allow-Origin', '*');
         }
 
         return response()->json([
             'status'=>'error', 
             'message'=>'Dados inválidos'
-        ]);
+        ])->header('Access-Control-Allow-Origin', '*');
 
     }
 
