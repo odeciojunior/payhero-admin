@@ -43,3 +43,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'usuarios', 'namespac
     ]);
 
 });
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'user', 'namespace' => 'Modules\Usuario\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'UsuarioController@user',
+    ]);
+});
