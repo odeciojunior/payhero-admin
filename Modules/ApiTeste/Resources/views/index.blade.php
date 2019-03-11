@@ -69,6 +69,7 @@
                     url: "http://cloudfoxapi.tk/api/user",
                     headers: {
                         'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': 'Bearer ' + access_token
                     },
                     error: function(){

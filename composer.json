@@ -26,7 +26,8 @@
         "slince/shopify-api-php": "2.2.0",
         "jenssegers/agent": "2.6.3",
         "pusher/pusher-php-server": "3.3.1",
-        "laravel/passport": "7.2.0"
+        "laravel/passport": "7.2.0",
+        "barryvdh/laravel-cors": "0.11.3"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
