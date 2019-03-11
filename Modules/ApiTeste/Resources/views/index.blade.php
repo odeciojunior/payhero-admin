@@ -25,8 +25,11 @@
                     headers: {
                         'Accept': 'application/json'
                     },
-                    data: { email: $('#email').val(), password: $('#password').val() },
-                    error: function(){
+                    data: { 
+                        email: $('#email').val(), 
+                        password: $('#password').val() 
+                    },
+                    error: function(a,b,c){
                         alert('Ocorreu algum erro');
                     },
                     success: function(data){
