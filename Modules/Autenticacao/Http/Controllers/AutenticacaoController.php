@@ -24,7 +24,7 @@ class AutenticacaoController extends Controller {
             return response()->json([
                 'status'=>'error', 
                 'message'=>'Usuário não encontrado'
-            ]);
+            ])->header('Access-Control-Allow-Origin', '*');
         }
 
         if(Hash::check($request->password, $user->password)){

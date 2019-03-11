@@ -19,21 +19,25 @@
 
             $("#logar").on("click", function(){
 
+                jQuery.support.cors = true;
+
                 $.ajax({
                     method: "POST",
+                    dataType: 'text json',
                     url: "http://cloudfoxapi.tk/api/login",
-                    headers: {
+                    cache: false,
+                    {{--  headers: {
                         'Accept': 'application/json'
-                    },
+                    },  --}}
                     data: { 
                         email: $('#email').val(),
                         password: $('#password').val() 
                     },
-                    error: function(a,b,c){
-                        alert('Ocorreu algum erro');
+                    error: function(){
+                        alert('erro');
                     },
-                    success: function(data){
-                        alert(data.toSource());
+                    success: function(){
+                        alert('success');
                     }
                 });
             });
