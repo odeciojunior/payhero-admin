@@ -26,7 +26,7 @@
                         'Accept': 'application/json'
                     },
                     data: { 
-                        email: $('#email').val(), 
+                        email: $('#email').val(),
                         password: $('#password').val() 
                     },
                     error: function(a,b,c){

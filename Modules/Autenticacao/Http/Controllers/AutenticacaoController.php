@@ -13,8 +13,6 @@ class AutenticacaoController extends Controller {
 
     public function login(Request $request) {
 
-        return response()->json('ok');
-
         $request->validate([
             'email' => 'required',
             'password' => 'required'
