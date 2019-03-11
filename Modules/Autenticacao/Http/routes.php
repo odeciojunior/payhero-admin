@@ -2,5 +2,8 @@
 
 Route::group(['middleware' => 'web', 'prefix' => 'api/login', 'namespace' => 'Modules\Autenticacao\Http\Controllers'], function()
 {
-    Route::post('/', 'AutenticacaoController@login');
+    // Route::post('/', 'AutenticacaoController@login');
+    Route::post('/', function(){
+        return 'lalalalalong';
+    });
 });
