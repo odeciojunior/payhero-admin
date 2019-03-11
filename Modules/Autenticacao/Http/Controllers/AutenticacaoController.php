@@ -2,6 +2,8 @@
 
 namespace Modules\Autenticacao\Http\Controllers;
 
+use App\User;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
