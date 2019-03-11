@@ -1,0 +1,16 @@
+{
+    "name": "Autenticacao",
+    "alias": "autenticacao",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Autenticacao\\Providers\\AutenticacaoServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}
