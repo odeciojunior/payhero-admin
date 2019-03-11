@@ -12,7 +12,6 @@ class AutenticacaoController extends Controller {
 
     public function login(Request $request) {
 
-        return 'to aqui';
         $request->validate([
             'email' => 'required',
             'password' => 'required'
