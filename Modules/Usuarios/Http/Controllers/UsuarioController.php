@@ -221,7 +221,9 @@ class UsuarioController extends Controller {
 
     public function user(){
 
-        return response()->json(\Auth::user())->header('Access-Control-Allow-Origin', '*');
+        return response()->json([
+            'user' => \Auth::user()
+        ])->header('Access-Control-Allow-Origin', '*');
     }
 }
 
