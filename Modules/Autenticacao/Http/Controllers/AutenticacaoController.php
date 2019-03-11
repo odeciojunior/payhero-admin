@@ -21,7 +21,7 @@ class AutenticacaoController extends Controller {
         $user = User::where('email',$request->email)->first();
 
         if(!$user){
-            return response(['status'=>'error', 'message'=>'Usuário não encontrado']);
+            return response()->json(['status'=>'error', 'message'=>'Usuário não encontrado']);
         }
 
         if(Hash::check($request->password, $user->password)){
@@ -38,10 +38,10 @@ class AutenticacaoController extends Controller {
                 ]
             ]);
 
-            return response(['data'=>json_decode((string) $response->getBody(), true)]);
+            return response()->json(['data'=>json_decode((string) $response->getBody(), true)]);
         }
 
-        return response(['status'=>'error', 'message'=>'Dados inválidos']);
+        return response()->json(['status'=>'error', 'message'=>'Dados inválidos']);
     }
 
 }
