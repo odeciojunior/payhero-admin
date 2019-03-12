@@ -578,7 +578,6 @@ class TransferenciasController extends Controller {
 
     }
 
-
     public function getSaldosDashboard(){
 
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
@@ -633,7 +632,6 @@ class TransferenciasController extends Controller {
         ]);
         
     }
-
 
 }
 

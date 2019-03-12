@@ -23,8 +23,15 @@
         <h3>Menu lateral</h3>
         <button id="get_menulateral">Menu lateral</button><br>
 
+        <hr>
+
+
         <h1>Dashboard</h1>
         <button id="get_saldos">Obter saldos</button><br>
+
+        <h1>Vitrine</h1>
+        <button id="get_vitrine">Obter projetos vitrine</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -170,6 +177,27 @@
                     }
                 });
 
+            });
+
+            $("#get_vitrine").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/vitrine/",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+                
             });
 
         });
