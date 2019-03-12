@@ -25,3 +25,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'relatorios', 'namesp
 });
 
 
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vendas', 'namespace' => 'Modules\Relatorios\Http\Controllers'], function()
+{
+    Route::get('/', [
+        'uses' => 'RelatoriosController@getVendas',
+    ]);
+
+});

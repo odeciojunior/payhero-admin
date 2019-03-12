@@ -32,6 +32,9 @@
         <h1>Vitrine</h1>
         <button id="get_vitrine">Obter projetos vitrine</button><br>
 
+        <h1>Vendas</h1>
+        <button id="get_vendas">Dados tabela de vendas</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -198,6 +201,28 @@
                     }
                 });
                 
+            });
+
+            $("#get_vendas").on("click", function(){
+
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "/api/vendas/",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
             });
 
         });
