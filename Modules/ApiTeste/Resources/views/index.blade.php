@@ -156,7 +156,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/user/getsaldos/",
+                    url: "http://cloudfoxapi.tk/api/financas/getsaldos/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
