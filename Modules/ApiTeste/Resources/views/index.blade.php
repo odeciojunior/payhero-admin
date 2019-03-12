@@ -19,6 +19,8 @@
         <button id="dados_usuario">Dados do usuario</button><br>
         <button id="qtd_notificacoes">Quantidade de notificaçẽos</button><br>
         <button id="notificacoes">Notificacoes</button><br>
+        <h1>Menu lateral</h1>
+        <button id="get_menulateral">Menu lateral</button><br>
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -108,7 +110,28 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/notificacoes/notificacoes",
+                    url: "http://cloudfoxapi.tk/api/notificacoes/",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+            $("#get_menulateral").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/notificacoes/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
