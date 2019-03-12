@@ -15,12 +15,16 @@
     </div>
 
     <div id="layout" style="display:none">
-        <h1> Barra superior </h1>
+        <h1>Dados necessários para o menu estático (top-bar e side-bar)</h1>
+        <h3> Barra superior </h3>
         <button id="dados_usuario">Dados do usuario</button><br>
         <button id="qtd_notificacoes">Quantidade de notificaçẽos</button><br>
         <button id="notificacoes">Notificacoes</button><br>
-        <h1>Menu lateral</h1>
+        <h3>Menu lateral</h3>
         <button id="get_menulateral">Menu lateral</button><br>
+
+        <h1>Dashboard</h1>
+        <button id="get_saldos">Obter saldos</button><br>
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -132,6 +136,27 @@
                     method: "GET",
                     dataType: 'json',
                     url: "http://cloudfoxapi.tk/api/layout/getmenulateral/",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+            $("#get_saldos").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/user/getsaldos/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',

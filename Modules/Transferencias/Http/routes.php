@@ -67,3 +67,11 @@ Route::group(['middleware' => 'web', 'prefix' => 'extrato', 'namespace' => 'Modu
     ]);
 
 });
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/financas', 'namespace' => 'Modules\Transferencias\Http\Controllers'], function()
+{
+    Route::get('/getsaldos', [
+        'uses' => 'TransferenciasController@getSaldos',
+    ]);
+
+});
