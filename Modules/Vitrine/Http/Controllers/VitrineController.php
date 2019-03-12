@@ -64,7 +64,7 @@ class VitrineController extends Controller {
         ])->pluck('projeto')->toArray();
 
         $projetos = Projeto::select('id','foto','nome','descricao')
-                            ::whereIn('id', $projetos_disponiveis)
+                            ->whereIn('id', $projetos_disponiveis)
                             ->whereNotIn('id',$afiliacoes_usuario)
                             ->whereNotIn('id',$afiliacoes_pendentes)
                             ->where('visibilidade','publico')
