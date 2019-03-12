@@ -7,7 +7,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'notificacoes', 'namespace' => 
     Route::post('/markasread', 'NotificacoesController@markasread');
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/notificacoes', 'namespace' => 'Modules\Usuario\Http\Controllers'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/notificacoes', 'namespace' => 'Modules\Notificacoes\Http\Controllers'], function(){
 
     Route::get('/', [
         'uses' => 'NotificacoesController@notificacoes',
