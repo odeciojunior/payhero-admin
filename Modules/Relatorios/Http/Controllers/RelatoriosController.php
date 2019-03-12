@@ -258,6 +258,8 @@ class RelatoriosController extends Controller {
 
         $vendas = Venda::where('proprietario',\Auth::user()->id)->get();
 
+        return response()->json($vendas->paginate());
+
         foreach($vendas as &$venda){
             $planos_venda = PlanoVenda::where('venda',$venda->id)->get()->toArray();
             if(count($planos_venda) > 1){
