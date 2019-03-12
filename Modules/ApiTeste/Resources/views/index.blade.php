@@ -205,11 +205,10 @@
 
             $("#get_vendas").on("click", function(){
 
-
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "/api/vendas/",
+                    url: "http://cloudfoxapi.tk/api/vendas/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
