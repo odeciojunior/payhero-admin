@@ -31,4 +31,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vendas', 'namespace' 
         'uses' => 'RelatoriosController@getVendas',
     ]);
 
+    Route::get('/{id_venda}', [
+        'uses' => 'RelatoriosController@detalhesVenda',
+    ]);
+
 });

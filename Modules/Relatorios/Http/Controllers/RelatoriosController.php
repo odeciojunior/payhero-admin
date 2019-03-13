@@ -262,4 +262,64 @@ class RelatoriosController extends Controller {
         return VendasResource::collection($vendas->paginate());
     }
 
+    public function detalhesVenda($id_venda){
+
+        $venda = Venda::find($id_venda);
+        $planos_venda = PlanoVenda::where('venda', $venda['id'])->get()->toArray();
+        $comprador = Comprador::find($venda['comprador']);
+        $entrega = Entrega::find($venda['entrega']);
+
+        $status = '';
+        if($venda['pagamento_status'] == 'paid')
+            $status = "Aprovada";
+        elseif($venda['pagamento_status'] == 'refused')
+            $status = "Rejeitada";
+        elseif($venda['pagamento_status'] == 'waiting_payment')
+            $status = "Aguardando pagamento";
+        else
+            $status = $venda['pagamento_status'];
+
+        $produtos = [];
+        foreach($planos_venda as $plano_venda){
+            $plano = Plano::find($plano_venda['plano']);
+            $produtos[] = [
+                'nome' => $plano['nome'],
+                'quantidade' => $plano_venda['quantidade']
+            ];
+        }
+
+        $dados = [];
+
+        $dados['codigo_transacao'] = "#".$venda['id'];
+        $dados['forma_pagamento'] = $venda['forma_pagamento'];
+        $dados['data'] = (new Carbon($venda['data_inicio']))->format('d/m/Y H:i:s');
+        $dados['status'] = $status;
+        $dados['codigo_transacao'] = "#".$venda['id'];
+        $dados['produtos'] = $produtos;
+        $dados['comprador_nome'] = $comprador['nome'];
+        $dados['comprador_email'] = $comprador['email'];
+        $dados['comprador_cpf'] = $comprador['cpf_cnpj'];
+        $dados['comprador_telefone'] = $comprador['telefone'];
+        $dados['comprador_nome'] = $comprador['nome'];
+        if($entrega){
+            $dados['valor_frete'] = $entrega['valor_frete'];
+            $dados['rua'] = $entrega['rua'];
+            $dados['numero_casa'] = $entrega['numero'];
+            $dados['rua'] = $entrega['rua'];
+            $dados['complemento'] = $entrega['ponto_referencia'];
+            $dados['bairro'] = $entrega['bairro'];
+            $dados['cidade'] = $entrega['cidade'];
+            $dados['estado'] = $entrega['estado'];
+            $dados['cep'] = $entrega['cep'];
+        }
+        if($venda['forma_pagamento'] == 'Boleto'){
+            $dados['link_boleto'] = $venda['link_boleto'];
+            $dados['linha_digitavel_boleto'] = $venda['linha_digitavel_boleto'];
+        }
+
+        return response()->json($dados);
+
+    }
+
+
 }

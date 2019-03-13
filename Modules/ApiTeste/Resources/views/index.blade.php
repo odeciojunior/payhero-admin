@@ -33,6 +33,7 @@
 
         <h1>Vendas</h1>
         <button id="get_vendas">Dados tabela de vendas</button><br>
+        <button id="detalhes_venda">Detalhes de uma venda</button><br>
         <button id="get_carrinhos_abandonados">Dados tabela de carrinhos abandonados</button><br>
 
     </div>
@@ -243,6 +244,26 @@
                     }
                 });
 
+            });
+
+            $("#detalhes_venda").on("click",function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/vendas/1108",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
             });
 
 
