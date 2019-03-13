@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
+use Modules\RecuperacaoCarrinho\Transformers\CarrinhosAbandonadosResource;
 
 class RecuperacaoCarrinhoController extends Controller {
 
@@ -89,6 +90,15 @@ class RecuperacaoCarrinhoController extends Controller {
         $link = "<div style='margin-top:50px' class='text-center'><b>LINK: <b> https://checkout.".$dominio['dominio']."/carrinho/".$checkout['id_sessao_log']."</div>";
 
         return response()->json($link);
+    }
+
+    public function getCarrinhosAbandonados(){
+        
+        $checkouts = Checkout::where('status','Carrinho abandonado')
+        ->orWhere('status', 'Recuperado')
+        ->orderBy('id','DESC');
+
+        return CarrinhosAbandonadosResource::collection($checkouts->paginate());
     }
 
 }

@@ -25,7 +25,6 @@
 
         <hr>
 
-
         <h1>Dashboard</h1>
         <button id="get_saldos">Obter saldos</button><br>
 
@@ -34,6 +33,7 @@
 
         <h1>Vendas</h1>
         <button id="get_vendas">Dados tabela de vendas</button><br>
+        <button id="get_carrinhos_abandonados">Dados tabela de carrinhos abandonados</button><br>
 
     </div>
 

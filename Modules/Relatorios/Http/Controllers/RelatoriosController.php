@@ -260,29 +260,6 @@ class RelatoriosController extends Controller {
         $vendas = Venda::where('proprietario',\Auth::user()->id);
 
         return VendasResource::collection($vendas->paginate());
-
-        foreach($vendas as &$venda){
-            $planos_venda = PlanoVenda::where('venda',$venda->id)->get()->toArray();
-            if(count($planos_venda) > 1){
-                $venda->plano_nome = "Carrinho";
-            }
-            foreach($planos_venda as $plano_venda){
-                $plano = Plano::find($plano_venda);
-                $venda->plano_nome = $plano['nome'];
-            }
-            $venda->data_inicio = $venda->data_inicio ? with(new Carbon($venda->data_inicio))->format('d/m/Y H:i:s') : '';
-            $venda->data_finalizada = $venda->data_finalizada ? with(new Carbon($venda->data_finalizada))->format('d/m/Y H:i:s') : '';
-            $venda->forma_pagamento = $venda->forma_pagamento == 'cartao_credito' ? 'cartão de crédito' : $venda->forma_pagamento;
-            if($venda->pagamento_status == 'paid')
-                return 'Aprovada';
-            if($venda->pagamento_status == 'rejected')
-                return 'Rejeitada';
-            if($venda->pagamento_status == 'pending')
-                return 'Pendente';
-        }
-
-        return response()->json($vendas->paginate());
-
     }
 
 }
