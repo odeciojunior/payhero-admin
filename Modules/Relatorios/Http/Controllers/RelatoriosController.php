@@ -259,7 +259,7 @@ class RelatoriosController extends Controller {
 
         $vendas = Venda::where('proprietario',\Auth::user()->id);
 
-        return new VendasResource($vendas->paginate());
+        return VendasResource::collection($vendas->paginate());
 
         foreach($vendas as &$venda){
             $planos_venda = PlanoVenda::where('venda',$venda->id)->get()->toArray();
