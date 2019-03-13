@@ -2,6 +2,7 @@
 
 namespace Modules\Relatorios\Transformers;
 
+use App\Comprador;
 use Illuminate\Http\Resources\Json\Resource;
 
 class VendasResource extends Resource
