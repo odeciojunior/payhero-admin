@@ -19,7 +19,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'recuperacaocarrinho'
 
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/carrinhosabandonados', 'namespace' => 'Modules\Relatorios\Http\Controllers'], function()
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/carrinhosabandonados', 'namespace' => 'Modules\RecuperacaoCarrinho\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'RelatoriosController@getCarrinhosAbandonados',

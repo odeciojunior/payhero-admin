@@ -224,6 +224,28 @@
 
             });
 
+            $("#get_carrinhos_abandonados").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/carrinhosabandonados/",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+
         });
 
     </script>
