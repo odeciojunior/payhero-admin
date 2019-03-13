@@ -16,9 +16,11 @@ class VendasResource extends Resource
     {
         // return parent::toArray($request);
 
+        $comprador = Comprador::find($this->comprador);
+
         return [
             'id' => $this->id,
-            //'comprador.nome as nome',
+            'comprador' => $comprador['nome'],
             'forma' => $this->forma_pagamento,
             'status' => $this->pagamento_statusas,
             'data_inicio' => $this->data_inicio,
