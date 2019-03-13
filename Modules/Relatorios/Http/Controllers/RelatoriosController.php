@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Yajra\DataTables\DataTables;
 use Illuminate\Routing\Controller; 
 use Modules\Relatorios\DataTables\VendasDataTable;
+use Modules\Relatorios\Transformers\VendasResource;
 
 class RelatoriosController extends Controller {
 
