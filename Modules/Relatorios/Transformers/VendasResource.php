@@ -14,6 +14,8 @@ class VendasResource extends Resource
      */
     public function toArray($request)
     {
+        return parent::toArray($request);
+
         return [
             'id' => $this->id,
             //'comprador.nome as nome',
@@ -23,6 +25,6 @@ class VendasResource extends Resource
             'data_finalizada' => $this->data_finalizada,
             'total_pago' => $this->valor_total_pago,
         ];
-    }
 
+    }
 }
