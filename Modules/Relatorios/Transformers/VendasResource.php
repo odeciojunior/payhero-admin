@@ -19,7 +19,7 @@ class VendasResource extends Resource
     {
         $comprador = Comprador::find($this->comprador);
 
-        $planos_venda = PlanoVenda::where('venda',$venda->id)->get()->toArray();
+        $planos_venda = PlanoVenda::where('venda',$this->id)->get()->toArray();
         $produto = '';
         if(count($planos_venda) > 1){
             $produto = "Carrinho";
@@ -30,11 +30,11 @@ class VendasResource extends Resource
         }
 
         $status = '';
-        if($venda->pagamento_status == 'paid')
+        if($this->pagamento_status == 'paid')
             $status = 'Aprovada';
-        else if($venda->pagamento_status == 'rejected')
+        else if($this->pagamento_status == 'rejected')
             $status = 'Rejeitada';
-        else if($venda->pagamento_status == 'pending')
+        else if($this->pagamento_status == 'pending')
             $status = 'Pendente';
         else
             $status = $this->pagamento_status;
