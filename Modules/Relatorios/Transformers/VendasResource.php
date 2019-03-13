@@ -26,7 +26,7 @@ class VendasResource extends Resource
             $produto = "Carrinho";
         }
         foreach($planos_venda as $plano_venda){
-            $plano = Plano::find($plano_venda);
+            $plano = Plano::find($plano_venda['plano']);
             $produto = $plano['nome'];
         }
 
