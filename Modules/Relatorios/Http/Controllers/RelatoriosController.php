@@ -257,7 +257,7 @@ class RelatoriosController extends Controller {
 
     public function getVendas(){
 
-        $vendas = Venda::where('proprietario',\Auth::user()->id)->get();
+        $vendas = Venda::where('proprietario',\Auth::user()->id);
 
         return new VendasResource($vendas->paginate());
 

@@ -16,6 +16,7 @@ class VendasResource extends Resource
     {
         // return parent::toArray($request);
 
+        dd($this);
         return [
             'id' => $this->id,
             //'comprador.nome as nome',
