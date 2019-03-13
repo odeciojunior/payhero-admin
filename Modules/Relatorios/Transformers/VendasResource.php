@@ -23,7 +23,7 @@ class VendasResource extends Resource
             'id' => $this->id,
             'comprador' => $comprador['nome'],
             'forma' => $this->forma_pagamento,
-            'status' => $this->pagamento_statusas,
+            'status' => $this->pagamento_status,
             'data_inicio' => $this->data_inicio,
             'data_finalizada' => $this->data_finalizada,
             'total_pago' => $this->valor_total_pago,
