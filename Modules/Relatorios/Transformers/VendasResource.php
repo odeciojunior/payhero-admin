@@ -2,6 +2,7 @@
 
 namespace Modules\Relatorios\Transformers;
 
+use App\Plano;
 use App\Comprador;
 use Carbon\Carbon;
 use App\PlanoVenda;
