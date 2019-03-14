@@ -36,6 +36,9 @@
         <button id="detalhes_venda">Detalhes de uma venda</button><br>
         <button id="get_carrinhos_abandonados">Dados tabela de carrinhos abandonados</button><br>
 
+        <h1>Projetos</h1>
+        <button id="get_projetos">Obter meus projetos</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -266,6 +269,25 @@
                 });
             });
 
+            $("#get_projetos").on("click",function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/projetos",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+            });
 
         });
 
