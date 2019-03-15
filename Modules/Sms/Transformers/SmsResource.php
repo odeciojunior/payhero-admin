@@ -14,6 +14,9 @@ class SmsResource extends Resource
      */
     public function toArray($request)
     {
+
+        return parent::toArray($request);
+
         $comprador = Comprador::find($this->comprador);
 
         $planos_venda = PlanoVenda::where('venda',$this->id)->get()->toArray();
