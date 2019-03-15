@@ -322,7 +322,8 @@ class ProdutosController extends Controller {
 
     public function produtos(){
 
-        $produtos = Produto::where('user',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
+        $produtos = Produto::select('id','nome','descricao','foto','created_at')
+                            ->where('user',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
         return response()->json($produtos);
 
