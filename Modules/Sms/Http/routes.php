@@ -92,7 +92,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'atendimento', 'names
 
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/atendimento/sms', 'namespace' => 'Modules\Produtos\Http\Controllers'], function()
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/atendimento/sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'SmsApiController@index',

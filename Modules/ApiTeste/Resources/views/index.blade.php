@@ -42,6 +42,9 @@
         <h1>Produtos</h1>
         <button id="get_produtos">Obter meus produtos</button><br>
 
+        <h1>Atendimento</h1>
+        <button id="get_sms">Dados da tabela do histórico de sms</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -312,6 +315,25 @@
                 });
             });
 
+            $("#get_sms").on("click",function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/atendimento/sms",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+            });
 
         });
 
