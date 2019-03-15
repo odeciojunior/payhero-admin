@@ -56,13 +56,13 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'produtos', 'namespac
         'as' => 'produtos.deletarprodutoplano',
         'uses' => 'ProdutosController@deletarProdutoPlano'
     ]);
-    
+
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/produtos', 'namespace' => 'Modules\Produtos\Http\Controllers'], function()
 {
     Route::get('/', [
-        'uses' => 'ProdutosController@getProdutos',
+        'uses' => 'ProdutosController@produtos',
     ]);
 
 });
