@@ -43,7 +43,6 @@ class SmsApiController extends Controller {
             'mensagem.tipo',
         ])->orderBy('mensagem.id','DESC');
 
-
         return SmsResource::collection($mensagens->paginate());
     }
 
