@@ -290,8 +290,8 @@ class ProjetosController extends Controller{
 
         if($projetos_usuario != null){
             foreach($projetos_usuario as $projeto_usuario){
-                $projeto = Projeto::select('id','foto','nome','descricao')
-                                    ->find($projeto_usuario['projeto']);
+                $projeto = Projeto::select('id','foto','nome','descricao','created_at')
+                                  ->find($projeto_usuario['projeto']);
                 if($projeto){
                     $projetos[] = $projeto;
                 }
@@ -300,5 +300,6 @@ class ProjetosController extends Controller{
 
         return response()->json($projetos);
     }
+
 
 }

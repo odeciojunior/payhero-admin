@@ -58,3 +58,11 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'produtos', 'namespac
     ]);
     
 });
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/produtos', 'namespace' => 'Modules\Produtos\Http\Controllers'], function()
+{
+    Route::get('/', [
+        'uses' => 'ProdutosController@getProdutos',
+    ]);
+
+});

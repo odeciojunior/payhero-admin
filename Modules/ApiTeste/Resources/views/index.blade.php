@@ -39,6 +39,9 @@
         <h1>Projetos</h1>
         <button id="get_projetos">Obter meus projetos</button><br>
 
+        <h1>Produtos</h1>
+        <button id="get_produtos">Obter meus produtos</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -288,6 +291,27 @@
                     }
                 });
             });
+
+            $("#get_produtos").on("click",function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://cloudfoxapi.tk/api/produtos",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+            });
+
 
         });
 

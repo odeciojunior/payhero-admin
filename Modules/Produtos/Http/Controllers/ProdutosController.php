@@ -320,6 +320,14 @@ class ProdutosController extends Controller {
 
     }
 
+    public function getProjetos(){
+
+        $produtos = Produto::where('user',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
+
+        return response()->json($produtos);
+
+    }
+
 }
 
 
