@@ -98,7 +98,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/user",
+                    url: "http://www.cloudfoxapi.tk/api/user",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -119,7 +119,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/notificacoes/qtdnotificacoes",
+                    url: "http://www.cloudfoxapi.tk/api/notificacoes/qtdnotificacoes",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -140,7 +140,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/notificacoes/",
+                    url: "http://www.cloudfoxapi.tk/api/notificacoes/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -161,7 +161,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/layout/getmenulateral/",
+                    url: "http://www.cloudfoxapi.tk/api/layout/getmenulateral/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -182,7 +182,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/financas/getsaldos/",
+                    url: "http://www.cloudfoxapi.tk/api/financas/getsaldos/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -203,7 +203,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/vitrine/",
+                    url: "http://www.cloudfoxapi.tk/api/vitrine/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -224,7 +224,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/vendas/",
+                    url: "http://www.cloudfoxapi.tk/api/vendas/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -245,7 +245,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/carrinhosabandonados/",
+                    url: "http://www.cloudfoxapi.tk/api/carrinhosabandonados/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -266,7 +266,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/vendas/1108",
+                    url: "http://www.cloudfoxapi.tk/api/vendas/1108",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -286,7 +286,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/projetos",
+                    url: "http://www.cloudfoxapi.tk/api/projetos",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -306,7 +306,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/produtos",
+                    url: "http://www.cloudfoxapi.tk/api/produtos",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -326,7 +326,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/atendimento/sms",
+                    url: "http://www.cloudfoxapi.tk/api/atendimento/sms",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -346,7 +346,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.tk/afiliados/meusafiliados",
+                    url: "http://www.cloudfoxapi.tk/api/afiliados/meusafiliados",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -367,7 +367,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.tk/afiliados/meusafiliados/solicitacoes",
+                    url: "http://www.cloudfoxapi.tk/api/afiliados/meusafiliados/solicitacoes",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -388,7 +388,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.tk/afiliados/minhasafiliacoes",
+                    url: "http://www.cloudfoxapi.tk/api/afiliados/minhasafiliacoes",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -409,7 +409,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.tk/afiliados/minhasafiliacoes/solicitacoes",
+                    url: "http://www.cloudfoxapi.tk/api/afiliados/minhasafiliacoes/solicitacoes",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',

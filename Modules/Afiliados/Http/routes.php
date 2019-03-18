@@ -82,5 +82,6 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/afiliados', 'namespac
     Route::get('/minhasafiliacoes/solicitacoes', [
         'uses' => 'AfiliadosApiController@minhasAfiliacoesSolicitacoes',
     ]);
-    
+
 });
+

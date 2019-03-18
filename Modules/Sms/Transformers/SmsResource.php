@@ -50,4 +50,5 @@ class SmsResource extends Resource
             'total_pago' => $this->valor_total_pago,
         ];
     }
+
 }
