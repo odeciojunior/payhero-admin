@@ -434,7 +434,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.local/api/ferramentas/sms/saldo",
+                    url: "http://www.cloudfoxapi.tk/api/ferramentas/sms/saldo",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -455,7 +455,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.local/api/ferramentas/sms/historico",
+                    url: "http://www.cloudfoxapi.tk/api/ferramentas/sms/historico",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
