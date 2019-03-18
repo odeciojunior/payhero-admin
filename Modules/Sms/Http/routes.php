@@ -100,4 +100,14 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/atendimento/sms', 'na
 
 });
 
+Route::group([ 'prefix' => 'api/ferramentas/sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
+{
+    Route::get('/saldo', [
+        'uses' => 'SmsApiController@saldo',
+    ]);
+
+    Route::get('/historico', [
+        'uses' => 'SmsApiController@historico',
+    ]);
+});
 

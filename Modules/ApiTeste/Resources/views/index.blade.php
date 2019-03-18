@@ -51,6 +51,10 @@
         <button id="minhas_afiliacoes">Minhas afiliações</button><br>
         <button id="minhas_afiliacoes_solicitacoes_pendentes">Minhas afiliações (solicitações pendentes)</button><br>
 
+        <h1>Ferramentas (sms)</h1>
+        <button id="dados_sms">SMS saldo</button><br>
+        <button id="historico_sms">SMS historico de compras</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -425,6 +429,48 @@
 
             });
 
+            $("#dados_sms").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.local/api/ferramentas/sms/saldo",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+            $("#historico_sms").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.local/api/ferramentas/sms/historico",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+            
         });
 
     </script>
