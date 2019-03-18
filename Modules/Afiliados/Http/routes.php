@@ -65,3 +65,22 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'afiliados', 'namespac
 });
 
 
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/afiliados', 'namespace' => 'Modules\Afiliados\Http\Controllers'], function()
+{
+    Route::get('/meusafiliados', [
+        'uses' => 'AfiliadosApiController@meusAfiliados',
+    ]);
+
+    Route::get('/meusafiliados/solicitacoes', [
+        'uses' => 'AfiliadosApiController@meusAfiliadosSolicitacoes',
+    ]);
+
+    Route::get('/minhasafiliacoes', [
+        'uses' => 'AfiliadosApiController@minhasAfiliacoes',
+    ]);
+
+    Route::get('/minhasafiliacoes/solicitacoes', [
+        'uses' => 'AfiliadosApiController@minhasAfiliacoesSolicitacoes',
+    ]);
+    
+});

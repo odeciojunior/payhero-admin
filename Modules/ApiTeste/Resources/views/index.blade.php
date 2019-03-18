@@ -45,6 +45,12 @@
         <h1>Atendimento</h1>
         <button id="get_sms">Dados da tabela do histórico de sms</button><br>
 
+        <h1>Afiliados</h1>
+        <button id="meus_afiliados">Meus afiliados</button><br>
+        <button id="meus_afiliados_solicitacoes_pendentes">Meus afiliados (solicitações pendentes)</button><br>
+        <button id="minhas_afiliacoes">Minhas afiliações</button><br>
+        <button id="minhas_afiliacoes_solicitacoes_pendentes">Minhas afiliações (solicitações pendentes)</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -62,7 +68,7 @@
                 $.ajax({
                     method: "POST",
                     dataType: 'json',
-                    url: "http://cloudfoxapi.tk/api/login",
+                    url: "http://www.cloudfoxapi.tk/api/login",
                     cache: false,
                     headers: {
                         'Accept': 'application/json'
@@ -333,6 +339,90 @@
                         alert(response.toSource());
                     }
                 });
+            });
+
+            $("#meus_afiliados").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.tk/afiliados/meusafiliados",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+            $("#meus_afiliados_solicitacoes_pendentes").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.tk/afiliados/meusafiliados/solicitacoes",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+            $("#minhas_afiliacoes").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.tk/afiliados/minhasafiliacoes",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+            $("#minhas_afiliacoes_solicitacoes_pendentes").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.tk/afiliados/minhasafiliacoes/solicitacoes",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
             });
 
         });
