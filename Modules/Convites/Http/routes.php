@@ -13,3 +13,11 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'convites', 'namespace
     ]);
 
 });
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/convites', 'namespace' => 'Modules\Convites\Http\Controllers'], function()
+{
+    Route::get('/', [
+        'uses' => 'ConvitesApiController@convites',
+    ]);
+
+});

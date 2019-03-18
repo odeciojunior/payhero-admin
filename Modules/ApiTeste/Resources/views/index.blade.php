@@ -58,6 +58,9 @@
         <h1>Aplicativos (shopify)</h1>
         <button id="integracoes_shopify">Integrações com Shopify</button><br>
 
+        <h1>Convites</h1>
+        <button id="convites">Convites</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -495,7 +498,25 @@
 
             });
 
+            $("#convites").on("click", function(){
 
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.tk/api/convites",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+            });
         });
 
     </script>
