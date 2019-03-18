@@ -171,7 +171,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.tk/api/layout/getmenulateral/",
+                    url: "http://www.cloudfoxapi.local/api/layout/getmenulateral/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
