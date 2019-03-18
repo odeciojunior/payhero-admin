@@ -55,6 +55,9 @@
         <button id="dados_sms">SMS saldo</button><br>
         <button id="historico_sms">SMS historico de compras</button><br>
 
+        <h1>Aplicativos (shopify)</h1>
+        <button id="integracoes_shopify">Integrações com Shopify</button><br>
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -470,7 +473,29 @@
                 });
 
             });
-            
+
+            $("#integracoes_shopify").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.tk/api/aplicativos/shopify/integracoes",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+
         });
 
     </script>
