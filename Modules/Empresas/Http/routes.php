@@ -52,6 +52,18 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/empresas', 'namespace
         'uses' => 'EmpresasApiController@index',
     ]);
 
+    Route::post('/', [
+        'uses' => 'EmpresasApiController@create',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'EmpresasApiController@update',
+    ]);
+
+    Route::delete('/{id}', [
+        'uses' => 'EmpresasApiController@delete',
+    ]);
+    
     Route::get('/{id}', [
         'uses' => 'EmpresasApiController@show',
     ]);

@@ -18,10 +18,52 @@ class EmpresasApiController extends Controller {
         return EmpresasResource::collection($empresas->paginate());
     }
 
+    public function create(Request $request){
+
+        $dados = $request->all();
+
+        Empresa::create($dados);
+
+        return response()->json("sucesso");
+    }
+
     public function show($id){
 
         $empresa = Empresa::find($id);
 
         return response()->json($empresa);
     }
+
+    public function update(Request $request){
+
+        $dados = $request->all();
+
+        if(!isset($dados['id'])){
+            return response()->json('id não informado');
+        }
+
+        $empresa = Empresa::find($dados['id']);
+
+        if(!$empresa){
+            return response()->json('empresa não encontrada');
+        }
+
+        $empresa->update($dados);
+
+        return response()->json('sucesso');
+    }
+
+    public function delete($id){
+
+        $empresa = Empresa::find($id);
+
+        if(!$empresa){
+            return response()->json('empresa não encontrada');
+        }
+
+        $empresa->delete();
+
+        return response()->json('sucesso');
+    }
+
 }
