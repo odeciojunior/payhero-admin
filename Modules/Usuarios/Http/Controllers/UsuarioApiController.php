@@ -59,7 +59,7 @@ class UsuarioApiController extends Controller {
 
         $dados = $request->all();
 
-        dd($dados);
+        return response()->json($dados);
 
     }
 
