@@ -23,6 +23,5 @@ class EmpresasApiController extends Controller {
         $empresa = Empresa::find($id);
 
         return response()->json($empresa);
-
     }
 }
