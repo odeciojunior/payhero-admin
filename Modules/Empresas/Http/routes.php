@@ -68,4 +68,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/empresas', 'namespace
         'uses' => 'EmpresasApiController@show',
     ]);
 
+    Route::get('/getbancos', [
+        'uses' => 'EmpresasApiController@getBancos',
+    ]);
+    
 });

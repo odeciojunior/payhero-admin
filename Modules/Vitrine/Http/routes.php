@@ -12,7 +12,7 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'vitrine', 'namespace'
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vitrine', 'namespace' => 'Modules\Vitrine\Http\Controllers'], function()
 {
     Route::get('/', [
-        'uses' => 'VitrineController@getVitrine',
+        'uses' => 'VitrineApiController@index',
     ]);
 
 });

@@ -284,22 +284,5 @@ class ProjetosController extends Controller{
         return response()->json('sucesso');
     }
 
-    public function getProjetos(){
-
-        $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
-
-        if($projetos_usuario != null){
-            foreach($projetos_usuario as $projeto_usuario){
-                $projeto = Projeto::select('id','foto','nome','descricao','created_at')
-                                  ->find($projeto_usuario['projeto']);
-                if($projeto){
-                    $projetos[] = $projeto;
-                }
-            }
-        }
-
-        return response()->json($projetos);
-    }
-
 
 }

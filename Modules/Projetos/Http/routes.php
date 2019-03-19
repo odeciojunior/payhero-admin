@@ -59,11 +59,28 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
 
 });
 
-
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos', 'namespace' => 'Modules\Projetos\Http\Controllers'], function()
+// 'middleware' => 'auth:api',
+Route::group([ 'prefix' => 'api/projetos', 'namespace' => 'Modules\Projetos\Http\Controllers'], function()
 {
     Route::get('/', [
-        'uses' => 'ProjetosController@getProjetos',
+        'uses' => 'ProjetosApiController@index',
     ]);
 
+    Route::get('/{id}', [
+        'uses' => 'ProjetosApiController@show',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'ProjetosApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'ProjetosApiController@update',
+    ]);
+
+    Route::delete('/{id}', [
+        'uses' => 'ProjetosApiController@delete',
+    ]);
+
+    
 });
