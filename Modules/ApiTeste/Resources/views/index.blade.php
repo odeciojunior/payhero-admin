@@ -64,7 +64,10 @@
         <h1>Perfil</h1>
         <button id="perfil">Dados do perfil</button><br>
         <button id="atualizar_perfil" disabled>Atualizar dados do perfil</button><br>
-        
+        <button id="atualizar_senha" disabled>Atualizar a senha do usuário</button><br>
+
+        <h1>Empresas</h1>
+        <button id="empresas">Obter empresas</button><br>
 
     </div>
 
@@ -529,6 +532,27 @@
                     method: "GET",
                     dataType: 'json',
                     url: "http://www.cloudfoxapi.local/api/user",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
+            });
+
+            $("#empresas").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.local/api/empresas",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',

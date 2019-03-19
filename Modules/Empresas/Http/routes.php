@@ -43,3 +43,17 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'empresas', 'namespac
     ]);
 
 });
+
+// 'middleware' => 'auth:api',
+
+Route::group([ 'prefix' => 'api/empresas', 'namespace' => 'Modules\Empresas\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'EmpresasApiController@index',
+    ]);
+
+    Route::get('/{id}', [
+        'uses' => 'EmpresasApiController@show',
+    ]);
+
+});
