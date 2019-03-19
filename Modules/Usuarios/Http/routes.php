@@ -51,7 +51,7 @@ Route::group([ 'prefix' => 'api/user', 'namespace' => 'Modules\Usuario\Http\Cont
     ]);
 
     Route::put('/', [
-        'uses' => 'UsuarioApiController@updatePerfil',
+        'uses' => 'UsuarioApiController@update',
     ]);
     
     Route::get('/informacoesbasicas', [
