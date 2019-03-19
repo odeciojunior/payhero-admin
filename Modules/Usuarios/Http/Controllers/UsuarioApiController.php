@@ -59,7 +59,9 @@ class UsuarioApiController extends Controller {
 
         $dados = $request->all();
 
-        return response()->json($dados);
+        User::find(\Auth::user()->id)->update($dados);
+
+        return response()->json('sucesso');
 
     }
 
