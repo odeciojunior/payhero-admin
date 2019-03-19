@@ -219,12 +219,6 @@ class UsuarioController extends Controller {
         return response()->json($modal_body);
     }
 
-    public function user(){
-
-        return response()->json([
-            'user' => \Auth::user()
-        ])->header('Access-Control-Allow-Origin', '*');
-    }
 }
 
 

@@ -43,10 +43,24 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'usuarios', 'namespac
     ]);
 
 });
-
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/user', 'namespace' => 'Modules\Usuario\Http\Controllers'], function(){
+//'middleware' => 'auth:api',
+Route::group([ 'prefix' => 'api/user', 'namespace' => 'Modules\Usuario\Http\Controllers'], function(){
 
     Route::get('/', [
-        'uses' => 'UsuarioController@user',
+        'uses' => 'UsuarioApiController@perfil',
     ]);
+
+    Route::put('/', [
+        'uses' => 'UsuarioApiController@updatePerfil',
+    ]);
+    
+    Route::get('/informacoesbasicas', [
+        'uses' => 'UsuarioApiController@informacoesBasicas',
+    ]);
+
+    Route::put('/alterarsenha', [
+        'uses' => 'UsuarioApiController@alterarSenha',
+    ]);
+
 });
+

@@ -61,6 +61,11 @@
         <h1>Convites</h1>
         <button id="convites">Convites</button><br>
 
+        <h1>Perfil</h1>
+        <button id="perfil">Dados do perfil</button><br>
+        <button id="atualizar_perfil" disabled>Atualizar dados do perfil</button><br>
+        
+
     </div>
 
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
@@ -108,7 +113,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.tk/api/user",
+                    url: "http://www.cloudfoxapi.tk/api/user/informacoesbasicas",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -171,7 +176,7 @@
                 $.ajax({
                     method: "GET",
                     dataType: 'json',
-                    url: "http://www.cloudfoxapi.local/api/layout/getmenulateral/",
+                    url: "http://www.cloudfoxapi.tk/api/layout/getmenulateral/",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -516,6 +521,27 @@
                         alert(response.toSource());
                     }
                 });
+            });
+
+            $("#perfil").on("click", function(){
+
+                $.ajax({
+                    method: "GET",
+                    dataType: 'json',
+                    url: "http://www.cloudfoxapi.local/api/user",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    error: function(){
+                        alert('erro');
+                    },
+                    success: function(response){
+                        alert(response.toSource());
+                    }
+                });
+
             });
         });
 
