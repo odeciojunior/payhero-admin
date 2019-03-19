@@ -67,7 +67,23 @@ class EmpresasApiController extends Controller {
 
     public function show($id){
 
-        $empresa = Empresa::find($id);
+        $empresa = Empresa::select(
+            'cnpj', // vale tanto pra cnpj quanto pra cpf
+            'nome_fantasia',
+            'cep',
+            'uf',
+            'municipio',
+            'bairro',
+            'logradouro',
+            'numero',
+            'complemento',
+            'banco',
+            'agencia',
+            'agencia_digito',
+            'conta',
+            'conta_digito'
+        )->where('id',$id)->first();
+        
 
         return response()->json($empresa);
     }
@@ -103,5 +119,6 @@ class EmpresasApiController extends Controller {
 
         return response()->json('sucesso');
     }
+
 
 }
