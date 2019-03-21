@@ -58,3 +58,31 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dominios', 'namespac
     ]);
 
 });
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/dominios', 'namespace' => 'Modules\Dominios\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'DominiosApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'DominiosApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'DominiosApiController@update',
+    ]);
+
+    Route::delete('/{id_dominio}', [
+        'uses' => 'DominiosApiController@delete',
+    ]);
+
+    Route::get('/{id_dominio}', [
+        'uses' => 'DominiosApiController@show',
+    ]);
+
+    Route::get('/getbancos', [
+        'uses' => 'DominiosApiController@getBancos',
+    ]);
+
+});

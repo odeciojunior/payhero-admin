@@ -52,6 +52,29 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'pixels', 'namespace' 
         'uses' => 'PixelsController@getFormEditarPixel'
     ]);
 
-
 });
 
+// 'middleware' => 'auth:api',
+Route::group([ 'prefix' => 'api/projetos/{id_projeto}/pixels', 'namespace' => 'Modules\Pixels\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'PixelsApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'PixelsApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'PixelsApiController@update',
+    ]);
+
+    Route::delete('/{id_pixel}', [
+        'uses' => 'PixelsApiController@destroy',
+    ]);
+
+    Route::get('/{id_pixel}', [
+        'uses' => 'PixelsApiController@show',
+    ]);
+
+});

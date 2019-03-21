@@ -53,3 +53,29 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'cuponsdesconto', 'na
     ]);
 
 });
+
+
+// 'middleware' => 'auth:api',
+Route::group([ 'prefix' => 'api/projetos/{id_projeto}/cuponsdesconto', 'namespace' => 'Modules\CuponsDesconto\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'CuponsDescontoApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'CuponsDescontoApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'CuponsDescontoApiController@update',
+    ]);
+
+    Route::delete('/{id_cupom}', [
+        'uses' => 'CuponsDescontoApiController@destroy',
+    ]);
+
+    Route::get('/{id_cupom}', [
+        'uses' => 'CuponsDescontoApiController@show',
+    ]);
+
+});

@@ -5,17 +5,19 @@ namespace Modules\Sms\Http\Controllers;
 use App\User;
 use App\Plano;
 use App\MensagemSms;
+use App\ZenviaSms;
 use App\UserProjeto;
 use App\CompraUsuario;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Sms\Transformers\SmsResource;
+use Modules\Sms\Transformers\SmsProjetosResource;
 use Modules\Sms\Transformers\HistoricoSmsResource;
 
 class SmsApiController extends Controller {
 
-    public function index() {
+    public function atendimentoIndex() {
 
         $user_projetos = UserProjeto::where([
             ['user',\Auth::user()->id],
@@ -40,7 +42,7 @@ class SmsApiController extends Controller {
             'mensagem.id',
             'mensagem.para',
             'mensagem.mensagem',
-            'mensagem.data',
+            'mensagem.data', 
             'mensagem.status',
             'plano.nome as plano',
             'mensagem.evento',
@@ -86,6 +88,46 @@ class SmsApiController extends Controller {
 
         return HistoricoSmsResource::collection($compras->paginate());
 
+    }
+
+    public function index(Request $request) {
+
+        $sms = ZenviaSms::where('projeto',$request->id_projeto);
+
+        return SmsProjetosResource::collection($sms->paginate());
+    }
+
+    public function store(Request $request) {
+
+        $dados = $request->all();
+        $dados['projeto'] = $request->id_projeto;
+
+        ZenviaSms::create($dados);
+
+        return response()->json('sucesso');
+    }
+
+    public function show(Request $request) {
+
+        $sms = ZenviaSms::select('plano','evento','tempo','periodo','status','mensagem')->where('id',$request->id_sms)->first();
+
+        return response()->json($sms);
+    }
+
+    public function update(Request $request) {
+
+        $dados = $request->all();
+
+        ZenviaSms::find($dados['id'])->update($dados);
+
+        return response()->json('sucesso');
+    }
+
+    public function destroy(Request $request) {
+
+        ZenviaSms::find($request->id_sms)->delete();
+
+        return response()->json('sucesso');
     }
 
 

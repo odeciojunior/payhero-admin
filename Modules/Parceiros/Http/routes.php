@@ -41,3 +41,28 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'parceiros', 'namespac
 
 });
 
+
+// 'middleware' => 'auth:api',
+Route::group([ 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Parceiros\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'ParceirosApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'ParceirosApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'ParceirosApiController@update',
+    ]);
+
+    Route::delete('/{id_parceiro}', [
+        'uses' => 'ParceirosApiController@destroy',
+    ]);
+
+    Route::get('/{id_parceiro}', [
+        'uses' => 'ParceirosApiController@show',
+    ]);
+
+});

@@ -95,7 +95,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'atendimento', 'names
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/atendimento/sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
 {
     Route::get('/', [
-        'uses' => 'SmsApiController@index',
+        'uses' => 'SmsApiController@atendimentoIndex',
     ]);
 
 });
@@ -111,3 +111,28 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/ferramentas/sms', 'na
     ]);
 });
 
+
+// 'middleware' => 'auth:api',
+Route::group([ 'prefix' => 'api/projetos/{id_projeto}/sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'SmsApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'SmsApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'SmsApiController@update',
+    ]);
+
+    Route::delete('/{id_sms}', [
+        'uses' => 'SmsApiController@destroy',
+    ]);
+
+    Route::get('/{id_sms}', [
+        'uses' => 'SmsApiController@show',
+    ]);
+
+});

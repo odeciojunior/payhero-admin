@@ -55,3 +55,28 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'brindes', 'namespace
 
 });
 
+
+// 'middleware' => 'auth:api',
+Route::group([ 'prefix' => 'api/projetos/{id_projeto}/brindes', 'namespace' => 'Modules\Brindes\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'BrindesApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'BrindesApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'BrindesApiController@update',
+    ]);
+
+    Route::delete('/{id_brinde}', [
+        'uses' => 'BrindesApiController@destroy',
+    ]);
+
+    Route::get('/{id_brinde}', [
+        'uses' => 'BrindesApiController@show',
+    ]);
+
+});
