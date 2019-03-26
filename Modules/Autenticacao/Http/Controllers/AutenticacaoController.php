@@ -2,12 +2,15 @@
 
 namespace Modules\Autenticacao\Http\Controllers;
 
+use DB;
 use App\User;
 use GuzzleHttp\Client;
+use Lcobucci\JWT\Parser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AutenticacaoController extends Controller {
 
@@ -53,13 +56,25 @@ class AutenticacaoController extends Controller {
 
     }
 
-    public function logout(){
-
-        if (\Auth::check()) {
-           \Auth::user()->AuthAcessToken()->delete();
+    public function logout(Request $request) {
+        $value = $request->bearerToken();
+        if ($value) {
+            $id = (new Parser())->parse($value)->getHeader('jti');
+            $revoked = DB::table('oauth_access_tokens')->where('id', '=', $id)->update(['revoked' => 1]);
+            $this->guard()->logout();
         }
-
+        Auth::logout();
         return response()->json('sucesso');
     }
+
+
+    // public function logout(){
+
+    //     if (\Auth::check()) {
+    //        \Auth::user()->AuthAcessToken()->delete();
+    //     }
+
+    //     return response()->json('sucesso');
+    // }
 
 }
