@@ -56,8 +56,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'brindes', 'namespace
 });
 
 
-// 'middleware' => 'auth:api',
-Route::group([ 'prefix' => 'api/projetos/{id_projeto}/brindes', 'namespace' => 'Modules\Brindes\Http\Controllers'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/brindes', 'namespace' => 'Modules\Brindes\Http\Controllers'], function(){
 
     Route::get('/', [
         'uses' => 'BrindesApiController@index',

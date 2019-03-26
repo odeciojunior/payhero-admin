@@ -59,10 +59,27 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'produtos', 'namespac
 
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/produtos', 'namespace' => 'Modules\Produtos\Http\Controllers'], function()
-{
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/produtos', 'namespace' => 'Modules\Produtos\Http\Controllers'], function() {
+
     Route::get('/', [
-        'uses' => 'ProdutosController@produtos',
+        'uses' => 'ProdutosApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'ProdutosApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'ProdutosApiController@update',
+    ]);
+
+    Route::delete('/{id_produto}', [
+        'uses' => 'ProdutosApiController@destroy',
+    ]);
+
+    Route::get('/{id_produto}', [
+        'uses' => 'ProdutosApiController@show',
     ]);
 
 });

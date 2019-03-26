@@ -160,4 +160,49 @@ class DominiosApiController extends Controller {
         return response()->json('sucesso');
 
     }
+
+    public function storeDns(Request $request){
+
+        $dados = $request->all();
+
+        $dominio = Dominio::find($request->id_dominio);
+
+        $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        $adapter = new Guzzle($key);
+        $dns = new DNS($adapter);
+        $zones = new Zones($adapter);
+        $zoneID = $zones->getZoneID($dominio['dominio']);
+
+        try{
+            $dns->addRecord($zoneID, $dados['tipo_registro'], $dados['nome_registro'], $dados['valor_registro'], 0, true);
+        }
+        catch(Exception $e){
+            return response()->json('Não foi possível adicionar o novo registro DNS, verifique os dados informados !');
+        }
+
+        return response()->json('sucesso');
+    }
+
+    public function destroyDns(Request $request){
+
+        $dados = $request->all();
+
+        $dominio = Dominio::find($request->id_dominio);
+ 
+        $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        $adapter = new Guzzle($key);
+        $dns = new DNS($adapter);
+        $zones = new Zones($adapter);
+        $zoneID = $zones->getZoneID($dominio['dominio']);
+
+        try{
+            $dns->deleteRecord($zoneID,$dados['id_registro']);
+        }
+        catch(\Exception $e){
+            return response()->json('Ocorreu algum erro ao remover o registro DNS');
+        }
+
+        return response()->json('sucesso');
+    }
+
 }

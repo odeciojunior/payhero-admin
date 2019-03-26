@@ -56,7 +56,7 @@ class CadastroController extends Controller {
             'email_convidado' => $dados['email'],
         ]);
 
-        return redirect('/');
+        return response()->json('sucesso');
     }
 
 }

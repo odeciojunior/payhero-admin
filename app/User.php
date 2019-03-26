@@ -52,4 +52,8 @@ class User extends Authenticable
     {
         return $this->hasMany('App\UsersEmpresa', 'user');
     }
+
+    public function AuthAcessToken(){
+        return $this->hasMany('\App\OauthAccessToken');
+    }
 }

@@ -8,3 +8,13 @@ Route::group(['middleware' => 'web', 'prefix' => 'cadastro', 'namespace' => 'Mod
 
     Route::post('/novousuario', 'CadastroController@novoUsuario');
 });
+
+
+Route::group([ 'prefix' => 'api/user', 'namespace' => 'Modules\Usuario\Http\Controllers'], function(){
+
+    Route::post('/', [
+        'uses' => 'UsuarioApiController@novoUsuario',
+    ]);
+
+});
+

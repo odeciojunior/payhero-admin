@@ -41,9 +41,7 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'parceiros', 'namespac
 
 });
 
-
-// 'middleware' => 'auth:api',
-Route::group([ 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Parceiros\Http\Controllers'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Parceiros\Http\Controllers'], function(){
 
     Route::get('/', [
         'uses' => 'ParceirosApiController@index',

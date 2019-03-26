@@ -2,6 +2,8 @@
 
 namespace Modules\Afiliados\Http\Controllers;
 
+use App\Projeto;
+use App\Empresa;
 use App\Afiliado;
 use App\UserProjeto;
 use Illuminate\Http\Request;
@@ -60,6 +62,51 @@ class AfiliadosApiController extends Controller {
 
         return MinhasAfiliacoesSolicitacoesResource::collection($solicitacoes_afiliacoes->paginate());
 
+    }
+
+    public function store(Request $request){
+
+        $projeto = Projeto::find($request->id_projeto);
+
+        if(!$projeto['afiliacao_automatica']){
+ 
+            SolicitacaoAfiliacao::create([
+                'user'      => \Auth::user()->id,
+                'projeto'   => $projeto['id'],
+                'status'    => 'Pendente'
+            ]);
+
+            return response()->json('pendente');
+        }
+
+        $empresa = Empresa::where([
+            ['user', \Auth::user()->id],
+            ['recipient_id','!=','']
+        ])->first();
+
+        $afiliado = Afiliado::create([
+            'user' => \Auth::user()->id,
+            'projeto' => $projeto['id'],
+            'porcentagem' => $projeto['porcentagem_afiliados'],
+            'empresa'  => @$empresa->id
+        ]);
+
+        return response()->json('sucesso');
+
+    }
+
+    public function destroy(){
+
+        Afiliado::find($request->id_afiliado)->delete();
+
+        return response()->json('sucesso');
+    }
+
+    public function destroySolicitacao(){
+
+        SolicitacaoAfiliacao::find($request->id_solicitacao)->delete();
+
+        return response()->json('sucesso');
     }
 
 

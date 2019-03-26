@@ -54,8 +54,8 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'pixels', 'namespace' 
 
 });
 
-// 'middleware' => 'auth:api',
-Route::group([ 'prefix' => 'api/projetos/{id_projeto}/pixels', 'namespace' => 'Modules\Pixels\Http\Controllers'], function(){
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/pixels', 'namespace' => 'Modules\Pixels\Http\Controllers'], function(){
 
     Route::get('/', [
         'uses' => 'PixelsApiController@index',

@@ -85,4 +85,12 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}
         'uses' => 'DominiosApiController@getBancos',
     ]);
 
+    Route::post('/{id_dominio}/dns', [
+        'uses' => 'DominiosApiController@storeDns',
+    ]);
+
+    Route::delete('/{id_dominio}/dns/{id_dns}', [
+        'uses' => 'DominiosApiController@destroyDns',
+    ]);
+
 });

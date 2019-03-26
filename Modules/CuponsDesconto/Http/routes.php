@@ -55,8 +55,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'cuponsdesconto', 'na
 });
 
 
-// 'middleware' => 'auth:api',
-Route::group([ 'prefix' => 'api/projetos/{id_projeto}/cuponsdesconto', 'namespace' => 'Modules\CuponsDesconto\Http\Controllers'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/cuponsdesconto', 'namespace' => 'Modules\CuponsDesconto\Http\Controllers'], function(){
 
     Route::get('/', [
         'uses' => 'CuponsDescontoApiController@index',

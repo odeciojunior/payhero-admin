@@ -11,14 +11,25 @@ class UsuarioApiController extends Controller {
 
     public function informacoesBasicas() {
 
-        $user = User::select('name','foto')->where('id',4)->first();
+        $user = User::select('name','foto')->where('id',\Auth::user()->id)->first();
 
         return response()->json([
             'user' => $user
         ]);
     }
 
-    public function perfil(){
+    public function alterarSenha(Request $request){
+
+        $dados = $request->all();
+
+        User::find(\Auth::user()->id)->update([
+            'password' => bcrypt($dados['senha'])
+        ]);
+
+        return response()->json('sucesso');
+    }
+
+    public function show(){
 
         $user = User::select(
             'name',
@@ -44,17 +55,6 @@ class UsuarioApiController extends Controller {
 
     }
 
-    public function alterarSenha(Request $request){
-
-        $dados = $request->all();
-
-        User::find(\Auth::user()->id)->update([
-            'password' => bcrypt($dados['senha'])
-        ]);
-
-        return response()->json('sucesso');
-    }
-
     public function update(Request $request){
 
         $dados = $request->all();
@@ -64,6 +64,5 @@ class UsuarioApiController extends Controller {
         return response()->json('sucesso');
 
     }
-
 
 }

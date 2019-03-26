@@ -54,3 +54,27 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'planos', 'namespace'
 
 });
 
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/planos', 'namespace' => 'Modules\Planos\Http\Controllers'], function(){
+
+    Route::get('/', [
+        'uses' => 'PlanosApiController@index',
+    ]);
+
+    Route::post('/', [
+        'uses' => 'PlanosApiController@store',
+    ]);
+
+    Route::put('/', [
+        'uses' => 'PlanosApiController@update',
+    ]);
+
+    Route::delete('/{id_plano}', [
+        'uses' => 'PlanosApiController@destroy',
+    ]);
+
+    Route::get('/{id_plano}', [
+        'uses' => 'PlanosApiController@show',
+    ]);
+
+});

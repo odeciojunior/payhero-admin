@@ -44,7 +44,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'empresas', 'namespac
 
 });
 
-// 'middleware' => 'auth:api',
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/empresas', 'namespace' => 'Modules\Empresas\Http\Controllers'], function(){
 

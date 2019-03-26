@@ -83,5 +83,17 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/afiliados', 'namespac
         'uses' => 'AfiliadosApiController@minhasAfiliacoesSolicitacoes',
     ]);
 
+    Route::delete('/minhasafiliacoes/solicitacoes/{id_solicitacao}', [
+        'uses' => 'AfiliadosApiController@destroySolicitacao',
+    ]);
+
+    Route::post('/{id_projeto}', [
+        'uses' => 'AfiliadosApiController@store',
+    ]);
+
+    Route::delete('/{id_projeto}/{id_afiliado}', [
+        'uses' => 'AfiliadosApiController@destroy',
+    ]);
+    
 });
 

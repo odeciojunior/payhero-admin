@@ -112,8 +112,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/ferramentas/sms', 'na
 });
 
 
-// 'middleware' => 'auth:api',
-Route::group([ 'prefix' => 'api/projetos/{id_projeto}/sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function(){
 
     Route::get('/', [
         'uses' => 'SmsApiController@index',
