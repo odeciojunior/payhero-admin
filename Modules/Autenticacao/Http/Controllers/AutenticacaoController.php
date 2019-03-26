@@ -4,6 +4,7 @@ namespace Modules\Autenticacao\Http\Controllers;
 
 use DB;
 use App\User;
+use App\OauthAccessToken;
 use GuzzleHttp\Client;
 use Lcobucci\JWT\Parser;
 use Illuminate\Http\Request;
@@ -61,7 +62,6 @@ class AutenticacaoController extends Controller {
         if ($value) {
             $id = (new Parser())->parse($value)->getHeader('jti');
             $revoked = DB::table('oauth_access_tokens')->where('id', '=', $id)->update(['revoked' => 1]);
-            $this->guard()->logout();
         }
         Auth::logout();
         return response()->json('sucesso');
@@ -78,3 +78,5 @@ class AutenticacaoController extends Controller {
     // }
 
 }
+
+
