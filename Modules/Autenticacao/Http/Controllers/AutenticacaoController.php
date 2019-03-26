@@ -58,6 +58,8 @@ class AutenticacaoController extends Controller {
         if (\Auth::check()) {
            \Auth::user()->AuthAcessToken()->delete();
         }
+
+        return response()->json('sucesso');
     }
 
 }
