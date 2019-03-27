@@ -67,16 +67,6 @@ class AutenticacaoController extends Controller {
         return response()->json('sucesso');
     }
 
-
-    // public function logout(){
-
-    //     if (\Auth::check()) {
-    //        \Auth::user()->AuthAcessToken()->delete();
-    //     }
-
-    //     return response()->json('sucesso');
-    // }
-
 }
 
 

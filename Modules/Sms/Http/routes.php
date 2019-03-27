@@ -98,6 +98,10 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/atendimento/sms', 'na
         'uses' => 'SmsApiController@atendimentoIndex',
     ]);
 
+    Route::post('/enviarmensagem', [
+        'uses' => 'SmsApiController@enviarMensagem',
+    ]);
+    
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/ferramentas/sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function()

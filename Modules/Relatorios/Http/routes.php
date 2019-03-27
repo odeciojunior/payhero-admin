@@ -35,4 +35,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vendas', 'namespace' 
         'uses' => 'RelatoriosController@detalhesVenda',
     ]);
 
+    Route::post('/estornarvenda', [
+        'uses' => 'RelatoriosController@estornarVenda',
+    ]);    
+
 });

@@ -22,8 +22,17 @@ Route::group(['middleware' => 'web', 'prefix' => 'ferramentas/shopify', 'namespa
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
-    Route::get('/integracoes', [
-        'uses' => 'ShopifyApiController@integracoes',
+    Route::get('/', [
+        'uses' => 'ShopifyApiController@index',
     ]);
 
+    Route::post('/', [
+        'uses' => 'ShopifyApiController@store',
+    ]);
+
+    Route::post('/sincronizarintegracao', [
+        'uses' => 'ShopifyApiController@sincronizarIntegracao',
+    ]);
+    
 });
+

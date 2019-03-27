@@ -8,7 +8,7 @@ use App\Venda;
 use App\Entrega;
 use App\Comprador;
 use Carbon\Carbon;
-use App\PlanoVenda;
+use App\PlanoVenda; 
 use PagarMe\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -242,17 +242,12 @@ class RelatoriosController extends Controller {
                 'id' => $venda['pagamento_id']
             ]);
 
-            $retorno = [
-                'sucesso' => 'Estorno realizado com sucesso!'
-            ];
         }
         else{
-            $retorno = [
-                'erro' => 'id não encontrado!'
-            ];
+            return response()->json('ID da venda não encontrado');
         }
 
-        return response()->json($retorno);
+        return response()->json('sucesso');
     }
 
     public function getVendas(){

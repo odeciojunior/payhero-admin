@@ -20,4 +20,8 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/convites', 'namespace
         'uses' => 'ConvitesApiController@convites',
     ]);
 
+    Route::post('/', [
+        'uses' => 'ConvitesApiController@enviarConvite',
+    ]);
+    
 });

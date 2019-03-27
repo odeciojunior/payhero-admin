@@ -6,7 +6,7 @@ use App\Brinde;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-
+ 
 class BrindesApiController extends Controller {
 
     public function index(Request $request) {
