@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\SolicitacaoAfiliacao;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 
 class VitrineApiController extends Controller {
 
@@ -24,7 +25,7 @@ class VitrineApiController extends Controller {
         ])->pluck('projeto')->toArray();
 
         $afiliacoes_pendentes = SolicitacaoAfiliacao::where([
-            ['user', \Auth::user()->id],
+            ['user', 6],
             ['status','Pendente']
         ])->pluck('projeto')->toArray();
 
@@ -36,6 +37,7 @@ class VitrineApiController extends Controller {
                             ->get()->toArray();
 
         foreach($projetos as &$projeto){
+            $projeto['id'] = Hashids::encode($projeto['id']);
             $projeto_usuario = UserProjeto::where([
                 ['projeto',$projeto['id']],
                 ['tipo','produtor']

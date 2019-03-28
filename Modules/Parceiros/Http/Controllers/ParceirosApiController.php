@@ -11,6 +11,7 @@ use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
 use Modules\Parceiros\Transformers\ParceirosResource;
 
@@ -20,7 +21,7 @@ class ParceirosApiController extends Controller {
 
         $parceiros = UserProjeto::where([
             ['tipo', '!=', 'produtor'],
-            ['projeto', $request->id_projeto]
+            ['projeto', Hashids::decode($request->id_projeto)]
         ]);
 
         return ParceirosResource::collection($parceiros->paginate());
@@ -29,7 +30,7 @@ class ParceirosApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = $request->id_projeto;
+        $dados['projeto'] = Hashids::decode($request->id_projeto);
 
         $user = User::where('email',$dados['email'])->first();
 
@@ -78,7 +79,9 @@ class ParceirosApiController extends Controller {
 
     public function show(Request $request) {
 
-        $parceiro = UserProjeto::select('user','tipo','status','valor_remuneracao','created_at')->where('id',$request->id_parceiro)->first();
+        $parceiro = UserProjeto::select('user','tipo','status','valor_remuneracao','created_at')
+                                ->where('id',Hashids::decode($request->id_parceiro))->first();
+
         $user = User::find($parceiro->user);
         
         return response()->json([
@@ -94,14 +97,14 @@ class ParceirosApiController extends Controller {
 
         $dados = $request->all();
 
-        UserProjeto::find($dados['id'])->update($dados);
+        UserProjeto::find(Hashids::decode($dados['id']))->update($dados);
 
         return response()->json('sucesso');
     }
 
     public function destroy(Request $request) {
 
-        UserProjeto::find($request->id_parceiro)->delete();
+        UserProjeto::find(Hashids::decode($request->id_parceiro))->delete();
 
         return response()->json('sucesso');
     }

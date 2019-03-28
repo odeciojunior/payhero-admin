@@ -6,9 +6,11 @@ use App\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
+use Modules\Produtos\Transformers\ProdutosResource;
 
 class ProdutosApiController extends Controller {
 
@@ -17,14 +19,14 @@ class ProdutosApiController extends Controller {
         $produtos = Produto::select('id','nome','descricao','foto','created_at')
                             ->where('user',\Auth::user()->id)->orderBy('id','DESC');
 
-        return response()->json($produtos->paginate(10));
+        return ProdutosResource::collection($produtos->paginate(10));
     }
 
     public function store(Request $request) {
 
         $dados = $request->all();
 
-        $dados['user'] = 4;//\Auth::user()->id;
+        $dados['user'] = Auth::user()->id;
 
         $produto = Produto::create($dados);
 
@@ -69,7 +71,7 @@ class ProdutosApiController extends Controller {
             'formato',
             'quantidade',
             'foto'
-        )->where('id',$request->id_plano)->first();
+        )->where('id',Hashids::decode($request->id_plano))->first();
 
         return response()->json($produto);
     }
@@ -78,14 +80,14 @@ class ProdutosApiController extends Controller {
 
         $dados = $request->all();
 
-        Produto::find($dados['id'])->update($dados);
+        Produto::find(Hashids::decode($dados['id']))->update($dados);
 
         return response()->json('sucesso');
     }
 
     public function destroy(Request $request) {
 
-        Produto::find($request->id_produto)->delete();
+        Produto::find(Hashids::decode($request->id_produto))->delete();
 
         return response()->json('sucesso');
     }

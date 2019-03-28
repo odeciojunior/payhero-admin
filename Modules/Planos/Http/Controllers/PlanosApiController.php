@@ -12,6 +12,7 @@ use App\ProdutoPlano;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 use Modules\Planos\Transformers\PlanosResource;
 
@@ -19,7 +20,7 @@ class PlanosApiController extends Controller {
 
     public function index(Request $request) {
 
-        $planos = Plano::where('projeto', $request->id_projeto);
+        $planos = Plano::where('projeto', Hashids::decode($request->id_projeto));
 
         return PlanosResource::collection($planos->paginate(10));
     }
@@ -27,10 +28,10 @@ class PlanosApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = $request->id_projeto;
+        $dados['projeto'] = Hashids::decode($request->id_projeto);
 
         $user_projeto = UserProjeto::where([
-            ['projeto',$request->id_projeto],
+            ['projeto',Hashids::decode($request->id_projeto)],
             ['tipo','produtor']
         ])->first();
 
@@ -101,7 +102,7 @@ class PlanosApiController extends Controller {
 
     public function show(Request $request) {
 
-        $plano = Plano::find($request->id_plano);
+        $plano = Plano::find(Hashids::decode($request->id_plano));
 
         $dados = [];
         $dados['nome'] = $plano['nome'];
@@ -151,14 +152,14 @@ class PlanosApiController extends Controller {
 
         $dados = $request->all();
 
-        Plano::find($dados['id'])->update($dados);
+        Plano::find(Hashids::decode($dados['id']))->update($dados);
 
         return response()->json('sucesso');
     }
 
     public function destroy(Request $request) {
 
-        Plano::find($request->id_plano)->delete();
+        Plano::find(Hashids::decode($request->id_plano))->delete();
 
         return response()->json('sucesso');
     }

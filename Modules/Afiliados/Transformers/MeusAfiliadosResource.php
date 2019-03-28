@@ -4,6 +4,7 @@ namespace Modules\Afiliados\Transformers;
 
 use App\User;
 use App\Projeto;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
 class MeusAfiliadosResource extends Resource {
@@ -14,7 +15,7 @@ class MeusAfiliadosResource extends Resource {
         $projeto = Projeto::find($this->projeto);
 
         return [
-            'id' => $this->id,
+            'id' => Hashids::encode($this->id),
             'afiliado' => $afiliado['name'],
             'projeto' => $projeto['nome'],
             'porcentagem' => $this->porcentagem,

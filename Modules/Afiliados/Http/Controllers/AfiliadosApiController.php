@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\SolicitacaoAfiliacao;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Modules\Afiliados\Transformers\MeusAfiliadosResource;
 use Modules\Afiliados\Transformers\MinhasAfiliacoesResource;
 use Modules\Afiliados\Transformers\MeusAfiliadosSolicitacoesResource;
@@ -66,13 +67,13 @@ class AfiliadosApiController extends Controller {
 
     public function store(Request $request){
 
-        $projeto = Projeto::find($request->id_projeto);
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
 
         if(!$projeto['afiliacao_automatica']){
  
             SolicitacaoAfiliacao::create([
                 'user'      => \Auth::user()->id,
-                'projeto'   => $projeto['id'],
+                'projeto'   => Hashids::decode($projeto['id']),
                 'status'    => 'Pendente'
             ]);
 
@@ -97,14 +98,14 @@ class AfiliadosApiController extends Controller {
 
     public function destroy(){
 
-        Afiliado::find($request->id_afiliado)->delete();
+        Afiliado::find(Hashids::decode($request->id_afiliado))->delete();
 
         return response()->json('sucesso');
     }
 
     public function destroySolicitacao(){
 
-        SolicitacaoAfiliacao::find($request->id_solicitacao)->delete();
+        SolicitacaoAfiliacao::find(Hashids::decode($request->id_solicitacao))->delete();
 
         return response()->json('sucesso');
     }

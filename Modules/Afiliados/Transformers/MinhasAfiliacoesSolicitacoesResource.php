@@ -3,6 +3,7 @@
 namespace Modules\Afiliados\Transformers;
 
 use App\Projeto;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
 class MinhasAfiliacoesSolicitacoesResource extends Resource {
@@ -12,7 +13,7 @@ class MinhasAfiliacoesSolicitacoesResource extends Resource {
         $projeto = Projeto::find($this->projeto);
 
         return [
-            'id' => $this->id,
+            'id' => Hashids::encode($this->id),
             'projeto' => $projeto['nome'],
             'status' => $this->status,
             'created_at' => $this->created_at

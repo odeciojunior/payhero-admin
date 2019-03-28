@@ -1,20 +1,19 @@
 <?php
 
-namespace Modules\Projetos\Transformers;
+namespace Modules\Brindes\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class ProjetosResource extends Resource {
+class BrindesResource extends Resource {
 
     public function toArray($request) {
 
         return [
             'id' => Hashids::encode($this->id),
-            'foto' => $this->foto,
-            'nome' => $this->nome,
+            'titulo' => $this->titulo,
             'descricao' => $this->descricao,
-            'created_at' => $this->created_at
+            'tipo_brinde' => $this->tipo_brinde
         ];
     }
 }

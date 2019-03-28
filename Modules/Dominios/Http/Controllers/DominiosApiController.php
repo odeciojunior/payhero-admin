@@ -13,13 +13,15 @@ use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\User;
 use Cloudflare\API\Endpoints\Zones;
+use Vinkla\Hashids\Facades\Hashids;
 use Modules\Dominios\Transformers\DominiosResource;
 
 class DominiosApiController extends Controller {
 
     public function index(Request $request) {
 
-        $dominios = Dominio::select('id','dominio','ip_dominio','status')->where('projeto',$request->id_projeto);
+        $dominios = Dominio::select('id','dominio','ip_dominio','status')
+                            ->where('projeto',Hashids::decode($request->id_projeto));
 
         return DominiosResource::collection($dominios->paginate());
     }
@@ -27,7 +29,7 @@ class DominiosApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = $request->projeto;
+        $dados['projeto'] = Hashids::decode($request->projeto);
 
         $projeto = Projeto::find($dados['projeto']);
 
@@ -101,7 +103,7 @@ class DominiosApiController extends Controller {
 
     public function show(Request $request) {
 
-        $dominio = Dominio::find($request->id_dominio);
+        $dominio = Dominio::find(Hashids::decode($request->id_dominio));
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
 
@@ -120,7 +122,6 @@ class DominiosApiController extends Controller {
                 foreach($zone->name_servers as $new_name_server){
                     $name_servers[] = $new_name_server;
                 }
-
             }
         }
 
@@ -139,7 +140,7 @@ class DominiosApiController extends Controller {
 
         $dados = $request->all();
 
-        $dominio = Dominio::find($dados['id']);
+        $dominio = Dominio::find(Hashids::decode($dados['id']));
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
 

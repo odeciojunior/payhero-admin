@@ -3,6 +3,7 @@
 namespace Modules\Sms\Transformers;
 
 use App\Plano;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
 class SmsProjetosResource extends Resource {
@@ -19,7 +20,7 @@ class SmsProjetosResource extends Resource {
         }
 
         return [
-            'id' => $this->id,
+            'id' => Hashids::encode($this->id),
             'evento' => $this->evento,
             'mensagem' => $this->mensagem,
             'tempo' => $this->tempo . ' ' . $this->periodo,

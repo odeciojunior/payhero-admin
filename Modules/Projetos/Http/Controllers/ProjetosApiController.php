@@ -7,6 +7,7 @@ use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Modules\Projetos\Transformers\ProjetosResource;
 
 class ProjetosApiController extends Controller {
@@ -45,7 +46,7 @@ class ProjetosApiController extends Controller {
 
     public function show($id)  {
 
-        $projeto = Projeto::find($id);
+        $projeto = Projeto::find(Hashids::decode($id));
 
         if(!$projeto){
             return response()->json('sucesso');
@@ -56,7 +57,7 @@ class ProjetosApiController extends Controller {
 
     public function update(Request $request)  {
 
-        $projeto = Projeto::find($dados['id']);
+        $projeto = Projeto::find(Hashids::decode($dados['id']));
 
         if(!$projeto){
             return response()->json('projeto não encontrado');
@@ -69,7 +70,7 @@ class ProjetosApiController extends Controller {
 
     public function destroy($id)  {
 
-        $projeto = Projeto::find($id);
+        $projeto = Projeto::find(Hashids::decode($id));
 
         if(!$projeto){
             return response()->json('projeto não encontrado');

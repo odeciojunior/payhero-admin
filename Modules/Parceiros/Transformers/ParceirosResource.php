@@ -3,6 +3,7 @@
 namespace Modules\Parceiros\Transformers;
 
 use App\User;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
 class ParceirosResource extends Resource {
@@ -18,7 +19,7 @@ class ParceirosResource extends Resource {
         }
 
         return [
-            'id' => $this->id,
+            'id' => Hashids::encode($this->id),
             'nome' => $nome,
             'tipo' => $this->tipo,
             'status' => $this->status,   

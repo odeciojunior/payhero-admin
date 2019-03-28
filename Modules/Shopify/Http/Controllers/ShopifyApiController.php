@@ -21,6 +21,7 @@ use Cloudflare\API\Auth\APIKey;
 use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Adapter\Guzzle;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
@@ -71,7 +72,7 @@ class ShopifyApiController extends Controller {
         catch(\Exception $e){
             return response()->json('Dados do shopify inválidos, revise os dados informados');
         }
-        
+
         $imagem = $request->file('foto_projeto');
 
         if ($imagem != null) {
@@ -238,8 +239,8 @@ class ShopifyApiController extends Controller {
 
         $dados = $request->all();
 
-        $projeto = Projeto::find($dados['projeto']);
-        $integracao = IntegracaoShopify::where('projeto',$dados['projeto'])->first();
+        $projeto = Projeto::find(Hashids::decode($dados['projeto']));
+        $integracao = IntegracaoShopify::where('projeto',Hashids::decode($dados['projeto']))->first();
 
         try{
             $credential = new PublicAppCredential($integracao['token']);

@@ -6,20 +6,23 @@ use App\Cupom;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\CuponsDesconto\Transformers\CuponsDescontoResource;
 
 class CuponsDescontoApiController extends Controller {
 
     public function index(Request $request) {
-
-        $cupons_desconto = Cupom::select('id','nome','tipo','valor','cod_cupom','status')->where('projeto',$request->id_projeto);
-
-        return response()->json($cupons_desconto->paginate());
+ 
+        $cupons_desconto = Cupom::select('id','nome','tipo','valor','cod_cupom','status')
+                                ->where('projeto',Hashids::decode($request->id_projeto));
+ 
+        return CuponsDescontoResource::collection($cupons_desconto->paginate(10));
     }
 
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = $request->id_projeto;
+        $dados['projeto'] = Hashids::decode($request->id_projeto);
 
         Cupom::create($dados);
 
@@ -28,7 +31,8 @@ class CuponsDescontoApiController extends Controller {
 
     public function show(Request $request) {
 
-        $cupom_desconto = Cupom::select('id','nome','tipo','valor','cod_cupom','status','created_at')->where('id',$request->id_cupom)->first();
+        $cupom_desconto = Cupom::select('id','nome','tipo','valor','cod_cupom','status','created_at')
+                        ->where('id',Hashids::decode($request->id_cupom))->first();
 
         return response()->json($cupom_desconto);
     }
@@ -37,14 +41,14 @@ class CuponsDescontoApiController extends Controller {
 
         $dados = $request->all();
 
-        Cupom::find($dados['id'])->update($dados);
+        Cupom::find(Hashids::decode($dados['id']))->update($dados);
 
         return response()->json('sucesso');
     }
 
     public function destroy(Request $request) {
 
-        Cupom::find($request->id_cupom)->delete();
+        Cupom::find(Hashids::decode($request->id_cupom))->delete();
 
         return response()->json('sucesso');
     }

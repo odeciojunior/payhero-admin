@@ -5,6 +5,7 @@ namespace Modules\Dominios\Transformers;
 use Cloudflare\API\Auth\APIKey;
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\Zones;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
 class DominiosResource extends Resource {
@@ -32,7 +33,7 @@ class DominiosResource extends Resource {
         }
 
         return [
-            'id' => $this->id,
+            'id' => Hashids::encode($this->id),
             'dominio' => $this->dominio,
             'ip_dominio' => $this->ip_dominio,
             'status' => $status   

@@ -14,9 +14,10 @@ use Zenvia\Model\SmsFacade;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Modules\Sms\Transformers\SmsResource;
 use Modules\Sms\Transformers\SmsProjetosResource;
-use Modules\Sms\Transformers\HistoricoSmsResource;
+use Modules\Sms\Transformers\HistoricoSmsResource; 
 
 class SmsApiController extends Controller {
 
@@ -157,7 +158,7 @@ class SmsApiController extends Controller {
 
     public function index(Request $request) {
 
-        $sms = ZenviaSms::where('projeto',$request->id_projeto);
+        $sms = ZenviaSms::where('projeto',Hashids::decode($request->id_projeto));
 
         return SmsProjetosResource::collection($sms->paginate());
     }
@@ -165,7 +166,7 @@ class SmsApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = $request->id_projeto;
+        $dados['projeto'] = Hashids::decode($request->id_projeto);
 
         ZenviaSms::create($dados);
 
@@ -174,7 +175,8 @@ class SmsApiController extends Controller {
 
     public function show(Request $request) {
 
-        $sms = ZenviaSms::select('plano','evento','tempo','periodo','status','mensagem')->where('id',$request->id_sms)->first();
+        $sms = ZenviaSms::select('plano','evento','tempo','periodo','status','mensagem')
+                        ->where('id',Hashids::decode($request->id_sms))->first();
 
         return response()->json($sms);
     }
@@ -183,14 +185,14 @@ class SmsApiController extends Controller {
 
         $dados = $request->all();
 
-        ZenviaSms::find($dados['id'])->update($dados);
+        ZenviaSms::find(Hashids::decode($dados['id']))->update($dados);
 
         return response()->json('sucesso');
     }
 
     public function destroy(Request $request) {
 
-        ZenviaSms::find($request->id_sms)->delete();
+        ZenviaSms::find(Hashids::decode($request->id_sms))->delete();
 
         return response()->json('sucesso');
     }
