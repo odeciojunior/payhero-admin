@@ -5,19 +5,14 @@ namespace Modules\Relatorios\Transformers;
 use App\Plano;
 use App\Comprador;
 use Carbon\Carbon;
-use App\PlanoVenda;
+use App\PlanoVenda; 
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class VendasResource extends Resource
-{
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request
-     * @return array
-     */
-    public function toArray($request)
-    {
+class VendasResource extends Resource {
+
+    public function toArray($request) {
+
         $comprador = Comprador::find($this->comprador);
 
         $planos_venda = PlanoVenda::where('venda',$this->id)->get()->toArray();
@@ -41,7 +36,7 @@ class VendasResource extends Resource
             $status = $this->pagamento_status;
 
         return [
-            'id' => $this->id,
+            'id' => Hashids::encode($this->id),
             'produto' => $produto,
             'comprador' => $comprador['nome'],
             'forma' => $this->forma_pagamento == 'cartao_credito' ? 'cartão' : $this->forma_pagamento,

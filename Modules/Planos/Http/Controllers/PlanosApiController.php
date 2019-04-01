@@ -20,6 +20,16 @@ class PlanosApiController extends Controller {
 
     public function index(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $planos = Plano::where('projeto', Hashids::decode($request->id_projeto));
 
         return PlanosResource::collection($planos->paginate(10));
@@ -28,7 +38,18 @@ class PlanosApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = Hashids::decode($request->id_projeto);
+
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $dados['projeto'] = $projeto['id'];
 
         $user_projeto = UserProjeto::where([
             ['projeto',Hashids::decode($request->id_projeto)],
@@ -102,6 +123,16 @@ class PlanosApiController extends Controller {
 
     public function show(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $plano = Plano::find(Hashids::decode($request->id_plano));
 
         $dados = [];
@@ -150,6 +181,16 @@ class PlanosApiController extends Controller {
 
     public function update(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $dados = $request->all();
 
         Plano::find(Hashids::decode($dados['id']))->update($dados);
@@ -158,6 +199,16 @@ class PlanosApiController extends Controller {
     }
 
     public function destroy(Request $request) {
+
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
 
         Plano::find(Hashids::decode($request->id_plano))->delete();
 
@@ -202,5 +253,20 @@ class PlanosApiController extends Controller {
        
         return $str;
     } 
+
+    public function isAuthorized($id_projeto){
+
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $id_projeto]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return false;
+        }
+
+        return true;
+    }
 
 }

@@ -5,6 +5,7 @@ namespace Modules\Dominios\Http\Controllers;
 use Exception;
 use App\Dominio;
 use App\Projeto;
+use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -20,8 +21,18 @@ class DominiosApiController extends Controller {
 
     public function index(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $dominios = Dominio::select('id','dominio','ip_dominio','status')
-                            ->where('projeto',Hashids::decode($request->id_projeto));
+                            ->where('projeto',$projeto['id']);
 
         return DominiosResource::collection($dominios->paginate());
     }
@@ -29,9 +40,17 @@ class DominiosApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = Hashids::decode($request->projeto);
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
 
-        $projeto = Projeto::find($dados['projeto']);
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $dados['projeto'] = $projeto['id'];
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
         $adapter = new Guzzle($key);
@@ -103,7 +122,21 @@ class DominiosApiController extends Controller {
 
     public function show(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $dominio = Dominio::find(Hashids::decode($request->id_dominio));
+
+        if(!$dominio){
+            return response()->json('domínio não encontrado');
+        }
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
 
@@ -140,7 +173,21 @@ class DominiosApiController extends Controller {
 
         $dados = $request->all();
 
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $dominio = Dominio::find(Hashids::decode($dados['id']));
+
+        if(!$dominio){
+            return response()->json('domínio não encontrado');
+        }
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
 
@@ -166,7 +213,21 @@ class DominiosApiController extends Controller {
 
         $dados = $request->all();
 
-        $dominio = Dominio::find($request->id_dominio);
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $dominio = Dominio::find(Hashids::decode($request->id_dominio));
+
+        if(!$dominio){
+            return response()->json('domínio não encontrado');
+        }
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
         $adapter = new Guzzle($key);
@@ -188,8 +249,22 @@ class DominiosApiController extends Controller {
 
         $dados = $request->all();
 
-        $dominio = Dominio::find($request->id_dominio);
- 
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $dominio = Dominio::find(Hashids::decode($request->id_dominio));
+
+        if(!$dominio){
+            return response()->json('domínio não encontrado');
+        }
+
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
         $adapter = new Guzzle($key);
         $dns = new DNS($adapter);
@@ -206,4 +281,18 @@ class DominiosApiController extends Controller {
         return response()->json('sucesso');
     }
 
+    public function isAuthorized($id_projeto){
+
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $id_projeto]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -13,7 +13,8 @@ use PagarMe\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Yajra\DataTables\DataTables;
-use Illuminate\Routing\Controller; 
+use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Modules\Relatorios\DataTables\VendasDataTable;
 use Modules\Relatorios\Transformers\VendasResource;
 
@@ -23,7 +24,7 @@ class RelatoriosController extends Controller {
 
         return $dataTable->render('relatorios::vendas');
     }
- 
+
     public function vendas(VendasDataTable $dataTable) {
 
         return $dataTable->render('relatorios::vendas');
@@ -259,7 +260,16 @@ class RelatoriosController extends Controller {
 
     public function detalhesVenda($id_venda){
 
-        $venda = Venda::find($id_venda);
+        $venda = Venda::find(Hashids::decode($id_venda));
+
+        if(!$venda){
+            return response()->json('Venda não encontrada');
+        }
+
+        if($venda['proprietario'] != \Auth::user()->id){
+            return response()->json('Não autorizado');
+        }
+
         $planos_venda = PlanoVenda::where('venda', $venda['id'])->get()->toArray();
         $comprador = Comprador::find($venda['comprador']);
         $entrega = Entrega::find($venda['entrega']);

@@ -4,6 +4,7 @@ namespace Modules\Sms\Http\Controllers;
 
 use App\User;
 use App\Plano;
+use App\Projeto;
 use DateTimeZone;
 use App\ZenviaSms;
 use App\MensagemSms;
@@ -158,6 +159,16 @@ class SmsApiController extends Controller {
 
     public function index(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $sms = ZenviaSms::where('projeto',Hashids::decode($request->id_projeto));
 
         return SmsProjetosResource::collection($sms->paginate());
@@ -166,7 +177,18 @@ class SmsApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = Hashids::decode($request->id_projeto);
+
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $dados['projeto'] = $projeto['id'];
 
         ZenviaSms::create($dados);
 
@@ -175,6 +197,16 @@ class SmsApiController extends Controller {
 
     public function show(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $sms = ZenviaSms::select('plano','evento','tempo','periodo','status','mensagem')
                         ->where('id',Hashids::decode($request->id_sms))->first();
 
@@ -182,6 +214,16 @@ class SmsApiController extends Controller {
     }
 
     public function update(Request $request) {
+
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
 
         $dados = $request->all();
 
@@ -192,10 +234,33 @@ class SmsApiController extends Controller {
 
     public function destroy(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         ZenviaSms::find(Hashids::decode($request->id_sms))->delete();
 
         return response()->json('sucesso');
     }
 
+    public function isAuthorized($id_projeto){
 
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $id_projeto]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return false;
+        }
+
+        return true;
+    }
 }

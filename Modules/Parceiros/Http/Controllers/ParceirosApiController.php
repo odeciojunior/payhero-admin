@@ -3,6 +3,7 @@
 namespace Modules\Parceiros\Http\Controllers;
 
 use App\User;
+use App\Projeto;
 use App\Convite;
 use App\Empresa;
 use App\Parceiro;
@@ -19,6 +20,16 @@ class ParceirosApiController extends Controller {
 
     public function index(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $parceiros = UserProjeto::where([
             ['tipo', '!=', 'produtor'],
             ['projeto', Hashids::decode($request->id_projeto)]
@@ -29,8 +40,18 @@ class ParceirosApiController extends Controller {
 
     public function store(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $dados = $request->all();
-        $dados['projeto'] = Hashids::decode($request->id_projeto);
+        $dados['projeto'] = $projeto['id'];
 
         $user = User::where('email',$dados['email'])->first();
 
@@ -79,6 +100,16 @@ class ParceirosApiController extends Controller {
 
     public function show(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $parceiro = UserProjeto::select('user','tipo','status','valor_remuneracao','created_at')
                                 ->where('id',Hashids::decode($request->id_parceiro))->first();
 
@@ -95,6 +126,16 @@ class ParceirosApiController extends Controller {
 
     public function update(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $dados = $request->all();
 
         UserProjeto::find(Hashids::decode($dados['id']))->update($dados);
@@ -104,9 +145,34 @@ class ParceirosApiController extends Controller {
 
     public function destroy(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         UserProjeto::find(Hashids::decode($request->id_parceiro))->delete();
 
         return response()->json('sucesso');
+    }
+
+    public function isAuthorized($id_projeto){
+
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $id_projeto]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return false;
+        }
+
+        return true;
     }
 
 }

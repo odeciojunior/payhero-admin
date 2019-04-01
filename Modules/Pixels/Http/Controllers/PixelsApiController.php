@@ -3,6 +3,8 @@
 namespace Modules\Pixels\Http\Controllers;
 
 use App\Pixel;
+use App\Projeto;
+use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -13,8 +15,18 @@ class PixelsApiController extends Controller {
 
     public function index(Request $request) {
 
+        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
         $pixels = Pixel::select('id','nome','cod_pixel','plataforma','status')
-                        ->where('projeto','=', Hashids::decode($request->id_projeto));
+                        ->where('projeto','=', $projeto['id']);
 
         return PixelsResource::collection($pixels->paginate(10));
     }
@@ -22,7 +34,17 @@ class PixelsApiController extends Controller {
     public function store(Request $request) {
 
         $dados = $request->all();
-        $dados['projeto'] = Hashids::decode($request->id_projeto);
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $dados['projeto'] = $projeto['id'];
 
         Pixel::create($dados);
 
@@ -30,6 +52,16 @@ class PixelsApiController extends Controller {
     }
 
     public function show(Request $request) {
+
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
 
         $pixel = Pixel::select(
             'nome',
@@ -41,6 +73,10 @@ class PixelsApiController extends Controller {
             'purchase_boleto'
         )->where('id',Hashids::decode($request->id_pixel)->first());
 
+        if(!$pixel){
+            return response()->json('pixel não encontrado');
+        }
+
         return response()->json($pixel);
     }
 
@@ -48,16 +84,62 @@ class PixelsApiController extends Controller {
 
         $dados = $request->all();
 
-        Pixel::find(Hashids::decode($dados['id']))->update($dados);
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $pixel = Pixel::find(Hashids::decode($dados['id']));
+        
+        if(!$pixel){
+            return reponse()->json('pixel não encontrado');
+        }
+
+        $pixel->update($dados);
 
         return response()->json('sucesso');
     }
 
     public function destroy(Request $request) {
 
-        Pixel::find(Hashids::decode($request->id_pixel))->delete();
+        $projeto = Projeto::find(Hashids::decode($request->projeto));
+
+        if(!$projeto){
+            return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $pixel = Pixel::find(Hashids::decode($request->id_pixel));
+        
+        if(!$pixel){
+            return response()->json('pixel não encontrado');
+        }
+
+        $pixel->delete();
 
         return response()->json('sucesso');
     }
 
+    public function isAuthorized($id_projeto){
+
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $id_projeto]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return false;
+        }
+
+        return true;
+    }
 }

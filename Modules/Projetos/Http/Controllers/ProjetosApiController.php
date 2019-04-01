@@ -49,7 +49,21 @@ class ProjetosApiController extends Controller {
         $projeto = Projeto::find(Hashids::decode($id));
 
         if(!$projeto){
-            return response()->json('sucesso');
+            return response()->json('Projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $projeto['id']]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return response()->json('Sem autorização');
         }
 
         return response()->json($projeto);
@@ -61,6 +75,20 @@ class ProjetosApiController extends Controller {
 
         if(!$projeto){
             return response()->json('projeto não encontrado');
+        }
+
+        if(!$this->isAuthorized($projeto['id'])){
+            return response()->json('não autorizado');
+        }
+
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $projeto['id']]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return response()->json('Sem autorização');
         }
 
         $projeto->update($dados);
@@ -76,9 +104,34 @@ class ProjetosApiController extends Controller {
             return response()->json('projeto não encontrado');
         }
 
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $projeto['id']]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return response()->json('Sem autorização');
+        }
+
         $projeto->delete();
 
         return response()->json('sucesso');
+    }
+
+    public function isAuthorized($id_projeto){
+
+        $projeto_usuario = UserProjeto::where([
+            ['user',\Auth::user()->id],
+            ['tipo','produtor'],
+            ['projeto', $id_projeto]
+        ])->first();
+
+        if(!$projeto_usuario){
+            return false;
+        }
+
+        return true;
     }
 
 }
