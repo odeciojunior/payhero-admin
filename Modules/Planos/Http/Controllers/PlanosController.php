@@ -19,6 +19,7 @@ use App\Transportadora;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -34,6 +35,7 @@ class PlanosController extends Controller {
     public function cadastrarPlano(Request $request){
 
         $dados = $request->all();
+        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
 
         $user_projeto = UserProjeto::where([
             ['projeto',$dados['projeto']],
@@ -110,9 +112,12 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
+        unset($dados['projeto']);
+
         $dados['preco'] = $this->getValor($dados['preco']);
 
-        $plano = Plano::find($dados['id']);
+        $plano = Plano::where('id',Hashids::decode($dados['id']))->first();
+
         $plano->update($dados);
 
         $foto = $request->file('foto_plano_editar');
@@ -187,7 +192,7 @@ class PlanosController extends Controller {
             return response()->json('Impossível excluir, possui serviço de sms integrado.');            
         }
 
-        $plano = Plano::find($dados['id']); 
+        $plano = Plano::where('id',Hashids::decode($dados['id']))->first();
 
         $fotos = Foto::where('plano', $plano['id'])->get()->toArray();
 
@@ -221,10 +226,14 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
-        $planos = \DB::table('planos as plano');
+        $planos = \DB::table('planos as plano')
+                      ->whereNull('deleted_at');
 
         if(isset($dados['projeto'])){
-            $planos = $planos->where('plano.projeto','=', $dados['projeto']);
+            $planos = $planos->where('plano.projeto','=', Hashids::decode($dados['projeto']));
+        }
+        else{
+            return response()->json('projeto não encontrado');
         }
 
         $planos = $planos->get([
@@ -238,17 +247,17 @@ class PlanosController extends Controller {
         return Datatables::of($planos)
         ->addColumn('detalhes', function ($plano) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_plano' data-placement='top' data-toggle='tooltip' title='Detalhes' plano='".$plano->id."'>
+                        <a class='btn btn-outline btn-success detalhes_plano' data-placement='top' data-toggle='tooltip' title='Detalhes' plano='".Hashids::encode($plano->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_plano' data-placement='top' data-toggle='tooltip' title='Editar' plano='".$plano->id."'>
+                        <a class='btn btn-outline btn-primary editar_plano' data-placement='top' data-toggle='tooltip' title='Editar' plano='".Hashids::encode($plano->id)."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_plano' data-placement='top' data-toggle='tooltip' title='Excluir' plano='".$plano->id."'>
+                        <a class='btn btn-outline btn-danger excluir_plano' data-placement='top' data-toggle='tooltip' title='Excluir' plano='".Hashids::encode($plano->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -261,7 +270,7 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
-        $plano = Plano::find($dados['id_plano']);
+        $plano = Plano::where('id',Hashids::decode($dados['id_plano']))->first();
 
         $modal_body = '';
 
@@ -439,7 +448,9 @@ class PlanosController extends Controller {
 
         $dados = $request->all();
 
-        $plano = Plano::find($dados['id']);
+        $plano = Plano::where('id',Hashids::decode($dados['id']))->first();
+        $id_plano = Hashids::encode($plano->id);
+
         $transportadoras = Transportadora::all();
 
         $produtos_projeto = ProjetoProduto::where('projeto',$dados['projeto'])->get()->toArray();
@@ -457,6 +468,7 @@ class PlanosController extends Controller {
         $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano['foto']."?dummy=".uniqid());
 
         $form = view('planos::editar',[
+            'id_plano' => $id_plano,
             'plano' => $plano,
             'transportadoras' => $transportadoras,
             'foto' => $caminho_foto,

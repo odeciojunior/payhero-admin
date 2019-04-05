@@ -1,12 +1,5 @@
 <?php
 
-// adm@healthlab.io
-// Bage2018
-
-// lorran_neverlost@hotmail.com
-// Bage2018
-
-
 namespace Modules\Dominios\Http\Controllers;
 
 use Exception;
@@ -22,7 +15,9 @@ use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\User;
 use Illuminate\Routing\Controller;
 use Cloudflare\API\Endpoints\Zones;
+use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
+use Modules\Core\Helpers\AutorizacaoHelper;
 
 
 class DominiosController extends Controller {
@@ -30,6 +25,8 @@ class DominiosController extends Controller {
     public function cadastrarDominio(Request $request){
 
         $dados = $request->all();
+
+        $dados['projeto'] = Hashids::decode($dados['projeto']);
 
         $projeto = Projeto::find($dados['projeto']);
 
@@ -147,7 +144,7 @@ class DominiosController extends Controller {
 
         $dados = $request->all();
 
-        $dominio = Dominio::find($dados['id']);
+        $dominio = Dominio::where('id',Hashids::decode($dados['id']))->first();
 
         $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
 
@@ -177,9 +174,12 @@ class DominiosController extends Controller {
         $dominios = \DB::table('dominios as dominio');
 
         if(isset($dados['projeto'])){
-            $dominios = $dominios->where('dominio.projeto','=', $dados['projeto']);
+            $dominios = $dominios->where('dominio.projeto','=', Hashids::decode($dados['projeto']));
         }
-            
+        else{
+            return response()->json('projeto não informado');
+        }
+
         $dominios = $dominios->get([
                 'dominio.id',
                 'dominio.dominio',
@@ -216,17 +216,17 @@ class DominiosController extends Controller {
             })
             ->addColumn('detalhes', function ($dominio) {
                 return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                            <a class='btn btn-outline btn-success detalhes_dominio' data-placement='top' data-toggle='tooltip' title='Detalhes' dominio='".$dominio->id."'>
+                            <a class='btn btn-outline btn-success detalhes_dominio' data-placement='top' data-toggle='tooltip' title='Detalhes' dominio='".Hashids::encode($dominio->id)."'>
                                 <i class='icon wb-order' aria-hidden='true'></i>
                             </a>
                         </span>
                         <span data-toggle='modal' data-target='#modal_editar'>
-                            <a class='btn btn-outline btn-primary editar_dominio' data-placement='top' data-toggle='tooltip' title='Editar' dominio='".$dominio->id."'>
+                            <a class='btn btn-outline btn-primary editar_dominio' data-placement='top' data-toggle='tooltip' title='Editar' dominio='".Hashids::encode($dominio->id)."'>
                                 <i class='icon wb-pencil' aria-hidden='true'></i>
                             </a>
                         </span>
                         <span data-toggle='modal' data-target='#modal_excluir'>
-                            <a class='btn btn-outline btn-danger excluir_dominio' data-placement='top' data-toggle='tooltip' title='Excluir' dominio='".$dominio->id."'>
+                            <a class='btn btn-outline btn-danger excluir_dominio' data-placement='top' data-toggle='tooltip' title='Excluir' dominio='".Hashids::encode($dominio->id)."'>
                                 <i class='icon wb-trash' aria-hidden='true'></i>
                             </a>
                         </span>";
@@ -239,7 +239,7 @@ class DominiosController extends Controller {
 
         $dados = $request->all();
 
-        $dominio = Dominio::find($dados['dominio']);
+        $dominio = Dominio::where('id',Hashids::decode($dados['dominio']))->first();
 
         $modal_body = '';
 
@@ -306,7 +306,7 @@ class DominiosController extends Controller {
 
         $dados = $request->all();
 
-        $dominio = Dominio::find($dados['id']);
+        $dominio = Dominio::where('id',Hashids::decode($dados['id']))->first();
 
         $projeto = Projeto::find($dominio['projeto']);
 

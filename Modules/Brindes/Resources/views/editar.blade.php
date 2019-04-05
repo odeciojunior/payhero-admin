@@ -1,6 +1,6 @@
 <form id="editar_brinde" method="post" action="/brindes/editarbrinde" enctype="multipart/form-data">
     @csrf
-    <input type="hidden" value="{!! $brinde->id !!}" name="id">
+    <input type="hidden" value="{!! $id_brinde !!}" name="id">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">

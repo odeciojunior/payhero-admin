@@ -17,16 +17,17 @@ use Illuminate\Http\Request;
 use App\SolicitacaoAfiliacao;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 
 class AfiliadosController extends Controller {
 
     public function afiliar($id_projeto) {
 
-        $projeto = Projeto::find($id_projeto);
+        $projeto = Projeto::where('id',Hashids::decode($id_projeto))->first();
 
         if(!$projeto['afiliacao_automatica']){
- 
+
             SolicitacaoAfiliacao::create([
                 'user'      => \Auth::user()->id,
                 'projeto'   => $projeto['id'],
@@ -57,9 +58,9 @@ class AfiliadosController extends Controller {
 
         $dados = $request->all();
 
-        $solicitacao_afiliacao = SolicitacaoAfiliacao::find($dados['id']);
+        $solicitacao_afiliacao = SolicitacaoAfiliacao::where('id',Hashids::decode($dados['id']))->first();
 
-        $projeto = Projeto::find($solicitacao_afiliacao['projeto']);
+        $projeto = Projeto::where('id',$solicitacao_afiliacao['projeto'])->first();
 
         $empresa = Empresa::where([
             ['user', $solicitacao_afiliacao['user']],
@@ -84,7 +85,8 @@ class AfiliadosController extends Controller {
 
         $dados = $request->all();
 
-        Afiliado::find($dados['afiliado'])->delete();
+        $afiliado = Afiliado::where('id',Hashids::decode($dados['afiliado']))->first();
+        $afiliado->delete();
 
         return response()->json('sucesso');
     }
@@ -103,8 +105,11 @@ class AfiliadosController extends Controller {
         if(count($afiliacoes) > 0){
             foreach($afiliacoes as $afiliacao){
                 $projeto = Projeto::find($afiliacao['projeto']);
-                $projeto['id_afiliacao'] = $afiliacao['id'];
-                $projetos[] = $projeto;
+                $p['id_afiliacao'] = Hashids::encode($afiliacao['id']);
+                $p['foto'] = $projeto['foto'];
+                $p['nome'] = $projeto['nome'];
+                $p['descricao'] = $projeto['descricao'];
+                $projetos[] = $p;
 
             }
         }
@@ -116,7 +121,8 @@ class AfiliadosController extends Controller {
 
     public function afiliacao($id_afiliacao){
 
-        $afiliado = Afiliado::find($id_afiliacao);
+        $afiliado = Afiliado::where('id',Hashids::decode($id_afiliacao))->first();
+        $id_afiliado = Hashids::encode($afiliado->id);
 
         $projeto = Projeto::find($afiliado['projeto']);
 
@@ -131,6 +137,7 @@ class AfiliadosController extends Controller {
         $materiais_extras = MaterialExtra::where('projeto',$projeto['id'])->get()->toArray();
 
         return view('afiliados::detalhes_afiliacao',[
+            'id_afiliado' => $id_afiliado,
             'projeto' => $projeto,
             'produtor' => $usuario['name'],
             'empresas' => $empresas,
@@ -162,13 +169,13 @@ class AfiliadosController extends Controller {
         return Datatables::of($usuarios_afiliados)
         ->addColumn('detalhes', function ($afiliado) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_afiliado' data-placement='top' data-toggle='tooltip' title='Detalhes' afiliado='".$afiliado->id."'>
+                        <a class='btn btn-outline btn-success detalhes_afiliado' data-placement='top' data-toggle='tooltip' title='Detalhes' afiliado='".Hashids::encode($afiliado->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Detalhes
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_remover_afiliado' style='margin-left:10px'>
-                        <a class='remover_afiliado btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='Remover afiliado' afiliado='".$afiliado->id."'>
+                        <a class='remover_afiliado btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='Remover afiliado' afiliado='".Hashids::encode($afiliado->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                             Remover afiliado
                         </a>
@@ -178,7 +185,7 @@ class AfiliadosController extends Controller {
         ->make(true);
 
     }
- 
+
     public function dadosAfiliacoesPendentes(){
 
         $projetos_usuario = UserProjeto::where([
@@ -206,13 +213,13 @@ class AfiliadosController extends Controller {
         })
         ->addColumn('detalhes', function ($solicitacao_afiliacao) {
             return "<span>
-                        <a class='btn btn-outline btn-success cancelar_solicitacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".$solicitacao_afiliacao->id."'>
+                        <a class='btn btn-outline btn-success cancelar_solicitacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Confirmar afiliação
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_cancelar_solicitacao'>
-                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".$solicitacao_afiliacao->id."'>
+                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                             Negar solicitação
                         </a>
@@ -248,7 +255,7 @@ class AfiliadosController extends Controller {
         })
         ->addColumn('detalhes', function ($solicitacao_afiliacao) {
             return "<span data-toggle='modal' data-target='#modal_cancelar_solicitacao'>
-                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".$solicitacao_afiliacao->id."'>
+                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                             Cancelar solicitação
                         </a>
@@ -261,7 +268,7 @@ class AfiliadosController extends Controller {
 
     public function getAfiliadosProjeto($id_projeto){
 
-        $projeto = Projeto::find($id_projeto);
+        $projeto = Projeto::where('id',$id_projeto)->first();
 
         $afiliados = Afiliado::where('projeto',$id_projeto)->get()->toArray();
 
@@ -283,7 +290,8 @@ class AfiliadosController extends Controller {
 
         $dados = $request->all();
 
-        Afiliado::find($dados['afiliado'])->update($dados);
+        $afiliado = Afiliado::where('id',$dados['afiliado'])->first();
+        $afiliado->update($dados);
 
         return response()->json('sucesso');
     }
@@ -292,7 +300,8 @@ class AfiliadosController extends Controller {
 
         $dados = $request->all();
 
-        SolicitacaoAfiliacao::find($dados['id_solicitacao'])->delete();
+        $solicitacao = SolicitacaoAfiliacao::where('id',Hashids::decode($dados['id_solicitacao']))->first();
+        $solicitacao->delete();
 
         return response()->json('sucesso');
     }
@@ -301,7 +310,7 @@ class AfiliadosController extends Controller {
 
         $dados = $request->all();
 
-        $solicitacao = SolicitacaoAfiliacao::find($dados['id_solicitacao']);
+        $solicitacao = SolicitacaoAfiliacao::where('id',$dados['id_solicitacao'])->first();
 
         $solicitacao->update([
             'status' => 'Negada'

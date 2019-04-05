@@ -2,27 +2,20 @@
 
 namespace Modules\Pixels\Http\Controllers;
 
+use App\Pixel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Pixel;
+use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 
-class PixelsController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
+class PixelsController extends Controller {
+
     public function index() {
 
         return view('pixels::index'); 
     }
 
-    /**
-     * Display a form to store new users.
-     * @return Response
-     */
     public function cadastro() {
 
         return view('pixels::cadastro');
@@ -31,6 +24,7 @@ class PixelsController extends Controller
     public function cadastrarPixel(Request $request){
 
         $dados = $request->all(); 
+        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
 
         Pixel::create($dados);
 
@@ -51,14 +45,17 @@ class PixelsController extends Controller
 
         $dados = $request->all();
 
-        Pixel::find($dados['pixelData']['id'])->update($dados['pixelData']);
+        $pixel = Pixel::find(Hashids::decode($dados['pixelData']['id']))->first();
+        $pixel->update($dados['pixelData']);
 
         return response()->json('Sucesso');
     }
 
     public function deletarPixel($id){
 
-        Pixel::find($id)->delete();
+        $pixel = Pixel::where('id',Hashids::decode($id))->first();
+
+        $pixel->delete();
 
         return response()->json('sucesso');
 
@@ -71,7 +68,10 @@ class PixelsController extends Controller
         $pixels = \DB::table('pixels as pixel');
 
         if(isset($dados['projeto'])){
-            $pixels = $pixels->where('pixel.projeto','=', $dados['projeto']);
+            $pixels = $pixels->where('pixel.projeto','=', Hashids::decode($dados['projeto']));
+        }
+        else{
+            return response()->json('projeto não encontrado');
         }
 
         $pixels = $pixels->get([
@@ -85,17 +85,17 @@ class PixelsController extends Controller
         return Datatables::of($pixels)
         ->addColumn('detalhes', function ($pixel) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_pixel' data-placement='top' data-toggle='tooltip' title='Detalhes' pixel='".$pixel->id."'>
+                        <a class='btn btn-outline btn-success detalhes_pixel' data-placement='top' data-toggle='tooltip' title='Detalhes' pixel='".Hashids::encode($pixel->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_pixel' data-placement='top' data-toggle='tooltip' title='Editar' pixel='".$pixel->id."'>
+                        <a class='btn btn-outline btn-primary editar_pixel' data-placement='top' data-toggle='tooltip' title='Editar' pixel='".Hashids::encode($pixel->id)."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_pixel' data-placement='top' data-toggle='tooltip' title='Excluir' pixel='".$pixel->id."'>
+                        <a class='btn btn-outline btn-danger excluir_pixel' data-placement='top' data-toggle='tooltip' title='Excluir' pixel='".Hashids::encode($pixel->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -108,7 +108,7 @@ class PixelsController extends Controller
 
         $dados = $request->all();
 
-        $pixel = Pixel::find($dados['id_pixel']);
+        $pixel = Pixel::where('id',Hashids::decode($dados['id_pixel']))->first();
 
         $modal_body = '';
 
@@ -156,7 +156,7 @@ class PixelsController extends Controller
 
         $dados = $request->all();
 
-        $pixel = Pixel::find($dados['id']);
+        $pixel = Pixel::where('id',Hashids::decode($dados['id']))->first();
 
         $form = view('pixels::editar',[
             'pixel' => $pixel,

@@ -4,7 +4,7 @@
     </div>
     <div class="col-9">
         <div style="position: relative; float: right">
-            <a class="btn btn-success" href="/afiliados/afiliar/{!! $projeto['id'] !!}">
+            <a class="btn btn-success" href="/afiliados/afiliar/{!! $id_projeto !!}">
                 Me afiliar
             </a>
         </div>

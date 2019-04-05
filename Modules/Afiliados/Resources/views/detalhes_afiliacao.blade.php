@@ -256,7 +256,7 @@
 
         $(document).ready(function(){
 
-            var id_afiliado = '{!! $afiliado['id'] !!}';
+            var id_afiliado = '{!! $id_afiliado !!}';
 
             $("#tabela_campanhas").DataTable( {
                 bLengthChange: false,

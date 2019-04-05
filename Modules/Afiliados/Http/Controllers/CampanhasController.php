@@ -16,6 +16,7 @@ use App\LinkAfiliado;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 
 class CampanhasController extends Controller {
@@ -31,7 +32,7 @@ class CampanhasController extends Controller {
             'descricao',
             'afiliado',
         ])
-        ->where('afiliado',$dados['afiliado']);
+        ->where('afiliado',Hashids::decode($dados['afiliado'])[0]);
 
         return Datatables::of($campanhas)
         ->addColumn('qtd_cliques', function ($campanha) {
@@ -47,7 +48,7 @@ class CampanhasController extends Controller {
         })
         ->addColumn('detalhes', function ($campanha) {
             return "<span data-toggle='modal' data-target='#modal_dados_campanha'>
-                        <a class='btn btn-outline btn-success dados_campanha' data-placement='top' data-toggle='tooltip' title='Dados da campanha' campanha='".$campanha->id."'>
+                        <a class='btn btn-outline btn-success dados_campanha' data-placement='top' data-toggle='tooltip' title='Dados da campanha' campanha='".Hashids::encode($campanha->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Dados da campanha
                         </a>
@@ -62,9 +63,9 @@ class CampanhasController extends Controller {
 
         $dados = $request->all();
 
-        $campanha = Campanha::find($dados['campanha']);
+        $campanha = Campanha::where('id',Hashids::decode($dados['campanha']))->first();;
 
-        $afiliado = Afiliado::find($campanha['afiliado']);
+        $afiliado = Afiliado::find($campanha->afiliado);
 
         $projeto = Projeto::find($afiliado['projeto']);
 
@@ -92,14 +93,14 @@ class CampanhasController extends Controller {
             ])->first()['parametro'];
         }
 
-        $pixels = Pixel::where('campanha',$campanha['id'])->get()->toArray();
+        $pixels = Pixel::where('campanha',$campanha->id)->get()->toArray();
 
         $dados_campanha = view('afiliados::campanha',[
             'planos' => $planos,
             'url_pagina' => $url_pagina,
             'projeto' => $projeto,
             'pixels' => $pixels,
-            'id_campanha' => $campanha['id']
+            'id_campanha' => $campanha->id
         ]);
 
         return response()->json($dados_campanha->render());
@@ -110,11 +111,13 @@ class CampanhasController extends Controller {
 
         $dados = $request->all();
 
-        $afiliado = Afiliado::find($dados['afiliado']);
+        $afiliado = Afiliado::where('id',Hashids::decode($dados['afiliado']))->first();
 
-        $projeto = Projeto::find($afiliado['projeto']);
+        $projeto = Projeto::find($afiliado->projeto);
 
         $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
+
+        $dados['afiliado'] = $afiliado->id;
 
         $campanha = Campanha::create($dados);
 
@@ -144,7 +147,7 @@ class CampanhasController extends Controller {
 
         $vendas = \DB::table('vendas')
             ->leftjoin('compradores as comprador', 'comprador.id', '=', 'vendas.comprador')
-            ->where('vendas.afiliado',$dados['afiliado'])
+            ->where('vendas.afiliado',Hashids::decode($dados['afiliado']))
             ->get([
                 'vendas.id',
                 'comprador.nome as comprador',

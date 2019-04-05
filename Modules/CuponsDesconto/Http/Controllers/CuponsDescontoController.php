@@ -6,6 +6,7 @@ use App\Cupom;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 
 class CuponsDescontoController extends Controller {
@@ -23,6 +24,7 @@ class CuponsDescontoController extends Controller {
     public function cadastrarCupomDesconto(Request $request){
 
         $dados = $request->all();
+        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
 
         Cupom::create($dados);
 
@@ -31,7 +33,7 @@ class CuponsDescontoController extends Controller {
 
     public function editarCupomDesconto($id){
 
-        $cupom_desconto = Cupom::find($id);
+        $cupom_desconto = Cupom::where('id',Hashids::decode($id)[0])->first();
 
         return view('cuponsdesconto::editar',[
             'cupom' => $cupom_desconto,
@@ -42,8 +44,9 @@ class CuponsDescontoController extends Controller {
     public function updateCupomDesconto(Request $request){
 
         $dados = $request->all();
-
-        Cupom::find($dados['id'])->update($dados);
+        unset($dados['projeto']);
+        $cupom = Cupom::where('id',Hashids::decode($dados['id']))->first();
+        $cupom->update($dados);
 
         return response()->json('Sucesso');
     }
@@ -52,7 +55,9 @@ class CuponsDescontoController extends Controller {
 
         $dados = $request->all();
 
-        Cupom::find($dados['id'])->delete();
+        $cupom = Cupom::where('id',Hashids::decode($dados['id']))->first();
+
+        $cupom->delete();
 
         return response()->json('Sucesso');
 
@@ -65,7 +70,10 @@ class CuponsDescontoController extends Controller {
         $cupons = \DB::table('cupons as cupom');
 
         if(isset($dados['projeto'])){
-            $cupons = $cupons->where('cupom.projeto','=', $dados['projeto']);
+            $cupons = $cupons->where('cupom.projeto','=', Hashids::decode($dados['projeto']));
+        }
+        else{
+            return response()->json('projeto não encontrado');
         }
 
         $cupons = $cupons->get([
@@ -92,17 +100,17 @@ class CuponsDescontoController extends Controller {
         })
         ->addColumn('detalhes', function ($cupom) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_cupom' data-placement='top' data-toggle='tooltip' title='Detalhes' cupom='".$cupom->id."'>
+                        <a class='btn btn-outline btn-success detalhes_cupom' data-placement='top' data-toggle='tooltip' title='Detalhes' cupom='".Hashids::encode($cupom->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_cupom' data-placement='top' data-toggle='tooltip' title='Editar' cupom='".$cupom->id."'>
+                        <a class='btn btn-outline btn-primary editar_cupom' data-placement='top' data-toggle='tooltip' title='Editar' cupom='".Hashids::encode($cupom->id)."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_cupom' data-placement='top' data-toggle='tooltip' title='Excluir' cupom='".$cupom->id."'>
+                        <a class='btn btn-outline btn-danger excluir_cupom' data-placement='top' data-toggle='tooltip' title='Excluir' cupom='".Hashids::encode($cupom->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -115,7 +123,7 @@ class CuponsDescontoController extends Controller {
 
         $dados = $request->all();
 
-        $cupom = Cupom::find($dados['id_cupom']);
+        $cupom = Cupom::where('id',Hashids::decode($dados['id_cupom']))->first();
 
         $modal_body = '';
 
@@ -173,10 +181,13 @@ class CuponsDescontoController extends Controller {
 
         $dados = $request->all();
 
-        $cupom_desconto = Cupom::find($dados['id']);
+        $cupom = Cupom::where('id',Hashids::decode($dados['id'])[0])->first();
+
+        $id = Hashids::encode($cupom['id']);
 
         $form = view('cuponsdesconto::editar',[
-            'cupom' => $cupom_desconto,
+            'cupom' => $cupom,
+            'id' => $id
         ]);
 
         return response()->json($form->render());

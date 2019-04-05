@@ -7,10 +7,12 @@ use App\TipoBrinde;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
+
 
 class BrindesController extends Controller {
 
@@ -32,6 +34,7 @@ class BrindesController extends Controller {
     public function cadastrarBrinde(Request $request){
 
         $dados = $request->all();
+        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
 
         $brinde = Brinde::create($dados);
 
@@ -76,10 +79,13 @@ class BrindesController extends Controller {
 
     public function editarBrinde($id){
 
-        $brinde = Brinde::find($id);
+        $brinde = Brinde::where('id',Hashids::decode($id))->first();
+        $id_brinde = Hashids::encode($brinde->id);
+
         $tipo_brindes = TipoBrinde::all();
 
         return view('brindes::editar',[
+            'id_brinde' => $id_brinde,
             'brinde' => $brinde,
             'tipo_brindes' => $tipo_brindes
         ]);
@@ -89,6 +95,7 @@ class BrindesController extends Controller {
     public function updateBrinde(Request $request){
 
         $dados = $request->all();
+        unset($dados['projeto']);
 
         if($request->file('foto') == null){
             unset($dados['foto']);
@@ -97,7 +104,7 @@ class BrindesController extends Controller {
             unset($dados['link']);
         }
 
-        $brinde = Brinde::find($dados['id']);
+        $brinde = Brinde::where('id',Hashids::decode($dados['id']))->first();
         $brinde->update($dados);
 
         $foto = $request->file('foto_brinde_editar');
@@ -143,7 +150,8 @@ class BrindesController extends Controller {
 
         $dados = $request->all();
 
-        $brinde = Brinde::find($dados['id']);
+        $brinde = Brinde::where('id',Hashids::decode($dados['id']))->first();
+        $brinde->delete();
 
         // Storage::delete('public/upload/brindes/fotos/'.$brinde['foto']);
 
@@ -161,7 +169,7 @@ class BrindesController extends Controller {
             ->leftJoin('tipo_brindes as tipo_brinde','tipo_brinde.id','brinde.tipo_brinde');
 
         if(isset($dados['projeto'])){
-            $brindes = $brindes->where('brinde.projeto','=', $dados['projeto']);
+            $brindes = $brindes->where('brinde.projeto','=', Hashids::decode($dados['projeto']));
         }
 
         $brindes = $brindes->get([
@@ -175,17 +183,17 @@ class BrindesController extends Controller {
         return Datatables::of($brindes)
         ->addColumn('detalhes', function ($brinde) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_brinde' data-placement='top' data-toggle='tooltip' title='Detalhes' brinde='".$brinde->id."'>
+                        <a class='btn btn-outline btn-success detalhes_brinde' data-placement='top' data-toggle='tooltip' title='Detalhes' brinde='".Hashids::encode($brinde->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_brinde' data-placement='top' data-toggle='tooltip' title='Editar' brinde='".$brinde->id."'>
+                        <a class='btn btn-outline btn-primary editar_brinde' data-placement='top' data-toggle='tooltip' title='Editar' brinde='".Hashids::encode($brinde->id)."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_brinde' data-placement='top' data-toggle='tooltip' title='Excluir' brinde='".$brinde->id."'>
+                        <a class='btn btn-outline btn-danger excluir_brinde' data-placement='top' data-toggle='tooltip' title='Excluir' brinde='".Hashids::encode($brinde->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -198,7 +206,8 @@ class BrindesController extends Controller {
 
         $dados = $request->all();
 
-        $brinde = Brinde::find($dados['id_brinde']);
+        $brinde = Brinde::where('id',Hashids::decode($dados['id_brinde']))->first();
+
         $tipo_brinde = TipoBrinde::find($brinde->tipo_brinde);
 
         $modal_body = '';
@@ -244,10 +253,13 @@ class BrindesController extends Controller {
 
         $dados = $request->all();
 
-        $brinde = Brinde::find($dados['id']);
+        $brinde = Brinde::where('id',Hashids::decode($dados['id']))->first();
+        $id_brinde = Hashids::encode($brinde->id);
+
         $tipo_brindes = TipoBrinde::all();
 
         $form = view('brindes::editar',[
+            'id_brinde' => $id_brinde,
             'brinde' => $brinde,
             'tipo_brindes' => $tipo_brindes
         ]);

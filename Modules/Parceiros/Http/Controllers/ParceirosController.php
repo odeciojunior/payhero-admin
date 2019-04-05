@@ -9,6 +9,7 @@ use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -24,7 +25,7 @@ class ParceirosController extends Controller {
             ->where('tipo','!=','produtor')
             // ->where('user_projeto.user','<',\Auth::user()->id)
             // ->orWhereNull('user_projeto.user')
-            ->where('projeto.id',$dados['projeto'])
+            ->where('projeto.id',Hashids::decode($dados['projeto']))
             ->get([
                 'user_projeto.id',
                 'user.name',
@@ -35,17 +36,17 @@ class ParceirosController extends Controller {
         return Datatables::of($parceiros)
         ->addColumn('detalhes', function ($parceiro) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_parceiro' data-placement='top' data-toggle='tooltip' title='Detalhes' parceiro='".$parceiro->id."'>
+                        <a class='btn btn-outline btn-success detalhes_parceiro' data-placement='top' data-toggle='tooltip' title='Detalhes' parceiro='".Hashids::encode($parceiro->id)."'>
                             <i class='icon wb-menu' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_parceiro' data-placement='top' data-toggle='tooltip' title='Editar' parceiro='".$parceiro->id."'>
+                        <a class='btn btn-outline btn-primary editar_parceiro' data-placement='top' data-toggle='tooltip' title='Editar' parceiro='".Hashids::encode($parceiro->id)."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_parceiro' data-placement='top' data-toggle='tooltip' title='Excluir' parceiro='".$parceiro->id."'>
+                        <a class='btn btn-outline btn-danger excluir_parceiro' data-placement='top' data-toggle='tooltip' title='Excluir' parceiro='".Hashids::encode($parceiro->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -57,6 +58,7 @@ class ParceirosController extends Controller {
     public function cadastrarParceiro(Request $request){
 
         $dados = $request->all();
+        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
 
         $user = User::where('email',$dados['email_parceiro'])->first();
 
@@ -91,7 +93,6 @@ class ParceirosController extends Controller {
 
                 $mail->to($dados_convite['email_convidado'], 'Cloudfox')->subject('Convite para participar de um projeto no Cloudfox!');
             });
-    
 
         }
 
@@ -107,8 +108,10 @@ class ParceirosController extends Controller {
     public function editarParceiro(Request $request){
 
         $dados = $request->all();
+        unset($dados['projeto']);
 
-        UserProjeto::find($dados['id'])->update($dados);
+        $parceiro = UserProjeto::where('id',Hashids::decode($dados['id']))->first();
+        $parceiro->update($dados);
 
         return response()->json('sucesso');
     }
@@ -117,7 +120,9 @@ class ParceirosController extends Controller {
 
         $dados = $request->all();
 
-        UserProjeto::find($dados['id'])->delete();
+        $parceiro = UserProjeto::where('id',Hashids::decode($dados['id']))->first();
+
+        $parceiro->delete();
 
         return response()->json('sucesso');
     }
@@ -133,11 +138,13 @@ class ParceirosController extends Controller {
 
         $dados = $request->all();
 
-        $parceiro = UserProjeto::find($dados['id_parceiro']);
+        $parceiro = UserProjeto::where('id',Hashids::decode($dados['id_parceiro']))->first();
+        $id_parceiro = Hashids::encode($parceiro->id);
 
-        $user = User::find($parceiro['user']);
+        $user = User::find($parceiro->user);
 
         $form = view('parceiros::editar',[
+            'id_parceiro' => $id_parceiro,
             'parceiro' => $parceiro,
             'user' => $user
         ]);
@@ -149,7 +156,7 @@ class ParceirosController extends Controller {
 
         $dados = $request->all();
 
-        $parceiro = UserProjeto::find($dados['parceiro']);
+        $parceiro = UserProjeto::where('id',Hashids::decode($dados['parceiro']))->first();
 
         $user = User::find($parceiro['user']);
 

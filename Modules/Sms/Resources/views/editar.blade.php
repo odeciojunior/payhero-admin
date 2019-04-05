@@ -3,7 +3,7 @@
 </div>
 <form id='editar_sms' method="post" action="#">
     @csrf
-    <input type="hidden" name="id" value="{!! $sms->id !!}">
+    <input type="hidden" name="id" value="{!! $id_sms !!}">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">

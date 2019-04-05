@@ -421,7 +421,7 @@
 
     $(document).ready( function(){
 
-        var id_projeto = '{{ $projeto->id }}';
+        var id_projeto = '{{ $projeto_id }}';
 
         $('#add_produto').on('click', function(){
 

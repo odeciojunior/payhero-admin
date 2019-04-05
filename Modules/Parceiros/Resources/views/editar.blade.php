@@ -4,7 +4,7 @@
 
 <form id="editar_parceiro" method="post">
     @csrf
-    <input type="hidden" name="id" value="{!! $parceiro['id'] !!}">
+    <input type="hidden" name="id" value="{!! $id_parceiro !!}">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">

@@ -4,7 +4,7 @@
 
 <form id="editar_cupom" method="post">
     @csrf
-    <input type="hidden" value="{!! $cupom->id !!}" name="id">
+    <input type="hidden" value="{!! $id !!}" name="id">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">

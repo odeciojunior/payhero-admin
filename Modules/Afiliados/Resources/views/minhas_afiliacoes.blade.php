@@ -31,7 +31,7 @@
                                             <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                                         </a>
                                         <div class="card-block">
-                                            <a href='/projetos/projeto/{!! $projeto['id'] !!}' class="text-center">
+                                            <a href='/afiliados/minhasafiliacoes/{!! $projeto['id_afiliacao'] !!}' class="text-center">
                                                 <hr>
                                                 <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
                                             </a>

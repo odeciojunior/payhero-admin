@@ -13,6 +13,7 @@ use Zenvia\Model\SmsFacade;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use NotificationChannels\Zenvia\Zenvia;
 use Yajra\DataTables\Facades\DataTables;
 use NotificationChannels\Zenvia\ZenviaChannel;
@@ -70,6 +71,7 @@ class SmsController extends Controller {
     public function cadastrarSms(Request $request){
 
         $dados = $request->all();
+        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
 
         if($dados['tempo'] == ''){
             $dados['tempo'] = '0';
@@ -106,6 +108,8 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
+        unset($dados['projeto']);
+
         if($dados['tempo'] == ''){
             $dados['tempo'] = '0';
         }
@@ -123,14 +127,16 @@ class SmsController extends Controller {
             unset($dados['plano']);
         }
 
-        ZenviaSms::find($dados['id'])->update($dados);
+        $sms = ZenviaSms::where('id',Hashids::decode($dados['id']))->first();
+        $sms->update($dados);
 
         return response()->json('Sucesso');
     }
 
     public function deletarSms($id){
 
-        ZenviaSms::find($id)->delete();
+        $sms = ZenviaSms::where('id',Hashids::decode($id))->first();
+        $sms->delete();
 
         return response()->json('sucesso');
 
@@ -144,7 +150,10 @@ class SmsController extends Controller {
                     ->leftJoin('planos', 'planos.id', 'sms.plano');
 
         if(isset($dados['projeto'])){
-            $sms = $sms->where('sms.projeto','=', $dados['projeto']);
+            $sms = $sms->where('sms.projeto','=', Hashids::decode($dados['projeto']));
+        }
+        else{
+            return response()->json('projeto não encontrado');
         }
 
         $sms = $sms->get([
@@ -166,12 +175,12 @@ class SmsController extends Controller {
         })
         ->addColumn('detalhes', function ($sms) {
             return "<span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_sms' data-placement='top' data-toggle='tooltip' title='Editar' sms='".$sms->id."'>
+                        <a class='btn btn-outline btn-primary editar_sms' data-placement='top' data-toggle='tooltip' title='Editar' sms='".Hashids::encode($sms->id)."'>
                             <i class='icon wb-pencil' aria-hidden='true'></i>
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_sms' data-placement='top' data-toggle='tooltip' title='Excluir' sms='".$sms->id."'>
+                        <a class='btn btn-outline btn-danger excluir_sms' data-placement='top' data-toggle='tooltip' title='Excluir' sms='".Hashids::encode($sms->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                         </a>
                     </span>";
@@ -184,7 +193,7 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        $sms = ZenviaSms::find($dados['id_sms']);
+        $sms = ZenviaSms::where('id',Hashids::decode($dados['id_sms']))->first();
 
         $plano = Plano::find($sms->plano);
 
@@ -230,7 +239,7 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
+        $planos = Plano::where('projeto', Hashids::decode($dados['projeto'])[0])->get()->toArray();
 
         foreach($planos as &$plano){
             if($plano['descricao'] != ''){
@@ -252,9 +261,12 @@ class SmsController extends Controller {
 
         $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
 
-        $sms = ZenviaSms::find($dados['id']);
+        $sms = ZenviaSms::where('id',Hashids::decode($dados['id']))->first();
+
+        $id_sms = Hashids::encode($sms->id);
 
         $form = view('sms::editar',[
+            'id_sms' => $id_sms,
             'sms' => $sms,
             'planos' => $planos
         ]);

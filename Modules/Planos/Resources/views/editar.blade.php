@@ -4,7 +4,7 @@
 
 <form id="editar_plano" method="post" action="/planos/editarplano" enctype="multipart/form-data">
     @csrf
-    <input type="hidden" value="{!! $plano->id !!}" name="id">
+    <input type="hidden" value="{!! $id_plano !!}" name="id">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <h4> Dados gerais </h4>

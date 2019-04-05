@@ -12,6 +12,7 @@ use App\MaterialExtra;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -32,7 +33,11 @@ class ProjetosController extends Controller{
                 foreach($projetos_usuario as $projeto_usuario){
                     $projeto = Projeto::find($projeto_usuario['projeto']);
                     if($projeto){
-                        $projetos[] = $projeto;
+                        $p['id'] = Hashids::encode($projeto_usuario['projeto']);
+                        $p['foto'] = $projeto['foto'];
+                        $p['nome'] = $projeto['nome'];
+                        $p['descricao'] = $projeto['descricao'];
+                        $projetos[] = $p;
                     }
                 }
             }
@@ -102,6 +107,7 @@ class ProjetosController extends Controller{
     public function editarProjeto($id){
 
         $projeto = Projeto::find($id);
+        $projeto = Projeto::where('id',Hashids::decode($id))->first();
 
         $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
@@ -116,7 +122,8 @@ class ProjetosController extends Controller{
 
         $dados = $request->all();
 
-        $projeto = Projeto::find($dados['id']);
+        $projeto = Projeto::where('id',Hashids::decode($dados['projeto']))->first();
+
         $projeto->update($dados);
 
         $imagem = $request->file('foto_projeto');
@@ -150,7 +157,7 @@ class ProjetosController extends Controller{
 
         $dados = $request->all();
 
-        $projeto = Projeto::find($dados['projeto']);
+        $projeto = Projeto::where('id',Hashids::decode($dados['projeto']))->first();
 
         $projeto->delete();
 
@@ -160,20 +167,24 @@ class ProjetosController extends Controller{
 
     public function projeto($id){
 
-        $projeto = projeto::find($id);
+        $projeto = Projeto::where('id',Hashids::decode($id))->first();
+
         $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto->foto."?dummy=".uniqid();
+
+        $projeto_id = Hashids::encode($projeto->id);
 
         return view('projetos::projeto',[
             'projeto' => $projeto,
-            'foto' => $foto
+            'foto' => $foto,
+            'projeto_id' => $projeto_id
         ]);
     }
 
     public function getConfiguracoesProjeto($id){
 
-        $projeto = Projeto::find($id);
+        $projeto = Projeto::where('id',Hashids::decode($id))->first();
 
-        $materiais_extras = MaterialExtra::where('projeto',$projeto['id'])->get()->toArray();
+        $materiais_extras = MaterialExtra::where('projeto',$projeto->id)->get()->toArray();
 
         $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
@@ -188,10 +199,11 @@ class ProjetosController extends Controller{
  
     public function getDadosProjeto($id){
 
-        $projeto = Projeto::find($id); 
+        $projeto = Projeto::find(Hashids::decode($id)[0]); 
+        $id_projeto = Hashids::encode($projeto->id);
 
         $user_projeto = UserProjeto::where([
-            ['projeto',$id],
+            ['projeto',$projeto['id']],
             ['tipo','produtor']
         ])->first();
 
@@ -203,6 +215,7 @@ class ProjetosController extends Controller{
         }
         
         $view = view('projetos::detalhes',[
+            'id_projeto' => $id_projeto,
             'projeto' => $projeto,
             'planos' => $planos,
             'produtor' => $usuario['name']
