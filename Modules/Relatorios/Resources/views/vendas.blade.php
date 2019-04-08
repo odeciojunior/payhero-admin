@@ -6,12 +6,61 @@
   <div class="page">
     <div class="page-content container-fluid">
 
-      <h3> Vendas </h3>
+      <div class="row">
+        <div class="col-10">
+          <h3> Vendas </h3>
+        </div>
+        <div class="col-2">
+          <button class="btn btn-success" id="filtros"><i class="icon wb-search" aria-hidden="true"></i> Filtros</button>
+        </div>
+      </div>
+      <div id="div_filtros" class="panel pt-30 p-30" style="display:none">
+        <div class="row">
+          <div class="col-3">
+            <label for="projeto">Projeto</label>
+            <select id="projeto" class="form-control">
+              <option value="">Todos projetos</option>
+              @foreach($projetos as $projeto)
+                <option value="{!! $projeto['id'] !!}">{!! $projeto['nome'] !!}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-3">
+            <label for="forma">Forma de pagamento</label>
+            <select id="forma" class="form-control">
+              <option value="">Boleto e cartão de crédito</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
+              <option value="Boleto">Boleto</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label for="status">Status</label>
+            <select id="status" class="form-control">
+              <option value="">Todos status</option>
+              <option value="paid">Aprovado</option>
+              <option value="waiting_payment">Aguardando pagamento</option>
+              <option value="refused">Recusada</option>
+              <option value="chargedback">Estornada</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label for="comprador">Comprador</label>
+            <input id="comprador" class="form-control" placeholder="comprador">
+          </div>
+        </div>
+        <div class="row" style="margin-top:30px">
+          <div class="col-10">
+          </div>
+          <div class="col-2">
+            <button id="bt_filtro" class="btn btn-primary">Aplicar filtros</button>
+          </div>
+        </div>
+      </div>
 
-      <div class="panel pt-30 p-30 " data-plugin="matchHeight" style="min-height: 300px">
+      <div class="panel pt-10 p-10" style="min-height: 300px">
 
-        <table id="tabela_vendas" class="table-hover table-striped table-bordered" style="width:100%;padding:0;margin:0">
-          <thead>
+        <table id="tabela_vendas" class="table table-hover table-striped table-bordered table-condensed" style="width:100%;">
+          <thead style="text-align:center">
             <th>Transação</th>
             <th>Projeto</th>
             <th>Descrição</th>
@@ -81,17 +130,30 @@
 
     $(document).ready( function(){
 
+      $("#filtros").on("click", function(){
+        if($("#div_filtros").is(":visible")){
+          $("#div_filtros").hide(700);
+        }
+        else{
+          $("#div_filtros").show(700);
+        }
+      });
+
       atualizar();
+
+      $("#bt_filtro").on("click", function(){
+        atualizar();
+      });
 
       function atualizar(link = null){
 
         $('#dados_tabela').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
 
         if(link == null){
-          link = '/relatorios/getvendas';
+          link = '/relatorios/getvendas?' + 'projeto='+ $("#projeto").val() + '&forma='+ $("#forma").val()+ '&status='+ $("#status").val()+ '&comprador='+ $("#comprador").val();;
         }
         else{
-          link = '/relatorios/getvendas'+link;
+          link = '/relatorios/getvendas'+ link + '&projeto='+ $("#projeto").val() + '&forma='+ $("#forma").val()+ '&status='+ $("#status").val()+ '&comprador='+ $("#comprador").val();
         }
 
         $.ajax({
@@ -141,7 +203,9 @@
                 $("#dados_tabela").append(dados);
 
               });
-
+              if(response.data == ''){
+                $('#dados_tabela').html("<tr class='text-center'><td colspan='11' style='height: 50px'> Nenhuma venda encontrada</td></tr>");
+              }
               pagination(response);
 
               var id_venda = '';
@@ -234,19 +298,20 @@
 
         }
 
-        var ultima_pagina = "<button id='ultima_pagina' class='btn btn-default'>"+response.meta.last_page+"</button>";
+        if(response.meta.last_page != '1'){
+          var ultima_pagina = "<button id='ultima_pagina' class='btn btn-default'>"+response.meta.last_page+"</button>";
 
-        $("#pagination").append(ultima_pagina);
+          $("#pagination").append(ultima_pagina);
 
-        if(response.meta.current_page == response.meta.last_page){
-          $("#ultima_pagina").attr('disabled',true);
-          $("#ultima_pagina").addClass('btn-primary');
+          if(response.meta.current_page == response.meta.last_page){
+            $("#ultima_pagina").attr('disabled',true);
+            $("#ultima_pagina").addClass('btn-primary');
+          }
+
+          $('#ultima_pagina').on("click", function(){
+            atualizar('?page='+response.meta.last_page);
+          });
         }
-
-        $('#ultima_pagina').on("click", function(){
-          atualizar('?page='+response.meta.last_page);
-        });
-
 
       }
 

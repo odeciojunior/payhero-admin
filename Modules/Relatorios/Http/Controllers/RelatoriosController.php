@@ -6,10 +6,12 @@ use App\Foto;
 use App\Plano;
 use App\Venda;
 use App\Entrega;
+use App\Projeto;
 use App\Comprador;
 use Carbon\Carbon;
 use App\PlanoVenda; 
 use PagarMe\Client;
+use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Yajra\DataTables\DataTables;
@@ -25,9 +27,21 @@ class RelatoriosController extends Controller {
         return $dataTable->render('relatorios::vendas');
     }
 
-    public function vendas(VendasDataTable $dataTable) {
+    public function vendas() {
 
-        return $dataTable->render('relatorios::vendas');
+        $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
+        $projetos = [];
+        foreach($projetos_usuario as $projeto_usuario){
+            $projeto = Projeto::find($projeto_usuario['projeto']);
+            $projetos[] = [
+                'id' => $projeto['id'],
+                'nome' => $projeto['nome']
+            ];
+        }
+
+        return view('relatorios::vendas',[
+            'projetos' => $projetos,
+        ]);
     }
 
     public function dadosVendas(){
@@ -251,9 +265,30 @@ class RelatoriosController extends Controller {
         return response()->json('sucesso');
     }
 
-    public function getVendas(){
+    public function getVendas(Request $request){
 
-        $vendas = Venda::where('proprietario',\Auth::user()->id)->orderBy('id','DESC');
+        $vendas = Venda::where('proprietario',\Auth::user()->id);
+
+        if($request->projeto != ''){
+            $planos = Plano::where('projeto',$request->projeto)->pluck('id');
+            $planos_venda = PlanoVenda::whereIn('plano',$planos)->pluck('venda');
+            $vendas->whereIn('id',$planos_venda);
+        }
+
+        if($request->comprador != ''){
+            $compradores = Comprador::where('nome','LIKE','%'.$request->comprador.'%')->pluck('id');
+            $vendas->whereIn('comprador',$compradores);
+        }
+
+        if($request->forma != ''){
+            $vendas->where('forma_pagamento',$request->forma);
+        }
+        
+        if($request->status != ''){
+            $vendas->where('pagamento_status',$request->status);
+        }
+
+        $vendas->orderBy('id','DESC');
 
         return VendasResource::collection($vendas->paginate(10));
     }
