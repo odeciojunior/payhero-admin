@@ -95,7 +95,7 @@ class RelatoriosController extends Controller {
     public function getDetalhesVenda(Request $request){
 
         $dados = $request->all();
-        $venda = Venda::find($dados['id_venda']);
+        $venda = Venda::find(preg_replace("/[^0-9]/", "", $dados['id_venda']));
         $planos_venda = PlanoVenda::where('venda', $venda->id)->get()->toArray();
         $comprador = Comprador::find($venda->comprador);
         $entrega = Entrega::find($venda->entrega);
@@ -253,9 +253,9 @@ class RelatoriosController extends Controller {
 
     public function getVendas(){
 
-        $vendas = Venda::where('proprietario',\Auth::user()->id);
+        $vendas = Venda::where('proprietario',\Auth::user()->id)->orderBy('id','DESC');
 
-        return VendasResource::collection($vendas->paginate());
+        return VendasResource::collection($vendas->paginate(10));
     }
 
     public function detalhesVenda($id_venda){

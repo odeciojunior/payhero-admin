@@ -7,6 +7,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'relatorios', 'namesp
         'uses' => 'RelatoriosController@vendas'
     ]);
 
+    Route::get('/getvendas', [
+        'uses' => 'RelatoriosController@getVendas',
+    ]);
+    
     Route::post('/vendas/data-source',[
         'as' => 'relatorios.dadosvendas',
         'uses' => 'RelatoriosController@dadosVendas'
