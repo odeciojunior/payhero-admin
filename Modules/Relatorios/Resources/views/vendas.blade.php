@@ -49,10 +49,18 @@
           </div>
         </div>
         <div class="row" style="margin-top:30px">
-          <div class="col-10">
+          <div class="col-3">
+            <label for="data_inicial">Data inicial</label>
+            <input id="data_inicial" class="form-control" type="date">
+          </div>
+          <div class="col-3">
+            <label for="data_final">Data final</label>
+            <input id="data_final" class="form-control" type="date">
+          </div>
+          <div class="col-4">
           </div>
           <div class="col-2">
-            <button id="bt_filtro" class="btn btn-primary">Aplicar filtros</button>
+            <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">Aplicar filtros</button>
           </div>
         </div>
       </div>
@@ -130,6 +138,8 @@
 
     $(document).ready( function(){
 
+      atualizar();
+
       $("#filtros").on("click", function(){
         if($("#div_filtros").is(":visible")){
           $("#div_filtros").hide(700);
@@ -138,8 +148,6 @@
           $("#div_filtros").show(700);
         }
       });
-
-      atualizar();
 
       $("#bt_filtro").on("click", function(){
         atualizar();
@@ -150,10 +158,10 @@
         $('#dados_tabela').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
 
         if(link == null){
-          link = '/relatorios/getvendas?' + 'projeto='+ $("#projeto").val() + '&forma='+ $("#forma").val()+ '&status='+ $("#status").val()+ '&comprador='+ $("#comprador").val();;
+          link = '/relatorios/getvendas?' + 'projeto='+ $("#projeto").val() + '&forma='+ $("#forma").val()+ '&status='+ $("#status").val() + '&comprador='+ $("#comprador").val() + '&data_inicial='+ $("#data_inicial").val() + '&data_final='+ $("#data_final").val();
         }
         else{
-          link = '/relatorios/getvendas'+ link + '&projeto='+ $("#projeto").val() + '&forma='+ $("#forma").val()+ '&status='+ $("#status").val()+ '&comprador='+ $("#comprador").val();
+          link = '/relatorios/getvendas'+ link + '&projeto='+ $("#projeto").val() + '&forma='+ $("#forma").val()+ '&status='+ $("#status").val() + '&comprador='+ $("#comprador").val() + '&data_inicial='+ $("#data_inicial").val() + '&data_final='+ $("#data_final").val();
         }
 
         $.ajax({
@@ -315,7 +323,7 @@
 
       }
 
-});
+    });
 
   </script>
 @endsection

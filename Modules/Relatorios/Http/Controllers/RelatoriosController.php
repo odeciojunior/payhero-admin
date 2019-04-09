@@ -288,6 +288,19 @@ class RelatoriosController extends Controller {
             $vendas->where('pagamento_status',$request->status);
         }
 
+        if($request->data_inicial != '' && $request->data_final != ''){
+            $vendas->whereBetween('data_inicio', [$request->data_inicial,date('Y-m-d', strtotime($request->data_final.' + 1 day'))]);
+        }
+        else{
+            if($request->data_inicial != ''){
+                $vendas->whereDate('data_inicio', '>', $request->data_inicial);
+            }
+
+            if($request->data_final != ''){
+                $vendas->whereDate('data_inicio', '<', date('Y-m-d', strtotime($request->data_final.' + 1 day')));
+            }
+        }
+
         $vendas->orderBy('id','DESC');
 
         return VendasResource::collection($vendas->paginate(10));
