@@ -4,10 +4,8 @@
 
 @section('styles')
 
-
 @endsection
 
- 
 <div class="page">
   <div class="page-content container-fluid">
     <div class="row" data-plugin="matchHeight" data-by-row="true">
@@ -37,7 +35,7 @@
                     </div>
                     <!-- End Widget Sale Bar -->
                   </div>
-        
+
                   <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
                     <!-- Widget Sale Bar -->
                     <div class="card card-inverse card-shadow bg-blue-600 white" id="widgetSaleBar">

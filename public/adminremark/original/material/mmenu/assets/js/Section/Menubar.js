@@ -128,7 +128,9 @@
             offCanvas: false,
             navbars: [{
               position: 'bottom',
-              content: ['<div class="site-menubar-footer">\n              <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Settings">\n                <span class="icon md-settings" aria-hidden="true"></span>\n              </a>\n              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">\n                <span class="icon md-eye-off" aria-hidden="true"></span>\n              </a>\n              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Logout">\n                <span class="icon md-power" aria-hidden="true"></span>\n              </a>\n            </div>']
+              content: [
+                // '<div class="site-menubar-footer">\n              <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Settings">\n                <span class="icon md-settings" aria-hidden="true"></span>\n              </a>\n              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">\n                <span class="icon md-eye-off" aria-hidden="true"></span>\n              </a>\n              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Logout">\n                <span class="icon md-power" aria-hidden="true"></span>\n              </a>\n            </div>'
+              ]
             }]
           });
         }

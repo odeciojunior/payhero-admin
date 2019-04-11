@@ -215,6 +215,20 @@ class PlanosApiController extends Controller {
         return response()->json('sucesso');
     }
 
+    public function planoCheckout(Request $request){
+
+        $plano = Plano::where('cod_identificador',$request->cod_identificador)->first();
+
+        if(!$plano){
+            return response()->json('Plano não encontrado');
+        }
+
+        return response()->json([
+            'preco' => $plano['preco'],
+            'foto'  => 'https://cloudfox.app/' . CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto."?dummy=".uniqid(),
+        ]);
+    }
+
     function randString($size){
 
         $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -252,7 +266,7 @@ class PlanosApiController extends Controller {
         }
        
         return $str;
-    } 
+    }
 
     public function isAuthorized($id_projeto){
 

@@ -78,29 +78,29 @@ export default class extends Component {
     this.change(this.type);
   }
 
-  setupMenu() {
-    if (typeof $.fn.mmenu !== 'undefined') {
-      this.$el.mmenu({
-        offCanvas: false,
-        navbars: [{
-          position: 'bottom',
-          content: [
-            `<div class="site-menubar-footer">
-              <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Settings">
-                <span class="icon md-settings" aria-hidden="true"></span>
-              </a>
-              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">
-                <span class="icon md-eye-off" aria-hidden="true"></span>
-              </a>
-              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Logout">
-                <span class="icon md-power" aria-hidden="true"></span>
-              </a>
-            </div>`
-          ]
-        }]
-      });
-    }
-  }
+  // setupMenu() {
+  //   if (typeof $.fn.mmenu !== 'undefined') {
+  //     this.$el.mmenu({
+  //       offCanvas: false,
+  //       navbars: [{
+  //         position: 'bottom',
+  //         content: [
+  //           `<div class="site-menubar-footer">
+  //             <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Settings">
+  //               <span class="icon md-settings" aria-hidden="true"></span>
+  //             </a>
+  //             <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">
+  //               <span class="icon md-eye-off" aria-hidden="true"></span>
+  //             </a>
+  //             <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Logout">
+  //               <span class="icon md-power" aria-hidden="true"></span>
+  //             </a>
+  //           </div>`
+  //         ]
+  //       }]
+  //     });
+  //   }
+  // }
 
   getMenuApi() {
     return this.$el.data('mmenu');

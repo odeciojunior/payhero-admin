@@ -78,3 +78,11 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}
     ]);
 
 });
+
+Route::group([ 'prefix' => 'api/planos', 'namespace' => 'Modules\Planos\Http\Controllers'], function(){
+
+    Route::get('/{cod_identificador}', [
+        'uses' => 'PlanosApiController@planoCheckout',
+    ]);
+
+});

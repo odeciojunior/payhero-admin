@@ -91,6 +91,32 @@ class DominiosController extends Controller {
             return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
         }
 
+        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+
+        $request_body = json_decode('{
+            "automatic_security": false,
+            "custom_spf": true,
+            "default": true,
+            "domain": '.$dados['dominio'].'
+        }');
+
+        try{
+            $response = $sendgrid->client->whitelabel()->domains()->post($request_body);
+            $respose = json_decode($response);
+
+            $dados['id_sendgrid'] = $response->id;
+
+            $response = $sendgrid->client->whitelabel()->domains()->_($response->id)->get();
+
+            foreach($response->dns as $dns){
+                $dns->addRecord($zoneID, $dns->type, $dns->host, $dns->data, 0, true);
+            }
+
+        }
+        catch(Exception $e){
+            //
+        }
+
         $dados['status'] = "Conectado";
         Dominio::create($dados);
 
