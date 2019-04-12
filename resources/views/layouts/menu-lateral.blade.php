@@ -136,13 +136,13 @@
 <div class="site-menubar">
     <ul class="site-menu">
       <li class="site-menu-item has-sub">
-        <a href="{{ route('dashboard') }}">
+        <a class="animsition-link"  href="{{ route('dashboard') }}">
             <i class="site-menu-icon wb-dashboard" aria-hidden="true"></i>
             <span class="site-menu-title">Dashboard</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="{{ route('vitrine') }}">
+        <a class="animsition-link"  href="{{ route('vitrine') }}">
             <i class="site-menu-icon  wb-grid-9" aria-hidden="true"></i>
             <span class="site-menu-title">Vitrine</span>
         </a>
@@ -155,7 +155,7 @@
         </a>
         <ul class="site-menu-sub">
           <li class="site-menu-item has-sub">
-            <a href="/relatorios/vendas">
+            <a class="animsition-link" href="/relatorios/vendas">
               <span class="site-menu-title">Visão geral</span>
             </a>
           </li>
@@ -198,7 +198,7 @@
         </a>
         <ul class="site-menu-sub">
           <li class="site-menu-item">
-            <a href="{{ route('produtos.cadastro') }}">
+            <a class="animsition-link" href="{{ route('produtos.cadastro') }}">
               <span class="site-menu-title">Cadastrar produto</span>
             </a>
           </li>
@@ -267,19 +267,19 @@
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="{!! route('ferramentas') !!}">
+        <a class="animsition-link" href="{!! route('ferramentas') !!}">
             <i class="site-menu-icon wb-settings" aria-hidden="true"></i>
             <span class="site-menu-title">Ferramentas</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="{{ route('aplicativos') }}">
+        <a class="animsition-link" href="{{ route('aplicativos') }}">
             <i class="site-menu-icon wb-briefcase" aria-hidden="true"></i>
             <span class="site-menu-title">Aplicativos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="{{ route('convites') }}">
+        <a class="animsition-link" href="{{ route('convites') }}">
             <i class="site-menu-icon wb-user-add" aria-hidden="true"></i>
             <span class="site-menu-title">Convites</span>
         </a>

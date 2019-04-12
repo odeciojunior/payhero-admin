@@ -24,21 +24,27 @@
                 <div class="tab-content pt-20">
                     <div class="tab-pane active" id="tab_minhas_afiliacoes" role="tabpanel">
                         <div class="row">
-                            @foreach($projetos as $projeto)
-                                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                                    <div class="card" style="border: 1px solid #E6E6FA">
-                                        <a href='/afiliados/minhasafiliacoes/{!! $projeto['id_afiliacao'] !!}'>
-                                            <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
-                                        </a>
-                                        <div class="card-block">
-                                            <a href='/afiliados/minhasafiliacoes/{!! $projeto['id_afiliacao'] !!}' class="text-center">
-                                                <hr>
-                                                <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                            @if(count($projetos) == 0)
+                                <div class="alert alert-success" role="alert" style="width:100%; text-align:center">
+                                    Nenhuma afiliação encontrada.
+                                </div>
+                            @else
+                                @foreach($projetos as $projeto)
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                        <div class="card" style="border: 1px solid #E6E6FA">
+                                            <a href='/afiliados/minhasafiliacoes/{!! $projeto['id_afiliacao'] !!}'>
+                                                <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                                             </a>
+                                            <div class="card-block">
+                                                <a href='/afiliados/minhasafiliacoes/{!! $projeto['id_afiliacao'] !!}' class="text-center">
+                                                    <hr>
+                                                    <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                     <div class="tab-pane" id="tab_solicitacoes_pendentes" role="tabpanel">
