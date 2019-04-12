@@ -18,7 +18,7 @@ class ProdutosController extends Controller {
 
     public function index() {
 
-        $produtos = Produto::where('user',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
+        $produtos = Produto::where('user',\Auth::user()->id)->orderBy('id','DESC')->paginate(12);
 
         return view('produtos::index',[
             'produtos' => $produtos

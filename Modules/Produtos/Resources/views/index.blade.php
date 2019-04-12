@@ -42,6 +42,7 @@
                   </div>
                 @endforeach
             </div>
+            {!! $produtos->links() !!}
           @endif
     
         <!-- Modal com detalhes do usuário -->
