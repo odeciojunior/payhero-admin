@@ -16,10 +16,16 @@ use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class ProdutosController extends Controller {
 
-    public function index() {
+    public function index(Request $request) {
 
-        $produtos = Produto::where('user',\Auth::user()->id)->orderBy('id','DESC')->paginate(12);
+        $produtos = Produto::where('user',\Auth::user()->id);
 
+        if(isset($request->nome)){
+            $produtos = $produtos->where('nome','LIKE','%'.$request->nome.'%');
+        }
+        
+        $produtos = $produtos->orderBy('id','DESC')->paginate(12);
+ 
         return view('produtos::index',[
             'produtos' => $produtos
         ]);

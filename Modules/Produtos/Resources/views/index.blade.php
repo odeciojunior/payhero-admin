@@ -5,7 +5,22 @@
   <!-- Page --> 
   <div class="page">
     <div class="page-header">
-        <h1 class="page-title">Meus produtos</h1>
+        <div class="row">
+          <div class="col-8">
+            <h1 class="page-title">Meus produtos</h1>
+          </div>
+          <div class="col-4">
+              <div class="panel pt-15 p-15" data-plugin="matchHeight">   
+                  <label for="nome">Nome do produto</label>
+                  <div class="input-group">
+                      <input id="nome" class="form-control" placeholder="Nome do produto">
+                      <span class="input-group-btn">
+                          <button id="procurar" class="btn btn-success">Procurar</button>
+                      </span>
+                  </div>
+              </div>
+          </div>
+        </div>
     </div>
 
     <div class="page-content container-fluid">
@@ -13,12 +28,12 @@
 
           @if(count($produtos) == 0)
               <div class="alert alert-warning" role="alert">
-                  <strong>Ops!</strong> Você ainda não possui produtos cadastrados.
+                   Nenhum produto encontrado.
               </div>
           @else 
             <div class="row">
                 @foreach($produtos as $produto)
-                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="padding: 0 25px 0 25px">
                       <div class="card" style="border: 1px solid #E6E6FA">
                           <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                           <div class="card-block">
@@ -97,6 +112,10 @@
   <script>
 
     $(document).ready( function(){
+
+        $("#procurar").on("click", function(){
+            window.location.href = "/produtos?nome=" + $('#nome').val();
+        })
 
         $('.detalhes_produto').on('click', function() {
 
