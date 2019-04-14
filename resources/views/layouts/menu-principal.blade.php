@@ -109,10 +109,10 @@
       </ul>
     </div>
   </div>
-</nav>   
+</nav>
 
-<div class="site-menubar">
-  <div class="site-menubar-body">
+<div class="site-menubar" style="height:100%">
+  <div class="site-menubar-body" style="height:100%">
     <div>
       <div>
         <ul class="site-menu" data-plugin="menu">

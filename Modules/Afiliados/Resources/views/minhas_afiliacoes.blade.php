@@ -30,7 +30,7 @@
                                 </div>
                             @else
                                 @foreach($projetos as $projeto)
-                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="padding: 0 25px 0 25px">
                                         <div class="card" style="border: 1px solid #E6E6FA">
                                             <a href='/afiliados/minhasafiliacoes/{!! $projeto['id_afiliacao'] !!}'>
                                                 <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">

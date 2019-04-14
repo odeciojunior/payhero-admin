@@ -8,9 +8,9 @@ class EmailHelper {
 
     public static function novaAfiliacao(){
 
-        $email = new \SendGrid\Mail\Mail(); 
+        $email = new \SendGrid\Mail\Mail();
         $email->setFrom("noreply@cloudfox.app", "Cloudfox");
-        $email->setSubject("testando integração com sendgrid");
+        $email->setSubject("Nova afiliação");
         $email->addTo("felixlorram@gmail.com", "julio");
         $email->addContent("text/plain", "Nova notificação");
         $email->addContent(
@@ -19,9 +19,8 @@ class EmailHelper {
         $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
         try {
             $response = $sendgrid->send($email);
-            print $response->statusCode() . "\n";
-            print $response->body() . "\n";
         } catch (Exception $e) {
+            return false;
             echo 'Caught exception: '. $e->getMessage() ."\n";
         }
 
