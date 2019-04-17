@@ -37,12 +37,17 @@
         </div>
 
         <div class="row">
-            <div class="form-group col-xl-12">
+            <div class="form-group col-xl-6 col-lg-6">
                 <label for="url_pagina">URL da página principal</label>
                 <input name="url_pagina" value="{!! $projeto->url_pagina !!}" type="text" class="form-control" id="url_pagina" placeholder="URL da página">
             </div>
+
+            <div class="form-group col-xl-6 col-lg-6">
+                <label for="contato">Contato (checkout)</label>
+                <input name="contato" value="{!! $projeto->contato !!}" type="text" class="form-control" id="contato" placeholder="Contato">
+            </div>
         </div>
-    
+
         <h4>Configurações de afiliados</h4>
 
         <div class="row" id="div_dados_afiliados">
