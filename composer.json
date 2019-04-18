@@ -29,7 +29,8 @@
         "laravel/passport": "7.2.0",
         "barryvdh/laravel-cors": "0.11.3",
         "vinkla/hashids": "^5",
-        "sendgrid/sendgrid": "~7"
+        "sendgrid/sendgrid": "~7",
+        "ebanx/ebanx": "dev-master"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

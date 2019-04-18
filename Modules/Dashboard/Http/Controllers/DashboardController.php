@@ -6,6 +6,7 @@ use App\Plano;
 use App\Venda;
 use App\Empresa;
 use App\Projeto;
+use App\Transacao;
 use Carbon\Carbon;
 use Pusher\Pusher;
 use App\PlanoVenda;
@@ -18,13 +19,6 @@ class DashboardController extends Controller {
 
     public function index() {
 
-        if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
-        }
-        else{
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
-        }
-
         $saldo_disponivel = 0;
         $saldo_transferido = 0;
         $saldo_futuro = 0;
@@ -33,17 +27,19 @@ class DashboardController extends Controller {
 
         foreach($empresas as $empresa){
 
-            if(!$empresa['recipient_id']){
-                continue;
+            $transacoes = Transacao::where('empresa',$empresa['id'])->get()->toArray();
+
+            if($transacoes){
+
+                foreach($transacoes as $transacao){
+                    if($transacao['tipo'] == 'entrada'){
+                        $saldo_disponivel += $transacao['valor'];
+                    }
+                    else{
+                        $saldo_disponivel -= $transacao['valor'];
+                    }
+                }
             }
-
-            $recipientBalance = $pagarMe->recipients()->getBalance([
-                'recipient_id' => $empresa['recipient_id'],
-            ]);
-
-            $saldo_disponivel  += $recipientBalance->available->amount;
-            $saldo_transferido += $recipientBalance->transferred->amount;
-            $saldo_futuro      += $recipientBalance->waiting_funds->amount;
         }
 
         if($saldo_disponivel == 0){
