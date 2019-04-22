@@ -88,7 +88,6 @@ class DashboardController extends Controller {
             'saldo_futuro' => $saldo_futuro
         ]);
 
-
     }
 
     public function ultimasVendas(Request $request){

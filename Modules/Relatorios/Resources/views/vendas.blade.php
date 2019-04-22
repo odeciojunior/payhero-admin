@@ -89,7 +89,7 @@
 
         <!-- Modal detalhes da venda-->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-          <div class="modal-dialog modal-simple">
+          <div class="modal-dialog modal-simple modal-sidebar modal-md">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -226,7 +226,7 @@
 
                   $('#modal_venda_titulo').html('Detalhes da venda ' + venda);
 
-                  $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                  $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
                   var data = { id_venda : venda };
 

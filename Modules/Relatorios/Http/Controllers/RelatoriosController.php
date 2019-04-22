@@ -31,6 +31,7 @@ class RelatoriosController extends Controller {
 
         $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
         $projetos = [];
+
         foreach($projetos_usuario as $projeto_usuario){
             $projeto = Projeto::find($projeto_usuario['projeto']);
             $projetos[] = [
@@ -110,132 +111,29 @@ class RelatoriosController extends Controller {
 
         $dados = $request->all();
         $venda = Venda::find(preg_replace("/[^0-9]/", "", $dados['id_venda']));
+
         $planos_venda = PlanoVenda::where('venda', $venda->id)->get()->toArray();
+        $planos = [];
+
+        foreach($planos_venda as $key => $plano_venda){
+            $planos[$key]['nome'] = Plano::find($plano_venda['plano'])['nome'];
+            $planos[$key]['quantidade'] = $plano_venda['quantidade'];
+        }
+
         $comprador = Comprador::find($venda->comprador);
         $entrega = Entrega::find($venda->entrega);
 
-        $modal_body = '';
+        $venda['data_inicio'] = (new Carbon($venda['data_inicio']))->format('d/m/Y H:i:s');
 
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td colspan='2' class='text-center'><b>INFORMAÇÕES GERAIS</b></td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Código da transação:</b></td>";
-        $modal_body .= "<td>#".$venda['id']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Forma de pagamento:</b></td>";
-        $modal_body .= "<td>".$venda['forma_pagamento']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Data:</b></td>";
-        $modal_body .= "<td>".(new Carbon($venda['data_inicio']))->format('d/m/Y H:i:s')."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Status:</b></td>";
-        if($venda['pagamento_status'] == 'paid')
-            $modal_body .= "<td>Aprovada</td>";
-        elseif($venda['pagamento_status'] == 'refused')
-            $modal_body .= "<td>Rejeitada</td>";
-        elseif($venda['pagamento_status'] == 'waiting_payment')
-            $modal_body .= "<td>Aguardando pagamento</td>";
-        else
-            $modal_body .= "<td>".$venda['pagamento_status']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td colspan='2' class='text-center'><b>PRODUTOS DA VENDA</b></td>";
-        $modal_body .= "</tr>";
-        foreach($planos_venda as $plano_venda){
-            $plano = Plano::find($plano_venda['plano']);
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Produto:</b></td>";
-            $modal_body .= "<td>".$plano['nome']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Quantidade:</b></td>";
-            $modal_body .= "<td>".$plano_venda['quantidade']."</td>";
-            $modal_body .= "</tr>";
-        }
-        $modal_body .= "<tr>";
-        $modal_body .= "<td colspan='2' class='text-center'><b>INFORMAÇÕES DO CLIENTE</b></td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Comprador:</b></td>";
-        $modal_body .= "<td>".$comprador['nome']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>CPF:</b></td>";
-        $modal_body .= "<td>".$comprador['cpf_cnpj']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Email:</b></td>";
-        $modal_body .= "<td>".$comprador['email']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Telefone:</b></td>";
-        $modal_body .= "<td>".$comprador['telefone']."</td>";
-        $modal_body .= "</tr>";
-        if($entrega){
-            $modal_body .= "<tr>";
-            $modal_body .= "<td colspan='2' class='text-center'><b>INFORMAÇÕES DA ENTREGA</b></td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Valor do frete:</b></td>";
-            $modal_body .= "<td>".$venda['valor_frete']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Rua:</b></td>";
-            $modal_body .= "<td>".$entrega['rua']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Número:</b></td>";
-            $modal_body .= "<td>".$entrega['numero']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Complemento:</b></td>";
-            $modal_body .= "<td>".$entrega['ponto_referencia']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Bairro:</b></td>";
-            $modal_body .= "<td>".$entrega['bairro']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Cidade:</b></td>";
-            $modal_body .= "<td>".$entrega['cidade']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Estado:</b></td>";
-            $modal_body .= "<td>".$entrega['estado']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";    
-            $modal_body .= "<td><b>CEP:</b></td>";
-            $modal_body .= "<td>".$entrega['cep']."</td>";
-            $modal_body .= "</tr>";
-        }
-        if($venda['forma_pagamento'] == 'Boleto'){
-            $modal_body .= "<tr>";
-            $modal_body .= "<td colspan='2' class='text-center'><b>INFORMAÇÕES DO BOLETO</b></td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Link do boleto:</b></td>";
-            $modal_body .= "<td>".$venda['link_boleto']."</td>";
-            $modal_body .= "</tr>";
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Linha digitável do boleto:</b></td>";
-            $modal_body .= "<td>".$venda['linha_digitavel_boleto']."</td>";
-            $modal_body .= "</tr>";
-        }
-        $modal_body .= "</thead>";
-        $modal_body .= "</table>";
-        $modal_body .= "</div>";
-        $modal_body .= "</div>";
+        $detalhes = view('relatorios::detalhes',[
+            'venda' => $venda,
+            'planos' => $planos,
+            'comprador' => $comprador,
+            'entrega' => $entrega
+        ]);
 
-        return response()->json($modal_body);
+        return response()->json($detalhes->render());
+
     }
 
     public function estornarVenda(Request $request){

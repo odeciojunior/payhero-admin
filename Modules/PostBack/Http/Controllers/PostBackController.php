@@ -52,7 +52,7 @@ class PostBackController extends Controller {
             if($response->payment->status == 'CA'){
 
                 foreach($transacoes as $transacao){
-                    $transacao->update('status','cancelada');
+                    Transacao::find($transacao['id'])->update('status','cancelada');
                 }
             }
 
@@ -65,7 +65,8 @@ class PostBackController extends Controller {
                 ]);
 
                 foreach($transacoes as $transacao){
-                    $transacao->update([
+
+                    Transacao::find($transacao['id'])->update([
                         ['status','pago'],
                         ['data_liberacao' => Carbon::now()->addDays(30)->format('Y-m-d')]
                     ]);
