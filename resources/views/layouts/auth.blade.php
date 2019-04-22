@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content=" - ">
-    <meta name="author" content="Henrique Brites - henriquebrites@live.com">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -48,13 +46,10 @@
     </script>
 
   </head>
-  <body class="animsition page-login-v3 layout-full">
+  <body class="animsition page-login-v3 layout-full" style="background-image: linear-gradient(to right, #FFA500, #D2691E);">
 
-    <!-- Page -->   
-        @yield('content')
-    <!-- End Page -->
+    @yield('content')
 
-    <!-- Core  -->
     <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
 

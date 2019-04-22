@@ -6,7 +6,9 @@ use App\User;
 use App\Plano;
 use App\Venda;
 use App\Entrega;
+use Carbon\Carbon;
 use App\Comprador;
+use App\Transacao;
 use App\PlanoVenda;
 use App\CompraUsuario;
 use App\IntegracaoShopify;
@@ -34,9 +36,43 @@ class PostBackController extends Controller {
 
         $venda = Venda::where('pagamento_id',$dados['hash_codes'])->first();
 
-        $venda->update([
-            'pagamento_status' => $response->payment->status
-        ]);
+        if(!$venda){
+            Log::write('info', 'Venda não encontrada');
+            return 'success';
+        }
+
+        if($response->payment->status != $venda->pagamento_status){
+
+            $venda->update([
+                'pagamento_status' => $response->payment->status
+            ]);
+
+            $transacoes = Transacao::where('venda',$venda['id'])->get()->toArray();
+            
+            if($response->payment->status == 'CA'){
+
+                foreach($transacoes as $transacao){
+                    $transacao->update('status','cancelada');
+                }
+            }
+            
+            else if($response->payment->status == 'CO'){
+
+                date_default_timezone_set('America/Sao_Paulo');
+
+                $venda->update([
+                    'data_finalizada' => \Carbon\Carbon::now()
+                ]);
+
+                foreach($transacoes as $transacao){
+                    $transacao->update([
+                        ['status','pago'],
+                        ['data_liberacao' => Carbon::now()->addDays(30)->format('Y-m-d')]
+                    ]);
+                }
+            }
+
+        }
 
         return 'success';
     }
@@ -46,7 +82,7 @@ class PostBackController extends Controller {
     //     $dados = $request->all();
 
     //     Log::write('info', 'retorno do pagar.me : '. print_r($dados, true));
- 
+
     //     if(isset($dados['event']) && $dados['event'] = 'transaction_status_changed'){
 
     //         if(isset($dados['transaction']['metadata']['servico'])){
@@ -67,7 +103,7 @@ class PostBackController extends Controller {
     //                 $compra_usuario->update([
     //                     'data_finalizada' => \Carbon\Carbon::now()->subHour()->subHour()
     //                 ]);
-    
+
     //                 $user = User::find($compra_usuario['comprador']);
 
     //                 $qtd_sms = $user['sms_zenvia_qtd'] + $compra_usuario['quantidade'];
@@ -159,7 +195,7 @@ class PostBackController extends Controller {
 
     //                         foreach($planos_venda as $plano_venda){
     //                             $plano = Plano::find($plano_venda['plano']);
-                
+
     //                             $items[] = [
     //                                 "grams" => 500,
     //                                 "id" => $plano['id'],
