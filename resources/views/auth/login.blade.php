@@ -31,14 +31,14 @@
               </div>
               <div class="form-group clearfix" style="margin-bottom:30px">
               </div>
-              <button type="submit" class="btn btn-block btn-lg mt-40" style="background-image: linear-gradient(to right, #FFA500, #D2691E);">{{ __('Sign in') }}</button>
+              <button type="submit" class="btn btn-block btn-lg mt-40" style="background-image: linear-gradient(77deg, #f37e1e, #e54724); color: white;">{{ __('Sign in') }}</button>
             </form>
           </div>
         </div>
 
         <footer class="page-copyright page-copyright-inverse">
-          <p>CloudFox - help@cloudfox.app</p>
-          <p>© 2019 - All rights reserved</p>
+          <p>help@cloudfox.app</p>
+          <p>©2019 CLOUDFOX LLC</p>
         </footer>
       </div>
     </div>
