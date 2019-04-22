@@ -9,7 +9,7 @@
             <div class="brand">
               <img class="brand-img logo-login" src="{{ asset('adminremark/assets/images/cloudfox_logo.png') }}" alt="...">
             </div>
-              <form autocomplete="off" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+            <form autocomplete="off" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
               @csrf
               <div class="form-group form-material floating" data-plugin="formMaterial">
                 <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus/>
