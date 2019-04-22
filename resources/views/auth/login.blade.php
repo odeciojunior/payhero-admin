@@ -2,7 +2,7 @@
 
  @section('title', '- Login')
     @section('content')
-    <div class="page vertical-align text-center" data-animsition-in="fade-in" data-animsition-out="fade-out" style="background-image: linear-gradient(to right, #e6774c, #f92278);">
+    <div class="page vertical-align text-center" data-animsition-in="fade-in" data-animsition-out="fade-out">
       <div class="page-content vertical-align-middle" style="height: 100%">
         <div class="panel">
           <div class="panel-body">

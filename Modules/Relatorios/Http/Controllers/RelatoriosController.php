@@ -9,14 +9,14 @@ use App\Entrega;
 use App\Projeto;
 use App\Comprador;
 use Carbon\Carbon;
-use App\PlanoVenda; 
 use PagarMe\Client;
+use App\PlanoVenda; 
 use App\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Yajra\DataTables\DataTables;
-use Illuminate\Routing\Controller;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\Controller;
 use Modules\Relatorios\DataTables\VendasDataTable;
 use Modules\Relatorios\Transformers\VendasResource;
 

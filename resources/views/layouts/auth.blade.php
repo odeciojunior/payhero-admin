@@ -46,7 +46,7 @@
     </script>
 
   </head>
-  <body class="animsition page-login-v3 layout-full" style="background-image: linear-gradient(to right, #FFA500, #D2691E);">
+  <body class="animsition page-login-v3 layout-full">
 
     @yield('content')
 
