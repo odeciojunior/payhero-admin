@@ -20,7 +20,6 @@ class DashboardController extends Controller {
     public function index() {
 
         $saldo_disponivel = 0;
-        $saldo_transferido = 0;
         $saldo_futuro = 0;
 
         $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
@@ -68,23 +67,17 @@ class DashboardController extends Controller {
         if($saldo_disponivel == 0){
             $saldo_disponivel = '000';
         }
-        if($saldo_transferido == 0){
-            $saldo_transferido = '000';
-        }
         if($saldo_futuro == 0){
             $saldo_futuro = '000';
         }
 
         $saldo_disponivel = substr_replace($saldo_disponivel, '.',strlen($saldo_disponivel) - 2, 0 );
         $saldo_disponivel = number_format($saldo_disponivel,2);
-        $saldo_transferido = substr_replace($saldo_transferido, '.',strlen($saldo_transferido) - 2, 0 );
-        $saldo_transferido = number_format($saldo_transferido,2);
         $saldo_futuro = substr_replace($saldo_futuro, '.',strlen($saldo_futuro) - 2, 0 );
         $saldo_futuro = number_format($saldo_futuro,2);
 
         return view('dashboard::dashboard',[
             'saldo_disponivel' => $saldo_disponivel,
-            'saldo_transferido' => $saldo_transferido,
             'saldo_futuro' => $saldo_futuro
         ]);
 

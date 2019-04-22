@@ -1,4 +1,4 @@
-<nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation">
+<nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation" style="background-color: #798b98">
 
     <div class="navbar-header">
       <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided"

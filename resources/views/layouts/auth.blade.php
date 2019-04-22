@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/slidepanel/slidePanel.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/flag-icon-css/flag-icon.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/waves/waves.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/pages/login-v3.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminremark2/assets/examples/css/pages/login-v3.css') }}">
 
     <link rel="stylesheet" href="{{ asset('adminremark/assets/css/style.css') }}">
     

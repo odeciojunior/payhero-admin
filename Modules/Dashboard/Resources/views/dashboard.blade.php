@@ -9,103 +9,64 @@
 <div class="page">
   <div class="page-content container-fluid">
     <div class="row" data-plugin="matchHeight" data-by-row="true">
-      <div class="col-xxl-12 col-lg-12">
-        <!-- Widget Linearea Color -->
-        <div class="card card-shadow card-responsive" id="widgetLineareaColor">
+
+      <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="card card-inverse card-shadow bg-green-600 white">
           <div class="card-block p-0">
-            <div class="pt-30 p-30" style="height:calc(100% - 250px);">
-              <div class="row" style="margin-bottom: 20px">
-
-                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-                    <!-- Widget Sale Bar -->
-                    <div class="card card-inverse card-shadow bg-green-600 white" id="widgetSaleBar">
-                      <div class="card-block p-0">
-                        <div class="pt-25 px-30">
-                          <div class="row no-space">
-                            <div class="col-12 text-center">
-                              <p>Saldo disponível</p>
-                            </div>
-                            <hr>
-                            <div class="col-12 text-center">
-                              <p class="font-size-30 text-nowrap">R$ {!! $saldo_disponivel !!}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End Widget Sale Bar -->
-                  </div>
-
-                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-                    <!-- Widget Sale Bar -->
-                    <div class="card card-inverse card-shadow bg-blue-600 white" id="widgetSaleBar">
-                      <div class="card-block p-0">
-                        <div class="pt-25 px-30">
-                          <div class="row no-space">
-                            <div class="col-12 text-center">
-                              <p>Saldo a receber</p>
-                            </div>
-                            <div class="col-12 text-center">
-                              <p class="font-size-30 text-nowrap">R$ {!! $saldo_futuro !!}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End Widget Sale Bar -->
-                  </div>
-
-                  <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-                    <!-- Widget Sale Bar -->
-                    <div class="card card-inverse card-shadow bg-yellow-600 white" id="widgetSaleBar">
-                      <div class="card-block p-0">
-                        <div class="pt-25 px-30">
-                          <div class="row no-space">
-                            <div class="col-12 text-center">
-                              <p>Transferido</p>
-                            </div>
-                            <div class="col-12 text-center">
-                              <p class="font-size-30 text-nowrap">R$ {!! $saldo_transferido !!}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- End Widget Sale Bar -->
-                  </div>
-              </div>
-
-              <hr>
-
-              <div style="width: 100%; text-align: center">
-                <h3 style="margin-bottom: 20px">Últimas vendas</h3>
-              </div>
-
-              <div class="row">
-                  <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
-                    <div id="mapa" style="height:500px">
-                    </div>
-                  </div>
-                  <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
-                    <div id="tabela">
-                      <table class="table table-hover table-bordered">
-                          <thead>
-                            <th>Hora</th>
-                            <th>Projeto</th>
-                            <th>Valor</th>
-                            <th>Forma</th>
-                          </thead>
-                          <tbody id="tabela_ultimas_vendas">
-                          </tbody>
-                      </table>
-                    </div>
-                  </div>
+            <div class="pt-25 px-30">
+              <div class="row no-space">
+                <div class="col-12 text-center">
+                  <p>Saldo disponível</p>
+                </div>
+                <div class="col-12 text-center">
+                  <p class="font-size-30 text-nowrap">R$ {!! $saldo_disponivel !!}</p>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
+
+      <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="card card-inverse card-shadow bg-blue-600 white">
+          <div class="card-block p-0">
+            <div class="pt-25 px-30">
+              <div class="row no-space">
+                <div class="col-12 text-center">
+                  <p>Saldo a receber</p>
+                </div>
+                <div class="col-12 text-center">
+                  <p class="font-size-30 text-nowrap">R$ {!! $saldo_futuro !!}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="width: 100%; text-align: center">
+        <h3 style="margin-bottom: 20px">Últimas vendas</h3>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
+        <div id="mapa" style="height:500px">
+        </div>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
+        <div id="tabela">
+          <table class="table table-hover table-bordered">
+              <thead>
+                <th>Hora</th>
+                <th>Projeto</th>
+                <th>Valor</th>
+                <th>Forma</th>
+              </thead>
+              <tbody id="tabela_ultimas_vendas">
+              </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -246,7 +207,7 @@
               showConfirmButton: false,
               timer: 6000
           });
-      }
+        }
 
 
     });
