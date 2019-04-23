@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/slidepanel/slidePanel.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/flag-icon-css/flag-icon.css') }}">
+    <link rel="stylesheet" href="{{ asset('jquery-imgareaselect/css/imgareaselect-default.css') }}">
 
     @yield('styles')
 
@@ -110,6 +111,9 @@
     <script src="{{ asset('adminremark/global/js/Plugin/matchheight.js') }}"></script>
 
     <script src="{{ asset('adminremark2/assets/examples/js/dashboard/v1.js') }}"></script>
+
+    <script src="{{ asset('jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
+    <script src="{{ asset('assets/js/notificacoes.js') }}"></script>
 
     @yield('scripts')
   </body>

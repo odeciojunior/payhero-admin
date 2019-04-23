@@ -31,11 +31,12 @@ class RecuperacaoCarrinhoController extends Controller {
             'checkout.status',
             'checkout.id_sessao_log',
             'checkout.created_at',
+            'checkout.projeto',
         ])
         ->where('status','Carrinho abandonado')
         ->orWhere('status', 'Recuperado')
         ->orderBy('id','DESC');
-
+ 
         return Datatables::of($checkouts)
         ->editColumn('created_at', function ($checkout) {
             return with(new Carbon($checkout->created_at))->format('d/m/Y H:i:s');
@@ -69,36 +70,14 @@ class RecuperacaoCarrinhoController extends Controller {
             }
             return substr_replace($valor, '.',strlen($valor) - 2, 0 );;
         })
-        ->addColumn('detalhes', function ($checkout) {
-            return "<span data-toggle='modal' data-target='#modal_opcoes'>
-                        <a class='btn btn-outline btn-primary opcoes_checkout' data-placement='top' data-toggle='tooltip' title='Opções' checkout='".$checkout->id."'>
-                            <i class='icon wb-plus' aria-hidden='true'></i>
-                        </a>
-                    </span>";
+        ->addColumn('link', function ($checkout) {
+
+            $dominio = Dominio::where('projeto',$checkout->projeto)->first();
+
+            return "https://checkout.".$dominio['dominio']."/carrinho/".$checkout->id_sessao_log;
         })
         ->rawColumns(['detalhes','status_recuperacao'])
         ->make(true);
-    }
-
-    public function opcoes(Request $request){
-
-        $dados = $request->all();
-
-        $checkout = Checkout::find($dados['id_checkout']);
-        $dominio = Dominio::where('projeto',$checkout['projeto'])->first();
-
-        $link = "<div style='margin-top:50px' class='text-center'><b>LINK: <b> https://checkout.".$dominio['dominio']."/carrinho/".$checkout['id_sessao_log']."</div>";
-
-        return response()->json($link);
-    }
-
-    public function getCarrinhosAbandonados(){
-        
-        $checkouts = Checkout::where('status','Carrinho abandonado')
-        ->orWhere('status', 'Recuperado')
-        ->orderBy('id','DESC');
-
-        return CarrinhosAbandonadosResource::collection($checkouts->paginate());
     }
 
 }

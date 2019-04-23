@@ -12,11 +12,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'recuperacaocarrinho'
         'uses' => 'RecuperacaoCarrinhoController@dadosCarrinhosAbandonados'
     ]);
 
-    Route::post('/opcoes',[
-        'as' => 'carrinhosabandonados.opcoes',
-        'uses' => 'RecuperacaoCarrinhoController@opcoes'
-    ]);
-
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/carrinhosabandonados', 'namespace' => 'Modules\RecuperacaoCarrinho\Http\Controllers'], function()

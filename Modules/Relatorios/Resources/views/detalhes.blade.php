@@ -1,7 +1,7 @@
 <div class="page-content container-fluid">
     <div class="panel pt-10 p-10" data-plugin="matchHeight">
 
-        <div class="nav-tabs-horizontal" data-plugin="tabs">
+        <div class="nav-tabs-horizontal" data-plugin="tabs" style="height:100%">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_venda"
                     aria-controls="tab_venda" role="tab">Venda</a></li>
