@@ -37,7 +37,7 @@
         </div>
 
         <footer class="page-copyright page-copyright-inverse">
-          <p>help@cloudfox.app</p>
+          <p>help@cloudfox.app - <a href="/terms" target="_blank" style="color:#e54724">Terms & Conditions</a></p>
           <p>©2019 CLOUDFOX LLC</p>
         </footer>
       </div>

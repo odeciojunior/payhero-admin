@@ -15,8 +15,11 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::get('/', function () {
-    //return view('welcome');
     return view('auth.login');
+});
+
+Route::get('/terms', function () {
+    return view('terms.terms');
 });
 
 Route::post('/liftgold', function (Request $request) {
