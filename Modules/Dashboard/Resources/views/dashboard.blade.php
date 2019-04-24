@@ -114,11 +114,11 @@
     <div class="row">
 
       <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
-        <div id="mapa" style="height:430px">
+        <div id="mapa" style="height:440px">
         </div>
       </div>
       <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
-        <div id="tabela">
+        <div id="tabela" class="card card-shadow">
           <table class="table table-hover text-center">
               <thead>
                 <tr>
