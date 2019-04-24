@@ -66,27 +66,30 @@
       </div>
 
       <div class="panel pt-10 p-10" style="min-height: 300px">
+        <div class="page-invoice-table table-responsive">
 
-        <table id="tabela_vendas" class="table table-hover table-striped table-bordered table-condensed" style="width:100%;">
-          <thead style="text-align:center">
-            <th>Transação</th>
-            <th>Projeto</th>
-            <th>Descrição</th>
-            <th>Comprador</th>
-            <th>Forma</th>
-            <th>Status</th>
-            <th>Data</th>
-            <th>Pagamento</th>
-            <th>Valor total</th>
-            <th>Valor líquido</th>
-            <th>Detalhes</th>
-          </thead>
-          <tbody id="dados_tabela">
+          <table id="tabela_vendas" class="table table-hover text-right" style="width:100%;">
+            <thead style="text-align:center">
+              <tr>
+                <th style='vertical-align: middle'>Transação</th>
+                <th style='vertical-align: middle'>Projeto</th>
+                <th style='vertical-align: middle'>Descrição</th>
+                <th style='vertical-align: middle'>Comprador</th>
+                <th style='vertical-align: middle'>Forma</th>
+                <th style='vertical-align: middle'>Status</th>
+                <th style='vertical-align: middle'>Data</th>
+                <th style='vertical-align: middle'>Pagamento</th>
+                <th style='vertical-align: middle'>Valor total</th>
+                <th style='vertical-align: middle'>Valor líquido</th>
+                <th style='vertical-align: middle'>Detalhes</th>
+              </tr>
+            </thead>
+            <tbody id="dados_tabela">
 
-          </tbody>
-        </table>
-        <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right"></ul>
-
+            </tbody>
+          </table>
+          <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right"></ul>
+        </div>
         <!-- Modal detalhes da venda-->
         <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-simple modal-sidebar modal-lg">
@@ -179,40 +182,40 @@
               $.each(response.data, function(index, value){
                 dados = '';
                 dados += '<tr>';
-                dados += "<td>"+value.id+"</td>";
-                dados += "<td>"+value.projeto+"</td>";
-                dados += "<td>"+value.produto+"</td>";
-                dados += "<td>"+value.comprador+"</td>";
+                dados += "<td style='vertical-align: middle'>"+value.id+"</td>";
+                dados += "<td style='vertical-align: middle'>"+value.projeto+"</td>";
+                dados += "<td style='vertical-align: middle'>"+value.produto+"</td>";
+                dados += "<td style='vertical-align: middle'>"+value.comprador+"</td>";
 
                 if(value.forma == 'Boleto'){
-                  dados += "<td><img src='/assets/img/boleto.jpeg' style='width: 60px'></td>";
+                  dados += "<td style='vertical-align: middle'><img src='/assets/img/boleto.jpeg' style='width: 60px'></td>";
                 }else{
-                  dados += "<td><img src='/assets/img/cartao.jpg' style='width: 60px'></td>";
+                  dados += "<td style='vertical-align: middle'><img src='/assets/img/cartao.jpg' style='width: 60px'></td>";
                 }
 
-                if(value.status == 'paid'){
-                  dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
-                } else if(value.status == 'refused'){
-                  dados += "<td><span class='badge badge-danger'>Recusada</span></td>";
+                if(value.status == 'CO'){
+                  dados += "<td style='vertical-align: middle'><span class='badge badge-success'>Aprovada</span></td>";
+                } else if(value.status == 'CA'){
+                  dados += "<td style='vertical-align: middle'><span class='badge badge-danger'>Recusada</span></td>";
                 }else if(value.status == 'chargedback' || value.status == 'refunded'){
-                  dados += "<td><span class='badge badge-secondary'>Estornada</span></td>";
-                }else if(value.status == 'waiting_payment'){
-                  dados += "<td><span class='badge badge-primary'>Aguardando pagamento</span></td>";
+                  dados += "<td style='vertical-align: middle'><span class='badge badge-secondary'>Estornada</span></td>";
+                }else if(value.status == 'PE'){
+                  dados += "<td style='vertical-align: middle'><span class='badge badge-primary'>Pendente</span></td>";
                 }else{
-                  dados += "<td><span class='badge badge-primary'>"+value.status+"</span></td>";
+                  dados += "<td style='vertical-align: middle'><span class='badge badge-primary'>"+value.status+"</span></td>";
                 }
 
-                dados += "<td>"+value.data_inicio+"</td>";
-                dados += "<td>"+value.data_finalizada+"</td>";
-                dados += "<td>"+value.total_pago+"</td>";
-                dados += "<td>"+value.total_pago+"</td>";
-                dados += "<td><button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button></td>";
+                dados += "<td style='vertical-align: middle'>"+value.data_inicio+"</td>";
+                dados += "<td style='vertical-align: middle'>"+value.data_finalizada+"</td>";
+                dados += "<td style='vertical-align: middle'>"+value.total_pago+"</td>";
+                dados += "<td style='vertical-align: middle'>"+value.total_pago+"</td>";
+                dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button></td>";
                 dados += '</tr>';
                 $("#dados_tabela").append(dados);
 
               });
               if(response.data == ''){
-                $('#dados_tabela').html("<tr class='text-center'><td colspan='11' style='height: 50px'> Nenhuma venda encontrada</td></tr>");
+                $('#dados_tabela').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
               }
               pagination(response);
 

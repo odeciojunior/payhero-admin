@@ -26,7 +26,7 @@
         <p><b>Section B</b> describes your use of the API and the Services.</p>
         <p><b>Section C</b> describes the Payment Processing Services, which are one type of Service provided by Cloudfox.</p>
         <p><b>Section D</b> describes proper handling, management, and use of data generated during your use of the Services, including your Customers’ data.</p>
-        <p>Finally, <b>Section</b> E describes your liability to Cloudfox for all losses connected with your Cloudfox Account, your agreement to resolve all disputes with Cloudfox by arbitration and not in a lawsuit, and other legal terms that apply to you.</p>
+        <p>Finally, <b>Section E</b> describes your liability to Cloudfox for all losses connected with your Cloudfox Account, your agreement to resolve all disputes with Cloudfox by arbitration and not in a lawsuit, and other legal terms that apply to you.</p>
         <h4>2. Your Cloudfox Account</h4>
         <p>a. Registration and Permitted Activities: Only businesses (including sole proprietors), bona fide charitable organizations, and other entities or persons located in the United States are eligible to apply for a Cloudfox Account to use the Services described in this Agreement. Cloudfox and its affiliates may provide Services to you or your affiliates in other countries or regions under separate agreements.
         

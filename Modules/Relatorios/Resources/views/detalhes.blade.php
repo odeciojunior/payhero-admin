@@ -14,19 +14,19 @@
                 <div class="tab-pane active" id="tab_venda" role="tabpanel" style="min-width: 300px">
                     <table class="table-bordered table-hover" style="width: 100%">
                         <tbody>
-                            <tr>
+                            <tr style="height: 40px">
                                 <td style="width: 40%"><b>TRANSAÇÃO:</b></td>
                                 <td>{!! "#".$venda['id'] !!}</td>
                             </tr>
-                            <tr>
+                            <tr style="height: 40px">
                                 <td style="width: 40%"><b>FORMA:</b></td>
                                 <td>{!! $venda['forma_pagamento'] !!}</td>
                             </tr>
-                            <tr>
+                            <tr style="height: 40px">
                                 <td style="width: 40%"><b>DATA:</b></td>
                                 <td>{!! $venda['data_inicio'] !!}</td>
                             </tr>
-                            <tr>
+                            <tr style="height: 40px">
                                 <td style="width: 40%"><b>STATUS:</b></td>
                                 @if($venda['pagamento_status'] == 'paid')
                                     <td>Aprovada</td>
@@ -39,14 +39,14 @@
                                 @endif
                             </tr>
                             @if($venda['forma_pagamento'] == 'Boleto')
-                                <tr>
+                                <tr style="height: 60px">
                                     <td colspan='2' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 40px">
                                     <td><b>Link do boleto:</b></td>
                                     <td>{!! $venda['link_boleto'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 40px">
                                     <td><b>Linha digitável:</b></td>
                                     <td>{!! $venda['linha_digitavel_boleto'] !!}</td>
                                 </tr>
@@ -57,55 +57,55 @@
                 <div class="tab-pane" id="tab_cliente" role="tabpanel">
                     <table class="table-bordered table-hover" style="width: 100%">
                         <tbody>
-                            <tr>
+                            <tr style="height: 30px">
                                 <td><b>Nome:</b></td>
                                 <td>{!! $comprador['nome'] !!}</td>
                             </tr>
-                            <tr>
+                            <tr style="height: 30px">
                                 <td><b>CPF:</b></td>
                                 <td>{!! $comprador['cpf_cnpj'] !!}</td>
                             </tr>
-                            <tr>
+                            <tr style="height: 30px">
                                 <td><b>Email:</b></td>
                                 <td>{!! $comprador['email'] !!}</td>
                             </tr>
-                            <tr>
+                            <tr style="height: 30px">
                                 <td><b>Telefone:</b></td>
                                 <td>{!! $comprador['telefone'] !!}</td>
                             </tr>
                             @if($entrega)
-                                <tr>
+                                <tr style="height: 30px">
                                     <td colspan='2' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DA ENTREGA</b></td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 30px">
                                     <td><b>Valor do frete:</b></td>
                                     <td>{!! $venda['valor_frete'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 30px">
                                     <td><b>Rua:</b></td>
                                     <td>{!! $entrega['rua'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 30px">
                                     <td><b>Número:</b></td>
                                     <td>{!! $entrega['numero'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 30px">
                                     <td><b>Complemento:</b></td>
                                     <td>{!! $entrega['ponto_referencia'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 30px">
                                     <td><b>Bairro:</b></td>
                                     <td>{!! $entrega['bairro'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 30px">
                                     <td><b>Cidade:</b></td>
                                     <td>{!! $entrega['cidade'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 30px">
                                     <td><b>Estado:</b></td>
                                     <td>{!! $entrega['estado'] !!}</td>
                                 </tr>
-                                <tr>    
+                                <tr style="height: 30px">    
                                     <td><b>CEP:</b></td>
                                     <td>{!! $entrega['cep'] !!}</td>
                                 </tr>
@@ -117,11 +117,11 @@
                     <table class="table-bordered table-hover" style="width: 100%">
                         <tbody>
                             @foreach($planos as $plano)
-                                <tr>
+                                <tr style="height: 40px">
                                     <td><b>Produto:</b></td>
                                     <td>{!! $plano['nome'] !!}</td>
                                 </tr>
-                                <tr>
+                                <tr style="height: 40px">
                                     <td><b>Quantidade:</b></td>
                                     <td>{!! $plano['quantidade'] !!}</td>
                                 </tr>
