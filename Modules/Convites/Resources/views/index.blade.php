@@ -5,73 +5,75 @@
 <div class="page">
 
     <div class="page-header">
+        <button id="enviar_convite" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" data-target='#modal_convite' data-toggle='modal'><i class="icon wb-plus" aria-hidden="true"></i></button>
         <h2 class="page-title">Convites</h2>
+        <p style="margin-top: 12px">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos membros que você convidou.</p>
     </div>
 
     <div class="page-content container-fluid">
         <div class="panel pt-30 p-30" data-plugin="matchHeight">
             <div class="col-xl-12">
-                <div class="example-wrap">
-                    <div class="nav-tabs-horizontal" data-plugin="tabs">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_convites_enviados"
-                                aria-controls="tab_convites_enviados" role="tab">Convites enviados</a></li>
-                            <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_enviar_convites"
-                                aria-controls="tab_enviar_convites" role="tab">Enviar convite</a></li>
-                        </ul>
-                        <div class="tab-content pt-20">
-                            <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
+                <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
 
-                                <table class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                        <th>Email convidado</th>
-                                        <th>Status</th>
-                                        <th>Data cadastro</th>
-                                        <th>Data expiração</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($convites as $convite)
-                                            <tr>
-                                                <td>{!! $convite['email_convidado'] !!}</td>
-                                                <td>{!! $convite['status'] !!}</td>
-                                                <td>{!! $convite['data_cadastro'] !!}</td>
-                                                <td>{!! $convite['data_expiracao'] !!}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                @if(count($convites) == 0)
-                                    <div style="width:100%; text-center">
-                                        <h4> Nenhum convite enviado </h4>
-                                    </div>
-                                @endif
+                    <table class="table table-hover" style="margin-top:10px">
+                        <thead class="text-center">
+                            <th>Email convidado</th>
+                            <th>Status</th>
+                            <th>Data cadastro</th>
+                            <th>Data expiração</th>
+                        </thead>
+                        <tbody>
+                            @if(count($convites) > 0)
+                                @foreach($convites as $convite)
+                                    <tr>
+                                        <td>{!! $convite['email_convidado'] !!}</td>
+                                        <td>{!! $convite['status'] !!}</td>
+                                        <td>{!! $convite['data_cadastro'] !!}</td>
+                                        <td>{!! $convite['data_expiracao'] !!}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        Nenhum convite enviado
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
 
-                            </div>
-                            <div class="tab-pane" id="tab_enviar_convites" role="tabpanel">
-
-                                <div style="padding: 30px">
-                                    <form method="POST" action="/convites/enviarconvite">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="form-group col-12">
-                                                <label for="email">Email para enviar o convite</label>
-                                                <input name="email_convidado" type="text" class="form-control" id="email" placeholder="Email">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="form-group col-12">
-                                                <input type="submit" class="form-control btn btn-success" value="Enviar convite" style="width: 30%">
-                                            </div>
-                                        </div>
-
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
+
+            <div class="modal fade modal-3d-flip-vertical" id="modal_convite" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+              <div class="modal-dialog modal-simple">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 id="modal_estornar_titulo" class="modal-title" style="width: 100%; text-align:center">Novo Convite</h4>
+                  </div>
+                  <div id="modal_estornar_body" class="modal-body">
+                    <form method="POST" action="/convites/enviarconvite">
+                        @csrf
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="email">Email do convidado</label>
+                                <input name="email_convidado" type="text" class="form-control" id="email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <input type="submit" class="form-control btn" value="Enviar Convite" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">
+                            </div>
+                        </div>
+                    </form>    
+                  </div>
+                </div>
+              </div>
+            </div>
+
         </div>
     </div>
 </div>

@@ -90,6 +90,7 @@
           </table>
           <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right"></ul>
         </div>
+
         <!-- Modal detalhes da venda-->
         <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-simple modal-sidebar modal-lg">
