@@ -47,7 +47,9 @@ class VitrineController extends Controller {
             $plano = Plano::where('projeto',$projeto['id'])->max('preco');
 
             $maiorComissao = number_format($plano * 0.90, 2);
-            
+
+            $maiorComissao = str_replace(',','',$maiorComissao);
+
             $maiorComissao = number_format($maiorComissao * $projeto['porcentagem_afiliados'] / 100 ,2);
 
             $projeto['maior_comissao'] = str_replace('.',',',$maiorComissao);
