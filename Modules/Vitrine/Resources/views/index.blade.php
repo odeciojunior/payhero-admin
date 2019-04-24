@@ -7,62 +7,61 @@
 
     <div class="page-header">
         <h1 class="page-title">Vitrine</h1>
-        <div class="page-header-actions">
-        </div>
     </div>
 
     <div class="page-content container-fluid">
-        <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-          <div class="row">
-            @foreach($projetos as $projeto)
-              <div class="col-3" style="padding: 0 25px 0 25px">
-                <div class="card" style="border: 1px solid gray">
-                    <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+        <div class="row">
+          @foreach($projetos as $projeto)
+            <div class="col-xl-3 col-md-6 info-panel">
+              <div class="card card-shadow">
+                <div class="card">
+                    <a class="detalhes_projeto" projeto="{!! $projeto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes' style="height: 180px">
+                        <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                    </a>
                     <div class="card-block">
                       <a>
                           <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
                           <p class="card-text">{!! substr($projeto['descricao'],0,50) !!}</p>
                       </a>
                       <hr>
-                      <span><b>Produtor : </b>{!! $projeto['produtor'] !!}</span>
-                      <hr>
-                      <div class="text-center">
-                        <span data-toggle='modal' data-target='#modal_detalhes'>
-                            <a class='btn btn-outline btn-primary detalhes_projeto' data-placement='top' projeto="{!! $projeto['id'] !!}" data-toggle='tooltip' title='Editar'>
-                                <i class='icon wb-grid-9' aria-hidden='true'></i>
-                                Ver detalhes
-                            </a>
-                        </span>
-                      </div>
-                  </div>
-                </div>
-              </div>
-            @endforeach
-          </div>
-
-          <!-- Modal com detalhes do projeto -->
-          <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                  <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                </div>
-                <div id="modal_detalhes_body" class="modal-body" style="padding: 30px">
-
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                      <span>
+                        <b>Produtor : </b> {!! $projeto['produtor'] !!}
+                      </span></br>
+                      <span class="font-size-15 gray-600">
+                        Comissão por venda de até:
+                      </span></br>
+                      <span class="font-size-18 green-600">
+                        R$ {!! $projeto['maior_comissao'] !!}
+                      </span>
+                    </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- End Modal -->
-
+          @endforeach
         </div>
+
+        <!-- Modal com detalhes do projeto -->
+        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+                <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
+              </div>
+              <div id="modal_detalhes_body" class="modal-body" style="padding: 30px">
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Modal -->
+
       </div>
   </div>
 

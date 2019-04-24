@@ -3,6 +3,7 @@
 namespace Modules\Vitrine\Http\Controllers;
 
 use App\User;
+use App\Plano;
 use App\Empresa;
 use App\Projeto;
 use App\Afiliado;
@@ -17,33 +18,41 @@ class VitrineController extends Controller {
 
     public function index() {
 
-        $afiliacoes_usuario = Afiliado::where('user',\Auth::user()->id)->pluck('projeto')->toArray();
+        $afiliacoesUsuario = Afiliado::where('user',\Auth::user()->id)->pluck('projeto')->toArray();
 
-        $projetos_disponiveis = UserProjeto::where([
+        $projetosDisponiveis = UserProjeto::where([
             ['user','!=',\Auth::user()->id],
             ['tipo','produtor']
         ])->pluck('projeto')->toArray();
 
-        $afiliacoes_pendentes = SolicitacaoAfiliacao::where([
+        $afiliacoesPendentes = SolicitacaoAfiliacao::where([
             ['user', \Auth::user()->id],
             ['status','Pendente']
         ])->pluck('projeto')->toArray();
 
-        $projetos = Projeto::select('id','foto','nome','descricao')
-                            ->whereIn('id', $projetos_disponiveis)
-                            ->whereNotIn('id',$afiliacoes_usuario)
-                            ->whereNotIn('id',$afiliacoes_pendentes)
+        $projetos = Projeto::select('id','foto','nome','descricao','porcentagem_afiliados')
+                            ->whereIn('id', $projetosDisponiveis)
+                            ->whereNotIn('id',$afiliacoesUsuario)
+                            ->whereNotIn('id',$afiliacoesPendentes)
                             ->where('visibilidade','publico')
                             ->get()->toArray();
 
         foreach($projetos as &$projeto){
-            $projeto['id'] = Hashids::encode($projeto['id']);
-            $projeto_usuario = UserProjeto::where([
+            $projetoUsuario = UserProjeto::where([
                 ['projeto',$projeto['id']],
                 ['tipo','produtor']
             ])->first();
-            $usuario = User::find($projeto_usuario['user']);
+            $usuario = User::find($projetoUsuario['user']);
             $projeto['produtor'] = $usuario['name'];
+            $plano = Plano::where('projeto',$projeto['id'])->max('preco');
+
+            $maiorComissao = number_format($plano * 0.90, 2);
+            
+            $maiorComissao = number_format($maiorComissao * $projeto['porcentagem_afiliados'] / 100 ,2);
+
+            $projeto['maior_comissao'] = str_replace('.',',',$maiorComissao);
+
+            $projeto['id'] = Hashids::encode($projeto['id']);
         }
 
         return view('vitrine::index',[

@@ -28,12 +28,12 @@ class ProjetosController extends Controller{
             $projetos = Projeto::all();
         }
         else{
-            $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
-            if($projetos_usuario != null){
-                foreach($projetos_usuario as $projeto_usuario){
-                    $projeto = Projeto::find($projeto_usuario['projeto']);
+            $projetosUsuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
+            if($projetosUsuario != null){
+                foreach($projetosUsuario as $projetoUsuario){
+                    $projeto = Projeto::find($projetoUsuario['projeto']);
                     if($projeto){
-                        $p['id'] = Hashids::encode($projeto_usuario['projeto']);
+                        $p['id'] = Hashids::encode($projetoUsuario['projeto']);
                         $p['foto'] = $projeto['foto'];
                         $p['nome'] = $projeto['nome'];
                         $p['descricao'] = $projeto['descricao'];
