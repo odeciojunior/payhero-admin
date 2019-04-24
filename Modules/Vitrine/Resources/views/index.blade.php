@@ -10,31 +10,29 @@
     </div>
 
     <div class="page-content container-fluid">
-
+ 
         <div class="row">
           @foreach($projetos as $projeto)
             <div class="col-xl-3 col-md-6 info-panel">
               <div class="card card-shadow">
-                <div class="card">
-                    <a class="detalhes_projeto" projeto="{!! $projeto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes' style="height: 180px">
-                        <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                  <a class="detalhes_projeto" projeto="{!! $projeto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes' style="height: 180px">
+                      <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                  </a>
+                  <div class="card-block">
+                    <a>
+                        <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                        <p class="card-text">{!! substr($projeto['descricao'],0,50) !!}</p>
                     </a>
-                    <div class="card-block">
-                      <a>
-                          <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
-                          <p class="card-text">{!! substr($projeto['descricao'],0,50) !!}</p>
-                      </a>
-                      <hr>
-                      <span>
-                        <b>Produtor : </b> {!! $projeto['produtor'] !!}
-                      </span></br>
-                      <span class="font-size-15 gray-600">
-                        Comissão por venda de até:
-                      </span></br>
-                      <span class="font-size-18 green-600">
-                        R$ {!! $projeto['maior_comissao'] !!}
-                      </span>
-                    </div>
+                    <hr>
+                    <span>
+                      <b>Produtor : </b> {!! $projeto['produtor'] !!}
+                    </span></br>
+                    <span class="font-size-15 gray-600">
+                      Comissão por venda de até:
+                    </span></br>
+                    <span class="font-size-18 green-600">
+                      R$ {!! $projeto['maior_comissao'] !!}
+                    </span>
                 </div>
               </div>
             </div>

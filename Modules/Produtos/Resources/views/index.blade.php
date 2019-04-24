@@ -19,48 +19,46 @@
                       </span>
                   </div>
               </div>
-          </div>
+          </div> 
         </div>
     </div>
 
     <div class="page-content container-fluid">
-      <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-          @if(count($produtos) == 0)
-              <div class="alert alert-warning" role="alert">
-                   Nenhum produto encontrado.
-              </div>
-          @else 
-            <div class="row">
-                @foreach($produtos as $produto)
-                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="padding: 0 25px 0 25px">
-                      <div class="card" style="border: 1px solid #E6E6FA">
-                          <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
-                          <div class="card-block">
-                            <a href="#" class="detalhes_produto text-center" produto="{!! $produto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes'>
-                                <h4 class="card-title">{!! $produto['nome'] !!}</h4>
-                                <p class="card-text">{!! substr($produto['descricao'],0,52) !!}</p>
-                            </a>
-                            <hr>
-                            <span data-toggle='modal' data-target='#modal_editar'>
-                                <a href="/produtos/editar/{!! $produto['id'] !!}" class='btn btn-outline btn-primary editar_produto' data-placement='top' data-toggle='tooltip' title='Editar'>
-                                    <i class='icon wb-pencil' aria-hidden='true'></i>
-                                </a>
-                            </span>
-                            <span data-toggle='modal' data-target='#modal_excluir' style="float:right">
-                                <a class='btn btn-outline btn-danger excluir_produto' data-placement='top' data-toggle='tooltip' title='Excluir' produto="{!! $produto['id'] !!}">
-                                    <i class='icon wb-trash' aria-hidden='true'></i>
-                                </a>
-                            </span>
-                        </div>
-                      </div>
-                  </div>
-                @endforeach
+        @if(count($produtos) == 0)
+            <div class="alert alert-warning" role="alert">
+                  Nenhum produto encontrado.
             </div>
-            {!! $produtos->links() !!}
-          @endif
-    
-        <!-- Modal com detalhes do usuário -->
+        @else 
+          <div class="row">
+              @foreach($produtos as $produto)
+                <div class="col-xl-3 col-md-6 info-panel">
+                    <div class="card card-shadow">
+                        <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                        <div class="card-block">
+                          <a href="#" class="detalhes_produto text-center" produto="{!! $produto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes'>
+                              <h4 class="card-title">{!! $produto['nome'] !!}</h4>
+                              <p class="card-text">{!! substr($produto['descricao'],0,52) !!}</p>
+                          </a>
+                          <hr>
+                          <span data-toggle='modal' data-target='#modal_editar'>
+                              <a href="/produtos/editar/{!! $produto['id'] !!}" class='btn btn-outline btn-primary editar_produto' data-placement='top' data-toggle='tooltip' title='Editar'>
+                                  <i class='icon wb-pencil' aria-hidden='true'></i>
+                              </a>
+                          </span>
+                          <span data-toggle='modal' data-target='#modal_excluir' style="float:right">
+                              <a class='btn btn-outline btn-danger excluir_produto' data-placement='top' data-toggle='tooltip' title='Excluir' produto="{!! $produto['id'] !!}">
+                                  <i class='icon wb-trash' aria-hidden='true'></i>
+                              </a>
+                          </span>
+                      </div>
+                    </div>
+                </div>
+              @endforeach
+          </div>
+          {!! $produtos->links() !!}
+        @endif
+
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
           <div class="modal-dialog modal-simple">
             <div class="modal-content">
@@ -79,32 +77,28 @@
             </div>
           </div>
         </div>
-        <!-- End Modal -->
 
-        <!-- Modal de confirmação da exclusão do produto -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-simple">
-              <div class="modal-content">
-                <form id="form_excluir_produto" method="GET" action="/deletarproduto">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
-                  </div>
-                  <div id="modal_excluir_body" class="modal-body">
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-success">Confirmar</button>
-                  </div>
-                </form>
-              </div>
+          <div class="modal-dialog modal-simple">
+            <div class="modal-content">
+              <form id="form_excluir_produto" method="GET" action="/deletarproduto">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                  <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
+                </div>
+                <div id="modal_excluir_body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                  <button type="submit" class="btn btn-success">Confirmar</button>
+                </div>
+              </form>
             </div>
           </div>
-          <!-- End Modal -->
-
         </div>
+
     </div>
   </div>
 
