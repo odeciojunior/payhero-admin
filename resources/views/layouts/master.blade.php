@@ -62,8 +62,7 @@
     @yield('content')
 
     <footer class="site-footer">
-
-        <div class="site-footer-right">© 2019 - CloudFox</div>
+        <div class="site-footer-right">© 2019 - CloudFox | help@cloudfox.app - <a href="/terms" target="_blank" style="color:#e54724">Terms & Conditions</a></div>
 
     </footer>
 
