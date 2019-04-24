@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-top: 20px">
       <div class="col-xl-3 col-md-6 info-panel">
         <div class="card card-shadow">
           <div class="card-block p-20" style="background-image: linear-gradient(#e6774c, #f92278);">
@@ -114,17 +114,19 @@
     <div class="row">
 
       <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
-        <div id="mapa" style="height:500px">
+        <div id="mapa" style="height:430px">
         </div>
       </div>
       <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
         <div id="tabela">
-          <table class="table table-hover table-bordered">
+          <table class="table table-hover text-center">
               <thead>
-                <th>Hora</th>
-                <th>Projeto</th>
-                <th>Valor</th>
-                <th>Forma</th>
+                <tr>
+                  <th style='vertical-align: middle'>Data</th>
+                  <th style='vertical-align: middle'>Projeto</th>
+                  <th style='vertical-align: middle'>Valor</th>
+                  <th style='vertical-align: middle'>Forma</th>
+                </tr>
               </thead>
               <tbody id="tabela_ultimas_vendas">
               </tbody>
