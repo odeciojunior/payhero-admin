@@ -8,8 +8,8 @@
 
 <div class="page">
   <div class="page-content container-fluid">
-    <div class="row" data-plugin="matchHeight" data-by-row="true">
 
+    <div class="row">
       <div class="col-sm-12 col-md-6 col-lg-6">
         <div class="card card-inverse card-shadow bg-green-600 white">
           <div class="card-block p-0">
@@ -17,7 +17,7 @@
               <div class="row no-space">
                 <div class="col-12 text-center">
                   <p>Saldo disponível</p>
-                </div>
+                </div><hr>
                 <div class="col-12 text-center">
                   <p class="font-size-30 text-nowrap">R$ {!! $saldo_disponivel !!}</p>
                 </div>
@@ -34,7 +34,7 @@
               <div class="row no-space">
                 <div class="col-12 text-center">
                   <p>Saldo a receber</p>
-                </div>
+                </div><hr>
                 <div class="col-12 text-center">
                   <p class="font-size-30 text-nowrap">R$ {!! $saldo_futuro !!}</p>
                 </div>
@@ -43,10 +43,75 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div style="width: 100%; text-align: center">
-        <h3 style="margin-bottom: 20px">Últimas vendas</h3>
+    <div class="row">
+      <div class="col-xl-3 col-md-6 info-panel">
+        <div class="card card-shadow">
+          <div class="card-block p-20" style="background-image: linear-gradient(#e6774c, #f92278);">
+            <button type="button" class="btn btn-floating btn-sm btn-primary">
+              <i class="icon wb-user"></i>
+            </button>
+            <span class="ml-15 font-weight-400" style="color: white">NÍVEL ATUAL</span><hr>
+            <div class="row" style="color: white">
+              <div class="col-6 content-text mb-0 text-center" style="border-right: 2px solid;">
+                <span class="font-size-20 font-weight-50"></span>
+                <span class="font-size-20 font-weight-50">1</span> - Iniciante
+              </div>
+              <div class="col-6 content-text mb-0 text-center">
+                <span class="font-size-20 font-weight-50"></span>
+                FoxCoins - 88
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <div class="col-xl-3 col-md-6 info-panel">
+        <div class="card card-shadow">
+          <div class="card-block bg-white p-20">
+            <button type="button" class="btn btn-floating btn-sm btn-warning">
+              <i class="icon wb-shopping-cart"></i>
+            </button>
+            <span class="ml-15 font-weight-400">PEDIDOS HOJE</span><hr>
+            <div class="content-text mb-0 text-center">
+              <span class="font-size-20 font-weight-50">7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 info-panel">
+        <div class="card card-shadow">
+          <div class="card-block bg-white p-20">
+            <button type="button" class="btn btn-floating btn-sm btn-danger">
+              <i class="icon wb-payment"></i>
+            </button>
+            <span class="ml-15 font-weight-400">RENDA</span><hr>
+            <div class="content-text mb-0">
+              <span class="font-size-20 font-weight-50">R$ 825,90</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6 info-panel">
+        <div class="card card-shadow">
+          <div class="card-block bg-white p-20">
+            <button type="button" class="btn btn-floating btn-sm btn-success">
+              <i class="icon wb-eye"></i>
+            </button>
+            <span class="ml-15 font-weight-400">ACESSOS</span><hr>
+            <div class="content-text mb-0 text-center">
+              <span class="font-size-20 font-weight-50">128</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width: 100%; text-align: center">
+      <h3 style="margin-bottom: 20px">Últimas vendas</h3>
+    </div>
+
+    <div class="row">
 
       <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
         <div id="mapa" style="height:500px">
@@ -66,7 +131,6 @@
           </table>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -76,11 +140,7 @@
 
 @section('scripts')
 
-  {{--  <script src="{{ asset('adminremark/global/js/Plugin/jvectormap.js') }}"></script>
-  <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
-  <script src="{{ asset('adminremark/assets/examples/js/dashboard/v1.js') }}"></script>  --}}
   <script src="{{ asset('assets/js/OpenLayers.js') }}"></script>
-  {{--  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>  --}}
   <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
 
   <script>
