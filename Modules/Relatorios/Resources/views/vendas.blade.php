@@ -259,14 +259,12 @@
 
         $("#pagination").html("");
 
-        var primeira_pagina = "<button id='primeira_pagina' class='btn btn-default' style='margin-right:5px'>1</button>";
+        var primeira_pagina = "<button id='primeira_pagina' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
         if(response.meta.current_page == '1'){
           $("#primeira_pagina").attr('disabled',true);
-          $("#primeira_pagina").removeClass('btn-default');
-          $("#primeira_pagina").addClass('btn-primary');
         }
 
         $('#primeira_pagina').on("click", function(){
@@ -279,7 +277,7 @@
             continue;
           }
 
-          $("#pagination").append("<button id='pagina_"+( response.meta.current_page - x )+"' class='btn btn-default' style='margin-right:5px'>"+(response.meta.current_page - x)+"</button>");
+          $("#pagination").append("<button id='pagina_"+( response.meta.current_page - x )+"' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page - x)+"</button>");
 
           $('#pagina_'+( response.meta.current_page - x )).on("click", function(){
             atualizar('?page='+$(this).html());
@@ -288,7 +286,7 @@
         }
 
         if(response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page){
-          var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px'>"+(response.meta.current_page)+"</button>";
+          var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page)+"</button>";
 
           $("#pagination").append(pagina_atual);
 
@@ -301,7 +299,7 @@
             continue;
           }
 
-          $("#pagination").append("<button id='pagina_"+( response.meta.current_page + x )+"' class='btn btn-default' style='margin-right:5px'>"+(response.meta.current_page + x)+"</button>");
+          $("#pagination").append("<button id='pagina_"+( response.meta.current_page + x )+"' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page + x)+"</button>");
 
           $('#pagina_'+( response.meta.current_page + x )).on("click", function(){
             atualizar('?page='+$(this).html());
@@ -310,13 +308,12 @@
         }
 
         if(response.meta.last_page != '1'){
-          var ultima_pagina = "<button id='ultima_pagina' class='btn btn-default'>"+response.meta.last_page+"</button>";
+          var ultima_pagina = "<button id='ultima_pagina' class='btn' style='background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+response.meta.last_page+"</button>";
 
           $("#pagination").append(ultima_pagina);
 
           if(response.meta.current_page == response.meta.last_page){
             $("#ultima_pagina").attr('disabled',true);
-            $("#ultima_pagina").addClass('btn-primary');
           }
 
           $('#ultima_pagina').on("click", function(){

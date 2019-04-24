@@ -1,4 +1,4 @@
-<nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation" style="background-color: #798b98">
+<nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation" style="background-color: white">
 
     <div class="navbar-header">
       <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided" data-toggle="menubar">
@@ -10,7 +10,7 @@
       </button>
       <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
         <img class="navbar-brand-logo" src="{{ asset('adminremark/assets/images/cloudfox_logo.png') }}" title="Remark">
-        <span class="navbar-brand-text hidden-xs-down"> CloudFox</span>
+        <span class="navbar-brand-text hidden-xs-down" style="color: #e54724"> CloudFox</span>
       </div>
       <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">
         <span class="sr-only">Toggle Search</span>
