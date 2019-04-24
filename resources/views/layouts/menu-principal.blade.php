@@ -112,7 +112,7 @@
 </nav>
 
 <div class="site-menubar" style="height:100%">
-  <div class="site-menubar-body" style="height:100%">
+  <div class="site-menubar-body">
     <div>
       <div>
         <ul class="site-menu" data-plugin="menu">
@@ -133,7 +133,7 @@
             <a href="javascript:void(0)">
               <i class="site-menu-icon wb-shopping-cart" aria-hidden="true"></i>
               <span class="site-menu-title">Vendas</span>
-              <span class="site-menu-arrow"></span>
+              <span class="site-menu-arrow"></span> 
             </a>
             <ul class="site-menu-sub">
               <li class="site-menu-item">

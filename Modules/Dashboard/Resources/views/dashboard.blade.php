@@ -10,36 +10,27 @@
   <div class="page-content container-fluid">
 
     <div class="row">
-      <div class="col-sm-12 col-md-6 col-lg-6">
-        <div class="card card-inverse card-shadow bg-green-600 white">
-          <div class="card-block p-0">
-            <div class="pt-25 px-30">
-              <div class="row no-space">
-                <div class="col-12 text-center">
-                  <p>Saldo disponível</p>
-                </div><hr>
-                <div class="col-12 text-center">
-                  <p class="font-size-30 text-nowrap">R$ {!! $saldo_disponivel !!}</p>
-                </div>
-              </div>
-            </div>
+
+      <div class="col-lg-6">
+        <div class="card card-shadow">
+          <div class="card-header bg-white text-center p-30" style="color: green">
+            <div class="font-size-18 green-600">Saldo disponível</div>
+            <div class="font-size-24">R$ {!! $saldo_disponivel !!}</div>
+          </div>
+          <div style="height:15px;background-image: linear-gradient(to right, #7CFC00, #006400);">
           </div>
         </div>
       </div>
 
-      <div class="col-sm-12 col-md-6 col-lg-6">
-        <div class="card card-inverse card-shadow bg-blue-600 white">
-          <div class="card-block p-0">
-            <div class="pt-25 px-30">
-              <div class="row no-space">
-                <div class="col-12 text-center">
-                  <p>Saldo a receber</p>
-                </div><hr>
-                <div class="col-12 text-center">
-                  <p class="font-size-30 text-nowrap">R$ {!! $saldo_futuro !!}</p>
-                </div>
-              </div>
+      <div class="col-lg-6 info-panel">
+        <div class="card card-shadow">
+          <div class="card-header bg-white text-center p-30" style="color: blue">
+            <div class="font-size-18 blue-600">
+              Saldo a receber
             </div>
+            <div class="font-size-24">R$ {!! $saldo_futuro !!}</div>
+          </div>
+          <div style="height:15px;background-image: linear-gradient(to right, #6495ED, #0000CD);">
           </div>
         </div>
       </div>
