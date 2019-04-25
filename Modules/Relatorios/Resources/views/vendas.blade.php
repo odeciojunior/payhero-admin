@@ -174,7 +174,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function(){
-                alert('Ocorreu algum erro');
+              //
             },
             success: function(response){
               $('#dados_tabela').html('');

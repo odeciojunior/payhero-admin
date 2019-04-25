@@ -6,12 +6,13 @@
   <div class="page"> 
 
     <div class="page-header">
+        <a href="{!! route('projetos.cadastro') !!}" class="btn btn-floating btn-danger" style="position: relative; float: right"><i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i></a>
         <h1 class="page-title">Meus projetos</h1>
         <div class="page-header-actions">
         </div>
     </div>
 
-    <div class="page-content container-fluid">
+    <div class="page-content container-fluid" style="margin-top: 30px">
 
         @if(count($projetos) == 0)
             <div class="alert alert-warning" role="alert">

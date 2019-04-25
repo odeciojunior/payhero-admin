@@ -6,11 +6,11 @@
   <div class="page">
     <div class="page-header">
         <div class="row">
-          <div class="col-8">
-            <h1 class="page-title">Meus produtos</h1>
+          <div class="col-7">
+              <h1 class="page-title">Meus produtos</h1>
           </div>
           <div class="col-4">
-              <div class="panel pt-15 p-15" data-plugin="matchHeight">   
+              <div class="panel pt-15 p-15">   
                   <label for="nome">Nome do produto</label>
                   <div class="input-group">
                       <input id="nome" class="form-control" placeholder="Nome do produto">
@@ -19,8 +19,11 @@
                       </span>
                   </div>
               </div>
-          </div> 
-        </div>
+          </div>
+          <div class="col-1">
+              <a href="{!! route('produtos.cadastro') !!}" class="btn btn-floating btn-danger" style="position: relative; float: right"><i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i></a>
+          </div>
+      </div>
     </div>
 
     <div class="page-content container-fluid">

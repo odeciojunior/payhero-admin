@@ -8,31 +8,52 @@
 <div class="page">
   <div class="page-content container-fluid">
 
-    <div class="row">
+    <h1 style="margin-bottom: 40px" class="page-title">Dashboard</h1>
+  
+    <div class="row" style="margin-bottom: 10px">
 
-      <div class="col-lg-6">
-        <div class="card card-shadow">
-          <div class="card-header bg-white text-center p-30" style="color: green">
-            <div class="font-size-18 green-600">Saldo disponível</div>
-            <div class="font-size-24">R$ {!! $saldo_disponivel !!}</div>
+      <div class="col-lg-4" style="border-radius: 5px;">
+        <div class="card card-shadow" style="border-radius: 5px;">
+          <div class="card-header bg-white p-10" style="color: gray;border-radius: 5px;">
+            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left">
+            <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
+              Saldo disponível
+            </div>
+            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $saldo_disponivel !!}</b></div>
           </div>
-          <div style="height:15px;background-image: linear-gradient(to right, #7CFC00, #006400);">
+          <div style="height:10px;background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);">
           </div>
         </div>
       </div>
 
-      <div class="col-lg-6 info-panel">
-        <div class="card card-shadow">
-          <div class="card-header bg-white text-center p-30" style="color: blue">
-            <div class="font-size-18 blue-600">
+      <div class="col-lg-4 info-panel" style="border-radius: 5px;">
+        <div class="card card-shadow" style="border-radius: 5px;">
+          <div class="card-header bg-white p-10" style="color: gray;border-radius: 5px;">
+            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left">
+            <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
               Saldo a receber
             </div>
-            <div class="font-size-24">R$ {!! $saldo_futuro !!}</div>
+            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $saldo_futuro !!}</b></div>
           </div>
-          <div style="height:15px;background-image: linear-gradient(to right, #6495ED, #0000CD);">
+          <div style="height:10px;background-image: linear-gradient(to right, #5849e2, #51c4ec);">
           </div>
         </div>
       </div>
+
+      <div class="col-lg-4 info-panel" style="border-radius: 5px;">
+        <div class="card card-shadow" style="border-radius: 5px;">
+          <div class="card-header bg-white p-10" style="color: gray;border-radius: 5px;">
+            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left">
+            <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
+              Disponível para antecipação
+            </div>
+            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $saldo_futuro !!}</b></div>
+          </div>
+          <div style="height:10px;background-image: linear-gradient(to left, #fad961, #f76b1c);">
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="row" style="margin-top: 20px">

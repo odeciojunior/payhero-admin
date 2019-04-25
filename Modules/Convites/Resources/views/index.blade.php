@@ -7,7 +7,7 @@
     <div class="page-header">
         <button id="enviar_convite" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" data-target='#modal_convite' data-toggle='modal'><i class="icon wb-plus" aria-hidden="true"></i></button>
         <h2 class="page-title">Convites</h2>
-        <p style="margin-top: 12px">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos membros que você convidou.</p>
+        <p style="margin-top: 12px">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
     </div>
 
     <div class="page-content container-fluid">
@@ -17,6 +17,7 @@
 
                     <table class="table table-hover" style="margin-top:10px">
                         <thead class="text-center">
+                            <th class="text-left">Convite</th>
                             <th>Email convidado</th>
                             <th>Status</th>
                             <th>Data cadastro</th>
@@ -24,12 +25,13 @@
                         </thead>
                         <tbody>
                             @if(count($convites) > 0)
-                                @foreach($convites as $convite)
+                                @foreach($convites as $key => $convite)
                                     <tr>
-                                        <td>{!! $convite['email_convidado'] !!}</td>
-                                        <td>{!! $convite['status'] !!}</td>
-                                        <td>{!! $convite['data_cadastro'] !!}</td>
-                                        <td>{!! $convite['data_expiracao'] !!}</td>
+                                        <td class="text-left"><button class="btn btn-floating btn-primary btn-sm" disabled>{!! $key + 1!!}</button></td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $convite['email_convidado'] !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $convite['status'] !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $convite['data_cadastro'] != '' ? $convite['data_cadastro'] : 'Pendente' !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $convite['data_expiracao'] != '' ? $convite['data_expiracao'] : 'Pendente' !!}</td>
                                     </tr>
                                 @endforeach
                             @else

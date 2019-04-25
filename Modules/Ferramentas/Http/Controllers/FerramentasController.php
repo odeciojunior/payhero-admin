@@ -11,7 +11,11 @@ class FerramentasController extends Controller {
 
     public function index() {
 
-        // \Auth::user()->notify(new Teste());
+        // $response = \Ebanx\Ebanx::doQuery([
+        //     'hash' => '5cbf6fe0b149d44bcbb4c6be6db37fd84da757cb2498492f'
+        // ]);
+
+        // dd($response);
 
         return view('ferramentas::index');
     }

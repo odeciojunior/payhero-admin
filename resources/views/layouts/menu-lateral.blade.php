@@ -169,61 +169,22 @@
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a class="animsition-link"  href="{{ route('projetos') }}">
             <i class="site-menu-icon wb-clipboard" aria-hidden="true"></i>
             <span class="site-menu-title">Projetos</span>
-            <span class="site-menu-arrow"></span>
         </a>
-        <ul class="site-menu-sub">
-          <li class="site-menu-item">
-            <a class="animsition-link" href="{{ route('projetos.cadastro') }}">
-              <span class="site-menu-title">Novo projeto</span>
-            </a>
-          </li>
-          <li class="site-menu-item">
-            <a class="animsition-link" href="{{ route('projetos') }}">
-              <span class="site-menu-title">Meus projetos</span>
-            </a>
-          </li>
-        </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a class="animsition-link"  href="{{ route('produtos') }}">
             <i class="site-menu-icon wb-mobile" aria-hidden="true"></i>
             <span class="site-menu-title">Produtos</span>
-            <span class="site-menu-arrow"></span>
         </a>
-        <ul class="site-menu-sub">
-          <li class="site-menu-item">
-            <a class="animsition-link" href="{{ route('produtos.cadastro') }}">
-              <span class="site-menu-title">Cadastrar produto</span>
-            </a>
-          </li>
-          <li class="site-menu-item">
-            <a class="animsition-link" href="{{ route('produtos') }}">
-              <span class="site-menu-title">Meus produtos</span>
-            </a>
-          </li>
-        </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a class="animsition-link"  href="{{ route('atendimento.index') }}">
             <i class="site-menu-icon wb-chat-group" aria-hidden="true"></i>
             <span class="site-menu-title">Atendimento</span>
-            <span class="site-menu-arrow"></span>
         </a>
-        <ul class="site-menu-sub">
-          <li class="site-menu-item">
-            <a class="animsition-link" href="{{ route('atendimento.index') }}">
-              <span class="site-menu-title">Visão geral</span>
-            </a>
-          </li>
-          <li class="site-menu-item">
-            <a class="animsition-link" href="#" style="pointer-events: none;cursor: default;">
-              <span class="site-menu-title">Configurações</span>
-            </a>
-          </li>
-        </ul>
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
