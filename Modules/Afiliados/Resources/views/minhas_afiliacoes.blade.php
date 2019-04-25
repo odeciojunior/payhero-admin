@@ -15,7 +15,7 @@
         <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
             <div class="nav-tabs-horizontal" data-plugin="tabs">
-                <ul class="nav nav-tabs" role="tablist">
+                <ul class="nav nav-tabs nav-tabs-line" role="tablist">
                     <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_minhas_afiliacoes"
                         aria-controls="tab_minhas_afiliacoes" role="tab">Minhas afiliações</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_solicitacoes_pendentes"

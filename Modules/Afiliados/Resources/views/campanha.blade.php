@@ -1,5 +1,5 @@
 <div class="nav-tabs-horizontal" data-plugin="tabs">
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-tabs nav-tabs-line" role="tablist">
         <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_links"
             aria-controls="tab_links" role="tab">URLs</a></li>
         <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_pixels"

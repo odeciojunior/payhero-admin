@@ -17,7 +17,7 @@
                     Meus projetos
                 </a>
             </div>
-        </div> 
+        </div>  
 
         <div class="page-content container-fluid">
             <div class="panel pt-10 p-10" data-plugin="matchHeight">
@@ -25,7 +25,7 @@
                 <div class="col-xl-12">
                     <div class="example-wrap">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
                                 <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_info_geral"
                                     aria-controls="tab_info_geral" role="tab">Informações gerais</a></li>
                                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_dominios"

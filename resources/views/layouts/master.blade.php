@@ -34,7 +34,6 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/uikit/icon.min.css?v4.0.2') }}">
 
-
     @yield('styles')
 
     <!-- Fonts -->

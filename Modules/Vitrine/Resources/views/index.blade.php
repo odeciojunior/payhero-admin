@@ -11,13 +11,15 @@
 
     <div class="page-content container-fluid">
  
-        <div class="row">
+        <ul class="blocks blocks-100 blocks-xxl-5 blocks-lg-4 blocks-md-3" data-plugin="masonry">
           @foreach($projetos as $projeto)
-            <div class="col-xl-3 col-md-6 info-panel">
+            <li class="masonry-item">
               <div class="card card-shadow">
-                  <a class="detalhes_projeto" projeto="{!! $projeto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes' style="height: 180px">
-                      <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
-                  </a>
+                  <div class="card-header cover">
+                    <a class="detalhes_projeto" projeto="{!! $projeto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes' style="height: 180px">
+                        <img class="ccover-image" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                    </a>
+                  </div>
                   <div class="card-block">
                     <a>
                         <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
@@ -33,11 +35,28 @@
                     <span class="font-size-18 green-600">
                       R$ {!! $projeto['maior_comissao'] !!}
                     </span>
-                </div>
+                  </div>
+                  <div class="rating text-center" data-score="4" data-number="5" data-read-only="true" data-plugin="rating" title="good" style="width: 100%;margin-bottom: 20px">
+                      <i data-alt="1" class="icon wb-star orange-600" title="muito ruim">
+                      </i>
+                      &nbsp;
+                      <i data-alt="2" class="icon wb-star orange-600" title="ruim">
+                      </i>
+                      &nbsp;
+                      <i data-alt="3" class="icon wb-star orange-600" title="regular">
+                      </i>
+                      &nbsp;
+                      <i data-alt="4" class="icon wb-star orange-600" title="bom">
+                      </i>
+                      &nbsp;
+                      <i data-alt="5" class="icon wb-star" title="excelente">
+                      </i>
+                      <input name="score" type="hidden" value="4" readonly="">
+                  </div>
               </div>
-            </div>
+            </li>
           @endforeach
-        </div>
+        </ul>
 
         <!-- Modal com detalhes do projeto -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">

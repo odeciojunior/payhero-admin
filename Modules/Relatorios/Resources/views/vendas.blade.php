@@ -182,7 +182,7 @@
               $.each(response.data, function(index, value){
                 dados = '';
                 dados += '<tr>';
-                dados += "<td style='vertical-align: middle'>"+value.id+"</td>";
+                dados += "<td class='text-left' style='vertical-align: middle'>"+value.id+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.projeto+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.produto+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.comprador+"</td>";
