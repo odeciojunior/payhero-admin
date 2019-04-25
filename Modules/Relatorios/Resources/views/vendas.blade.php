@@ -79,8 +79,7 @@
                 <th style='vertical-align: middle'>Status</th>
                 <th style='vertical-align: middle'>Data</th>
                 <th style='vertical-align: middle'>Pagamento</th>
-                <th style='vertical-align: middle'>Valor total</th>
-                <th style='vertical-align: middle'>Valor líquido</th>
+                <th style='vertical-align: middle'>Comissão</th>
                 <th style='vertical-align: middle'>Detalhes</th>
               </tr>
             </thead>
@@ -188,6 +187,7 @@
                 dados += "<td style='vertical-align: middle'>"+value.produto+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.comprador+"</td>";
 
+
                 if(value.forma == 'Boleto'){
                   dados += "<td style='vertical-align: middle'><img src='/assets/img/boleto.jpeg' style='width: 60px'></td>";
                 }else{
@@ -208,7 +208,6 @@
 
                 dados += "<td style='vertical-align: middle'>"+value.data_inicio+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.data_finalizada+"</td>";
-                dados += "<td style='vertical-align: middle'>"+value.total_pago+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.total_pago+"</td>";
                 dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button></td>";
                 dados += '</tr>';

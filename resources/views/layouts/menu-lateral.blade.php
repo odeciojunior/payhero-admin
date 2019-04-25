@@ -129,9 +129,9 @@
       <!-- End Site Navbar Seach -->
     </div>
 </nav>
-
+ 
 <div class="site-menubar">
-    <ul class="site-menu">
+    <ul class="site-menu" style="margin-top:10px">
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="{{ route('dashboard') }}">
             <i class="site-menu-icon wb-dashboard" aria-hidden="true"></i>
@@ -208,7 +208,7 @@
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-            <i class="site-menu-icon wb-help-circle" aria-hidden="true"></i>
+            <i class="site-menu-icon wb-chat-group" aria-hidden="true"></i>
             <span class="site-menu-title">Atendimento</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -227,7 +227,7 @@
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-            <i class="site-menu-icon wb-graph-down" aria-hidden="true"></i>
+            <i class="site-menu-icon wb-users" aria-hidden="true"></i>
             <span class="site-menu-title">Afiliados</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -246,8 +246,8 @@
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-            <i class="site-menu-icon wb-plus" aria-hidden="true"></i>
-            <span class="site-menu-title">Finanças</span>
+            <i class="icon fa-bank" aria-hidden="true"></i>
+            <span class="site-menu-title" style="margin-left: 14px">Finanças</span>
             <span class="site-menu-arrow"></span>
         </a>
         <ul class="site-menu-sub">
@@ -271,7 +271,7 @@
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link" href="{{ route('aplicativos') }}">
-            <i class="site-menu-icon wb-briefcase" aria-hidden="true"></i>
+            <i class="site-menu-icon wb-grid-4" aria-hidden="true"></i>
             <span class="site-menu-title">Aplicativos</span>
         </a>
       </li>

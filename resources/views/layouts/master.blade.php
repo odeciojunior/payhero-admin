@@ -31,6 +31,9 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/flag-icon-css/flag-icon.css') }}">
     <link rel="stylesheet" href="{{ asset('jquery-imgareaselect/css/imgareaselect-default.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/uikit/icon.min.css?v4.0.2') }}">
+
 
     @yield('styles')
 

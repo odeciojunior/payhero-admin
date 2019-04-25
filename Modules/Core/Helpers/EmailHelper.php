@@ -71,5 +71,25 @@ class EmailHelper {
         return true;
     }
 
+    public static function enviarConvite($to, $parametro){
+
+        $email = new \SendGrid\Mail\Mail();
+        $email->setFrom("noreply@cloudfox.app", "Cloudfox");
+        $email->setSubject("Convite para o CloudFox");
+        $email->addTo($to, "CloudFox");
+        $email->addContent(
+                "text/html", "<a href='https://cloudfox.app/cadastro/'". $parametro."'>Entrar para o Cloudfox</a>"
+        );
+        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+        try {
+            $response = $sendgrid->send($email);
+        } catch (Exception $e) {
+
+        }
+
+        return true;
+    }
+
+
 }
 

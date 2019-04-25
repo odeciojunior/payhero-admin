@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
+use Modules\Core\Helpers\EmailHelper;
 
 class ConvitesController extends Controller {
 
@@ -30,27 +31,18 @@ class ConvitesController extends Controller {
 
         $dados['empresa'] = @Empresa::where('user', \Auth::user()->id)->first()->id;
 
-        try{
-            $convite = Convite::create($dados);
+        $convite = Convite::create($dados);
 
-            Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados) {
-                $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
-
-                $mail->to($dados['email_convidado'], 'Cloudfox')->subject('Convite!');
-            });
-        }
-        catch(\Exception $e){
-
-        }
+        EmailHelper::enviarConvite($dados['email_convidado'], $dados['parametro']);
 
         return redirect()->route('convites');
     }
 
     function randString($size){
 
-        $novo_parametro = false;
+        $novoParametro = false;
 
-        while(!$novo_parametro){
+        while(!$novoParametro){
 
             $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
 
@@ -63,7 +55,7 @@ class ConvitesController extends Controller {
             $convite = Convite::where('parametro', $parametro)->first();
 
             if($convite == null){
-                $novo_parametro = true;
+                $novoParametro = true;
             }
 
         }
