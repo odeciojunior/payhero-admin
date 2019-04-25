@@ -11,13 +11,13 @@
 
     <div class="page-content container-fluid">
  
-        <ul class="blocks blocks-100 blocks-xxl-5 blocks-lg-4 blocks-md-3" data-plugin="masonry">
+        <ul class="blocks blocks-100 blocks-xxl-5 blocks-lg-4 blocks-md-3 blocks-sm-2" data-plugin="masonry">
           @foreach($projetos as $projeto)
             <li class="masonry-item">
               <div class="card card-shadow">
                   <div class="card-header cover">
                     <a class="detalhes_projeto" projeto="{!! $projeto['id'] !!}" data-toggle='modal' data-target='#modal_detalhes'>
-                        <img class="ccover-image" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                        <img class="ccover-image img-responsive" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                     </a>
                   </div>
                   <div class="card-block">
