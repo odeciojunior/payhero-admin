@@ -26,6 +26,22 @@ class PostBackController extends Controller {
 
     public function postBackListener(Request $request){
 
+        // $cert = file_get_contents('ebanx-notifications-public.pem');
+        // $data = file_get_contents("php://input");
+        // $signature = base64_decode($_SERVER['HTTP_X_SIGNATURE_CONTENT']);
+        
+        // // http://php.net/manual/en/function.openssl-verify.php
+        // $result = openssl_verify($data, $signature, $cert);
+        
+        // if ($result === 1)
+        // {
+        //     echo "OK, signature is correct.";
+        // }
+        // else
+        // {
+        //     echo "ERROR, the signature is incorrect.";
+        // }
+
         $dados = $request->all();
 
         Log::write('info', 'Notificação do Ebanx : '. print_r($dados, true));

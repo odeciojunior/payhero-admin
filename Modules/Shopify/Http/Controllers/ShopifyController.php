@@ -35,12 +35,12 @@ class ShopifyController extends Controller {
 
         $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
-        $integracoes_shopify = IntegracaoShopify::where('user',\Auth::user()->id)->get()->toArray();
+        $integracoesShopify = IntegracaoShopify::where('user',\Auth::user()->id)->get()->toArray();
 
         $projetos = [];
 
-        foreach($integracoes_shopify as $integracao_shopify){
-            $projeto = Projeto::find($integracao_shopify['projeto']);
+        foreach($integracoesShopify as $integracaoShopify){
+            $projeto = Projeto::find($integracaoShopify['projeto']);
             if($projeto){
                 $projetos[] = $projeto;
             }
@@ -82,6 +82,7 @@ class ShopifyController extends Controller {
                 'shopify_id' => $client->getShopManager()->get()->getId(),
             ]);
         }
+
         catch(\Exception $e){
             return response()->json('Dados do shopify inválidos, revise os dados informados');
         }
@@ -89,22 +90,22 @@ class ShopifyController extends Controller {
         $imagem = $request->file('foto_projeto');
 
         if ($imagem != null) {
-            $nome_foto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+            $nomeFoto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_foto);
+            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
             $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
             $img->resize(200, 200);
 
-            Storage::delete('public/upload/projeto/'.$nome_foto);
+            Storage::delete('public/upload/projeto/'.$nomeFoto);
 
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
             $projeto->update([
-                'foto' => $nome_foto
+                'foto' => $nomeFoto
             ]);
         }
 
@@ -133,18 +134,18 @@ class ShopifyController extends Controller {
                     'disponivel' => true,
                     'quantidade' => '0',
                     'formato' => 1,
-                    'categoria' => '1',
+                    'categoria' => '11',
                     'custo_produto' => '',
                 ]);
 
-                $novo_codigo_identificador = false;
+                $novoCodigoIdentificador = false;
 
-                while($novo_codigo_identificador == false){
+                while($novoCodigoIdentificador == false){
 
-                    $codigo_identificador = $this->randString(3).rand(100,999);
-                    $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
+                    $codigoIdentificador = $this->randString(3).rand(100,999);
+                    $plano = Plano::where('cod_identificador', $codigoIdentificador)->first();
                     if($plano == null){
-                        $novo_codigo_identificador = true;
+                        $novoCodigoIdentificador = true;
                     }
                 }
 
@@ -155,7 +156,7 @@ class ShopifyController extends Controller {
                     'projeto' => $projeto->id,
                     'nome' => substr($product->getTitle(),0,100),
                     'descricao' => '',
-                    'cod_identificador' => $codigo_identificador,
+                    'cod_identificador' => $codigoIdentificador,
                     'preco' => $variant->getPrice(),
                     'frete_fixo' => '1',
                     'valor_frete' => '0.00',
@@ -170,31 +171,31 @@ class ShopifyController extends Controller {
                 if(count($product->getVariants()) > 1){
                     foreach($product->getImages() as $image){
 
-                        foreach($image->getVariantIds() as $variant_id){
-                            if($variant_id == $variant->getId()){
+                        foreach($image->getVariantIds() as $variantId){
+                            if($variantId == $variant->getId()){
 
                                 $img = Image::make($image->getSrc());
             
-                                $nome_foto = 'plano_' . $plano->id . '_.png';
+                                $nomeFoto = 'plano_' . $plano->id . '_.png';
             
-                                Storage::delete('public/upload/plano/'.$nome_foto);
+                                Storage::delete('public/upload/plano/'.$nomeFoto);
             
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
             
                                 $plano->update([
-                                    'foto' => $nome_foto
+                                    'foto' => $nomeFoto
                                 ]);
 
                                 $img = Image::make($image->getSrc());
         
-                                $nome_foto = 'produto_' . $produto->id . '_.png';
+                                $nomeFoto = 'produto_' . $produto->id . '_.png';
                     
-                                Storage::delete('public/upload/produto/'.$nome_foto);
+                                Storage::delete('public/upload/produto/'.$nomeFoto);
                     
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
                     
                                 $produto->update([
-                                    'foto' => $nome_foto
+                                    'foto' => $nomeFoto
                                 ]);
         
                             }
@@ -205,26 +206,26 @@ class ShopifyController extends Controller {
 
                     $img = Image::make($product->getImage()->getSrc());
             
-                    $nome_foto = 'plano_' . $plano->id . '_.png';
+                    $nomeFoto = 'plano_' . $plano->id . '_.png';
 
-                    Storage::delete('public/upload/plano/'.$nome_foto);
+                    Storage::delete('public/upload/plano/'.$nomeFoto);
 
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
 
                     $plano->update([
-                        'foto' => $nome_foto
+                        'foto' => $nomeFoto
                     ]);
 
                     $img = Image::make($product->getImage()->getSrc());
 
-                    $nome_foto = 'produto_' . $produto->id . '_.png';
+                    $nomeFoto = 'produto_' . $produto->id . '_.png';
         
-                    Storage::delete('public/upload/produto/'.$nome_foto);
+                    Storage::delete('public/upload/produto/'.$nomeFoto);
         
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
         
                     $produto->update([
-                        'foto' => $nome_foto
+                        'foto' => $nomeFoto
                     ]);
                 }
 
@@ -305,18 +306,18 @@ class ShopifyController extends Controller {
                         'custo_produto' => '',
                     ]);
 
-                    $novo_codigo_identificador = false;
+                    $novoCodigoIdentificador = false;
 
-                    while($novo_codigo_identificador == false){
+                    while($novoCodigoIdentificador == false){
 
-                        $codigo_identificador = $this->randString(3).rand(100,999);
-                        $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
+                        $codigoIdentificador = $this->randString(3).rand(100,999);
+                        $plano = Plano::where('cod_identificador', $codigoIdentificador)->first();
                         if($plano == null){
-                            $novo_codigo_identificador = true;
+                            $novoCodigoIdentificador = true;
                         }
                     }
 
-                    $user_projeto = UserProjeto::where([
+                    $userProjeto = UserProjeto::where([
                         ['user', \Auth::user()->id],
                         ['projeto',$dados['projeto']],
                         ['tipo', 'produtor']
@@ -325,11 +326,11 @@ class ShopifyController extends Controller {
                     $plano = Plano::create([
                         'shopify_id' => $product->getId(),
                         'shopify_variant_id' => $variant->getId(),
-                        'empresa' => $user_projeto->empresa,
+                        'empresa' => $userProjeto->empresa,
                         'projeto' => $projeto->id,
                         'nome' => substr($product->getTitle(),0,100),
                         'descricao' => $descricao,
-                        'cod_identificador' => $codigo_identificador, 
+                        'cod_identificador' => $codigoIdentificador, 
                         'preco' => $variant->getPrice(),
                         'frete_fixo' => '1',
                         'valor_frete' => '0.00',
@@ -345,31 +346,31 @@ class ShopifyController extends Controller {
 
                         foreach($product->getImages() as $image){
 
-                            foreach($image->getVariantIds() as $variant_id){
-                                if($variant_id == $variant->getId()){
+                            foreach($image->getVariantIds() as $variantId){
+                                if($variantId == $variant->getId()){
 
                                     $img = Image::make($image->getSrc());
 
-                                    $nome_foto = 'plano_' . $plano->id . '_.png';
+                                    $nomeFoto = 'plano_' . $plano->id . '_.png';
 
-                                    Storage::delete('public/upload/plano/'.$nome_foto);
+                                    Storage::delete('public/upload/plano/'.$nomeFoto);
 
-                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
 
                                     $plano->update([
-                                        'foto' => $nome_foto
+                                        'foto' => $nomeFoto
                                     ]);
 
                                     $img = Image::make($image->getSrc());
 
-                                    $nome_foto = 'produto_' . $produto->id . '_.png';
+                                    $nomeFoto = 'produto_' . $produto->id . '_.png';
 
-                                    Storage::delete('public/upload/produto/'.$nome_foto);
+                                    Storage::delete('public/upload/produto/'.$nomeFoto);
 
-                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
 
                                     $produto->update([
-                                        'foto' => $nome_foto
+                                        'foto' => $nomeFoto
                                     ]);
 
                                 }
@@ -380,26 +381,26 @@ class ShopifyController extends Controller {
 
                         $img = Image::make($product->getImage()->getSrc());
                 
-                        $nome_foto = 'plano_' . $plano->id . '_.png';
+                        $nomeFoto = 'plano_' . $plano->id . '_.png';
     
-                        Storage::delete('public/upload/plano/'.$nome_foto);
+                        Storage::delete('public/upload/plano/'.$nomeFoto);
     
-                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
     
                         $plano->update([
-                            'foto' => $nome_foto
+                            'foto' => $nomeFoto
                         ]);
 
                         $img = Image::make($product->getImage()->getSrc());
 
-                        $nome_foto = 'produto_' . $produto->id . '_.png';
+                        $nomeFoto = 'produto_' . $produto->id . '_.png';
             
-                        Storage::delete('public/upload/produto/'.$nome_foto);
+                        Storage::delete('public/upload/produto/'.$nomeFoto);
             
-                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
             
                         $produto->update([
-                            'foto' => $nome_foto
+                            'foto' => $nomeFoto
                         ]);
 
                     }

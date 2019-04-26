@@ -29,7 +29,7 @@
       <div class="col-lg-4 info-panel" style="border-radius: 5px;">
         <div class="card card-shadow" style="border-radius: 5px;">
           <div class="card-header bg-white p-10" style="color: gray;border-radius: 5px;">
-            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left">
+            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left;">
             <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
               Saldo a receber
             </div>

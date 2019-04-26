@@ -16,6 +16,16 @@ class ConvitesController extends Controller {
 
         $convites = Convite::where('user_convite',\Auth::user()->id)->get()->toArray();
 
+        foreach($convites as &$convite){
+
+            if($convite['status'] == 'Enviado'){
+                $convite['status'] = "<span class='badge badge-info'>Enviado</span>";
+            }
+            else{
+                $convite['status'] = "<span class='badge badge-success'>" . $convite['status'] . "</span>";
+            }
+        }   
+     
         return view('convites::index',[
             'convites' => $convites
         ]);

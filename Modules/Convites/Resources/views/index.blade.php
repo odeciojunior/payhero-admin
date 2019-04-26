@@ -28,7 +28,7 @@
                                 @foreach($convites as $key => $convite)
                                     <tr>
                                         <td class="text-left"><button class="btn btn-floating btn-primary btn-sm" disabled>{!! $key + 1!!}</button></td>
-                                        <td class="text-center" style="vertical-align: middle">{!! $convite['email_convidado'] !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $convite['email_convidado'] !!}</td> 
                                         <td class="text-center" style="vertical-align: middle">{!! $convite['status'] !!}</td>
                                         <td class="text-center" style="vertical-align: middle">{!! $convite['data_cadastro'] != '' ? $convite['data_cadastro'] : 'Pendente' !!}</td>
                                         <td class="text-center" style="vertical-align: middle">{!! $convite['data_expiracao'] != '' ? $convite['data_expiracao'] : 'Pendente' !!}</td>
