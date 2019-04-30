@@ -58,9 +58,7 @@ class ShopifyController extends Controller {
 
         try{
             $credential = new PublicAppCredential($dados['token']);
-            //$credential = new PublicAppCredential('0fc0fea41cc38c989749dc9040794bb4');
 
-            //$client = new Client($credential, 'canto-infantil.myshopify.com', [
             $client = new Client($credential, $dados['url_loja'], [
                 'metaCacheDir' => './tmp' // Metadata cache dir, required
             ]);
@@ -70,17 +68,17 @@ class ShopifyController extends Controller {
         }
 
         try{
-            $projeto = Projeto::create([
-                'nome' => $client->getShopManager()->get()->getName(),
-                'status' => '1',
-                'visibilidade' => 'privado',
-                'porcentagem_afiliados' => '0',
-                'descricao' =>  $client->getShopManager()->get()->getName(),
-                'descricao_fatura' => $client->getShopManager()->get()->getName(),
-                'url_pagina' =>  'https://'.$client->getShopManager()->get()->getDomain(),
-                'afiliacao_automatica' => false,
-                'shopify_id' => $client->getShopManager()->get()->getId(),
-            ]);
+            // $projeto = Projeto::create([
+            //     'nome' => $client->getShopManager()->get()->getName(),
+            //     'status' => '1',
+            //     'visibilidade' => 'privado',
+            //     'porcentagem_afiliados' => '0',
+            //     'descricao' =>  $client->getShopManager()->get()->getName(),
+            //     'descricao_fatura' => $client->getShopManager()->get()->getName(),
+            //     'url_pagina' =>  'https://'.$client->getShopManager()->get()->getDomain(),
+            //     'afiliacao_automatica' => false,
+            //     'shopify_id' => $client->getShopManager()->get()->getId(),
+            // ]);
         }
 
         catch(\Exception $e){
@@ -89,43 +87,43 @@ class ShopifyController extends Controller {
         
         $imagem = $request->file('foto_projeto');
 
-        if ($imagem != null) {
-            $nomeFoto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+        // if ($imagem != null) {
+        //     $nomeFoto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
+        //     $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
+        //     $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
-            $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
+        //     $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
-            $img->resize(200, 200);
+        //     $img->resize(200, 200);
 
-            Storage::delete('public/upload/projeto/'.$nomeFoto);
+        //     Storage::delete('public/upload/projeto/'.$nomeFoto);
 
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
+        //     $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
-            $projeto->update([
-                'foto' => $nomeFoto
-            ]);
-        }
+        //     $projeto->update([
+        //         'foto' => $nomeFoto
+        //     ]);
+        // }
 
-        UserProjeto::create([
-            'user'              => \Auth::user()->id,
-            'projeto'           => $projeto->id,
-            'empresa'           => $dados['empresa'],
-            'tipo'              => 'produtor',
-            'responsavel_frete' => true,
-            'permissao_acesso'  => true,
-            'permissao_editar'  => true,
-            'status'            => 'ativo'
-        ]);
+        // UserProjeto::create([
+        //     'user'              => \Auth::user()->id,
+        //     'projeto'           => $projeto->id,
+        //     'empresa'           => $dados['empresa'],
+        //     'tipo'              => 'produtor',
+        //     'responsavel_frete' => true,
+        //     'permissao_acesso'  => true,
+        //     'permissao_editar'  => true,
+        //     'status'            => 'ativo'
+        // ]);
 
         $products = $client->getProductManager()->findAll([]);
 
         foreach($products as $product){
-
+dd($product);
             foreach($product->getVariants() as $variant){
-
+dd($variant);
                 $produto = Produto::create([
                     'user' => \Auth::user()->id,
                     'nome' => substr($product->getTitle(),0,100),
@@ -175,29 +173,28 @@ class ShopifyController extends Controller {
                             if($variantId == $variant->getId()){
 
                                 $img = Image::make($image->getSrc());
-            
+
                                 $nomeFoto = 'plano_' . $plano->id . '_.png';
-            
+
                                 Storage::delete('public/upload/plano/'.$nomeFoto);
-            
+
                                 $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
-            
+
                                 $plano->update([
                                     'foto' => $nomeFoto
                                 ]);
 
                                 $img = Image::make($image->getSrc());
-        
+
                                 $nomeFoto = 'produto_' . $produto->id . '_.png';
-                    
+
                                 Storage::delete('public/upload/produto/'.$nomeFoto);
-                    
+
                                 $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
-                    
+
                                 $produto->update([
                                     'foto' => $nomeFoto
                                 ]);
-        
                             }
                         }
                     }
@@ -205,7 +202,7 @@ class ShopifyController extends Controller {
                 else{
 
                     $img = Image::make($product->getImage()->getSrc());
-            
+
                     $nomeFoto = 'plano_' . $plano->id . '_.png';
 
                     Storage::delete('public/upload/plano/'.$nomeFoto);
@@ -219,11 +216,11 @@ class ShopifyController extends Controller {
                     $img = Image::make($product->getImage()->getSrc());
 
                     $nomeFoto = 'produto_' . $produto->id . '_.png';
-        
+
                     Storage::delete('public/upload/produto/'.$nomeFoto);
-        
+
                     $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
-        
+
                     $produto->update([
                         'foto' => $nomeFoto
                     ]);
