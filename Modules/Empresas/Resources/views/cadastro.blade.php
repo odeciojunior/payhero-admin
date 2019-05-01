@@ -13,123 +13,20 @@
                     Voltar
                 </a>
             </div>
-        </div> 
+        </div>
         <div class="page-content container-fluid">
             <div class="panel pt-30 p-30" data-plugin="matchHeight">
-                <form method="post" action="/empresas/cadastrarempresa">
-                    @csrf
-                    <div style="width:100%">
-                        <h4>Dados gerais</h4>
-                        <div class="row">
-                            <div class="form-group col-xl-6">
-                                <label for="cnpj">CNPJ / CPF</label>
-                                <input name="cnpj" type="text" class="form-control" id="cnpj" placeholder="CNPJ / CPF" data-mask="0#" required>
-                            </div>
-                            <div class="form-group col-xl-6">
-                                <label for="situacao">Situacao</label>
-                                <select name="situacao" class="form-control" id="situacao" required>
-                                    <option value="ativo" selected>Ativo</option>
-                                    <option value="inativo">Inativo</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-xl-12">
-                                <label for="nome">Nome fantasia</label>
-                                <input name="nome_fantasia" type="text" class="form-control" id="nome" placeholder="Nome fantasia" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-xl-6">
-                                <label for="cep">CEP</label>
-                                <input name="cep" type="text" class="form-control" id="cep" placeholder="CEP" data-mask="0#">
-                            </div>
-
-                            <div class="form-group col-xl-6">
-                                <label for="estado">Estado</label>
-                                <input name="uf" type="text" class="form-control" id="estado" placeholder="estado">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-xl-6">
-                                <label for="municipio">Município</label>
-                                <input name="municipio" type="text" class="form-control" id="municipio" placeholder="Município">
-                            </div>
-
-                            <div class="form-group col-xl-6">
-                                <label for="bairro">Bairro</label>
-                                <input name="bairro" type="text" class="form-control" id="bairro" placeholder="Bairro">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-xl-6">
-                                <label for="logradouro">Rua</label>
-                                <input name="logradouro" type="text" class="form-control" id="logradouro" placeholder="Rua">
-                            </div>
-
-                            <div class="form-group col-xl-6">
-                                <label for="numero">Número</label>
-                                <input name="numero" type="text" class="form-control" id="numero" placeholder="Número" data-mask="0#">
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-
-                            <div class="form-group col-xl-6">
-                                <label for="complemento">Complemento</label>
-                                <input name="complemento" type="text" class="form-control" id="complemento" placeholder="Complemento">
-                            </div>
-
-                        </div>
-                        <h4>Dados bancários</h4>
-
-                        <div class="row">
-                            <div class="form-group col-xl-12">
-                                <label for="banco">Banco</label>
-                                <select id="banco" name="banco" class="form-control">
-                                    <option value="">Selecione</option>
-                                    @foreach($bancos as $banco)
-                                        <option value="{!! $banco['codigo'] !!}">{!! $banco['codigo'] . ' - ' .$banco['nome'] !!}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-xl-9">
-                                <label for="agencia">Agência</label>
-                                <input name="agencia" type="text" class="form-control" id="agencia" placeholder="Agência" data-mask="0#">
-                            </div>
-                            <div class="form-group col-xl-3">
-                                <label for="agencia_digito">Dígito</label>
-                                <input name="agencia_digito" type="text" class="form-control" id="agencia_digito" placeholder="Dígito" data-mask="0#">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-xl-9">
-                                <label for="conta">Conta</label>
-                                <input name="conta" type="text" class="form-control" id="conta" placeholder="Conta" data-mask="0#">
-                            </div>
-                            <div class="form-group col-xl-3">
-                                <label for="conta_digito">Dígito</label>
-                                <input name="conta_digito" type="text" class="form-control" id="agencia_digito" placeholder="Dígito" data-mask="0#">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-success">Salvar</button>
-                            </div>
-                        </div>
-
+                <div class="row" style="margin-bottom: 30px">
+                    <div class="col-3">
+                        <label for="country">Company country</label>
+                        <select id="country" class="form-control">
+                            <option value="usa">United States</option>
+                            <option value="brazil">Brasil</option>
+                        </select>
                     </div>
-                </form>
+                </div>
+                <div id="store_form" style="width:100%">
+                </div>
             </div>
         </div>
     </div>
@@ -138,26 +35,47 @@
 
     $(document).ready( function(){
 
-//        $('#cnpj').on('input',function(){
-//
-//            if($(this).val().replace(/[^0-9]/g,'').length ==  14){
-//
-//                jQuery.support.cors = true;
-//
-//                $.ajax({
-//                    type: 'GET',
-//                    url: 'https://www.receitaws.com.br/v1/cnpj/'+$(this).val(),
-//                    crossDomain: true,
-//                    dataType: 'jsonp',
-//                    success: function(data) {
-//                        alert(data.toSource());
-//                        
-//                    },
-//                });
-//        
-//            }
+        updateForm();
 
-//        });
+        $("#country").on("change", function(){
+            updateForm();
+        });
+
+        function updateForm(){
+
+            $("#store_form").html('');
+
+            $.ajax({
+                method: "GET",
+                url: "/empresas/getformcadastrarempresa/"+$("#country").val(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function(){
+                    $('.loading').css("visibility", "hidden");
+                },
+                success: function(data){
+                    $('.loading').css("visibility", "hidden");
+                    $("#store_form").html(data);
+
+                    $("#routing_number").on("blur", function(){
+
+                        $.ajax({
+                            method: "GET",
+                            url: "https://www.routingnumbers.info/api/data.json?rn="+$("#routing_number").val(),
+                            success: function(data){
+                                if(data.message == 'OK'){
+                                    $("#bank").val(data.customer_name);
+                                }
+                                else{
+                                    alert(data.message);
+                                }
+                            }
+                        });
+                    });
+                },
+            });
+        }
 
     });
 

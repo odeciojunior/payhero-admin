@@ -2,11 +2,12 @@
 
 namespace App;
 
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
+ * @property int $user
+ * @property string $nome_fantasia
  * @property string $cnpj
  * @property string $cep
  * @property string $municipio
@@ -14,34 +15,59 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $complemento
  * @property string $bairro
  * @property string $numero
- * @property string $ultima_atualizacao
  * @property string $uf
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property string $status
- * @property string $razao_social
- * @property string $nome_fantasia
  * @property string $banco
  * @property string $agencia
  * @property string $agencia_digito
  * @property string $conta
  * @property string $conta_digito
- * @property string $bank_account_id
- * @property string $recipient_id
+ * @property string $country
+ * @property string $statement_descriptor
+ * @property string $shortened_descriptor
+ * @property string $business_website
+ * @property string $support_email
+ * @property string $support_telephone
+ * @property User $user
+ * @property Afiliado[] $afiliados
+ * @property Convite[] $convites
  * @property DadosHotzapp[] $dadosHotzapps
- * @property Dominio[] $dominios
  * @property Plano[] $planos
- * @property Produto[] $produtos
- * @property Projeto[] $projetos
- * @property UsersEmpresa[] $usersEmpresas
+ * @property Transaco[] $transacoes
+ * @property UsersProjeto[] $usersProjetos
  */
 class Empresa extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['cnpj', 'cep', 'municipio', 'logradouro', 'complemento', 'bairro', 'numero', 'ultima_atualizacao', 'uf', 'created_at', 'updated_at', 'deleted_at', 'status', 'razao_social', 'nome_fantasia', 'banco', 'agencia', 'agencia_digito', 'conta', 'conta_digito', 'bank_account_id', 'recipient_id', 'user'];
+    protected $fillable = ['user', 'nome_fantasia', 'cnpj', 'cep', 'municipio', 'logradouro', 'complemento', 'bairro', 'numero', 'uf', 'created_at', 'updated_at', 'deleted_at', 'banco', 'agencia', 'agencia_digito', 'conta', 'conta_digito', 'country', 'statement_descriptor', 'shortened_descriptor', 'business_website', 'support_email', 'support_telephone'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function afiliados()
+    {
+        return $this->hasMany('App\Afiliado', 'empresa');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function convites()
+    {
+        return $this->hasMany('App\Convite', 'empresa');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -49,14 +75,6 @@ class Empresa extends Model
     public function dadosHotzapps()
     {
         return $this->hasMany('App\DadosHotzapp', 'empresa');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function dominios()
-    {
-        return $this->hasMany('App\Dominio', 'empresa');
     }
 
     /**
@@ -70,30 +88,16 @@ class Empresa extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function produtos()
+    public function transacoes()
     {
-        return $this->hasMany('App\Produto', 'empresa');
+        return $this->hasMany('App\Transaco', 'empresa');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function projetos()
+    public function usersProjetos()
     {
-        return $this->hasMany('App\Projeto', 'empresa');
+        return $this->hasMany('App\UsersProjeto', 'empresa');
     }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function usersEmpresas()
-    {
-        return $this->hasMany('App\UsersEmpresa', 'empresa');
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
-
 }

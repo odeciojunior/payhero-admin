@@ -42,6 +42,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'empresas', 'namespac
         'uses' => 'EmpresasController@getDetalhesEmpresa'
     ]);
 
+    Route::get("/getformcadastrarempresa/{country}", [
+        'uses' => 'EmpresasController@getFormCadastroEmpresa',
+    ]);
+
 });
 
 
