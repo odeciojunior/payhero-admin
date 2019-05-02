@@ -80,16 +80,16 @@ class PostBackController extends Controller {
                     'data_finalizada' => \Carbon\Carbon::now()
                 ]);
 
-                foreach($transacoes as $transacao){
+                foreach($transacoes as $t){
 
-                    $transacao = Transacao::find($transacao['id']);
-                    
+                    $transacao = Transacao::find($t['id']);
+
                     $transacao->update([
                         ['status' => 'pago'],
                         ['data_liberacao' => Carbon::now()->addDays(30)->format('Y-m-d')]
                     ]);
 
-                    Log::write('info', 'atualizando transacao '. $transacao['id']);
+                    Log::write('info', 'atualizando transacao '. print_r($transacao, true));
 
                 }
             }
