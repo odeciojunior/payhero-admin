@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-          <a href="{!! route('ferramentas.shopify') !!}">
+          <a href="{!! route('shopify.index') !!}">
             <div class="card card-inverse card-shadow bg-blue-600 white" id="widgetSaleBar">
               <div class="card-block p-0">
                   <div class="row no-space">

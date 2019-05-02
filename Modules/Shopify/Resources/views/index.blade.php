@@ -196,7 +196,7 @@
 
             $.ajax({
                 method: "POST",
-                url: "/ferramentas/shopify/adicionarintegracao",
+                url: "/aplicativos/shopify/adicionarintegracao",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -232,7 +232,7 @@
 
             $.ajax({
                 method: "POST",
-                url: "/ferramentas/shopify/sincronizarintegracao",
+                url: "/aplicativos/shopify/sincronizarintegracao",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

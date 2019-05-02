@@ -1,10 +1,10 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'ferramentas/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
+Route::group(['middleware' => 'web', 'prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'ShopifyController@index',
-        'as' => 'ferramentas.shopify'
+        'as' => 'shopify.index'
     ]);
 
     Route::post('/adicionarintegracao', [
@@ -17,6 +17,10 @@ Route::group(['middleware' => 'web', 'prefix' => 'ferramentas/shopify', 'namespa
         'as' => 'shopify.sincronizarintegracao'
     ]);
 
+    Route::post('/webhook', [
+        'uses' => 'ShopifyController@webHook',
+        'as' => 'shopify.webhook'
+    ]);
 
 });
 

@@ -29,10 +29,10 @@ class PostBackController extends Controller {
         // $cert = file_get_contents('ebanx-notifications-public.pem');
         // $data = file_get_contents("php://input");
         // $signature = base64_decode($_SERVER['HTTP_X_SIGNATURE_CONTENT']);
-        
+
         // // http://php.net/manual/en/function.openssl-verify.php
         // $result = openssl_verify($data, $signature, $cert);
-        
+
         // if ($result === 1)
         // {
         //     echo "OK, signature is correct.";
@@ -86,6 +86,10 @@ class PostBackController extends Controller {
                         ['status','pago'],
                         ['data_liberacao' => Carbon::now()->addDays(30)->format('Y-m-d')]
                     ]);
+                }
+
+                if($venda->forma_pagamento == 'Boleto'){
+                    
                 }
             }
 

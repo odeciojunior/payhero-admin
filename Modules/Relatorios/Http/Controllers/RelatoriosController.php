@@ -29,6 +29,21 @@ class RelatoriosController extends Controller {
 
     public function vendas() {
 
+        // \Ebanx\Config::set([
+        //     'integrationKey' => 'test_ik_WkYi7P55VR0bk_ZcxtgGTA',
+        //     'testMode'       => true,
+        // ]);
+
+        // $result = \Ebanx\Ebanx::doExchange([
+        //     'currency_code' => 'USD'
+        // ]);
+
+        // $response = \Ebanx\Ebanx::doQuery(array(
+        //     'hash' => '5cc75099ebcf4ba417fbebc282fd49830ad3d1f34ad53681'
+        // ));
+
+        // dd($response);
+
         $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
         $projetos = [];
 

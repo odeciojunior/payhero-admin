@@ -10,10 +10,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $empresa
  * @property string $valor
  * @property string $tipo
+ * @property string $status
+ * @property string $data_liberacao
  * @property string $created_at
  * @property string $updated_at
  * @property Empresa $empresa
  * @property Venda $venda
+ * @property Transferencia[] $transferencias
  */
 class Transacao extends Model
 {
@@ -34,7 +37,7 @@ class Transacao extends Model
     /**
      * @var array
      */
-    protected $fillable = ['venda', 'empresa', 'valor', 'tipo', 'created_at', 'updated_at'];
+    protected $fillable = ['venda', 'empresa', 'valor', 'tipo', 'status', 'data_liberacao', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -50,5 +53,13 @@ class Transacao extends Model
     public function venda()
     {
         return $this->belongsTo('App\Venda', 'venda');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transferencias()
+    {
+        return $this->hasMany('App\Transferencia', 'transacao');
     }
 }

@@ -184,9 +184,8 @@
                 dados += '<tr>';
                 dados += "<td class='text-left' style='vertical-align: middle'>"+value.id+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.projeto+"</td>";
-                dados += "<td style='vertical-align: middle'>"+value.produto+"</td>";
+                dados += "<td style='vertical-align: middle' class='text-center'>"+value.produto+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.comprador+"</td>";
-
 
                 if(value.forma == 'Boleto'){
                   dados += "<td style='vertical-align: middle'><img src='/assets/img/boleto.jpeg' style='width: 60px'></td>";

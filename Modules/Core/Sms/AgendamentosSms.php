@@ -14,7 +14,6 @@ use Modules\Core\Sms\ServicoSmsHelper;
 
 class AgendamentosSms {
 
-
     public static function verificarBoletosVencendo(){
 
         $boletos = Venda::whereDate('vencimento_boleto', '=', Carbon::today()->toDateString())
