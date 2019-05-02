@@ -26,26 +26,6 @@ class DashboardController extends Controller {
 
         foreach($empresas as $empresa){
 
-            $transacoes_liberadas = Transacao::where('empresa',$empresa['id'])
-                ->where('status','pago')
-                ->whereDate('data_liberacao', '<=', Carbon::today()->toDateString())
-                ->get()->toArray();
-
-            if(count($transacoes_liberadas)){
-
-                foreach($transacoes_liberadas as $transacao){
-                    if($transacao['tipo'] == 'entrada'){
-                        $saldo_disponivel += $transacao['valor'];
-                    }
-                    else{
-                        $saldo_disponivel -= $transacao['valor'];
-                    }
-                }
-            }
-        }
-
-        foreach($empresas as $empresa){
-
             $transacoes_aguardando = Transacao::where('empresa',$empresa['id'])
                 ->where('status','pago')
                 ->whereDate('data_liberacao', '>', Carbon::today()->toDateString())
@@ -71,7 +51,7 @@ class DashboardController extends Controller {
             $saldo_futuro = '000';
         }
 
-        $saldo_disponivel = substr_replace($saldo_disponivel, '.',strlen($saldo_disponivel) - 2, 0 );
+        $saldo_disponivel = \Auth::user()->saldo;
         $saldo_disponivel = number_format($saldo_disponivel,2);
         $saldo_futuro = substr_replace($saldo_futuro, '.',strlen($saldo_futuro) - 2, 0 );
         $saldo_futuro = number_format($saldo_futuro,2);

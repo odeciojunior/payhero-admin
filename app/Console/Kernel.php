@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule) {
 
         $schedule->command('enviar:sms')->dailyAt('10:00');
+        $schedule->command('verify:transfers')->dailyAt('03:00');
     }
 
     /**

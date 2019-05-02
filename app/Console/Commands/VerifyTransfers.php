@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Tranferencias\Transferencias;
 
 class VerifyTransfers extends Command
 {
@@ -11,14 +12,14 @@ class VerifyTransfers extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'verify:transfers';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Verify if has money to be transefered to users accounts daily';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,6 @@ class VerifyTransfers extends Command
      */
     public function handle()
     {
-        //
+        Transferencias::verify();
     }
 }
