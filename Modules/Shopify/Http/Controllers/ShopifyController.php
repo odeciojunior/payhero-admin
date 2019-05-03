@@ -88,13 +88,13 @@ class ShopifyController extends Controller {
 
         $client->getWebhookManager()->create([
             "topic"   => "products/create",
-            "address" => "https://cloudfox.app/aplicativos/shopify/webhook/",
+            "address" => "https://cloudfox.app/aplicativos/shopify/webhook",
             "format"  => "json"
         ]);
 
         $client->getWebhookManager()->create([
             "topic"   => "products/update",
-            "address" => "https://cloudfox.app/aplicativos/shopify/webhook/",
+            "address" => "https://cloudfox.app/aplicativos/shopify/webhook",
             "format"  => "json"
         ]);
 
@@ -104,6 +104,7 @@ class ShopifyController extends Controller {
         //     $client->getWebhookManager()->remove($webhook->getId());
         // }
 
+        $webhooks = $client->getWebhookManager()->findAll([]);
         dd($webhooks);
 
         $themes = $client->getThemeManager()->findAll([]);

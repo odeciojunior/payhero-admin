@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'ShopifyController@index',
@@ -13,11 +13,16 @@ Route::group(['middleware' => 'web', 'prefix' => 'aplicativos/shopify', 'namespa
     ]);
 
     Route::post('/sincronizarintegracao', [
-        'uses' => 'ShopifyController@sincronizarIntegracao',
+        'uses' => 'ShopifyController@sincronizarIntegracao', 
         'as' => 'shopify.sincronizarintegracao'
     ]);
 
     Route::post('/webhook', [
+        'uses' => 'ShopifyController@webHook',
+        'as' => 'shopify.webhook'
+    ]);
+
+    Route::get('/webhook', [
         'uses' => 'ShopifyController@webHook',
         'as' => 'shopify.webhook'
     ]);
@@ -37,6 +42,6 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/aplicativos/shopify',
     Route::post('/sincronizarintegracao', [
         'uses' => 'ShopifyApiController@sincronizarIntegracao',
     ]);
-    
+
 });
 
