@@ -281,183 +281,6 @@ class ShopifyController extends Controller {
         return response()->json('Sucesso');
     }
 
-    public function sincronizarIntegracao(Request $request){
-
-        $dados = $request->all();
-
-        $projeto = Projeto::find($dados['projeto']);
-        $integracao = IntegracaoShopify::where('projeto',$dados['projeto'])->first();
-
-        try{
-            $credential = new PublicAppCredential($integracao['token']);
-
-            $client = new Client($credential, $integracao['url_loja'], [
-                'metaCacheDir' => './tmp'
-            ]);
-        }
-        catch(\Exception $e){
-            return response()->json('Dados do shopify inválidos, revise os dados informados');
-        }
-
-        $products = $client->getProductManager()->findAll([]);
-
-        foreach($products as $product){
-
-            foreach($product->getVariants() as $variant){
-
-                $plano = Plano::where('shopify_variant_id' , $variant->getId())->first();
-
-                $descricao = '';
-
-                try{
-                    $descricao = $variant->getOption1();
-                    if($descricao == 'Default Title'){
-                        $descricao = '';
-                    }
-                    if($variant->getOption2() != ''){
-                        $descricao .= ' - '. $$variant->getOption2();
-                    }
-                    if($variant->getOption3() != ''){
-                        $descricao .= ' - '. $$variant->getOption3();
-                    }
-                }
-                catch(\Exception $e){
-                    //
-                }
-
-                if($plano == null){
-                    $produto = Produto::create([
-                        'user'          => \Auth::user()->id,
-                        'nome'          => substr($product->getTitle(),0,100),
-                        'descricao'     => $descricao,
-                        'garantia'      => '0',
-                        'disponivel'    => true,
-                        'quantidade'    => '0',
-                        'disponivel'    => true,
-                        'formato'       => 1,
-                        'categoria'     => '1',
-                        'custo_produto' => '',
-                    ]);
-
-                    $novoCodigoIdentificador = false;
-
-                    while($novoCodigoIdentificador == false){
-
-                        $codigoIdentificador = $this->randString(3).rand(100,999);
-                        $plano = Plano::where('cod_identificador', $codigoIdentificador)->first();
-                        if($plano == null){
-                            $novoCodigoIdentificador = true;
-                        }
-                    }
-
-                    $userProjeto = UserProjeto::where([
-                        ['user', \Auth::user()->id],
-                        ['projeto',$dados['projeto']],
-                        ['tipo', 'produtor']
-                    ])->first();
-
-                    $plano = Plano::create([
-                        'shopify_id'         => $product->getId(),
-                        'shopify_variant_id' => $variant->getId(),
-                        'empresa'            => $userProjeto->empresa,
-                        'projeto'            => $projeto->id,
-                        'nome'               => substr($product->getTitle(),0,100),
-                        'descricao'          => $descricao,
-                        'cod_identificador'  => $codigoIdentificador, 
-                        'preco'              => $variant->getPrice(),
-                        'frete_fixo'         => '1',
-                        'valor_frete'        => '0.00',
-                        'pagamento_cartao'   => true,
-                        'pagamento_boleto'   => true,
-                        'status'             => '1',
-                        'transportadora'     => '2',
-                        'qtd_parcelas'       => '12',
-                        'parcelas_sem_juros' => '1'
-                    ]);
-
-                    if(count($product->getVariants()) > 1){
-
-                        foreach($product->getImages() as $image){
-
-                            foreach($image->getVariantIds() as $variantId){
-                                if($variantId == $variant->getId()){
-
-                                    $img = Image::make($image->getSrc());
-
-                                    $nomeFoto = 'plano_' . $plano->id . '_.png';
-
-                                    Storage::delete('public/upload/plano/'.$nomeFoto);
-
-                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
-
-                                    $plano->update([
-                                        'foto' => $nomeFoto
-                                    ]);
-
-                                    $img = Image::make($image->getSrc());
-
-                                    $nomeFoto = 'produto_' . $produto->id . '_.png';
-
-                                    Storage::delete('public/upload/produto/'.$nomeFoto);
-
-                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
-
-                                    $produto->update([
-                                        'foto' => $nomeFoto
-                                    ]);
-
-                                }
-                            }
-                        }
-                    }
-                    else{
-
-                        $img = Image::make($product->getImage()->getSrc());
-                
-                        $nomeFoto = 'plano_' . $plano->id . '_.png';
-    
-                        Storage::delete('public/upload/plano/'.$nomeFoto);
-    
-                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
-    
-                        $plano->update([
-                            'foto' => $nomeFoto
-                        ]);
-
-                        $img = Image::make($product->getImage()->getSrc());
-
-                        $nomeFoto = 'produto_' . $produto->id . '_.png';
-            
-                        Storage::delete('public/upload/produto/'.$nomeFoto);
-            
-                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
-            
-                        $produto->update([
-                            'foto' => $nomeFoto
-                        ]);
-
-                    }
-
-                    ProdutoPlano::create([
-                        'produto'            => $produto->id,
-                        'plano'              => $plano->id,
-                        'quantidade_produto' => '1'
-                    ]);
-                }
-                else{
-                    $plano->update([
-                        'nome'      => substr($product->getTitle(),0,100),
-                        'descricao' => $descricao,
-                        'preco'     => $variant->getPrice(),
-                    ]);
-                }
-            }
-
-        }
-
-        return response()->json('Sucesso');
-    }
-
     public function getCartTemplate(){
 
         return "<div class='page-width' data-section-id='{{ section.id }}' data-section-type='cart-template'>
@@ -871,8 +694,8 @@ class ShopifyController extends Controller {
     public function webHook(Request $request){
 
         $dados = $request->all();
-        Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
-        return 'success';
+        // Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
+        // return 'success';
 
         $projeto = Projeto::find($request->id_projeto);
 
@@ -959,74 +782,48 @@ class ShopifyController extends Controller {
                 ]);
 
                 if(count($dados['variants']) > 1){
+                  foreach($dados['images'] as $image){
 
-                    foreach($dados['images'] as $image){
+                      foreach($image['variant_ids'] as $variantId){
+                          if($variantId == $variant['id']){
 
-                        foreach($image->getVariantIds() as $variantId){
-                            if($variantId == $variant->getId()){
+                              if($image['src'] != ''){
+                                  $produto->update([
+                                      'foto' => $image->getSrc()
+                                  ]);
 
-                                $img = Image::make($image->getSrc());
+                                  $plano->update([
+                                      'foto' => $image->getSrc()
+                                  ]);
+                              }
+                              else{
+                                  $plano->update([
+                                      'foto' => $dados['image']['src']
+                                  ]);
+                                  $produto->update([
+                                      'foto' => $dados['image']['src']
+                                  ]);
+                              }
+                          }
+                      }
+                  }
+              }
+              else{
 
-                                $nomeFoto = 'plano_' . $plano->id . '_.png';
+                  $plano->update([
+                      'foto' => $dados['image']['src']
+                  ]);
 
-                                Storage::delete('public/upload/plano/'.$nomeFoto);
+                  $produto->update([
+                      'foto' => $dados['image']['src']
+                  ]);
+              }
 
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
-
-                                $plano->update([
-                                    'foto' => $nomeFoto
-                                ]);
-
-                                $img = Image::make($image->getSrc());
-
-                                $nomeFoto = 'produto_' . $produto->id . '_.png';
-
-                                Storage::delete('public/upload/produto/'.$nomeFoto);
-
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
-
-                                $produto->update([
-                                    'foto' => $nomeFoto
-                                ]);
-
-                            }
-                        }
-                    }
-                }
-                else{
-
-                    $img = Image::make($product->getImage()->getSrc());
-            
-                    $nomeFoto = 'plano_' . $plano->id . '_.png';
-
-                    Storage::delete('public/upload/plano/'.$nomeFoto);
-
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nomeFoto);
-
-                    $plano->update([
-                        'foto' => $nomeFoto
-                    ]);
-
-                    $img = Image::make($product->getImage()->getSrc());
-
-                    $nomeFoto = 'produto_' . $produto->id . '_.png';
-        
-                    Storage::delete('public/upload/produto/'.$nomeFoto);
-        
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
-        
-                    $produto->update([
-                        'foto' => $nomeFoto
-                    ]);
-
-                }
-
-                ProdutoPlano::create([
+              ProdutoPlano::create([
                     'produto'            => $produto->id,
                     'plano'              => $plano->id,
                     'quantidade_produto' => '1'
-                ]);
-
+              ]);
 
             }
         }
