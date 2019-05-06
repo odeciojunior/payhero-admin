@@ -18,7 +18,7 @@ class ProdutosController extends Controller {
 
     public function index(Request $request) {
 
-        $produtos = Produto::where('user',\Auth::user()->id);
+        $produtos = Produto::where('user',\Auth::user()->id)->where('shopify', '0');
 
         if(isset($request->nome)){
             $produtos = $produtos->where('nome','LIKE','%'.$request->nome.'%');

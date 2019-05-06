@@ -21,12 +21,12 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'aplicativos/shopify'
 Route::group(['prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
 
-    Route::post('/webhook', [
+    Route::post('/webhook/{projeto_id}', [
         'uses' => 'ShopifyController@webHook',
         'as' => 'shopify.webhook'
     ]);
 
-    Route::get('/webhook', [
+    Route::get('/webhook/{projeto_id}', [
         'uses' => 'ShopifyController@webHook',
         'as' => 'shopify.webhook'
     ]);

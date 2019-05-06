@@ -374,7 +374,12 @@ class PlanosController extends Controller {
         $modal_body .= "</thead>";
         $modal_body .= "</table>";
         $modal_body .= "<div class='text-center'>";
-        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto)."?dummy=".uniqid()."' style='height: 250px'>";
+        if(!$plano->shopify_id){
+            $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto)."?dummy=".uniqid()."' style='height: 250px'>";
+        }
+        else{
+            $modal_body .= "<img src='".$plano->foto."' style='height: 250px'>";
+        }
         $modal_body .= "</div>";
         $modal_body .= "</div>";
 

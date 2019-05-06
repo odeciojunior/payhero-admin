@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property int $empresa
  * @property integer $categoria
+ * @property int $user
  * @property string $nome
  * @property string $descricao
  * @property string $garantia
@@ -16,14 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $formato
  * @property string $created_at
  * @property string $updated_at
- * @property float $custo_produto
+ * @property string $custo_produto
  * @property string $foto
  * @property string $deleted_at
  * @property string $altura
  * @property string $largura
  * @property string $peso
+ * @property string $recebedor_custo
+ * @property boolean $shopify
  * @property Categoria $categoria
- * @property Empresa $empresa
+ * @property User $user
  * @property ProdutosPlano[] $produtosPlanos
  * @property ProjetosProduto[] $projetosProdutos
  */
@@ -39,7 +41,7 @@ class Produto extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'categoria', 'nome', 'descricao', 'garantia', 'quantidade', 'disponivel', 'formato', 'created_at', 'updated_at', 'custo_produto','recebedor_custo', 'foto', 'deleted_at', 'altura', 'largura', 'peso'];
+    protected $fillable = ['categoria', 'user', 'nome', 'descricao', 'garantia', 'quantidade', 'disponivel', 'formato', 'created_at', 'updated_at', 'custo_produto', 'foto', 'deleted_at', 'altura', 'largura', 'peso', 'recebedor_custo', 'shopify'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -52,9 +54,9 @@ class Produto extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function empresa()
+    public function user()
     {
-        return $this->belongsTo('App\Empresa', 'empresa');
+        return $this->belongsTo('App\User', 'user');
     }
 
     /**

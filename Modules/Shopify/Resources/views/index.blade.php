@@ -39,9 +39,6 @@
                               </div>
                           </a>
                           <hr>
-                          <div class="text-center">
-                              <button class="btn btn-success sincronizar" type="button" projeto="{!! $projeto['id'] !!}">Sincronizar dados</button>
-                          </div>
                         </div>
                     </div>
                   </div>
@@ -219,36 +216,6 @@
                       alertPersonalizado('error',data);
                     }
                     $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
-                },
-            });
-
-        });
-
-        $(".sincronizar").on("click", function(){
-
-            $('.loading').css("visibility", "visible");
-
-            var id_projeto = $(this).attr('projeto');
-
-            $.ajax({
-                method: "POST",
-                url: "/aplicativos/shopify/sincronizarintegracao",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {projeto: id_projeto},
-                error: function(){
-                    $('.loading').css("visibility", "hidden");
-                    alertPersonalizado('error','Ocorreu algum erro');
-                },
-                success: function(data){
-                    $('.loading').css("visibility", "hidden");
-                    if(data == 'Sucesso'){
-                      alertPersonalizado('success','Dados do projeto sincronizados!');
-                    }
-                    else{
-                      alertPersonalizado('error',data);
-                    }
                 },
             });
 
