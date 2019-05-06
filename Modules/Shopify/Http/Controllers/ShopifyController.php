@@ -697,10 +697,10 @@ class ShopifyController extends Controller {
         // Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
         // return 'success';
 
-        $projeto = Projeto::find($request->id_projeto);
+        $projeto = Projeto::find($request->route()->parameter('id_projeto'));
 
         if(!$projeto){
-            Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->id_projeto );
+            Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->route()->parameter('id_projeto') );
             return 'error';
         }
 
