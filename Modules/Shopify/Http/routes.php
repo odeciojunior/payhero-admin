@@ -16,6 +16,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'aplicativos/shopify'
         'uses' => 'ShopifyController@sincronizarIntegracao', 
         'as' => 'shopify.sincronizarintegracao'
     ]);
+});
+
+Route::group(['prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
+{
 
     Route::post('/webhook', [
         'uses' => 'ShopifyController@webHook',
