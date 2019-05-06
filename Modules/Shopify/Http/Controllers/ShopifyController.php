@@ -713,15 +713,15 @@ class ShopifyController extends Controller {
 
             $descricao = '';
             try{
-                $descricao = $variant->getOption1();
+                $descricao = $variant['option1'];
                 if($descricao == 'Default Title'){
                     $descricao = '';
                 }
-                if($variant->getOption2() != ''){
-                    $descricao .= ' - '. $$variant->getOption2();
+                if($variant['option2'] != ''){
+                    $descricao .= ' - '. $$variant['option2'];
                 }
-                if($variant->getOption3() != ''){
-                    $descricao .= ' - '. $$variant->getOption3();
+                if($variant['option3'] != ''){
+                    $descricao .= ' - '. $$variant['option3'];
                 }
             }
             catch(\Exception $e){
