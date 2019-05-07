@@ -81,7 +81,7 @@ class PostBackController extends Controller {
 
                     $planosVenda = PlanoVenda::where('venda', $venda['id'])->first();
 
-                    $plano = Plano::find($planoVenda->plano);
+                    $plano = Plano::find($planosVenda->plano);
 
                     $integracaoShopify = IntegracaoShopify::where('projeto',$plano['projeto'])->first();
 
@@ -111,26 +111,3 @@ class PostBackController extends Controller {
     }
 
 }
-
-
-
-
-
-
-        // $cert = file_get_contents('ebanx-notifications-public.pem');
-        // $data = file_get_contents("php://input");
-        // $signature = base64_decode($_SERVER['HTTP_X_SIGNATURE_CONTENT']);
-
-        // // http://php.net/manual/en/function.openssl-verify.php
-        // $result = openssl_verify($data, $signature, $cert);
-
-        // if ($result === 1)
-        // {
-        //     echo "OK, signature is correct.";
-        // }
-        // else
-        // {
-        //     echo "ERROR, the signature is incorrect.";
-        // }
-
-
