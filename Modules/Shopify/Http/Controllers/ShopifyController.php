@@ -272,10 +272,10 @@ class ShopifyController extends Controller {
         ]);
 
         IntegracaoShopify::create([
-            'token' => $dados['token'],
+            'token'    => $dados['token'],
             'url_loja' => $dados['url_loja'],
-            'user' => \Auth::user()->id,
-            'projeto' => $projeto->id
+            'user'     => \Auth::user()->id,
+            'projeto'  => $projeto->id
         ]);
 
         return response()->json('Sucesso');
@@ -849,3 +849,4 @@ class ShopifyController extends Controller {
     }
 
 }
+

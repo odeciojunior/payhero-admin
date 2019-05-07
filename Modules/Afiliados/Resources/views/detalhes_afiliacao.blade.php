@@ -19,7 +19,7 @@
             <div class="panel pt-10 p-10" data-plugin="matchHeight" style="min-height: 400px">
 
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
-                    <ul class="nav nav-tabs" role="tablist">
+                    <ul class="nav nav-tabs nav-tabs-line" role="tablist">
                         <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#tab_info_geral"
                             aria-controls="tab_info_geral" role="tab">Informações básicas</a></li>
                         <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#tab_campanhas"

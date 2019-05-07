@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class Teste extends Notification
+class NovaAfiliacao extends Notification
 {
     use Queueable;
 
@@ -32,10 +32,14 @@ class Teste extends Notification
         return ['database'];
     }
 
-    public function toDatabase($notifiable) {
-
+    /**
+     * @param mixed $notifiable
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
         return [
-            'teste' => 'nova notificação'
+            'qtd' => '1'
         ];
     }
 

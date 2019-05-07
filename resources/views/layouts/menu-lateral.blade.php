@@ -61,7 +61,51 @@
                                   <i class="icon wb-shopping-cart bg-green-600 green icon-circle" sty aria-hidden="true"></i>
                                 </div>
                                 <div class="media-body">
-                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!} {!! $notification->data['qtd'] > 1 ? 'novas vendas' : 'nova venda' !!}</h6>
+                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
+                                      {!! $notification->data['qtd'] > 1 ? 'novas vendas' : 'nova venda' !!}
+                                  </h6>
+                                  <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
+                                </div>
+                              </div>
+                            </a>
+                          @elseif($notification['type'] == 'Modules\Notificacoes\Notifications\NovaSolicitacaoAfiliacao')
+                            <a class="list-group-item dropdown-item" href="/afiliados/meusafiliados" role="menuitem">
+                              <div class="media">
+                                <div class="pr-10">
+                                  <i class="icon wb-users bg-green-600 green icon-circle" sty aria-hidden="true"></i>
+                                </div>
+                                <div class="media-body">
+                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
+                                      {!! $notification->data['qtd'] > 1 ? 'novas solicitações de afiliação' : 'nova solicitação de afiliação' !!}
+                                  </h6>
+                                  <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
+                                </div>
+                              </div>
+                            </a>
+                          @elseif($notification['type'] == 'Modules\Notificacoes\Notifications\NovaAfiliacao')
+                            <a class="list-group-item dropdown-item" href="/afiliados/meusafiliados" role="menuitem">
+                              <div class="media">
+                                <div class="pr-10">
+                                  <i class="icon wb-users bg-green-600 green icon-circle" sty aria-hidden="true"></i>
+                                </div>
+                                <div class="media-body">
+                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
+                                      {!! $notification->data['qtd'] > 1 ? 'novas afiliações' : 'nova afiliação' !!}
+                                  </h6>
+                                  <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
+                                </div>
+                              </div>
+                            </a>
+                          @elseif($notification['type'] == 'Modules\Notificacoes\Notifications\AfiliacaoAprovada')
+                            <a class="list-group-item dropdown-item" href="/afiliados/minhasafiliacoes" role="menuitem">
+                              <div class="media">
+                                <div class="pr-10">
+                                  <i class="icon wb-users bg-green-600 green icon-circle" sty aria-hidden="true"></i>
+                                </div>
+                                <div class="media-body">
+                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
+                                      {!! $notification->data['qtd'] > 1 ? 'novas afiliações aprovadas' : 'nova afiliação aprovada' !!}
+                                  </h6>
                                   <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
                                 </div>
                               </div>

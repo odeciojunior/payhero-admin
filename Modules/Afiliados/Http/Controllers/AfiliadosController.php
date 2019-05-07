@@ -12,6 +12,7 @@ use App\Afiliado;
 use Carbon\Carbon;
 use App\UserProjeto;
 use App\LinkAfiliado;
+use App\Notification;
 use App\MaterialExtra;
 use Illuminate\Http\Request;
 use App\SolicitacaoAfiliacao;
@@ -19,14 +20,43 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
+use Modules\Notificacoes\Notifications\NovaAfiliacao;
+use Modules\Notificacoes\Notifications\AfiliacaoAprovada;
+use Modules\Notificacoes\Notifications\NovaSolicitacaoAfiliacao;
 
 class AfiliadosController extends Controller {
 
     public function afiliar($id_projeto) {
 
+        date_default_timezone_set('America/Sao_Paulo');
+
         $projeto = Projeto::where('id',Hashids::decode($id_projeto))->first();
 
+        $userProjeto = UserProjeto::where([
+            ['projeto', $projeto['id']],
+            ['tipo', 'produtor']
+        ])->first();
+
+        $user = User::find($userProjeto['user']);
+
         if(!$projeto['afiliacao_automatica']){
+
+            $notificacao = Notification::where([
+                ['notifiable_id',$user['id']],
+                ['type','Modules\Notificacoes\Notifications\NovaSolicitacaoAfiliacao']
+            ])
+            ->whereNull('read_at')
+            ->first();
+
+            if($notificacao){
+                $data = json_decode($notificacao['data']);
+                $notificacao->update([
+                    'data' => json_encode(['qtd' => preg_replace("/[^0-9]/", "", $data->qtd) + 1 ])
+                ]);
+            }
+            else{
+                $user->notify(new NovaSolicitacaoAfiliacao());
+            }
 
             SolicitacaoAfiliacao::create([
                 'user'      => \Auth::user()->id,
@@ -38,10 +68,7 @@ class AfiliadosController extends Controller {
             return redirect()->route('afiliados.minhasafiliacoes');
         }
 
-        $empresa = Empresa::where([
-            ['user', \Auth::user()->id],
-            ['recipient_id','!=','']
-        ])->first();
+        $empresa = Empresa::where('user', \Auth::user()->id)->first();
 
         $afiliado = Afiliado::create([
             'user' => \Auth::user()->id,
@@ -50,7 +77,23 @@ class AfiliadosController extends Controller {
             'empresa'  => @$empresa->id
         ]);
 
-        \Session::flash('success', "Afiliação realizada com sucesso!");
+        $notificacao = Notification::where([
+            ['notifiable_id',$user['id']],
+            ['type','Modules\Notificacoes\Notifications\NovaAfiliacao']
+        ])
+        ->whereNull('read_at')
+        ->first();
+
+        if($notificacao){
+            $data = json_decode($notificacao['data']);
+            $notificacao->update([
+                'data' => json_encode(['qtd' => preg_replace("/[^0-9]/", "", $data->qtd) + 1 ])
+            ]);
+        }
+        else{
+            $user->notify(new NovaAfiliacao());
+        }
+
         return redirect()->route('afiliados.minhasafiliacoes');
     }
 
@@ -62,13 +105,12 @@ class AfiliadosController extends Controller {
 
         $projeto = Projeto::where('id',$solicitacao_afiliacao['projeto'])->first();
 
-        $empresa = Empresa::where([
-            ['user', $solicitacao_afiliacao['user']],
-            ['recipient_id','!=','']
-        ])->first();
+        $user = User::find($solicitacao_afiliacao['user']);
+
+        $empresa = Empresa::where('user', $user['id'])->first();
 
         $afiliado = Afiliado::create([
-            'user' => $solicitacao_afiliacao['user'],
+            'user' => $user['id'],
             'projeto' => $projeto['id'],
             'porcentagem' => $projeto['porcentagem_afiliados'],
             'empresa'  => @$empresa->id
@@ -78,8 +120,25 @@ class AfiliadosController extends Controller {
             'status' => 'Confirmada'
         ]);
 
+        $notificacao = Notification::where([
+            ['notifiable_id',$user['id']],
+            ['type','Modules\Notificacoes\Notifications\AfiliacaoAprovada']
+        ])
+        ->whereNull('read_at')
+        ->first();
+
+        if($notificacao){
+            $data = json_decode($notificacao['data']);
+            $notificacao->update([
+                'data' => json_encode(['qtd' => preg_replace("/[^0-9]/", "", $data->qtd) + 1 ])
+            ]);
+        }
+        else{
+            $user->notify(new AfiliacaoAprovada());
+        }
+
         return response()->json('Sucesso');
-    }
+    } 
 
     public function excluirAfiliacao(Request $request){
 
@@ -213,7 +272,7 @@ class AfiliadosController extends Controller {
         })
         ->addColumn('detalhes', function ($solicitacao_afiliacao) {
             return "<span>
-                        <a class='btn btn-outline btn-success cancelar_solicitacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
+                        <a class='btn btn-outline btn-success confirmar_afiliacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Confirmar afiliação
                         </a>
@@ -310,7 +369,7 @@ class AfiliadosController extends Controller {
 
         $dados = $request->all();
 
-        $solicitacao = SolicitacaoAfiliacao::where('id',$dados['id_solicitacao'])->first();
+        $solicitacao = SolicitacaoAfiliacao::where('id',Hashids::decode($dados['id_solicitacao']))->first();
 
         $solicitacao->update([
             'status' => 'Negada'

@@ -241,7 +241,9 @@
                 $('.confirmar_afiliacao').on('click', function(){
 
                     var solicitacao_afiliacao = $(this).attr('solicitacao_afiliacao');
-        
+
+                    $('.loading').css("visibility", "visible");
+
                     $.ajax({
                         method: "POST",
                         url: "/afiliados/minhasafiliacoespendentes/confirmar",
@@ -250,10 +252,13 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function(){
+                            $('.loading').css("visibility", "hidden");
                             alert('Ocorreu algum erro');
                         },
                         success: function(data){
-                            location.reload();
+                            $('.loading').css("visibility", "hidden");
+                            $($.fn.dataTable.tables( true ) ).css('width', '100%');
+                            $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
                         }
                     });
 
@@ -315,7 +320,6 @@
             });
 
         });
-
 
         function alertPersonalizado(tipo, mensagem){
 
