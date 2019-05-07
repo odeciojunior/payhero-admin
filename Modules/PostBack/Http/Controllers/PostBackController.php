@@ -47,10 +47,10 @@ class PostBackController extends Controller {
                 'pagamento_status' => $response->payment->status
             ]);
 
-            $transacoes = Transacao::where('venda',$venda['id'])->get()->toArray();
+            $transacoes = Transacao::where('venda',$venda->id)->get()->toArray();
 
             if($response->payment->status == 'CA'){
-
+ 
                 foreach($transacoes as $transacao){
                     Transacao::find($transacao['id'])->update('status','cancelada');
                 }
@@ -76,6 +76,8 @@ class PostBackController extends Controller {
                         ]);
                     }
                 }
+
+                Log::write('info', 'Transações para atualizar : '. print_r($transacoes, true));
 
                 if($venda['pedido_shopify'] != ''){
 
