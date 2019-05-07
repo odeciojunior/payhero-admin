@@ -26,22 +26,6 @@ class PostBackController extends Controller {
 
     public function postBackListener(Request $request){
 
-        // $cert = file_get_contents('ebanx-notifications-public.pem');
-        // $data = file_get_contents("php://input");
-        // $signature = base64_decode($_SERVER['HTTP_X_SIGNATURE_CONTENT']);
-
-        // // http://php.net/manual/en/function.openssl-verify.php
-        // $result = openssl_verify($data, $signature, $cert);
-
-        // if ($result === 1)
-        // {
-        //     echo "OK, signature is correct.";
-        // }
-        // else
-        // {
-        //     echo "ERROR, the signature is incorrect.";
-        // }
-
         $dados = $request->all();
 
         Log::write('info', 'Notificação do Ebanx : '. print_r($dados, true));
@@ -85,10 +69,37 @@ class PostBackController extends Controller {
                     $transacao = Transacao::find($t['id']);
 
                     if($transacao['emrpesa'] != null){
+
                         $transacao->update([
-                            'status' => 'pago',
+                            'status'         => 'pago',
                             'data_liberacao' => Carbon::now()->addDays(30)->format('Y-m-d')
                         ]);
+                    }
+                }
+
+                if($venda['pedido_shopify'] != ''){
+
+                    $planosVenda = PlanoVenda::where('venda', $venda['id'])->first();
+
+                    $plano = Plano::find($planoVenda->plano);
+
+                    $integracaoShopify = IntegracaoShopify::where('projeto',$plano['projeto'])->first();
+
+                    try{
+                        $credential = new PublicAppCredential($integracaoShopify['token']);
+
+                        $client = new Client($credential, $integracaoShopify['url_loja'], [
+                            'metaCacheDir' => './tmp'
+                        ]);
+
+                        $transaction = $client->getTransactionManager()->create($venda['pedido_shopify'],[
+                            "kind"      => "capture",
+                        ]);
+
+                    }
+                    catch(\Exception $e){
+                        Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$venda['id']);
+                        Log::write('info',  print_r($e, true) );
                     }
 
                 }
@@ -100,4 +111,26 @@ class PostBackController extends Controller {
     }
 
 }
+
+
+
+
+
+
+        // $cert = file_get_contents('ebanx-notifications-public.pem');
+        // $data = file_get_contents("php://input");
+        // $signature = base64_decode($_SERVER['HTTP_X_SIGNATURE_CONTENT']);
+
+        // // http://php.net/manual/en/function.openssl-verify.php
+        // $result = openssl_verify($data, $signature, $cert);
+
+        // if ($result === 1)
+        // {
+        //     echo "OK, signature is correct.";
+        // }
+        // else
+        // {
+        //     echo "ERROR, the signature is incorrect.";
+        // }
+
 

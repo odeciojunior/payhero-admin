@@ -32,29 +32,29 @@ class BackupPostBackController extends Controller {
 
             if(isset($dados['transaction']['metadata']['servico'])){
 
-                $compra_usuario = CompraUsuario::find($dados['transaction']['metadata']['id_venda']);
+                $compraUsuario = CompraUsuario::find($dados['transaction']['metadata']['id_venda']);
 
-                if($compra_usuario['status'] == $dados['transaction']['status']){
+                if($compraUsuario['status'] == $dados['transaction']['status']){
                     return 'Sucesso';
                 }
 
-                $compra_usuario->update([
-                    'status' => $dados['transaction']['status'],
+                $compraUsuario->update([
+                    'status'        => $dados['transaction']['status'],
                     'plataforma_id' => $dados['id'],
                 ]);
 
                 if($dados['transaction']['status'] == 'paid'){
 
-                    $compra_usuario->update([
+                    $compraUsuario->update([
                         'data_finalizada' => \Carbon\Carbon::now()->subHour()->subHour()
                     ]);
     
-                    $user = User::find($compra_usuario['comprador']);
+                    $user = User::find($compraUsuario['comprador']);
 
-                    $qtd_sms = $user['sms_zenvia_qtd'] + $compra_usuario['quantidade'];
+                    $qtdSms = $user['sms_zenvia_qtd'] + $compraUsuario['quantidade'];
 
                     $user->update([
-                        'sms_zenvia_qtd' => $qtd_sms
+                        'sms_zenvia_qtd' => $qtdSms
                     ]);
                 }
             }
@@ -71,17 +71,19 @@ class BackupPostBackController extends Controller {
                 }
 
                 if($dados['transaction']['status'] == 'paid'){
+
                     date_default_timezone_set('America/Sao_Paulo');
+
                     $venda->update([
                         'pagamento_status' => $dados['transaction']['status'],
-                        'pagamento_id' => $dados['id'],
-                        'data_finalizada' => \Carbon\Carbon::now()
+                        'pagamento_id'     => $dados['id'],
+                        'data_finalizada'  => \Carbon\Carbon::now()
                     ]);
 
                     $comprador = Comprador::find($venda['comprador']);
-                    $plano_venda = PlanoVenda::where('venda', $venda['id'])->first();
+                    $planoVenda = PlanoVenda::where('venda', $venda['id'])->first();
 
-                    $plano = Plano::find($plano_venda->plano);
+                    $plano = Plano::find($planoVenda->plano);
 
                     if($plano['shopify_id'] == ''){
                         $entrega = Entrega::find($venda['entrega']);
@@ -94,8 +96,8 @@ class BackupPostBackController extends Controller {
                         if($venda->forma_pagamento == 'cartao_credito' && $plano['hotzapp_dados'] != null) {
 
                             // $venda = Venda::where([
-                            //     'comprador' => $comprador['id'],
-                            //     'plano' => $plano['id'],
+                            //     'comprador'           => $comprador['id'],
+                            //     'plano'               => $plano['id'],
                             //     'mercado_pago_status' => 'rejected'
                             // ])->first();
 
@@ -106,8 +108,8 @@ class BackupPostBackController extends Controller {
                         }
     
                         if($plano['transportadora'] == 1) {
-                            $cliente_id = Kapsula::cadastarCliente($entrega, $comprador);
-                            $response = Kapsula::realizarPedido($cliente_id, $plano['id_plano_trasnportadora']);
+                            $clienteId = Kapsula::cadastarCliente($entrega, $comprador);
+                            $response = Kapsula::realizarPedido($clienteId, $plano['id_plano_trasnportadora']);
                             $entrega->update($response);
                         }
                         if($plano['transportadora'] == 3) {
@@ -117,14 +119,14 @@ class BackupPostBackController extends Controller {
                     }
                     else{
 
-                        $integracao_shopify = IntegracaoShopify::where('projeto',$plano['projeto'])->first();
+                        $integracaoShopify = IntegracaoShopify::where('projeto',$plano['projeto'])->first();
 
-                        $planos_venda = PlanoVenda::where('venda', $venda['id'])->get()->toArray();
+                        $planosVenda = PlanoVenda::where('venda', $venda['id'])->get()->toArray();
 
                         try{
-                            $credential = new PublicAppCredential($integracao_shopify['token']);
+                            $credential = new PublicAppCredential($integracaoShopify['token']);
 
-                            $client = new Client($credential, $integracao_shopify['url_loja'], [
+                            $client = new Client($credential, $integracaoShopify['url_loja'], [
                                 'metaCacheDir' => './tmp'
                             ]);
 
@@ -138,22 +140,22 @@ class BackupPostBackController extends Controller {
 
                             $items = [];
 
-                            foreach($planos_venda as $plano_venda){
-                                $plano = Plano::find($plano_venda['plano']);
+                            foreach($planosVenda as $planoVenda){
+                                $plano = Plano::find($planoVenda['plano']);
                 
                                 $items[] = [
-                                    "grams" => 500,
-                                    "id" => $plano['id'],
-                                    "price" => $plano['preco'],
-                                    "product_id" => $plano['shopify_id'],
-                                    "quantity" => $plano_venda['quantidade'],
+                                    "grams"             => 500,
+                                    "id"                => $plano['id'],
+                                    "price"             => $plano['preco'],
+                                    "product_id"        => $plano['shopify_id'],
+                                    "quantity"          => $planoVenda['quantidade'],
                                     "requires_shipping" => true,
-                                    "sku" => $plano['nome'],
-                                    "title" => $plano['nome'],
-                                    "variant_id" => $plano['shopify_variant_id'],
-                                    "variant_title" => $plano['nome'],
-                                    "name" => $plano['nome'],
-                                    "gift_card" => false,
+                                    "sku"               => $plano['nome'],
+                                    "title"             => $plano['nome'],
+                                    "variant_id"        => $plano['shopify_variant_id'],
+                                    "variant_title"     => $plano['nome'],
+                                    "name"              => $plano['nome'],
+                                    "gift_card"         => false,
                                 ];
                             }
 
@@ -165,31 +167,31 @@ class BackupPostBackController extends Controller {
                             }
                             $address .= ' - ' .$entrega['bairro'];
 
-                            $shipping_address = [
-                                "address1"=> $address,
-                                "address2"=> "",
-                                "city"=> $entrega['cidade'],
-                                "company"=> $comprador['cpf'],
-                                "country"=> "Brasil",
-                                "first_name"=> $nomes[0],
-                                "last_name"=> $nomes[count($nomes) - 1],
-                                "phone"=> $telefone,
-                                "province"=> $entrega['estado'],
-                                "zip"=> $entrega['cep'],
-                                "name"=> $comprador['nome'],
-                                "country_code"=> "BR",
-                                "province_code"=> $entrega['estado']
+                            $shippingAddress = [
+                                "address1"      => $address,
+                                "address2"      => "",
+                                "city"          => $entrega['cidade'],
+                                "company"       => $comprador['cpf'],
+                                "country"       => "Brasil",
+                                "first_name"    => $nomes[0],
+                                "last_name"     => $nomes[count($nomes) - 1],
+                                "phone"         => $telefone,
+                                "province"      => $entrega['estado'],
+                                "zip"           => $entrega['cep'],
+                                "name"          => $comprador['nome'],
+                                "country_code"  => "BR",
+                                "province_code" => $entrega['estado']
                             ];
 
                             $order = $client->getOrderManager()->create([
-                                "accepts_marketing" => false,
-                                "currency" => "BRL",
-                                "email" => $comprador['email'],
-                                "first_name" => $nomes[0],
-                                "last_name" => $nomes[count($nomes) - 1],
+                                "accepts_marketing"       => false,
+                                "currency"                => "BRL",
+                                "email"                   => $comprador['email'],
+                                "first_name"              => $nomes[0],
+                                "last_name"               => $nomes[count($nomes) - 1],
                                 "buyer_accepts_marketing" => false,
-                                "line_items" => $items,
-                                "shipping_address" => $shipping_address,
+                                "line_items"              => $items,
+                                "shipping_address"        => $shippingAddress,
                             ]);
                         }
                         catch(\Exception $e){
@@ -202,7 +204,7 @@ class BackupPostBackController extends Controller {
                 else{
                     $venda->update([
                         'pagamento_status' => $dados['transaction']['status'],
-                        'pagamento_id' => $dados['id'],
+                        'pagamento_id'     => $dados['id'],
                     ]);
                 }
             }
