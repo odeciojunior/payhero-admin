@@ -8,13 +8,13 @@ class AutorizacaoHelper {
 
     public static function isAuthorized($id_projeto){
 
-        $projeto_usuario = UserProjeto::where([
+        $projetoUsuario = UserProjeto::where([
             ['user',\Auth::user()->id],
             ['tipo','produtor'],
             ['projeto', $id_projeto]
         ])->first();
 
-        if(!$projeto_usuario){
+        if(!$projetoUsuario){
             return false;
         }
 

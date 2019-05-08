@@ -93,23 +93,25 @@ class DominiosController extends Controller {
 
         $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
 
-        $request_body = json_decode('{
-            "automatic_security": false,
-            "custom_spf": true,
-            "default": true,
-            "domain": '.$dados['dominio'].'
-        }');
+        $requestBody = json_decode('
+                {
+                    "automatic_security": false,
+                    "custom_spf": true,
+                    "default": true,
+                    "domain": '.$dados['dominio'].'
+                }
+        ');
 
         try{
-            $response = $sendgrid->client->whitelabel()->domains()->post($request_body);
-            $respose = json_decode($response);
+            $response = $sendgrid->client->whitelabel()->domains()->post($requestBody);
+            $response = json_decode($response);
 
             $dados['id_sendgrid'] = $response->id;
 
             $response = $sendgrid->client->whitelabel()->domains()->_($response->id)->get();
 
-            foreach($response->dns as $dns){
-                $dns->addRecord($zoneID, $dns->type, $dns->host, $dns->data, 0, true);
+            foreach($response->dns as $responseDns){
+                $dns->addRecord($zoneID, $responseDns->type, $responseDns->host, $responseDns->data, 0, true);
             }
 
         }
@@ -118,6 +120,7 @@ class DominiosController extends Controller {
         }
 
         $dados['status'] = "Conectado";
+
         Dominio::create($dados);
 
         return response()->json('sucesso');
@@ -130,8 +133,8 @@ class DominiosController extends Controller {
         $empresas = Empresa::all();
 
         return view('dominios::editar',[
-            'dominio' => $dominio,
-            'layouts' => $layouts,
+            'dominio'  => $dominio,
+            'layouts'  => $layouts,
             'empresas' => $empresas
         ]);
 
@@ -382,9 +385,9 @@ class DominiosController extends Controller {
         }
 
         $form = view('dominios::editar',[
-            'dominio' => $dominio,
+            'dominio'   => $dominio,
             'registros' => $registros,
-            'projeto' => $projeto
+            'projeto'   => $projeto
         ]);
 
         return response()->json($form->render());

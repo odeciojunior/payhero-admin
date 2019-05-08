@@ -11,8 +11,8 @@ class NotificacoesController extends Controller {
     public function markasread(Request $request) {
 
         \Auth::user()->unreadNotifications->markAsRead();
-        return response()->json('sucesso');
 
+        return response()->json('sucesso');
     }
 
     public function qtdNotificacoes(){
@@ -20,7 +20,6 @@ class NotificacoesController extends Controller {
         return response()->json([
             'qtd_notificacoes' => count(\Auth::user()->unreadNotifications)
         ]);
-
     }
 
     public function notificacoes(){

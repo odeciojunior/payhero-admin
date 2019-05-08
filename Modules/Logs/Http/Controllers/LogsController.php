@@ -10,10 +10,6 @@ use Illuminate\Routing\Controller;
 
 class LogsController extends Controller {
 
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
     public function logs() {
 
         return view('logs::logs');

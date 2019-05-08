@@ -24,10 +24,10 @@ class BrindesController extends Controller {
 
     public function cadastro() {
 
-        $tipo_brindes = TipoBrinde::all();
+        $tipoBrindes = TipoBrinde::all();
 
         return view('brindes::cadastro',[
-            'tipo_brindes' => $tipo_brindes
+            'tipo_brindes' => $tipoBrindes
         ]);
     }
 
@@ -80,14 +80,14 @@ class BrindesController extends Controller {
     public function editarBrinde($id){
 
         $brinde = Brinde::where('id',Hashids::decode($id))->first();
-        $id_brinde = Hashids::encode($brinde->id);
+        $idBrinde = Hashids::encode($brinde->id);
 
-        $tipo_brindes = TipoBrinde::all();
+        $tipoBrindes = TipoBrinde::all();
 
         return view('brindes::editar',[
-            'id_brinde' => $id_brinde,
+            'id_brinde' => $idBrinde,
             'brinde' => $brinde,
-            'tipo_brindes' => $tipo_brindes
+            'tipo_brindes' => $tipoBrindes
         ]);
 
     }
@@ -208,42 +208,42 @@ class BrindesController extends Controller {
 
         $brinde = Brinde::where('id',Hashids::decode($dados['id_brinde']))->first();
 
-        $tipo_brinde = TipoBrinde::find($brinde->tipo_brinde);
+        $tipoBrinde = TipoBrinde::find($brinde->tipo_brinde);
 
-        $modal_body = '';
+        $modalBody = '';
 
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Título:</b></td>";
-        $modal_body .= "<td>".$brinde->titulo."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Descrição:</b></td>";
-        $modal_body .= "<td>".$brinde->descricao."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Tipo:</b></td>";
-        $modal_body .= "<td>".$tipo_brinde['descricao']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "</thead>";
-        $modal_body .= "</table>";
-        $modal_body .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)."?dummy=".uniqid()."'>";
-        $modal_body .= "</div>";
-        $modal_body .= "</div>";
+        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
+        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
+        $modalBody .= "<thead>";
+        $modalBody .= "</thead>";
+        $modalBody .= "<tbody>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Título:</b></td>";
+        $modalBody .= "<td>".$brinde->titulo."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Descrição:</b></td>";
+        $modalBody .= "<td>".$brinde->descricao."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Tipo:</b></td>";
+        $modalBody .= "<td>".$tipoBrinde['descricao']."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "</thead>";
+        $modalBody .= "</table>";
+        $modalBody .= "<img src='".url(CaminhoArquivosHelper::CAMINHO_BRINDES_FOTO.$brinde->foto)."?dummy=".uniqid()."'>";
+        $modalBody .= "</div>";
+        $modalBody .= "</div>";
 
-        return response()->json($modal_body);
+        return response()->json($modalBody);
     }
 
     public function getFormAddBrinde(){
 
-        $tipo_brindes = TipoBrinde::all();
+        $tipoBrindes = TipoBrinde::all();
 
         $form = view('brindes::cadastro',[
-            'tipo_brindes' => $tipo_brindes
+            'tipo_brindes' => $tipoBrindes
         ]);
 
         return response()->json($form->render());
@@ -254,14 +254,14 @@ class BrindesController extends Controller {
         $dados = $request->all();
 
         $brinde = Brinde::where('id',Hashids::decode($dados['id']))->first();
-        $id_brinde = Hashids::encode($brinde->id);
+        $idBrinde = Hashids::encode($brinde->id);
 
-        $tipo_brindes = TipoBrinde::all();
+        $tipoBrindes = TipoBrinde::all();
 
         $form = view('brindes::editar',[
-            'id_brinde' => $id_brinde,
-            'brinde' => $brinde,
-            'tipo_brindes' => $tipo_brindes
+            'id_brinde'     => $idBrinde,
+            'brinde'        => $brinde,
+            'tipo_brindes'  => $tipoBrindes
         ]);
 
         return response()->json($form->render());

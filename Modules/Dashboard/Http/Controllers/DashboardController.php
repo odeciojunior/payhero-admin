@@ -19,46 +19,46 @@ class DashboardController extends Controller {
 
     public function index() {
 
-        $saldo_disponivel = 0;
-        $saldo_futuro = 0;
+        $saldoDisponivel = 0;
+        $saldoFuturo = 0;
 
         $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
         foreach($empresas as $empresa){
 
-            $transacoes_aguardando = Transacao::where('empresa',$empresa['id'])
+            $transacoesAguardando = Transacao::where('empresa',$empresa['id'])
                 ->where('status','pago')
                 ->whereDate('data_liberacao', '>', Carbon::today()->toDateString())
                 ->get()->toArray();
 
-            if(count($transacoes_aguardando)){
+            if(count($transacoesAguardando)){
 
-                foreach($transacoes_aguardando as $transacao){
+                foreach($transacoesAguardando as $transacao){
                     if($transacao['tipo'] == 'entrada'){
-                        $saldo_futuro += $transacao['valor'];
+                        $saldoFuturo += $transacao['valor'];
                     }
                     else{
-                        $saldo_futuro -= $transacao['valor'];
+                        $saldoFuturo -= $transacao['valor'];
                     }
                 }
             }
         }
 
-        if($saldo_disponivel == 0){
-            $saldo_disponivel = '000';
+        if($saldoDisponivel == 0){
+            $saldoDisponivel = '000';
         }
-        if($saldo_futuro == 0){
-            $saldo_futuro = '000';
+        if($saldoFuturo == 0){
+            $saldoFuturo = '000';
         }
 
-        $saldo_disponivel = \Auth::user()->saldo;
-        $saldo_disponivel = number_format($saldo_disponivel,2);
-        $saldo_futuro = substr_replace($saldo_futuro, '.',strlen($saldo_futuro) - 2, 0 );
-        $saldo_futuro = number_format($saldo_futuro,2);
+        $saldoDisponivel = \Auth::user()->saldo;
+        $saldoDisponivel = number_format($saldoDisponivel,2);
+        $saldoFuturo = substr_replace($saldoFuturo, '.',strlen($saldoFuturo) - 2, 0 );
+        $saldoFuturo = number_format($saldoFuturo,2);
 
         return view('dashboard::dashboard',[
-            'saldo_disponivel' => $saldo_disponivel,
-            'saldo_futuro' => $saldo_futuro
+            'saldo_disponivel' => $saldoDisponivel,
+            'saldo_futuro' => $saldoFuturo
         ]);
 
     }
@@ -76,8 +76,8 @@ class DashboardController extends Controller {
         ->get()->toArray();
 
         foreach($vendas as &$venda){
-            $plano_venda = PlanoVenda::where('venda',$venda['id'])->first();
-            $plano = Plano::find($plano_venda->plano);
+            $planoVenda = PlanoVenda::where('venda',$venda['id'])->first();
+            $plano = Plano::find($planoVenda->plano);
             $projeto = Projeto::find($plano['projeto']);
             $venda['projeto'] = $projeto['nome'];
             $venda['data_inicio'] = (new Carbon($venda['data_inicio']))->format('d/m/Y H:i:s');

@@ -44,11 +44,11 @@ class RelatoriosController extends Controller {
 
         // dd($response);
 
-        $projetos_usuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
+        $projetosUsuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
         $projetos = [];
 
-        foreach($projetos_usuario as $projeto_usuario){
-            $projeto = Projeto::find($projeto_usuario['projeto']);
+        foreach($projetosUsuario as $projetoUsuario){
+            $projeto = Projeto::find($projetoUsuario['projeto']);
             $projetos[] = [
                 'id' => $projeto['id'],
                 'nome' => $projeto['nome']
@@ -81,8 +81,8 @@ class RelatoriosController extends Controller {
             if(count($planos_venda) > 1){
                 return "Carrinho";
             }
-            foreach($planos_venda as $plano_venda){
-                $plano = Plano::find($plano_venda);
+            foreach($planos_venda as $planoVenda){
+                $plano = Plano::find($planoVenda);
                 return $plano['nome'];
             }
         })
@@ -127,12 +127,12 @@ class RelatoriosController extends Controller {
         $dados = $request->all();
         $venda = Venda::find(preg_replace("/[^0-9]/", "", $dados['id_venda']));
 
-        $planos_venda = PlanoVenda::where('venda', $venda->id)->get()->toArray();
+        $planosVenda = PlanoVenda::where('venda', $venda->id)->get()->toArray();
         $planos = [];
 
-        foreach($planos_venda as $key => $plano_venda){
-            $planos[$key]['nome'] = Plano::find($plano_venda['plano'])['nome'];
-            $planos[$key]['quantidade'] = $plano_venda['quantidade'];
+        foreach($planosVenda as $key => $planoVenda){
+            $planos[$key]['nome'] = Plano::find($planoVenda['plano'])['nome'];
+            $planos[$key]['quantidade'] = $planoVenda['quantidade'];
         }
 
         $comprador = Comprador::find($venda->comprador);
@@ -141,10 +141,10 @@ class RelatoriosController extends Controller {
         $venda['data_inicio'] = (new Carbon($venda['data_inicio']))->format('d/m/Y H:i:s');
 
         $detalhes = view('relatorios::detalhes',[
-            'venda' => $venda,
-            'planos' => $planos,
+            'venda'     => $venda,
+            'planos'    => $planos,
             'comprador' => $comprador,
-            'entrega' => $entrega
+            'entrega'   => $entrega
         ]);
 
         return response()->json($detalhes->render());
@@ -246,11 +246,11 @@ class RelatoriosController extends Controller {
             $status = $venda['pagamento_status'];
 
         $produtos = [];
-        foreach($planos_venda as $plano_venda){
-            $plano = Plano::find($plano_venda['plano']);
+        foreach($planos_venda as $planoVenda){
+            $plano = Plano::find($planoVenda['plano']);
             $produtos[] = [
                 'nome' => $plano['nome'],
-                'quantidade' => $plano_venda['quantidade']
+                'quantidade' => $planoVenda['quantidade']
             ];
         }
 

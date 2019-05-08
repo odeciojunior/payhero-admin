@@ -26,11 +26,11 @@ use Modules\Notificacoes\Notifications\NovaSolicitacaoAfiliacao;
 
 class AfiliadosController extends Controller {
 
-    public function afiliar($id_projeto) {
+    public function afiliar($idProjeto) {
 
         date_default_timezone_set('America/Sao_Paulo');
 
-        $projeto = Projeto::where('id',Hashids::decode($id_projeto))->first();
+        $projeto = Projeto::where('id',Hashids::decode($idProjeto))->first();
 
         $userProjeto = UserProjeto::where([
             ['projeto', $projeto['id']],
@@ -71,10 +71,10 @@ class AfiliadosController extends Controller {
         $empresa = Empresa::where('user', \Auth::user()->id)->first();
 
         $afiliado = Afiliado::create([
-            'user' => \Auth::user()->id,
-            'projeto' => $projeto['id'],
+            'user'        => \Auth::user()->id,
+            'projeto'     => $projeto['id'],
             'porcentagem' => $projeto['porcentagem_afiliados'],
-            'empresa'  => @$empresa->id
+            'empresa'     => @$empresa->id
         ]);
 
         $notificacao = Notification::where([
@@ -101,22 +101,22 @@ class AfiliadosController extends Controller {
 
         $dados = $request->all();
 
-        $solicitacao_afiliacao = SolicitacaoAfiliacao::where('id',Hashids::decode($dados['id']))->first();
+        $solicitacaoAfiliacao = SolicitacaoAfiliacao::where('id',Hashids::decode($dados['id']))->first();
 
-        $projeto = Projeto::where('id',$solicitacao_afiliacao['projeto'])->first();
+        $projeto = Projeto::where('id',$solicitacaoAfiliacao['projeto'])->first();
 
-        $user = User::find($solicitacao_afiliacao['user']);
+        $user = User::find($solicitacaoAfiliacao['user']);
 
         $empresa = Empresa::where('user', $user['id'])->first();
 
         $afiliado = Afiliado::create([
-            'user' => $user['id'],
-            'projeto' => $projeto['id'],
+            'user'        => $user['id'],
+            'projeto'     => $projeto['id'],
             'porcentagem' => $projeto['porcentagem_afiliados'],
-            'empresa'  => @$empresa->id
+            'empresa'     => @$empresa->id
         ]);
 
-        $solicitacao_afiliacao->update([
+        $solicitacaoAfiliacao->update([
             'status' => 'Confirmada'
         ]);
 
@@ -181,41 +181,41 @@ class AfiliadosController extends Controller {
     public function afiliacao($id_afiliacao){
 
         $afiliado = Afiliado::where('id',Hashids::decode($id_afiliacao))->first();
-        $id_afiliado = Hashids::encode($afiliado->id);
+        $idAfiliado = Hashids::encode($afiliado->id);
 
         $projeto = Projeto::find($afiliado['projeto']);
 
         $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
 
-        $projeto_usuario = UserProjeto::where([
+        $projetoUsuario = UserProjeto::where([
             ['projeto',$projeto['id']],
             ['tipo','produtor']
         ])->first();
-        $usuario = User::find($projeto_usuario['user']);
+        $usuario = User::find($projetoUsuario['user']);
 
-        $materiais_extras = MaterialExtra::where('projeto',$projeto['id'])->get()->toArray();
+        $materiaisExtras = MaterialExtra::where('projeto',$projeto['id'])->get()->toArray();
 
         return view('afiliados::detalhes_afiliacao',[
-            'id_afiliado' => $id_afiliado,
-            'projeto' => $projeto,
-            'produtor' => $usuario['name'],
-            'empresas' => $empresas,
-            'afiliado' => $afiliado,
-            'materiais_extras' => $materiais_extras,
+            'id_afiliado'      => $idAfiliado,
+            'projeto'          => $projeto,
+            'produtor'         => $usuario['name'],
+            'empresas'         => $empresas,
+            'afiliado'         => $afiliado,
+            'materiais_extras' => $materiaisExtras,
         ]);
     }
 
     public function dadosMeusAfiliados(){
 
-        $projetos_usuario = UserProjeto::where([
+        $projetosUsuario = UserProjeto::where([
             ['user',\Auth::user()->id],
             ['tipo','produtor']
         ])->pluck('projeto')->toArray();
 
-        $usuarios_afiliados = \DB::table('afiliados as afiliado')
+        $usuariosAfiliados = \DB::table('afiliados as afiliado')
             ->leftJoin('users as user','afiliado.user','user.id')
             ->leftJoin('projetos as projeto','afiliado.projeto','projeto.id')
-            ->whereIn('projeto.id',$projetos_usuario)
+            ->whereIn('projeto.id',$projetosUsuario)
             ->whereNull('afiliado.deleted_at')
             ->select([
                 'afiliado.id',
@@ -225,7 +225,7 @@ class AfiliadosController extends Controller {
                 'projeto.nome',
         ]);
 
-        return Datatables::of($usuarios_afiliados)
+        return Datatables::of($usuariosAfiliados)
         ->addColumn('detalhes', function ($afiliado) {
             return "<span data-toggle='modal' data-target='#modal_detalhes'>
                         <a class='btn btn-outline btn-success detalhes_afiliado' data-placement='top' data-toggle='tooltip' title='Detalhes' afiliado='".Hashids::encode($afiliado->id)."'>
@@ -247,15 +247,15 @@ class AfiliadosController extends Controller {
 
     public function dadosAfiliacoesPendentes(){
 
-        $projetos_usuario = UserProjeto::where([
+        $projetosUsuario = UserProjeto::where([
             ['user',\Auth::user()->id],
             ['tipo','produtor']   
         ])->pluck('projeto')->toArray();
 
-        $solicitacoes_afiliacoes = \DB::table('solicitacoes_afiliacoes as solicitacao_afiliacao')
+        $solicitacoesAfiliacoes = \DB::table('solicitacoes_afiliacoes as solicitacao_afiliacao')
             ->leftJoin('users as user','solicitacao_afiliacao.user','user.id')
             ->leftJoin('projetos as projeto','solicitacao_afiliacao.projeto','projeto.id')
-            ->whereIn('solicitacao_afiliacao.projeto',$projetos_usuario)
+            ->whereIn('solicitacao_afiliacao.projeto',$projetosUsuario)
             ->whereNull('solicitacao_afiliacao.deleted_at')
             ->where('solicitacao_afiliacao.status','Pendente')
             ->select([
@@ -266,19 +266,19 @@ class AfiliadosController extends Controller {
                 'projeto.nome',
         ]);
 
-        return Datatables::of($solicitacoes_afiliacoes)
+        return Datatables::of($solicitacoesAfiliacoes)
         ->editColumn('data_solicitacao', function($afiliado){
             return Carbon::parse($afiliado->data_solicitacao)->format('d/m/Y H:i');
         })
-        ->addColumn('detalhes', function ($solicitacao_afiliacao) {
+        ->addColumn('detalhes', function ($solicitacaoAfiliacao) {
             return "<span>
-                        <a class='btn btn-outline btn-success confirmar_afiliacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
+                        <a class='btn btn-outline btn-success confirmar_afiliacao' data-placement='top' data-toggle='tooltip' title='Confirmar' solicitacao_afiliacao='".Hashids::encode($solicitacaoAfiliacao->id)."'>
                             <i class='icon wb-order' aria-hidden='true'></i>
                             Confirmar afiliação
                         </a>
                     </span>
                     <span data-toggle='modal' data-target='#modal_cancelar_solicitacao'>
-                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
+                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".Hashids::encode($solicitacaoAfiliacao->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                             Negar solicitação
                         </a>
@@ -293,9 +293,9 @@ class AfiliadosController extends Controller {
 
         $empresas_usuario = Empresa::where('user',\Auth::user()->id)->pluck('id')->toArray();
 
-        $projetos_usuario = UserProjeto::where('user',\Auth::user()->id)->pluck('id')->toArray();
+        $projetosUsuario = UserProjeto::where('user',\Auth::user()->id)->pluck('id')->toArray();
 
-        $solicitacoes_afiliacoes = \DB::table('solicitacoes_afiliacoes as solicitacao_afiliacao')
+        $solicitacoesAfiliacoes = \DB::table('solicitacoes_afiliacoes as solicitacao_afiliacao')
             ->leftJoin('projetos as projeto','projeto.id','=','solicitacao_afiliacao.projeto')
             ->whereNull('solicitacao_afiliacao.deleted_at')
             ->where('solicitacao_afiliacao.user',\Auth::user()->id)
@@ -308,13 +308,13 @@ class AfiliadosController extends Controller {
                 'solicitacao_afiliacao.created_at as data_solicitacao',
         ]);
 
-        return Datatables::of($solicitacoes_afiliacoes)
-        ->editColumn('data_solicitacao', function($solicitacao_afiliacao){
-            return Carbon::parse($solicitacao_afiliacao->data_solicitacao)->format('d/m/Y H:i');
+        return Datatables::of($solicitacoesAfiliacoes)
+        ->editColumn('data_solicitacao', function($solicitacaoAfiliacao){
+            return Carbon::parse($solicitacaoAfiliacao->data_solicitacao)->format('d/m/Y H:i');
         })
-        ->addColumn('detalhes', function ($solicitacao_afiliacao) {
+        ->addColumn('detalhes', function ($solicitacaoAfiliacao) {
             return "<span data-toggle='modal' data-target='#modal_cancelar_solicitacao'>
-                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".Hashids::encode($solicitacao_afiliacao->id)."'>
+                        <a class='cancelar_solicitacao btn btn-outline btn-danger' data-placement='top' data-toggle='tooltip' title='cancelar solicitação' solicitacao_afiliacao='".Hashids::encode($solicitacaoAfiliacao->id)."'>
                             <i class='icon wb-trash' aria-hidden='true'></i>
                             Cancelar solicitação
                         </a>
@@ -325,11 +325,11 @@ class AfiliadosController extends Controller {
 
     }
 
-    public function getAfiliadosProjeto($id_projeto){
+    public function getAfiliadosProjeto($idProjeto){
 
-        $projeto = Projeto::where('id',$id_projeto)->first();
+        $projeto = Projeto::where('id',$idProjeto)->first();
 
-        $afiliados = Afiliado::where('projeto',$id_projeto)->get()->toArray();
+        $afiliados = Afiliado::where('projeto',$idProjeto)->get()->toArray();
 
         foreach($afiliados as &$afiliado){
             $usuario = User::find($afiliado['user']);
@@ -337,7 +337,7 @@ class AfiliadosController extends Controller {
         }
 
         $view = view('afiliados::afiliados_projeto',[
-            'projeto' => $projeto,
+            'projeto'   => $projeto,
             'afiliados' => $afiliados
         ]);
 
@@ -376,31 +376,6 @@ class AfiliadosController extends Controller {
         ]);
 
         return response()->json('sucesso');
-    }
-
-    function randString($size){
-
-        $novo_parametro = false;
-
-        while(!$novo_parametro){
-
-            $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
-
-            $parametro = "";
-
-            for($count= 0; $size > $count; $count++){
-                $parametro.= $basic[rand(0, strlen($basic) - 1)];
-            }
-
-            $novo_link = LinkAfiliado::where('parametro', $parametro)->first();
-
-            if($novo_link == null){
-                $novo_parametro = true;
-            }
-
-        }
-
-        return $parametro;
     }
 
 }

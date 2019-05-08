@@ -63,8 +63,8 @@ class RecuperacaoCarrinhoController extends Controller {
         })
         ->addColumn('valor', function ($checkout) {
             $valor = 0;
-            $planos_checkout = PlanoCheckout::where('checkout',$checkout->id)->get()->toArray();
-            foreach($planos_checkout as $plano_checkout){
+            $planosCheckout = PlanoCheckout::where('checkout',$checkout->id)->get()->toArray();
+            foreach($planosCheckout as $plano_checkout){
                 $plano = Plano::find($plano_checkout['plano']);
                 $valor += str_replace('.','',$plano['preco']) * $plano_checkout['quantidade'];
             }

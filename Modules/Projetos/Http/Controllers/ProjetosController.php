@@ -25,13 +25,19 @@ class ProjetosController extends Controller{
         $projetos = array();
 
         if(\Auth::user()->hasRole('administrador geral')){
+
             $projetos = Projeto::all();
+
         }
         else{
             $projetosUsuario = UserProjeto::where('user', \Auth::user()->id)->get()->toArray();
+
             if($projetosUsuario != null){
+
                 foreach($projetosUsuario as $projetoUsuario){
+
                     $projeto = Projeto::find($projetoUsuario['projeto']);
+
                     if($projeto){
                         $p['id'] = Hashids::encode($projetoUsuario['projeto']);
                         $p['foto'] = $projeto['foto'];
@@ -69,24 +75,24 @@ class ProjetosController extends Controller{
         $imagem = $request->file('foto_projeto');
 
         if ($imagem != null) {
-            $nome_foto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+            $nomeFoto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
 
-            Storage::delete('public/upload/projeto/'.$nome_foto);
+            Storage::delete('public/upload/projeto/'.$nomeFoto);
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_foto);
+            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
             $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
             $img->resize(200, 200);
 
-            Storage::delete('public/upload/projeto/'.$nome_foto);
+            Storage::delete('public/upload/projeto/'.$nomeFoto);
 
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
             $projeto->update([
-                'foto' => $nome_foto
+                'foto' => $nomeFoto
             ]);
         }
 
@@ -112,7 +118,7 @@ class ProjetosController extends Controller{
         $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         return view('projetos::editar',[
-            'projeto' => $projeto,
+            'projeto'  => $projeto,
             'empresas' => $empresas
         ]);
 
@@ -129,24 +135,24 @@ class ProjetosController extends Controller{
         $imagem = $request->file('foto_projeto');
 
         if ($imagem != null) {
-            $nome_foto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+            $nomeFoto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
 
-            Storage::delete('public/upload/projeto/'.$nome_foto);
+            Storage::delete('public/upload/projeto/'.$nomeFoto);
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_foto);
+            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto); 
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto); 
 
             $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
             $img->resize(200, 200);
 
-            Storage::delete('public/upload/projeto/'.$nome_foto);
+            Storage::delete('public/upload/projeto/'.$nomeFoto);
 
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
             $projeto->update([
-                'foto' => $nome_foto
+                'foto' => $nomeFoto
             ]);
         }
 
@@ -174,8 +180,8 @@ class ProjetosController extends Controller{
         $projeto_id = Hashids::encode($projeto->id);
 
         return view('projetos::projeto',[
-            'projeto' => $projeto,
-            'foto' => $foto,
+            'projeto'    => $projeto,
+            'foto'       => $foto,
             'projeto_id' => $projeto_id
         ]);
     }
@@ -184,14 +190,14 @@ class ProjetosController extends Controller{
 
         $projeto = Projeto::where('id',Hashids::decode($id))->first();
 
-        $materiais_extras = MaterialExtra::where('projeto',$projeto->id)->get()->toArray();
+        $materiaisExtras = MaterialExtra::where('projeto',$projeto->id)->get()->toArray();
 
         $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
         $view = view('projetos::editar',[
-            'projeto' => $projeto,
-            'empresas' => $empresas,
-            'materiais_extras' => $materiais_extras
+            'projeto'          => $projeto,
+            'empresas'         => $empresas,
+            'materiais_extras' => $materiaisExtras
         ]);
 
         return response()->json($view->render());
@@ -200,14 +206,14 @@ class ProjetosController extends Controller{
     public function getDadosProjeto($id){
 
         $projeto = Projeto::find(Hashids::decode($id)[0]); 
-        $id_projeto = Hashids::encode($projeto->id);
+        $idProjeto = Hashids::encode($projeto->id);
 
-        $user_projeto = UserProjeto::where([
+        $userProjeto = UserProjeto::where([
             ['projeto',$projeto['id']],
             ['tipo','produtor']
         ])->first();
 
-        $usuario = User::find($user_projeto['user']);
+        $usuario = User::find($userProjeto['user']);
         $planos = Plano::where('projeto',$projeto['id'])->get()->toArray();
 
         foreach($planos as &$plano){
@@ -215,10 +221,10 @@ class ProjetosController extends Controller{
         }
         
         $view = view('projetos::detalhes',[
-            'id_projeto' => $id_projeto,
-            'projeto' => $projeto,
-            'planos' => $planos,
-            'produtor' => $usuario['name']
+            'id_projeto' => $idProjeto,
+            'projeto'    => $projeto,
+            'planos'     => $planos,
+            'produtor'   => $usuario['name']
         ]);
 
         return response()->json($view->render());
@@ -234,39 +240,40 @@ class ProjetosController extends Controller{
             $dados['material'] = $dados['material_extra_video'];
             MaterialExtra::create($dados);
         }
+
         else if($dados['tipo'] == 'imagem'){
 
-            $material_extra = MaterialExtra::create($dados);
+            $materialExtra = MaterialExtra::create($dados);
 
             $imagem = $request->file('material_extra_imagem');
 
             if ($imagem != null) {
-                $nome_foto = 'foto_' . $material_extra->id . '_.' . $imagem->getClientOriginalExtension();
+                $nomeFoto = 'foto_' . $materialExtra->id . '_.' . $imagem->getClientOriginalExtension();
     
-                Storage::delete('public/upload/materialextra/fotos/'.$nome_foto);
+                Storage::delete('public/upload/materialextra/fotos/'.$nomeFoto);
     
-                $imagem->move(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO, $nome_foto);
+                $imagem->move(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO, $nomeFoto);
     
-                $img = Image::make(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nome_foto);
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nomeFoto);
 
-                Storage::delete('public/upload/materialextra/fotos/'.$nome_foto);
+                Storage::delete('public/upload/materialextra/fotos/'.$nomeFoto);
 
-                $img->save(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nome_foto);
+                $img->save(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nomeFoto);
 
-                $material_extra->update([
-                    'material' => $nome_foto
+                $materialExtra->update([
+                    'material' => $nomeFoto
                 ]);
             }
 
         }
         else if($dados['tipo'] == 'pdf'){
 
-            $material_extra = MaterialExtra::create($dados);
+            $materialExtra = MaterialExtra::create($dados);
 
             $arquivo = $request->file('material_extra_pdf');
 
             if ($arquivo != null) {
-                $nome_pdf = 'pdf_' . $material_extra->id . '_.' . $arquivo->getClientOriginalExtension();
+                $nome_pdf = 'pdf_' . $materialExtra->id . '_.' . $arquivo->getClientOriginalExtension();
 
                 Storage::delete('public/upload/materialextra/pdfs/'.$nome_pdf);
 
@@ -278,7 +285,7 @@ class ProjetosController extends Controller{
 
                 $img->save(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJETO_FOTO . $nome_pdf);
 
-                $material_extra->update([
+                $materialExtra->update([
                     'material' => $nome_pdf
                 ]);
             }

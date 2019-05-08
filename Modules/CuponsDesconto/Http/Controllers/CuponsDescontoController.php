@@ -33,10 +33,10 @@ class CuponsDescontoController extends Controller {
 
     public function editarCupomDesconto($id){
 
-        $cupom_desconto = Cupom::where('id',Hashids::decode($id)[0])->first();
+        $cupomDesconto = Cupom::where('id',Hashids::decode($id)[0])->first();
 
         return view('cuponsdesconto::editar',[
-            'cupom' => $cupom_desconto,
+            'cupom' => $cupomDesconto,
         ]);
 
     }
@@ -125,49 +125,49 @@ class CuponsDescontoController extends Controller {
 
         $cupom = Cupom::where('id',Hashids::decode($dados['id_cupom']))->first();
 
-        $modal_body = '';
+        $modalBody = '';
 
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Nome:</b></td>";
-        $modal_body .= "<td>".$cupom->nome."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Descrição:</b></td>";
-        $modal_body .= "<td>".$cupom->descricao."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Código:</b></td>";
-        $modal_body .= "<td>".$cupom->cod_cupom."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Tipo:</b></td>";
+        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
+        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
+        $modalBody .= "<thead>";
+        $modalBody .= "</thead>";
+        $modalBody .= "<tbody>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Nome:</b></td>";
+        $modalBody .= "<td>".$cupom->nome."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Descrição:</b></td>";
+        $modalBody .= "<td>".$cupom->descricao."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Código:</b></td>";
+        $modalBody .= "<td>".$cupom->cod_cupom."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Tipo:</b></td>";
         if($cupom->tipo)
-            $modal_body .= "<td>Valor</td>";
+            $modalBody .= "<td>Valor</td>";
         else
-            $modal_body .= "<td>Porcentagem</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Valor:</b></td>";
-        $modal_body .= "<td>".$cupom->valor."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Status:</b></td>";
+            $modalBody .= "<td>Porcentagem</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Valor:</b></td>";
+        $modalBody .= "<td>".$cupom->valor."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Status:</b></td>";
         if($cupom->status)
-            $modal_body .= "<td>Ativo</td>";
+            $modalBody .= "<td>Ativo</td>";
         else
-            $modal_body .= "<td>Inativo</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "</thead>";
-        $modal_body .= "</table>";
-        $modal_body .= "</div>";
-        $modal_body .= "</div>";
+            $modalBody .= "<td>Inativo</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "</thead>";
+        $modalBody .= "</table>";
+        $modalBody .= "</div>";
+        $modalBody .= "</div>";
 
-        return response()->json($modal_body);
+        return response()->json($modalBody);
     }
 
     public function getFormAddCupom(Request $request){
@@ -187,7 +187,7 @@ class CuponsDescontoController extends Controller {
 
         $form = view('cuponsdesconto::editar',[
             'cupom' => $cupom,
-            'id' => $id
+            'id'    => $id
         ]);
 
         return response()->json($form->render());

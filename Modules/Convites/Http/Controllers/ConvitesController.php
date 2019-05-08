@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\EmailHelper;
+use Modules\Core\Helpers\StringHelper;
 
 class ConvitesController extends Controller {
 
@@ -37,7 +38,20 @@ class ConvitesController extends Controller {
 
         $dados['user_convite'] = \Auth::user()->id;
         $dados['status'] = "Convite enviado";
-        $dados['parametro']  = $this->randString(15);
+
+        $novoParametro = false;
+
+        while(!$novoParametro){
+
+            $parametro = StringHelper::randString(15);
+
+            $convite = Convite::where('parametro', $parametro)->first();
+
+            if($convite == null){
+                $novoParametro = true;
+                $dados['parametro'] = $parametro;
+            }
+        }
 
         $dados['empresa'] = @Empresa::where('user', \Auth::user()->id)->first()->id;
 
@@ -46,31 +60,6 @@ class ConvitesController extends Controller {
         EmailHelper::enviarConvite($dados['email_convidado'], $dados['parametro']);
 
         return redirect()->route('convites');
-    }
-
-    function randString($size){
-
-        $novoParametro = false;
-
-        while(!$novoParametro){
-
-            $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
-
-            $parametro = "";
-
-            for($count= 0; $size > $count; $count++){
-                $parametro.= $basic[rand(0, strlen($basic) - 1)];
-            }
-
-            $convite = Convite::where('parametro', $parametro)->first();
-
-            if($convite == null){
-                $novoParametro = true;
-            }
-
-        }
-
-        return $parametro;
     }
 
 }

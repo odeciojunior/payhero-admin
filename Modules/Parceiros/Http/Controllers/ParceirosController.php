@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
+use Modules\Core\Helpers\StringHelper;
 use Yajra\DataTables\Facades\DataTables;
 
 class ParceirosController extends Controller {
@@ -79,19 +80,34 @@ class ParceirosController extends Controller {
         else{
             $dados['status'] = 'convite enviado';
 
-            $dados_convite['email_convidado'] = $dados['email_parceiro'];
-            $dados_convite['user_convite'] = \Auth::user()->id;
-            $dados_convite['status'] = "Convite enviado";
-            $dados_convite['parametro']  = $this->randString(15);
+            $dadosConvite['email_convidado'] = $dados['email_parceiro'];
+            $dadosConvite['user_convite'] = \Auth::user()->id;
+            $dadosConvite['status'] = "Convite enviado";
 
-            $dados_convite['empresa'] = @Empresa::where('user', \Auth::user()->id)->first()->id;
+            $novoParametro = false;
 
-            $convite = Convite::create($dados_convite);
+            while(!$novoParametro){
 
-            Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados_convite) {
+                $parametro = StringHelper::randString(15);
+
+                $convite = Convite::where('parametro', $parametro)->first();
+    
+                if($convite == null){
+                    $novoParametro = true;
+                    $dadosConvite['parametro']  = $parametro;
+
+                }
+    
+            }
+
+            $dadosConvite['empresa'] = @Empresa::where('user', \Auth::user()->id)->first()->id;
+
+            $convite = Convite::create($dadosConvite);
+
+            Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dadosConvite) {
                 $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
 
-                $mail->to($dados_convite['email_convidado'], 'Cloudfox')->subject('Convite para participar de um projeto no Cloudfox!');
+                $mail->to($dadosConvite['email_convidado'], 'Cloudfox')->subject('Convite para participar de um projeto no Cloudfox!');
             });
 
         }
@@ -108,9 +124,11 @@ class ParceirosController extends Controller {
     public function editarParceiro(Request $request){
 
         $dados = $request->all();
+
         unset($dados['projeto']);
 
         $parceiro = UserProjeto::where('id',Hashids::decode($dados['id']))->first();
+
         $parceiro->update($dados);
 
         return response()->json('sucesso');
@@ -139,14 +157,14 @@ class ParceirosController extends Controller {
         $dados = $request->all();
 
         $parceiro = UserProjeto::where('id',Hashids::decode($dados['id_parceiro']))->first();
-        $id_parceiro = Hashids::encode($parceiro->id);
+        $idParceiro = Hashids::encode($parceiro->id);
 
         $user = User::find($parceiro->user);
 
         $form = view('parceiros::editar',[
-            'id_parceiro' => $id_parceiro,
-            'parceiro' => $parceiro,
-            'user' => $user
+            'id_parceiro' => $idParceiro,
+            'parceiro'    => $parceiro,
+            'user'        => $user
         ]);
 
         return response()->json($form->render());
@@ -166,31 +184,6 @@ class ParceirosController extends Controller {
         ]);
 
         return response()->json($detalhes->render());
-    }
-
-    function randString($size){
-
-        $novo_parametro = false;
-
-        while(!$novo_parametro){
-
-            $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
-
-            $parametro = "";
-
-            for($count= 0; $size > $count; $count++){
-                $parametro.= $basic[rand(0, strlen($basic) - 1)];
-            }
-
-            $convite = Convite::where('parametro', $parametro)->first();
-
-            if($convite == null){
-                $novo_parametro = true;
-            }
-
-        }
-
-        return $parametro;
     }
 
 }

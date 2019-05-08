@@ -37,24 +37,24 @@ class PerfilController extends Controller {
         if ($foto != null) {
 
             try{
-                $nome_foto = 'user_' . $user->id . '_.' . $foto->getClientOriginalExtension();
+                $nomeFoto = 'user_' . $user->id . '_.' . $foto->getClientOriginalExtension();
 
-                Storage::delete('public/upload/perfil/'.$nome_foto);
+                Storage::delete('public/upload/perfil/'.$nomeFoto);
                 
-                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_USER, $nome_foto);
+                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_USER, $nomeFoto);
 
-                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $nome_foto);
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $nomeFoto);
 
                 $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
                 $img->resize(200, 200);
 
-                Storage::delete('public/upload/perfil/'.$nome_foto);
+                Storage::delete('public/upload/perfil/'.$nomeFoto);
                 
-                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $nome_foto);
+                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $nomeFoto);
 
                 $user->update([
-                    'foto' => $nome_foto
+                    'foto' => $nomeFoto
                 ]);
             }
             catch(\Exception $e){

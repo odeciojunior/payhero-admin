@@ -96,32 +96,32 @@ class CategoriasController extends Controller {
 
         $produtos = Produto::where('categoria', $categoria->id)->get()->toArray();
 
-        $modal_body = '';
+        $modalBody = '';
 
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Nome:</b></td>";
-        $modal_body .= "<td>".$categoria->nome."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Descrição:</b></td>";
-        $modal_body .= "<td>".$categoria->descricao."</td>";
-        $modal_body .= "</tr>";
+        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
+        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
+        $modalBody .= "<thead>";
+        $modalBody .= "</thead>";
+        $modalBody .= "<tbody>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Nome:</b></td>";
+        $modalBody .= "<td>".$categoria->nome."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Descrição:</b></td>";
+        $modalBody .= "<td>".$categoria->descricao."</td>";
+        $modalBody .= "</tr>";
         foreach($produtos as $produto){
-            $modal_body .= "<tr>";
-            $modal_body .= "<td><b>Produto:</b></td>";
-            $modal_body .= "<td>".$produto['nome']."</td>";
-            $modal_body .= "</tr>";
+            $modalBody .= "<tr>";
+            $modalBody .= "<td><b>Produto:</b></td>";
+            $modalBody .= "<td>".$produto['nome']."</td>";
+            $modalBody .= "</tr>";
         }
-        $modal_body .= "</thead>";
-        $modal_body .= "</table>";
-        $modal_body .= "</div>";
-        $modal_body .= "</div>";
+        $modalBody .= "</thead>";
+        $modalBody .= "</table>";
+        $modalBody .= "</div>";
+        $modalBody .= "</div>";
 
-        return response()->json($modal_body);
+        return response()->json($modalBody);
     }
 }

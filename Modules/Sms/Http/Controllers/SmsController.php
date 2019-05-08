@@ -23,26 +23,27 @@ class SmsController extends Controller {
 
     public function index() {
 
-        $qtd_sms_disponiveis = \Auth::user()->sms_zenvia_qtd;
+        $qtdSmsDisponiveis = \Auth::user()->sms_zenvia_qtd;
 
-        $user_projetos = UserProjeto::where([
+        $userProjetos = UserProjeto::where([
             ['user',\Auth::user()->id],
             ['tipo','produtor']
         ])->get()->toArray();
 
-        $planos_usuario = [];
-        foreach($user_projetos as $user_projeto){
-            $planos = Plano::where('projeto',$user_projeto['projeto'])->pluck('id')->toArray();
+        $planosUsuario = [];
+
+        foreach($userProjetos as $userProjeto){
+            $planos = Plano::where('projeto',$userProjeto['projeto'])->pluck('id')->toArray();
             if(count($planos) > 0){
                 foreach($planos as $plano){
-                    $planos_usuario[] = $plano;
+                    $planosUsuario[] = $plano;
                 }
             }
         }
 
-        $qtd_sms_enviados = MensagemSms::whereIn('plano',$planos_usuario)->where('tipo','Enviada')->count();
+        $qtdSmsEnviados = MensagemSms::whereIn('plano',$planosUsuario)->where('tipo','Enviada')->count();
 
-        $qtd_sms_recebidos = MensagemSms::whereIn('plano',$planos_usuario)->where('tipo','Recebida')->count();
+        $qtdSmsRecebidos = MensagemSms::whereIn('plano',$planosUsuario)->where('tipo','Recebida')->count();
 
         $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
@@ -56,10 +57,10 @@ class SmsController extends Controller {
         }
 
         return view('sms::index',[
-            'sms_disponiveis' => $qtd_sms_disponiveis,
-            'sms_enviados' => $qtd_sms_enviados,
-            'sms_recebidos' => $qtd_sms_recebidos,
-            'compras' => $compras
+            'sms_disponiveis' => $qtdSmsDisponiveis,
+            'sms_enviados'    => $qtdSmsEnviados,
+            'sms_recebidos'   => $qtdSmsRecebidos,
+            'compras'         => $compras
         ]);
     }
 
@@ -197,42 +198,42 @@ class SmsController extends Controller {
 
         $plano = Plano::find($sms->plano);
 
-        $modal_body = '';
+        $modalBody = '';
 
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Plano:</b></td>";
-        $modal_body .= "<td>".$plano['nome']."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Evento:</b></td>";
-        $modal_body .= "<td>".$sms->evento."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Tempo:</b></td>";
-        $modal_body .= "<td>".$sms->tempo." ".$sms->periodo."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Status:</b></td>";
+        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
+        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
+        $modalBody .= "<thead>";
+        $modalBody .= "</thead>";
+        $modalBody .= "<tbody>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Plano:</b></td>";
+        $modalBody .= "<td>".$plano['nome']."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Evento:</b></td>";
+        $modalBody .= "<td>".$sms->evento."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Tempo:</b></td>";
+        $modalBody .= "<td>".$sms->tempo." ".$sms->periodo."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Status:</b></td>";
         if($sms->status)
-            $modal_body .= "<td>Ativo</td>";
+            $modalBody .= "<td>Ativo</td>";
         else
-            $modal_body .= "<td>Inativo</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<td><b>Mensagem:</b></td>";
-        $modal_body .= "<td>".$sms->mensagem."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "</thead>";
-        $modal_body .= "</table>";
-        $modal_body .= "</div>";
-        $modal_body .= "</div>";
+            $modalBody .= "<td>Inativo</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<td><b>Mensagem:</b></td>";
+        $modalBody .= "<td>".$sms->mensagem."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "</thead>";
+        $modalBody .= "</table>";
+        $modalBody .= "</div>";
+        $modalBody .= "</div>";
 
-        return response()->json($modal_body);
+        return response()->json($modalBody);
     }
 
     public function getFormAddSms(Request $request){
@@ -263,11 +264,11 @@ class SmsController extends Controller {
 
         $sms = ZenviaSms::where('id',Hashids::decode($dados['id']))->first();
 
-        $id_sms = Hashids::encode($sms->id);
+        $idSms = Hashids::encode($sms->id);
 
         $form = view('sms::editar',[
-            'id_sms' => $id_sms,
-            'sms' => $sms,
+            'id_sms' => $idSms,
+            'sms'    => $sms,
             'planos' => $planos
         ]);
 
@@ -346,13 +347,13 @@ class SmsController extends Controller {
 
                     MensagemSms::create([
                         'id_zenvia' => $smsReceived->getSmsOriginId(),
-                        'plano' => @$mensagem_enviada->plano,
-                        'para' => $smsReceived->getMobile(),
-                        'mensagem' => $smsReceived->getBody(),
-                        'data' => $smsReceived->getDateReceived(),
-                        'status' => 'Ok',
-                        'evento' => 'Mensagem recebida',
-                        'tipo' => 'Recebida'
+                        'plano'     => @$mensagem_enviada->plano,
+                        'para'      => $smsReceived->getMobile(),
+                        'mensagem'  => $smsReceived->getBody(),
+                        'data'      => $smsReceived->getDateReceived(),
+                        'status'    => 'Ok',
+                        'evento'    => 'Mensagem recebida',
+                        'tipo'      => 'Recebida'
                     ]);
 
                 }
@@ -367,24 +368,27 @@ class SmsController extends Controller {
 
     public function dadosMensagens(Request $request){
 
-        $user_projetos = UserProjeto::where([
+        $userProjetos = UserProjeto::where([
             ['user',\Auth::user()->id],
             ['tipo','produtor']
         ])->get()->toArray();
 
-        $planos_usuario = [];
-        foreach($user_projetos as $user_projeto){
-            $planos = Plano::where('projeto',$user_projeto['projeto'])->pluck('id')->toArray();
+        $planosUsuario = [];
+
+        foreach($userProjetos as $userProjeto){
+
+            $planos = Plano::where('projeto',$userProjeto['projeto'])->pluck('id')->toArray();
+
             if(count($planos) > 0){
                 foreach($planos as $plano){
-                    $planos_usuario[] = $plano;
+                    $planosUsuario[] = $plano;
                 }
             }
         }
 
         $mensagens = \DB::table('mensagens_sms as mensagem')
         ->leftJoin('planos as plano', 'plano.id', 'mensagem.plano')
-        ->whereIn('plano.id',$planos_usuario)
+        ->whereIn('plano.id',$planosUsuario)
         ->orWhere('user', \Auth::user()->id)
         ->select([
             'mensagem.id',
@@ -435,8 +439,8 @@ class SmsController extends Controller {
             $sms = new Sms();
             $sms->setTo('55'.preg_replace("/[^0-9]/", "", $dados['telefone']));
             $sms->setMsg($dados['mensagem']);
-            $id_sms = uniqid();
-            $sms->setId($id_sms);
+            $idSms = uniqid();
+            $sms->setId($idSms);
             $sms->setCallbackOption(Sms::CALLBACK_NONE);
             $date = new \DateTime();
             $date->setTimeZone(new DateTimeZone('America/Sao_Paulo'));
@@ -447,14 +451,14 @@ class SmsController extends Controller {
                 $response = $smsFacade->send($sms);
 
                 MensagemSms::create([
-                    'id_zenvia' => $id_sms,
-                    'para' => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
-                    'mensagem' => $dados['mensagem'],
-                    'data' => $schedule,
-                    'status' => $response->getStatusDescription(),
-                    'evento' => 'Mensagem manual',
-                    'tipo' => 'Enviada',
-                    'user' => \Auth::user()->id
+                    'id_zenvia' => $idSms,
+                    'para'      => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
+                    'mensagem'  => $dados['mensagem'],
+                    'data'      => $schedule,
+                    'status'    => $response->getStatusDescription(),
+                    'evento'    => 'Mensagem manual',
+                    'tipo'      => 'Enviada',
+                    'user'      => \Auth::user()->id
                 ]);
 
                 $user->update([
@@ -466,14 +470,14 @@ class SmsController extends Controller {
             catch(\Exception $ex){
 
                 MensagemSms::create([
-                    'id_zenvia' => $id_sms,
-                    'para' => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
-                    'mensagem' => $dados['mensagem'],
-                    'data' => $schedule,
-                    'status' => 'Erro',
-                    'evento' => 'Mensagem manual',
-                    'tipo' => 'Enviada',
-                    'user' => \Auth::user()->id
+                    'id_zenvia' => $idSms,
+                    'para'      => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
+                    'mensagem'  => $dados['mensagem'],
+                    'data'      => $schedule,
+                    'status'    => 'Erro',
+                    'evento'    => 'Mensagem manual',
+                    'tipo'      => 'Enviada',
+                    'user'      => \Auth::user()->id
                 ]);
 
                 return response()->json('Ocorreu algum erro, verifique os dados informados!');

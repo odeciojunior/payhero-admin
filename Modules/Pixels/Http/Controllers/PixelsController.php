@@ -23,7 +23,8 @@ class PixelsController extends Controller {
 
     public function cadastrarPixel(Request $request){
 
-        $dados = $request->all(); 
+        $dados = $request->all();
+
         $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
 
         Pixel::create($dados);
@@ -46,6 +47,7 @@ class PixelsController extends Controller {
         $dados = $request->all();
 
         $pixel = Pixel::find(Hashids::decode($dados['pixelData']['id']))->first();
+
         $pixel->update($dados['pixelData']);
 
         return response()->json('Sucesso');
@@ -58,7 +60,6 @@ class PixelsController extends Controller {
         $pixel->delete();
 
         return response()->json('sucesso');
-
     }
 
     public function dadosPixels(Request $request) {
@@ -110,38 +111,38 @@ class PixelsController extends Controller {
 
         $pixel = Pixel::where('id',Hashids::decode($dados['id_pixel']))->first();
 
-        $modal_body = '';
+        $modalBody = '';
 
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Nome:</b></td>";
-        $modal_body .= "<td>".$pixel->nome."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Código:</b></td>";
-        $modal_body .= "<td>".$pixel->cod_pixel."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Plataforma:</b></td>";
-        $modal_body .= "<td>".$pixel->plataforma."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Status:</b></td>";
+        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
+        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
+        $modalBody .= "<thead>";
+        $modalBody .= "</thead>";
+        $modalBody .= "<tbody>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Nome:</b></td>";
+        $modalBody .= "<td>".$pixel->nome."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Código:</b></td>";
+        $modalBody .= "<td>".$pixel->cod_pixel."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Plataforma:</b></td>";
+        $modalBody .= "<td>".$pixel->plataforma."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Status:</b></td>";
         if($pixel->status)
-            $modal_body .= "<td>Ativo</td>";
+            $modalBody .= "<td>Ativo</td>";
         else
-            $modal_body .= "<td>Inativo</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "</thead>";
-        $modal_body .= "</table>";
-        $modal_body .= "</div>";
-        $modal_body .= "</div>";
+            $modalBody .= "<td>Inativo</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "</thead>";
+        $modalBody .= "</table>";
+        $modalBody .= "</div>";
+        $modalBody .= "</div>";
 
-        return response()->json($modal_body);
+        return response()->json($modalBody);
     }
 
     public function getFormAddPixel(){

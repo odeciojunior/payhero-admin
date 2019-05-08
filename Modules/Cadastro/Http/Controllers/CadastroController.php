@@ -51,10 +51,10 @@ class CadastroController extends Controller {
         $user->assignRole('administrador empresarial');
 
         $convite->update([
-            'user_convidado' => $user->id,
-            'status' => 'Ativo',
-            'data_cadastro' => Carbon::now()->format('Y-m-d'),
-            'data_expiracao' => Carbon::now()->addMonths(6)->format('Y-m-d'),
+            'user_convidado'  => $user->id,
+            'status'          => 'Ativo',
+            'data_cadastro'   => Carbon::now()->format('Y-m-d'),
+            'data_expiracao'  => Carbon::now()->addMonths(6)->format('Y-m-d'),
             'email_convidado' => $dados['email'],
         ]);
 
@@ -62,3 +62,5 @@ class CadastroController extends Controller {
     }
 
 }
+
+

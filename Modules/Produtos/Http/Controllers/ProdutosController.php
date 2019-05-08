@@ -52,24 +52,24 @@ class ProdutosController extends Controller {
 
         if ($foto != null) {
             try{
-                $nome_foto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
+                $nomeFoto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
 
-                Storage::delete('public/upload/produto/'.$nome_foto);
+                Storage::delete('public/upload/produto/'.$nomeFoto);
 
-                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nome_foto);
+                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nomeFoto);
 
-                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
 
                 $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
                 $img->resize(200, 200);
 
-                Storage::delete('public/upload/produto/'.$nome_foto);
+                Storage::delete('public/upload/produto/'.$nomeFoto);
                 
-                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
 
                 $produto->update([
-                    'foto' => $nome_foto
+                    'foto' => $nomeFoto
                 ]);
             }
             catch(\Exception $e){
@@ -86,7 +86,7 @@ class ProdutosController extends Controller {
         $categorias = Categoria::all();
 
         return view('produtos::editar',[
-            'produto' => $produto,
+            'produto'    => $produto,
             'categorias' => $categorias
         ]);
 
@@ -108,24 +108,24 @@ class ProdutosController extends Controller {
         if ($foto != null) {
 
             try{
-                $nome_foto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
+                $nomeFoto = 'produto_' . $produto->id . '_.' . $foto->getClientOriginalExtension();
 
-                Storage::delete('public/upload/produto/'.$nome_foto);
+                Storage::delete('public/upload/produto/'.$nomeFoto);
 
-                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nome_foto);
+                $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $nomeFoto);
 
-                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
 
                 $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
                 $img->resize(200, 200);
 
-                Storage::delete('public/upload/produto/'.$nome_foto);
+                Storage::delete('public/upload/produto/'.$nomeFoto);
                 
-                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nomeFoto);
 
                 $produto->update([
-                    'foto' => $nome_foto
+                    'foto' => $nomeFoto
                 ]);
             }
             catch(\Exception $e){
@@ -200,73 +200,73 @@ class ProdutosController extends Controller {
 
         $produto = Produto::find($dados['id_produto']);
 
-        $modal_body = '';
+        $modalBody = '';
 
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Nome:</b></td>";
-        $modal_body .= "<td>".$produto->nome."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Descrição:</b></td>";
-        $modal_body .= "<td>".$produto->descricao."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Status:</b></td>";
+        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
+        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
+        $modalBody .= "<thead>";
+        $modalBody .= "</thead>";
+        $modalBody .= "<tbody>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Nome:</b></td>";
+        $modalBody .= "<td>".$produto->nome."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Descrição:</b></td>";
+        $modalBody .= "<td>".$produto->descricao."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Status:</b></td>";
         if($produto->disponivel == 1)
-            $modal_body .= "<td>Disponível</td>";
+            $modalBody .= "<td>Disponível</td>";
         else
-            $modal_body .= "<td>Insdisponível</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Formato:</b></td>";
+            $modalBody .= "<td>Insdisponível</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Formato:</b></td>";
         if($produto->formato == 1)
-            $modal_body .= "<td>Físico</td>";
+            $modalBody .= "<td>Físico</td>";
         else
-            $modal_body .= "<td>Digital</td>";
-        $modal_body .= "</tr>";
+            $modalBody .= "<td>Digital</td>";
+        $modalBody .= "</tr>";
 
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Categoria:</b></td>";
-        $modal_body .= "<td>".Categoria::find($produto->categoria)->nome."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Garantia:</b></td>";
-        $modal_body .= "<td>".$produto->garantia."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Quantidade:</b></td>";
-        $modal_body .= "<td>".$produto->quantidade."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Custo do produto:</b></td>";
-        $modal_body .= "<td>".$produto->custo_produto."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Altura:</b></td>";
-        $modal_body .= "<td>".$produto->altura."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Largura:</b></td>";
-        $modal_body .= "<td>".$produto->largura."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Peso:</b></td>";
-        $modal_body .= "<td>".$produto->peso."</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "</thead>";
-        $modal_body .= "</table>";
-        $modal_body .= "</div>";
-        $modal_body .= "<div class='text-center' style='margin-top: 20px'>";
-        $modal_body .= "<img src='".'/'.CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto']."' style='height: 200px'>";
-        $modal_body .= "</div>";
-        $modal_body .= "</div>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Categoria:</b></td>";
+        $modalBody .= "<td>".Categoria::find($produto->categoria)->nome."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Garantia:</b></td>";
+        $modalBody .= "<td>".$produto->garantia."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Quantidade:</b></td>";
+        $modalBody .= "<td>".$produto->quantidade."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Custo do produto:</b></td>";
+        $modalBody .= "<td>".$produto->custo_produto."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Altura:</b></td>";
+        $modalBody .= "<td>".$produto->altura."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Largura:</b></td>";
+        $modalBody .= "<td>".$produto->largura."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "<tr>";
+        $modalBody .= "<td><b>Peso:</b></td>";
+        $modalBody .= "<td>".$produto->peso."</td>";
+        $modalBody .= "</tr>";
+        $modalBody .= "</thead>";
+        $modalBody .= "</table>";
+        $modalBody .= "</div>";
+        $modalBody .= "<div class='text-center' style='margin-top: 20px'>";
+        $modalBody .= "<img src='".'/'.CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$produto['foto']."' style='height: 200px'>";
+        $modalBody .= "</div>";
+        $modalBody .= "</div>";
 
-        return response()->json($modal_body);
+        return response()->json($modalBody);
     }
 
     public function getProdutos(Request $request){
