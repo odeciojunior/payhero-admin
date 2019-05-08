@@ -68,7 +68,7 @@ class PostBackController extends Controller {
 
                     $transacao = Transacao::find($t['id']);
 
-                    if($transacao['emrpesa'] != null){
+                    if($transacao['empresa'] != null){
 
                         $transacao->update([
                             'status'         => 'pago',
