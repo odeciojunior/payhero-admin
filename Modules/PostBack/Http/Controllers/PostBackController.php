@@ -70,14 +70,21 @@ class PostBackController extends Controller {
 
                     if($transacao['empresa'] != null){
 
+                        $empresa = Empresa::find($transacao['empresa']);
+
+                        $user = User::find($empresa['user']);
+
                         $transacao->update([
                             'status'         => 'pago',
-                            'data_liberacao' => Carbon::now()->addDays(30)->format('Y-m-d')
+                            'data_liberacao' => Carbon::now()->addDays($user['dias_antecipacao'])->format('Y-m-d')
+                        ]);
+                    }
+                    else{
+                        $transacao->update([
+                            'status' => 'pago',
                         ]);
                     }
                 }
-
-                Log::write('info', 'Transações para atualizar : '. print_r($transacoes, true));
 
                 if($venda['pedido_shopify'] != ''){
 

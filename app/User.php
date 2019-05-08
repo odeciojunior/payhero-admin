@@ -61,7 +61,7 @@ class User extends Authenticable
     /**
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'remember_token', 'created_at', 'updated_at', 'data_nascimento', 'celular', 'cpf', 'cep', 'pais', 'estado', 'cidade', 'bairro', 'logradouro', 'numero', 'complemento', 'telefone2', 'telefone1', 'referencia', 'foto', 'deleted_at', 'score', 'sms_zenvia_qtd', 'taxa_porcentagem', 'taxa_transacao', 'saldo', 'foxcoin', 'email_qtd', 'ligacao_qtd'];
+    protected $fillable = ['name', 'email', 'password', 'remember_token', 'created_at', 'updated_at', 'data_nascimento', 'celular', 'cpf', 'cep', 'pais', 'estado', 'cidade', 'bairro', 'logradouro', 'numero', 'complemento', 'telefone2', 'telefone1', 'referencia', 'foto', 'deleted_at', 'score', 'sms_zenvia_qtd', 'taxa_porcentagem', 'taxa_transacao', 'saldo', 'foxcoin', 'email_qtd', 'ligacao_qtd','dias_antecipacao'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

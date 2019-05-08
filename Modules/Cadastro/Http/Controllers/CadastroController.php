@@ -44,6 +44,8 @@ class CadastroController extends Controller {
 
         $dados['taxa_porcentagem'] = '6.9';
 
+        $dados['dias_antecipacao'] = '30';
+
         $user = User::create($dados);
 
         $user->assignRole('administrador empresarial');
