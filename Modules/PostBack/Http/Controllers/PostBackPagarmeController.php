@@ -5,10 +5,11 @@ namespace Modules\PostBack\Http\Controllers;
 use App\User;
 use App\Plano;
 use App\Venda;
+use App\Empresa;
 use App\Entrega;
-use Carbon\Carbon;
 use App\Comprador;
 use App\Transacao;
+use Carbon\Carbon;
 use App\PlanoVenda;
 use App\CompraUsuario;
 use App\IntegracaoShopify;
@@ -22,46 +23,33 @@ use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Transportadoras\Kapsula;
 use Modules\Core\Transportadoras\LiftGold;
 
-class PostBackController extends Controller {
+class PostBackPagarmeController extends Controller {
 
-    public function postBackListener(Request $request){
+    public function postBackListener(Request $request) {
 
         $dados = $request->all();
 
-        Log::write('info', 'Notificação do Ebanx : '. print_r($dados, true));
-
-        $response = \Ebanx\Ebanx::doQuery([
-            'hash' => $dados['hash_codes']
-        ]);
-
-        $venda = Venda::where('pagamento_id',$dados['hash_codes'])->first();
-
-        if(!$venda){
-            Log::write('info', 'Venda não encontrada');
-            return 'success';
-        }
-
-        if($response->payment->status != $venda->pagamento_status){
-
-            $venda->update([
-                'pagamento_status' => $response->payment->status
-            ]);
-
-            $transacoes = Transacao::where('venda',$venda->id)->get()->toArray();
-
-            if($response->payment->status == 'CA'){
+        Log::write('info', 'retorno do pagar.me : '. print_r($dados, true));
  
-                foreach($transacoes as $transacao){
-                    Transacao::find($transacao['id'])->update('status','cancelada');
-                }
+        if(isset($dados['event']) && $dados['event'] = 'transaction_status_changed'){
+
+            $venda = Venda::find($dados['transaction']['metadata']['id_venda']);
+
+            if($venda == null){
+                Log::write('info', 'VENDA NÃO ENCONTRADA!!!');
+                return 'sucesso';
             }
 
-            else if($response->payment->status == 'CO'){
+            if($dados['transaction']['status'] == $venda['pagamento_status']){
+                return 'sucesso';
+            }
+
+            if($dados['transaction']['status'] == 'paid'){
 
                 date_default_timezone_set('America/Sao_Paulo');
 
                 $venda->update([
-                    'data_finalizada' => \Carbon\Carbon::now()
+                    'data_finalizada' => Carbon::now()
                 ]);
 
                 foreach($transacoes as $t){
@@ -104,7 +92,6 @@ class PostBackController extends Controller {
                         $transaction = $client->getTransactionManager()->create($venda['pedido_shopify'],[
                             "kind"      => "capture",
                         ]);
-
                     }
                     catch(\Exception $e){
                         Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$venda['id']);
@@ -112,11 +99,11 @@ class PostBackController extends Controller {
                     }
 
                 }
+
             }
-
         }
-
-        return 'success';
+        return 'sucesso';
     }
 
 }
+
