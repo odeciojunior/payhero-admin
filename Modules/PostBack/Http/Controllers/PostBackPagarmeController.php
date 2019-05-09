@@ -53,7 +53,8 @@ class PostBackPagarmeController extends Controller {
                 date_default_timezone_set('America/Sao_Paulo');
 
                 $venda->update([
-                    'data_finalizada' => Carbon::now()
+                    'data_finalizada' => Carbon::now(),
+                    'status'          => 'paid',
                 ]);
 
                 foreach($transacoes as $t){
