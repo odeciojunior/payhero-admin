@@ -44,6 +44,8 @@ class PostBackPagarmeController extends Controller {
                 return 'sucesso';
             }
 
+            $transacoes = Transacao::where('venda',$venda->id)->get()->toArray();
+
             if($dados['transaction']['status'] == 'paid'){
 
                 date_default_timezone_set('America/Sao_Paulo');
@@ -100,6 +102,11 @@ class PostBackPagarmeController extends Controller {
 
                 }
 
+            }
+            else{
+                foreach($transacoes as $transacao){
+                    Transacao::find($transacao['id'])->update('status',$dados['transaction']['status']);
+                }
             }
         }
         return 'sucesso';
