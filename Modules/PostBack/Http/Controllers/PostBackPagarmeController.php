@@ -35,6 +35,8 @@ class PostBackPagarmeController extends Controller {
 
             $venda = Venda::find($dados['transaction']['metadata']['id_venda']);
 
+            Log::write('info', 'alterando dados da venda : '. $venda['id']);
+
             if($venda == null){
                 Log::write('info', 'VENDA NÃO ENCONTRADA!!!');
                 return 'sucesso';
