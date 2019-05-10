@@ -8,15 +8,6 @@
                 <label for="nome">Nome do projeto</label>
                 <input name="nome" value="{!! $projeto->nome !!}" type="text" class="form-control" id="nome" placeholder="Nome do projeto" required>
             </div>
-            {{--  <div class="form-group col-xl-6">
-                <label for="emrpesa">Empresa</label>
-                <select name="empresa" class="form-control" id="empresa" required>
-                    <option value="">Selecione</option>
-                    @foreach($empresas as $empresa)
-                        <option value="{!! $empresa->id !!}" {!! ($empresa->id == $projeto->empresa) ? 'selected' : '' !!}>{!! $empresa->nome_fantasia !!}</option>
-                    @endforeach 
-                </select>
-            </div>  --}}
         </div>
 
         <div class="row">
@@ -204,7 +195,16 @@
                     <option value="11" {!! $projeto['parcelas_sem_juros'] == '11' ? 'selected' : '' !!}>11</option>
                     <option value="12" {!! $projeto['parcelas_sem_juros'] == '12' ? 'selected' : '' !!}>12</option>
                 </select>
-            </div>    
+            </div>
+             <div class="col-6 col-xs-12">
+                <label for="emrpesa">Empresa</label>
+                <select name="empresa" class="form-control" id="empresa" required>
+                    @foreach($empresas as $empresa)
+                        <option value="{!! $empresa['id'] !!}" {!! ($empresa['id'] == $emp) ? 'selected' : '' !!}>{!! $empresa['nome_fantasia'] !!}</option>
+                    @endforeach
+                </select>
+            </div>
+
         </div>
 
         <h4>Imagem do projeto</h4>

@@ -29,7 +29,6 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/intro-js/introjs.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/slidepanel/slidePanel.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/flag-icon-css/flag-icon.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/waves/waves.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark2/assets/examples/css/pages/login-v3.css') }}">
 
     <link rel="stylesheet" href="{{ asset('adminremark/assets/css/style.css') }}">
@@ -60,7 +59,6 @@
     <script src="{{ asset('adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/ashoverscroll/jquery-asHoverScroll.js') }}"></script>
-    <script src="{{ asset('adminremark/global/vendor/waves/waves.js') }}"></script>
     
     <!-- Plugins -->
     <script src="{{ asset('adminremark/global/vendor/switchery/switchery.js') }}"></script>

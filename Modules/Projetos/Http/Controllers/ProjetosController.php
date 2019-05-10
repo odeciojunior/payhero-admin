@@ -194,10 +194,16 @@ class ProjetosController extends Controller{
 
         $empresas = Empresa::where('user', \Auth::user()->id)->get()->toArray();
 
+        $produtor = UserProjeto::where([
+            ['user', \Auth::user()->id],
+            ['tipo', 'produtor']
+        ])->first();
+
         $view = view('projetos::editar',[
             'projeto'          => $projeto,
             'empresas'         => $empresas,
-            'materiais_extras' => $materiaisExtras
+            'materiais_extras' => $materiaisExtras,
+            'emp'              => $produtor->empresa,
         ]);
 
         return response()->json($view->render());
@@ -224,7 +230,8 @@ class ProjetosController extends Controller{
             'id_projeto' => $idProjeto,
             'projeto'    => $projeto,
             'planos'     => $planos,
-            'produtor'   => $usuario['name']
+            'produtor'   => $usuario['name'],
+            'empresa'    => $produtor->empresa,
         ]);
 
         return response()->json($view->render());

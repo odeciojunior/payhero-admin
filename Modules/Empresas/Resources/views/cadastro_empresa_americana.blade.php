@@ -1,6 +1,6 @@
 <form method="post" action="/empresas/cadastrarempresa">
     @csrf
-
+    <input type="hidden" name="country" value="usa">
     <div class="row">
         <div class="form-group col-xl-6">
             <label>Legal Business Name</label>
@@ -116,6 +116,4 @@
     </div>
 
 </form>
-
-
 

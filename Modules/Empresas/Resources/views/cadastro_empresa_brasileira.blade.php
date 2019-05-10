@@ -1,6 +1,6 @@
 <form method="post" action="/empresas/cadastrarempresa">
     @csrf
-
+    <input type="hidden" name="country" value="brasil">
     <h4>Dados gerais</h4>
     <div class="row">
         <div class="form-group col-xl-6">
