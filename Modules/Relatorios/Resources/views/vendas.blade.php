@@ -207,7 +207,7 @@
 
                 dados += "<td style='vertical-align: middle'>"+value.data_inicio+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.data_finalizada+"</td>";
-                dados += "<td style='vertical-align: middle'>"+value.total_pago+"</td>";
+                dados += "<td style='vertical-align: middle'><b>"+value.total_pago+"</b></td>";
                 dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-primary detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal' type='button'>Detalhes</button></td>";
                 dados += '</tr>';
                 $("#dados_tabela").append(dados);

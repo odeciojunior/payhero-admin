@@ -34,12 +34,9 @@ class DashboardController extends Controller {
             if(count($transacoesAguardando)){
 
                 foreach($transacoesAguardando as $transacao){
-                    if($transacao['tipo'] == 'entrada'){
-                        $saldoFuturo += $transacao['valor'];
-                    }
-                    else{
-                        $saldoFuturo -= $transacao['valor'];
-                    }
+
+                    $saldoFuturo += $transacao['valor'];
+
                 }
             }
         }

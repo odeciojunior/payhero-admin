@@ -180,7 +180,7 @@ class RelatoriosController extends Controller {
 
     public function getVendas(Request $request){
 
-        $vendas = Venda::where('proprietario',\Auth::user()->id);
+        $vendas = Venda::where('proprietario',\Auth::user()->id)->orWhere('afiliado',\Auth::user()->id);
 
         if($request->projeto != ''){
             $planos = Plano::where('projeto',$request->projeto)->pluck('id');

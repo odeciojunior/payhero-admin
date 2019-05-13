@@ -156,6 +156,16 @@ class ProjetosController extends Controller{
             ]);
         }
 
+        $userProject = UserProjeto::where([
+            ['user', \Auth::user()->id],
+            ['projeto', $projeto['id']]
+        ])->first();
+
+        if($userProject->empresa != $dados['empresa']){
+            $userProject->empresa = $dados['empresa'];
+            $userProject->update();
+        }
+
         return response()->json('sucesso');
     }
 
@@ -196,7 +206,7 @@ class ProjetosController extends Controller{
 
         $produtor = UserProjeto::where([
             ['user', \Auth::user()->id],
-            ['tipo', 'produtor']
+            ['projeto', $projeto['id']]
         ])->first();
 
         $view = view('projetos::editar',[

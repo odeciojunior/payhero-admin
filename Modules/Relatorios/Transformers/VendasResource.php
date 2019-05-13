@@ -50,7 +50,7 @@ class VendasResource extends Resource {
             'status' => $this->pagamento_status,
             'data_inicio' => $this->data_inicio ? with(new Carbon($this->data_inicio))->format('d/m/Y H:i:s') : '',
             'data_finalizada' => $this->data_finalizada ? with(new Carbon($this->data_finalizada))->format('d/m/Y H:i:s') : '',
-            'total_pago' => 'R$ ' . substr_replace($valor, '.', strlen($valor) - 2, 0 ),
+            'total_pago' => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($valor, '.', strlen($valor) - 2, 0 ),
         ];
 
     }

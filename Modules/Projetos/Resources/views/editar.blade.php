@@ -204,7 +204,6 @@
                     @endforeach
                 </select>
             </div>
-
         </div>
 
         <h4>Imagem do projeto</h4>
@@ -233,4 +232,3 @@
 
     </div>
 </form>
-
