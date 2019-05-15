@@ -11,19 +11,43 @@ use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 
-class LayoutsController extends Controller
-{
-    public function index() {
+class LayoutsController extends Controller {
+ 
 
-        return view('layouts::index');  
+    public function index(Request $request) {
+
+        $dados = $request->all();
+
+        $layouts = \DB::table('layouts as layout');
+
+        if(isset($dados['projeto'])){
+            $layouts = $layouts->where('layout.project','=', $dados['projeto']);
+        }
+
+        $layouts = $layouts->get([
+                'layout.id',
+                'layout.description',
+                'layout.status',
+        ]);
+
+        return Datatables::of($layouts)
+        ->addColumn('detalhes', function ($layout) {
+            return "<span data-toggle='modal' data-target='#modal_editar'>
+                        <a class='btn btn-outline btn-primary editar_layout' data-placement='top' data-toggle='tooltip' title='Editar' layout='".$layout->id."'>
+                            <i class='icon wb-pencil' aria-hidden='true'></i>
+                        </a>
+                    </span>
+                    <span data-toggle='modal' data-target='#modal_excluir'>
+                        <a class='btn btn-outline btn-danger excluir_layout' data-placement='top' data-toggle='tooltip' title='Excluir' layout='".$layout->id."'>
+                            <i class='icon wb-trash' aria-hidden='true'></i>
+                        </a>
+                    </span>";
+        })
+        ->rawColumns(['detalhes'])
+        ->make(true);
     }
 
-    public function cadastro() {
-
-        return view('layouts::cadastro');
-    }
-
-    public function cadastrarLayout(Request $request){
+    public function store(Request $request){
 
         $dados = $request->all();
 
@@ -70,17 +94,7 @@ class LayoutsController extends Controller
         return response()->json('sucesso');
     }
 
-    public function editarLayout($id){
-
-        $layout = Layout::find($id);
-
-        return view('layouts::editar',[
-            'layout' => $layout,
-        ]);
-
-    }
-
-    public function updateLayout(Request $request){
+    public function update(Request $request){
 
         $dados = $request->all();
 
@@ -134,7 +148,7 @@ class LayoutsController extends Controller
         return response()->json('sucesso');
     }
 
-    public function deletarLayout(Request $request){
+    public function delete(Request $request){
 
         $dados = $request->all();
 
@@ -144,55 +158,22 @@ class LayoutsController extends Controller
 
     }
 
-    public function dadosLayout(Request $request) {
+    public function create(Request $request){
 
         $dados = $request->all();
 
-        $layouts = \DB::table('layouts as layout');
-
-        if(isset($dados['projeto'])){
-            $layouts = $layouts->where('layout.projeto','=', $dados['projeto']);
-        }
-
-        $layouts = $layouts->get([
-                'layout.id',
-                'layout.descricao',
-                'layout.status',
-        ]);
-
-        return Datatables::of($layouts)
-        ->addColumn('detalhes', function ($layout) {
-            return "<span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_layout' data-placement='top' data-toggle='tooltip' title='Editar' layout='".$layout->id."'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_layout' data-placement='top' data-toggle='tooltip' title='Excluir' layout='".$layout->id."'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-        })
-        ->rawColumns(['detalhes'])
-        ->make(true);
-    }
-
-    public function getFormAddLayout(Request $request){
-
-        $dados = $request->all();
-
-        $form = view('layouts::cadastro');
+        $form = view('layouts::create');
 
         return response()->json($form->render());
     }
 
-    public function getFormEditarLayout(Request $request){
+    public function edit(Request $request){
 
         $dados = $request->all();
 
         $layout = Layout::find($dados['id']);
 
-        $form = view('layouts::editar',[
+        $form = view('layouts::edit',[
             'layout' => $layout
         ]);
 

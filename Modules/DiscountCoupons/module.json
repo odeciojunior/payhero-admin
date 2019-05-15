@@ -1,0 +1,16 @@
+{
+    "name": "DiscountCoupons",
+    "alias": "discountCoupons",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\DiscountCoupons\\Providers\\DiscountCouponsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

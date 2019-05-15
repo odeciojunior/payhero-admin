@@ -2,14 +2,12 @@
 
 namespace Modules\Sms\Http\Controllers;
 
-use App\Plano;
 use DateTimeZone;
-use App\ZenviaSms;
-use App\MensagemSms;
-use App\Entities\UserProjeto;
 use Zenvia\Model\Sms;
-use App\CompraUsuario;
+use App\Entities\Plan;
+use App\Entities\ZenviaSms;
 use Zenvia\Model\SmsFacade;
+use App\Entities\SmsMessage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -33,7 +31,7 @@ class SmsController extends Controller {
         $planosUsuario = [];
 
         foreach($userProjetos as $userProjeto){
-            $planos = Plano::where('projeto',$userProjeto['projeto'])->pluck('id')->toArray();
+            $planos = Plan::where('projeto',$userProjeto['projeto'])->pluck('id')->toArray();
             if(count($planos) > 0){
                 foreach($planos as $plano){
                     $planosUsuario[] = $plano;
@@ -41,9 +39,9 @@ class SmsController extends Controller {
             }
         }
 
-        $qtdSmsEnviados = MensagemSms::whereIn('plano',$planosUsuario)->where('tipo','Enviada')->count();
+        $qtdSmsEnviados = SmsMessage::whereIn('plano',$planosUsuario)->where('tipo','Enviada')->count();
 
-        $qtdSmsRecebidos = MensagemSms::whereIn('plano',$planosUsuario)->where('tipo','Recebida')->count();
+        $qtdSmsRecebidos = SmsMessage::whereIn('plano',$planosUsuario)->where('tipo','Recebida')->count();
 
         $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
@@ -63,7 +61,7 @@ class SmsController extends Controller {
             'compras'         => $compras
         ]);
     }
-
+ 
     public function cadastro() {
 
         return view('sms::cadastro');
@@ -148,10 +146,10 @@ class SmsController extends Controller {
         $dados = $request->all();
 
         $sms = \DB::table('zenvia_sms as sms')
-                    ->leftJoin('planos', 'planos.id', 'sms.plano');
+                    ->leftJoin('plans', 'plans.id', 'sms.plan');
 
         if(isset($dados['projeto'])){
-            $sms = $sms->where('sms.projeto','=', Hashids::decode($dados['projeto']));
+            $sms = $sms->where('sms.project','=', Hashids::decode($dados['projeto']));
         }
         else{
             return response()->json('projeto não encontrado');
@@ -159,20 +157,20 @@ class SmsController extends Controller {
 
         $sms = $sms->get([
                 'sms.id',
-                'sms.evento',
-                'sms.tempo',
-                'sms.periodo',
-                'sms.mensagem',
+                'sms.event',
+                'sms.time',
+                'sms.period',
+                'sms.message',
                 'sms.status',
-                'planos.nome as plano'
+                'plans.name as plan'
         ]);
 
         return Datatables::of($sms)
-        ->editColumn('plano', function ($sms) {
-            if($sms->plano == ''){
-                return 'Todos planos';
+        ->editColumn('plan', function ($sms) {
+            if($sms->plan == ''){
+                return 'Todos plans';
             }
-            return $sms->plano;
+            return $sms->plan;
         })
         ->addColumn('detalhes', function ($sms) {
             return "<span data-toggle='modal' data-target='#modal_editar'>
@@ -196,7 +194,7 @@ class SmsController extends Controller {
 
         $sms = ZenviaSms::where('id',Hashids::decode($dados['id_sms']))->first();
 
-        $plano = Plano::find($sms->plano);
+        $plano = Plan::find($sms->plano);
 
         $modalBody = '';
 
@@ -240,7 +238,7 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        $planos = Plano::where('projeto', Hashids::decode($dados['projeto'])[0])->get()->toArray();
+        $planos = Plan::where('projeto', Hashids::decode($dados['projeto'])[0])->get()->toArray();
 
         foreach($planos as &$plano){
             if($plano['descricao'] != ''){
@@ -260,7 +258,7 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        $planos = Plano::where('projeto', $dados['projeto'])->get()->toArray();
+        $planos = Plan::where('projeto', $dados['projeto'])->get()->toArray();
 
         $sms = ZenviaSms::where('id',Hashids::decode($dados['id']))->first();
 
@@ -343,9 +341,9 @@ class SmsController extends Controller {
                 $messages = $response->getReceivedMessages();
                 foreach ($messages as $smsReceived) {
 
-                    $mensagem_enviada = MensagemSms::where('id_zenvia',$smsReceived->getSmsOriginId())->first();
+                    $mensagem_enviada = SmsMessage::where('id_zenvia',$smsReceived->getSmsOriginId())->first();
 
-                    MensagemSms::create([
+                    SmsMessage::create([
                         'id_zenvia' => $smsReceived->getSmsOriginId(),
                         'plano'     => @$mensagem_enviada->plano,
                         'para'      => $smsReceived->getMobile(),
@@ -377,7 +375,7 @@ class SmsController extends Controller {
 
         foreach($userProjetos as $userProjeto){
 
-            $planos = Plano::where('projeto',$userProjeto['projeto'])->pluck('id')->toArray();
+            $planos = Plan::where('projeto',$userProjeto['projeto'])->pluck('id')->toArray();
 
             if(count($planos) > 0){
                 foreach($planos as $plano){
@@ -450,7 +448,7 @@ class SmsController extends Controller {
             try{
                 $response = $smsFacade->send($sms);
 
-                MensagemSms::create([
+                SmsMessage::create([
                     'id_zenvia' => $idSms,
                     'para'      => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
                     'mensagem'  => $dados['mensagem'],
@@ -469,7 +467,7 @@ class SmsController extends Controller {
             }
             catch(\Exception $ex){
 
-                MensagemSms::create([
+                SmsMessage::create([
                     'id_zenvia' => $idSms,
                     'para'      => '55'.preg_replace("/[^0-9]/", "", $dados['telefone']),
                     'mensagem'  => $dados['mensagem'],

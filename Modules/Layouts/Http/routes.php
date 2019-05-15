@@ -2,44 +2,29 @@
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'layouts', 'namespace' => 'Modules\Layouts\Http\Controllers'], function()
 {
-    Route::get('/', [
-        'uses' => 'LayoutsController@index',
-        'as' => 'layouts',
-    ]);
-
-    Route::get('/cadastro', [
-        'uses' => 'LayoutsController@cadastro',
-        'as' => 'layouts.cadastro',
-    ]);
-
-    Route::get('/editar/{id}', [
-        'uses' => 'LayoutsController@editarLayout',
-        'as' => 'layouts.editar',
+    Route::post('/data-source',[
+        'as' => 'layouts.index',
+        'uses' => 'LayoutsController@index'
     ]);
 
     Route::post('/editarlayout', [
-        'uses' => 'LayoutsController@updateLayout',
+        'uses' => 'LayoutsController@update',
         'as' => 'layouts.update',
     ]);
 
     Route::post('/removerlayout', [
-        'uses' => 'LayoutsController@deletarLayout',
+        'uses' => 'LayoutsController@deletar',
         'as' => 'layouts.deletar',
     ]);
 
     Route::post('/cadastrarlayout', [
-        'uses' => 'LayoutsController@cadastrarLayout',
-        'as' => 'layouts.cadastrarlayout',
-    ]);
-
-    Route::post('/data-source',[
-        'as' => 'layouts.dadoslayouts',
-        'uses' => 'LayoutsController@dadosLayout'
+        'uses' => 'LayoutsController@store',
+        'as' => 'layouts.store',
     ]);
 
     Route::post('/detalhe',[
-        'as' => 'usuario.detalhes',
-        'uses' => 'LayoutsController@getDetalhesLayout'
+        'as' => 'usuario.details',
+        'uses' => 'LayoutsController@details'
     ]);
 
     Route::post('/preview', [
@@ -48,13 +33,13 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'layouts', 'namespace
     ]);
 
     Route::post('/getformaddlayout', [
-        'as' => 'checkout.getformaddlayout',
-        'uses' => 'LayoutsController@getFormAddLayout',
+        'as' => 'checkout.create',
+        'uses' => 'LayoutsController@create',
     ]);
 
     Route::post('/getformeditarlayout', [
-        'as' => 'checkout.getformeditarlayout',
-        'uses' => 'LayoutsController@getFormEditarLayout',
+        'as' => 'checkout.edit',
+        'uses' => 'LayoutsController@edit',
     ]);
 
 });

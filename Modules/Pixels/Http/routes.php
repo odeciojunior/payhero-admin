@@ -2,54 +2,39 @@
 
 Route::group(['middleware' => ['web','auth'], 'prefix' => 'pixels', 'namespace' => 'Modules\Pixels\Http\Controllers'], function() {
 
-    Route::get('/', [
-        'uses' => 'PixelsController@index',
-        'as' => 'pixels',
+    Route::post('/data-source',[
+        'as' => 'pixels.index',
+        'uses' => 'PixelsController@index'
     ]);
-
-    Route::get('/cadastro', [
-        'uses' => 'PixelsController@cadastro',
-        'as' => 'pixels.cadastro',
-    ]);
-
-    Route::get('/editar/{id}', [
-        'uses' => 'PixelsController@editarPixel',
-        'as' => 'pixels.editar',
-    ]);
-
+    
     Route::post('/editarpixel', [
-        'uses' => 'PixelsController@updatePixel',
+        'uses' => 'PixelsController@update',
         'as' => 'pixels.update',
     ]);
 
     Route::get('/deletarpixel/{id}', [
-        'uses' => 'PixelsController@deletarPixel',
-        'as' => 'pixels.deletar',
+        'uses' => 'PixelsController@delete',
+        'as' => 'pixels.delete',
     ]);
 
     Route::post('/cadastrarpixel', [
-        'uses' => 'PixelsController@cadastrarPixel',
-        'as' => 'pixels.cadastrarpixel',
-    ]);
-
-    Route::post('/data-source',[
-        'as' => 'pixels.dadospixels',
-        'uses' => 'PixelsController@dadosPixels'
+        'uses' => 'PixelsController@store',
+        'as' => 'pixels.store',
     ]);
 
     Route::post('/detalhe',[
-        'as' => 'pixels.detalhes',
-        'uses' => 'PixelsController@getDetalhesPixel'
+        'as' => 'pixels.details',
+        'uses' => 'PixelsController@details'
     ]);
 
     Route::get('/getformaddpixel',[
-        'as' => 'pixels.detalhes',
-        'uses' => 'PixelsController@getFormAddPixel'
+        'as' => 'pixels.create',
+        'uses' => 'PixelsController@create'
     ]);
 
     Route::post('/getformeditarpixel',[
-        'as' => 'pixels.getformeditarpixel',
-        'uses' => 'PixelsController@getFormEditarPixel'
+        'as' => 'pixels.edit',
+        'uses' => 'PixelsController@edit'
     ]);
 
 });

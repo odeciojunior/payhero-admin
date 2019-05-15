@@ -2,7 +2,7 @@
 
 namespace Modules\Pixels\Http\Controllers;
 
-use App\Pixel;
+use App\Entities\Pixel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -11,65 +11,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PixelsController extends Controller {
 
-    public function index() {
-
-        return view('pixels::index'); 
-    }
-
-    public function cadastro() {
-
-        return view('pixels::cadastro');
-    }
-
-    public function cadastrarPixel(Request $request){
-
-        $dados = $request->all();
-
-        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
-
-        Pixel::create($dados);
-
-        return response()->json('Sucesso');
-    }
-
-    public function editarPixel($id){
-
-        $pixel = Pixel::find($id);
-
-        return view('pixels::editar',[
-            'pixel' => $pixel,
-        ]);
-
-    }
-
-    public function updatePixel(Request $request){
-
-        $dados = $request->all();
-
-        $pixel = Pixel::find(Hashids::decode($dados['pixelData']['id']))->first();
-
-        $pixel->update($dados['pixelData']);
-
-        return response()->json('Sucesso');
-    }
-
-    public function deletarPixel($id){
-
-        $pixel = Pixel::where('id',Hashids::decode($id))->first();
-
-        $pixel->delete();
-
-        return response()->json('sucesso');
-    }
-
-    public function dadosPixels(Request $request) {
+    public function index(Request $request) {
 
         $dados = $request->all();
 
         $pixels = \DB::table('pixels as pixel');
 
         if(isset($dados['projeto'])){
-            $pixels = $pixels->where('pixel.projeto','=', Hashids::decode($dados['projeto']));
+            $pixels = $pixels->where('pixel.project','=', Hashids::decode($dados['projeto']));
         }
         else{
             return response()->json('projeto não encontrado');
@@ -77,9 +26,9 @@ class PixelsController extends Controller {
 
         $pixels = $pixels->get([
                 'pixel.id',
-                'pixel.nome',
-                'pixel.cod_pixel',
-                'pixel.plataforma',
+                'pixel.name',
+                'pixel.code',
+                'pixel.platform',
                 'pixel.status',
         ]);
 
@@ -105,7 +54,38 @@ class PixelsController extends Controller {
         ->make(true);
     }
 
-    public function getDetalhesPixel(Request $request){
+    public function store(Request $request){
+
+        $dados = $request->all();
+
+        $dados['project'] = Hashids::decode($dados['projeto'])[0];
+
+        Pixel::create($dados);
+
+        return response()->json('Sucesso');
+    }
+
+    public function update(Request $request){
+
+        $dados = $request->all();
+
+        $pixel = Pixel::find(Hashids::decode($dados['pixelData']['id']))->first();
+
+        $pixel->update($dados['pixelData']);
+
+        return response()->json('Sucesso');
+    }
+
+    public function delete($id){
+
+        $pixel = Pixel::where('id',Hashids::decode($id))->first();
+
+        $pixel->delete();
+
+        return response()->json('sucesso');
+    }
+
+    public function details(Request $request){
 
         $dados = $request->all();
 
@@ -145,21 +125,21 @@ class PixelsController extends Controller {
         return response()->json($modalBody);
     }
 
-    public function getFormAddPixel(){
+    public function create(){
 
-        $form = view('pixels::cadastro');
+        $form = view('pixels::create');
 
         return response()->json($form->render());
 
     }
 
-    public function getFormEditarPixel(Request $request){
+    public function edit(Request $request){
 
         $dados = $request->all();
 
         $pixel = Pixel::where('id',Hashids::decode($dados['id']))->first();
 
-        $form = view('pixels::editar',[
+        $form = view('pixels::edit',[
             'pixel' => $pixel,
         ]);
 
