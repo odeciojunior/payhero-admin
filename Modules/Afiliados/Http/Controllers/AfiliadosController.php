@@ -3,14 +3,14 @@
 namespace Modules\Afiliados\Http\Controllers;
 
 use App\Foto;
-use App\User;
+use App\Entities\User;
 use App\Plano;
 use App\Dominio;
 use App\Empresa;
 use App\Projeto;
 use App\Afiliado;
 use Carbon\Carbon;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use App\LinkAfiliado;
 use App\Notification;
 use App\MaterialExtra;

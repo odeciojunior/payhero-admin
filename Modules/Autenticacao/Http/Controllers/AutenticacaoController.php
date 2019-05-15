@@ -3,7 +3,7 @@
 namespace Modules\Autenticacao\Http\Controllers;
 
 use DB;
-use App\User;
+use App\Entities\User;
 use App\OauthAccessToken;
 use GuzzleHttp\Client;
 use Lcobucci\JWT\Parser;

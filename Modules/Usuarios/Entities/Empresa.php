@@ -42,6 +42,6 @@ class Empresa extends Model
      */
     public function usersEmpresas()
     {
-        return $this->hasMany('App\UsersEmpresa', 'empresa');
+        return $this->hasMany('App\Entities\UsersEmpresa', 'empresa');
     }
 }

@@ -5,7 +5,7 @@ namespace Modules\Afiliados\Http\Controllers;
 use App\Projeto;
 use App\Empresa;
 use App\Afiliado;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use Illuminate\Http\Request;
 use App\SolicitacaoAfiliacao;
 use Illuminate\Http\Response;

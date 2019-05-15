@@ -3,11 +3,11 @@
 namespace Modules\Projetos\Http\Controllers;
 
 use App\Foto;
-use App\User;
+use App\Entities\User;
 use App\Plano;
 use App\Empresa;
 use App\Projeto;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use App\MaterialExtra;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

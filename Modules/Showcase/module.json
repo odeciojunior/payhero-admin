@@ -1,0 +1,16 @@
+{
+    "name": "Showcase",
+    "alias": "showcase",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Showcase\\Providers\\ShowcaseServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

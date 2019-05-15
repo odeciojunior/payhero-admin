@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Tranferencias;
 
-use App\User;
+use App\Entities\User;
 use App\Empresa;
 use App\Transacao;
 use Carbon\Carbon;

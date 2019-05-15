@@ -2,10 +2,10 @@
 
 namespace Modules\Parceiros\Http\Controllers;
 
-use App\User;
+use App\Entities\User;
 use App\Convite;
 use App\Empresa;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

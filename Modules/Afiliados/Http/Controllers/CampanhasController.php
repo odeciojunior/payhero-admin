@@ -2,7 +2,7 @@
 
 namespace Modules\Afiliados\Http\Controllers;
 
-use App\User;
+use App\Entities\User;
 use App\Pixel;
 use App\Plano;
 use App\Dominio;
@@ -11,7 +11,7 @@ use App\Afiliado;
 use App\Campanha;
 use Carbon\Carbon;
 use App\PlanoVenda;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use App\LinkAfiliado;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

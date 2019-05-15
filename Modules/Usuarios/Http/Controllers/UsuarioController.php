@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Yajra\DataTables\Facades\DataTables;
-use App\User;
+use App\Entities\User;
 use App\ModelHasRoles;
 use App\Role;
 use Auth;

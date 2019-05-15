@@ -19,7 +19,7 @@
             <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
               Saldo disponível
             </div>
-            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $saldo_disponivel !!}</b></div>
+            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $available_balance !!}</b></div>
           </div>
           <div style="height:10px;background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);">
           </div>
@@ -33,7 +33,7 @@
             <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
               Saldo a receber
             </div>
-            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $saldo_futuro !!}</b></div>
+            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $future_balance !!}</b></div>
           </div>
           <div style="height:10px;background-image: linear-gradient(to right, #5849e2, #51c4ec);">
           </div>
@@ -47,7 +47,7 @@
             <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
               Disponível para antecipação
             </div>
-            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $saldo_futuro !!}</b></div>
+            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $future_balance !!}</b></div>
           </div>
           <div style="height:10px;background-image: linear-gradient(to left, #fad961, #f76b1c);">
           </div>
@@ -139,7 +139,7 @@
                   <th style='vertical-align: middle'>Forma</th>
                 </tr>
               </thead>
-              <tbody id="tabela_ultimas_vendas">
+              <tbody id="last_sales_table">
               </tbody>
           </table>
         </div>
@@ -208,11 +208,11 @@
         vectorLayers.length = 0;
       }
 
-      function atualizarUltimasVendas(){
+      function updateLastSales(){
 
         $.ajax({
           method: "POST",
-          url: "/dashboard/ultimasvendas",
+          url: "/dashboard/lastsales",
           headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
@@ -222,16 +222,16 @@
           },
           success: function(data){
 
-              $('#tabela_ultimas_vendas').html(dados_tabela);
+              $('#last_sales_table').html(table_data);
 
-              var dados_tabela = "";
+              var table_data = "";
               $.each(data, function(i, item) {
-                  dados_tabela += "<tr>";
-                  dados_tabela += "<td>"+data[i].data_inicio+"</td>";
-                  dados_tabela += "<td>"+data[i].projeto+"</td>";
-                  dados_tabela += "<td>"+data[i].valor_total_pago+"</td>";
-                  dados_tabela += "<td>"+data[i].forma_pagamento+"</td>";
-                  dados_tabela += "</tr>"; 
+                  table_data += "<tr>";
+                  table_data += "<td>"+data[i].start_date+"</td>";
+                  table_data += "<td>"+data[i].project+"</td>";
+                  table_data += "<td>"+data[i].total_paid_value+"</td>";
+                  table_data += "<td>"+data[i].payment_form+"</td>";
+                  table_data += "</tr>"; 
 
                   if(data[i].ip != null){
                     $.ajax({
@@ -245,7 +245,7 @@
                   }
               });
 
-              $('#tabela_ultimas_vendas').html(dados_tabela);
+              $('#last_sales_table').html(table_data);
 
           }
 
@@ -253,7 +253,7 @@
 
       }
 
-      atualizarUltimasVendas();
+      updateLastSales();
 
       Pusher.logToConsole = false;
 
@@ -267,7 +267,7 @@
       channel.bind('my-event', function(data) {
         alertPersonalizado('success','Nova venda realizada');
         clear_map_points();
-        atualizarUltimasVendas();
+        updateLastSales();
       });
 
       function alertPersonalizado(tipo, mensagem){

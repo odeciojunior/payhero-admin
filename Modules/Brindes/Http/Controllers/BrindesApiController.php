@@ -4,7 +4,7 @@ namespace Modules\Brindes\Http\Controllers;
 
 use App\Brinde;
 use App\Projeto;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

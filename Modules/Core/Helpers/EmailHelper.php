@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Helpers;
 
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 
 class EmailHelper {
 

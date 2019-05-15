@@ -2,7 +2,7 @@
 
 namespace Modules\Perfil\Http\Controllers;
 
-use App\User;
+use App\Entities\User;
 use App\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

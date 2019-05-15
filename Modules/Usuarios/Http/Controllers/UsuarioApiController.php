@@ -2,7 +2,7 @@
 
 namespace Modules\Usuario\Http\Controllers;
 
-use App\User;
+use App\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

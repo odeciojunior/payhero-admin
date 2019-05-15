@@ -11,7 +11,7 @@ use App\Layout;
 use App\Produto;
 use App\ZenviaSms;
 use App\PlanoBrinde;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use App\DadosHotZapp;
 use App\ProdutoPlano;
 use App\ProjetoProduto;

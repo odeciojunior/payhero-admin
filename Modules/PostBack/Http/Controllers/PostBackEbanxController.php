@@ -2,7 +2,7 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use App\User;
+use App\Entities\User;
 use App\Plano;
 use App\Venda;
 use App\Entrega;

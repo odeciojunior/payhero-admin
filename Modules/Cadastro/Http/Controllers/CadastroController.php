@@ -2,7 +2,7 @@
 
 namespace Modules\Cadastro\Http\Controllers;
 
-use App\User;
+use App\Entities\User;
 use App\Convite;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

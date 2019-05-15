@@ -41,6 +41,6 @@ class User_Empresa extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\User', 'user');
+        return $this->belongsTo('App\Entities\User', 'user');
     }
 }

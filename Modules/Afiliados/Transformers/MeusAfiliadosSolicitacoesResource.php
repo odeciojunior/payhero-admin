@@ -2,7 +2,7 @@
 
 namespace Modules\Afiliados\Transformers;
 
-use App\User;
+use App\Entities\User;
 use App\Projeto;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;

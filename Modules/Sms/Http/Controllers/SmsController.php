@@ -6,7 +6,7 @@ use App\Plano;
 use DateTimeZone;
 use App\ZenviaSms;
 use App\MensagemSms;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use Zenvia\Model\Sms;
 use App\CompraUsuario;
 use Zenvia\Model\SmsFacade;

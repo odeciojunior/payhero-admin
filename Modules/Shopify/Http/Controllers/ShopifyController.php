@@ -11,7 +11,7 @@ use App\Produto;
 use App\Projeto;
 use App\Comprador;
 use App\PlanoVenda;
-use App\UserProjeto;
+use App\Entities\UserProjeto;
 use App\ProdutoPlano;
 use App\IntegracaoShopify;
 use Slince\Shopify\Client;
