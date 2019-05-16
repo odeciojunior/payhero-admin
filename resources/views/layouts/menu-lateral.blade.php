@@ -68,7 +68,7 @@
                                 </div>
                               </div>
                             </a>
-                          @elseif($notification['type'] == 'Modules\Notificacoes\Notifications\NovaSolicitacaoAfiliacao')
+                          @elseif($notification['type'] == 'Modules\Notifications\Notifications\NewAffiliationRequest')
                             <a class="list-group-item dropdown-item" href="/afiliados/meusafiliados" role="menuitem">
                               <div class="media">
                                 <div class="pr-10">
@@ -82,7 +82,7 @@
                                 </div>
                               </div>
                             </a>
-                          @elseif($notification['type'] == 'Modules\Notificacoes\Notifications\NovaAfiliacao')
+                          @elseif($notification['type'] == 'Modules\Notifications\Notifications\NewAffiliation')
                             <a class="list-group-item dropdown-item" href="/afiliados/meusafiliados" role="menuitem">
                               <div class="media">
                                 <div class="pr-10">
@@ -96,7 +96,7 @@
                                 </div>
                               </div>
                             </a>
-                          @elseif($notification['type'] == 'Modules\Notificacoes\Notifications\AfiliacaoAprovada')
+                          @elseif($notification['type'] == 'Modules\Notifications\Notifications\ApprovedAffiliation')
                             <a class="list-group-item dropdown-item" href="/afiliados/minhasafiliacoes" role="menuitem">
                               <div class="media">
                                 <div class="pr-10">
@@ -219,7 +219,7 @@
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('produtos') }}">
+        <a class="animsition-link"  href="{{ route('products') }}">
             <i class="site-menu-icon wb-mobile" aria-hidden="true"></i>
             <span class="site-menu-title">Produtos</span>
         </a>

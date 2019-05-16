@@ -13,9 +13,9 @@ use App\Entities\AffiliateRequest;
 use Illuminate\Routing\Controller;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
-use Modules\Notificacoes\Notifications\NovaAfiliacao;
-use Modules\Notificacoes\Notifications\AfiliacaoAprovada;
-use Modules\Notificacoes\Notifications\NovaSolicitacaoAfiliacao;
+use Modules\Notificacoes\Notifications\NewAffiliation;
+use Modules\Notificacoes\Notifications\ApprovedAffiliation;
+use Modules\Notificacoes\Notifications\NewAffiliationRequest;
 
 class AffiliatesController extends Controller {
 
@@ -36,7 +36,7 @@ class AffiliatesController extends Controller {
 
             $notification = Notification::where([
                 ['notifiable_id',$user['id']],
-                ['type','Modules\Notificacoes\Notifications\NovaSolicitacaoAfiliacao']
+                ['type','Modules\Notificacoes\Notifications\NewAffiliationRequest']
             ])
             ->whereNull('read_at')
             ->first();
@@ -48,7 +48,7 @@ class AffiliatesController extends Controller {
                 ]);
             }
             else{
-                $user->notify(new NovaSolicitacaoAfiliacao());
+                $user->notify(new NewAffiliationRequest());
             }
 
             AffiliateRequest::create([
@@ -72,7 +72,7 @@ class AffiliatesController extends Controller {
 
         $notification = Notification::where([
             ['notifiable_id',$user['id']],
-            ['type','Modules\Notificacoes\Notifications\NovaAfiliacao']
+            ['type','Modules\Notificacoes\Notifications\NewAffiliation']
         ])
         ->whereNull('read_at')
         ->first();
@@ -84,7 +84,7 @@ class AffiliatesController extends Controller {
             ]);
         }
         else{
-            $user->notify(new NovaAfiliacao());
+            $user->notify(new NewAffiliation());
         }
 
         return redirect()->route('affiliates.minhasafiliacoes');
@@ -115,7 +115,7 @@ class AffiliatesController extends Controller {
 
         $notification = Notification::where([
             ['notifiable_id',$user['id']],
-            ['type','Modules\Notificacoes\Notifications\AfiliacaoAprovada']
+            ['type','Modules\Notificacoes\Notifications\ApprovedAffiliation']
         ])
         ->whereNull('read_at')
         ->first();
@@ -127,7 +127,7 @@ class AffiliatesController extends Controller {
             ]);
         }
         else{
-            $user->notify(new AfiliacaoAprovada());
+            $user->notify(new ApprovedAffiliation());
         }
 
         return response()->json('Sucesso');
