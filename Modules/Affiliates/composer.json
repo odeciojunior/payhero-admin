@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/affiliates",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Affiliates\\Providers\\AffiliatesServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Affiliates\\": ""
+        }
+    }
+}

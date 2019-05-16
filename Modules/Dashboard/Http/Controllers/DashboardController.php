@@ -36,7 +36,6 @@ class DashboardController extends Controller {
                 foreach($pendingTransactions as $pendingTransaction){
 
                     $futureBalance += $pendingTransaction['value'];
-
                 }
             }
         }

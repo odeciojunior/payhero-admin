@@ -149,7 +149,7 @@
                 </a>
               </li>
               <li class="site-menu-item">
-                <a class="animsition-link" href="{!! route('vendas.recuperacaocarrinho') !!}">
+                <a class="animsition-link" href="{!! route('cartrecovery') !!}">
                   <span class="site-menu-title">Recuperação de carrinho</span>
                 </a>
               </li>
@@ -211,7 +211,7 @@
             </a>
             <ul class="site-menu-sub">
               <li class="site-menu-item">
-                <a class="animsition-link" href="{{ route('atendimento.index') }}">
+                <a class="animsition-link" href="{{ route('attendance') }}">
                   <span class="site-menu-title">Visão geral</span>
                 </a>
               </li>
@@ -267,7 +267,7 @@
             </a>
           </li>
           <li class="site-menu-item has-sub">
-            <a href="{{ route('aplicativos') }}">
+            <a href="{{ route('apps') }}">
               <i class="site-menu-icon wb-briefcase" aria-hidden="true"></i>
               <span class="site-menu-title">Aplicativos</span>
             </a>

@@ -138,12 +138,12 @@
                 </span>
               </a>
               <div class="dropdown-menu" role="menu">
-                <a class="dropdown-item" href="{!! route('perfil') !!}" role="menuitem">
+                <a class="dropdown-item" href="{!! route('profile') !!}" role="menuitem">
                   <i class="icon wb-user" aria-hidden="true"></i> 
                   Perfil 
                 </a>
                 @if(Auth::user()->hasRole('administrador empresarial'))
-                  <a class="dropdown-item" href="{{ route('empresas') }}" role="menuitem">
+                  <a class="dropdown-item" href="{{ route('companies') }}" role="menuitem">
                     <i class="icon wb-home" aria-hidden="true"></i>
                     Empresas
                   </a>
@@ -201,7 +201,7 @@
             </a>
           </li>
           <li class="site-menu-item">
-            <a class="animsition-link" href="{!! route('vendas.recuperacaocarrinho') !!}">
+            <a class="animsition-link" href="{!! route('cartrecovery') !!}">
               <span class="site-menu-title">Carrinhos abandonados</span>
             </a>
           </li>
@@ -225,7 +225,7 @@
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('atendimento.index') }}">
+        <a class="animsition-link"  href="{{ route('attendance') }}">
             <i class="site-menu-icon wb-chat-group" aria-hidden="true"></i>
             <span class="site-menu-title">Atendimento</span>
         </a>
@@ -269,19 +269,19 @@
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{!! route('ferramentas') !!}">
+        <a class="animsition-link" href="{!! route('tools') !!}">
             <i class="site-menu-icon wb-settings" aria-hidden="true"></i>
             <span class="site-menu-title">Ferramentas</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{{ route('aplicativos') }}">
+        <a class="animsition-link" href="{{ route('apps') }}">
             <i class="site-menu-icon wb-grid-4" aria-hidden="true"></i>
             <span class="site-menu-title">Aplicativos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{{ route('convites') }}">
+        <a class="animsition-link" href="{{ route('invites') }}">
             <i class="site-menu-icon wb-user-add" aria-hidden="true"></i>
             <span class="site-menu-title">Convites</span>
         </a>

@@ -1,0 +1,16 @@
+{
+    "name": "Affiliates",
+    "alias": "affiliates",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Affiliates\\Providers\\AffiliatesServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

@@ -51,11 +51,4 @@ class Invitation extends Model
         return $this->belongsTo('App\Entities\User', 'user_invited');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo('App\Entities\User', 'invite');
-    }
 }

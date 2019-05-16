@@ -1,0 +1,59 @@
+<?php
+
+namespace Modules\CartRecovery\Transformers;
+
+use Carbon\Carbon;
+use App\Entities\Log;
+use App\Entities\Plan;
+use App\Entities\Domain;
+use App\Entities\CheckoutPlan;
+use Illuminate\Http\Resources\Json\Resource;
+
+class CartRecoveryResource extends Resource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        $client = '';
+        $log = Log::where('id_log_session', $this->id_log_session)->orderBy('id','DESC')->first();
+        if($log){
+            $client = $log->name;
+        }
+
+        $status = '';
+        if($this->status == 'Carrinho abandonado'){
+            $status = 'Não recuperado';
+        }
+        else{
+            $status = 'Recuperado';
+        }
+
+        $value = 0;
+        $plannCheckout = CheckoutPlan::where('checkout',$this->id)->get()->toArray();
+        foreach($plannCheckout as $planCheckout){
+            $plan = Plan::find($planCheckout['plan']);
+            $value += str_replace('.','',$plan['price']) * $planCheckout['amount'];
+        }
+        $value = substr_replace($value, '.',strlen($value) - 2, 0 );
+
+        $domain = Domain::where('project',$this->project)->first();
+        $link = "https://checkout.".$domain['name']."/carrinho/".$this->id_log_session;
+
+        return [
+            'date'            => with(new Carbon($this->created_at))->format('d/m/Y H:i:s'),
+            'client'          => $client,
+            'email_status'    => 'Não enviado',
+            'sms_status'      => 'Não enviado',
+            'recovery_status' => $status,
+            'value'           => $value,
+            'link'            => $link
+        ];
+
+        return parent::toArray($request);
+    }
+}
