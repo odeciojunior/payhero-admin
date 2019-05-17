@@ -186,7 +186,7 @@ class ProjectsController extends Controller{
 
         $companies = Company::where('user', \Auth::user()->id)->get()->toArray();
 
-        $produtor = UserProject::where([
+        $producer = UserProject::where([
             ['user', \Auth::user()->id],
             ['project', $project['id']]
         ])->first();
@@ -195,7 +195,7 @@ class ProjectsController extends Controller{
             'project'          => $project,
             'companies'        => $companies,
             'extra_materials'  => $materiaisExtras,
-            'emp'              => $produtor->empresa,
+            'emp'              => $producer->company,
         ]);
 
         return response()->json($view->render());
