@@ -187,19 +187,19 @@
                 dados += "<td style='vertical-align: middle' class='text-center'>"+value.produto+"</td>";
                 dados += "<td style='vertical-align: middle'>"+value.comprador+"</td>";
 
-                if(value.forma == 'Boleto'){
+                if(value.forma == 'boleto'){
                   dados += "<td style='vertical-align: middle'><img src='/assets/img/boleto.jpeg' style='width: 60px'></td>";
                 }else{
                   dados += "<td style='vertical-align: middle'><img src='/assets/img/cartao.jpg' style='width: 60px'></td>";
                 }
 
-                if(value.status == 'CO'){
+                if(value.status == 'CO' || value.status == 'paid'){
                   dados += "<td style='vertical-align: middle'><span class='badge badge-success'>Aprovada</span></td>";
                 } else if(value.status == 'CA'){
                   dados += "<td style='vertical-align: middle'><span class='badge badge-danger'>Recusada</span></td>";
                 }else if(value.status == 'chargedback' || value.status == 'refunded'){
                   dados += "<td style='vertical-align: middle'><span class='badge badge-secondary'>Estornada</span></td>";
-                }else if(value.status == 'PE'){
+                }else if(value.status == 'PE' || value.status == 'waiting_payment'){
                   dados += "<td style='vertical-align: middle'><span class='badge badge-primary'>Pendente</span></td>";
                 }else{
                   dados += "<td style='vertical-align: middle'><span class='badge badge-primary'>"+value.status+"</span></td>";

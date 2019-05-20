@@ -2,7 +2,7 @@
     <div class="panel pt-10 p-10" data-plugin="matchHeight">
 
         <div class="nav-tabs-horizontal" data-plugin="tabs" style="height:100%">
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs-line" role="tablist" style="color: #ee535e">
                 <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#sales_tab"
                     aria-controls="sales_tab" role="tab">Venda</a></li>
                 <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#client_tab"
@@ -28,17 +28,17 @@
                             </tr>
                             <tr style="height: 40px">
                                 <td style="width: 40%">STATUS:</td>
-                                @if($sale['gateway_status'] == 'paid')
+                                @if($sale['gateway_status'] == 'paid' || $sale['gateway_status'] == 'CO')
                                     <td>Aprovada</td>
                                 @elseif($sale['gateway_status'] == 'refused')
                                     <td>Rejeitada</td>
-                                @elseif($sale['gateway_status'] == 'waiting_payment')
+                                @elseif($sale['gateway_status'] == 'waiting_payment' || $sale['gateway_status'] == 'PE')
                                     <td>Aguardando pagamento</td>
                                 @else
                                     <td>{!! $sale['gateway_status'] !!}</td>
                                 @endif
                             </tr>
-                            @if($sale['payment_form'] == 'Boleto')
+                            @if($sale['payment_form'] == 'boleto')
                                 <tr style="height: 60px">
                                     <td colspan='2' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
                                 </tr>

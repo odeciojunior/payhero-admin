@@ -78,7 +78,7 @@ class PostBackPagarmeController extends Controller {
 
                 if($sale['shopify_order'] != ''){
 
-                    $plansSale = PlanSale::where('venda', $sale['id'])->first();
+                    $plansSale = PlanSale::where('sale', $sale['id'])->first();
 
                     $plan = Plan::find($plansSale->plan);
 
