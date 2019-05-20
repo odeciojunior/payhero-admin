@@ -2,22 +2,20 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use App\Entities\User;
-use App\Plano;
-use App\Venda;
-use App\Entrega;
 use Carbon\Carbon;
-use App\Comprador;
-use App\Transacao;
-use App\PlanoVenda;
-use App\CompraUsuario;
-use App\IntegracaoShopify;
+use App\Entities\Plan;
+use App\Entities\Sale;
+use App\Entities\User;
+use App\Entities\Company;
+use App\Entities\PlanSale;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
+use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Modules\Core\HotZapp\HotZapp;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use App\Entities\ShopifyIntegration;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Transportadoras\Kapsula;
 use Modules\Core\Transportadoras\LiftGold;
@@ -26,33 +24,33 @@ class PostBackEbanxController extends Controller {
 
     public function postBackListener(Request $request){
 
-        $dados = $request->all();
+        $requestData = $request->all();
 
-        Log::write('info', 'Notificação do Ebanx : '. print_r($dados, true));
+        Log::write('info', 'Notificação do Ebanx : '. print_r($requestData, true));
 
         $response = \Ebanx\Ebanx::doQuery([
-            'hash' => $dados['hash_codes']
+            'hash' => $requestData['hash_codes']
         ]);
 
-        $venda = Venda::where('pagamento_id',$dados['hash_codes'])->first();
+        $sale = Sale::where('gateway_id',$requestData['hash_codes'])->first();
 
-        if(!$venda){
+        if(!$sale){
             Log::write('info', 'Venda não encontrada');
             return 'success';
         }
 
-        if($response->payment->status != $venda->pagamento_status){
+        if($response->payment->status != $sale->pagamento_status){
 
-            $venda->update([
-                'pagamento_status' => $response->payment->status
+            $sale->update([
+                'gateway_status' => $response->payment->status
             ]);
 
-            $transacoes = Transacao::where('venda',$venda->id)->get()->toArray();
+            $transactions = Transaction::where('sale',$sale->id)->get()->toArray();
 
             if($response->payment->status == 'CA'){
  
-                foreach($transacoes as $transacao){
-                    Transacao::find($transacao['id'])->update('status','cancelada');
+                foreach($transactions as $transaction){
+                    Transaction::find($transaction['id'])->update('status','cancelada');
                 }
             }
 
@@ -60,55 +58,55 @@ class PostBackEbanxController extends Controller {
 
                 date_default_timezone_set('America/Sao_Paulo');
 
-                $venda->update([
-                    'data_finalizada'  => \Carbon\Carbon::now(),
-                    'pagemento_status' => 'paid',
+                $sale->update([
+                    'end_date'       => \Carbon\Carbon::now(),
+                    'gateway_status' => 'paid',
                 ]);
 
-                foreach($transacoes as $t){
+                foreach($transactions as $t){
 
-                    $transacao = Transacao::find($t['id']);
+                    $transaction = Transaction::find($t['id']);
 
-                    if($transacao['empresa'] != null){
+                    if($transaction['company'] != null){
 
-                        $empresa = Empresa::find($transacao['empresa']);
+                        $company = Company::find($transaction['company']);
 
-                        $user = User::find($empresa['user']);
+                        $user = User::find($company['user']);
 
-                        $transacao->update([
-                            'status'         => 'pago',
-                            'data_liberacao' => Carbon::now()->addDays($user['dias_antecipacao'])->format('Y-m-d')
+                        $transaction->update([
+                            'status'       => 'paid',
+                            'release_date' => Carbon::now()->addDays($user['antecipation_days'])->format('Y-m-d')
                         ]);
                     }
                     else{
-                        $transacao->update([
-                            'status' => 'pago',
+                        $transaction->update([
+                            'status' => 'paid',
                         ]);
                     }
                 }
 
-                if($venda['pedido_shopify'] != ''){
+                if($sale['shopify_order'] != ''){
 
-                    $planosVenda = PlanoVenda::where('venda', $venda['id'])->first();
+                    $plansSale = PlanSale::where('venda', $sale['id'])->first();
 
-                    $plano = Plano::find($planosVenda->plano);
+                    $plan = Plan::find($plansSale->plan);
 
-                    $integracaoShopify = IntegracaoShopify::where('projeto',$plano['projeto'])->first();
+                    $shopifyIntegration = ShopifyIntegration::where('project',$plan['project'])->first();
 
                     try{
-                        $credential = new PublicAppCredential($integracaoShopify['token']);
+                        $credential = new PublicAppCredential($shopifyIntegration['token']);
 
-                        $client = new Client($credential, $integracaoShopify['url_loja'], [
+                        $client = new Client($credential, $shopifyIntegration['url_store'], [
                             'metaCacheDir' => './tmp'
                         ]);
 
-                        $transaction = $client->getTransactionManager()->create($venda['pedido_shopify'],[
+                        $transaction = $client->getTransactionManager()->create($sale['shopify_order'],[
                             "kind"      => "capture",
                         ]);
 
                     }
                     catch(\Exception $e){
-                        Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$venda['id']);
+                        Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$sale['id']);
                         Log::write('info',  print_r($e, true) );
                     }
 
