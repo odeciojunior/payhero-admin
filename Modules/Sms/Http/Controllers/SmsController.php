@@ -70,23 +70,23 @@ class SmsController extends Controller {
     public function cadastrarSms(Request $request){
 
         $dados = $request->all();
-        $dados['projeto'] = Hashids::decode($dados['projeto'])[0];
+        $dados['project'] = Hashids::decode($dados['projeto'])[0];
 
-        if($dados['tempo'] == ''){
-            $dados['tempo'] = '0';
+        if($dados['time'] == ''){
+            $dados['time'] = '0';
         }
 
-        if($dados['tempo'] == '1'){
-            if($dados['periodo'] == 'minutes')
-                $dados['periodo'] = 'minute';
-            elseif($dados['periodo'] == 'hours')
-                $dados['periodo'] = 'hour';
-            elseif($dados['periodo'] == 'days')
-                $dados['periodo'] = 'day';
+        if($dados['time'] == '1'){
+            if($dados['period'] == 'minutes')
+                $dados['period'] = 'minute';
+            elseif($dados['period'] == 'hours')
+                $dados['period'] = 'hour';
+            elseif($dados['period'] == 'days')
+                $dados['period'] = 'day';
         }
 
-        if($dados['plano'] == 'todos'){
-            unset($dados['plano']);
+        if($dados['plan'] == 'all'){
+            unset($dados['plan']);
         }
 
         ZenviaSms::create($dados);
@@ -109,21 +109,21 @@ class SmsController extends Controller {
 
         unset($dados['projeto']);
 
-        if($dados['tempo'] == ''){
-            $dados['tempo'] = '0';
+        if($dados['time'] == ''){
+            $dados['time'] = '0';
         }
 
-        if($dados['tempo'] == '1'){
-            if($dados['periodo'] == 'minutes')
-                $dados['periodo'] = 'minute';
-            elseif($dados['periodo'] == 'hours')
-                $dados['periodo'] = 'hour';
-            elseif($dados['periodo'] == 'days')
-                $dados['periodo'] = 'day';
+        if($dados['time'] == '1'){
+            if($dados['period'] == 'minutes')
+                $dados['period'] = 'minute';
+            elseif($dados['period'] == 'hours')
+                $dados['period'] = 'hour';
+            elseif($dados['period'] == 'days')
+                $dados['period'] = 'day';
         }
 
-        if($dados['plano'] == 'todos'){
-            unset($dados['plano']);
+        if($dados['plan'] == 'all'){
+            unset($dados['plan']);
         }
 
         $sms = ZenviaSms::where('id',Hashids::decode($dados['id']))->first();
@@ -247,7 +247,7 @@ class SmsController extends Controller {
         }
 
         $form = view('sms::cadastro',[
-            'planos' => $plans
+            'plans' => $plans
         ]);
 
         return response()->json($form->render());
@@ -258,16 +258,16 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        $planos = Plan::where('projeto', $dados['projeto'])->get()->toArray();
+        $plans = Plan::where('project', $dados['projeto'])->get()->toArray();
 
         $sms = ZenviaSms::where('id',Hashids::decode($dados['id']))->first();
 
         $idSms = Hashids::encode($sms->id);
 
         $form = view('sms::editar',[
-            'id_sms' => $idSms,
+            'sms_id' => $idSms,
             'sms'    => $sms,
-            'planos' => $planos
+            'plans'  => $plans
         ]);
 
         return response()->json($form->render());

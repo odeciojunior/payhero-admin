@@ -3,7 +3,7 @@
 </div>
 <form id='editar_sms' method="post" action="#">
     @csrf
-    <input type="hidden" name="id" value="{!! $id_sms !!}">
+    <input type="hidden" name="id" value="{!! $sms_id !!}">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">
@@ -11,10 +11,10 @@
                 <div class="row">
                     <div class="form-group col-12">
                         <label for="plano">Plano</label>
-                        <select name="plano" type="text" class="form-control" id="plano" required>
-                            <option value="todos">Todos planos</option>
-                            @foreach($planos as $plano)
-                                <option value="{!! $plano['id'] !!}" {!! $sms->plano == $plano['id'] ? 'selected' : '' !!}>{!! $plano['nome'] !!}</option>
+                        <select name="plan" type="text" class="form-control" id="plano" required>
+                            <option value="all">Todos planos</option>
+                            @foreach($plans as $plan)
+                                <option value="{!! $plan['id'] !!}" {!! $sms->plano == $plan['id'] ? 'selected' : '' !!}>{!! $plan['name'] !!}</option>
                             @endforeach
                         </select>
                     </div>
@@ -22,15 +22,15 @@
                         
                 <div class="row">
                     <div class="form-group col-12">
-                        <label for="evento">Evento</label>
+                        <label for="event">Evento</label>
                         <select name="evento" type="text" class="form-control" id="evento" required>
-                            <option value="boleto_gerado" {!! ($sms->evento == 'boleto_gerado') ? 'selected' : '' !!}>Boleto gerado</option>
-                            <option value="boleto_vencendo" {!! ($sms->evento == 'boleto_vencendo') ? 'selected' : '' !!}>Boleto no dia do vencimento</option>
-                            <option value="boleto_vencido" {!! ($sms->evento == 'boleto_vencido') ? 'selected' : '' !!}>Boleto vencido</option>
-                            <option value="reembolso" {!! ($sms->evento == 'reembolso') ? 'selected' : '' !!}>Reembolso</option>
-                            <option value="venda_realizada" {!! ($sms->evento == 'venda_realizada') ? 'selected' : '' !!}>Venda realizada</option>
-                            <option value="cartao_recusado" {!! ($sms->evento == 'cartao_recusado') ? 'selected' : '' !!}>Cartão recusado</option>
-                            <option value="abandono_checkout" {!! ($sms->evento == 'abandono_checkout') ? 'selected' : '' !!}>Abandono do checkout</option>
+                            <option value="boleto_generated" {!! ($sms->evento == 'boleto_generated') ? 'selected' : '' !!}>Boleto gerado</option>
+                            <option value="boleto_expiring" {!! ($sms->evento == 'boleto_expiring') ? 'selected' : '' !!}>Boleto no dia do vencimento</option>
+                            <option value="boleto_expired" {!! ($sms->evento == 'boleto_expired') ? 'selected' : '' !!}>Boleto vencido</option>
+                            <option value="refund" {!! ($sms->evento == 'refund') ? 'selected' : '' !!}>Reembolso</option>
+                            <option value="sale_realized" {!! ($sms->evento == 'sale_realized') ? 'selected' : '' !!}>Venda realizada</option>
+                            <option value="card_refused" {!! ($sms->evento == 'card_refused') ? 'selected' : '' !!}>Cartão recusado</option>
+                            <option value="checkout_abandoned" {!! ($sms->evento == 'checkout_abandoned') ? 'selected' : '' !!}>Abandono do checkout</option>
                         </select>
                     </div>
                 </div>
@@ -43,14 +43,14 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <input value="{!! $sms->tempo != '' ? $sms->tempo : '' !!}" name="tempo" type="text" class="form-control" id="tempo_sms_editar" placeholder="Número">
+                        <input value="{!! $sms->time != '' ? $sms->time : '' !!}" name="time" type="text" class="form-control" id="tempo_sms_editar" placeholder="Número">
                     </div>
 
                     <div class="col-9">
-                        <select name="periodo" class="form-control" id="periodo" required>
-                            <option value="minutes" {!! ($sms->periodo == 'minutos') ? 'selected' : '' !!}>Minuto(s)</option>
-                            <option value="hours" {!! ($sms->periodo == 'horas') ? 'selected' : '' !!}>Hora(s)</option>
-                            <option value="days" {!! ($sms->periodo == 'dias') ? 'selected' : '' !!}>Dia(s)</option>
+                        <select name="period" class="form-control" id="periodo" required>
+                            <option value="minutes" {!! ($sms->period == 'minutes') ? 'selected' : '' !!}>Minuto(s)</option>
+                            <option value="hours" {!! ($sms->period == 'hours') ? 'selected' : '' !!}>Hora(s)</option>
+                            <option value="days" {!! ($sms->period == 'days') ? 'selected' : '' !!}>Dia(s)</option>
                         </select>
                     </div>
                 </div>
@@ -67,9 +67,9 @@
     
                 <div class="row">
                     <div class="form-group col-xl-12">
-                        <label for="mensagem">Mensagem</label>
-                        <textarea name="mensagem" class="form-control" rows="5" id="mensagem" maxlength="120" placeholder="mensagem">
-                            {!! $sms->mensagem != '' ? $sms->mensagem : '' !!}
+                        <label for="message">Mensagem</label>
+                        <textarea name="message" class="form-control" rows="5" id="message" maxlength="120" placeholder="mensagem">
+                            {!! $sms->message != '' ? $sms->message : '' !!}
                         </textarea>
                     </div>
                 </div>

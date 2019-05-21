@@ -1913,10 +1913,10 @@
             columns: [
                 { data: 'plan', name: 'plan'},
                 { data: function(data){
-                    return data.evento.replace(new RegExp('_', 'g'), ' ');   
-                }, name: 'evento'},
+                    return data.event.replace(new RegExp('_', 'g'), ' ');   
+                }, name: 'event'},
                 { data: function(data){
-                    return data.tempo + ' ' + data.periodo;
+                    return data.time + ' ' + data.period;
                 }, name: 'time'},
                 { data: 'message', name: 'message'},
                 { data: function(data){
