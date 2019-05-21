@@ -72,7 +72,7 @@ class CartRecoveryController extends Controller {
 
             $domain = Domain::where('project',$checkout->project)->first();
 
-            return "https://checkout.".$domain['name']."/carrinho/".$checkout->id_log_session;
+            return "https://checkout.".$domain['name']."/recovery/".$checkout->id_log_session;
         })
         ->rawColumns(['detalhes','recovery_status'])
         ->make(true);

@@ -238,16 +238,16 @@ class SmsController extends Controller {
 
         $dados = $request->all();
 
-        $planos = Plan::where('projeto', Hashids::decode($dados['projeto'])[0])->get()->toArray();
+        $plans = Plan::where('project', Hashids::decode($dados['projeto'])[0])->get()->toArray();
 
-        foreach($planos as &$plano){
-            if($plano['descricao'] != ''){
-                $plano['nome'] = $plano['nome'] . ' - ' . $plano['descricao'];
+        foreach($plans as &$plan){
+            if($plan['description'] != ''){
+                $plan['name'] = $plan['name'] . ' - ' . $plan['description'];
             }
         }
 
         $form = view('sms::cadastro',[
-            'planos' => $planos
+            'planos' => $plans
         ]);
 
         return response()->json($form->render());
