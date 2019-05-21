@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\CartRecovery\Http\Controllers;
- 
+
 use Carbon\Carbon;
 use App\Entities\Log;
 use App\Entities\Plan;
@@ -31,7 +31,7 @@ class CartRecoveryController extends Controller {
             'checkout.created_at',
             'checkout.project',
         ])
-        ->where('status','Carrinho abandonado')
+        ->where('status','abandoned cart')
         ->orWhere('status', 'Recuperado')
         ->orderBy('id','DESC');
  
@@ -52,7 +52,7 @@ class CartRecoveryController extends Controller {
             return "Não enviado";
         })
         ->addColumn('recovery_status', function ($checkout) {
-            if($checkout->status == 'Carrinho abandonado'){
+            if($checkout->status == 'abandoned cart'){
                 return "<span class='badge badge-danger'>Não recuperado</span>";
             }
             else{
