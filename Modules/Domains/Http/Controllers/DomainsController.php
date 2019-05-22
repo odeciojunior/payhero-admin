@@ -4,6 +4,7 @@ namespace Modules\Domains\Http\Controllers;
 
 use Exception;
 use App\Entities\Domain;
+use App\Entities\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Cloudflare\API\Auth\APIKey;
@@ -91,9 +92,9 @@ class DomainsController extends Controller {
 
         $requestData = $request->all();
 
-        $requestData['project'] = Hashids::decode($requestData['projeto']);
+        $requestData['project'] = Hashids::decode($requestData['projeto'])[0];
 
-        $project = Project::find($requestData['projeto']);
+        $project = Project::find($requestData['project']);
 
         $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
         $adapter = new Guzzle($key);
@@ -104,6 +105,7 @@ class DomainsController extends Controller {
             $zones->addZone($requestData['name']);
         }
         catch(Exception $e){
+            dd($e);
             return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
         }
  
@@ -148,11 +150,12 @@ class DomainsController extends Controller {
         }
         catch(Exception $e){
             try{
-                $zones->deleteZone($zoneID); 
+                $zones->deleteZone($zoneID);
             }
             catch(Exception $e){
                 //
             }
+            dd($e);
             return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
         }
 
@@ -161,27 +164,34 @@ class DomainsController extends Controller {
         $requestBody = json_decode('
                 {
                     "automatic_security": false,
-                    "custom_spf": true,
-                    "default": true,
-                    "domain": '.$requestData['domain'].'
-                }
-        ');
+                    "custom_spf" : true,
+                    "default" : true,
+                    "domain" : "'.$requestData['name'].'"
+                }');
 
         try{
             $response = $sendgrid->client->whitelabel()->domains()->post($requestBody);
-            $response = json_decode($response);
+
+            $response = json_decode($response->body());
 
             $requestData['id_sendgrid'] = $response->id;
 
             $response = $sendgrid->client->whitelabel()->domains()->_($response->id)->get();
 
+            $response = json_decode($response->body());
+
             foreach($response->dns as $responseDns){
-                $dns->addRecord($zoneID, $responseDns->type, $responseDns->host, $responseDns->data, 0, true);
+                if($responseDns->type == 'mx'){
+                    $dns->addRecord($zoneID, 'MX', $responseDns->host, $responseDns->data, 0, false,'1');
+                }
+                else{
+                    $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
+                }
             }
 
         }
         catch(Exception $e){
-            //
+            dd($e);
         }
 
         $requestData['status'] = "Conectado";
@@ -310,10 +320,10 @@ class DomainsController extends Controller {
             return response()->json('Erro, projeto não encontrado');
         }        
 
-        $project = Project::find($requestData['projeto']);
+        $project = Project::find(Hashids::decode($requestData['projeto'])[0]);
 
         $form = view('domains::create',[
-            'projeto' => $project,
+            'project' => $project
         ]);
 
         return response()->json($form->render());

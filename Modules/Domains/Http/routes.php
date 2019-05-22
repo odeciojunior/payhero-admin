@@ -7,29 +7,19 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dominios', 'namespac
         'as' => 'domains',
     ]);
 
-    Route::get('/cadastro', [
-        'uses' => 'DomainsController@cadastro',
-        'as' => 'domains.cadastro',
-    ]);
-
-    Route::get('/editar/{id}', [
-        'uses' => 'DomainsController@editarDominio',
-        'as' => 'domains.editar',
-    ]);
-
     Route::post('/editardominio', [
-        'uses' => 'DomainsController@updateDominio',
+        'uses' => 'DomainsController@update',
         'as' => 'domains.update',
     ]);
 
     Route::post('/deletardominio', [
-        'uses' => 'DomainsController@deletarDominio',
+        'uses' => 'DomainsController@delete',
         'as' => 'domains.deletar',
     ]);
 
     Route::post('/cadastrardominio', [
-        'uses' => 'DomainsController@cadastrarDominio',
-        'as' => 'domains.cadastrardominio',
+        'uses' => 'DomainsController@store',
+        'as' => 'domains.store',
     ]);
 
     Route::post('/data-source',[
@@ -38,13 +28,13 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dominios', 'namespac
     ]);
 
     Route::post('/getformadddominio', [
-        'uses' => 'DomainsController@getFormAddDominio',
-        'as' => 'domains.getformadddominio',
+        'uses' => 'DomainsController@create',
+        'as' => 'domains.create',
     ]);
 
     Route::post('/getformeditardominio', [
-        'uses' => 'DomainsController@getFormEditarDominio',
-        'as' => 'domains.getformeditardominio',
+        'uses' => 'DomainsController@edit',
+        'as' => 'domains.edit',
     ]);
 
     Route::post('/detalhesdominio', [

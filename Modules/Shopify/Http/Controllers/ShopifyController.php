@@ -2,20 +2,15 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
-use App\Plano;
-use App\Venda;
 use Exception;
-use App\Empresa;
-use App\Entrega;
-use App\Produto;
-use App\Projeto;
-use App\Comprador;
-use App\PlanoVenda;
-use App\Entities\UserProjeto;
-use App\ProdutoPlano;
-use App\IntegracaoShopify;
+use App\Entities\Plan;
+use App\Entities\Company;
+use App\Entities\Product;
+use App\Entities\Project;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
+use App\Entities\ProductPlan;
+use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Cloudflare\API\Auth\APIKey;
 use Cloudflare\API\Endpoints\DNS;
@@ -23,6 +18,7 @@ use Cloudflare\API\Adapter\Guzzle;
 use Illuminate\Routing\Controller;
 use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Support\Facades\Log;
+use App\Entities\ShopifyIntegration;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Slince\Shopify\PublicAppCredential;
@@ -30,27 +26,26 @@ use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class ShopifyController extends Controller {
 
-
     public function index() {
 
-        $empresas = Empresa::where('user',\Auth::user()->id)->get()->toArray();
+        $companies = Company::where('user',\Auth::user()->id)->get()->toArray();
 
-        $integracoesShopify = IntegracaoShopify::where('user',\Auth::user()->id)->get()->toArray();
+        $shopifyIntegrations = ShopifyIntegration::where('user',\Auth::user()->id)->get()->toArray();
 
-        $projetos = [];
+        $projects = [];
 
-        foreach($integracoesShopify as $integracaoShopify){
+        foreach($shopifyIntegrations as $shopifyIntegration){
 
-            $projeto = Projeto::find($integracaoShopify['projeto']);
+            $project = Project::find($shopifyIntegration['project']);
 
-            if($projeto){
-                $projetos[] = $projeto;
+            if($project){
+                $projects[] = $project;
             }
         }
 
         return view('shopify::index',[
-            'empresas' => $empresas,
-            'projetos' => $projetos,
+            'companies' => $companies,
+            'projects'  => $projects,
         ]);
     }
 
@@ -58,16 +53,16 @@ class ShopifyController extends Controller {
 
         $dados = $request->all();
 
-        $integracaoShopify = IntegracaoShopify::where('token',$dados['token'])->first();
+        $shopifyIntegration = ShopifyIntegration::where('token',$dados['token'])->first();
 
-        if($integracaoShopify != null){
+        if($shopifyIntegration != null){
             return response()->json('Projeto já integrado');
         }
 
         try{
             $credential = new PublicAppCredential($dados['token']);
 
-            $client = new Client($credential, $dados['url_loja'], [
+            $client = new Client($credential, $dados['url_store'], [
                 'metaCacheDir' => './tmp' // Metadata cache dir, required
             ]);
         }
@@ -76,15 +71,15 @@ class ShopifyController extends Controller {
         }
 
         try{
-            $projeto = Projeto::create([
-                'nome'                  => $client->getShopManager()->get()->getName(),
+            $project = Project::create([
+                'name'                  => $client->getShopManager()->get()->getName(),
                 'status'                => '1',
-                'visibilidade'          => 'privado',
-                'porcentagem_afiliados' => '0',
-                'descricao'             =>  $client->getShopManager()->get()->getName(),
-                'descricao_fatura'      => $client->getShopManager()->get()->getName(),
-                'url_pagina'            => 'https://'.$client->getShopManager()->get()->getDomain(),
-                'afiliacao_automatica'  => false,
+                'visibility'            => 'private',
+                'percentage_affiliates' => '0',
+                'description'           =>  $client->getShopManager()->get()->getName(),
+                'invoice_description'   => $client->getShopManager()->get()->getName(),
+                'url_page'              => 'https://'.$client->getShopManager()->get()->getDomain(),
+                'automatic_affiliation' => false,
                 'shopify_id'            => $client->getShopManager()->get()->getId(),
             ]);
         }
@@ -104,26 +99,26 @@ class ShopifyController extends Controller {
             "value" => $this->getCartTemplate()
         ]);
 
-        $imagem = $request->file('foto_projeto');
+        $photo = $request->file('foto_projeto');
 
-        if ($imagem != null) {
-            $nomeFoto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
+        if ($photo != null) {
+            $photoName = 'projeto_' . $project->id . '_.' . $photo->getClientOriginalExtension();
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
+            $photo->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $photoName);
 
             try{
-              $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
+              $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $photoName);
 
               $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
 
               $img->resize(200, 200);
 
-              Storage::delete('public/upload/projeto/'.$nomeFoto);
+              Storage::delete('public/upload/projeto/'.$photoName);
 
-              $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
+              $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $photoName);
 
-              $projeto->update([
-                  'foto' => $nomeFoto
+              $project->update([
+                  'photo' => $photoName
               ]);
             }
             catch(\Exception $e){
@@ -131,108 +126,99 @@ class ShopifyController extends Controller {
             }
         }
 
-        UserProjeto::create([
-            'user'              => \Auth::user()->id,
-            'projeto'           => $projeto->id,
-            'empresa'           => $dados['empresa'],
-            'tipo'              => 'produtor',
-            'responsavel_frete' => true,
-            'permissao_acesso'  => true,
-            'permissao_editar'  => true,
-            'status'            => 'ativo'
+        UserProject::create([
+            'user'                 => \Auth::user()->id,
+            'project'              => $project->id,
+            'company'              => $dados['company'],
+            'type'                 => 'producer',
+            'shipment_responsible' => true,
+            'permissao_acesso'     => true,
+            'permissao_editar'     => true,
+            'status'               => 'active'
         ]);
 
         $products = $client->getProductManager()->findAll([]);
 
-        foreach($products as $product){
+        foreach($products as $shopifyProduct){
 
-            foreach($product->getVariants() as $variant){
+            foreach($shopifyProduct->getVariants() as $variant){
 
-                $produto = Produto::create([
+                $product = Product::create([
                     'user'          => \Auth::user()->id,
-                    'nome'          => substr($product->getTitle(),0,100),
-                    'descricao'     => '',
-                    'garantia'      => '0',
-                    'disponivel'    => true,
-                    'quantidade'    => '0',
-                    'formato'       => 1,
-                    'categoria'     => '11',
-                    'custo_produto' => '',
+                    'name'          => substr($shopifyProduct->getTitle(),0,100),
+                    'description'   => '',
+                    'guarantee'     => '0',
+                    'format'        => 1,
+                    'category'      => '11',
+                    'cost'          => '',
                     'shopify'       => true,
                 ]);
 
-                $novoCodigoIdentificador = false;
+                $newCode = false;
 
-                while($novoCodigoIdentificador == false){
+                while($newCode == false){
 
-                    $codigoIdentificador = $this->randString(3).rand(100,999);
+                    $code = $this->randString(3).rand(100,999);
 
-                    $plano = Plano::where('cod_identificador', $codigoIdentificador)->first();
+                    $plan = Plan::where('code', $code)->first();
 
-                    if($plano == null){
-                        $novoCodigoIdentificador = true;
+                    if($plan == null){
+                        $newCode = true;
                     }
                 }
 
-                $descricao = '';
+                $description = '';
 
                 try{
-                    $descricao = $variant->getOption1();
-                    if($descricao == 'Default Title'){
-                        $descricao = '';
+                    $description = $variant->getOption1();
+                    if($description == 'Default Title'){
+                        $description = '';
                     }
                     if($variant->getOption2() != ''){
-                        $descricao .= ' - '. $$variant->getOption2();
+                        $description .= ' - '. $$variant->getOption2();
                     }
                     if($variant->getOption3() != ''){
-                        $descricao .= ' - '. $$variant->getOption3();
+                        $description .= ' - '. $$variant->getOption3();
                     }
                 }
                 catch(\Exception $e){
                     //
                 }
 
-                $plano = Plano::create([
-                    'shopify_id'            => $product->getId(),
+                $plan = Plan::create([
+                    'shopify_id'            => $shopifyProduct->getId(),
                     'shopify_variant_id'    => $variant->getId(),
-                    'empresa'               => $dados['empresa'],
-                    'projeto'               => $projeto->id,
-                    'nome'                  => substr($product->getTitle(),0,100),
-                    'descricao'             => $descricao,
-                    'cod_identificador'     => $codigoIdentificador,
-                    'preco'                 => $variant->getPrice(),
-                    'frete_fixo'            => '1',
-                    'valor_frete'           => '0.00',
-                    'pagamento_cartao'      => true,
-                    'pagamento_boleto'      => true,
+                    'company'               => $dados['company'],
+                    'project'               => $project->id,
+                    'name'                  => substr($shopifyProduct->getTitle(),0,100),
+                    'description'           => $description,
+                    'code'                  => $code,
+                    'price'                 => $variant->getPrice(),
                     'status'                => '1',
-                    'transportadora'        => '2',
-                    'qtd_parcelas'          => '12',
-                    'parcelas_sem_juros'    => '1'
                 ]);
 
-                if(count($product->getVariants()) > 1){
-                    foreach($product->getImages() as $image){
+                if(count($shopifyProduct->getVariants()) > 1){
+                    foreach($shopifyProduct->getImages() as $image){
 
                         foreach($image->getVariantIds() as $variantId){
                             if($variantId == $variant->getId()){
 
                                 if($image->getSrc() != ''){
-                                    $produto->update([
-                                        'foto' => $image->getSrc()
+                                    $product->update([
+                                        'photo' => $image->getSrc()
                                     ]);
 
-                                    $plano->update([
-                                        'foto' => $image->getSrc()
+                                    $plan->update([
+                                        'photo' => $image->getSrc()
                                     ]);
                                 }
                                 else{
-                                    $plano->update([
-                                        'foto' => $product->getImage()->getSrc()
+                                    $plan->update([
+                                        'photo' => $shopifyProduct->getImage()->getSrc()
                                     ]);
                 
-                                    $produto->update([
-                                        'foto' => $product->getImage()->getSrc()
+                                    $product->update([
+                                        'photo' => $shopifyProduct->getImage()->getSrc()
                                     ]);
                                 }
                             }
@@ -241,19 +227,19 @@ class ShopifyController extends Controller {
                 }
                 else{
 
-                    $plano->update([
-                        'foto' => $product->getImage()->getSrc()
+                    $plan->update([
+                        'photo' => $shopifyProduct->getImage()->getSrc()
                     ]);
 
-                    $produto->update([
-                        'foto' => $product->getImage()->getSrc()
+                    $product->update([
+                        'photo' => $shopifyProduct->getImage()->getSrc()
                     ]);
                 }
 
-                ProdutoPlano::create([
-                    'produto'            => $produto->id,
-                    'plano'              => $plano->id,
-                    'quantidade_produto' => '1'
+                ProductPlan::create([
+                    'product' => $product->id,
+                    'plan'    => $plan->id,
+                    'amount'  => '1'
                 ]);
             }
 
@@ -261,21 +247,21 @@ class ShopifyController extends Controller {
 
         $client->getWebhookManager()->create([
             "topic"   => "products/create",
-            "address" => "https://cloudfox.app/aplicativos/shopify/webhook/".$projeto['id'],
+            "address" => "https://cloudfox.app/aplicativos/shopify/webhook/".$project['id'],
             "format"  => "json"
         ]);
 
         $client->getWebhookManager()->create([
             "topic"   => "products/update",
-            "address" => "https://cloudfox.app/aplicativos/shopify/webhook/".$projeto['id'],
+            "address" => "https://cloudfox.app/aplicativos/shopify/webhook/".$project['id'],
             "format"  => "json"
         ]);
 
-        IntegracaoShopify::create([
-            'token'    => $dados['token'],
-            'url_loja' => $dados['url_loja'],
-            'user'     => \Auth::user()->id,
-            'projeto'  => $projeto->id
+        ShopifyIntegration::create([
+            'token'     => $dados['token'],
+            'url_store' => $dados['url_store'],
+            'user'      => \Auth::user()->id,
+            'project'   => $project->id
         ]);
 
         return response()->json('Sucesso');
@@ -283,7 +269,9 @@ class ShopifyController extends Controller {
 
     public function getCartTemplate(){
 
-        return "<div class='page-width' data-section-id='{{ section.id }}' data-section-type='cart-template'>
+        return 
+        
+        "<div class='page-width' data-section-id='{{ section.id }}' data-section-type='cart-template'>
 
         {% if cart.item_count > 0 %}
         {% if section.settings.cart_enable %}
@@ -697,9 +685,9 @@ class ShopifyController extends Controller {
         // Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
         // return 'success';
 
-        $projeto = Projeto::find($request->id_projeto);
+        $project = Project::find($request->id_projeto);
 
-        if(!$projeto){
+        if(!$project){
             Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->id_projeto );
             return 'error';
         }
@@ -709,77 +697,77 @@ class ShopifyController extends Controller {
 
         foreach($dados['variants'] as $variant){
 
-            $plano = Plano::where('shopify_variant_id' , $variant['id'])->first();
+            $plan = Plan::where('shopify_variant_id' , $variant['id'])->first();
 
-            $descricao = '';
+            $description = '';
             try{
-                $descricao = $variant['option1'];
-                if($descricao == 'Default Title'){
-                    $descricao = '';
+                $description = $variant['option1'];
+                if($description == 'Default Title'){
+                    $description = '';
                 }
                 if($variant['option2'] != ''){
-                    $descricao .= ' - '. $$variant['option2'];
+                    $description .= ' - '. $$variant['option2'];
                 }
                 if($variant['option3'] != ''){
-                    $descricao .= ' - '. $$variant['option3'];
+                    $description .= ' - '. $$variant['option3'];
                 }
             }
             catch(\Exception $e){
                 //
             }
 
-            if($plano){
-                $plano->update([
-                    'nome'      => substr($dados['title'],0,100),
-                    'preco'     => $variant['price'],
-                    'descricao' => $descricao
+            if($plan){
+                $plan->update([
+                    'name'      => substr($dados['title'],0,100),
+                    'price'     => $variant['price'],
+                    'description' => $description
                 ]);
             }
             else{
-                $produto = Produto::create([
+                $product = Product::create([
                     'user'          => \Auth::user()->id,
-                    'nome'          => substr($dados['title'],0,100),
-                    'descricao'     => $descricao,
-                    'garantia'      => '0',
+                    'name'          => substr($dados['title'],0,100),
+                    'description'     => $description,
+                    'guarantee'      => '0',
                     'disponivel'    => true,
                     'quantidade'    => '0',
                     'formato'       => 1,
-                    'categoria'     => '1',
-                    'custo_produto' => '',
+                    'category'     => '1',
+                    'cost' => '',
                 ]);
 
-                $novoCodigoIdentificador = false;
+                $newCode = false;
 
-                while($novoCodigoIdentificador == false){
+                while($newCode == false){
 
-                    $codigoIdentificador = $this->randString(3).rand(100,999);
-                    $plano = Plano::where('cod_identificador', $codigoIdentificador)->first();
-                    if($plano == null){
-                        $novoCodigoIdentificador = true;
+                    $code = $this->randString(3).rand(100,999);
+                    $plan = Plan::where('code', $code)->first();
+                    if($plan == null){
+                        $newCode = true;
                     }
                 }
 
-                $userProjeto = UserProjeto::where([
+                $userProjeto = UserProject::where([
                     ['user', \Auth::user()->id],
-                    ['projeto',$projeto['id']],
-                    ['tipo', 'produtor']
+                    ['project',$project['id']],
+                    ['type', 'produtor']
                 ])->first();
 
-                $plano = Plano::create([
+                $plan = Plan::create([
                     'shopify_id'         => $dados['id'],
                     'shopify_variant_id' => $variant['id'],
-                    'empresa'            => $userProjeto->empresa,
-                    'projeto'            => $projeto['id'],
-                    'nome'               => substr($dados['title'],0,100),
-                    'descricao'          => $descricao,
-                    'cod_identificador'  => $codigoIdentificador, 
-                    'preco'              => $variant['price'],
-                    'frete_fixo'         => '1',
-                    'valor_frete'        => '0.00',
+                    'company'            => $userProjeto->empresa,
+                    'project'            => $project['id'],
+                    'name'               => substr($dados['title'],0,100),
+                    'description'          => $description,
+                    'code'  => $code, 
+                    'price'              => $variant['price'],
+                    'shipment_fixed'         => '1',
+                    'shipment_value'        => '0.00',
                     'pagamento_cartao'   => true,
                     'pagamento_boleto'   => true,
                     'status'             => '1',
-                    'transportadora'     => '2',
+                    'carrier'            => '2',
                     'qtd_parcelas'       => '12',
                     'parcelas_sem_juros' => '1'
                 ]);
@@ -791,20 +779,20 @@ class ShopifyController extends Controller {
                           if($variantId == $variant['id']){
 
                               if($image['src'] != ''){
-                                  $produto->update([
-                                      'foto' => $image->getSrc()
+                                  $product->update([
+                                      'photo' => $image->getSrc()
                                   ]);
 
-                                  $plano->update([
-                                      'foto' => $image->getSrc()
+                                  $plan->update([
+                                      'photo' => $image->getSrc()
                                   ]);
                               }
                               else{
-                                  $plano->update([
-                                      'foto' => $dados['image']['src']
+                                  $plan->update([
+                                      'photo' => $dados['image']['src']
                                   ]);
-                                  $produto->update([
-                                      'foto' => $dados['image']['src']
+                                  $product->update([
+                                      'photo' => $dados['image']['src']
                                   ]);
                               }
                           }
@@ -813,19 +801,19 @@ class ShopifyController extends Controller {
               }
               else{
 
-                  $plano->update([
-                      'foto' => $dados['image']['src']
+                  $plan->update([
+                      'photo' => $dados['image']['src']
                   ]);
 
-                  $produto->update([
-                      'foto' => $dados['image']['src']
+                  $product->update([
+                      'photo' => $dados['image']['src']
                   ]);
               }
 
-              ProdutoPlano::create([
-                    'produto'            => $produto->id,
-                    'plano'              => $plano->id,
-                    'quantidade_produto' => '1'
+              ProdutoPlan::create([
+                  'produto' => $product->id,
+                  'plano'   => $plan->id,
+                  'amount'  => '1'
               ]);
 
             }

@@ -10,24 +10,24 @@
 
                 <div class="row">
                     <div class="form-group col-xl-12">
-                        <label for="nome">Descrição</label>
-                        <input value="{!! $pixel->nome != '' ? $pixel->nome : '' !!}" name="nome" type="text" class="form-control" id="nome" placeholder="Descrição">
+                        <label for="name">Descrição</label>
+                        <input value="{!! $pixel->name != '' ? $pixel->name : '' !!}" name="name" type="text" class="form-control" id="name" placeholder="Descrição">
                     </div>
 
                     <div class="form-group col-xl-12">
-                        <label for="descricao">Código</label>
-                        <input value="{!! $pixel->cod_pixel != '' ? $pixel->cod_pixel : '' !!}" name="cod_pixel" type="text" class="form-control" id="cod_pixel" placeholder="Código">
+                        <label for="code">Código</label>
+                        <input value="{!! $pixel->code != '' ? $pixel->code : '' !!}" name="code" type="text" class="form-control" id="code" placeholder="Código">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-xl-12">
-                        <label for="plataforma">Plataforma</label>
-                        <select name="plataforma" type="text" class="form-control" id="plataforma">
-                            <option value="facebook" {!! ($pixel->plataforma == 'facebook') ? 'selected' : '' !!}>Facebook</option>
-                            <option value="google" {!! ($pixel->plataforma == 'google') ? 'selected' : '' !!}>Google</option>
-                            <option value="taboola" {!! ($pixel->plataforma == 'taboola') ? 'selected' : '' !!}>Taboola</option>
-                            <option value="outbrain" {!! ($pixel->plataforma == 'outbrain') ? 'selected' : '' !!}>Outbrain</option>
+                        <label for="platform">Plataforma</label>
+                        <select name="platform" type="text" class="form-control" id="platform">
+                            <option value="facebook" {!! ($pixel->platform == 'facebook') ? 'selected' : '' !!}>Facebook</option>
+                            <option value="google" {!! ($pixel->platform == 'google') ? 'selected' : '' !!}>Google</option>
+                            <option value="taboola" {!! ($pixel->platform == 'taboola') ? 'selected' : '' !!}>Taboola</option>
+                            <option value="outbrain" {!! ($pixel->platform == 'outbrain') ? 'selected' : '' !!}>Outbrain</option>
                         </select>
                     </div>
 
@@ -43,30 +43,31 @@
                     <div class="form-group col-12">
                         <label for="checkout">Rodar pixel no checkout</label>
                         <select name="checkout" class="form-control" id="checkout">
-                            <option value="sim" {!! ($pixel->checkout == 'sim') ? 'selected' : '' !!}>Sim</option>
-                            <option value="nao" {!! ($pixel->checkout == 'nao') ? 'selected' : '' !!}>Não</option>
+                            <option value="1" {!! ($pixel->checkout == '1') ? 'selected' : '' !!}>Sim</option>
+                            <option value="0" {!! ($pixel->checkout == '0') ? 'selected' : '' !!}>Não</option>
                         </select>
                     </div>
 
                     <div class="form-group col-12">
-                        <label for="purchase_cartao">Rodar pixel no purchase (cartão)</label>
-                        <select name="purchase_cartao" class="form-control" id="purchase_cartao">
-                            <option value="sim" {!! ($pixel->purchase_cartao == 'sim') ? 'selected' : '' !!}>Sim</option>
-                            <option value="nao" {!! ($pixel->purchase_cartao == 'nao') ? 'selected' : '' !!}>Não</option>
+                        <label for="purchase_card">Rodar pixel no purchase (cartão)</label>
+                        <select name="purchase_card" class="form-control" id="purchase_card">
+                            <option value="1" {!! ($pixel->purchase_card == '1') ? 'selected' : '' !!}>Sim</option>
+                            <option value="0" {!! ($pixel->purchase_card == '0') ? 'selected' : '' !!}>Não</option>
                         </select>
                     </div>
                     <div class="form-group col-12">
                         <label for="purchase_boleto">Rodar pixel no purchase (boleto)</label>
                         <select name="purchase_boleto" class="form-control" id="purchase_boleto">
-                            <option value="sim" {!! ($pixel->purchase_boleto == 'sim') ? 'selected' : '' !!}>Sim</option>
-                            <option value="nao" {!! ($pixel->purchase_boleto == 'nao') ? 'selected' : '' !!}>Não</option>
+                            <option value="1" {!! ($pixel->purchase_boleto == '1') ? 'selected' : '' !!}>Sim</option>
+                            <option value="0" {!! ($pixel->purchase_boleto == '0') ? 'selected' : '' !!}>Não</option>
                         </select>
                     </div>
 
                 </div>
-
-
             </div>
         </div>
     </div>
 </form>
+
+
+

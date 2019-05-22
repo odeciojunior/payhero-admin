@@ -19,23 +19,23 @@
               </div>      
           </div>
 
-          @if(count($projetos) == 0)
+          @if(count($projects) == 0)
             <div class="row" style="margin-top: 40px">
                 <h4>Nenhuma integração encontrada</h4>
             </div>
           @else
 
             <div class="row" style="margin-top: 50px">
-                @foreach($projetos as $projeto)
+                @foreach($projects as $project)
                   <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                     <div class="card" style="border: 1px solid gray">
-                        <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
-                            <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$projeto['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                        <a href='/projetos/projeto/{!! $project['id'] !!}'>
+                            <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                         </a>
                         <div class="card-block">
-                          <a href='/projetos/projeto/{!! $projeto['id'] !!}'>
+                          <a href='/projetos/projeto/{!! $project['id'] !!}'>
                               <div class="text-center">
-                                  <h4 class="card-title">{!! $projeto['nome'] !!}</h4>
+                                  <h4 class="card-title">{!! $project['nome'] !!}</h4>
                               </div>
                           </a>
                           <hr>
@@ -68,16 +68,16 @@
                             </div>
                             <div class="row" style="margin-top:30px">
                                 <div class="col-12">
-                                    <label for="token">URL da sua loja no Shopify</label>
-                                    <input type="text" class="form-control" name="url_loja" id="url_loja" placeholder="Digite a URL da sua loja">
+                                    <label for="url_store">URL da sua loja no Shopify</label>
+                                    <input type="text" class="form-control" name="url_store" id="url_store" placeholder="Digite a URL da sua loja">
                                 </div>
                             </div>
                             <div class="row" style="margin-top:30px">
                                 <div class="col-12">
-                                    <label for="empresa">Selecione sua empresa</label>
-                                    <select class="form-control" id="empresa" name="empresa">
-                                        @foreach($empresas as $empresa)
-                                        <option value="{!! $empresa['id'] !!}">{!! $empresa['nome_fantasia'] !!}</option>
+                                    <label for="company">Selecione sua empresa</label>
+                                    <select class="form-control" id="company" name="company">
+                                        @foreach($companies as $company)
+                                            <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -183,7 +183,7 @@
 
         $("#bt_adicionar_integracao").on("click", function(){
 
-            if($('#token').val() == '' || $('#url_loja').val() == '' || $('#foto_projeto').val() == '' || $('#empresa').val() == ''){
+            if($('#token').val() == '' || $('#url_store').val() == '' || $('#foto_projeto').val() == '' || $('#company').val() == ''){
                 alertPersonalizado('error','Dados informados inválidos');
                 return false;
             }
