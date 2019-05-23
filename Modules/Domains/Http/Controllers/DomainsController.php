@@ -159,20 +159,21 @@ class DomainsController extends Controller {
             return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
         }
 
-        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
-
-        $requestBody = json_decode('
-                {
-                    "automatic_security": false,
-                    "custom_spf" : true,
-                    "default" : true,
-                    "domain" : "'.$requestData['name'].'"
-                }');
-
         try{
+            $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+
+            $requestBody = json_decode('{
+                "automatic_security": false,
+                "custom_spf" : true,
+                "default" : true,
+                "domain" : "'.$requestData['name'].'"
+            }');
+
             $response = $sendgrid->client->whitelabel()->domains()->post($requestBody);
 
             $response = json_decode($response->body());
+
+            $senderAuthenticationId = $response->id;
 
             $requestData['id_sendgrid'] = $response->id;
 
@@ -189,6 +190,27 @@ class DomainsController extends Controller {
                 }
             }
 
+            $request_body = json_decode('{
+                "default": true,
+                "domain": "'.$requestData['name'].'",
+                "subdomain": "mail"
+            }');
+
+            $query_params = json_decode('{"limit": 1, "offset": 1}');
+
+            $response = $sendgrid->client->whitelabel()->links()->post($request_body, $query_params);
+
+            $response = json_decode($response->body());
+
+            $linkBrandingId = $response->id;
+
+            foreach($response->dns as $responseDns){
+                $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
+            }
+
+            sleep(5);
+            $sendgrid->client->whitelabel()->domains()->_($senderAuthenticationId)->validate()->post();
+            $response = $sendgrid->client->whitelabel()->links()->_($linkBrandingId)->validate()->post();
         }
         catch(Exception $e){
             dd($e);
