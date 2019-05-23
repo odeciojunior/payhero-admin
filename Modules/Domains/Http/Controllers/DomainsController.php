@@ -173,6 +173,10 @@ class DomainsController extends Controller {
 
             $response = json_decode($response->body());
 
+            if(!isset($response->id)){
+                dd($response);
+            }
+
             $senderAuthenticationId = $response->id;
 
             $requestData['id_sendgrid'] = $response->id;
