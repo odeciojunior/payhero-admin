@@ -75,9 +75,9 @@ class ProjectsController extends Controller{
 
             Storage::delete('public/upload/project/'.$photoName);
 
-            $projectPhoto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJEct, $photoName);
+            $projectPhoto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $photoName);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJEct . $photoName);
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $photoName);
 
             $img->crop($dataRequest['foto_w'], $dataRequest['foto_h'], $dataRequest['foto_x1'], $dataRequest['foto_y1']);
 
@@ -85,7 +85,7 @@ class ProjectsController extends Controller{
 
             Storage::delete('public/upload/project/'.$photoName);
 
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJEct . $photoName);
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $photoName);
 
             $project->update([
                 'foto' => $photoName
@@ -121,9 +121,9 @@ class ProjectsController extends Controller{
 
             Storage::delete('public/upload/project/'.$nomeFoto);
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJEct, $nomeFoto);
+            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJEct . $nomeFoto); 
+            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto); 
 
             $img->crop($dataRequest['foto_w'], $dataRequest['foto_h'], $dataRequest['foto_x1'], $dataRequest['foto_y1']);
 
@@ -131,10 +131,10 @@ class ProjectsController extends Controller{
 
             Storage::delete('public/upload/project/'.$nomeFoto);
 
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJEct . $nomeFoto);
+            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
 
             $project->update([
-                'foto' => $nomeFoto
+                'photo' => $nomeFoto
             ]);
         }
 
