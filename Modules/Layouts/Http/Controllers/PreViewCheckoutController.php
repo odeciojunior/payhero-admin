@@ -2,9 +2,8 @@
 
 namespace Modules\Layouts\Http\Controllers;
 
-use App\Foto;
-use App\Plano;
-use App\Layout;
+use App\Entities\Plan;
+use App\Entities\Layout;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -36,9 +35,9 @@ class PreViewCheckoutController extends Controller {
             $logo = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_LOGO.$layout["logo"];
         }
 
-        $plano = Plano::where('id', '24')->first();
+        $plano = Plan::where('id', '24')->first();
 
-        $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto;
+        $foto = '/'.CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->photo;
 
         return view('layouts::checkout_pre_view', [
                 'logo' => $logo,

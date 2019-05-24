@@ -2,10 +2,11 @@
 
 namespace Modules\Layouts\Http\Controllers;
 
-use App\Layout;
+use App\Entities\Layout;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -21,7 +22,7 @@ class LayoutsController extends Controller {
         $layouts = \DB::table('layouts as layout');
 
         if(isset($dados['projeto'])){
-            $layouts = $layouts->where('layout.project','=', $dados['projeto']);
+            $layouts = $layouts->where('layout.project','=', Hashids::decode($dados['projeto'])[0]);
         }
 
         $layouts = $layouts->get([
@@ -51,8 +52,10 @@ class LayoutsController extends Controller {
 
         $dados = $request->all();
 
+        $dados['project'] = Hashids::decode($dados['projeto'])[0];
+
         if($dados['status'] == 'Ativo'){
-            $layouts = Layout::where('projeto',$dados['projeto'])->get()->toArray();
+            $layouts = Layout::where('project',$dados['project'])->get()->toArray();
             foreach($layouts as $l){
                 if($l['status'] == 'Ativo'){
                     Layout::find($l['id'])->update([
@@ -77,7 +80,7 @@ class LayoutsController extends Controller {
 
             $img->crop($dados['foto_checkout_cadastrar_w'], $dados['foto_checkout_cadastrar_h'], $dados['foto_checkout_cadastrar_x1'], $dados['foto_checkout_cadastrar_y1']);
 
-            if($dados['formato_logo'] == 'quadrado')
+            if($dados['format_logo'] == 'quadrado')
                 $img->resize(150, 150);
             else
                 $img->resize(300, 150);

@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="descricao">Descrição</label>
-                        <input name="descricao" type="text" class="form-control" id="descricao" placeholder="Descrição" required>
+                        <input name="description" type="text" class="form-control" id="descricao" placeholder="Descrição" required>
                     </div>
                 </div>
                 <div class="row">
@@ -26,7 +26,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="formato_logo">Formato do logo</label>
-                        <select name="formato_logo" class="form-control" id="formato_logo_cadastrar">
+                        <select name="format_logo" class="form-control" id="formato_logo_cadastrar">
                             <option value="quadrado">Quadrado</option>
                             <option value="retangulo">Retangular</option>
                         </select>
