@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller {
 
@@ -63,7 +64,7 @@ class DashboardController extends Controller {
 
         $requestData = $request->all();
 
-        $sales = Sale::select('id','start_date','valor_total_pago','forma_pagamento','ip')
+        $sales = Sale::select('id','start_date','total_paid_value','payment_form','ip')
         ->where([
             [ 'owner', \Auth::user()->id ],
             [ 'gateway_status', '!=', 'refused']
@@ -76,7 +77,7 @@ class DashboardController extends Controller {
 
             $plan = Plan::find($planSale->plan);
 
-            $project = Project::find($plano['project']);
+            $project = Project::find($plan['project']);
 
             $sale['project'] = $project['name'];
 
