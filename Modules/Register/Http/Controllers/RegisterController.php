@@ -58,7 +58,7 @@ class RegisterController extends Controller {
             'email_invited'   => $dados['email'],
         ]);
 
-        return response()->json('sucesso');
+        return view('auth.login');
     }
 
 }

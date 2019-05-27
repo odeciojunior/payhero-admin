@@ -94,10 +94,10 @@ class ShopifyController extends Controller {
                 break;
         }
 
-        $asset = $client->getAssetManager()->update($theme->getId(),[
-            "key"   => "sections/cart-template.liquid",
-            "value" => $this->getCartTemplate()
-        ]);
+        // $asset = $client->getAssetManager()->update($theme->getId(),[
+        //     "key"   => "sections/cart-template.liquid",
+        //     "value" => $this->getCartTemplate()
+        // ]);
 
         $photo = $request->file('foto_projeto');
 

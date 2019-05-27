@@ -22,16 +22,6 @@ Route::get('/terms', function () {
     return view('terms.terms');
 });
 
-Route::post('/liftgold', function (Request $request) {
-
-    $dados = $request->all();
-
-    Log::write('info', 'retorno liftgold : '.print_r($dados,true));    
-});
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-//Route::redirect("home", "cliente", 301);
-//Route::view("welcome", "welcome");
