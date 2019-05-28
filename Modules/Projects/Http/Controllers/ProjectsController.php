@@ -157,7 +157,11 @@ class ProjectsController extends Controller{
 
         $project = Project::where('id',Hashids::decode($dataRequest['project']))->first();
 
-        $project->delete();
+        $plans = Plan::where('project', $project->id)->pluck('id')->toArray();
+
+        $productsPlans = ProductPlan::whereIn('plan',$plans)->pluck('product')->toArray();
+
+        // $project->delete();
 
         return response()->json('sucesso');
 
