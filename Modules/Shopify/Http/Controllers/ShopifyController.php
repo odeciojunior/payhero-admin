@@ -697,7 +697,10 @@ class ShopifyController extends Controller {
 
         foreach($dados['variants'] as $variant){
 
-            $plan = Plan::where('shopify_variant_id' , $variant['id'])->first();
+            $plan = Plan::where([
+              ['shopify_variant_id' , $variant['id']],
+              ['project', $request->id_projeto]
+            ])->first();
 
             $description = '';
             try{
@@ -713,7 +716,7 @@ class ShopifyController extends Controller {
                 }
             }
             catch(\Exception $e){
-                //
+              report($e);
             }
 
             if($plan){
