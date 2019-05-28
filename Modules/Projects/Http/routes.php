@@ -18,7 +18,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
     ]);
 
     Route::post('/deletarprojeto', [
-        'uses' => 'ProjectsController@deletarProjeto',
+        'uses' => 'ProjectsController@delete',
         'as' => 'projetos.deletar',
     ]);
 

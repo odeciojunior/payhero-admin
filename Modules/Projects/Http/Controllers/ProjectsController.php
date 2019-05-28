@@ -155,7 +155,7 @@ class ProjectsController extends Controller{
 
         $dataRequest = $request->all();
 
-        $project = Project::where('id',Hashids::decode($dataRequest['project']))->first();
+        $project = Project::where('id',Hashids::decode($dataRequest['projeto']))->first();
 
         $plans = Plan::where('project', $project->id)->pluck('id')->toArray();
 
