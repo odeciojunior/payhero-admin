@@ -67,7 +67,7 @@ class InvitesController extends Controller {
 
         $requestData = $request->all();
 
-        SiteInvitationRequest::create($dados);
+        SiteInvitationRequest::create($requestData);
 
         return 'success';
     }
