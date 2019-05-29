@@ -59,6 +59,7 @@ class VerifyCsrfToken extends Middleware
         '/despachos/addcodigorastreio',
         '/liftgold',
         '/postback/*',
-        '/checkout'
+        '/checkout',
+        '/convites/obterconvite'
     ];
 }

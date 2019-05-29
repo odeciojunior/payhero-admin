@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\EmailHelper;
 use Modules\Core\Helpers\StringHelper;
+use App\Entities\SiteInvitationRequest;
 
 class InvitesController extends Controller {
 
@@ -62,4 +63,12 @@ class InvitesController extends Controller {
         return redirect()->route('invites');
     }
 
+    public function getInvitation(Request $request){
+
+        $requestData = $request->all();
+
+        SiteInvitationRequest::create($dados);
+
+        return 'success';
+    }
 }
