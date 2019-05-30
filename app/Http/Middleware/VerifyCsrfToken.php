@@ -60,6 +60,7 @@ class VerifyCsrfToken extends Middleware
         '/liftgold',
         '/postback/*',
         '/checkout',
-        '/convites/obterconvite'
+        '/convites/obterconvite',
+        '/convites/obterconvitehubsmart'
     ];
 }

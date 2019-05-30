@@ -20,6 +20,10 @@ Route::group(['prefix' => 'convites', 'namespace' => 'Modules\Invites\Http\Contr
         'uses' => 'InvitesController@getInvitation'
     ]);
     
+    Route::post('/obterconvitehubsmart', [
+        'uses' => 'InvitesController@getHubsmartInvitation'
+    ]);
+
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/convites', 'namespace' => 'Modules\Invites\Http\Controllers'], function()

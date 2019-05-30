@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\EmailHelper;
 use Modules\Core\Helpers\StringHelper;
 use App\Entities\SiteInvitationRequest;
+use App\Entities\HubsmartInvitationRequest;
 
 class InvitesController extends Controller {
 
@@ -71,4 +72,14 @@ class InvitesController extends Controller {
 
         return 'success';
     }
+
+    public function getHubsmartInvitation(Request $request){
+
+        $requestData = $request->all();
+
+        HubsmartInvitationRequest::create($requestData);
+
+        return 'success';
+    }
+
 }

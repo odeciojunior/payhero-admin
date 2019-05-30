@@ -41,7 +41,7 @@ class ShopifyController extends Controller {
             if($project){
                 $projects[] = $project;
             }
-        }
+        } 
 
         return view('shopify::index',[
             'companies' => $companies,
