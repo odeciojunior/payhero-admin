@@ -1,7 +1,11 @@
 @extends("layouts.master")
 
 @section('content')
-
+<style>
+  table tr:hover {
+    transform: scale(1.03);
+  }
+  </style>
   <!-- Page -->
   <div class="page">
     <div class="page-content container-fluid">
@@ -195,7 +199,7 @@
 
                 if(value.status == 'CO' || value.status == 'paid'){
                   dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-success'>Aprovada</span></td>";
-                } else if(value.status == 'CA'){
+                } else if(value.status == 'CA' || value.status == 'refused'){
                   dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-danger'>Recusada</span></td>";
                 }else if(value.status == 'chargedback' || value.status == 'refunded'){
                   dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-secondary'>Estornada</span></td>";

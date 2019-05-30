@@ -12,43 +12,53 @@
             </ul>
             <div class="tab-content pt-20">
                 <div class="tab-pane active" id="sales_tab" role="tabpanel" style="min-width: 300px">
-                    <table class="table-bordered table-hover" style="width: 100%">
+                    <table class="table-hover" style="width: 100%">
                         <tbody>
                             <tr style="height: 40px">
-                                <td style="width: 40%">TRANSAÇÃO:</td>
-                                <td>{!! "#".$sale['id'] !!}</td>
+                                <td style="width: 40%" class="text-right">TRANSAÇÃO:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! "#".$sale['id'] !!}</td>
                             </tr>
                             <tr style="height: 40px">
-                                <td style="width: 40%">FORMA:</td>
-                                <td>{!! $sale['payment_form'] !!}</td>
-                            </tr>
-                            <tr style="height: 40px">
-                                <td style="width: 40%">DATA:</td>
-                                <td>{!! $sale['start_date'] !!}</td>
-                            </tr>
-                            <tr style="height: 40px">
-                                <td style="width: 40%">STATUS:</td>
-                                @if($sale['gateway_status'] == 'paid' || $sale['gateway_status'] == 'CO')
-                                    <td>Aprovada</td>
-                                @elseif($sale['gateway_status'] == 'refused')
-                                    <td>Rejeitada</td>
-                                @elseif($sale['gateway_status'] == 'waiting_payment' || $sale['gateway_status'] == 'PE')
-                                    <td>Aguardando pagamento</td>
+                                <td style="width: 40%" class="text-right">FORMA DE PAGAMENTO:</td>
+                                <td style="width:20px">
+                                @if($sale['payment_form'] == 'boleto')
+                                    <td class="text-left">Boleto</td>
                                 @else
-                                    <td>{!! $sale['gateway_status'] !!}</td>
+                                    <td class="text-left">Cartão de crédito</td>
+                                @endif
+                            </tr>
+                            <tr style="height: 40px">
+                                <td style="width: 40%" class="text-right">DATA:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! $sale['start_date'] !!}</td>
+                            </tr>
+                            <tr style="height: 40px">
+                                <td style="width: 40%" class="text-right">STATUS:</td>
+                                <td style="width:20px">
+                                @if($sale['gateway_status'] == 'paid' || $sale['gateway_status'] == 'CO')
+                                    <td class="text-left">Aprovada</td>
+                                @elseif($sale['gateway_status'] == 'refused')
+                                    <td class="text-left">Rejeitada</td>
+                                @elseif($sale['gateway_status'] == 'waiting_payment' || $sale['gateway_status'] == 'PE')
+                                    <td class="text-left">Aguardando pagamento</td>
+                                @else
+                                    <td class="text-left">{!! $sale['gateway_status'] !!}</td>
                                 @endif
                             </tr>
                             @if($sale['payment_form'] == 'boleto')
                                 <tr style="height: 60px">
-                                    <td colspan='2' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
+                                    <td colspan='3' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
                                 </tr>
                                 <tr style="height: 40px">
-                                    <td>Link do boleto:</td>
-                                    <td>{!! $sale['boleto_link'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Link do boleto:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $sale['boleto_link'] !!}</td>
                                 </tr>
-                                <tr style="height: 40px">
-                                    <td>Linha digitável:</td>
-                                    <td>{!! $sale['boleto_digitable_line'] !!}</td>
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">Linha digitável:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $sale['boleto_digitable_line'] !!}</td>
                                 </tr>
                             @endif
                         </tbody>
