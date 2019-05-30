@@ -33,8 +33,8 @@
             <label for="forma">Forma de pagamento</label>
             <select id="forma" class="form-control">
               <option value="">Boleto e cartão de crédito</option>
-              <option value="Cartão de crédito">Cartão de crédito</option>
-              <option value="Boleto">Boleto</option>
+              <option value="credit card">Cartão de crédito</option>
+              <option value="boleto">Boleto</option>
             </select>
           </div>
           <div class="col-3">
@@ -43,7 +43,6 @@
               <option value="">Todos status</option>
               <option value="paid">Aprovado</option>
               <option value="waiting_payment">Aguardando pagamento</option>
-              <option value="refused">Recusada</option>
               <option value="chargedback">Estornada</option>
             </select>
           </div>

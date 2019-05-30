@@ -72,25 +72,28 @@ class SalesController extends Controller {
 
     public function getSales(Request $request){
 
-        $sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
+        //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
+        $sales = Sale::where('owner',\Auth::user()->id);
+
+        $sales = $sales->where('gateway_status','!=', 'refused');
 
         if($request->projeto != ''){
-            $plans = Plan::where('project',$request->project)->pluck('id');
+            $plans = Plan::where('project',$request->projeto)->pluck('id');
             $salePlan = PlanSale::whereIn('plan',$plans)->pluck('sale');
             $sales->whereIn('id',$salePlan);
         }
 
         if($request->comprador != ''){
-            $clientes = Client::where('nome','LIKE','%'.$request->comprador.'%')->pluck('id');
-            $sales->whereIn('comprador',$clientes);
+            $clientes = Client::where('name','LIKE','%'.$request->comprador.'%')->pluck('id');
+            $sales->whereIn('client',$clientes);
         }
 
         if($request->forma != ''){
-            $sales->where('forma_pagamento',$request->forma);
+            $sales->where('payment_form',$request->forma);
         }
         
         if($request->status != ''){
-            $sales->where('pagamento_status',$request->status);
+            $sales->where('gateway_status',$request->status);
         }
 
         if($request->data_inicial != '' && $request->data_final != ''){
@@ -98,11 +101,11 @@ class SalesController extends Controller {
         }
         else{
             if($request->data_inicial != ''){
-                $sales->whereDate('start_date', '>', $request->data_inicial);
+                $sales->whereDate('start_date', '>=', $request->data_inicial);
             }
 
             if($request->data_final != ''){
-                $sales->whereDate('start_date', '<', date('Y-m-d', strtotime($request->data_final.' + 1 day')));
+                $sales->whereDate('end_date', '<', date('Y-m-d', strtotime($request->data_final.' + 1 day')));
             }
         }
 
