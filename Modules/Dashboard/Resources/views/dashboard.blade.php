@@ -85,7 +85,7 @@
             </button>
             <span class="ml-15 font-weight-400">PEDIDOS HOJE</span><hr>
             <div class="content-text mb-0 text-center">
-              <span class="font-size-20 font-weight-50">7</span>
+              <span class="font-size-20 font-weight-50">{!! $sales_count !!}</span>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@
             </button>
             <span class="ml-15 font-weight-400">RENDA</span><hr>
             <div class="content-text mb-0">
-              <span class="font-size-20 font-weight-50">R$ 825,90</span>
+              <span class="font-size-20 font-weight-50">R$ {!! $daily_balance !!}</span>
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@
             </button>
             <span class="ml-15 font-weight-400">ACESSOS</span><hr>
             <div class="content-text mb-0 text-center">
-              <span class="font-size-20 font-weight-50">128</span>
+              <span class="font-size-20 font-weight-50">{!! $checkouts !!}</span>
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@
     </div>
   </div>
 </div>
-
+ 
 
 @endsection
 

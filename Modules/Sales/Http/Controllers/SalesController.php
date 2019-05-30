@@ -91,7 +91,7 @@ class SalesController extends Controller {
         if($request->forma != ''){
             $sales->where('payment_form',$request->forma);
         }
-        
+         
         if($request->status != ''){
             $sales->where('gateway_status',$request->status);
         }

@@ -11,10 +11,12 @@ use App\Entities\Company;
 use App\Entities\Project;
 use App\Entities\PlanSale;
 use Illuminate\Http\Request;
+use App\Entities\UserProject;
 use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use App\Entities\Checkout;
 
 class DashboardController extends Controller {
 
@@ -22,6 +24,7 @@ class DashboardController extends Controller {
 
         $availableBalance = 0;
         $futureBalance    = 0;
+        $dailyBalance     = 0;
 
         $companies = Company::where('user',\Auth::user()->id)->get()->toArray();
 
@@ -33,12 +36,21 @@ class DashboardController extends Controller {
                 ->get()->toArray();
 
             if(count($pendingTransactions)){
-
                 foreach($pendingTransactions as $pendingTransaction){
-
                     $futureBalance += $pendingTransaction['value'];
                 }
             }
+
+            $todayTransactions = Transaction::where('company',$company['id'])
+                ->whereDate('created_at', Carbon::today())
+                ->get()->toArray();
+
+            if(count($todayTransactions)){
+                foreach($todayTransactions as $todayTransaction){
+                    $dailyBalance += $todayTransaction['value'];
+                }
+            }
+                    
         }
 
         if($availableBalance == 0){
@@ -52,10 +64,23 @@ class DashboardController extends Controller {
         $availableBalance = number_format($availableBalance,2);
         $futureBalance    = substr_replace($futureBalance, '.',strlen($futureBalance) - 2, 0 );
         $futureBalance    = number_format($futureBalance,2);
+        $dailyBalance     = substr_replace($dailyBalance, '.',strlen($dailyBalance) - 2, 0 );
+        $dailyBalance     = number_format($dailyBalance,2);
+
+        $userProjects = UserProject::where([
+            ['user', \Auth::user()->id],
+            ['type','producer']
+        ])->pluck('project')->toArray();
+
+        $salesCount = Sale::whereIn('project',$userProjects)->whereDate('start_date', Carbon::today())->count();
+        $checkouts  = Checkout::whereIn('project',$userProjects)->whereDate('created_at', Carbon::today())->count();
 
         return view('dashboard::dashboard',[
             'available_balance' => $availableBalance,
-            'future_balance'    => $futureBalance
+            'future_balance'    => $futureBalance,
+            'sales_count'       => $salesCount,
+            'daily_balance'     => $dailyBalance,
+            'checkouts'         => $checkouts,
         ]);
 
     }
