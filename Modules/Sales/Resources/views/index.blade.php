@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
-  table tr:hover {
+  tbody tr:hover {
     transform: scale(1.03);
   }
   </style>
@@ -73,7 +73,7 @@
         <div class="page-invoice-table table-responsive">
 
           <table id="tabela_vendas" class="table table-hover text-right" style="width:100%;">
-            <thead style="text-align:center">
+            <thead style="text-align:center" style="margin-bottom:8px">
               <tr>
                 <th style='vertical-align: middle'>Transação</th>
                 <th style='vertical-align: middle'>Projeto</th>
@@ -194,7 +194,15 @@
                 if(value.forma == 'boleto'){
                   dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/boleto.jpeg' style='width: 60px'></td>";
                 }else{
-                  dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/cartao.jpg' style='width: 60px'></td>";
+                  if(value.brand == 'mastercard'){
+                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/master.1.svg' style='width: 60px'></td>";
+                  }
+                  else if(value.brand == 'visa'){
+                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/visa.svg' style='width: 60px'></td>";
+                  }
+                  else{
+                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/cartao.jpg' style='width: 60px'></td>";
+                  }
                 }
 
                 if(value.status == 'CO' || value.status == 'paid'){
