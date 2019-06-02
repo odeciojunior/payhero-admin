@@ -1,0 +1,16 @@
+{
+    "name": "Shipping",
+    "alias": "shipping",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Shipping\\Providers\\ShippingServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

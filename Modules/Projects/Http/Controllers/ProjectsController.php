@@ -5,6 +5,7 @@ namespace Modules\Projects\Http\Controllers;
 use App\Entities\Company;
 use App\Entities\Project;
 use Illuminate\Http\Request;
+use App\Entities\Shipping;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use App\Entities\ExtraMaterial;
@@ -186,6 +187,8 @@ class ProjectsController extends Controller{
 
         $companies = Company::where('user', \Auth::user()->id)->get()->toArray();
 
+        $shippings = Shipping::where('project',$project->id)->get()->toArray();
+
         $producer = UserProject::where([
             ['user', \Auth::user()->id],
             ['project', $project['id']]
@@ -196,11 +199,12 @@ class ProjectsController extends Controller{
             'companies'        => $companies,
             'extra_materials'  => $materiaisExtras,
             'emp'              => $producer->company,
+            'shippings'        => $shippings,
         ]);
 
         return response()->json($view->render());
     }
- 
+
     public function getDadosProject($id){
 
         $project = Project::find(Hashids::decode($id)[0]); 
@@ -302,6 +306,5 @@ class ProjectsController extends Controller{
 
         return response()->json('sucesso');
     }
-
 
 }

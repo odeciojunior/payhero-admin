@@ -108,7 +108,7 @@
             </table>
         </div>
 
-        <h4> Configurações do frete </h4>
+        <h4> Configurações do frete</h4>
 
         <div class="row">
             <div class="form-group col-xl-6 col-lg-6">
@@ -118,29 +118,15 @@
                     <option value="0" {!! $project['shipment'] == '0' ? 'selected' : '' !!}>Não</option>
                 </select>
             </div>
-            <div id="div_frete_fixo_projeto" class="form-group col-xl-6 col-lg-6" style="{!! $project['frete'] ? 'display:none' : '' !!}">
-                <label for="frete_fixo_projeto">Frete fixo</label>
-                <select name="shipment_fixed" type="text" class="form-control" id="frete_fixo_projeto">
-                    <option value="0" {!! $project['shipment_fixed'] == '0' ? 'selected' : '' !!}>Não (frete calculado pela API)</option>
-                    <option value="1" {!! $project['shipment_fixed'] == '1' ? 'selected' : '' !!}>Sim (você define o valor do frete)</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="div_valor_frete_fixo_projeto" class="row">
-            <div class="form-group col-xl-6 col-lg-6">
-                <label for="valor_frete_projeto">Valor frete fixo</label>
-                <input name="shipment_value" type="text" class="form-control dinheiro" id="valor_frete_projeto" value="{!! $project['shipment_value'] !!}" placeholder="valor fixo">
-            </div>
         </div>
 
         <div class="row">
             <div id="div_transportadora_projeto" class="form-group col-xl-6 col-lg-6" style="{!! $project['frete'] ? 'display:none' : '' !!}">
                 <label for="transportadora">Transportadora</label>
                 <select name="carrier" type="text" class="form-control" id="transportadora_projeto" required>
-                    <option value="1" {!! $project['carrier'] == '1' ? 'selected' : '' !!}>Kapsula</option>
+                    <!--option value="1" {!! $project['carrier'] == '1' ? 'selected' : '' !!}>Kapsula</option-->
                     <option value="2" {!! $project['carrier'] == '2' ? 'selected' : '' !!}>Despacho próprio</option>
-                    <option value="3" {!! $project['carrier'] == '3' ? 'selected' : '' !!}>Lift Gold</option>
+                    <!--option value="3" {!! $project['carrier'] == '3' ? 'selected' : '' !!}>Lift Gold</option-->
                 </select>
             </div>
             <div id="div_responsavel_frete_projeto" class="form-group col-xl-6 col-lg-6" style="{!! $project['frete'] ? 'display:none' : '' !!}">
@@ -150,6 +136,51 @@
                     <option value="parceiros" {!! $project['shipment_responsible'] == 'partners' ? 'selected' : '' !!}>Proprietário + parceiros</option>
                 </select>
             </div>
+        </div>
+
+        <div class="row">
+            <div style="width:100%">
+                <a id="add_shipping" class="btn btn-primary float-right"  data-toggle='modal' data-target='#modal_add_shipping' style="color: white">
+                    <i class='icon wb-user-add' aria-hidden='true'></i>
+                    Adicionar frete
+                </a>
+            </div>
+
+            <h5 style="margin-top: 10px">Fretes oferecidos no checkout</h5>
+
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Informação</th>
+                    <th>Status</th>
+                    <th>Pré selecionado</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    @forelse($shippings as $shipping)
+                        <tr>
+                            <td class="shipping_id" style="display:none">{!! $shipping['id'] !!}</td>
+                            <td class="shipping_type" style="display:none">{!! $shipping['type'] !!}</td>
+                            <td class="shipping_value" style="display:none">{!! $shipping['value'] !!}</td>
+                            <td class="shipping_zip_code_origin" style="display:none">{!! $shipping['zip_code_origin'] !!}</td>
+                            <td class="shipping_name">{!! $shipping['name'] !!}</td>
+                            <td class="shipping_type">{!! ($shipping['type'] == 'static') ? $shipping['value'] : 'calculado automaticamente' !!}</td>
+                            <td class="shipping_information">{!! $shipping['information'] !!}</td>
+                            <td class="shipping_status">{!! $shipping['status'] == '1' ? 'Ativado' : 'Desativado' !!}</td>
+                            <td class="shipping_pre_selected">{!! $shipping['pre_selected'] == '1' ? 'Sim' : 'Não' !!}</td>
+                            <td>
+                                <button type="button" class="btn btn-success edit_shipping" material-extra="{!! $shipping['id'] !!}" data-toggle='modal' data-target='#modal_edit_shipping'>Editar</button>
+                                <button type="button" class="btn btn-danger delete_shipping" material-extra="{!! $shipping['id'] !!}" data-toggle='modal' data-target='#modal_excluir'>Excluir</button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr class="text-center">
+                            <td colspan="5">Nenhum frete adicionado </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
         <h4>Configurações avançadas</h4>
@@ -232,3 +263,5 @@
 
     </div>
 </form>
+
+

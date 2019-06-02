@@ -412,6 +412,168 @@
                         </div>
                     </div>
 
+                    <!-- Modal para adicionar tipos de frete no projeto -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div style="text-align: center">
+                                    <h4>Adicionar frete</h4>
+                                </div>
+
+                                <div class="page-content container-fluid">
+                                    <div class="panel" data-plugin="matchHeight">
+                                        <div style="width:100%">
+                                            <form id="form_add_shipping">
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="type">Tipo</label>
+                                                        <select id="shipping_type" name="type" class="form-control" id="tipo_material_extra">
+                                                            <option value="pac">PAC (calculado automaticamente pela API)</option>
+                                                            <option value="sexed">SEXEX (calculado automaticamente pela API)</option>
+                                                            <option value="static">Frete fixo(você define um valor fixo para o frete)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="name">Descrição</label>
+                                                        <input name="name" type="text" id="shipping_name" class="form-control" placeholder="PAC">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="information">Informação apresentada</label>
+                                                        <input name="information" type="text" id="shipping_information" class="form-control" placeholder="10 até 20 dias">
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="value_shipping_row" style="display:none">
+                                                    <div class="form-group col-12">
+                                                        <label for="value">Valor</label>
+                                                        <input name="value" type="text" id="shipping_value" class="form-control" placeholder="30.00">
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="zip_code_origin_shipping_row">
+                                                    <div class="form-group col-12">
+                                                        <label for="zip_code_origin">CEP de origem</label>
+                                                        <input name="zip_code_origin" id="shipping_zip_code_origin" type="text" class="form-control" placeholder="12345-678">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="status">Status</label>
+                                                        <select name="status" class="form-control">
+                                                            <option value="1">Ativado</option>
+                                                            <option value="0">Desativado</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="pre_selected">Pré-selecionado</label>
+                                                        <select name="pre_selected" id="shipping_pre_selected" class="form-control">
+                                                            <option value="1">Sim</option>
+                                                            <option value="0">Não</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="bt_add_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para editar fretes no projeto -->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_edit_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-simple">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div style="text-align: center">
+                                    <h4>Editar frete</h4>
+                                </div>
+
+                                <div class="page-content container-fluid">
+                                    <div class="panel" data-plugin="matchHeight">
+                                        <div style="width:100%">
+                                            <form id="form_update_shipping">
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="type">Tipo</label>
+                                                        <select id="shipping_type_edit" name="type" class="form-control" id="tipo_material_extra">
+                                                            <option value="pac">PAC (calculado automaticamente pela API)</option>
+                                                            <option value="sexed">SEXEX (calculado automaticamente pela API)</option>
+                                                            <option value="static">Frete fixo(você define um valor fixo para o frete)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="name">Descrição</label>
+                                                        <input name="name" type="text" id="shipping_name_edit" class="form-control" placeholder="PAC">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="information">Informação apresentada</label>
+                                                        <input name="information" type="text" id="shipping_information_edit" class="form-control" placeholder="10 até 20 dias">
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="value_shipping_row_edit">
+                                                    <div class="form-group col-12">
+                                                        <label for="value">Valor</label>
+                                                        <input name="value" type="text" id="shipping_value_edit" class="form-control" placeholder="30.00">
+                                                    </div>
+                                                </div>
+                                                <div class="row" id="zip_code_origin_shipping_row_edit">
+                                                    <div class="form-group col-12">
+                                                        <label for="zip_code_origin">CEP de origem</label>
+                                                        <input name="zip_code_origin" id="shipping_zip_code_origin_edit" type="text" class="form-control" placeholder="12345-678">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="status">Status</label>
+                                                        <select name="status" id="shipping_status_edit" class="form-control">
+                                                            <option value="1">Ativado</option>
+                                                            <option value="0">Desativado</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12">
+                                                        <label for="pre_selected">Pré-selecionado</label>
+                                                        <select name="pre_selected" id="shipping_pre_selected_edit" class="form-control">
+                                                            <option value="1">Sim</option>
+                                                            <option value="0">Não</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="bt_update_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -3258,9 +3420,9 @@
                     alertPersonalizado('error','Ocorreu algum erro');
                 },
                 success: function(data){
-    
+
                     $('#configuracoes_projeto').html(data);
-    
+
                     $("#porcentagem_afiliados").mask("0#");
 
                     var p = $("#previewimage");
@@ -3322,7 +3484,7 @@
                         };
             
                     });
-            
+
                     $("#selecionar_foto").on("click", function(){
                         $("#foto_projeto").click();
                     });
@@ -3358,6 +3520,167 @@
                         }
                     });
 
+                    $("#shipping_type").on('change', function(){
+                        if($(this).val() == 'static'){
+                            $("#zip_code_origin_shipping_row").css('display','none');
+                            $("#value_shipping_row").css('display','block');
+                        }
+                        else{
+                            $("#zip_code_origin_shipping_row").css('display','block');
+                            $("#value_shipping_row").css('display','none');
+                        }
+                    });
+
+                    $("#shipping_zip_code_origin").mask("0#");
+                    $("#shipping_value").mask('#.###,#0', {reverse: true});
+
+                    $("#bt_add_shipping").unbind("click");
+                    $("#bt_add_shipping").on("click", function(){
+                        if($("#shipping_type").val() == '' || $("#shipping_name").val() == '' || $("#shipping_information").val() == ''){
+                            alertPersonalizado('error', 'dados informados inválidos');
+                            return false;
+                        }
+                        if(($("#shipping_type").val() == 'static' && $("#shipping_value").val() == '') || ($("#shipping_type").val() != 'static' && $("#shipping_zip_code_origin").val() == '')){
+                            alertPersonalizado('error', 'dados informados inválidos');
+                            return false;
+                        }
+
+                        $('.loading').css("visibility", "visible");
+
+                        var form_data = new FormData(document.getElementById('form_add_shipping'));
+                        form_data.append('projeto',id_projeto);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/shipping/store",
+                            data: form_data,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function(){
+                                $('.loading').css("visibility", "hidden");
+                                alertPersonalizado('error','Ocorreu algum erro');
+                            },
+                            success: function(data){
+                                $('.loading').css("visibility", "hidden");
+                                alertPersonalizado('success','Frete cadastrado com sucesso!');
+                                updateConfiguracoes();
+                            },
+                        });
+
+                    });
+
+                    $(".edit_shipping").unbind("click");
+                    $(".edit_shipping").on("click", function(){
+
+                        var shipping_id = $(this).closest('tr').find('.shipping_id').html();
+                        var shipping_type = $(this).closest('tr').find('.shipping_type').html();
+                        var shipping_name = $(this).closest('tr').find('.shipping_name').html();
+                        var shipping_information = $(this).closest('tr').find('.shipping_information').html();
+                        var shipping_value = $(this).closest('tr').find('.shipping_value').html();
+                        var shipping_zip_code_origin = $(this).closest('tr').find('.shipping_zip_code_origin').html();
+                        var shipping_status = $(this).closest('tr').find('.shipping_status').html();
+                        var shipping_pre_selected = $(this).closest('tr').find('.shipping_pre_selected').html();
+
+                        if(shipping_type == 'static'){
+                            $("#zip_code_origin_shipping_row_edit").css('display','none');
+                            $("#value_shipping_row_edit").css('display','block');
+                        }
+                        else{
+                            $("#zip_code_origin_shipping_row_edit").css('display','block');
+                            $("#value_shipping_row_edit").css('display','none');
+                        }
+
+                        $("#shipping_type_edit").val(shipping_type);
+                        $("#shipping_name_edit").val(shipping_name);
+                        $("#shipping_information_edit").val(shipping_information);
+                        $("#shipping_value_edit").val(shipping_value);
+                        $("#shipping_zip_code_origin_edit").val(shipping_zip_code_origin);
+                        if(shipping_status == 'Ativado')
+                            $("#shipping_status_edit").val('1');
+                        else
+                            $("#shipping_status_edit").val('0');
+                        if(shipping_pre_selected == 'Sim')
+                            $("#shipping_pre_selected_edit").val('1');
+                        else
+                            $("#shipping_pre_selected_edit").val('0');
+
+                        $("#bt_update_shipping").unbind("click");
+                        $("#bt_update_shipping").on("click", function(){
+
+                            if($("#shipping_type_edit").val() == '' || $("#shipping_name_edit").val() == '' || $("#shipping_information_edit").val() == ''){
+                                alertPersonalizado('error', 'dados informados inválidos');
+                                return false;
+                            }
+                            if(($("#shipping_type_edit").val() == 'static' && $("#shipping_value_edit").val() == '') || ($("#shipping_type_edit").val() != 'static' && $("#shipping_zip_code_origin").val() == '')){
+                                alertPersonalizado('error', 'dados informados inválidos');
+                                return false;
+                            }
+
+                            $('.loading').css("visibility", "visible");
+
+                            var form_data = new FormData(document.getElementById('form_update_shipping'));
+                            form_data.append('id',shipping_id);
+
+                            $.ajax({
+                                method: "POST",
+                                url: "/shipping/update",
+                                data: form_data,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                error: function(){
+                                    $('.loading').css("visibility", "hidden");
+                                    alertPersonalizado('error','Ocorreu algum erro');
+                                },
+                                success: function(data){
+                                    $('.loading').css("visibility", "hidden");
+                                    alertPersonalizado('success','Frete cadastrado com sucesso!');
+                                    updateConfiguracoes();
+                                },
+                            });
+
+                        });
+                    });
+
+                    $('.delete_shipping').unbind('click');
+                    $('.delete_shipping').on('click', function(){
+
+                        var shipping_id = $(this).closest('tr').find('.shipping_id').html();
+
+                        $('#modal_excluir_titulo').html('Remover frete do projeto ?');
+
+                        $('#bt_excluir').unbind('click');
+                        $('#bt_excluir').on('click', function(){
+
+                            $('.loading').css("visibility", "visible");
+                            $('#fechar_modal_excluir').click();
+
+                            $.ajax({
+                                method: "POST",
+                                url: "/shipping/delete",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                data: { id: shipping_id },
+                                error: function(){
+                                    $('.loading').css("visibility", "hidden");
+                                    alertPersonalizado('error','Ocorreu algum erro');
+                                },
+                                success: function(data){
+                                    $('.loading').css("visibility", "hidden");
+                                    updateConfiguracoes();
+                                }
+                            });
+                        });
+                    });
+
                     $("#transportadora_projeto").on("change", function(){
                         $("#responsavel_frete_projeto option[value='Kapsula']").remove();
                         $("#responsavel_frete_projeto option[value='Lift Gold']").remove();
@@ -3369,7 +3692,7 @@
                             $("#div_id_plano_transportadora_projeto").hide();
                         }
                     });
-    
+
                     $('#bt_atualizar_configuracoes').on('click',function(){
 
                         $('.loading').css("visibility", "visible");

@@ -47,8 +47,8 @@
             </select>
           </div>
           <div class="col-3">
-            <label for="comprador">Comprador</label>
-            <input id="comprador" class="form-control" placeholder="comprador">
+            <label for="comprador">Nome do cliente</label>
+            <input id="comprador" class="form-control" placeholder="cliente">
           </div>
         </div>
         <div class="row" style="margin-top:30px">
@@ -77,7 +77,7 @@
                 <th style='vertical-align: middle'>Transação</th>
                 <th style='vertical-align: middle'>Projeto</th>
                 <th style='vertical-align: middle'>Descrição</th>
-                <th style='vertical-align: middle'>Comprador</th>
+                <th style='vertical-align: middle'>Cliente</th>
                 <th style='vertical-align: middle'>Forma</th>
                 <th style='vertical-align: middle'>Status</th>
                 <th style='vertical-align: middle'>Data</th>

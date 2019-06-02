@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $automatic_affiliation
  * @property string $shopify_id
  * @property boolean $shipment
- * @property boolean $shipment_fixed
  * @property string $shipment_value
  * @property string $shipment_responsible
  * @property string $installments_amount
@@ -53,7 +52,7 @@ class Project extends Model
     /**
      * @var array
      */
-    protected $fillable = ['carrier', 'photo', 'visibility', 'status', 'name', 'description', 'sms_status', 'invoice_description', 'percentage_affiliates', 'url_page', 'automatic_affiliation', 'shopify_id', 'shipment', 'shipment_fixed', 'shipment_value', 'shipment_responsible', 'installments_amount', 'installments_interest_free', 'cookie_duration', 'url_cookies_checkout', 'contact', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['carrier', 'photo', 'visibility', 'status', 'name', 'description', 'sms_status', 'invoice_description', 'percentage_affiliates', 'url_page', 'automatic_affiliation', 'shopify_id', 'shipment', 'shipment_value', 'shipment_responsible', 'installments_amount', 'installments_interest_free', 'cookie_duration', 'url_cookies_checkout', 'contact', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
