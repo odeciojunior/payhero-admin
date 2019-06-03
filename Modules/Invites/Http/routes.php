@@ -14,6 +14,18 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'convites', 'namespace
 
 });
 
+Route::group(['prefix' => 'convites', 'namespace' => 'Modules\Invites\Http\Controllers'], function(){
+
+    Route::post('/obterconvite', [
+        'uses' => 'InvitesController@getInvitation'
+    ]);
+    
+    Route::post('/obterconvitehubsmart', [
+        'uses' => 'InvitesController@getHubsmartInvitation'
+    ]);
+
+});
+
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/convites', 'namespace' => 'Modules\Invites\Http\Controllers'], function()
 {
     Route::get('/', [

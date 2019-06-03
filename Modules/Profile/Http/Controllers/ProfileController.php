@@ -31,7 +31,7 @@ class ProfileController extends Controller {
         $user->update($requestData);
 
         $userPhoto = $request->file('foto_usuario');
-
+ 
         if ($userPhoto != null) {
 
             try{
@@ -52,11 +52,11 @@ class ProfileController extends Controller {
                 $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
 
                 $user->update([
-                    'foto' => $photoName
+                    'photo' => $photoName
                 ]);
             }
             catch(\Exception $e){
-                //
+                dd($e);
             }
         }
 
@@ -74,7 +74,6 @@ class ProfileController extends Controller {
         ]);
 
         return response()->json("sucesso");
-
     }
 
 }

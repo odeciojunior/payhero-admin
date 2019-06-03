@@ -116,35 +116,33 @@
                                             <input name="cidade" value="{!! $user->cidade !!}" type="text" class="form-control" id="cidade">
                                         </div>
                                     </div>
-                        
+
                                     <div class="row">
                                         <div class="form-group col-xl-6">
                                             <label for="bairro">Bairro</label>
                                             <input name="bairro" value="{!! $user->bairro !!}" type="text" class="form-control" id="bairro">
                                         </div>
-                        
+
                                         <div class="form-group col-xl-6">
                                             <label for="logradouro">Rua</label>
                                             <input name="logradouro" value="{!! $user->logradouro !!}" type="text" class="form-control" id="logradouro">
                                         </div>
                                     </div>
-                        
+
                                     <div class="row">
                                         <div class="form-group col-xl-6">
                                             <label for="numero">Número</label>
                                             <input name="numero" value="{!! $user->numero !!}" type="text" class="form-control" id="numero">
                                         </div>
-                        
+
                                         <div class="form-group col-xl-6">
                                             <label for="complemento">Complemento</label>
                                             <input name="complemento" value="{!! $user->complemento !!}" type="text" class="form-control" id="complemento">
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group" style="margin-top: 30px">
-
                                         <input type="submit" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
-
                                     </div>
 
                                 </form>
@@ -153,7 +151,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_alterar_senha" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                     <div class="modal-dialog modal-simple">
@@ -177,7 +174,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -197,10 +193,9 @@
                 p.attr('src', oFREvent.target.result).fadeIn();
 
                 p.on('load', function(){
-
                     var img = document.getElementById('previewimage');
                     var x1, x2, y1, y2;
-    
+
                     if (img.naturalWidth > img.naturalHeight) {
                         y1 = Math.floor(img.naturalHeight / 100 * 10);
                         y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);

@@ -286,18 +286,6 @@ class PlansController extends Controller {
         else
             $modalBody .= "<td>Não</td>";
         $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Frete fixo:</b></td>";
-        if($plan->shipment_fixed == 1)
-            $modalBody .= "<td>Sim</td>";
-        else
-            $modalBody .= "<td>Não</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Valor frete fixo:</b></td>";
-        $modalBody .= "<td>".$plan->shipment_value."</td>";
-        $modalBody .= "</tr>";
-
 
         $produtosPlano = ProductPlan::where('plano',$plan->id)->get()->toArray();
 

@@ -53,6 +53,7 @@ class SalesResource extends Resource {
             'data_inicio'     => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
             'data_finalizada' => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
             'total_pago'      => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0 ),
+            'brand'           => $this->flag,
         ];
 
     }

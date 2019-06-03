@@ -10,6 +10,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\EmailHelper;
 use Modules\Core\Helpers\StringHelper;
+use App\Entities\SiteInvitationRequest;
+use App\Entities\HubsmartInvitationRequest;
 
 class InvitesController extends Controller {
 
@@ -60,6 +62,24 @@ class InvitesController extends Controller {
         EmailHelper::enviarConvite($requestData['email_invited'], $requestData['parameter']);
 
         return redirect()->route('invites');
+    }
+
+    public function getInvitation(Request $request){
+
+        $requestData = $request->all();
+
+        SiteInvitationRequest::create($requestData);
+
+        return 'success';
+    }
+
+    public function getHubsmartInvitation(Request $request){
+
+        $requestData = $request->all();
+
+        HubsmartInvitationRequest::create($requestData);
+
+        return 'success';
     }
 
 }

@@ -41,7 +41,7 @@ class ShopifyController extends Controller {
             if($project){
                 $projects[] = $project;
             }
-        }
+        } 
 
         return view('shopify::index',[
             'companies' => $companies,
@@ -765,10 +765,6 @@ class ShopifyController extends Controller {
                     'description'          => $description,
                     'code'  => $code, 
                     'price'              => $variant['price'],
-                    'shipment_fixed'         => '1',
-                    'shipment_value'        => '0.00',
-                    'pagamento_cartao'   => true,
-                    'pagamento_boleto'   => true,
                     'status'             => '1',
                     'carrier'            => '2',
                     'qtd_parcelas'       => '12',

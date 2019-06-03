@@ -65,13 +65,13 @@ class PostBackPagarmeController extends Controller {
                         $user = User::find($company['user']);
 
                         $transaction->update([
-                            'status'       => 'pago',
+                            'status'       => 'paid',
                             'release_date' => Carbon::now()->addDays($user['antecipation_days'])->format('Y-m-d')
                         ]);
                     }
                     else{
                         $transaction->update([
-                            'status' => 'pago',
+                            'status' => 'paid',
                         ]);
                     }
                 }

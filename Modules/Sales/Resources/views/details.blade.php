@@ -12,118 +12,140 @@
             </ul>
             <div class="tab-content pt-20">
                 <div class="tab-pane active" id="sales_tab" role="tabpanel" style="min-width: 300px">
-                    <table class="table-bordered table-hover" style="width: 100%">
+                    <table class="table-hover" style="width: 100%">
                         <tbody>
                             <tr style="height: 40px">
-                                <td style="width: 40%">TRANSAÇÃO:</td>
-                                <td>{!! "#".$sale['id'] !!}</td>
+                                <td style="width: 40%" class="text-right">TRANSAÇÃO:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! "#".$sale['id'] !!}</td>
                             </tr>
                             <tr style="height: 40px">
-                                <td style="width: 40%">FORMA:</td>
-                                <td>{!! $sale['payment_form'] !!}</td>
-                            </tr>
-                            <tr style="height: 40px">
-                                <td style="width: 40%">DATA:</td>
-                                <td>{!! $sale['start_date'] !!}</td>
-                            </tr>
-                            <tr style="height: 40px">
-                                <td style="width: 40%">STATUS:</td>
-                                @if($sale['gateway_status'] == 'paid' || $sale['gateway_status'] == 'CO')
-                                    <td>Aprovada</td>
-                                @elseif($sale['gateway_status'] == 'refused')
-                                    <td>Rejeitada</td>
-                                @elseif($sale['gateway_status'] == 'waiting_payment' || $sale['gateway_status'] == 'PE')
-                                    <td>Aguardando pagamento</td>
+                                <td style="width: 40%" class="text-right">FORMA DE PAGAMENTO:</td>
+                                <td style="width:20px">
+                                @if($sale['payment_form'] == 'boleto')
+                                    <td class="text-left">Boleto</td>
                                 @else
-                                    <td>{!! $sale['gateway_status'] !!}</td>
+                                    <td class="text-left">Cartão de crédito</td>
+                                @endif
+                            </tr>
+                            <tr style="height: 40px">
+                                <td style="width: 40%" class="text-right">DATA:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! $sale['start_date'] !!}</td>
+                            </tr>
+                            <tr style="height: 40px">
+                                <td style="width: 40%" class="text-right">STATUS:</td>
+                                <td style="width:20px">
+                                @if($sale['gateway_status'] == 'paid' || $sale['gateway_status'] == 'CO')
+                                    <td class="text-left">Aprovada</td>
+                                @elseif($sale['gateway_status'] == 'refused')
+                                    <td class="text-left">Rejeitada</td>
+                                @elseif($sale['gateway_status'] == 'waiting_payment' || $sale['gateway_status'] == 'PE')
+                                    <td class="text-left">Aguardando pagamento</td>
+                                @else
+                                    <td class="text-left">{!! $sale['gateway_status'] !!}</td>
                                 @endif
                             </tr>
                             @if($sale['payment_form'] == 'boleto')
                                 <tr style="height: 60px">
-                                    <td colspan='2' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
+                                    <td colspan='3' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
                                 </tr>
                                 <tr style="height: 40px">
-                                    <td>Link do boleto:</td>
-                                    <td>{!! $sale['boleto_link'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Link do boleto:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $sale['boleto_link'] !!}</td>
                                 </tr>
-                                <tr style="height: 40px">
-                                    <td>Linha digitável:</td>
-                                    <td>{!! $sale['boleto_digitable_line'] !!}</td>
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">Linha digitável:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $sale['boleto_digitable_line'] !!}</td>
                                 </tr>
                             @endif
                         </tbody>
                     </table>
                 </div>
                 <div class="tab-pane" id="client_tab" role="tabpanel">
-                    <table class="table-bordered table-hover" style="width: 100%">
+                    <table class="table-hover" style="width: 100%">
                         <tbody>
                             <tr style="height: 30px">
-                                <td>Nome:</td>
-                                <td>{!! $client['name'] !!}</td>
+                                <td style="width: 40%" class="text-right">Nome:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! $client['name'] !!}</td>
                             </tr>
                             <tr style="height: 30px">
-                                <td>CPF:</td>
-                                <td>{!! $client['document'] !!}</td>
+                                <td style="width: 40%" class="text-right">CPF:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! $client['document'] !!}</td>
                             </tr>
                             <tr style="height: 30px">
-                                <td>Email:</td>
-                                <td>{!! $client['email'] !!}</td>
+                                <td style="width: 40%" class="text-right">Email:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! $client['email'] !!}</td>
                             </tr>
                             <tr style="height: 30px">
-                                <td>Telefone:</td>
-                                <td>{!! $client['telephone'] !!}</td>
+                                <td style="width: 40%" class="text-right">Telefone:</td>
+                                <td style="width:20px">
+                                <td class="text-left">{!! $client['telephone'] !!}</td>
                             </tr>
                             @if($delivery)
                                 <tr style="height: 30px">
-                                    <td colspan='2' class='text-center' style="margin: 15px 0 15px 0">INFORMAÇÕES DA ENTREGA</td>
+                                    <td colspan='3' class='text-center' style="margin: 15px 0 15px 0">INFORMAÇÕES DA ENTREGA</td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Valor do frete:</td>
-                                    <td>{!! $sale['shipment_value'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Valor do frete:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $sale['shipment_value'] !!}</td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Rua:</td>
-                                    <td>{!! $delivery['street'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Rua:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $delivery['street'] !!}</td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Número:</td>
-                                    <td>{!! $delivery['number'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Número:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $delivery['number'] !!}</td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Complemento:</td>
-                                    <td>{!! $delivery['complement'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Complemento:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $delivery['complement'] !!}</td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Bairro:</td>
-                                    <td>{!! $delivery['neighboorhod'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Bairro:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $delivery['neighboorhod'] !!}</td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Cidade:</td>
-                                    <td>{!! $delivery['city'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Cidade:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $delivery['city'] !!}</td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Estado:</td>
-                                    <td>{!! $delivery['state'] !!}</td>
+                                    <td style="width: 40%" class="text-right">Estado:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $delivery['state'] !!}</td>
                                 </tr>
                                 <tr style="height: 30px">    
-                                    <td>CEP:</td>
-                                    <td>{!! $delivery['zip_code'] !!}</td>
+                                    <td style="width: 40%" class="text-right">CEP:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $delivery['zip_code'] !!}</td>
                                 </tr>
                             @endif
                         </tbody>
                     </table>
                 </div>
                 <div class="tab-pane" id="products_tab" role="tabpanel">
-                    <table class="table-bordered table-hover" style="width: 100%">
-                        <tbody>
+                    <table class="table-hover" style="width: 100%">
+                        <thead>
+                            <th class="text-left">Produto</th>
+                            <th class="text-left">Quantidade</th>
+                        </thead>
+                        <tbody style="margin-top:15px">
                             @foreach($plans as $plan)
-                                <tr style="height: 40px">
-                                    <td>Produto:</td>
-                                    <td>{!! $plan['name'] !!}</td>
-                                </tr>
-                                <tr style="height: 40px">
-                                    <td>Quantidade:</td>
-                                    <td>{!! $plan['amount'] !!}</td>
+                                <tr style="height: 30px">
+                                    <td class="text-left">{!! $plan['name'] !!}</td>
+                                    <td class="text-left">{!! $plan['amount'] !!}</td>
                                 </tr>
                             @endforeach
                         </tbody>
