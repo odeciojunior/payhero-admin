@@ -12,30 +12,30 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="nome">Nome</label>
-                        <input value="{!! $cupom->nome != '' ? $cupom->nome : '' !!}" name="nome" type="text" class="form-control" id="nome" placeholder="Nome">
+                        <input value="{!! $cupom->name != '' ? $cupom->name : '' !!}" name="name" type="text" class="form-control" id="nome" placeholder="Nome">
                     </div>
 
                 </div>
 
                 <div class="row">
                     <div class="form-group col-xl-6">
-                        <label for="tipo">Tipo</label>
-                        <select name="tipo" class="form-control" id="tipo" required>
-                            <option value="0" {!! ($cupom->tipo == '0') ? 'selected' : '' !!}>Porcentagem</option>
-                            <option value="1" {!! ($cupom->tipo == '1') ? 'selected' : '' !!}>Valor</option>
+                        <label for="type">Tipo</label>
+                        <select name="type" class="form-control" id="tipo" required>
+                            <option value="0" {!! ($cupom->type == '0') ? 'selected' : '' !!}>Porcentagem</option>
+                            <option value="1" {!! ($cupom->type == '1') ? 'selected' : '' !!}>Valor</option>
                         </select>
                     </div>
 
                     <div class="form-group col-xl-6">
                         <label for="valor">Valor</label>
-                        <input value="{!! $cupom->valor != '' ? $cupom->valor : '' !!}" name="valor" type="text" class="form-control" id="valor_cupom_editar" placeholder="Valor" data-mask="0#">
+                        <input value="{!! $cupom->value != '' ? $cupom->value : '' !!}" name="value" type="text" class="form-control" id="valor_cupom_editar" placeholder="Valor" data-mask="0#">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-xl-6">
-                        <label for="cod_cupom">Código</label>
-                        <input value="{!! $cupom->cod_cupom != '' ? $cupom->cod_cupom : '' !!}" name="cod_cupom" type="text" class="form-control" id="cod_cupom" placeholder="Código">
+                        <label for="code">Código</label>
+                        <input value="{!! $cupom->code != '' ? $cupom->code : '' !!}" name="code" type="text" class="form-control" id="code" placeholder="Código">
                     </div>
 
                     <div class="form-group col-xl-6">

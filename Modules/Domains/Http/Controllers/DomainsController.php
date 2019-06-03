@@ -276,7 +276,7 @@ class DomainsController extends Controller {
         $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
         $adapter = new Guzzle($key);
         $zones   = new Zones($adapter); 
-
+ 
         try{
             $zones->deleteZone($zones->getZoneID($domain['name']));
         }

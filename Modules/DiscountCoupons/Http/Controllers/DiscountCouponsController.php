@@ -34,8 +34,8 @@ class DiscountCouponsController extends Controller {
         ]);
 
         return Datatables::of($cupons)
-        ->editColumn('tipo', function ($cupom) {
-            if($cupom->tipo)
+        ->editColumn('type', function ($cupom) {
+            if($cupom->type)
                 return "Valor";
             else
                 return "Porcentagem";
@@ -145,6 +145,17 @@ class DiscountCouponsController extends Controller {
         $form = view('discountcoupons::create');
 
         return response()->json($form->render());
+    }
+
+    public function store(Request $request){
+
+        $requestData = $request->all();
+
+        $requestData['project'] = Hashids::decode($requestData['projeto'])[0];
+
+        DiscountCoupon::create($requestData);
+
+        return response()->json('Sucesso');
     }
 
     public function edit(Request $request){

@@ -14,8 +14,8 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'cuponsdesconto', 'na
     ]);
 
     Route::post('/cadastrarcupom', [
-        'uses' => 'DiscountCouponsController@create',
-        'as' => 'cuponsdesconto.create',
+        'uses' => 'DiscountCouponsController@store',
+        'as' => 'cuponsdesconto.store',
     ]);
 
     Route::post('/data-source',[
