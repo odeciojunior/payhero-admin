@@ -7,7 +7,7 @@ use App\Empresa;
 use App\Transacao;
 use Carbon\Carbon;
 use App\Transferencia;
-use Modules\Core\Sms\ServicoSmsHelper;
+use Modules\Core\Sms\SmsService;
 
 class Transferencias {
 

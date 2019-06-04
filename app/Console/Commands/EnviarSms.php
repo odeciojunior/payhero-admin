@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Sms\AgendamentosSms;
+use Modules\Core\Sms\SmsScheduling;
 
-class EnviarSms extends Command
+class SendSms extends Command
 {
     /**
      * The name and signature of the console command.
@@ -38,9 +38,9 @@ class EnviarSms extends Command
      */
     public function handle()
     {
-        AgendamentosSms::verificarBoletosVencendo(); 
+        SmsScheduling::verifyBoletosExpiring(); 
 
-        // AgendamentosSms::verificarBoletosVencidos();
+        // SmsScheduling::verifyBoletosExpired();
     }
 
     
