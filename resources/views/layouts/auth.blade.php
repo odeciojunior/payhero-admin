@@ -12,44 +12,39 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     
     <link rel="apple-touch-icon" href="{{ asset('adminremark/assets/images/apple-touch-icon.png') }}">
     <link rel="shortcut icon"  href="{{ asset('adminremark/assets/images/favicon.ico') }}">
     
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet"href="{{ asset('adminremark/global/css/bootstrap-extend.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/assets/css/site.min.css') }}">
-    
-    <!-- Plugins -->
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/animsition/animsition.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/asscrollable/asScrollable.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/switchery/switchery.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/intro-js/introjs.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/slidepanel/slidePanel.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/global/vendor/flag-icon-css/flag-icon.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark2/assets/examples/css/pages/login-v3.css') }}">
+    <!-- Styles -->
 
-    <link rel="stylesheet" href="{{ asset('adminremark/assets/css/style.css') }}">
-    
-    <!-- Fonts -->
-    <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/material-design/material-design.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/brand-icons/brand-icons.min.css') }}">
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
-    
+    <link rel="stylesheet" href="{{ asset('adminremark/assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminremark/assets/css/new-login.css') }}">
+
+
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
     <script src="{{ asset('adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
       Breakpoints();
     </script>
 
   </head>
-  <body class="animsition page-login-v3 layout-full">
+  <body>
 
+  <style>
+      body {
+	font-family: 'Muli', sans-serif;
+	min-height: 100vh;
+	background: url({{ asset('adminremark/assets/images/gradient-bg.png') }}) bottom left no-repeat;
+}
+</style>
     @yield('content')
 
-    <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
+    <!-- <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
 
     <script src="{{ asset('adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
@@ -60,14 +55,12 @@
     <script src="{{ asset('adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/ashoverscroll/jquery-asHoverScroll.js') }}"></script>
     
-    <!-- Plugins -->
     <script src="{{ asset('adminremark/global/vendor/switchery/switchery.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/intro-js/intro.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/screenfull/screenfull.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/slidepanel/jquery-slidePanel.js') }}"></script>
         <script src="{{ asset('adminremark/global/vendor/jquery-placeholder/jquery.placeholder.js') }}"></script>
     
-    <!-- Scripts -->
     <script src="{{ asset('adminremark/global/js/Component.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Base.js') }}"></script>
@@ -83,13 +76,12 @@
     <script src="{{ asset('adminremark/assets/js/config/tour.js') }}"></script>
     <script>Config.set('assets', '../../assets');</script>
     
-    <!-- Page -->
     <script src="{{ asset('adminremark/assets/js/Site.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/asscrollable.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/slidepanel.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/switchery.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/jquery-placeholder.js') }}"></script>
-    <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script>
+    <script src="{{ asset('adminremark/global/js/Plugin/material.js') }}"></script> -->
 
     <script>
       (function(document, window, $){
@@ -101,6 +93,7 @@
         });
       })(document, window, jQuery);
     </script>
+
     
   </body>
 </html>
