@@ -733,7 +733,7 @@ class ShopifyController extends Controller {
                 ])->first();
 
                 $product = Product::create([
-                    'user'          => $userProject->id,
+                    'user'          => $userProject->user,
                     'name'          => substr($dados['title'],0,100),
                     'description'   => $description,
                     'guarantee'     => '0',
