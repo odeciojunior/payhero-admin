@@ -12,7 +12,7 @@ class SendSms extends Command
      *
      * @var string
      */
-    protected $signature = 'enviar:sms';
+    protected $signature = 'send:sms';
 
     /**
      * The console command description.
@@ -40,7 +40,7 @@ class SendSms extends Command
     {
         SmsScheduling::verifyBoletosExpiring(); 
 
-        // SmsScheduling::verifyBoletosExpired();
+        SmsScheduling::verifyBoletosExpired();
     }
 
     

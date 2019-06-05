@@ -727,22 +727,26 @@ class ShopifyController extends Controller {
                 ]);
             }
             else{
+                $userProject = UserProject::where([
+                  ['project', $project['id']],
+                  ['type', 'producer']
+                ])->first();
+
                 $product = Product::create([
-                    'user'          => \Auth::user()->id,
+                    'user'          => $userProject->id,
                     'name'          => substr($dados['title'],0,100),
-                    'description'     => $description,
-                    'guarantee'      => '0',
-                    'disponivel'    => true,
-                    'quantidade'    => '0',
-                    'formato'       => 1,
-                    'category'     => '1',
-                    'cost' => '',
+                    'description'   => $description,
+                    'guarantee'     => '0',
+                    'available'     => true,
+                    'amount'        => '0',
+                    'format'        => 1,
+                    'category'      => '1',
+                    'cost'          => '',
                 ]);
 
                 $newCode = false;
 
                 while($newCode == false){
-
                     $code = $this->randString(3).rand(100,999);
                     $plan = Plan::where('code', $code)->first();
                     if($plan == null){
@@ -750,25 +754,19 @@ class ShopifyController extends Controller {
                     }
                 }
 
-                $userProjeto = UserProject::where([
-                    ['user', \Auth::user()->id],
-                    ['project',$project['id']],
-                    ['type', 'produtor']
-                ])->first();
-
                 $plan = Plan::create([
-                    'shopify_id'         => $dados['id'],
-                    'shopify_variant_id' => $variant['id'],
-                    'company'            => $userProjeto->empresa,
-                    'project'            => $project['id'],
-                    'name'               => substr($dados['title'],0,100),
-                    'description'          => $description,
-                    'code'  => $code, 
-                    'price'              => $variant['price'],
-                    'status'             => '1',
-                    'carrier'            => '2',
-                    'qtd_parcelas'       => '12',
-                    'parcelas_sem_juros' => '1'
+                    'shopify_id'                 => $dados['id'],
+                    'shopify_variant_id'         => $variant['id'],
+                    'company'                    => $userProject->company,
+                    'project'                    => $project['id'],
+                    'name'                       => substr($dados['title'],0,100),
+                    'description'                => $description,
+                    'code'                       => $code, 
+                    'price'                      => $variant['price'],
+                    'status'                     => '1',
+                    'carrier'                    => '2',
+                    'installments_amount'        => '12',
+                    'installments_interest_free' => '1'
                 ]);
 
                 if(count($dados['variants']) > 1){
@@ -799,7 +797,6 @@ class ShopifyController extends Controller {
                   }
               }
               else{
-
                   $plan->update([
                       'photo' => $dados['image']['src']
                   ]);
@@ -810,8 +807,8 @@ class ShopifyController extends Controller {
               }
 
               ProdutoPlan::create([
-                  'produto' => $product->id,
-                  'plano'   => $plan->id,
+                  'product' => $product->id,
+                  'plan'    => $plan->id,
                   'amount'  => '1'
               ]);
 
