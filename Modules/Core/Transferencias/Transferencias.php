@@ -3,7 +3,6 @@
 namespace Modules\Core\Tranferencias;
 
 use Carbon\Carbon;
-use App\Entities\User;
 use App\Entities\Company;
 use App\Entities\Transaction;
 use Modules\Core\Sms\SmsService;
@@ -18,8 +17,6 @@ class Transferencias {
 
             $company = Company::find($t['company']);
 
-            $user = User::find($company['user']);
-
             Transfer::create([
                 'transaction' => $t['id'],
                 'user'        => $company['user'],
@@ -33,8 +30,8 @@ class Transferencias {
                 'status' => 'transfered'
             ]);
 
-            $user->update([
-                'balance' => $user['balance'] + substr_replace($t['value'], '.',strlen($t['value']) - 2, 0 ) 
+            $company->update([
+                'balance' => $company['balance'] + substr_replace($t['value'], '.',strlen($t['value']) - 2, 0 ) 
             ]);
         }
     }
