@@ -9,6 +9,7 @@ use App\Entities\ZenviaSms;
 use Zenvia\Model\SmsFacade;
 use App\Entities\SmsMessage;
 use Illuminate\Http\Request;
+use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Vinkla\Hashids\Facades\Hashids;
@@ -21,17 +22,17 @@ class SmsController extends Controller {
 
     public function index() {
 
-        $qtdSmsDisponiveis = \Auth::user()->sms_zenvia_qtd;
+        $amountAvailable = \Auth::user()->sms_zenvia_qtd;
 
-        $userProjetos = UserProjeto::where([
+        $userProjects = UserProject::where([
             ['user',\Auth::user()->id],
-            ['tipo','produtor']
+            ['type','producer']
         ])->get()->toArray();
 
         $planosUsuario = [];
 
-        foreach($userProjetos as $userProjeto){
-            $planos = Plan::where('projeto',$userProjeto['projeto'])->pluck('id')->toArray();
+        foreach($userProjects as $userProject){
+            $planos = Plan::where('project',$userProject['project'])->pluck('id')->toArray();
             if(count($planos) > 0){
                 foreach($planos as $plano){
                     $planosUsuario[] = $plano;
@@ -39,15 +40,14 @@ class SmsController extends Controller {
             }
         }
 
-        $qtdSmsEnviados = SmsMessage::whereIn('plano',$planosUsuario)->where('tipo','Enviada')->count();
+        $qtdSmsEnviados = SmsMessage::whereIn('plan',$planosUsuario)->where('type','Enviada')->count();
 
-        $qtdSmsRecebidos = SmsMessage::whereIn('plano',$planosUsuario)->where('tipo','Recebida')->count();
+        $qtdSmsRecebidos = SmsMessage::whereIn('plan',$planosUsuario)->where('type','Recebida')->count();
 
-        $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
+        // $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
 
         foreach($compras as &$compra){
-            $compra['data_inicio'] = date('d/m/Y',strtotime($compra['data_inicio'])); 
-
+            $compra['data_inicio'] = date('d/m/Y',strtotime($compra['data_inicio']));
             if($compra['status'] == 'paid')
                 $compra['status'] = 'Paga';
             elseif($compra['status'] == 'waiting_payment')
@@ -55,10 +55,10 @@ class SmsController extends Controller {
         }
 
         return view('sms::index',[
-            'sms_disponiveis' => $qtdSmsDisponiveis,
+            'sms_disponiveis' => $amountAvailable,
             'sms_enviados'    => $qtdSmsEnviados,
             'sms_recebidos'   => $qtdSmsRecebidos,
-            'compras'         => $compras
+            'compras'         => []
         ]);
     }
  

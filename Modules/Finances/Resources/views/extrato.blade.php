@@ -67,8 +67,8 @@
                 <div style="float: right; padding: 5px">
                     <label for="select_empresas">Empresa</label>
                     <select id="select_empresas" class="form-control">
-                        @foreach($empresas as $empresa)
-                            <option value="{!! $empresa['id'] !!}">Dados financeiros da empresa {!! $empresa['nome'] !!}</option>
+                        @foreach($companies as $company)
+                            <option value="{!! $company['id'] !!}">Dados financeiros da empresa {!! $company['nome'] !!}</option>
                         @endforeach
                     </select>
                 </div>
