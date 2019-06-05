@@ -2,44 +2,42 @@
 
 namespace Modules\Core\Tranferencias;
 
-use App\Entities\User;
-use App\Empresa;
-use App\Transacao;
 use Carbon\Carbon;
-use App\Transferencia;
-use Modules\Core\Sms\ServicoSmsHelper;
+use App\Entities\User;
+use App\Entities\Company;
+use App\Entities\Transaction;
+use Modules\Core\Sms\SmsService;
 
 class Transferencias {
 
     public static function verify(){
 
-        $transacoes = Transacao::where('data_liberacao',Carbon::now()->format('Y-m-d'))->get()->toArray();
+        $transactions = Transaction::where('delivery_date',Carbon::now()->format('Y-m-d'))->get()->toArray();
 
-        foreach($transacoes as $t){
+        foreach($transactions as $t){
 
-            $empresa = Empresa::find($t['empresa']);
+            $company = Company::find($t['company']);
 
-            $user = User::find($empresa['user']);
+            $user = User::find($company['user']);
 
-            Transferencia::create([
-                'transacao' => $t['id'],
-                'user'      => $empresa['user'],
-                'valor'     => $t['valor'],
-                'tipo'      => 'entrada',
+            Transfer::create([
+                'transaction' => $t['id'],
+                'user'        => $company['user'],
+                'value'       => $t['value'],
+                'type'        => 'in',
             ]);
 
-            $transacao = Transacao::find($t['id']);
+            $transacao = Transaction::find($t['id']);
 
             $transacao->update([
-                'status' => 'transferido'
+                'status' => 'transfered'
             ]);
 
             $user->update([
-                'saldo' => $user['saldo'] + substr_replace($t['valor'], '.',strlen($t['valor']) - 2, 0 ) 
+                'balance' => $user['balance'] + substr_replace($t['value'], '.',strlen($t['value']) - 2, 0 ) 
             ]);
-
         }
-
     }
+
 
 }

@@ -1,155 +1,666 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-        <meta name="description" content="CloudFox">
-        <meta name="author" content="">
 
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        <title>CloudFox @yield('title')</title> 
-        <link rel="apple-touch-icon" href="{{ asset('adminremark/assets/images/apple-touch-icon.png') }}">
-        <link rel="shortcut icon" href="{{ asset('adminremark/assets/images/favicon.ico') }}">
+    <title>Finalize seu cadastro | CloudFox </title>
 
-        <!-- Stylesheets -->
-        <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap-extend.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('adminremark/assets/css/site.min.css') }}">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
 
-        <!-- Scripts -->
-        <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
-    </head>
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
 
-    <body style="margin:0; padding: 0">
-        <div class="text-center">
-            <h2>Seja bem vindo ao Cloudfox</h2>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/wow.min.js"></script>
+
+</head>
+
+<body>
+    <section class="topbar">
+
+        <div class="container">
+
+            <div class="d-flex align-items-center content-top">
+                <img src="img/fox-60.png">
+                <span class="toptitle bold ml15"> Finalize seu cadastro </span>
+            </div>
+
         </div>
 
-        <div class="page">
-            <div class="page-content container-fluid">
-                <form method="post" action="/cadastro/novousuario">
-                    <input type="hidden" name="id_convite" value="{!! $invite->id !!}">
-                    @csrf
-                    <div class="page-content container-fluid">
-                        <div class="panel pt-30 p-30" data-plugin="matchHeight">
-                            <div style="width:100%">
-                                <h4>Dados para o login</h4>
-                                <div class="row">
-                                    <div class="form-group col-xl-6">
-                                        <label for="email">Email</label>
-                                        <input name="email" value="{!! $invite->email_invited !!}" type="text" class="form-control" id="email" placeholder="Email">
-                                    </div>
-                                    <div class="form-group col-xl-6">
-                                        <label for="password">Password</label>
-                                        <input name="password" type="password" class="form-control" id="password" placeholder="Senha">
-                                    </div>
+    </section>
+
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"></div>
+    </div>
+
+    <section class="holder-content">
+        <div class="container">
+            <div class="wrap">
+                <form class="mt10">
+
+                    <div id="login">
+                        <h4 class="bold title-content">Confirme seus dados</h4>
+                        <p class="desc"> Esses são os dados que recebemos na sua solicitação de convite. Confirme ou corrija-os.
+                        </p>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="firstname">Nome</label>
+                                    <input type="text" name="firstname" id="firstname" required>
                                 </div>
+                            </div>
 
-                                <h4>Informações básicas</h4>
-                                <div class="row">
-                                    <div class="form-group col-xl-6">
-                                        <label for="nome">Nome</label>
-                                        <input name="name" type="text" class="form-control" id="nome" placeholder="Nome">
-                                    </div>
-                                    <div class="form-group col-xl-6">
-                                        <label for="cpf">CPF</label>
-                                        <input name="cpf" type="text" class="form-control" id="cpf" placeholder="CPF">
-                                    </div>
+                            <div class="col-lg-6">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="lastname">Sobrenome</label>
+                                    <input type="text" name="lastname" id="lastname" required>
                                 </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="form-group col-xl-6">
-                                        <label for="data_nascimento">Data de nascimento</label>
-                                        <input name="data_nascimento" type="date" class="form-control" id="data_nascimento">
-                                    </div>
-                                    <div class="form-group col-xl-6">
-                                        <label for="celular">Celular</label>
-                                        <input name="celular" type="text" class="form-control" id="celular" placeholder="Celular">
-                                    </div>
-
+                            <div class="col-lg-6">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="firstname">E-mail</label>
+                                    <input type="text" name="firstname" id="firstname" required>
                                 </div>
+                            </div>
 
-                                <div class="row">
-
-                                    <div class="form-group col-xl-6">
-                                        <label for="telefone1">Telefone</label>
-                                        <input name="telefone1" type="text" class="form-control" id="telefone1" placeholder="Telefone">
-                                    </div>
-                                </div>
-
-                                <h4>Endereço</h4>
-                                <div class="row">
-
-                                    <div class="form-group col-xl-6">
-                                        <label for="cep">CEP</label>
-                                        <input name="cep" type="text" class="form-control" id="cep" placeholder="CEP">
-                                    </div>
-        
-                                    <div class="form-group col-xl-6">
-                                        <label for="pais">País</label>
-                                        <input name="pais" type="text" class="form-control" id="pais" placeholder="País">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-xl-6">
-                                        <label for="estado">Estado</label>
-                                        <input name="estado" type="text" class="form-control" id="estado" placeholder="Estado">
-                                    </div>
-                                    <div class="form-group col-xl-6">
-                                        <label for="cidade">Cidade</label>
-                                        <input name="cidade" type="text" class="form-control" id="cidade" placeholder="Cidade">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-xl-6">
-                                        <label for="bairro">Bairro</label>
-                                        <input name="bairro" type="text" class="form-control" id="bairro" placeholder="Bairro">
-                                    </div>
-                                    <div class="form-group col-xl-6">
-                                        <label for="rua">Rua</label>
-                                        <input name="logradouro" type="text" class="form-control" id="rua" placeholder="Rua">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-xl-6">
-                                        <label for="numero">Número</label>
-                                        <input name="numero" type="text" class="form-control" id="numero" placeholder="Número">
-                                    </div>
-        
-                                    <div class="form-group col-xl-6">
-                                        <label for="complemento">Complemento</label>
-                                        <input name="complemento" type="text" class="form-control" id="complemento" placeholder="Complemento">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-success">Salvar</button>
-                                    </div>
+                            <div class="col-lg-6">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="lastname">Celular</label>
+                                    <input type="text" name="lastname" id="lastname" required>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row align-items-center">
+
+                            <div class="col-lg-6">
+
+                                <div class="senha mt30">
+                                    <h4 class="bold title-content">Crie uma senha </h4>
+                                    <p class="desc"> Ok. Para garantir seu acesso, você precisa de uma senha. </p>
+                                </div>
+
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="lastname">Senha</label>
+                                    <input type="password" id="password" required>
+                                </div>
+
+                                <p class="sm-text"> Evite senhas usadas em outros sites e que sejam fáceis de identificar. </p>
+
+                                <div class="progress align-items-center justify-content-between">
+                                    </span>
+                                    <div class="progress-bar password-progress" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"></div> <span class="bold ml15 text-progress" id="text-password"> Fraco
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-5 justify-content-center">
+
+                                <div class="password-tip">
+                                    <h5> Sua senha deve conter: </h5>
+
+                                    <div class="passtip-item mt10 d-flex align-items-center">
+                                        <span class="check"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z" />
+                                            </svg> </span>
+                                    <span> 8 ou mais caracteres </span>
+                                </div>
+
+                                <div class="passtip-item d-flex align-items-center">
+                                    <span class="check"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z" />
+                                            </svg> </span>
+                                    <span> Pelo menos uma letra maiúscula </span>
+                                </div>
+
+                                <div class="passtip-item d-flex align-items-center">
+                                    <span class="check"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                height="24" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z" />
+                                            </svg> </span>
+                                    <span> Pelo menos um número</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
-                </form>
+
             </div>
+
+            <div id="empresa" style="display: none;">
+                <h4 class="bold title-content">Cadastre sua empresa</h4>
+                <p class="desc" style="width: 60%;"> Para cadastras seus produtos e começar a vender, você precisa cadastrar sua empresa primeiro.
+                </p>
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+
+                        <div class="input-holder d-flex flex-column">
+                            <label>Selecione o país:</label>
+                            <div class="btn-group colors select-country" data-toggle="buttons">
+                                <label class="btn btn-outline-primary ">
+                                    <input type="radio" name="options" value="BRA" autocomplete="off" checked> Brasil
+                                </label>
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" name="options" value="USA" autocomplete="off"> United States
+                                </label>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="brasil-form">
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="firstname">CPF/CNPJ</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Digite seu CPF ou CNPJ da empresa" required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="lastname">Nome Fantasia</label>
+                                <input type="text" name="lastname" id="lastname" placeholder="Digite o nome fantasia" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt30">
+                        <div class="col-lg-3">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="firstname">CEP</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Digite o CEP" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="endereco">Logradouro</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Rua, Avenida..." required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="endereco">Nº</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Nº" required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="endereco">Bairro</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Digite o bairro" required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="estado">Estado</label>
+                                <select name="estado" id="estado" required>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="SP">São Paulo </option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="MG">Minas Gerais</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="endereco">Cidade</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Digite a cidade" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="eua-form">
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="firstname">Legal Business Name</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your Legal Business Name" required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="lastname">Document</label>
+                                <input type="text" name="lastname" id="lastname" placeholder="Enter your document" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt30">
+                        <div class="col-lg-3">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="firstname">ZIP/Postal Code</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your ZIP Code" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="endereco"> Street Address </label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your address" required>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="endereco">Address Line 2</label>
+                                <input Enter="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your Apt/Suite/Other">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="estado">State</label>
+                                <select name="estado" id="estado" required>
+                                    <option value="AL">Alabama</option>
+                                    <option value="AK">Alaska</option>
+                                    <option value="AZ">Arizona</option>
+                                    <option value="AR">Arkansas</option>
+                                    <option value="CA">California</option>
+                                    <option value="CO">Colorado</option>
+                                    <option value="CT">Connecticut</option>
+                                    <option value="DE">Delaware</option>
+                                    <option value="DC">District Of Columbia</option>
+                                    <option value="FL">Florida</option>
+                                    <option value="GA">Georgia</option>
+                                    <option value="HI">Hawaii</option>
+                                    <option value="ID">Idaho</option>
+                                    <option value="IL">Illinois</option>
+                                    <option value="IN">Indiana</option>
+                                    <option value="IA">Iowa</option>
+                                    <option value="KS">Kansas</option>
+                                    <option value="KY">Kentucky</option>
+                                    <option value="LA">Louisiana</option>
+                                    <option value="ME">Maine</option>
+                                    <option value="MD">Maryland</option>
+                                    <option value="MA">Massachusetts</option>
+                                    <option value="MI">Michigan</option>
+                                    <option value="MN">Minnesota</option>
+                                    <option value="MS">Mississippi</option>
+                                    <option value="MO">Missouri</option>
+                                    <option value="MT">Montana</option>
+                                    <option value="NE">Nebraska</option>
+                                    <option value="NV">Nevada</option>
+                                    <option value="NH">New Hampshire</option>
+                                    <option value="NJ">New Jersey</option>
+                                    <option value="NM">New Mexico</option>
+                                    <option value="NY">New York</option>
+                                    <option value="NC">North Carolina</option>
+                                    <option value="ND">North Dakota</option>
+                                    <option value="OH">Ohio</option>
+                                    <option value="OK">Oklahoma</option>
+                                    <option value="OR">Oregon</option>
+                                    <option value="PA">Pennsylvania</option>
+                                    <option value="RI">Rhode Island</option>
+                                    <option value="SC">South Carolina</option>
+                                    <option value="SD">South Dakota</option>
+                                    <option value="TN">Tennessee</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="UT">Utah</option>
+                                    <option value="VT">Vermont</option>
+                                    <option value="VA">Virginia</option>
+                                    <option value="WA">Washington</option>
+                                    <option value="WV">West Virginia</option>
+                                    <option value="WI">Wisconsin</option>
+                                    <option value="WY">Wyoming</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="input-holder d-flex flex-column">
+                                <label for="endereco">City</label>
+                                <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your city" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="select-projeto" style="display: none;">
+                <div class="text-center">
+                    <h4 class="bold title-content">Vamos criar seu primeiro projeto?</h4>
+                    <p class="desc"> Primeiro, conta pra gente, qual tipo de projeto? </p>
+                </div>
+
+                <div class="options-holder mt30">
+                    <div class="row">
+
+                        <div class="project-option mt30">
+                            <div class="row align-items-center">
+                                <div class="col-lg-2 text-center">
+                                    <svg class="plusvg" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24">
+                                        <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z" />
+                                    </svg>
+                                </div>
+
+                                <div class="col-lg-10">
+
+                                    <h4 class="bold title-content d-flex">Projeto Padrão</h4>
+                                    <p class="desc"> Cadastrarei meus planos e produtos manualmente, optando ou não pelo serviço de integração </p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="project-option shopify mt30">
+                            <div class="row align-items-center">
+                                <div class="col-lg-2 text-center">
+                                    <svg class="plusvg" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24">
+                                        <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z" />
+                                    </svg>
+                                </div>
+
+                                <div class="col-lg-10">
+
+                                    <h4 class="bold title-content d-flex align-items-center">
+                                        <span> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="30"
+                                            height="30" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                                            y="0px" viewBox="0 0 1000 1000"
+                                            enable-background="new 0 0 1000 1000" xml:space="preserve">
+                                            <g>
+                                                <g id="c2be471c56fc5b4dd571614bb3052f50">
+                                                    <path
+                                                        d="M824.5,201.7c0,0-0.8-4.4-3.3-6c-2.5-1.6-5.2-1.9-5.2-1.9l-78.8-5.9l-58-57.6c-2.2-1.7-4.7-2.7-7.3-3.2c-6.2-1.2-14.5,0.2-16,0.6l-30.1,9.3c-13.1-38.6-30.9-66-53.3-81.9c-16.6-11.7-34.8-16.7-54.4-15.2c-4.1-5.5-8.7-10.3-13.6-14.3C482.8,8,454.7,5.3,421.2,17.4C320.6,54,277.9,184.4,262.5,249.5l-87.7,27.2c0,0-20.6,5.9-25.5,11.7c-5.3,6.4-6.3,23.6-6.3,23.6L68.6,885.5L628.9,990l302.5-65.5L824.5,201.7z M514,171.6l-96.9,30c12.8-50.3,37.5-101.6,84.7-121.7C511.6,105.6,514.3,140.7,514,171.6z M432.7,49.1c20.5-7.4,36.2-7.1,48.1,0.9C417.5,78.8,389.9,151.5,378,213.7l-77.6,24C317.8,175.1,356.4,76.8,432.7,49.1z M487,471.8c-4.4-2.2-9.7-4.5-15.6-6.6c-5.9-2.2-12.4-4.3-19.5-6c-7-1.7-14.6-3.1-22.5-3.9c-7.9-0.8-16.2-1.1-24.8-0.6c-7.9,0.5-15,1.9-21.3,4.1c-6.2,2.2-11.7,5.3-16.1,9.1c-4.4,3.8-8,8.3-10.4,13.5c-2.5,5.2-3.9,11-4.2,17.5c-0.2,4.8,0.5,9.4,2.2,13.9c1.7,4.5,4.3,8.9,7.9,13.3c3.6,4.4,8.2,8.8,13.7,13.2c5.6,4.5,12.2,9.1,19.8,13.8c10.7,6.8,21.6,14.5,32,23.4c10.5,9,20.5,19.1,29,30.6c8.7,11.7,15.9,24.7,20.7,39.4c4.9,14.8,7.4,31.1,6.6,49c-1.3,29.4-7.7,54.7-18.4,75.7c-10.5,20.7-25,37-42.5,48.8c-17.1,11.5-36.9,18.7-58.4,21.6c-20.9,2.8-43.3,1.6-66.4-3.5c-0.2,0-0.4-0.1-0.6-0.1c-0.2,0-0.4-0.1-0.5-0.1c-0.2,0-0.4-0.1-0.6-0.1c-0.2,0-0.4-0.1-0.6-0.1c-10.8-2.6-21.3-6-31.1-10c-9.7-3.9-18.8-8.3-27-13.2c-8.2-4.8-15.6-9.9-22-15.1c-6.3-5.2-11.7-10.6-15.9-16.1l25.5-84.6c4.3,3.6,9.6,7.8,15.6,12c6.1,4.3,12.9,8.6,20.1,12.7c7.4,4.1,15.2,7.9,23.3,11c8.2,3.1,16.7,5.6,25,6.8c7.4,1.1,14,0.9,19.8-0.4c5.8-1.3,10.8-3.7,14.9-7.1c4.1-3.3,7.3-7.5,9.5-12.3c2.2-4.9,3.5-10.3,3.7-16.1c0.3-5.8-0.3-11.3-1.7-16.6c-1.5-5.3-3.9-10.5-7.3-15.6c-3.4-5.1-7.9-10.3-13.5-15.6c-5.6-5.3-12.3-10.7-20.2-16.5c-9.8-7.3-18.9-15.1-27.1-23.7c-8.1-8.5-15.3-17.6-21.1-27.6c-5.8-9.9-10.4-20.5-13.4-32.1c-3-11.5-4.3-24-3.7-37.6c1-22.7,5.5-43.6,13.1-62.5c7.7-19,18.6-36.1,32.2-50.8c13.9-15,30.8-27.7,50.3-37.4c20.1-10,43-17.1,68.4-20.4c11.8-1.6,23.1-2.3,33.8-2.3c10.9,0,21.1,0.6,30.5,1.8c9.5,1.2,18.2,3,25.9,5.2c7.8,2.2,14.5,4.8,20,7.6L487,471.8z M547.6,161.2c0-3.8-0.1-7.7-0.3-11.6c-1.1-30.1-5.2-55.5-12.2-76.1c7.6,0.8,14.5,3.3,20.8,7.7c17.5,12.4,30.2,37.4,39.1,65.3L547.6,161.2z" />
+                                                </g>
+                                            </g>
+                                        </svg> </span>Loja no Shopify</h4>
+                                    <p class="desc"> Você será encaminhado para criar seu projeto integrado automaticamente com sua loja no Shopify </p>
+                                </div>
+
+                                <div class="badge-exclusive">
+                                    EXCLUSIVO
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="standard-project" style="display: none;">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h4 class="bold title-content">Crie seu primeiro projeto</h4>
+                        <p class="desc"> Na nossa plataforma, os projetos são as lojas. Você pode ter uma ou várias lojas. Não se preocupe, vamos te explicando passo a passo!
+                        </p>
+
+                        <div class="row">
+                            <div class="col-lg-12 mt20">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="project_name">Nome</label>
+                                    <input type="text" name "project_name" id="project_name" placeholder="Digite o nome do projeto" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="project_desc">Descrição</label>
+                                    <textarea type="text" name "project_desc" id="project_desc" placeholder="Digite uma breve apresentação do projeto" required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="input-holder d-flex flex-column">
+                                    <label>Imagem do projeto</label>
+
+                                    <label for="file-upload" class="btn btn-primary custom-upload d-flex justify-content-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                            <path d="M16 16h-3v5h-2v-5h-3l4-4 4 4zm3.479-5.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z" />
+                                        </svg>
+                                        Upload
+                                    </label>
+
+                                    <input id="file-upload" type="file" /> </div>
+
+                                <p class="sm-text gray"> Indicamos uma imagem 500x500
+                                    <br> JPG, JPEG ou PNG de até 2MB</p>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="input-holder d-flex flex-column">
+                                    <label>Visibilidade:</label>
+                                    <div class="btn-group colors select-country" data-toggle="buttons">
+                                        <label class="btn btn-outline-primary ">
+                                            <input type="radio" name="public" value="public" autocomplete="off"> Público
+                                        </label>
+                                        <label class="btn btn-outline-primary">
+                                            <input type="radio" name="private" value="private" autocomplete="off"> Privado
+                                        </label>
+                                    </div>
+                                </div>
+                                <p class="sm-text"> Seu projeto <strong> estará  disponível </strong> para receber filiados da vitrine. </p>
+                                <p class="sm-text"> Seu projeto <strong> não estará  disponível </strong>para receber filiados da vitrine. </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 hidden-m d-flex justify-content-center">
+
+                        <div class="project-card d-flex flex-column align-items-center hidden-m">
+
+                            <div class="private-over justify-content-center text-center">
+                                <div class="private-card-content">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
+                                        <path d="M17 9.761v-4.761c0-2.761-2.238-5-5-5-2.763 0-5 2.239-5 5v4.761c-1.827 1.466-3 3.714-3 6.239 0 4.418 3.582 8 8 8s8-3.582 8-8c0-2.525-1.173-4.773-3-6.239zm-8-4.761c0-1.654 1.346-3 3-3s3 1.346 3 3v3.587c-.927-.376-1.938-.587-3-.587s-2.073.211-3 .587v-3.587zm3 17c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm2-6c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2z" />
+                                    </svg>
+                                    <h4 class="bold">Privado</h4>
+                                </div>
+                            </div>
+                            <div class="card-img">
+                                <img class="card-img-top" src="img/imgprojeto.png">
+                            </div>
+                            <div class="card-body mt30">
+                                <h5 class="card-title">Nome do seu projeto</h5>
+                                <p class="card-text sm-text gray"> Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="shopify-project" style="display: none">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h4 class="bold title-content">Novo projeto Shopify</h4>
+                        <p class="desc"> Criando seu primeiro projeto 100% integrado ao Shopify
+                        </p>
+                        <div class="row">
+
+                            <div class="col-lg-12 mt20">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="project_name" class="d-flex justify-content-center">
+                                        Token Shopify </label>
+                                    <input type="text" name "project_name" id="project_name" placeholder="Insira o token do Shopify" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="project_name">Nome</label>
+                                    <input type="text" name "project_name" id="project_name" placeholder="Digite o nome do projeto" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="input-holder d-flex flex-column">
+                                    <label for="project_desc">Descrição</label>
+                                    <textarea type="text" name "project_desc" id="project_desc" placeholder="Digite uma breve apresentação do projeto" required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="input-holder d-flex flex-column">
+                                    <label>Imagem do projeto</label>
+
+                                    <label for="file-upload" class="btn btn-primary custom-upload d-flex justify-content-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                            <path d="M16 16h-3v5h-2v-5h-3l4-4 4 4zm3.479-5.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z" />
+                                        </svg>
+                                        Upload
+                                    </label>
+                                    <input id="file-upload" type="file" /> </div>
+                                <p class="sm-text gray"> Indicamos uma imagem 500x500
+                                    <br> JPG, JPEG ou PNG de até 2MB</p>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="input-holder d-flex flex-column">
+                                    <label>Visibilidade:</label>
+                                    <div class="btn-group colors select-country" data-toggle="buttons">
+                                        <label class="btn btn-outline-primary ">
+                                            <input type="radio" name="public" value="public" autocomplete="off"> Público
+                                        </label>
+                                        <label class="btn btn-outline-primary">
+                                            <input type="radio" name="private" value="private" autocomplete="off"> Privado
+                                        </label>
+
+                                    </div>
+                                </div>
+
+                                <p class="sm-text"> Seu projeto <strong> estará  disponível </strong> para receber filiados da vitrine. </p>
+                                <p class="sm-text"> Seu projeto <strong> não estará  disponível </strong>para receber filiados da vitrine. </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 hidden-m d-flex justify-content-center">
+
+                        <div class="project-card d-flex flex-column align-items-center hidden-m">
+
+                            <div class="private-over justify-content-center text-center">
+                                <div class="private-card-content">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
+                                        <path d="M17 9.761v-4.761c0-2.761-2.238-5-5-5-2.763 0-5 2.239-5 5v4.761c-1.827 1.466-3 3.714-3 6.239 0 4.418 3.582 8 8 8s8-3.582 8-8c0-2.525-1.173-4.773-3-6.239zm-8-4.761c0-1.654 1.346-3 3-3s3 1.346 3 3v3.587c-.927-.376-1.938-.587-3-.587s-2.073.211-3 .587v-3.587zm3 17c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm2-6c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2z" />
+                                    </svg>
+                                    <h4 class="bold">Privado</h4>
+                                </div>
+
+                            </div>
+
+                            <div class="card-img">
+                                <img class="card-img-top" src="img/imgprojeto.png">
+                            </div>
+                            <div class="card-body mt30">
+                                <h5 class="card-title">Nome do seu projeto</h5>
+                                <p class="card-text sm-text gray"> Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
+                            </div>
+                        </div>
+
+                        <!-- <div class="project-card">
+
+                            <div class="card-img">
+
+                            </div>
+
+                        </div> -->
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="success" style="display: none">
+
+                <div class="content-success">
+                    <img src="img/loader.svg">
+
+                    <h1 class="bold orange mt10"> Tudo pronto! </h1>
+                    <p class="mt10"> Só um momento. Estamos preparando a sua plataforma para você! Em alguns instantes, você estara na sua nova dashboard.
+
+                </div>
+
+            </div>
+
+            </form>
         </div>
 
-        <script src="{{ asset('adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
+        </div>
 
-        <script>
+    </section>
 
-            $(document).ready(function(){
+    <footer>
+        <div class="container">
+            <div class="wrap-footer">
 
-                @if(isset($erro))
-                    alert('{!! $erro !!}');
-                @endif
-            });
+                <div class="row justify-content-between align-items-center">
 
-        </script>
-    </body>
+                    <div class="col-3">
+
+                        <div class="btn-voltar d-flex">
+
+                            <a href="#" class="d-flex">
+                                <span class="icon-back mr10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path
+                                            d="M0 12c0 6.627 5.373 12 12 12s12-5.373 12-12-5.373-12-12-12-12 5.373-12 12zm7.58 0l5.988-5.995 1.414 1.416-4.574 4.579 4.574 4.59-1.414 1.416-5.988-6.006z" />
+                                    </svg>
+                                </span>
+
+                                <span class="bold hidden-m">
+                                    Voltar
+                                </span>
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <div class="col-6 d-flex align-items-center justify-content-end">
+
+                        <div class="btn-voltar d-flex mr15">
+                            <span>
+                                <a href="#" class="bold">Pular</a>
+                            </span>
+                        </div>
+
+                        <div class="btn-holder footer">
+                            <button class="btn btn-primary btn-go"> Prosseguir </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+    </footer>
+
+</body>
+
 </html>
-

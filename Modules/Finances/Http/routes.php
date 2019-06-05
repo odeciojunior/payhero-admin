@@ -1,77 +1,77 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'transferencias', 'namespace' => 'Modules\Transferencias\Http\Controllers'], function()
+Route::group(['middleware' => 'web', 'prefix' => 'transferencias', 'namespace' => 'Modules\Finances\Http\Controllers'], function()
 {
     Route::get('/', [
-        'uses' => 'TransferenciasController@index',
+        'uses' => 'FinancesController@index',
         'as' => 'transferencias'
     ]);
 
     Route::post('/saque', [
-        'uses' => 'TransferenciasController@saque',
-        'as' => 'transferencias.saque'
+        'uses' => 'FinancesController@saque',
+        'as' => 'finances.saque'
     ]);
 
     Route::post('/detalhesantecipacao', [
-        'uses' => 'TransferenciasController@detalhesAntecipacao',
-        'as' => 'transferencias.detalhesantecipacao'
+        'uses' => 'FinancesController@detalhesAntecipacao',
+        'as' => 'finances.detalhesantecipacao'
     ]);
 
     Route::post('/confirmarantecipacao', [
-        'uses' => 'TransferenciasController@confirmarAntecipacao',
-        'as' => 'transferencias.confirmarantecipacao'
+        'uses' => 'FinancesController@confirmarAntecipacao',
+        'as' => 'finances.confirmarantecipacao'
     ]);
 
-    Route::post('/historicotransferencias', [
-        'uses' => 'TransferenciasController@getTransferencias',
-        'as' => 'transferencias.historicotransferencias'
+    Route::post('/historicofinances', [
+        'uses' => 'FinancesController@getfinances',
+        'as' => 'finances.historicofinances'
     ]);
 
     Route::post('/cancelartransferencia', [
-        'uses' => 'TransferenciasController@cancelarTransferencia',
-        'as' => 'transferencias.cancelartransferencia'
+        'uses' => 'FinancesController@cancelarTransferencia',
+        'as' => 'finances.cancelartransferencia'
     ]);
 
     Route::post('/cancelarantecipacao', [
-        'uses' => 'TransferenciasController@cancelarAntecipacao',
-        'as' => 'transferencias.cancelarantecipacao'
+        'uses' => 'FinancesController@cancelarAntecipacao',
+        'as' => 'finances.cancelarantecipacao'
     ]);
 
     Route::post('/historicoantecipacoes', [
-        'uses' => 'TransferenciasController@getAntecipacoes',
-        'as' => 'transferencias.historicoantecipacoes'
+        'uses' => 'FinancesController@getAntecipacoes',
+        'as' => 'finances.historicoantecipacoes'
     ]);
 
 });
 
-Route::group(['middleware' => 'web', 'prefix' => 'extrato', 'namespace' => 'Modules\Transferencias\Http\Controllers'], function()
+Route::group(['middleware' => 'web', 'prefix' => 'extrato', 'namespace' => 'Modules\Finances\Http\Controllers'], function()
 {
     Route::get('/', [
-        'uses' => 'TransferenciasController@extrato',
+        'uses' => 'FinancesController@extrato',
         'as' => 'extrato'
     ]);
 
     Route::post('/detalhessaldofuturo', [
-        'uses' => 'TransferenciasController@detalhesSaldoFuturo',
-        'as' => 'transferencias.detalhessaldofuturo'
+        'uses' => 'FinancesController@detalhesSaldoFuturo',
+        'as' => 'finances.detalhessaldofuturo'
     ]);
     
     Route::post('/historico', [
-        'uses' => 'TransferenciasController@historico',
-        'as' => 'transferencias.historico'
+        'uses' => 'FinancesController@historico',
+        'as' => 'finances.historico'
     ]);
 
     Route::post('/getsaldos', [
-        'uses' => 'TransferenciasController@getSaldos',
-        'as' => 'transferencias.getsaldos'
+        'uses' => 'FinancesController@getSaldos',
+        'as' => 'finances.getsaldos'
     ]);
 
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/financas', 'namespace' => 'Modules\Transferencias\Http\Controllers'], function()
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/financas', 'namespace' => 'Modules\Finances\Http\Controllers'], function()
 {
     Route::get('/getsaldos', [
-        'uses' => 'TransferenciasController@getSaldosDashboard',
+        'uses' => 'FinancesController@getSaldosDashboard',
     ]);
 
 });
