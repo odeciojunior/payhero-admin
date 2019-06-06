@@ -10,7 +10,7 @@
       </button>
       <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
         <img class="navbar-brand-logo" src="{{ asset('adminremark/assets/images/cloudfox_logo.png') }}" title="Remark">
-        <span class="navbar-brand-text hidden-xs-down" style="color: #e54724"> CloudFox</span>
+        <span class="navbar-brand-text hidden-xs-down" style="color: black"> <span style="font-weight: 300;">Cloud</span><strong>Fox</strong></span>
       </div>
       <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search" data-toggle="collapse">
         <span class="sr-only">Toggle Search</span>
@@ -31,11 +31,7 @@
               </i>
             </a>
           </li>
-          <li class="nav-item hidden-sm-down" id="toggleFullscreen">
-            <a class="nav-link icon icon-fullscreen" data-toggle="fullscreen" href="#" role="button">
-              <span class="sr-only">Toggle fullscreen</span>
-            </a>
-          </li>
+          
         </ul>
 
         <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
@@ -133,7 +129,8 @@
               <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
                 data-animation="scale-up" role="button">
                 <span class="avatar avatar-online">
-                  <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.\Auth::user()->photo)!!}" alt="...">
+                  <!-- <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.\Auth::user()->photo)!!}" alt="..."> -->
+                  <img src="{{ asset('assets/img/user.jpg') }}" alt="">
                   <i></i>
                 </span>
               </a>
@@ -178,19 +175,19 @@
     <ul class="site-menu" style="margin-top:10px">
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="{{ route('dashboard') }}">
-            <i class="site-menu-icon wb-dashboard" aria-hidden="true"></i>
+           <img src="{{ asset('assets/img/svg/dashboard.svg') }}">
             <span class="site-menu-title">Dashboard</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="{{ route('showcase') }}">
-            <i class="site-menu-icon  wb-grid-9" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/vitrine.svg') }}">
             <span class="site-menu-title">Vitrine</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-            <i class="site-menu-icon wb-shopping-cart" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/vendas.svg') }}">
             <span class="site-menu-title">Vendas</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -214,25 +211,25 @@
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="{{ route('projetos') }}">
-            <i class="site-menu-icon wb-clipboard" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/projetos.svg') }}" style="width:17px;">
             <span class="site-menu-title">Projetos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="{{ route('products') }}">
-            <i class="site-menu-icon wb-mobile" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/produtos.svg') }}">
             <span class="site-menu-title">Produtos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="{{ route('attendance') }}">
-            <i class="site-menu-icon wb-chat-group" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/atendimento.svg') }}">
             <span class="site-menu-title">Atendimento</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-            <i class="site-menu-icon wb-users" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/afiliados.svg') }}">
             <span class="site-menu-title">Afiliados</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -251,8 +248,8 @@
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-            <i class="icon fa-bank" aria-hidden="true"></i>
-            <span class="site-menu-title" style="margin-left: 14px">Finanças</span>
+        <img src="{{ asset('assets/img/svg/financas.svg') }}">
+            <span class="site-menu-title">Finanças</span>
             <span class="site-menu-arrow"></span>
         </a>
         <ul class="site-menu-sub">
@@ -270,21 +267,37 @@
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link" href="{!! route('tools') !!}">
-            <i class="site-menu-icon wb-settings" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/configuracao.svg') }}">
             <span class="site-menu-title">Ferramentas</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link" href="{{ route('apps') }}">
-            <i class="site-menu-icon wb-grid-4" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/aplicativos.svg') }}">
             <span class="site-menu-title">Aplicativos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link" href="{{ route('invites') }}">
-            <i class="site-menu-icon wb-user-add" aria-hidden="true"></i>
+        <img src="{{ asset('assets/img/svg/convites.svg') }}">
             <span class="site-menu-title">Convites</span>
         </a>
       </li>
+
+      <li class="site-menu-item has-sub">
+        <a class="animsition-link  lh-10" href="{{ route('invites') }}">
+        <img src="">
+            <span class="site-menu-title footer-nav-link">Suporte</span>
+        </a>
+      </li>
+
+      <li class="site-menu-item has-sub ">
+        <a class="animsition-link lh-10" href="{{ route('invites') }}">
+        <img src="">
+            <span class="site-menu-title footer-nav-link">Termos e Políticas</span>
+        </a>
+      </li>
+
+
     </ul>
 </div>

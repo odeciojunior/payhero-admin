@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" href="{{ asset('adminremark/assets/images/cloudfox_logo.png') }}">
+     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
 
     <title>Cloudfox</title>
  
@@ -41,33 +42,45 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/weather-icons/weather-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/brand-icons/brand-icons.min.css') }}">
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">    
     <link rel="stylesheet" href="{{ asset('jquery-imgareaselect/css/imgareaselect-default.css') }}">
-    <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
+
+
+    
+      <!-- New CSS -->
+
+      <link rel="stylesheet" href="{{ asset('assets/css/new-dashboard.css') }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/new-site.css') }}">
 
     <!-- Datatables -->
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
     <!-- Scripts -->
+    <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
       Breakpoints();
     </script>
+
   </head>
   <body class="animsition site-navbar-small dashboard">
 
     <div class="loading">
         <div class="loader"></div>
     </div>
+
+    <style> 
+    body { font-family: 'Muli', sans-serif !important;}
+    </style>
  
     @include("layouts.menu-lateral")
 
     @yield('content')
 
-    <footer class="site-footer">
+    <!-- <footer class="site-footer">
         <div class="site-footer-right">© 2019 - CloudFox | help@cloudfox.app - <a href="/terms" target="_blank" style="color:#e54724">Terms & Conditions</a></div>
 
-    </footer>
+    </footer> -->
 
     <!-- Core  -->
     <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
