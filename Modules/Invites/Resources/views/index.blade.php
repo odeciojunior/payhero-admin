@@ -57,7 +57,7 @@
                     <h4 id="modal_estornar_titulo" class="modal-title" style="width: 100%; text-align:center">Novo Convite</h4>
                   </div>
                   <div id="modal_estornar_body" class="modal-body">
-                    <form method="POST" action="/convites/enviarconvite">
+                    <form method="POST" action="{{ route('invitations.send.invitation') }}">
                         @csrf
                         <div class="row">
                             <div class="form-group col-12">

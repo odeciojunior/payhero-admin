@@ -13,73 +13,129 @@ use Modules\Core\Helpers\StringHelper;
 use App\Entities\SiteInvitationRequest;
 use App\Entities\HubsmartInvitationRequest;
 
-class InvitesController extends Controller {
+/**
+ * Class InvitesController
+ * @package Modules\Invites\Http\Controllers
+ */
+class InvitesController extends Controller
+{
+    /**
+     * @var Invitation
+     */
+    private $invitation;
+    /**
+     * @var Company
+     */
+    private $company;
+    /**
+     * @var SiteInvitationRequest
+     */
+    private $siteInvitationRequest;
+    /**
+     * @var HubsmartInvitationRequest
+     */
+    private $hubsmartInvitationRequest;
 
-    public function index() {
+    /**
+     * InvitesController constructor.
+     * @param Invitation $invitation
+     * @param Company $company
+     * @param SiteInvitationRequest $siteInvitationRequest
+     * @param HubsmartInvitationRequest $hubsmartInvitationRequest
+     */
+    function __construct(Invitation $invitation,
+                         Company $company,
+                         SiteInvitationRequest $siteInvitationRequest,
+                         HubsmartInvitationRequest $hubsmartInvitationRequest)
+    {
+        $this->invitation                = $invitation;
+        $this->company                   = $company;
+        $this->siteInvitationRequest     = $siteInvitationRequest;
+        $this->hubsmartInvitationRequest = $hubsmartInvitationRequest;
+    }
 
-        $invites = Invitation::where('invite',\Auth::user()->id)->get()->toArray();
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
 
-        foreach($invites as &$invite){
+        $invites = $this->invitation->where('invite', auth()->user()->id)->get();
 
-            if($invite['status'] == 'Enviado'){
-                $invite['status'] = "<span class='badge badge-info'>Enviado</span>";
+        foreach ($invites as $invite) {
+
+            if ($invite->status == 'Enviado') {
+                $invite->status = "<span class='badge badge-info'>Enviado</span>";
+            } else {
+                $invite->status = "<span class='badge badge-success'>" . $invite->status . "</span>";
             }
-            else{
-                $invite['status'] = "<span class='badge badge-success'>" . $invite['status'] . "</span>";
-            }
-        }   
-     
-        return view('invites::index',[
-            'invites' => $invites
+        }
+
+        return view('invites::index', [
+            'invites' => $invites,
         ]);
     }
 
-    public function sendInvitation(Request $request) {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sendInvitation(Request $request)
+    {
 
         $requestData = $request->all();
 
-        $requestData['invite'] = \Auth::user()->id;
+        $requestData['invite'] = auth()->user()->id;
         $requestData['status'] = "Convite enviado";
 
         $newParameter = false;
 
-        while(!$newParameter){
+        while (!$newParameter) {
 
             $parameter = StringHelper::randString(15);
 
-            $invite = Invitation::where('parameter', $parameter)->first();
+            $invite = $this->invitation->where('parameter', $parameter)->first();
 
-            if($invite == null){
-                $newParameter = true;
+            if ($invite == null) {
+                $newParameter             = true;
                 $requestData['parameter'] = $parameter;
             }
         }
 
-        $requestData['company'] = Company::where('user', \Auth::user()->id)->first()->id;
+        $requestData['company'] = $this->company->where('user', auth()->user()->id)->first()->id;
 
-        $invite = Invitation::create($requestData);
+        $invite = $this->invitation->create($requestData);
 
         EmailHelper::enviarConvite($requestData['email_invited'], $requestData['parameter']);
 
-        return redirect()->route('invites');
+        return redirect()->route('invitations.invites');
     }
 
-    public function getInvitation(Request $request){
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function getInvitation(Request $request)
+    {
 
         $requestData = $request->all();
 
-        SiteInvitationRequest::create($requestData);
+        $this->siteInvitationRequest->create($requestData);
 
         return 'success';
     }
 
-    public function getHubsmartInvitation(Request $request){
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function getHubsmartInvitation(Request $request)
+    {
 
         $requestData = $request->all();
 
-        HubsmartInvitationRequest::create($requestData);
+        $this->hubsmartInvitationRequest->create($requestData);
 
         return 'success';
     }
-
 }
