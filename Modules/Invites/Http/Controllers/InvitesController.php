@@ -4,14 +4,18 @@ namespace Modules\Invites\Http\Controllers;
 
 use App\Entities\Company;
 use App\Entities\Invitation;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\EmailHelper;
 use Modules\Core\Helpers\StringHelper;
 use App\Entities\SiteInvitationRequest;
 use App\Entities\HubsmartInvitationRequest;
+use Modules\Invites\Http\Requests\SendInvitationRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class InvitesController
@@ -80,35 +84,43 @@ class InvitesController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendInvitation(Request $request)
+    public function sendInvitation(SendInvitationRequest $request)
     {
+        try {
 
-        $requestData = $request->all();
+            $requestData = $request->validated();
 
-        $requestData['invite'] = auth()->user()->id;
-        $requestData['status'] = "Convite enviado";
+            $requestData['invite'] = auth()->user()->id;
+            $requestData['status'] = "Convite enviado";
 
-        $newParameter = false;
+            $newParameter = false;
 
-        while (!$newParameter) {
+            while (!$newParameter) {
 
-            $parameter = StringHelper::randString(15);
+                //$parameter = Hashids::encode(auth()->user()->id + 77991133);
+                $parameter = StringHelper::randString(15);
 
-            $invite = $this->invitation->where('parameter', $parameter)->first();
+                $invite = $this->invitation->where('parameter', $parameter)->first();
 
-            if ($invite == null) {
-                $newParameter             = true;
-                $requestData['parameter'] = $parameter;
+                if ($invite == null) {
+                    $newParameter             = true;
+                    $requestData['parameter'] = $parameter;
+                }
             }
+
+            $requestData['company'] = $this->company->where('user', auth()->user()->id)->first()->id;
+
+            $invite = $this->invitation->create($requestData);
+
+            if ($invite) {
+                EmailHelper::enviarConvite($requestData['email_invited'], $requestData['parameter']);
+            }
+
+            return redirect()->route('invitations.invites');
+        } catch (Exception $ex) {
+            Log::warning('Erro ao enviar convite (InvitesController - sendInvitation)');
+            report($ex);
         }
-
-        $requestData['company'] = $this->company->where('user', auth()->user()->id)->first()->id;
-
-        $invite = $this->invitation->create($requestData);
-
-        EmailHelper::enviarConvite($requestData['email_invited'], $requestData['parameter']);
-
-        return redirect()->route('invitations.invites');
     }
 
     /**

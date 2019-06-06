@@ -31,7 +31,7 @@ Route::group(
         // rotas autenticadas
 
         Route::get('/', 'InvitesController@index')->name('invites');
-        Route::post('/enviarconvite', 'InvitesController@sendInvitation')->name('send.invitation');
+        Route::post('/sendinvitation', 'InvitesController@sendInvitation')->name('send.invitation');
     }
 );
 
