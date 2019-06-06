@@ -11,9 +11,7 @@ use Illuminate\Routing\Controller;
 
 class FinancesController extends Controller {
 
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
+
     public function index() {
 
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
@@ -49,10 +47,6 @@ class FinancesController extends Controller {
 
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function saque(Request $request){
 
         $dados = $request->all();
@@ -74,10 +68,6 @@ class FinancesController extends Controller {
         return response()->json('sucesso');
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getTransferencias(Request $request){
 
         $dados = $request->all();
@@ -126,10 +116,6 @@ class FinancesController extends Controller {
         return response()->json($historico_transferencias);
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function cancelarTransferencia(Request $request){
 
         $dados = $request->all();
@@ -148,10 +134,6 @@ class FinancesController extends Controller {
         return response()->json('sucesso');
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function cancelarAntecipacao(Request $request){
 
         $dados = $request->all();
@@ -173,10 +155,6 @@ class FinancesController extends Controller {
         return response()->json('sucesso');
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function detalhesAntecipacao(Request $request){
 
         $dados = $request->all();
@@ -233,10 +211,6 @@ class FinancesController extends Controller {
         return response()->json($dados);
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function confirmarAntecipacao(Request $request){
 
         $dados = $request->all();
@@ -278,10 +252,6 @@ class FinancesController extends Controller {
 
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getAntecipacoes(Request $request){
 
         $dados = $request->all();
@@ -337,40 +307,36 @@ class FinancesController extends Controller {
         return response()->json($historico_antecipacoes);
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function extrato(Request $request){
 
         $userCompanies = Company::where('user', \Auth::user()->id)->get()->toArray();
 
         $selectedCompany = false;
-        $company_pre_selecionada; //??
+        $preSelectedCompany;
         $companies = [];
 
         foreach($userCompanies as $company){
 
             $companies[] = [
                 'id' => $company['id'],
-                'nome' => $company['nome_fantasia']
+                'nome' => $company['fantasy_name']
             ];
 
             if(!$selectedCompany){
-                $company_pre_selecionada = $company;
+                $preSelectedCompany = $company;
                 $selectedCompany = true;
             }
 
         }
 
-        $filtro_data_inicio = Carbon::now()->format('Y-m-d');
-        $filtro_data_fim = Carbon::now()->addMonths(1)->format('Y-m-d');
+        $startDateFilter = Carbon::now()->format('Y-m-d');
+        $endDateFilter   = Carbon::now()->addMonths(1)->format('Y-m-d');
 
-        return view('transferencias::extrato',[
-            'company'            => $company_pre_selecionada,
-            'companys'           => $companies,
-            'filtro_data_inicio' => $filtro_data_inicio,
-            'filtro_data_fim'    => $filtro_data_fim,
+        return view('finances::extrato',[
+            'company'            => $preSelectedCompany,
+            'companies'          => $companies,
+            'filtro_data_inicio' => $startDateFilter,
+            'filtro_data_fim'    => $endDateFilter
         ]);
 
     }
