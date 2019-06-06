@@ -740,7 +740,7 @@ class ShopifyController extends Controller {
                     'available'     => true,
                     'amount'        => '0',
                     'format'        => 1,
-                    'category'      => '1',
+                    'category'      => 11,
                     'cost'          => '',
                 ]);
 
