@@ -11,7 +11,9 @@ use Illuminate\Routing\Controller;
 
 class FinancesController extends Controller {
 
-
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index() {
 
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
@@ -47,6 +49,10 @@ class FinancesController extends Controller {
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function saque(Request $request){
 
         $dados = $request->all();
@@ -68,6 +74,10 @@ class FinancesController extends Controller {
         return response()->json('sucesso');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getTransferencias(Request $request){
 
         $dados = $request->all();
@@ -116,6 +126,10 @@ class FinancesController extends Controller {
         return response()->json($historico_transferencias);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function cancelarTransferencia(Request $request){
 
         $dados = $request->all();
@@ -134,6 +148,10 @@ class FinancesController extends Controller {
         return response()->json('sucesso');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function cancelarAntecipacao(Request $request){
 
         $dados = $request->all();
@@ -155,6 +173,10 @@ class FinancesController extends Controller {
         return response()->json('sucesso');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function detalhesAntecipacao(Request $request){
 
         $dados = $request->all();
@@ -211,6 +233,10 @@ class FinancesController extends Controller {
         return response()->json($dados);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function confirmarAntecipacao(Request $request){
 
         $dados = $request->all();
@@ -252,6 +278,10 @@ class FinancesController extends Controller {
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAntecipacoes(Request $request){
 
         $dados = $request->all();
@@ -307,6 +337,10 @@ class FinancesController extends Controller {
         return response()->json($historico_antecipacoes);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function extrato(Request $request){
 
         $userCompanies = Company::where('user', \Auth::user()->id)->get()->toArray();
@@ -341,6 +375,10 @@ class FinancesController extends Controller {
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function detalhesSaldoFuturo(Request $request){
 
         $dados = $request->all();
@@ -413,6 +451,10 @@ class FinancesController extends Controller {
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function historico(Request $request){
 
         $dados = $request->all();
@@ -496,6 +538,10 @@ class FinancesController extends Controller {
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getSaldos(Request $request){
 
         $dados = $request->all();
@@ -574,6 +620,9 @@ class FinancesController extends Controller {
 
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getSaldosDashboard(){
 
         if(getenv('PAGAR_ME_PRODUCAO') == 'true'){
