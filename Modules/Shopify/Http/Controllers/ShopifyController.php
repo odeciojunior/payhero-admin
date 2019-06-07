@@ -334,13 +334,13 @@ class ShopifyController extends Controller {
                           {% endfor %}
                         </div>
                       {% endunless %}
-      
+
                       {% comment %}
                         Optional, loop through custom product line items if available
-      
+
                         Line item properties come in as having two parts. The first part will be passed with the default form,
                         but p.last is the actual custom property and may be blank. If it is, don't show it.
-      
+
                         For more info on line item properties, visit:
                           - http://docs.shopify.com/support/your-store/products/how-do-I-collect-additional-information-on-the-product-page-Like-for-a-monogram-engraving-or-customization
                       {% endcomment %}
@@ -350,7 +350,7 @@ class ShopifyController extends Controller {
                           {% for p in item.properties %}
                             {% unless p.last == blank %}
                               {{ p.first }}:
-      
+
                               {% comment %}
                                 Check if there was an uploaded file associated
                               {% endcomment %}
@@ -363,18 +363,18 @@ class ShopifyController extends Controller {
                           {% endfor %}
                         </div>
                       {% endif %}
-      
+
                       <p class='small--hide'>
                         <a href='/cart/change?line={{ forloop.index }}&amp;quantity=0' class='btn btn--small btn--secondary cart__remove'>{{ 'cart.general.remove' | t }}</a>
                       </p>
                     </td>
                     <td class='cart__price-wrapper cart-flex-item text-center medium-up--hide'>
                       <span class='hulkapps-cart-item-price' data-key='{{item.key}}'>{{ item.price | money }}</span>
-      
+
                       {% for discount in item.discounts %}
                         <div class='cart-item__discount medium-up--hide'>{{ discount.title }}</div>
                       {% endfor %}
-      
+
                       <div class='cart__edit medium-up--hide'>
                         <button type='button' class='btn btn--secondary btn--small js-edit-toggle cart__edit--active' data-target='line{{ forloop.index }}'>
                           <span class='cart__edit-text--edit'>{{ 'cart.general.edit' | t }}</span>
@@ -385,7 +385,7 @@ class ShopifyController extends Controller {
                     <td class='cart__update-wrapper cart-flex-item'>
                       <a href='/cart/change?line={{ forloop.index }}&amp;quantity=0' class='btn btn--small btn--secondary cart__remove medium-up--hide'>{{ 'cart.general.remove' | t }}</a>
                       <div class='cart__qty'>
-      <!--                   <label for='updates_{{ item.key }}' class='cart__qty-label'>{{ 'cart.label.quantity' | t }}</label> -->
+                        <!-- <label for='updates_{{ item.key }}' class='cart__qty-label'>{{ 'cart.label.quantity' | t }}</label> -->
                         <input class='cart__qty-input' type='text' id='updates_{{ item.key }}' value='{{ item.quantity }}' min='0' pattern='[0-9]*' disabled>
                         <input type='hidden' name='qtd_produto_{{ forloop.index }}' value='{{ item.quantity }}'>
                       </div>
@@ -397,7 +397,7 @@ class ShopifyController extends Controller {
                       {% for discount in item.discounts %}
                         <div class='cart-item__discount medium-up--hide'>{{ discount.title }}</div>
                       {% endfor %}
-      
+
                       <div class='cart__edit medium-up--hide'>
                         <button type='button' class='btn btn--secondary btn--small js-edit-toggle cart__edit--active' data-target='line{{ forloop.index }}'>
                           <span class='cart__edit-text--edit'>{{ 'cart.general.edit' | t }}</span>
