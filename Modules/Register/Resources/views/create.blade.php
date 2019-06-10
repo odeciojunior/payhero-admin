@@ -21,7 +21,7 @@
     <script src="{{asset('register/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('register/js/wow.min.js')}}"></script>
     <script src="{{asset('register/js/pesquisaCep.js')}}"></script>
-{{--    <script src="{{asset('register/js/Mootools.js')}}"></script>--}}
+    <script src="{{asset('register/js/Mootools.js')}}"></script>
 </head>
 <body>
 <section class="topbar">
@@ -445,22 +445,22 @@
                         </div>
                         <div class="col-lg-6 hidden-m d-flex justify-content-center">
                             <div class="project-card d-flex flex-column align-items-center hidden-m">
-                                <div class="justify-content-center text-center">
-                                  {{--  <div class="private-card-content">
+                                <div class="private-over justify-content-center text-center">
+                                    <div class="private-card-content">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
                                              viewBox="0 0 24 24">
                                             <path
                                                 d="M17 9.761v-4.761c0-2.761-2.238-5-5-5-2.763 0-5 2.239-5 5v4.761c-1.827 1.466-3 3.714-3 6.239 0 4.418 3.582 8 8 8s8-3.582 8-8c0-2.525-1.173-4.773-3-6.239zm-8-4.761c0-1.654 1.346-3 3-3s3 1.346 3 3v3.587c-.927-.376-1.938-.587-3-.587s-2.073.211-3 .587v-3.587zm3 17c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm2-6c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2z"/>
                                         </svg>
                                         <h4 class="bold">Privado</h4>
-                                    </div>--}}
+                                    </div>
                                 </div>
                                 <div class="card-img">
                                     <img class="card-img-top" src="{{asset('register/img/imgprojeto.png')}}">
                                 </div>
                                 <div class="card-body mt30">
                                     <h5 class="card-title">Nome do seu projeto</h5>
-                                    <p id="descriptionPreviewStandard" class="card-text sm-text gray"> Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
+                                    <p class="card-text sm-text gray"> Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
                                 </div>
                             </div>
                         </div>
@@ -533,16 +533,16 @@
                         </div>
                         <div class="col-lg-6 hidden-m d-flex justify-content-center">
                             <div class="project-card d-flex flex-column align-items-center hidden-m">
-                               {{-- <div class="private-over justify-content-center text-center">
+                                <div class="private-over justify-content-center text-center">
                                     <div class="private-card-content">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
                                              viewBox="0 0 24 24">
                                             <path
                                                 d="M17 9.761v-4.761c0-2.761-2.238-5-5-5-2.763 0-5 2.239-5 5v4.761c-1.827 1.466-3 3.714-3 6.239 0 4.418 3.582 8 8 8s8-3.582 8-8c0-2.525-1.173-4.773-3-6.239zm-8-4.761c0-1.654 1.346-3 3-3s3 1.346 3 3v3.587c-.927-.376-1.938-.587-3-.587s-2.073.211-3 .587v-3.587zm3 17c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm2-6c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2z"/>
                                         </svg>
---}}{{--                                        <h4 class="bold">Privado</h4>--}}{{--
+                                        <h4 class="bold">Privado</h4>
                                     </div>
-                                </div>--}}
+                                </div>
                                 <div class="card-img">
                                     <img class="card-img-top" src="{{asset('register/img/imgprojeto.png')}}">
                                 </div>
@@ -623,23 +623,231 @@
 
     });
 
-    $("#firstname").keyup(function () {
-        $("#nameError").hide();
-
-    });
-
-    $("#phone").keyup(function () {
-        $("#phoneError").hide();
-
-    });
-
     $(document).ready(function () {
 
-                @if(isset($erro))
-                    alert('{!! $erro !!}');
-                @endif
-            });
+        var div1Visible = $(".div1").is(':visible');
+        if (div1Visible) {
+            $(".btn-go").css('display', 'block');
+            $("#jump").css('display', 'none');
+            $("#btnBack").css('display', 'none');
 
-        </script>
-    </body>
+        }
+
+        // dados obrigatorios
+        var password = $("#password");
+        var email = $("#email");
+        var name = $('#firstname');
+        var phone = $("#phone");
+
+        // contagem das divs do registro
+        var contDiv = 1;
+        var contBack = 0;
+        var contProgress = 0;
+
+        ///// botão prosseguir
+        $("#btn-go").click(function () {
+            contProgressRegister();
+
+            buttonsVisible();
+
+        });
+
+        function buttonsVisible() {
+
+            console.log('achando valor: ' + contProgress);
+
+            if (contProgress == 640) {
+                $("#btn-go").css('display', 'none');
+            }
+
+            if (contProgress == 320) {
+                $("#jump").css('display', 'block');
+            }
+
+            // if(contProgress == 960){
+            //
+            // }
+
+            /// ESTA NA ULTIMA DIV
+            if (contProgress == 1280) {
+                $("#jump").css('display', 'none');
+                $(".progress").css('display', 'none');
+                $(".wrap-footer").css('display', 'none');
+                $(".toptitle").html('Parabéns cadastro finalizado com sucesso!')
+            }
+        }
+
+        /// button back
+        $(".back").click(function () {
+            if (contProgress <= 0) {
+                contProgress = 0;
+            } else {
+                contProgress -= 320;
+            }
+
+            buttonsVisible();
+
+            /// diminui o barra de progresso
+            progressBar(contProgress);
+
+            if (contBack > 0) {
+                $(".div" + contDiv).hide();
+                contDiv--;
+                $(".div" + contBack).show();
+                contBack--;
+
+            }
+
+            if (contProgress === 0) {
+                $("#btn-go").css('display', 'block');
+                $("#jump").css('display', 'none');
+                $("#btnBack").css('display', 'none');
+
+            }
+
+            if (contProgress === 320) {
+                $("#btnBack").css('display', 'block');
+                $("#btn-go").css('display', 'block');
+            }
+
+            if (contProgress === 640) {
+                $("#jump").css('display', 'block');
+            }
+
+            console.log('volta primeira pagina: ' + contProgress);
+        });
+
+        $("#jump").click(function () {
+            if (contProgress == 640) {
+                console.log('contDiv' + contDiv + '.....' + contProgress);
+                $(".div" + contDiv).hide();
+                contDiv += 3;
+                $(".div" + contDiv).show();
+                contBack += 2;
+
+                contProgress += 640;
+                progressBar(contProgress);
+
+                buttonsVisible();
+
+            }
+            if (contProgress == 320) {
+                $(".div" + contDiv).hide();
+                contDiv++;
+                $(".div" + contDiv).show();
+                contBack++;
+
+                contProgress += 320;
+                progressBar(contProgress);
+
+                buttonsVisible();
+            }
+
+        });
+
+        //
+        function contProgressRegister() {
+            console.log(password.val());
+            if (!password.val()) {
+                $("#passwordError").show();
+
+            }
+            console.log(email.val());
+            if (!email.val()) {
+                $("#emailError").show();
+
+            }
+            console.log(name.val());
+            if (!name.val()) {
+                $("#nameError").show();
+            }
+
+            console.log(phone.val());
+            if (!phone.val()) {
+                $("#phoneError").show();
+            }
+
+            if (password.val() && email.val() && name.val() && email.val() && phone.val()) {
+                console.log(contProgress);
+                contProgress += 320;
+                progressBar(contProgress);
+
+                if (contDiv < 6) {
+                    $(".div" + contDiv).hide();
+                    contDiv++;
+                    $(".div" + contDiv).show();
+                    contBack++;
+                }
+            }
+
+            if (contProgress === 640) {
+                $("#btnBack").css('display', 'block');
+            } else if (contProgress === 320) {
+                $("#btnBack").css('display', 'block');
+                $("#btn-go").css('display', 'block');
+            }
+
+        }
+
+        // barra de progresso cadastro
+        var bar = $("#progress-bar-register");
+        function progressBar(value) {
+            console.log('progress bar: ' + value);
+            bar.width(value);
+
+        }
+
+        ///  radio button escolhe tipo de projeto
+        $("#btnBrasil").click(function () {
+            $("#eua-form").hide();
+            $("#brasil-form").show();
+
+        });
+
+        $("#btnUSA").click(function () {
+            $("#brasil-form").hide();
+            $("#eua-form").show();
+        });
+
+        $("#project-default").click(function () {
+            contProgress += 320;
+            progressBar(contProgress);
+            $('.div' + contDiv).hide();
+            contDiv++;
+            $("#standard-project").show();
+            contBack++;
+
+            $("#btn-go").css('display', 'block');
+            $("#jump").css('display', 'none');
+            $("#btnBack").css('display', 'block');
+
+        });
+
+        $("#project-shopify").click(function () {
+            contProgress += 320;
+            progressBar(contProgress);
+            $('.div' + contDiv).hide();
+            contDiv++;
+            $("#shopify-project").show();
+            contBack++;
+
+            $(".btn-go").css('display', 'block');
+            $("#jump").css('display', 'block');
+            $("#btnBack").css('display', 'block');
+
+        });
+
+    });
+
+    ///// MASCARA CNPJ/CPF
+    var options = {
+        onKeyPress: function (identificatioNumber, e, field, options) {
+            var masks = ['000.000.000-000', '00.000.000/0000-00'];
+            var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
+            $('#identificatioNumber').mask(mask, options);
+        }
+    };
+
+    $('#identificatioNumber').mask('000.000.000-000', options);
+</script>
 </html>
