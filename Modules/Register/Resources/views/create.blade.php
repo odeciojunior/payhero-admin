@@ -5,23 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Finalize seu cadastro | CloudFox </title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('register/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('register/css/animate.css')}}">
     <link rel="stylesheet" href="{{asset('register/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('register/css/jquery-ui.min.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
     {{--    <script src = "https://ajax.googleapis.com/ajax/libs/prototype/1.7.2.0/prototype.js"> </script>--}}
-    <script src="{{asset('register/js/jquery-ui.min.js')}}"></script>
-    <script src="{{asset('register/js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('register/js/wow.min.js')}}"></script>
-    <script src="{{asset('register/js/pesquisaCep.js')}}"></script>
-    <script src="{{asset('register/js/register.js')}}"></script>
 </head>
 <body>
 <section class="topbar">
@@ -41,6 +38,7 @@
     <div class="container">
         <div class="wrap">
             <form class="mt10">
+                <input type='hidden' id='invite' value='{{$invite->id}}'>
                 <div id="login" class="div1">
                     <h4 class="bold title-content">Confirme seus dados</h4>
                     <p class="desc"> Esses são os dados que recebemos na sua solicitação de convite. Confirme ou corrija-os.
@@ -90,30 +88,39 @@
                             <p class="sm-text">Evite senhas usadas em outros sites e que sejam fáceis de identificar.</p>
                             <div class="progress align-items-center justify-content-between">
                                 </span>
-                                <div class="progress-bar password-progress" role="progressbar" aria-valuenow="25"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: 10%;"></div>
-                                <span class="bold ml15 text-progress" id="text-password"> Fraco</span>
+                                <div class="progress-bar" id='progress-password' role="progressbar" aria-valuenow="25"
+                                     aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                <span class="bold ml15 text-progress" id="text-password"> </span>
                             </div>
                         </div>
                         <div class="col-lg-5 justify-content-center">
                             <div class="password-tip">
                                 <h5> Sua senha deve conter: </h5>
                                 <div class="passtip-item mt10 d-flex align-items-center">
-                                        <span class="check"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                  height="24" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>
-                                            </svg> </span>
+                                    <span id='number-count-correct' class="check" style='display:none;'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                             height="24" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>
+                                        </svg>
+                                    </span>
+                                    <span id='number-count-incorrect' class="check">
+                                        <svg class="wrong" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style='fill:#D30D0C'>
+                                            <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5 15.538l-3.592-3.548 3.546-3.587-1.416-1.403-3.545 3.589-3.588-3.543-1.405 1.405 3.593 3.552-3.547 3.592 1.405 1.405 3.555-3.596 3.591 3.55 1.403-1.416z"/>
+                                        </svg>
+                                    </span>
                                     <span> 8 ou mais caracteres </span>
                                 </div>
-                                <div class="passtip-item d-flex align-items-center">
-                                    <span class="check"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                              height="24" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>
-                                            </svg> </span>
-                                    <span> Pelo menos uma letra maiúscula </span>
-                                </div>
+                                {{--                                <div class="passtip-item d-flex align-items-center">--}}
+                                {{--                                    <span class="check">--}}
+                                {{--                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"--}}
+                                {{--                                             height="24" viewBox="0 0 24 24">--}}
+                                {{--                                                <path--}}
+                                {{--                                                    d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>--}}
+                                {{--                                        </svg>--}}
+                                {{--                                    </span>--}}
+                                {{--                                    <span> Pelo menos uma letra maiúscula </span>--}}
+                                {{--                                </div>--}}
                                 <div class="passtip-item d-flex align-items-center">
                                     <span class="check"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                               height="24" viewBox="0 0 24 24">
@@ -147,7 +154,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="brasil-form">
+                    <div id="brasil-form" style='display:none;'>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
@@ -158,8 +165,8 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="lastname">Nome Fantasia</label>
-                                    <input type="text" name="lastname" id="lastname"
+                                    <label for="fantasyname">Nome Fantasia</label>
+                                    <input type="text" name="fantasyname" id="fantasyname"
                                            placeholder="Digite o nome fantasia" required>
                                 </div>
                             </div>
@@ -167,8 +174,8 @@
                         <div class="row mt30">
                             <div class="col-lg-3">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="cep">CEP</label>
-                                    <input type="text" name="cep" id="cep" placeholder="Digite o CEP" onblur='pesquisacep(this.value)'
+                                    <label for="zip_code">CEP</label>
+                                    <input type="text" name="zip_code" id="zip_code" placeholder="Digite o CEP" onblur='pesquisacep(this.value)'
                                            required>
                                 </div>
                             </div>
@@ -214,7 +221,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="firstname">Legal Business Name</label>
+                                    <label for="name">Legal Business Name</label>
                                     <input type="text" name="cpf-cnpj" id="cpf-cnpj"
                                            placeholder="Enter your Legal Business Name" required>
                                 </div>
@@ -391,15 +398,13 @@
                                 <div class="col-lg-12 mt20">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="project_name_standard">Nome</label>
-                                        <input type="text" name="project_name_standard" id="project_name_standard" placeholder="Digite o
-                                        nome do projeto" required>
+                                        <input type="text" name="project_name_standard" id="project_name_standard" placeholder="Digite o nome do projeto" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="project_desc_standard">Descrição</label>
-                                        <textarea type="text" name="project_desc_standard" id="project_desc_standard" placeholder="Digite
-                                        uma breve apresentação do projeto" required></textarea>
+                                        <textarea type="text" name="project_desc_standard" id="project_desc_standard" placeholder="Digite uma breve apresentação do projeto" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -414,7 +419,7 @@
                                             </svg>
                                             Upload
                                         </label>
-                                        <input id="file-upload" type="file"/></div>
+                                        <input id="file-upload" name='photo' type="file"/></div>
                                     <p class="sm-text gray"> Indicamos uma imagem 500x500
                                         <br> JPG, JPEG ou PNG de até 2MB</p>
                                 </div>
@@ -425,11 +430,12 @@
                         <div class="col-lg-6 hidden-m d-flex justify-content-center">
                             <div class="project-card d-flex flex-column align-items-center hidden-m">
                                 <div class="card-img">
-                                    <img class="card-img-top" src="{{asset('register/img/imgprojeto.png')}}">
+                                    <img class="card-img-top image_standard" src="{{asset('register/img/imgprojeto.png')}}" style='height:240px; width:240px;'>
                                 </div>
                                 <div class="card-body mt30">
                                     <h5 id='name_preview_standard ' class="card-title">Nome do seu projeto</h5>
-                                    <p id='description_preview_standard' class="card-text sm-text gray">Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
+                                    <p id='description_preview_standard' class="card-text sm-text gray">
+                                        Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
                                 </div>
                             </div>
                         </div>
@@ -444,25 +450,22 @@
                             <div class="row">
                                 <div class="col-lg-12 mt20">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="project_name" class="d-flex justify-content-center">
+                                        <label for="project_shopify_token" class="d-flex justify-content-center">
                                             Token Shopify
                                         </label>
-                                        <input type="text" name="project_name" id="project_name" placeholder="Insira o
-                                        token do Shopify" required>
+                                        <input type="text" name="project_shopify_token" id="project_shopify_token" placeholder="Insira o token do Shopify" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="project_name_shopify">Nome</label>
-                                        <input type="text" name=project_name_" id="project_name_shopify" placeholder="Digite o
-                                        nome do projeto" required>
+                                        <input type="text" name="project_name_shopify" id="project_name_shopify" placeholder="Digite o nome do projeto" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="project_desc_shopify">Descrição</label>
-                                        <textarea type="text" name="project_desc_shopify" id="project_desc_shopify" placeholder="Digite
-                                        uma breve apresentação do projeto" required></textarea>
+                                        <textarea type="text" name="project_desc_shopify" id="project_desc_shopify" placeholder="Digite uma breve apresentação do projeto" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -477,7 +480,7 @@
                                             </svg>
                                             Upload
                                         </label>
-                                        <input id="file-upload" type="file"/></div>
+                                        <input id="file-upload-shopify" type="file"/></div>
                                     <p class="sm-text gray"> Indicamos uma imagem 500x500
                                         <br> JPG, JPEG ou PNG de até 2MB</p>
                                 </div>
@@ -496,7 +499,7 @@
                                     </div>
                                 </div>--}}
                                 <div class="card-img">
-                                    <img class="card-img-top" src="{{asset('register/img/imgprojeto.png')}}">
+                                    <img class="card-img-top image-shopify" src="{{asset('register/img/imgprojeto.png')}}" style='height:240px; width:240px;'>
                                 </div>
                                 <div class="card-body mt30">
                                     <h5 id='name_preview_shopify' class="card-title">Nome do seu projeto</h5>
@@ -555,7 +558,12 @@
         </div>
     </div>
 </footer>
-</body>
+<script src="{{asset('register/js/jquery-ui.min.js')}}"></script>
+<script src="{{asset('register/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('register/js/wow.min.js')}}"></script>
+<script src="{{asset('register/js/pesquisaCep.js')}}"></script>
+<script src="{{asset('register/js/register.js')}}"></script>
+<script src="{{asset('register/js/passwordStrength.js')}}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
 <script>
     // MASCARA CNPJ/CPF
@@ -576,16 +584,67 @@
     // mascara numero telefone
     $("#phone").mask("(00) 0000-00009");
 
+    // alert(contProgress);
 
+    $(document).ready(function () {
+        if (window.File && window.FileList && window.FileReader) {
+            $("#file-upload").on("change", function (e) {
+                var files = e.target.files;
+                var filesLength = files.length;
+                for (var i = 0; i < filesLength; i++) {
+                    var f = files[i];
+                    if (/\.(jpe?g|png)$/i.test(f.name)) {
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function (e) {
+                            var file = e.target;
+                            $(".image_standard").attr('src', e.target.result);
+                        });
 
-    ///// replica texto na criação do projeto standard
+                        fileReader.readAsDataURL(f);
+                        // verificaImagemPerfil();
+                    }
 
-    $("#project_name_shopify").keydown(function () {
-        $("#name_preview_shopify").text($("#project_name_shopify").val());
+                }
+            });
+        } else {
+            alert("Your Browser doesn't support to File API");
+        }
+
+    });
+    $(document).ready(function () {
+        if (window.File && window.FileList && window.FileReader) {
+            $("#file-upload-shopify").on("change", function (e) {
+                var filesShopify = e.target.files;
+                var filesLengthShopify = filesShopify.length;
+                for (var i = 0; i < filesLengthShopify; i++) {
+                    var fS = filesShopify[i];
+                    if (/\.(jpe?g|png)$/i.test(fS.name)) {
+                        var fileReaderS = new FileReader();
+                        fileReaderS.onload = (function (et) {
+                            var fileSH = et.target;
+                            $(".image-shopify").attr('src', et.target.result);
+                        });
+
+                        fileReaderS.readAsDataURL(fS);
+                        // verificaImagemPerfil();
+                    }
+
+                }
+            });
+        } else {
+            alert("Your Browser doesn't support to File API");
+        }
+
     });
 
-    $("#project_desc_shopify").keydown(function () {
-        $("#description_preview_shopify").value($("#project_desc_shopify").val());
-    });
+    function verificaImagemPerfil() {
+        let files = $("#file-upload").val();
+        if (files !== null && files !== '' && files !== 'undefined') {
+            $('#file-upload').hide("slow");
+        } else {
+            $('#file-upload').show("slow");
+        }
+    }
 </script>
+</body>
 </html>

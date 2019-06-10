@@ -1,4 +1,4 @@
-$(function () {
+$(document).ready(function () {
 
     //keyUp para verificar preenchimento senha e email
     $("#password").keyup(function () {
@@ -10,17 +10,15 @@ $(function () {
 
     });
 
+    ///// replica texto na criação do projeto standard
 
+    $("#project_desc_standard").keydown(function () {
+        $("#description_preview_standard").text($("#project_desc_standard").val());
+    });
 
-    /////////////////
-
-    var div1Visible = $(".div1").is(':visible');
-    if (div1Visible) {
-        $(".btn-go").css('display', 'block');
-        $("#jump").css('display', 'none');
-        $("#btnBack").css('display', 'none');
-
-    }
+    $("#project_name_standard").keydown(function () {
+        $("#name_preview_standard").value($("#project_name_standard").val());
+    });
 
     // dados obrigatorios
     var password = $("#password");
@@ -35,6 +33,7 @@ $(function () {
 
     ///// botão prosseguir
     $("#btn-go").click(function () {
+
         contProgressRegister();
 
         buttonsVisible();
@@ -102,12 +101,12 @@ $(function () {
             $(".div5").css('display', 'none');
         }
 
-        console.log('volta primeira pagina: ' + contProgress);
+        // console.log('volta primeira pagina: ' + contProgress);
     });
 
     $("#jump").click(function () {
         if (contProgress == 640) {
-            console.log('contDiv' + contDiv + '.....' + contProgress);
+            // console.log('contDiv' + contDiv + '.....' + contProgress);
             $(".div" + contDiv).hide();
             contDiv += 3;
             $(".div" + contDiv).show();
@@ -135,28 +134,37 @@ $(function () {
 
     //
     function contProgressRegister() {
-        console.log(password.val());
+        // console.log(password.val());
         if (!password.val()) {
             $("#passwordError").show();
 
         }
-        console.log(email.val());
+        // console.log(email.val());
         if (!email.val()) {
             $("#emailError").show();
 
         }
-        console.log(name.val());
+        // console.log(name.val());
         if (!name.val()) {
             $("#nameError").show();
         }
 
-        console.log(phone.val());
+        // console.log(phone.val());
         if (!phone.val()) {
             $("#phoneError").show();
         }
 
         if (password.val() && email.val() && name.val() && email.val() && phone.val()) {
-            console.log(contProgress);
+            // console.log('asdasd' + contProgress);
+            //metodo ajax dados do usuario
+
+            // alert(contProgress);
+
+            if (contProgress === 0) {
+                saveUser();
+            }
+
+            // console.log(contProgress);
             contProgress += 320;
             progressBar(contProgress);
 
@@ -196,7 +204,7 @@ $(function () {
     // barra de progresso cadastro
     var bar = $("#progress-bar-register");
     function progressBar(value) {
-        console.log('progress bar: ' + value);
+        // console.log('progress bar: ' + value);
         bar.width(value);
 
     }
@@ -240,6 +248,134 @@ $(function () {
         $("#btnBack").css('display', 'block');
 
     });
+
+    //ajax save user
+    function saveUser() {
+        let firstName = $('#firstname').val();
+        let lastName = $('#lastname').val();
+        let email = $('#email').val();
+        let phone = $('#phone').val();
+        let password = $('#password').val();
+        let invite = $('#invite').val();
+
+        $.ajax({
+            method: "POST",
+            url: "/register/",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                name: firstName + ' ' + lastName,
+                email: email,
+                celphone: phone,
+                password: password,
+                invite: invite
+            },
+            error: function () {
+                //
+            },
+            success: function (data) {
+
+            }
+
+        });
+
+    }
+
+    //
+    function saveEmpresaBr() {
+        let country = $('#options').val();
+        let fantasyname = $('#fantasyname').val();
+        let zip_code = $('#zip_code').val();
+        let street = $('#logradouro').val();
+        let number = $('#numero').val();
+        let neighborhood = $('#bairro').val();
+        let state = $('#estado').val();
+        let city = $('#cidade').val();
+
+        $.ajax({
+            method: "POST",
+            url: "/register/",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                country: country,
+                fantasyname: fantasyname,
+                zip_code: zip_code,
+                street: street,
+                number: number,
+                neighborhood: neighborhood,
+                state: state,
+                city: city,
+            },
+            error: function () {
+                //
+            },
+            success: function (data) {
+
+            }
+
+        });
+    }
+
+    function saveEmpresaUSA() {
+
+    }
+
+    function saveProjectStandard() {
+        let name = $('#project_name_standard').val();
+        let description = $('#project_desc_standard').val();
+        let photo = $('#file-upload').val();
+
+        $.ajax({
+            method: "POST",
+            url: "/register/",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                photo: photo,
+                name: name,
+                description: description,
+
+            },
+            error: function () {
+                //
+            },
+            success: function (data) {
+
+            }
+
+        });
+    }
+
+    function saveProjectShopify() {
+        let name = $('#project_name_shopify').val();
+        let description = $('#project_desc_standard').val();
+        let photo = $('#file-upload').val();
+
+        $.ajax({
+            method: "POST",
+            url: "/register/",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                photo: photo,
+                name: name,
+                description: description,
+
+            },
+            error: function () {
+                //
+            },
+            success: function (data) {
+
+            }
+
+        });
+    }
 
 });
 
