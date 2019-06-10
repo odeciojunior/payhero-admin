@@ -68,3 +68,6 @@ package-lock.json
 ### vscode .history ###
 .history
 
+### TesteController ###
+app/Http/Controllers/Dev/TesteController.php
+

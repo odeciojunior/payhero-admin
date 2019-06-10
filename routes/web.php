@@ -22,6 +22,19 @@ Route::get('/terms', function () {
     return view('terms.terms');
 });
 
+Route::group(
+    [
+        'prefix'     => 'dev',
+        'as'         => 'dev.',
+        'middleware' => ['web', 'auth'],
+        'namespace'  => '\App\Http\Controllers\Dev',
+    ],
+    function() {
+        // rotas autenticadas
+        Route::resource('/teste', 'TesteController')->names('teste');
+    }
+);
+
 
 Auth::routes();
 
