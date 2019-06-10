@@ -63,7 +63,6 @@ class InvitesController extends Controller
      */
     public function index()
     {
-
         $invites = $this->invitation->where('invite', auth()->user()->id)->get();
 
         foreach ($invites as $invite) {
