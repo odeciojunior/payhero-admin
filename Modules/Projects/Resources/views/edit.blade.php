@@ -195,19 +195,19 @@
         <div class="row">
             <div class="form-group col-6 col-xs-12">
                 <label for="qtd_parcelas">Qtd de parcelas (cartão de  crédito)</label>
-                <select name="installment_amount" class="form-control">
-                    <option value="1" {!! $project['installment_amount'] == '1' ? 'selected' : '' !!}>1</option>
-                    <option value="2" {!! $project['installment_amount'] == '2' ? 'selected' : '' !!}>2</option>
-                    <option value="3" {!! $project['installment_amount'] == '3' ? 'selected' : '' !!}>3</option>
-                    <option value="4" {!! $project['installment_amount'] == '4' ? 'selected' : '' !!}>4</option>
-                    <option value="5" {!! $project['installment_amount'] == '5' ? 'selected' : '' !!}>5</option>
-                    <option value="6" {!! $project['installment_amount'] == '6' ? 'selected' : '' !!}>6</option>
-                    <option value="7" {!! $project['installment_amount'] == '7' ? 'selected' : '' !!}>7</option>
-                    <option value="8" {!! $project['installment_amount'] == '8' ? 'selected' : '' !!}>8</option>
-                    <option value="9" {!! $project['installment_amount'] == '9' ? 'selected' : '' !!}>9</option>
-                    <option value="10" {!! $project['installment_amount'] == '10' ? 'selected' : '' !!}>10</option>
-                    <option value="11" {!! $project['installment_amount'] == '11' ? 'selected' : '' !!}>11</option>
-                    <option value="12" {!! $project['installment_amount'] == '12' ? 'selected' : '' !!}>12</option>
+                <select name="installments_amount" class="form-control">
+                    <option value="1" {!! $project['installments_amount'] == '1' ? 'selected' : '' !!}>1</option>
+                    <option value="2" {!! $project['installments_amount'] == '2' ? 'selected' : '' !!}>2</option>
+                    <option value="3" {!! $project['installments_amount'] == '3' ? 'selected' : '' !!}>3</option>
+                    <option value="4" {!! $project['installments_amount'] == '4' ? 'selected' : '' !!}>4</option>
+                    <option value="5" {!! $project['installments_amount'] == '5' ? 'selected' : '' !!}>5</option>
+                    <option value="6" {!! $project['installments_amount'] == '6' ? 'selected' : '' !!}>6</option>
+                    <option value="7" {!! $project['installments_amount'] == '7' ? 'selected' : '' !!}>7</option>
+                    <option value="8" {!! $project['installments_amount'] == '8' ? 'selected' : '' !!}>8</option>
+                    <option value="9" {!! $project['installments_amount'] == '9' ? 'selected' : '' !!}>9</option>
+                    <option value="10" {!! $project['installments_amount'] == '10' ? 'selected' : '' !!}>10</option>
+                    <option value="11" {!! $project['installments_amount'] == '11' ? 'selected' : '' !!}>11</option>
+                    <option value="12" {!! $project['installments_amount'] == '12' ? 'selected' : '' !!}>12</option>
                 </select>
             </div>
             <div class="col-6 col-xs-12">

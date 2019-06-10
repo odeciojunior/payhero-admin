@@ -6,7 +6,6 @@ npm-debug.log
 # Laravel 4 specific
 bootstrap/compiled.php
 app/storage/
-/storage/
 
 # Laravel 5 & Lumen specific
 public/storage
@@ -65,3 +64,5 @@ storage/framework/cache/data/.gitignore
 *.icloud
 *.DS_Store
 package-lock.json
+
+.history

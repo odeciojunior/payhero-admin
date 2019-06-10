@@ -278,8 +278,8 @@
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{{ route('invites') }}">
-        <img src="{{ asset('assets/img/svg/convites.svg') }}">
+        <a class="animsition-link" href="{{ route('invitations.invites') }}">
+            <i class="site-menu-icon wb-user-add" aria-hidden="true"></i>
             <span class="site-menu-title">Convites</span>
         </a>
       </li>
