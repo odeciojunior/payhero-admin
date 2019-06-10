@@ -64,3 +64,7 @@ storage/framework/cache/data/.gitignore
 *.icloud
 *.DS_Store
 package-lock.json
+
+### vscode .history ###
+.history
+
