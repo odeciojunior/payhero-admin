@@ -23,7 +23,6 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
-
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\TextNode;
@@ -330,7 +329,8 @@ class ShopifyController extends Controller
 
                     });
 
-                  });"));
+                  });
+        "));
         $form->addChild($script);
 
         return $dom->root->outerHtml();

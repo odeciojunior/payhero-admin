@@ -9,9 +9,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" href="{{ asset('adminremark/assets/images/cloudfox_logo.png') }}">
+     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
 
     <title>Cloudfox</title>
- 
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/css/bootstrap-extend.min.css') }}">
@@ -41,33 +42,41 @@
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/weather-icons/weather-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/brand-icons/brand-icons.min.css') }}">
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">    
     <link rel="stylesheet" href="{{ asset('jquery-imgareaselect/css/imgareaselect-default.css') }}">
-    <script src="{{ asset('adminremark/global/vendor/jquery/jquery.js') }}"></script>
 
-    <!-- Datatables -->
-    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <!-- New CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/new-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/new-site.css') }}">
 
     <!-- Scripts -->
+    <script src="{{ asset('adminremark/global/vendor/jquery/jquery.min.js') }}"></script>  
     <script src="{{ asset('adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
       Breakpoints();
     </script>
+
+    <!-- Datatables -->
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
   </head>
   <body class="animsition site-navbar-small dashboard">
 
     <div class="loading">
         <div class="loader"></div>
     </div>
- 
+
+    <style> 
+        body { font-family: 'Muli', sans-serif !important;}
+    </style>
+
     @include("layouts.menu-lateral")
 
     @yield('content')
 
-    <footer class="site-footer">
+    <!-- <footer class="site-footer">
         <div class="site-footer-right">© 2019 - CloudFox | help@cloudfox.app - <a href="/terms" target="_blank" style="color:#e54724">Terms & Conditions</a></div>
-
-    </footer>
+    </footer> -->
 
     <!-- Core  -->
     <script src="{{ asset('adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
@@ -77,7 +86,7 @@
     <script src="{{ asset('adminremark/global/vendor/mousewheel/jquery.mousewheel.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
-    
+
     <!-- Plugins -->
     <script src="{{ asset('adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/switchery/switchery.js') }}"></script>
@@ -97,12 +106,12 @@
     <script src="{{ asset('adminremark/global/js/Plugin/tabs.js') }}"></script>
     <script src="{{ asset('adminremark/global/vendor/masonry/masonry.pkgd.min.js') }}"></script>
     <script src="{{ asset('adminremark/global/js/Plugin/masonry.js') }}"></script>
-    
+
     <script src="{{ asset('adminremark2/assets/js/Section/Menubar.js') }}"></script>
     <script src="{{ asset('adminremark2/assets/js/Section/Sidebar.js') }}"></script>
     <script src="{{ asset('adminremark2/assets/js/Section/PageAside.js') }}"></script>
     <script src="{{ asset('adminremark2/assets/js/Section/GridMenu.js') }}"></script>
-    
+
     <!-- Config -->
     <script src="{{ asset('adminremark/global/js/config/colors.js') }}"></script>
     <script src="{{ asset('adminremark2/assets/js/config/tour.js') }}"></script>

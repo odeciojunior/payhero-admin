@@ -5,56 +5,139 @@
 
 @endsection
 
+
 <div class="page">
-  <div class="page-content container-fluid">
+  <div class="page-content container">
 
     <h1 style="margin-bottom: 40px" class="page-title">Dashboard</h1>
   
-    <div class="row" style="margin-bottom: 10px">
+<div class="row">
 
-      <div class="col-lg-4" style="border-radius: 5px;">
-        <div class="card card-shadow" style="border-radius: 5px;">
-          <div class="card-header bg-white p-10" style="color: gray;border-radius: 5px;">
-            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left">
-            <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
-              Saldo disponível
+        
+      <div class="col-lg-4" >
+        <div class="card card-shadow bg-white"> 
+
+          <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
+          <div class="font-size-14 gray-600">
+            <img src="{{ asset('assets/img/svg/moeda.svg') }}" width="35px">
+              <span class="card-desc">Saldo disponível</span>
             </div>
-            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $available_balance !!}</b></div>
           </div>
-          <div style="height:10px;background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);">
+
+            <div class="font-size-24 text-center d-flex align-items-topline justify-content-center" style="margin:20px 0 15px 0">
+              <span class="moeda">R$</span> <span class="text-money">{!! $available_balance !!}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="indices row justify-content-center align-items-center">
+              <div class="col-4">
+                <div class="d-flex justify-content-around">
+                  <img src="{{ asset('assets/img/svg/arrow.svg') }}">
+                  <span class="card-p"> +24% ao dia </span>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="d-flex justify-content-around">
+                  <img src="{{ asset('assets/img/svg/arrow-down.svg') }}">
+                  <span class="card-p"> -2% ao dia </span>
+                </div>
+              </div>
+              
+            </div>
+
+            <div class="card-bottom"> </div>
+
+
           </div>
         </div>
-      </div>
 
-      <div class="col-lg-4 info-panel" style="border-radius: 5px;">
-        <div class="card card-shadow" style="border-radius: 5px;">
-          <div class="card-header bg-white p-10" style="color: gray;border-radius: 5px;">
-            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left;">
-            <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
-              Saldo a receber
+
+        <div class="col-lg-4" >
+        <div class="card card-shadow bg-white"> 
+
+          <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
+          <div class="font-size-14 gray-600">
+            <img src="{{ asset('assets/img/svg/moeda-azul.svg') }}" width="35px">
+              <span class="card-desc">Saldo a receber</span>
             </div>
-            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $future_balance !!}</b></div>
           </div>
-          <div style="height:10px;background-image: linear-gradient(to right, #5849e2, #51c4ec);">
+
+            <div class="font-size-24 text-center d-flex align-items-topline justify-content-center" style="margin:20px 0 15px 0">
+              <span class="moeda">R$</span> <span class="text-money">{!! $future_balance !!}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="indices row justify-content-center align-items-center">
+              <div class="col-4">
+                <div class="d-flex justify-content-around">
+                  <img src="{{ asset('assets/img/svg/arrow.svg') }}">
+                  <span class="card-p"> +24% ao dia </span>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="d-flex justify-content-around">
+                  <img src="{{ asset('assets/img/svg/arrow-down.svg') }}">
+                  <span class="card-p"> -2% ao dia </span>
+                </div>
+              </div>
+              
+            </div>
+
+            <div class="card-bottom blue"> </div>
+
+
           </div>
         </div>
-      </div>
 
-      <div class="col-lg-4 info-panel" style="border-radius: 5px;">
-        <div class="card card-shadow" style="border-radius: 5px;">
-          <div class="card-header bg-white p-10" style="color: gray;border-radius: 5px;">
-            <img src="{{ asset('assets/img/saldos.png') }}" style="width: 12%;position: relative; float: left">
-            <div class="font-size-12 gray-600" style="margin: 10px 0 0 50px">
-              Disponível para antecipação
+
+        <div class="col-lg-4" >
+        <div class="card card-shadow bg-white"> 
+
+          <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
+          <div class="font-size-14 gray-600">
+            <img src="{{ asset('assets/img/svg/moeda-laranja.svg') }}" width="35px">
+              <span class="card-desc">Disponível para antecipação</span>
             </div>
-            <div class="font-size-24 text-center" style="margin:20px 0 15px 0">R$ <b>{!! $future_balance !!}</b></div>
           </div>
-          <div style="height:10px;background-image: linear-gradient(to left, #fad961, #f76b1c);">
+
+            <div class="font-size-24 text-center d-flex align-items-topline justify-content-center" style="margin:20px 0 15px 0">
+              <span class="moeda">R$</span> <span class="text-money">{!! $future_balance !!}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="indices row justify-content-center align-items-center">
+              <div class="col-4">
+                <div class="d-flex justify-content-around">
+                  <img src="{{ asset('assets/img/svg/arrow.svg') }}">
+                  <span class="card-p"> +24% ao dia </span>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="d-flex justify-content-around">
+                  <img src="{{ asset('assets/img/svg/arrow-down.svg') }}">
+                  <span class="card-p"> -2% ao dia </span>
+                </div>
+              </div>
+              
+            </div>
+
+            <div class="card-bottom orange"> </div>
+
+
           </div>
         </div>
-      </div>
+        
+        
 
-    </div>
+</div>
+
+
 
     <div class="row" style="margin-top: 20px">
       <div class="col-xl-3 col-md-6 info-panel">
@@ -119,10 +202,10 @@
     </div>
 
     <div style="width: 100%; text-align: center">
-      <h3 style="margin-bottom: 20px">Últimas vendas</h3>
+      <h3 style="margin-bottom: 20px" class="page-title">Últimas vendas</h3>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
 
       <div class="col-xl-6 col-lg-6 col-md-6 h-p50 h-only-lg-p100 h-only-xl-p100">
         <div id="mapa" style="height:440px">
@@ -144,7 +227,7 @@
           </table>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
  

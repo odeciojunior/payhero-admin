@@ -3615,7 +3615,7 @@
                                 alertPersonalizado('error', 'dados informados inválidos');
                                 return false;
                             }
-                            if(($("#shipping_type_edit").val() == 'static' && $("#shipping_value_edit").val() == '') || ($("#shipping_type_edit").val() != 'static' && $("#shipping_zip_code_origin").val() == '')){
+                            if(($("#shipping_type_edit").val() == 'static' && $("#shipping_value_edit").val() == '') || ($("#shipping_type_edit").val() != 'static' && $("#shipping_zip_code_origin_edit").val() == '')){
                                 alertPersonalizado('error', 'dados informados inválidos');
                                 return false;
                             }
