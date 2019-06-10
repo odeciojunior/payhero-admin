@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\ModelEnumTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Invitation extends Model
 {
+    use ModelEnumTrait;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -43,6 +45,12 @@ class Invitation extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    private $enum = [
+        'status' => [
+            1 => 'sent_invite',
+        ],
     ];
 
     /**
