@@ -21,7 +21,7 @@
     <script src="{{asset('register/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('register/js/wow.min.js')}}"></script>
     <script src="{{asset('register/js/pesquisaCep.js')}}"></script>
-    <script src="{{asset('register/js/Mootools.js')}}"></script>
+{{--    <script src="{{asset('register/js/Mootools.js')}}"></script>--}}
 </head>
 <body>
 <section class="topbar">
