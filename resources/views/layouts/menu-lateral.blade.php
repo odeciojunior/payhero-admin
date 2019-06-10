@@ -285,14 +285,14 @@
       </li>
 
       <li class="site-menu-item has-sub">
-        <a class="animsition-link  lh-10" href="{{ route('invites') }}">
+        <a class="animsition-link  lh-10" href="#">
         <img src="">
             <span class="site-menu-title footer-nav-link">Suporte</span>
         </a>
       </li>
 
       <li class="site-menu-item has-sub ">
-        <a class="animsition-link lh-10" href="{{ route('invites') }}">
+        <a class="animsition-link lh-10" href="#">
         <img src="">
             <span class="site-menu-title footer-nav-link">Termos e Políticas</span>
         </a>
