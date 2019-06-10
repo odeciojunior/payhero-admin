@@ -21,7 +21,7 @@
     <script src="{{asset('register/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('register/js/wow.min.js')}}"></script>
     <script src="{{asset('register/js/pesquisaCep.js')}}"></script>
-    <script src="{{asset('register/js/Mootools.js')}}"></script>
+    <script src="{{asset('register/js/register.js')}}"></script>
 </head>
 <body>
 <section class="topbar">
@@ -184,7 +184,7 @@
                             <div class="col-lg-2">
                                 <div class="input-holder d-flex flex-column">
                                     <label for="numero">Nº</label>
-                                    <input type="number" name="numero" id="numero" required>
+                                    <input type="text" name="numero" id="numero" required>
                                 </div>
                             </div>
                             <div class="col-lg-4">
@@ -199,12 +199,6 @@
                                     <label for="estado">Estado</label>
                                     <input type="text" name="estado" id="estado" placeholder="Digite a cidade"
                                            required>
-                                    {{--                                    <select name="estado" id="estado" required>--}}
-                                    {{--                                        <option value="RS">Rio Grande do Sul</option>--}}
-                                    {{--                                        <option value="SP">São Paulo</option>--}}
-                                    {{--                                        <option value="RJ">Rio de Janeiro</option>--}}
-                                    {{--                                        <option value="MG">Minas Gerais</option>--}}
-                                    {{--                                    </select>--}}
                                 </div>
                             </div>
                             <div class="col-lg-4">
@@ -396,15 +390,15 @@
                             <div class="row">
                                 <div class="col-lg-12 mt20">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="project_name">Nome</label>
-                                        <input type="text" name="project_name" id="project_name" placeholder="Digite o
+                                        <label for="project_name_standard">Nome</label>
+                                        <input type="text" name="project_name_standard" id="project_name_standard" placeholder="Digite o
                                         nome do projeto" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="project_desc">Descrição</label>
-                                        <textarea type="text" name="project_desc" id="project_desc" placeholder="Digite
+                                        <label for="project_desc_standard">Descrição</label>
+                                        <textarea type="text" name="project_desc_standard" id="project_desc_standard" placeholder="Digite
                                         uma breve apresentação do projeto" required></textarea>
                                     </div>
                                 </div>
@@ -425,42 +419,17 @@
                                         <br> JPG, JPEG ou PNG de até 2MB</p>
                                 </div>
                                 <div class="col-lg-12">
-                                    {{--                                    <div class="input-holder d-flex flex-column">--}}
-                                    {{--                                        <label>Visibilidade:</label>--}}
-                                    {{--                                        <div class="btn-group colors select-country" data-toggle="buttons">--}}
-                                    {{--                                            <label class="btn btn-outline-primary ">--}}
-                                    {{--                                                <input type="radio" name="public" value="public" autocomplete="off"> Público--}}
-                                    {{--                                            </label>--}}
-                                    {{--                                            <label class="btn btn-outline-primary">--}}
-                                    {{--                                                <input type="radio" name="private" value="private" autocomplete="off"> Privado--}}
-                                    {{--                                            </label>--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
-                                    <p class="sm-text"> Seu projeto
-                                        <strong> estará disponível </strong> para receber filiados da vitrine. </p>
-                                    <p class="sm-text"> Seu projeto
-                                        <strong> não estará disponível </strong>para receber filiados da vitrine. </p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 hidden-m d-flex justify-content-center">
                             <div class="project-card d-flex flex-column align-items-center hidden-m">
-                                <div class="private-over justify-content-center text-center">
-                                    <div class="private-card-content">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
-                                             viewBox="0 0 24 24">
-                                            <path
-                                                d="M17 9.761v-4.761c0-2.761-2.238-5-5-5-2.763 0-5 2.239-5 5v4.761c-1.827 1.466-3 3.714-3 6.239 0 4.418 3.582 8 8 8s8-3.582 8-8c0-2.525-1.173-4.773-3-6.239zm-8-4.761c0-1.654 1.346-3 3-3s3 1.346 3 3v3.587c-.927-.376-1.938-.587-3-.587s-2.073.211-3 .587v-3.587zm3 17c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6zm2-6c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2z"/>
-                                        </svg>
-                                        <h4 class="bold">Privado</h4>
-                                    </div>
-                                </div>
                                 <div class="card-img">
                                     <img class="card-img-top" src="{{asset('register/img/imgprojeto.png')}}">
                                 </div>
                                 <div class="card-body mt30">
-                                    <h5 class="card-title">Nome do seu projeto</h5>
-                                    <p class="card-text sm-text gray"> Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
+                                    <h5 id='name_preview_standard ' class="card-title">Nome do seu projeto</h5>
+                                    <p id='description_preview_standard' class="card-text sm-text gray">Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
                                 </div>
                             </div>
                         </div>
@@ -484,15 +453,15 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="project_name">Nome</label>
-                                        <input type="text" name=project_name" id="project_name" placeholder="Digite o
+                                        <label for="project_name_shopify">Nome</label>
+                                        <input type="text" name=project_name_" id="project_name_shopify" placeholder="Digite o
                                         nome do projeto" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="project_desc">Descrição</label>
-                                        <textarea type="text" name="project_desc" id="project_desc" placeholder="Digite
+                                        <label for="project_desc_shopify">Descrição</label>
+                                        <textarea type="text" name="project_desc_shopify" id="project_desc_shopify" placeholder="Digite
                                         uma breve apresentação do projeto" required></textarea>
                                     </div>
                                 </div>
@@ -512,28 +481,11 @@
                                     <p class="sm-text gray"> Indicamos uma imagem 500x500
                                         <br> JPG, JPEG ou PNG de até 2MB</p>
                                 </div>
-                                {{--                                <div class="col-lg-12">--}}
-                                {{--                                    <div class="input-holder d-flex flex-column">--}}
-                                {{--                                        <label>Visibilidade:</label>--}}
-                                {{--                                        <div class="btn-group colors select-country" data-toggle="buttons">--}}
-                                {{--                                            <label class="btn btn-outline-primary ">--}}
-                                {{--                                                <input type="radio" name="public" value="public" autocomplete="off"> Público--}}
-                                {{--                                            </label>--}}
-                                {{--                                            <label class="btn btn-outline-primary">--}}
-                                {{--                                                <input type="radio" name="private" value="private" autocomplete="off"> Privado--}}
-                                {{--                                            </label>--}}
-                                {{--                                        </div>--}}
-                                {{--                                    </div>--}}
-                                {{--                                    <p class="sm-text"> Seu projeto--}}
-                                {{--                                        <strong> estará disponível </strong> para receber filiados da vitrine. </p>--}}
-                                {{--                                    <p class="sm-text"> Seu projeto--}}
-                                {{--                                        <strong> não estará disponível </strong>para receber filiados da vitrine. </p>--}}
-                                {{--                                </div>--}}
                             </div>
                         </div>
                         <div class="col-lg-6 hidden-m d-flex justify-content-center">
                             <div class="project-card d-flex flex-column align-items-center hidden-m">
-                                <div class="private-over justify-content-center text-center">
+                                {{--<div class="private-over justify-content-center text-center">
                                     <div class="private-card-content">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
                                              viewBox="0 0 24 24">
@@ -542,22 +494,15 @@
                                         </svg>
                                         <h4 class="bold">Privado</h4>
                                     </div>
-                                </div>
+                                </div>--}}
                                 <div class="card-img">
                                     <img class="card-img-top" src="{{asset('register/img/imgprojeto.png')}}">
                                 </div>
                                 <div class="card-body mt30">
-                                    <h5 class="card-title">Nome do seu projeto</h5>
-                                    <p class="card-text sm-text gray"> Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
+                                    <h5 id='name_preview_shopify' class="card-title">Nome do seu projeto</h5>
+                                    <p id='description_preview_shopify' class="card-text sm-text gray"> Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
                                 </div>
                             </div>
-                            <!-- <div class="project-card">
-
-                                <div class="card-img">
-
-                                </div>
-
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -613,233 +558,7 @@
 </body>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
 <script>
-    //keyUp para verificar preenchimento senha e email
-    $("#password").keyup(function () {
-        $("#passwordError").hide();
-    });
-
-    $("#email").keyup(function () {
-        $("#emailError").hide();
-
-    });
-
-    $(document).ready(function () {
-
-        var div1Visible = $(".div1").is(':visible');
-        if (div1Visible) {
-            $(".btn-go").css('display', 'block');
-            $("#jump").css('display', 'none');
-            $("#btnBack").css('display', 'none');
-
-        }
-
-        // dados obrigatorios
-        var password = $("#password");
-        var email = $("#email");
-        var name = $('#name');
-        var phone = $("#phone");
-
-        // contagem das divs do registro
-        var contDiv = 1;
-        var contBack = 0;
-        var contProgress = 0;
-
-        ///// botão prosseguir
-        $("#btn-go").click(function () {
-            contProgressRegister();
-
-            buttonsVisible();
-
-        });
-
-        function buttonsVisible() {
-
-            console.log('achando valor: ' + contProgress);
-
-            if (contProgress == 640) {
-                $("#btn-go").css('display', 'none');
-            }
-
-            if (contProgress == 320) {
-                $("#jump").css('display', 'block');
-            }
-
-            // if(contProgress == 960){
-            //
-            // }
-
-            /// ESTA NA ULTIMA DIV
-            if (contProgress == 1280) {
-                $("#jump").css('display', 'none');
-                $(".progress").css('display', 'none');
-                $(".wrap-footer").css('display', 'none');
-                $(".toptitle").html('Parabéns cadastro finalizado com sucesso!')
-            }
-        }
-
-        /// button back
-        $(".back").click(function () {
-            if (contProgress <= 0) {
-                contProgress = 0;
-            } else {
-                contProgress -= 320;
-            }
-
-            buttonsVisible();
-
-            /// diminui o barra de progresso
-            progressBar(contProgress);
-
-            if (contBack > 0) {
-                $(".div" + contDiv).hide();
-                contDiv--;
-                $(".div" + contBack).show();
-                contBack--;
-
-            }
-
-            if (contProgress === 0) {
-                $("#btn-go").css('display', 'block');
-                $("#jump").css('display', 'none');
-                $("#btnBack").css('display', 'none');
-
-            }
-
-            if (contProgress === 320) {
-                $("#btnBack").css('display', 'block');
-                $("#btn-go").css('display', 'block');
-            }
-
-            if (contProgress === 640) {
-                $("#jump").css('display', 'block');
-            }
-
-            console.log('volta primeira pagina: ' + contProgress);
-        });
-
-        $("#jump").click(function () {
-            if (contProgress == 640) {
-                console.log('contDiv' + contDiv + '.....' + contProgress);
-                $(".div" + contDiv).hide();
-                contDiv += 3;
-                $(".div" + contDiv).show();
-                contBack += 2;
-
-                contProgress += 640;
-                progressBar(contProgress);
-
-                buttonsVisible();
-
-            }
-            if (contProgress == 320) {
-                $(".div" + contDiv).hide();
-                contDiv++;
-                $(".div" + contDiv).show();
-                contBack++;
-
-                contProgress += 320;
-                progressBar(contProgress);
-
-                buttonsVisible();
-            }
-
-        });
-
-        //
-        function contProgressRegister() {
-            console.log(password.val());
-            if (!password.val()) {
-                $("#passwordError").show();
-
-            }
-            console.log(email.val());
-            if (!email.val()) {
-                $("#emailError").show();
-
-            }
-            console.log(name.val());
-            if (!name.val()) {
-                $("#nameError").show();
-            }
-
-            console.log(phone.val());
-            if (!phone.val()) {
-                $("#phoneError").show();
-            }
-
-            if (password.val() && email.val() && name.val() && email.val() && phone.val()) {
-                console.log(contProgress);
-                contProgress += 320;
-                progressBar(contProgress);
-
-                if (contDiv < 6) {
-                    $(".div" + contDiv).hide();
-                    contDiv++;
-                    $(".div" + contDiv).show();
-                    contBack++;
-                }
-            }
-
-            if (contProgress === 640) {
-                $("#btnBack").css('display', 'block');
-            } else if (contProgress === 320) {
-                $("#btnBack").css('display', 'block');
-                $("#btn-go").css('display', 'block');
-            }
-
-        }
-
-        // barra de progresso cadastro
-        var bar = $("#progress-bar-register");
-        function progressBar(value) {
-            console.log('progress bar: ' + value);
-            bar.width(value);
-
-        }
-
-        ///  radio button escolhe tipo de projeto
-        $("#btnBrasil").click(function () {
-            $("#eua-form").hide();
-            $("#brasil-form").show();
-
-        });
-
-        $("#btnUSA").click(function () {
-            $("#brasil-form").hide();
-            $("#eua-form").show();
-        });
-
-        $("#project-default").click(function () {
-            contProgress += 320;
-            progressBar(contProgress);
-            $('.div' + contDiv).hide();
-            contDiv++;
-            $("#standard-project").show();
-            contBack++;
-
-            $("#btn-go").css('display', 'block');
-            $("#jump").css('display', 'none');
-            $("#btnBack").css('display', 'block');
-
-        });
-
-        $("#project-shopify").click(function () {
-            contProgress += 320;
-            progressBar(contProgress);
-            $('.div' + contDiv).hide();
-            contDiv++;
-            $("#shopify-project").show();
-            contBack++;
-
-            $(".btn-go").css('display', 'block');
-            $("#jump").css('display', 'block');
-            $("#btnBack").css('display', 'block');
-
-        });
-
-    });
-
-    ///// MASCARA CNPJ/CPF
+    // MASCARA CNPJ/CPF
     var options = {
         onKeyPress: function (identificatioNumber, e, field, options) {
             var masks = ['000.000.000-000', '00.000.000/0000-00'];
@@ -848,6 +567,25 @@
         }
     };
 
+    //mascara cpf
     $('#identificatioNumber').mask('000.000.000-000', options);
+
+    // mascara cep
+    $("#cep").mask("99.999-999");
+
+    // mascara numero telefone
+    $("#phone").mask("(00) 0000-00009");
+
+
+
+    ///// replica texto na criação do projeto standard
+
+    $("#project_name_shopify").keydown(function () {
+        $("#name_preview_shopify").text($("#project_name_shopify").val());
+    });
+
+    $("#project_desc_shopify").keydown(function () {
+        $("#description_preview_shopify").value($("#project_desc_shopify").val());
+    });
 </script>
 </html>
