@@ -69,5 +69,5 @@ package-lock.json
 .history
 
 ### TesteController ###
-app/Http/Controllers/Dev/TesteController.php
+/var/www/fox/admin/app/Http/Controllers/Dev/TesteController.php
 

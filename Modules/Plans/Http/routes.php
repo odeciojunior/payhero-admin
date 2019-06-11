@@ -40,7 +40,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'planos', 'namespace'
 
 });
 
-
+/*
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/planos', 'namespace' => 'Modules\Plans\Http\Controllers'], function(){
 
     Route::get('/', [
@@ -72,3 +72,4 @@ Route::group([ 'prefix' => 'api/planos', 'namespace' => 'Modules\Plans\Http\Cont
     ]);
 
 });
+*/
