@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\ModelEnumTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,17 +24,34 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Invitation extends Model
 {
+    use ModelEnumTrait;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
-    protected $fillable = ['invite', 'user_invited', 'company', 'email_invited', 'status', 'register_date', 'expiration_date', 'parameter', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'invite',
+        'user_invited',
+        'company',
+        'email_invited',
+        'status',
+        'register_date',
+        'expiration_date',
+        'parameter',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    private $enum = [
+        'status' => [
+            1 => 'sent_invite',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -50,5 +68,4 @@ class Invitation extends Model
     {
         return $this->belongsTo('App\Entities\User', 'user_invited');
     }
-
 }

@@ -1,0 +1,62 @@
+.card {
+    border-radius: 5px !important;
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.site-menubar {
+    font-family: 'Muli', sans-serif;
+}
+
+.footer-nav-link {
+    margin-left: -15px;
+    font-size: 12px;
+
+}
+
+.lh-10 {
+    line-height: 20px !important;
+    height: 18px !important;
+
+}
+
+.divider {
+    width: 80%;
+    height: 1px;
+    align-self: center;
+    background-color: #edeff1;
+      margin: 15px 0px; 
+  }
+
+  .hamburger-bar {
+      background-color: black !important;
+  }
+
+
+  .hamburger::before {
+    background-color: black !important;
+}
+
+.hamburger::after {
+    background-color: black !important;
+}
+
+
+  .navbar-toggler {
+      color: black !important;
+  }
+
+  .site-menu-item img {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 300 !important;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 0.88;
+  letter-spacing: 0.8px;
+  color: black;
+
+}

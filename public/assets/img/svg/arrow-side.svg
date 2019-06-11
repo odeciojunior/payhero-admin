@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="15px" viewBox="0 0 18 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 53.2 (72643) - https://sketchapp.com -->
+    <title>E26F4488-F966-4489-A294-B3E8E292DD63</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M15.9399078,10.408162 L1.796739,10.408162 C1.356663,10.408162 1.000104,10.051 1.000104,9.611397 L1.000104,9.388318 C1.000104,8.948316 1.356663,8.591553 1.796739,8.591553 L15.9303947,8.591553 L10.865169,3.529687 C10.516821,3.181379 10.516821,2.616167 10.865169,2.267878 C11.214021,1.919969 11.779194,1.919969 12.127563,2.267878 L18.440268,8.576144 C18.4645907,8.60042746 18.4872176,8.62576542 18.5081486,8.65201085 C18.7969084,8.77173796 19.000044,9.05633503 19.000044,9.388318 L19.000044,9.611397 C19.000044,9.93881707 18.8020951,10.2205038 18.519237,10.3429495 C18.495272,10.3742134 18.468949,10.4042517 18.440268,10.432824 L12.127563,16.734535 C11.779194,17.082444 11.214021,17.082444 10.865169,16.734535 C10.516821,16.386626 10.516821,15.822174 10.865169,15.474265 L15.9399078,10.408162 Z" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="box/vendas" transform="translate(-187.000000, -32.000000)">
+            <g id="new-sale">
+                <g>
+                    <g id="icon/arrow-side" transform="translate(186.000000, 30.000000)">
+                        <g>
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Mask" fill="#AAAAAA" xlink:href="#path-1"></use>
+                            <g id="color/primary/medium-gray" mask="url(#mask-2)" fill="#AAAAAA" fill-rule="nonzero">
+                                <g transform="translate(-1.000000, -4.000000)" id="color/primary/main-gradient">
+                                    <rect x="0" y="0" width="23" height="23"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

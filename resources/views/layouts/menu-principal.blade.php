@@ -11,8 +11,7 @@
       <i class="icon wb-more-horizontal" aria-hidden="true"></i>
     </button>
     <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-      <img class="navbar-brand-logo" src="{{ asset('adminremark/assets/images/logo.png') }}" title="CloudFox">
-      <span class="navbar-brand-text hidden-xs-down"> CloudFox</span>
+      <img class="navbar-brand-logo" src="{{ asset('adminremark/assets/images/logo.png') }}">
     </div>
   </div>
   <div class="navbar-container container-fluid">
@@ -118,7 +117,7 @@
   </div>
 </nav>
 
-<div class="site-menubar" style="height:100%">
+<div class="site-menubar" style="height:80%">
   <div class="site-menubar-body">
     <div>
       <div>

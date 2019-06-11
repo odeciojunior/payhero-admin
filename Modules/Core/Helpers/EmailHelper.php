@@ -78,7 +78,7 @@ class EmailHelper {
         $email->setSubject("Convite para o CloudFox");
         $email->addTo($to, "CloudFox");
         $email->addContent(
-                "text/html", "<a href='https://cloudfox.app/cadastro/'". $parametro."'>Entrar para o Cloudfox</a>"
+                "text/html", "<a href='https://app.devcloudfox.net/cadastro/". $parametro."'>Entrar para o Cloudfox</a>"
         );
         $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
         try {
