@@ -30,7 +30,7 @@ class RegisterController extends Controller
     {
 
         $dados = $request->all();
-        dd($dados);
+//        dd($dados);
         $invite = Invitation::find($dados['id_convite']);
 
         $user = User::where('email', $dados['email'])->first();
