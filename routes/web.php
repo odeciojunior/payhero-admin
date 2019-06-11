@@ -48,8 +48,8 @@ Route::group(
         Route::post('/password/reset', '\App\Http\Controllers\Auth\ResetPasswordController@reset');
 
         //Verificacao do usuario atraves do email
-        Route::get('/user/verify/{token}', '\App\Http\Controllers\Auth\NewRegisterController@userVerifyMail')
-             ->name('mail.verification');
+//        Route::get('/user/verify/{token}', '\App\Http\Controllers\Auth\NewRegisterController@userVerifyMail')
+//             ->name('mail.verification');
     }
 );
 
