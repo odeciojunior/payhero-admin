@@ -10,7 +10,7 @@ Route::group(['middleware' => 'web', 'prefix' => 'register', 'namespace' => 'Mod
 //    Route::post('/', 'RegisterController@registerUser');
 });
 
-
+/*
 Route::group([ 'prefix' => 'api/user', 'namespace' => 'Modules\Usuario\Http\Controllers'], function(){
 
     Route::post('/', [
@@ -19,3 +19,4 @@ Route::group([ 'prefix' => 'api/user', 'namespace' => 'Modules\Usuario\Http\Cont
 
 });
 
+*/
