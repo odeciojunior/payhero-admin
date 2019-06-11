@@ -53,7 +53,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
     ]);
 
 });
-
+/*
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos', 'namespace' => 'Modules\Projetos\Http\Controllers'], function()
 {
     Route::get('/', [
@@ -77,3 +77,4 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos', 'namespace
     ]);
 
 });
+*/
