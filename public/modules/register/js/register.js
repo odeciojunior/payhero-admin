@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    var currentPage = 'user';
+
     //keyUp para verificar preenchimento senha e email
     $("#password").keyup(function () {
         $("#passwordError").hide();
@@ -7,11 +9,9 @@ $(document).ready(function () {
 
     $("#email").keyup(function () {
         $("#emailError").hide();
-
     });
 
-    ///// replica texto na criação do projeto standard
-
+    // replica texto na criação do projeto standard
     $("#project_name_standard").keydown(function () {
         $("#name_preview_standard").text($("#project_name_standard").val());
     });
@@ -29,12 +29,6 @@ $(document).ready(function () {
         $("#description_preview_shopify").text($("#project_desc_shopify").val());
     });
 
-    // dados obrigatorios
-    var password = $("#password");
-    var email = $("#email");
-    var name = $('#firstname');
-    var phone = $("#phone");
-
     // contagem das divs do registro
     var contDiv = 1;
     var contBack = 0;
@@ -46,7 +40,6 @@ $(document).ready(function () {
         contProgressRegister();
 
         buttonsVisible();
-
     });
 
     function buttonsVisible() {
@@ -69,51 +62,52 @@ $(document).ready(function () {
     }
 
     /// button back
-    $(".back").click(function () {
-        if (contProgress <= 0) {
-            contProgress = 0;
-        } else {
-            contProgress -= 320;
-        }
+    // $(".back").click(function () {
+    //     if (contProgress <= 0) {
+    //         contProgress = 0;
+    //     } else {
+    //         contProgress -= 320;
+    //     }
 
-        buttonsVisible();
+    //     buttonsVisible();
 
-        /// diminui o barra de progresso
-        progressBar(contProgress);
+    //     /// diminui o barra de progresso
+    //     progressBar(contProgress);
 
-        if (contBack > 0) {
-            $(".div" + contDiv).hide();
-            contDiv--;
-            $(".div" + contBack).show();
-            contBack--;
+    //     if (contBack > 0) {
+    //         $(".div" + contDiv).hide();
+    //         contDiv--;
+    //         $(".div" + contBack).show();
+    //         contBack--;
+    //     }
 
-        }
+    //     if (contProgress === 0) {
+    //         $("#btn-go").css('display', 'block');
+    //         $("#jump").css('display', 'none');
+    //         $("#btnBack").css('display', 'none');
+    //     }
 
-        if (contProgress === 0) {
-            $("#btn-go").css('display', 'block');
-            $("#jump").css('display', 'none');
-            $("#btnBack").css('display', 'none');
+    //     if (contProgress === 320) {
+    //         $("#btnBack").css('display', 'block');
+    //         $("#btn-go").css('display', 'block');
+    //     }
 
-        }
+    //     if (contProgress === 640) {
+    //         $("#jump").css('display', 'block');
 
-        if (contProgress === 320) {
-            $("#btnBack").css('display', 'block');
-            $("#btn-go").css('display', 'block');
-        }
+    //         $(".div5").css('display', 'none');
+    //     }
+    //     if (contProgress === 960) {
+    //         $(".div5").css('display', 'none');
+    //     }
 
-        if (contProgress === 640) {
-            $("#jump").css('display', 'block');
-
-            $(".div5").css('display', 'none');
-        }
-        if (contProgress === 960) {
-            $(".div5").css('display', 'none');
-        }
-
-        // console.log('volta primeira pagina: ' + contProgress);
-    });
+    //     // console.log('volta primeira pagina: ' + contProgress);
+    // });
 
     $("#jump").click(function () {
+
+        alert('to aqui');
+
         if (contProgress == 640) {
             // console.log('contDiv' + contDiv + '.....' + contProgress);
             $(".div" + contDiv).hide();
@@ -125,7 +119,6 @@ $(document).ready(function () {
             progressBar(contProgress);
 
             buttonsVisible();
-
         }
         if (contProgress == 320) {
             $(".div" + contDiv).hide();
@@ -141,59 +134,52 @@ $(document).ready(function () {
 
     });
 
-    //
     function contProgressRegister() {
-        // console.log(password.val());
-        if (!password.val()) {
+
+        if (!$("#password").val()) {
             $("#passwordError").show();
-
         }
-        // console.log(email.val());
-        if (!email.val()) {
+        if (!$("#email").val()) {
             $("#emailError").show();
-
         }
-        // console.log(name.val());
-        if (!name.val()) {
+        if (!$("#name").val()) {
             $("#nameError").show();
         }
-
-        // console.log(phone.val());
-        if (!phone.val()) {
+        if (!$("#phone").val()) {
             $("#phoneError").show();
         }
-
-        if (password.val() && email.val() && name.val() && email.val() && phone.val()) {
-            // console.log('asdasd' + contProgress);
-            //metodo ajax dados do usuario
-
-            // alert(contProgress);
-
-            if (contProgress === 0) {
-                saveUser();
-            }
-
-            // console.log(contProgress);
-            contProgress += 320;
-            progressBar(contProgress);
-
-            if (contDiv < 6) {
-                $(".div" + contDiv).hide();
-                contDiv++;
-                $(".div" + contDiv).show();
-                contBack++;
-            }
+        if (!$("#password").val() || !$("#email").val() || !$("#name").val() || !$("#email").val() || !$("#phone").val()) {
+            return false;
         }
 
-        if (contProgress === 640) {
-            $("#btnBack").css('display', 'block');
-        } else if (contProgress === 320) {
-            $("#btnBack").css('display', 'block');
-            $("#btn-go").css('display', 'block');
-        }
+        let firstName = $('#firstname').val();
+        let lastName = $('#lastname').val();
+        let email = $('#email').val();
+        let phone = $('#phone').val();
+        let password = $('#password').val();
+        let invite = $('#invite').val();
 
-        finalyDiv();
+        $.ajax({
+            method: "POST",
+            url: "/register/",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                name: firstName + ' ' + lastName,
+                email: email,
+                celphone: phone,
+                password: password,
+                invite: invite
+            },
+            error: function () {
+                alert('yes');
+            },
+            success: function (data) {
+                alert('noo');
+            }
 
+        });
     }
 
     function finalyDiv() {
@@ -205,8 +191,7 @@ $(document).ready(function () {
             $("#jump").css('display', 'none');
             $(".progress").css('display', 'none');
             $(".wrap-footer").css('display', 'none');
-            $(".toptitle").html('Parabéns cadastro finalizado com sucesso!')
-
+            $(".toptitle").html('Parabéns cadastro finalizado com sucesso!');
         }
     }
 
@@ -215,7 +200,6 @@ $(document).ready(function () {
     function progressBar(value) {
         // console.log('progress bar: ' + value);
         bar.width(value);
-
     }
 
     ///  radio button escolhe tipo de projeto
@@ -278,7 +262,7 @@ $(document).ready(function () {
                 email: email,
                 celphone: phone,
                 password: password,
-                invite: invite
+                // invite: invite
             },
             error: function () {
                 //

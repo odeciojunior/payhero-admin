@@ -36,6 +36,15 @@ $("#password").keyup(function (e) {
         score = 25;
     }
 
+    if($("#password").val().replace(/[^0-9]/g,'').length > 0){
+        $("#length-correct").show();
+        $("#length-incorrect").hide();
+    }
+    else{
+        $("#length-correct").hide();
+        $("#length-incorrect").show();
+    }
+
     let widt = 0 + '%';
     let color = '';
 
@@ -54,9 +63,6 @@ $("#password").keyup(function (e) {
     } else {
         widt = 0 + '%';
     }
-
-    console.log(color);
-    console.log(widt);
 
     $('#progress-password').css({'background': color});
     $("#progress-password").width(widt);
