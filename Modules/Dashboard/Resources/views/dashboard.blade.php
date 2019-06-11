@@ -25,7 +25,7 @@
 
                 <div class="p-2 text-lg-right">
 
-                  <select name="empresa" id="empresa" class="new-select">
+                  <select name="empresa" id="empresa" class="form-control new-select">
                     <option value="emp1">Empresa 1</option>
                     <option value="emp2">Empresa 2</option>
                   </select>
@@ -196,6 +196,7 @@
      }
    
      function clear_map_points(){
+       
        vectorLayers.forEach((vectorLayer) => {
          var features = vectorLayer.getSource().getFeatures();
          features.forEach((feature) => {

@@ -193,7 +193,7 @@
         </a>
         <ul class="site-menu-sub">
           <li class="site-menu-item has-sub">
-            <a class="animsition-link" href="/relatorios/vendas">
+            <a class="animsition-link" href="{!! route('sales') !!}">
               <span class="site-menu-title">Visão geral</span>
             </a>
           </li>
