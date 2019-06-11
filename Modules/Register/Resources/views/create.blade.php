@@ -221,15 +221,14 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="name">Legal Business Name</label>
-                                    <input type="text" name="cpf-cnpj" id="cpf-cnpj"
-                                           placeholder="Enter your Legal Business Name" required>
+                                    <label for="name_eua">Legal Business Name</label>
+                                    <input type="text" name="name_eua" id="name_eua" placeholder="Enter your Legal Business Name" required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="lastname">EIN</label>
-                                    <input type="text" name="lastname" id="lastname" placeholder="Enter your document"
+                                    <label for="ein">EIN</label>
+                                    <input type="text" name="ein" id="ein" placeholder="Enter your document"
                                            required>
                                 </div>
                             </div>
@@ -237,8 +236,8 @@
                         <div class="row mt30">
                             <div class="col-lg-3">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="firstname">ZIP/Postal Code</label>
-                                    <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your ZIP Code"
+                                    <label for="zip_code_eua">ZIP/Postal Code</label>
+                                    <input type="text" name="zip_code_eua" id="zip_code_eua" placeholder="Enter your ZIP Code"
                                            required>
                                 </div>
                             </div>
@@ -246,22 +245,22 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="endereco"> Street Address</label>
-                                    <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your address"
+                                    <label for="street"> Street Address</label>
+                                    <input type="text" name="street" id="street" placeholder="Enter your address"
                                            required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="endereco">Address Line 2</label>
-                                    <input Enter="text" name="cpf-cnpj" id="cpf-cnpj"
+                                    <label for="address">Address Line 2</label>
+                                    <input Enter="text" name="address" id="cpf-cnpj"
                                            placeholder="Enter your Apt/Suite/Other">
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="estado">State</label>
-                                    <select name="estado" id="estado" required>
+                                    <label for="state">State</label>
+                                    <select name="state" id="state" required>
                                         <option value="AL">Alabama</option>
                                         <option value="AK">Alaska</option>
                                         <option value="AZ">Arizona</option>
@@ -318,8 +317,8 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="input-holder d-flex flex-column">
-                                    <label for="endereco">City</label>
-                                    <input type="text" name="cpf-cnpj" id="cpf-cnpj" placeholder="Enter your city"
+                                    <label for="city">City</label>
+                                    <input type="text" name="city" id="city" placeholder="Enter your city"
                                            required>
                                 </div>
                             </div>
@@ -430,10 +429,10 @@
                         <div class="col-lg-6 hidden-m d-flex justify-content-center">
                             <div class="project-card d-flex flex-column align-items-center hidden-m">
                                 <div class="card-img">
-                                    <img class="card-img-top image_standard" src="{{asset('register/img/imgprojeto.png')}}" style='height:240px; width:240px;'>
+                                    <img class="card-img-top" id='image_standard' src="{{asset('register/img/projeto.png')}}" style='height:240px; width:240px;'>
                                 </div>
                                 <div class="card-body mt30">
-                                    <h5 id='name_preview_standard ' class="card-title">Nome do seu projeto</h5>
+                                    <h5 id='name_preview_standard' class="card-title">Nome do seu projeto</h5>
                                     <p id='description_preview_standard' class="card-text sm-text gray">
                                         Aqui irá a descrição do seu projeto. Ela poderá ser acessada por possiveis afiliados que visualizarem a vitrine da plataforma. </p>
                                 </div>
@@ -450,9 +449,7 @@
                             <div class="row">
                                 <div class="col-lg-12 mt20">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="project_shopify_token" class="d-flex justify-content-center">
-                                            Token Shopify
-                                        </label>
+                                        <label for='project_shopify_token'>Token Shopify</label>
                                         <input type="text" name="project_shopify_token" id="project_shopify_token" placeholder="Insira o token do Shopify" required>
                                     </div>
                                 </div>
@@ -480,9 +477,10 @@
                                             </svg>
                                             Upload
                                         </label>
-                                        <input id="file-upload-shopify" type="file"/></div>
-                                    <p class="sm-text gray"> Indicamos uma imagem 500x500
-                                        <br> JPG, JPEG ou PNG de até 2MB</p>
+                                        <input id="file-upload-shopify" type="file" name="photo-shopify"/>
+                                        <p class="sm-text gray"> Indicamos uma imagem 500x500
+                                            <br> JPG, JPEG ou PNG de até 2MB</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -499,7 +497,7 @@
                                     </div>
                                 </div>--}}
                                 <div class="card-img">
-                                    <img class="card-img-top image-shopify" src="{{asset('register/img/imgprojeto.png')}}" style='height:240px; width:240px;'>
+                                    <img class="card-img-top" id='image-shopify' src="{{asset('register/img/projeto.png')}}" style='height:240px; width:240px;'>
                                 </div>
                                 <div class="card-body mt30">
                                     <h5 id='name_preview_shopify' class="card-title">Nome do seu projeto</h5>
@@ -579,72 +577,10 @@
     $('#identificatioNumber').mask('000.000.000-000', options);
 
     // mascara cep
-    $("#cep").mask("99.999-999");
+    $("#zip_code").mask("99.999-999");
 
     // mascara numero telefone
     $("#phone").mask("(00) 0000-00009");
-
-    // alert(contProgress);
-
-    $(document).ready(function () {
-        if (window.File && window.FileList && window.FileReader) {
-            $("#file-upload").on("change", function (e) {
-                var files = e.target.files;
-                var filesLength = files.length;
-                for (var i = 0; i < filesLength; i++) {
-                    var f = files[i];
-                    if (/\.(jpe?g|png)$/i.test(f.name)) {
-                        var fileReader = new FileReader();
-                        fileReader.onload = (function (e) {
-                            var file = e.target;
-                            $(".image_standard").attr('src', e.target.result);
-                        });
-
-                        fileReader.readAsDataURL(f);
-                        // verificaImagemPerfil();
-                    }
-
-                }
-            });
-        } else {
-            alert("Your Browser doesn't support to File API");
-        }
-
-    });
-    $(document).ready(function () {
-        if (window.File && window.FileList && window.FileReader) {
-            $("#file-upload-shopify").on("change", function (e) {
-                var filesShopify = e.target.files;
-                var filesLengthShopify = filesShopify.length;
-                for (var i = 0; i < filesLengthShopify; i++) {
-                    var fS = filesShopify[i];
-                    if (/\.(jpe?g|png)$/i.test(fS.name)) {
-                        var fileReaderS = new FileReader();
-                        fileReaderS.onload = (function (et) {
-                            var fileSH = et.target;
-                            $(".image-shopify").attr('src', et.target.result);
-                        });
-
-                        fileReaderS.readAsDataURL(fS);
-                        // verificaImagemPerfil();
-                    }
-
-                }
-            });
-        } else {
-            alert("Your Browser doesn't support to File API");
-        }
-
-    });
-
-    function verificaImagemPerfil() {
-        let files = $("#file-upload").val();
-        if (files !== null && files !== '' && files !== 'undefined') {
-            $('#file-upload').hide("slow");
-        } else {
-            $('#file-upload').show("slow");
-        }
-    }
 </script>
 </body>
 </html>

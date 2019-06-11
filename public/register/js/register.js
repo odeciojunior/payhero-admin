@@ -12,12 +12,21 @@ $(document).ready(function () {
 
     ///// replica texto na criação do projeto standard
 
+    $("#project_name_standard").keydown(function () {
+        $("#name_preview_standard").text($("#project_name_standard").val());
+    });
+
     $("#project_desc_standard").keydown(function () {
         $("#description_preview_standard").text($("#project_desc_standard").val());
     });
 
-    $("#project_name_standard").keydown(function () {
-        $("#name_preview_standard").value($("#project_name_standard").val());
+    ///// replica texto na criação do projeto standard
+    $("#project_name_shopify").keydown(function () {
+        $("#name_preview_shopify").text($("#project_name_shopify").val());
+    });
+
+    $("#project_desc_shopify").keydown(function () {
+        $("#description_preview_shopify").text($("#project_desc_shopify").val());
     });
 
     // dados obrigatorios
@@ -376,6 +385,57 @@ $(document).ready(function () {
 
         });
     }
+
+    ///////////
+    if (window.File && window.FileList && window.FileReader) {
+
+        $("#file-upload").on("change", function (e) {
+            let files = e.target.files;
+            let filesLength = files.length;
+            for (let i = 0; i < filesLength; i++) {
+                let f = files[i];
+                if (/\.(jpe?g|png)$/i.test(f.name)) {
+                    let fileReader = new FileReader();
+                    fileReader.onload = (function (e) {
+                        let file = e.target;
+                        $("#image_standard").attr('src', e.target.result);
+                    });
+
+                    fileReader.readAsDataURL(f);
+                }
+
+            }
+        });
+
+    } else {
+        alert("Your Browser doesn't support to File API");
+    }
+
+
+   /*
+    if (window.File && window.FileList && window.FileReader) {
+        $("#file-upload-shopify").on("change", function (e) {
+            alert('aki');
+            let files = e.target.files;
+            let filesLength = files.length;
+            for (let i = 0; i < filesLength; i++) {
+                let f = files[i];
+                if (/\.(jpe?g|png)$/i.test(f.name)) {
+                    let fileReader = new FileReader();
+                    fileReader.onload = (function (e) {
+                        let file = e.target;
+                        $("#image-shopify").attr('src', e.target.result);
+                    });
+
+                    fileReader.readAsDataURL(f);
+                    // verificaImagemPerfil();
+                }
+
+            }
+        });
+    } else {
+        alert("Your Browser doesn't support to File API");
+    }*/
 
 });
 
