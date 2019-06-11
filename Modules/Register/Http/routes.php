@@ -1,11 +1,13 @@
 <?php
 
-Route::group(['middleware' => 'web', 'prefix' => 'cadastro', 'namespace' => 'Modules\Register\Http\Controllers'], function()
+Route::group(['middleware' => 'web', 'prefix' => 'register', 'namespace' => 'Modules\Register\Http\Controllers'], function()
 {
 
     Route::get('/{parametro}', 'RegisterController@create');
 
-    Route::post('/novousuario', 'RegisterController@store');
+    Route::post('/', 'RegisterController@store');
+
+//    Route::post('/', 'RegisterController@registerUser');
 });
 
 
