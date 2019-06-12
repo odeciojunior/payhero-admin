@@ -14,10 +14,10 @@
         </div>
         <div class="page-content container-fluid">
             <div class="panel pt-30 p-30" data-plugin="matchHeight">
-                <form method="POST" action="/products/{{$product->id}}" enctype="multipart/form-data">
+                <form method="POST" action="/products/{{Hashids::encode($product->id)}}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
-                    <input type="hidden" value="{{$product->id}}" name="id">
+                    <input type="hidden" value="{{Hashids::encode($product->id)}}" name="id">
                     <div style="width:100%">
                         <div class='row'>
                             <div class='col-md-6'>

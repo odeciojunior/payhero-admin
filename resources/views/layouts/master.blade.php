@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/uikit/icon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminremark/assets/examples/css/advanced/masonry.min.css') }}">
 
-    @yield('styles')
+{{--    @yield('styles')--}}
 
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('adminremark/global/fonts/weather-icons/weather-icons.css') }}">
@@ -48,6 +48,8 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/new-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/new-site.css') }}">
+      @stack('css')
+
 
     <!-- Scripts -->
     <script src="{{ asset('adminremark/global/vendor/jquery/jquery.min.js') }}"></script>  
@@ -127,7 +129,8 @@
 
     <script src="{{ asset('jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
     <script src="{{ asset('assets/js/notificacoes.js') }}"></script>
+    <script src="{{ asset('modules/global/js/customAlert.js') }}"></script>
 
-    @yield('scripts')
+    @stack('scripts')
   </body>
 </html>
