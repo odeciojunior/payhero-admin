@@ -31,12 +31,12 @@ class PostBackPagarmeController extends Controller {
  
         if(isset($requestData['event']) && $requestData['event'] = 'transaction_status_changed'){
 
-            $sale = Sale::find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
+            $sale = Sale::find(Hashids::decode($requestData['transaction']['metadata']['sale_id']));
 
             Log::write('info', 'alterando dados da venda : '. $sale['id']);
 
             if($sale == null){
-                Log::write('info', 'VENDA NÃO ENCONTRADA!!!');
+                Log::write('info', 'VENDA NÃO ENCONTRADA!!!' . Hashids::decode($requestData['transaction']['metadata']['sale_id']));
                 return 'sucesso';
             }
 
