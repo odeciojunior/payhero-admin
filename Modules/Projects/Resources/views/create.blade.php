@@ -2,28 +2,33 @@
 
 @section('content')
 
-  <div class="page">
-
+    <div class="page">
         <div class="page-header">
             <h1 class="page-title">Cadastrar novo projeto</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/projetos">
+                <a class="btn btn-primary float-right" href="/projects">
                     Meus projetos
                 </a>
             </div>
         </div>
-
         <div class="page-content container-fluid">
             <div class="panel pt-30 p-30" data-plugin="matchHeight">
-                @if(count($companies) == 0)
-                    <div class="alert alert-warning" role="alert">
-                        <strong>Ops!</strong> Você ainda não possui empresas cadastradas.
-                    </div>
-                @else
-                    <form method="post" action="/projetos/cadastrarprojeto" enctype="multipart/form-data">
+                @if($companies->count() > 0)
+                    <form method="post" action="/projects" enctype="multipart/form-data">
                         @csrf
                         <h4> Dados gerais </h4>
                         <div style="width:100%">
+                            <div class='row'>
+                                <div class='form-group col-12'>
+                                    <label for='select-photo'>Foto do produto</label>
+                                    <br>
+                                    <div class='row'>
+                                        <div class='col-md-6'>
+                                            <label for='select-photo'>Imagem do Projeto</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="nome">Nome</label>
@@ -39,14 +44,12 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="form-group col-xl-12">
                                     <label for="descricao">Descrição</label>
                                     <input name="description" type="text" class="form-control" id="descricao" placeholder="Descrição">
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="form-group col-xl-6">
                                     <label for="visibilidade">Visibilidade</label>
@@ -56,7 +59,6 @@
                                         <option value="private">Projeto privado</option>
                                     </select>
                                 </div>
-
                                 <div class="form-group col-xl-6">
                                     <label for="status">Status</label>
                                     <select name="status" class="form-control" id="status" required>
@@ -66,41 +68,40 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <label for="selecionar_foto">Imagem do projeto</label><br>
+                                    <label for="selecionar_foto">Imagem do projeto</label>
+                                    <br>
                                     <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto">
                                     <input name="project_photo" type="file" class="form-control" id="foto" style="display:none" accept="image/*">
-                                    <div  style="margin: 20px 0 0 30px;">
+                                    <div style="margin: 20px 0 0 30px;">
                                         <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;"/>
                                     </div>
-                                    <input type="hidden" name="foto_x1"/>
-                                    <input type="hidden" name="foto_y1"/>
-                                    <input type="hidden" name="foto_w"/>
-                                    <input type="hidden" name="foto_h"/>
+                                    <input type="hidden" name="foto_x1"/> <input type="hidden" name="foto_y1"/>
+                                    <input type="hidden" name="foto_w"/> <input type="hidden" name="foto_h"/>
                                 </div>
                             </div>
-
                             <div class="row" style="margin-top: 30px">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-success">Salvar</button>
                                 </div>
                             </div>
-
                         </div>
                     </form>
+                @else
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Ops!</strong> Você ainda não possui empresas cadastradas.
+                    </div>
                 @endif
             </div>
         </div>
     </div>
 
     <script>
-
-        $(document).ready( function(){
+        $(document).ready(function () {
 
             var p = $("#previewimage");
-            $("#foto").on("change", function(){
+            $("#foto").on("change", function () {
 
                 var imageReader = new FileReader();
                 imageReader.readAsDataURL(document.getElementById("foto").files[0]);
@@ -108,7 +109,7 @@
                 imageReader.onload = function (oFREvent) {
                     p.attr('src', oFREvent.target.result).fadeIn();
 
-                    p.on('load', function(){
+                    p.on('load', function () {
 
                         var img = document.getElementById('previewimage');
                         var x1, x2, y1, y2;
@@ -118,27 +119,26 @@
                             y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
                             x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
                             x2 = x1 + (y2 - y1);
-                        }
-                        else {
+                        } else {
                             if (img.naturalWidth < img.naturalHeight) {
-                                x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                                x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                ;
                                 x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
                                 y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                                 y2 = y1 + (x2 - x1);
-                            }
-                            else {
+                            } else {
                                 x1 = Math.floor(img.naturalWidth / 100 * 10);
                                 x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
                                 y1 = Math.floor(img.naturalHeight / 100 * 10);
                                 y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
                             }
                         }
-    
+
                         $('input[name="foto_x1"]').val(x1);
                         $('input[name="foto_y1"]').val(y1);
                         $('input[name="foto_w"]').val(x2 - x1);
                         $('input[name="foto_h"]').val(y2 - y1);
-    
+
                         $('#previewimage').imgAreaSelect({
                             x1: x1, y1: y1, x2: x2, y2: y2,
                             aspectRatio: '1:1',
@@ -154,15 +154,14 @@
                         });
                     })
                 };
-    
+
             });
-    
-            $("#selecionar_foto").on("click", function(){
+
+            $("#selecionar_foto").on("click", function () {
                 $("#foto").click();
             });
-    
-        });
 
+        });
     </script>
 
 @endsection

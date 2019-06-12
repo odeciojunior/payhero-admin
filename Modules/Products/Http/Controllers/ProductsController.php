@@ -3,10 +3,11 @@
 namespace Modules\Products\Http\Controllers;
 
 use App\Entities\Product;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Exception;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductsController extends Controller
 {
@@ -70,26 +71,7 @@ class ProductsController extends Controller
         try {
             $data         = $request->all();
             $data['user'] = auth()->user()->id;
-
-            $product = $this->productModel->create($data);
-            //            $photo   = $request->file('product_photo');
-
-            /*if (!is_null($photo)) {
-                try {
-                    $photoName = 'produto_' . $product->id . '_.' . $photo->getClientOriginalExtension();
-                    Storage::delete('public/upload/produto/' . $photoName);
-                    $photo->move(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $photoName);
-                    $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $photoName);
-                    $img->crop($data['foto_w'], $data['foto_h'], $data['foto_x1'], $data['foto_y1']);
-                    $img->resize(200, 200);
-                    Storage::delete('public/upload/produto/' . $photoName);
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO, $photoName);
-                    $product->update(['photo' => $photoName]);
-                } catch (Exception $e) {
-                    Log::warning('Erro ao salvar imagem do produto (ProductsController - store');
-                    report($e);
-                }
-            }*/
+            $product      = $this->productModel->create($data);
 
             return redirect()->route('products.index');
         } catch (Exception $e) {
@@ -105,7 +87,7 @@ class ProductsController extends Controller
     public function edit($id)
     {
         try {
-            $product = $this->productModel->find($id);
+            $product = $this->productModel->find(Hashids::decode($id))->first();
 
             return view('products::edit', ['product' => $product]);
         } catch (Exception $e) {
@@ -122,7 +104,7 @@ class ProductsController extends Controller
     {
         try {
             $data    = $request->all();
-            $product = $this->productModel->find($data['id']);
+            $product = $this->productModel->find(Hashids::decode($data['id']))->first();
             $product->update($data);
 
             return redirect()->route('products.index');
@@ -139,11 +121,8 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         try {
-            $id      = intval($id);
-            $product = $this->productModel->find($id);
-            if ($product) {
-                $product->delete();
-            }
+            $product = $this->productModel->find(Hashids::decode($id))->first();
+            $product->delete();
 
             return redirect()->route('products.index');
         } catch (Exception $e) {
