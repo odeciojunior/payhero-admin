@@ -290,76 +290,92 @@ class ShopifyController extends Controller
         if ($cartForm) {
             //if ($cartForm->getAttribute('id') != 'cart_form') {
 
-                //div Foxdata
-                $divFoxData = new Selector('#foxData', new Parser());
-                $divs       = $divFoxData->find($cartForm);
-                foreach ($divs as $div) {
-                    $parent = $div->getParent();
-                    $parent->removeChild($div->id());
-                }
+            //div Foxdata
+            $divFoxData = new Selector('#foxData', new Parser());
+            $divs       = $divFoxData->find($cartForm);
+            foreach ($divs as $div) {
+                $parent = $div->getParent();
+                $parent->removeChild($div->id());
+            }
 
-                //div FoxScript
-                $divFoxScript = new Selector('#foxScript', new Parser());
-                $divs       = $divFoxScript->find($cartForm);
-                foreach ($divs as $div) {
-                    $parent = $div->getParent();
-                    $parent->removeChild($div->id());
-                }
+            //div FoxScript
+            $divFoxScript = new Selector('#foxScript', new Parser());
+            $divs         = $divFoxScript->find($cartForm);
+            foreach ($divs as $div) {
+                $parent = $div->getParent();
+                $parent->removeChild($div->id());
+            }
 
-                $buttons = new Selector('[name=checkout]', new Parser());
-                $buttons = $buttons->find($cartForm);
-                foreach ($buttons as $button) {
-                    $button->removeAttribute('name');
-                }
+            //update button
+            $inputUpdate   = new Selector('input[name=update]', new Parser());
+            $inputsUpdates = $inputUpdate->find($cartForm);
+            foreach ($inputsUpdates as $item) {
+                $parent = $item->getParent();
+                $parent->removeChild($item->id());
+            }
 
-                $buttons = new Selector('[name=goto_pp]', new Parser());
-                $buttons = $buttons->find($cartForm);
-                foreach ($buttons as $button) {
-                    $parent = $button->getParent();
-                    $parent->removeChild($button->id());
-                }
+            //disable quantity button
+            $quantityButton   = new Selector('.cart__qty-input', new Parser());
+            $quantityButtons = $quantityButton->find($cartForm);
+            foreach ($quantityButtons as $item) {
+                $parent = $item->getParent();
+                $item->setAttribute('disabled', 'true');
+            }
 
-                $buttons = new Selector('[name=goto_gc]', new Parser());
-                $buttons = $buttons->find($cartForm);
-                foreach ($buttons as $button) {
-                    $parent = $button->getParent();
-                    $parent->removeChild($button->id());
-                }
+            $buttons = new Selector('[name=checkout]', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $button->removeAttribute('name');
+            }
 
-                $buttons = new Selector('.amazon-payments-pay-button', new Parser());
-                $buttons = $buttons->find($cartForm);
-                foreach ($buttons as $button) {
-                    $parent = $button->getParent();
-                    $parent->removeChild($button->id());
-                }
+            $buttons = new Selector('[name=goto_pp]', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
 
-                $buttons = new Selector('.google-wallet-button-holder', new Parser());
-                $buttons = $buttons->find($cartForm);
-                foreach ($buttons as $button) {
-                    $parent = $button->getParent();
-                    $parent->removeChild($button->id());
-                }
+            $buttons = new Selector('[name=goto_gc]', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
 
-                $buttons = new Selector('.additional-checkout-button', new Parser());
-                $buttons = $buttons->find($cartForm);
-                foreach ($buttons as $button) {
-                    $parent = $button->getParent();
-                    $parent->removeChild($button->id());
-                }
+            $buttons = new Selector('.amazon-payments-pay-button', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
 
-                $cartForm->setAttribute('action', 'https://checkout.{{ shop.domain }}/');
-                $cartForm->setAttribute('id', 'cart_form');
-                $cartForm->setAttribute('data-fox', 'cart_form');
+            $buttons = new Selector('.google-wallet-button-holder', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
 
-                $divFoxScript = new HtmlNode('div');
+            $buttons = new Selector('.additional-checkout-button', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
 
-                $divFoxScript->setAttribute('id', 'foxScript');
-                $script = new HtmlNode('script');
-                $script->setAttribute('src','https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js');
-                $divFoxScript->addChild($script);
-                $script = new HtmlNode('script');
+            $cartForm->setAttribute('action', 'https://checkout.{{ shop.domain }}/');
+            $cartForm->setAttribute('id', 'cart_form');
+            $cartForm->setAttribute('data-fox', 'cart_form');
 
-                $script->addChild(new TextNode("$(document).ready(function (){
+            $divFoxScript = new HtmlNode('div');
+
+            $divFoxScript->setAttribute('id', 'foxScript');
+            $script = new HtmlNode('script');
+            $script->setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js');
+            $divFoxScript->addChild($script);
+            $script = new HtmlNode('script');
+
+            $script->addChild(new TextNode("$(document).ready(function (){
                     
                     $('[data-fox=cart_form]').submit(function(){
                         var discount=0;
@@ -374,18 +390,11 @@ class ShopifyController extends Controller
 
                   });"));
 
+            $divFoxScript->addChild($script);
 
-//                $script->addChild(new TextNode("$(document).ready(function (){
-//                    $('[data-fox=cart_form]').submit(function(){
-//                        $('#cart_form').append(\"<input type='hidden' name='value_discount' value='\"+parseInt($( \".cart__footer [data-integration-price-saved=1]\" ).text().replace(/[^0-9]/g,''))+\"'>\");
-//                });
-//
-//                  });"));
-                $divFoxScript->addChild($script);
+            $cartForm->addChild($divFoxScript);
 
-                $cartForm->addChild($divFoxScript);
-
-                $foxData = "
+            $foxData = "
                     <div id='foxData'>
                     <input type='hidden' data-fox='1' name='product_id_{{ forloop.index }}' value='{{ item.id }}'>
                     <input type='hidden' data-fox='2' name='variant_id_{{ forloop.index }}' value='{{ item.variant_id }}'>
@@ -394,14 +403,14 @@ class ShopifyController extends Controller
                     <input type='hidden' data-fox='5' name='product_amount_{{ forloop.index }}' value='{{ item.quantity }}'>
                   </div>";
 
-                $html = $dom->root->outerHtml();
-                preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
-                foreach ($tokens[0] as $key => $item) {
-                    if ((stripos($item[0], 'for ') !== false) &&
-                        (stripos($item[0], ' in cart.items') !== false)) {
-                        $newHtml = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
-                    }
+            $html = $dom->root->outerHtml();
+            preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
+            foreach ($tokens[0] as $key => $item) {
+                if ((stripos($item[0], 'for ') !== false) &&
+                    (stripos($item[0], ' in cart.items') !== false)) {
+                    $newHtml = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
                 }
+            }
 
 
             //}
