@@ -49,6 +49,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     /**
      * @var array
      */
@@ -163,7 +165,7 @@ class Project extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UsersProject', 'project');
+        return $this->hasMany('App\Entities\UserProject', 'project');
     }
 
     /**

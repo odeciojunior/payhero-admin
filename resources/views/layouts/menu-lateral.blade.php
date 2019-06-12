@@ -210,7 +210,7 @@
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('projetos') }}">
+        <a class="animsition-link"  href="/projects">
         <img src="{{ asset('assets/img/svg/projetos.svg') }}" style="width:17px;">
             <span class="site-menu-title">Projetos</span>
         </a>
