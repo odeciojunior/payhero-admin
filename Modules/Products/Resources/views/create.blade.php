@@ -10,7 +10,7 @@
                 <a class="btn btn-primary float-right" href="{{ route('products.index') }}">
                     Meus produtos
                 </a>
-            </div> -->
+            </div>
         </div>
         <div class="page-content container-fluid">
             <div class="panel pt-30 p-30" data-plugin="matchHeight">

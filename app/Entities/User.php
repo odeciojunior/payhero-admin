@@ -52,8 +52,8 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property UserShopping[] $userShoppings
  * @property UsersProject[] $usersProjects
  */
-class User extends Authenticable
-{
+
+class User extends Authenticable {
 
     use HasApiTokens;
     use Notifiable;
