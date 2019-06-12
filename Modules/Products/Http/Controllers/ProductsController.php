@@ -2,8 +2,9 @@
 
 namespace Modules\Products\Http\Controllers;
 
-use App\Entities\Product;
 use Exception;
+use App\Entities\Product;
+use App\Entities\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -41,6 +42,8 @@ class ProductsController extends Controller
 
             $products = $productsSearch->orderBy('id', 'DESC')->paginate(12);
 
+            $categories = Category::all();
+
             return view('products::index', ['products' => $products]);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar produtos (ProductsController - index)');
@@ -54,7 +57,11 @@ class ProductsController extends Controller
     public function create()
     {
         try {
-            return view('products::create');
+            $categories = Category::all();
+
+            return view('products::create',[
+                'categories' => $categories
+            ]);
         } catch (Exception $e) {
             Log::warning('Erro ao tenta acessar pagina de cadastro de produto (ProductsController - create)');
             report($e);
