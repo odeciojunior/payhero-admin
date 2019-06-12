@@ -3,10 +3,12 @@
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
 }
 
-input {
+
+input, .input-pad{
     width: 100%;
     background: transparent;
     border: 1px solid #dddddd;
+    background: #fff;
     border-radius: 6px;
     padding: 8px 15px;
     color: #707070;
@@ -14,11 +16,35 @@ input {
     font-family: 'Muli', sans-serif;
 }
 
-select {
+.form-sub {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 300;
+}
+
+.input-info {
+    color: rgba(47, 47, 47, 0.644);
+    font-size: 12px;
+    font-weight: 300;
+}
+
+select.form-control {
+    height: auto !important;
+}
+
+label, .label-pad{
+    display: inline-block;
+    margin-bottom: .5rem;
+    font-weight: 700;
+    color: black;
+}
+
+select, .select-pad {
     font-family: 'Muli', sans-serif;
     font-size: 16px;
     width: 100%;
-    background: transparent;
+    height: auto;
+    background: #fff;
     border: 1px solid #dddddd;
     border-radius: 6px;
     padding: 8px 15px;
@@ -30,8 +56,6 @@ select:active, select:hover {
     outline: none !important;
   }
 
-.input-pad {
-    padding: 8px 15px; }
 
 input[type=radio] {
     display: none;

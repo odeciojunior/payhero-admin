@@ -313,7 +313,7 @@ class ShopifyController extends Controller
                 $parent = $item->getParent();
                 $parent->removeChild($item->id());
             }
-
+/*
             //disable quantity button
             $quantityButton   = new Selector('.cart__qty-input', new Parser());
             $quantityButtons = $quantityButton->find($cartForm);
@@ -321,6 +321,8 @@ class ShopifyController extends Controller
                 $parent = $item->getParent();
                 $item->setAttribute('disabled', 'true');
             }
+
+            */
 
             $buttons = new Selector('[name=checkout]', new Parser());
             $buttons = $buttons->find($cartForm);
@@ -376,6 +378,12 @@ class ShopifyController extends Controller
             $script = new HtmlNode('script');
 
             $script->addChild(new TextNode("$(document).ready(function (){
+
+                    $(document).on('change', \"input.booster-quantity, input[name^='updates['], input[id^='updates_'], input[id^='Updates_']\", function(e) {
+                        e.preventDefault();
+                         $('[data-fox=cart_form]').attr('action', '/cart');
+                        $('[data-fox=cart_form]').submit();
+                      });
                     
                     $('[data-fox=cart_form]').submit(function(){
                         var discount=0;
