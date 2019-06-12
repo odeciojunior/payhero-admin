@@ -15,7 +15,6 @@ class RegisterController extends Controller
 
     public function create($parameter)
     {
-
         $invite = Invitation::where('parameter', $parameter)->first();
 
         if ($invite == null) {
@@ -34,16 +33,7 @@ class RegisterController extends Controller
 
         $dados = $request->all();
 
-        $invite = Invitation::find($dados['id_convite']);
-
-        $user = User::where('email', $dados['email'])->first();
-
-        if ($user != null) {
-            return view('register::create', [
-                'invite' => $invite,
-                'erro'   => 'Email já esta sendo utilizado',
-            ]);
-        }
+        $invite = Invitation::find($dados['invite']);
 
         $dados['password']                            = bcrypt($dados['password']);
         $dados['percentage_rate']                     = '6.5';
@@ -63,15 +53,19 @@ class RegisterController extends Controller
 
         $user->assignRole('administrador empresarial');
 
-        $invite->update([
-            'user_invited'    => $user->id,
-            'status'          => 'Ativo',
-            'register_date'   => Carbon::now()->format('Y-m-d'),
-            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-            'email_invited'   => $dados['email'],
-        ]);
+        auth()->loginUsingId($user['id']);
 
-        return view('auth.login');
+        // $invite->update([
+        //     'user_invited'    => $user->id,
+        //     'status'          => 'Ativo',
+        //     'register_date'   => Carbon::now()->format('Y-m-d'),
+        //     'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+        //     'email_invited'   => $dados['email'],
+        // ]);
+
+        return response()->json([
+            '' => '',
+        ]);
     }
 
 

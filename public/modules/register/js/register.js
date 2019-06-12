@@ -61,48 +61,6 @@ $(document).ready(function () {
         }
     }
 
-    /// button back
-    // $(".back").click(function () {
-    //     if (contProgress <= 0) {
-    //         contProgress = 0;
-    //     } else {
-    //         contProgress -= 320;
-    //     }
-
-    //     buttonsVisible();
-
-    //     /// diminui o barra de progresso
-    //     progressBar(contProgress);
-
-    //     if (contBack > 0) {
-    //         $(".div" + contDiv).hide();
-    //         contDiv--;
-    //         $(".div" + contBack).show();
-    //         contBack--;
-    //     }
-
-    //     if (contProgress === 0) {
-    //         $("#btn-go").css('display', 'block');
-    //         $("#jump").css('display', 'none');
-    //         $("#btnBack").css('display', 'none');
-    //     }
-
-    //     if (contProgress === 320) {
-    //         $("#btnBack").css('display', 'block');
-    //         $("#btn-go").css('display', 'block');
-    //     }
-
-    //     if (contProgress === 640) {
-    //         $("#jump").css('display', 'block');
-
-    //         $(".div5").css('display', 'none');
-    //     }
-    //     if (contProgress === 960) {
-    //         $(".div5").css('display', 'none');
-    //     }
-
-    //     // console.log('volta primeira pagina: ' + contProgress);
-    // });
 
     $("#jump").click(function () {
 
@@ -136,28 +94,9 @@ $(document).ready(function () {
 
     function contProgressRegister() {
 
-        if (!$("#password").val()) {
-            $("#passwordError").show();
-        }
-        if (!$("#email").val()) {
-            $("#emailError").show();
-        }
-        if (!$("#name").val()) {
-            $("#nameError").show();
-        }
-        if (!$("#phone").val()) {
-            $("#phoneError").show();
-        }
-        if (!$("#password").val() || !$("#email").val() || !$("#name").val() || !$("#email").val() || !$("#phone").val()) {
+        if(!validateBasicData()){
             return false;
         }
-
-        let firstName = $('#firstname').val();
-        let lastName = $('#lastname').val();
-        let email = $('#email').val();
-        let phone = $('#phone').val();
-        let password = $('#password').val();
-        let invite = $('#invite').val();
 
         $.ajax({
             method: "POST",
@@ -166,20 +105,72 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
-                name: firstName + ' ' + lastName,
-                email: email,
-                celphone: phone,
-                password: password,
-                invite: invite
+                name: $('#firstname').val() + ' ' + $('#lastname').val(),
+                email: $('#email').val(),
+                celphone: $('#phone').val(),
+                password: $('#password').val(),
+                invite: $('#invite').val()
             },
-            error: function () {
-                alert('yes');
+            error: function ( response) {
+                //
             },
-            success: function (data) {
-                alert('noo');
+            success: function ( response ) {
+                if(response.success == 'true'){
+
+                }
+                else{
+                    alert('revise os dados informados');
+                }
             }
 
         });
+    }
+
+    function validateBasicData(){
+
+        var isDataValid = true;
+
+        $("#passwordError").css('display', 'none');
+        $("#emailError").css('display', 'none');
+        $("#nameError").css('display', 'none');
+        $("#lastNameError").css('display', 'none');
+        $("#phoneError").css('display', 'none');
+        $("#passwordError").css('display', 'none');
+
+        if (!validatePassword()) {
+            $("#passwordError").show();
+            isDataValid = false;
+        }
+        if ($("#email").val().length < 3) {
+            $("#emailError").show();
+            isDataValid = false;
+        }
+        if ($("#firstname").val().length < 3) {
+            $("#nameError").show();
+            isDataValid = false;
+        }
+        if ($("#lastname").val().length < 3) {
+            $("#lastNameError").show();
+            isDataValid = false;
+        }
+        if ($("#phone").val().length < 14) {
+            $("#phoneError").show();
+            isDataValid = false;
+        }
+
+        return isDataValid;
+    }
+
+    function validatePassword(){
+
+        if($("#password").val().replace(/[^0-9]/g,'').length < 1){
+            return false;
+        }
+        if($("#password").val().length < 8){
+            return false;
+        }
+
+        return true;
     }
 
     function finalyDiv() {

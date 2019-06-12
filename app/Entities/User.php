@@ -7,7 +7,6 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
-
 /**
  * @property int $id
  * @property string $name
@@ -29,11 +28,14 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property int $sms_zenvia_amount
  * @property string $percentage_rate
  * @property string $transaction_rate
- * @property float $balance
  * @property string $foxcoin
  * @property string $email_amount
  * @property string $call_amount
- * @property int $antecipation_days
+ * @property int $boleto_antecipation_money_days
+ * @property int $credit_card_antecipation_money_days
+ * @property int $release_money_days
+ * @property int $percentage_antecipable
+ * @property int $antecipation_tax
  * @property string $updated_at
  * @property string $created_at
  * @property string $deleted_at
@@ -50,6 +52,7 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property UserShopping[] $userShoppings
  * @property UsersProject[] $usersProjects
  */
+
 class User extends Authenticable {
 
     use Notifiable;
@@ -59,7 +62,7 @@ class User extends Authenticable {
     /**
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'remember_token', 'celphone', 'document', 'zip_code', 'country', 'state', 'city', 'neighborhood', 'street', 'number', 'complement', 'photo', 'score', 'sms_zenvia_amount', 'percentage_rate', 'transaction_rate', 'balance', 'foxcoin', 'email_amount', 'call_amount', 'antecipation_days', 'updated_at', 'created_at', 'deleted_at'];
+    protected $fillable = ['name', 'email', 'password', 'remember_token', 'celphone', 'document', 'zip_code', 'country', 'state', 'city', 'neighborhood', 'street', 'number', 'complement', 'photo', 'score', 'sms_zenvia_amount', 'percentage_rate', 'transaction_rate', 'foxcoin', 'email_amount', 'call_amount', 'boleto_antecipation_money_days', 'credit_card_antecipation_money_days', 'release_money_days', 'percentage_antecipable', 'antecipation_tax', 'updated_at', 'created_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

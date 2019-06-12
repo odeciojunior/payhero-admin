@@ -53,6 +53,7 @@
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
                                     <label for="lastname">Sobrenome</label>
+                                    <p class='sm-tex text-danger' id='lastNameError' style='display:none;'>O campo sobrenome é obrigatório</p>
                                     <input type="text" name="lastname" id="lastname" required>
                                 </div>
                             </div>
@@ -535,11 +536,11 @@
                             </a>
                         </div>
                     </div> --}}
-                    <div class="col-6 d-flex align-items-center justify-content-end">
+                    <div class="col-12 d-flex align-items-center justify-content-end">
                         <div class="btn-voltar d-flex mr15">
-                                <span>
-                                    <a href="#" id="jump" class="bold" style="display:none;">Pular</a>
-                                </span>
+                            <span>
+                                <a href="#" id="jump" class="bold" style="display:none;">Pular</a>
+                            </span>
                         </div>
                         <div class="btn-holder footer">
                             <button class="btn btn-primary" id='btn-go'> Prosseguir</button>
