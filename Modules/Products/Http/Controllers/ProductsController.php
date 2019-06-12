@@ -122,9 +122,7 @@ class ProductsController extends Controller
     {
         try {
             $product = $this->productModel->find(Hashids::decode($id))->first();
-            if ($product) {
-                $product->delete();
-            }
+            $product->delete();
 
             return redirect()->route('products.index');
         } catch (Exception $e) {
