@@ -210,13 +210,13 @@
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('projetos') }}">
+        <a class="animsition-link"  href="/projects">
         <img src="{{ asset('assets/img/svg/projetos.svg') }}" style="width:17px;">
             <span class="site-menu-title">Projetos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('products') }}">
+          <a class="animsition-link" href="{{ route('products.index') }}">
         <img src="{{ asset('assets/img/svg/produtos.svg') }}">
             <span class="site-menu-title">Produtos</span>
         </a>
@@ -285,14 +285,14 @@
       </li>
 
       <li class="site-menu-item has-sub">
-        <a class="animsition-link  lh-10" href="{{ route('invites') }}">
+        <a class="animsition-link  lh-10" href="#">
         <img src="">
             <span class="site-menu-title footer-nav-link">Suporte</span>
         </a>
       </li>
 
       <li class="site-menu-item has-sub ">
-        <a class="animsition-link lh-10" href="{{ route('invites') }}">
+        <a class="animsition-link lh-10" href="#">
         <img src="">
             <span class="site-menu-title footer-nav-link">Termos e Políticas</span>
         </a>

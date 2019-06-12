@@ -1,8 +1,8 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespace' => 'Modules\Projects\Http\Controllers'], function()
-{
-    Route::get('/', [
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Projects\Http\Controllers'], function() {
+    Route::Resource('/projects', 'ProjectsController')->only('index', 'create', 'show');
+    /*Route::get('/', [
         'uses' => 'ProjectsController@index',
         'as' => 'projetos',
     ]);
@@ -50,10 +50,9 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'projetos', 'namespac
     Route::post('/deletarmaterialextra',[
         'as' => 'projetos.deletarmaterialextra',
         'uses' => 'ProjectsController@deletarMaterialExtra'
-    ]);
-
+    ]);*/
 });
-
+/*
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos', 'namespace' => 'Modules\Projetos\Http\Controllers'], function()
 {
     Route::get('/', [
@@ -77,3 +76,4 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos', 'namespace
     ]);
 
 });
+*/

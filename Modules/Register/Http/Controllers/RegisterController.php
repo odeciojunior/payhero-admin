@@ -8,24 +8,29 @@ use App\Entities\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Register\Http\Requests\RegisterRequest;
 
-class RegisterController extends Controller {
+class RegisterController extends Controller
+{
 
-    public function create($parameter) {
+    public function create($parameter)
+    {
 
-        $invite = Invitation::where('parameter',$parameter)->first();
+        $invite = Invitation::where('parameter', $parameter)->first();
 
-        if($invite == null){
+        if ($invite == null) {
             echo 'convite não encontrado';
             die;
         }
 
-        return view('register::create', [
-            'invite' => $invite
+        return view('register::create', [ 
+            'invite' => $invite,
         ]);
     }
 
-    public function store(Request $request){
+    public function store(RegisterRequest $request)
+    {
+        $requestData = $request->validated();
 
         $dados = $request->all();
 
@@ -33,18 +38,26 @@ class RegisterController extends Controller {
 
         $user = User::where('email', $dados['email'])->first();
 
-        if($user != null){
+        if ($user != null) {
             return view('register::create', [
                 'invite' => $invite,
-                'erro'   => 'Email já esta sendo utilizado'
+                'erro'   => 'Email já esta sendo utilizado',
             ]);
         }
 
-        $dados['password'] = bcrypt($dados['password']);
-
-        $dados['percentage_rate'] = '9.9';
-
-        $dados['antecipation_days'] = '30';
+        $dados['password']                            = bcrypt($dados['password']);
+        $dados['percentage_rate']                     = '6.5';
+        $dados['transaction_rate']                    = '1.00';
+        $dados['balance']                             = '0';
+        $dados['foxcoin']                             = '0';
+        $dados['credit_card_antecipation_money_days'] = '15';
+        $dados['release_money_days']                  = '30';
+        $dados['boleto_antecipation_money_days']      = '7';
+        $dados['antecipation_tax']                    = '5.0';
+        $dados['percentage_antecipable']              = '80';
+        $dados['email_amount']                        = '0';
+        $dados['call_amount']                         = '0';
+        $dados['score']                               = '0';
 
         $user = User::create($dados);
 
@@ -54,12 +67,13 @@ class RegisterController extends Controller {
             'user_invited'    => $user->id,
             'status'          => 'Ativo',
             'register_date'   => Carbon::now()->format('Y-m-d'),
-            'expiration_date' => Carbon::now()->addMonths(6)->format('Y-m-d'),
+            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
             'email_invited'   => $dados['email'],
         ]);
 
         return view('auth.login');
     }
+
 
 }
 
