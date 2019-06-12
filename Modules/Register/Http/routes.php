@@ -8,7 +8,8 @@ Route::group(['middleware' => 'web', 'prefix' => 'register', 'namespace' => 'Mod
 
     Route::post('/', 'RegisterController@store');
 
-//    Route::post('/', 'RegisterController@registerUser');
+    Route::get('/', 'RegisterController@index');
+
 });
 
 

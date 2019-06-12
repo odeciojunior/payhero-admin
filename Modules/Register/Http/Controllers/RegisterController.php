@@ -8,9 +8,11 @@ use App\Entities\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Register\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
+
     public function create($parameter)
     {
 
@@ -21,16 +23,17 @@ class RegisterController extends Controller
             die;
         }
 
-        return view('register::create', [
+        return view('register::create', [ 
             'invite' => $invite,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
+        $requestData = $request->validated();
 
         $dados = $request->all();
-//        dd($dados);
+
         $invite = Invitation::find($dados['id_convite']);
 
         $user = User::where('email', $dados['email'])->first();
@@ -42,10 +45,8 @@ class RegisterController extends Controller
             ]);
         }
 
-        $dados['password'] = bcrypt($dados['password']);
-
-        $dados['percentage_rate'] = '6.5';
-
+        $dados['password']                            = bcrypt($dados['password']);
+        $dados['percentage_rate']                     = '6.5';
         $dados['transaction_rate']                    = '1.00';
         $dados['balance']                             = '0';
         $dados['foxcoin']                             = '0';
@@ -63,20 +64,17 @@ class RegisterController extends Controller
         $user->assignRole('administrador empresarial');
 
         $invite->update([
-                            'user_invited'    => $user->id,
-                            'status'          => 'Ativo',
-                            'register_date'   => Carbon::now()->format('Y-m-d'),
-                            'expiration_date' => Carbon::now()->addMonths(6)->format('Y-m-d'),
-                            'email_invited'   => $dados['email'],
-                        ]);
+            'user_invited'    => $user->id,
+            'status'          => 'Ativo',
+            'register_date'   => Carbon::now()->format('Y-m-d'),
+            'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+            'email_invited'   => $dados['email'],
+        ]);
 
         return view('auth.login');
     }
 
-    public function registerUser($data)
-    {
-        dd($data);
-    }
+
 }
 
 
