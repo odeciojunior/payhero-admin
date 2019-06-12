@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Modules\Core\HotZapp\HotZapp;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use App\Entities\ShopifyIntegration;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Transportadoras\Kapsula;
