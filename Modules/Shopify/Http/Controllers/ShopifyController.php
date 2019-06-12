@@ -288,14 +288,23 @@ class ShopifyController extends Controller
     public function getCartTemplateAjax($htmlCart)
     {
         $dom = new Dom;
+
+        $dom->setOptions([
+                             'removeScripts' => false, // Set a global option to enable strict html parsing.
+                         ]);
+
         $dom->load($htmlCart);
 
-        $forms = $dom->find('script');
+        $forms = $dom->find('script[id=cartTemplate]');
+        $x=$forms->innerHtml();
+
+        //$dom2 = new Dom2;
+        $dom->load($x);
 
         $forms = $dom->find('form');
         foreach ($forms as $form) {
             $data = explode(' ', $form->getAttribute('class'));
-            if (in_array('cart', $data)) {
+            if (in_array('cart', $data) || in_array('cart-form', $data)) {
                 $cartForm = $form;
                 break;
             }
@@ -438,7 +447,7 @@ class ShopifyController extends Controller
             foreach ($tokens[0] as $key => $item) {
                 if ((stripos($item[0], 'for ') !== false) &&
                     (stripos($item[0], ' in cart.items') !== false)) {
-                    $newHtml = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
+                    $html = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
                 }
             }
 
