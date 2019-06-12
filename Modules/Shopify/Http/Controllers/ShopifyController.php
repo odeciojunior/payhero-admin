@@ -102,13 +102,25 @@ class ShopifyController extends Controller
                 break;
         }
 
-        $htmlCart = $client->getAssetManager()->find($theme->getId(), "sections/cart-template.liquid");
-
-        $asset = $client->getAssetManager()->update($theme->getId(), [
-            "key"   => "sections/cart-template.liquid",
-            //"key"   => "snippets/ajax-cart-template.liquid",
-            "value" => $this->getCartTemplate($htmlCart->getValue()),
-        ]);
+        $htmlCart = "";
+        $templateFiles = $client->getAssetManager()->findAll($theme->getId());
+        foreach ($templateFiles as $file) {
+            if ($file->getKey() == "sections/cart-template.liquid") {
+                $htmlCart = $client->getAssetManager()->find($theme->getId(), "sections/cart-template.liquid");
+                $asset    = $client->getAssetManager()->update($theme->getId(), [
+                    "key"   => "sections/cart-template.liquid",
+                    "value" => $this->getCartTemplate($htmlCart->getValue()),
+                ]);
+                break;
+            } else if ($file->getKey() == "snippets/ajax-cart-template.liquid") {
+                $htmlCart = $client->getAssetManager()->find($theme->getId(), "snippets/ajax-cart-template.liquid");
+                $asset    = $client->getAssetManager()->update($theme->getId(), [
+                    "key"   => "snippets/ajax-cart-template.liquid",
+                    "value" => $this->getCartTemplateAjax($htmlCart->getValue()),
+                ]);
+                break;
+            }
+        }
 
         $photo = $request->file('foto_projeto');
 
@@ -273,10 +285,12 @@ class ShopifyController extends Controller
         return response()->json('Sucesso');
     }
 
-    public function getCartTemplate($htmlCart)
+    public function getCartTemplateAjax($htmlCart)
     {
         $dom = new Dom;
         $dom->load($htmlCart);
+
+        $forms = $dom->find('script');
 
         $forms = $dom->find('form');
         foreach ($forms as $form) {
@@ -313,16 +327,24 @@ class ShopifyController extends Controller
                 $parent = $item->getParent();
                 $parent->removeChild($item->id());
             }
-/*
-            //disable quantity button
-            $quantityButton   = new Selector('.cart__qty-input', new Parser());
-            $quantityButtons = $quantityButton->find($cartForm);
-            foreach ($quantityButtons as $item) {
-                $parent = $item->getParent();
-                $item->setAttribute('disabled', 'true');
-            }
 
-            */
+            //update button
+            $inputUpdate   = new Selector('button[name=update]', new Parser());
+            $inputsUpdates = $inputUpdate->find($cartForm);
+            foreach ($inputsUpdates as $item) {
+                $parent = $item->getParent();
+                $parent->removeChild($item->id());
+            }
+            /*
+                        //disable quantity button
+                        $quantityButton   = new Selector('.cart__qty-input', new Parser());
+                        $quantityButtons = $quantityButton->find($cartForm);
+                        foreach ($quantityButtons as $item) {
+                            $parent = $item->getParent();
+                            $item->setAttribute('disabled', 'true');
+                        }
+
+                        */
 
             $buttons = new Selector('[name=checkout]', new Parser());
             $buttons = $buttons->find($cartForm);
@@ -420,6 +442,170 @@ class ShopifyController extends Controller
                 }
             }
 
+            //}
+
+            return $newHtml;
+        } else {
+            //thown parse error
+        }
+    }
+
+    public function getCartTemplate($htmlCart)
+    {
+        $dom = new Dom;
+        $dom->load($htmlCart);
+
+        $forms = $dom->find('script');
+
+        $forms = $dom->find('form');
+        foreach ($forms as $form) {
+            $data = explode(' ', $form->getAttribute('class'));
+            if (in_array('cart', $data)) {
+                $cartForm = $form;
+                break;
+            }
+        }
+
+        if ($cartForm) {
+            //if ($cartForm->getAttribute('id') != 'cart_form') {
+
+            //div Foxdata
+            $divFoxData = new Selector('#foxData', new Parser());
+            $divs       = $divFoxData->find($cartForm);
+            foreach ($divs as $div) {
+                $parent = $div->getParent();
+                $parent->removeChild($div->id());
+            }
+
+            //div FoxScript
+            $divFoxScript = new Selector('#foxScript', new Parser());
+            $divs         = $divFoxScript->find($cartForm);
+            foreach ($divs as $div) {
+                $parent = $div->getParent();
+                $parent->removeChild($div->id());
+            }
+
+            //update button
+            $inputUpdate   = new Selector('input[name=update]', new Parser());
+            $inputsUpdates = $inputUpdate->find($cartForm);
+            foreach ($inputsUpdates as $item) {
+                $parent = $item->getParent();
+                $parent->removeChild($item->id());
+            }
+
+            //update button
+            $inputUpdate   = new Selector('button[name=update]', new Parser());
+            $inputsUpdates = $inputUpdate->find($cartForm);
+            foreach ($inputsUpdates as $item) {
+                $parent = $item->getParent();
+                $parent->removeChild($item->id());
+            }
+            /*
+                        //disable quantity button
+                        $quantityButton   = new Selector('.cart__qty-input', new Parser());
+                        $quantityButtons = $quantityButton->find($cartForm);
+                        foreach ($quantityButtons as $item) {
+                            $parent = $item->getParent();
+                            $item->setAttribute('disabled', 'true');
+                        }
+
+                        */
+
+            $buttons = new Selector('[name=checkout]', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $button->removeAttribute('name');
+            }
+
+            $buttons = new Selector('[name=goto_pp]', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
+
+            $buttons = new Selector('[name=goto_gc]', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
+
+            $buttons = new Selector('.amazon-payments-pay-button', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
+
+            $buttons = new Selector('.google-wallet-button-holder', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
+
+            $buttons = new Selector('.additional-checkout-button', new Parser());
+            $buttons = $buttons->find($cartForm);
+            foreach ($buttons as $button) {
+                $parent = $button->getParent();
+                $parent->removeChild($button->id());
+            }
+
+            $cartForm->setAttribute('action', 'https://checkout.{{ shop.domain }}/');
+            $cartForm->setAttribute('id', 'cart_form');
+            $cartForm->setAttribute('data-fox', 'cart_form');
+
+            $divFoxScript = new HtmlNode('div');
+
+            $divFoxScript->setAttribute('id', 'foxScript');
+            $script = new HtmlNode('script');
+            $script->setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js');
+            $divFoxScript->addChild($script);
+            $script = new HtmlNode('script');
+
+            $script->addChild(new TextNode("$(document).ready(function (){
+
+                    $(document).on('change', \"input.booster-quantity, input[name^='updates['], input[id^='updates_'], input[id^='Updates_']\", function(e) {
+                        e.preventDefault();
+                         $('[data-fox=cart_form]').attr('action', '/cart');
+                        $('[data-fox=cart_form]').submit();
+                      });
+                    
+                    $('[data-fox=cart_form]').submit(function(){
+                        var discount=0;
+                        $( '[data-integration-price-saved=1]' ).each(function( key, value ) {
+                            if(parseInt(value.innerText.replace(/[^0-9]/g,'')) > discount)
+                            {
+                                discount = parseInt(value.innerText.replace(/[^0-9]/g,''))
+                            }
+                        });
+                        $('#cart_form').append(\"<input type='hidden' name='value_discount' value='\"+discount+\"'>\");
+                    });
+
+                  });"));
+
+            $divFoxScript->addChild($script);
+
+            $cartForm->addChild($divFoxScript);
+
+            $foxData = "
+                    <div id='foxData'>
+                    <input type='hidden' data-fox='1' name='product_id_{{ forloop.index }}' value='{{ item.id }}'>
+                    <input type='hidden' data-fox='2' name='variant_id_{{ forloop.index }}' value='{{ item.variant_id }}'>
+                    <input type='hidden' data-fox='3' name='product_price_{{ forloop.index }}' value='{{ item.price }}'>
+                    <input type='hidden' data-fox='4' name='product_image_{{ forloop.index }}' value='{{ item.image }}'>
+                    <input type='hidden' data-fox='5' name='product_amount_{{ forloop.index }}' value='{{ item.quantity }}'>
+                  </div>";
+
+            $html = $dom->root->outerHtml();
+            preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
+            foreach ($tokens[0] as $key => $item) {
+                if ((stripos($item[0], 'for ') !== false) &&
+                    (stripos($item[0], ' in cart.items') !== false)) {
+                    $newHtml = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
+                }
+            }
 
             //}
 
