@@ -4,29 +4,33 @@
 
   <!-- Page --> 
   <div class="page">
-    <div class="page-header">
-        <div class="row">
-          <div class="col-7">
-              <h1 class="page-title">Meus produtos</h1>
-          </div>
-          <div class="col-4">
-              <div class="panel pt-15 p-15">   
-                  <label for="nome">Nome do produto</label>
-                  <div class="input-group">
-                      <input id="nome" class="form-control" placeholder="Nome do produto">
-                      <span class="input-group-btn">
-                          <button id="procurar" class="btn btn-success">Procurar</button>
-                      </span>
+    <div class="page-header container">
+        <div class="row justify-content-between">
+
+          <div class="col-8">
+            <div class="row justify-content-start align-items-center">
+
+                <div class="p-2">
+                  <h1 class="page-title">Produtos</h1>
+                </div>
+
+                <div class="p-2">
+                  <div class="input-search">
+                        <button type="submit" class="input-search-btn"><i class="icon wb-search" aria-hidden="true"></i></button>
+                        <input type="text" class="form-control input-search" name="" placeholder="Digite sua busca">
                   </div>
+                </div>
+
               </div>
-          </div>
-          <div class="col-1">
+            </div>
+
+          <div class="col-2">
               <a href="{!! route('products.create') !!}" class="btn btn-floating btn-danger" style="position: relative; float: right"><i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i></a>
           </div>
       </div>
     </div>
 
-    <div class="page-content container-fluid">
+    <div class="page-content container">
 
         @if(count($products) == 0)
             <div class="alert alert-warning" role="alert">

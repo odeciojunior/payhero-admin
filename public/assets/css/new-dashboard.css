@@ -43,7 +43,7 @@ body { font-family: 'Muli', sans-serif !important;}
   
   .text-money {
     font-family: Muli;
-    font-size: 34px;
+    font-size: 32px;
     color: black;
     font-weight: 700;
     font-style: normal;
@@ -55,10 +55,14 @@ body { font-family: 'Muli', sans-serif !important;}
   .card-bottom{ 
 
     height:10px;
-    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
+    background-image: linear-gradient(to right, rgb(15, 4, 41), #000011);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 
+  }
+
+  .card-bottom.green {
+    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
   }
 
   .card-bottom.blue {
@@ -66,5 +70,9 @@ body { font-family: 'Muli', sans-serif !important;}
   }
 
   .card-bottom.orange {
-    background-image: linear-gradient(to left, rgb(250, 217, 97), rgb(247, 107, 28));
+    background-image: linear-gradient(to right, rgb(250, 217, 97), rgb(247, 107, 28));
+  }
+
+  .card-bottom.orangered {
+    background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
   }

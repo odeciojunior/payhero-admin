@@ -179,10 +179,10 @@
             <span class="site-menu-title">Dashboard</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('showcase') }}">
+      <li class="site-menu-item has-sub disabled">
+        <a class="animsition-link disabled"  href="{{ route('showcase') }}">
         <img src="{{ asset('assets/img/svg/vitrine.svg') }}">
-            <span class="site-menu-title">Vitrine</span>
+            <span class="site-menu-title">Vitrine (em breve)</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
@@ -193,7 +193,7 @@
         </a>
         <ul class="site-menu-sub">
           <li class="site-menu-item has-sub">
-            <a class="animsition-link" href="/relatorios/vendas">
+            <a class="animsition-link" href="{!! route('sales') !!}">
               <span class="site-menu-title">Visão geral</span>
             </a>
           </li>
@@ -221,16 +221,16 @@
             <span class="site-menu-title">Produtos</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('attendance') }}">
+      <li class="site-menu-item has-sub  disabled">
+        <a class="animsition-link disabled"  href="{{ route('attendance') }}">
         <img src="{{ asset('assets/img/svg/atendimento.svg') }}">
-            <span class="site-menu-title">Atendimento</span>
+            <span class="site-menu-title">Atendimento (em breve)</span>
         </a>
       </li>
-      <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+      <li class="site-menu-item has-sub  disabled">
+        <a href="javascript:void(0)" class="disabled">
         <img src="{{ asset('assets/img/svg/afiliados.svg') }}">
-            <span class="site-menu-title">Afiliados</span>
+            <span class="site-menu-title">Afiliados (em breve)</span>
             <span class="site-menu-arrow"></span>
         </a>
         <ul class="site-menu-sub">
