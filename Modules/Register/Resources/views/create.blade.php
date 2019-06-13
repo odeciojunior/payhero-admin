@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{{asset('modules/register/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('modules/register/css/jquery-ui.min.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href="{{ asset('/assets/css/sweetalert2.min.css') }}">
+
     <script
         src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -29,7 +31,7 @@
         </div>
     </section>
     <div class="progress">
-        <div class="progress-bar " id="progress-bar-register" role="progressbar" aria-valuenow="25" aria-valuemin="0"
+        <div class="progress-bar" id="progress-bar-register" role="progressbar" aria-valuenow="25" aria-valuemin="0"
             aria-valuemax="100">
         </div>
     </div>
@@ -124,6 +126,19 @@
                                         </span>
                                         <span> Pelo menos um número</span>
                                     </div>
+                                    <div class="passtip-item d-flex align-items-center">
+                                        <span id='character-count-correct' class="check" style='display:none;'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>
+                                            </svg>
+                                        </span>
+                                        <span id='character-count-incorrect' class="check">
+                                            <svg class="wrong" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style='fill:#D30D0C'>
+                                                <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5 15.538l-3.592-3.548 3.546-3.587-1.416-1.403-3.545 3.589-3.588-3.543-1.405 1.405 3.593 3.552-3.547 3.592 1.405 1.405 3.555-3.596 3.591 3.55 1.403-1.416z"/>
+                                            </svg>
+                                        </span>
+                                        <span> Pelo menos uma letra </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -135,27 +150,25 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label>Selecione o país:</label>
+                                    <label>Selecione o país de sua empresa:</label>
                                     <div class="btn-group colors select-country" data-toggle="buttons">
                                         <label id='btnBrasil' class="btn btn-outline-primary ">
-                                            <input type="radio" class="typeBrasil" name="options" value="BRA"
-                                                autocomplete="off" checked='checked'> Brasil
+                                            <input type="radio" class="typeBrasil" name="country" value="brasil" autocomplete="off" checked='checked'> Brasil
                                         </label>
                                         <label id='btnUSA' class="btn btn-outline-primary">
-                                            <input type="radio" class="typeUSA" name="options" value="USA"
-                                                autocomplete="off"> United States
+                                            <input type="radio" class="typeUSA" name="country" value="usa" autocomplete="off"> United States
                                         </label>
                                     </div>
+                                    <input type="hidden" id="country" value="brasil">
                                 </div>
                             </div>
                         </div>
-                        <div id="brasil-form" style='display:none;'>
+                        <div id="brasil-form">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="identificatioNumber">CPF/CNPJ</label>
-                                        <input type="text" name="identificatioNumber" id="identificatioNumber"
-                                            placeholder="Digite seu CPF ou CNPJ da empresa" required>
+                                        <input type="text" name="identificatioNumber" id="identificatioNumber" placeholder="Digite seu CPF ou CNPJ da empresa" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -170,8 +183,7 @@
                                 <div class="col-lg-3">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="zip_code">CEP</label>
-                                        <input type="text" name="zip_code" id="zip_code" placeholder="Digite o CEP" onblur='pesquisacep(this.value)'
-                                            required>
+                                        <input type="text" name="zip_code" id="zip_code" placeholder="Digite o CEP" onblur='pesquisacep(this.value)' required>
                                     </div>
                                 </div>
                             </div>
@@ -179,8 +191,7 @@
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="logradouro">Logradouro</label>
-                                        <input type="text" name="logradouro" id="logradouro" placeholder="Rua, Avenida..."
-                                            required>
+                                        <input type="text" name="logradouro" id="logradouro" placeholder="Rua, Avenida..." required>
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
@@ -192,22 +203,19 @@
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="bairro">Bairro</label>
-                                        <input type="text" name="bairro" id="bairro" placeholder="Digite o bairro"
-                                            required>
+                                        <input type="text" name="bairro" id="bairro" placeholder="Digite o bairro" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="estado">Estado</label>
-                                        <input type="text" name="estado" id="estado" placeholder="Digite a cidade"
-                                            required>
+                                        <input type="text" name="estado" id="estado" placeholder="Estado" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="cidade">Cidade</label>
-                                        <input type="text" name="cidade" id="cidade" placeholder="Digite a cidade"
-                                            required>
+                                        <input type="text" name="cidade" id="cidade" placeholder="Digite a cidade" required>
                                     </div>
                                 </div>
                             </div>
@@ -223,8 +231,7 @@
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="ein">EIN</label>
-                                        <input type="text" name="ein" id="ein" placeholder="Enter your document"
-                                            required>
+                                        <input type="text" name="ein" id="ein" placeholder="Enter your document" required>
                                     </div>
                                 </div>
                             </div>
@@ -232,8 +239,7 @@
                                 <div class="col-lg-3">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="zip_code_eua">ZIP/Postal Code</label>
-                                        <input type="text" name="zip_code_eua" id="zip_code_eua" placeholder="Enter your ZIP Code"
-                                            required>
+                                        <input type="text" name="zip_code_eua" id="zip_code_eua" placeholder="Enter your ZIP Code" required>
                                     </div>
                                 </div>
                             </div>
@@ -241,8 +247,7 @@
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="street"> Street Address</label>
-                                        <input type="text" name="street" id="street" placeholder="Enter your address"
-                                            required>
+                                        <input type="text" name="street" id="street" placeholder="Enter your address" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -556,25 +561,7 @@
     <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
     <script src="{{asset('modules/register/js/register.js')}}"></script>
     <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
+    <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
-    <script>
-        // MASCARA CNPJ/CPF
-        var options = {
-            onKeyPress: function (identificatioNumber, e, field, options) {
-                var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
-                $('#identificatioNumber').mask(mask, options);
-            }
-        };
-
-        //mascara cpf
-        $('#identificatioNumber').mask('000.000.000-000', options);
-
-        // mascara cep
-        $("#zip_code").mask("99.999-999");
-
-        // mascara numero telefone
-        $("#phone").mask("(00) 0000-00009");
-    </script>
 </body>
 </html>

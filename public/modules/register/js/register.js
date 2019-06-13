@@ -1,5 +1,23 @@
 $(document).ready(function () {
 
+    // MASCARA CNPJ/CPF
+    var options = {
+        onKeyPress: function (identificatioNumber, e, field, options) {
+            var masks = ['000.000.000-000', '00.000.000/0000-00'];
+            var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
+            $('#identificatioNumber').mask(mask, options);
+        }
+    };
+
+    //mascara cpf
+    $('#identificatioNumber').mask('000.000.000-000', options);
+
+    // mascara cep
+    $("#zip_code").mask("99.999-999");
+
+    // mascara numero telefone
+    $("#phone").mask("(00) 0000-00009");
+
     var currentPage = 'user';
 
     //keyUp para verificar preenchimento senha e email
@@ -29,6 +47,14 @@ $(document).ready(function () {
         $("#description_preview_shopify").text($("#project_desc_shopify").val());
     });
 
+    $("#btnBrasil").on("click", function(){
+        $("#country").val('brasil');
+    });
+
+    $("#btnUSA").on("click", function(){
+        $("#country").val('usa');
+    });
+
     // contagem das divs do registro
     var contDiv = 1;
     var contBack = 0;
@@ -37,7 +63,7 @@ $(document).ready(function () {
     ///// botão prosseguir
     $("#btn-go").click(function () {
 
-        contProgressRegister();
+        nextStep();
 
         buttonsVisible();
     });
@@ -46,10 +72,6 @@ $(document).ready(function () {
 
         if (contProgress == 640) {
             $("#btn-go").css('display', 'none');
-        }
-
-        if (contProgress == 320) {
-            $("#jump").css('display', 'block');
         }
 
         /// ESTA NA ULTIMA DIV
@@ -61,103 +83,22 @@ $(document).ready(function () {
         }
     }
 
-    /// button back
-    // $(".back").click(function () {
-    //     if (contProgress <= 0) {
-    //         contProgress = 0;
-    //     } else {
-    //         contProgress -= 320;
-    //     }
+    function nextStep() {
 
-    //     buttonsVisible();
-
-    //     /// diminui o barra de progresso
-    //     progressBar(contProgress);
-
-    //     if (contBack > 0) {
-    //         $(".div" + contDiv).hide();
-    //         contDiv--;
-    //         $(".div" + contBack).show();
-    //         contBack--;
-    //     }
-
-    //     if (contProgress === 0) {
-    //         $("#btn-go").css('display', 'block');
-    //         $("#jump").css('display', 'none');
-    //         $("#btnBack").css('display', 'none');
-    //     }
-
-    //     if (contProgress === 320) {
-    //         $("#btnBack").css('display', 'block');
-    //         $("#btn-go").css('display', 'block');
-    //     }
-
-    //     if (contProgress === 640) {
-    //         $("#jump").css('display', 'block');
-
-    //         $(".div5").css('display', 'none');
-    //     }
-    //     if (contProgress === 960) {
-    //         $(".div5").css('display', 'none');
-    //     }
-
-    //     // console.log('volta primeira pagina: ' + contProgress);
-    // });
-
-    $("#jump").click(function () {
-
-        alert('to aqui');
-
-        if (contProgress == 640) {
-            // console.log('contDiv' + contDiv + '.....' + contProgress);
-            $(".div" + contDiv).hide();
-            contDiv += 3;
-            $(".div" + contDiv).show();
-            contBack += 2;
-
-            contProgress += 640;
-            progressBar(contProgress);
-
-            buttonsVisible();
+        if(currentPage == 'user'){
+            basicDataComplete();
         }
-        if (contProgress == 320) {
-            $(".div" + contDiv).hide();
-            contDiv++;
-            $(".div" + contDiv).show();
-            contBack++;
-
-            contProgress += 320;
-            progressBar(contProgress);
-
-            buttonsVisible();
+        else if(currentPage == 'company'){
+            companyComplete();
         }
+    }
 
-    });
+    function companyComplete(){
 
-    function contProgressRegister() {
+        $(".div2").hide();
+        $(".div3").show();
 
-        if (!$("#password").val()) {
-            $("#passwordError").show();
-        }
-        if (!$("#email").val()) {
-            $("#emailError").show();
-        }
-        if (!$("#name").val()) {
-            $("#nameError").show();
-        }
-        if (!$("#phone").val()) {
-            $("#phoneError").show();
-        }
-        if (!$("#password").val() || !$("#email").val() || !$("#name").val() || !$("#email").val() || !$("#phone").val()) {
-            return false;
-        }
-
-        let firstName = $('#firstname').val();
-        let lastName = $('#lastname').val();
-        let email = $('#email').val();
-        let phone = $('#phone').val();
-        let password = $('#password').val();
-        let invite = $('#invite').val();
+        return true;
 
         $.ajax({
             method: "POST",
@@ -166,20 +107,112 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
-                name: firstName + ' ' + lastName,
-                email: email,
-                celphone: phone,
-                password: password,
-                invite: invite
+                country: $('#country').val(),
+                fantasyname: ($('#country').val() == 'brasil') ? $('#fantasyname').val() : '',
+                zip_code: ($('#country').val() == 'brasil') ? $('#zip_code').val() : '',
+                street: ($('#country').val() == 'brasil') ? $('#logradouro').val() : '',
+                number: ($('#country').val() == 'brasil') ? $('#numero').val() : '',
+                neighborhood: ($('#country').val() == 'brasil') ? $('#bairro').val() : '',
+                state: ($('#country').val() == 'brasil') ? $('#estado').val() : '',
+                city: ($('#country').val() == 'brasil') ? $('#cidade').val() : '',
             },
             error: function () {
-                alert('yes');
+                //
             },
             success: function (data) {
-                alert('noo');
+
             }
 
         });
+
+    }
+
+    function basicDataComplete(){
+
+        if(!validateBasicData()){
+            return false;
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "/register/",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                name: $('#firstname').val() + ' ' + $('#lastname').val(),
+                email: $('#email').val(),
+                celphone: $('#phone').val(),
+                password: $('#password').val(),
+                invite: $('#invite').val()
+            },
+            error: function ( response) {
+                //
+            },
+            success: function ( response ) {
+                if(response.success == 'true'){
+                    currentPage = 'company';
+                    $(".div1").hide();
+                    $(".div2").show();
+                    $("#jump").show();
+                    alertCustom('success','Cadastro realizado com sucesso');
+                }
+                else{
+                    alertCustom('error','revise os dados informados');
+                }
+            }
+        });
+
+    }
+
+    function validateBasicData(){
+
+        var isDataValid = true;
+
+        $("#passwordError").css('display', 'none');
+        $("#emailError").css('display', 'none');
+        $("#nameError").css('display', 'none');
+        $("#lastNameError").css('display', 'none');
+        $("#phoneError").css('display', 'none');
+        $("#passwordError").css('display', 'none');
+
+        if (!validatePassword()) {
+            $("#passwordError").show();
+            isDataValid = false;
+        }
+        if ($("#email").val().length < 3) {
+            $("#emailError").show();
+            isDataValid = false;
+        }
+        if ($("#firstname").val().length < 3) {
+            $("#nameError").show();
+            isDataValid = false;
+        }
+        if ($("#lastname").val().length < 3) {
+            $("#lastNameError").show();
+            isDataValid = false;
+        }
+        if ($("#phone").val().length < 14) {
+            $("#phoneError").show();
+            isDataValid = false;
+        }
+
+        return isDataValid;
+    }
+
+    function validatePassword(){
+
+        if($("#password").val().replace(/[^0-9]/g,'').length < 1){
+            return false;
+        }
+        if($("#password").val().length < 8){
+            return false;
+        }
+        if($("#password").val().replace(/[^a-zA-Z]/g,'').length < 1){
+            alert($("#password").val().replace(/[^a-zA-Z]/g,'').length < 1);
+            return false;
+        }
+        return true;
     }
 
     function finalyDiv() {
@@ -194,6 +227,16 @@ $(document).ready(function () {
             $(".toptitle").html('Parabéns cadastro finalizado com sucesso!');
         }
     }
+
+    $("#jump").on("click", function(){
+        $(".div2").hide();
+        $(".div3").hide();
+        $(".div4").hide();
+        $(".div5").hide();
+        $(".div6").show();
+        $(this).hide();
+        setTimeout(registerComplete, 10000);
+    });
 
     // barra de progresso cadastro
     var bar = $("#progress-bar-register");
@@ -215,160 +258,14 @@ $(document).ready(function () {
     });
 
     $("#project-default").click(function () {
-        contProgress += 320;
-        progressBar(contProgress);
-        $('.div' + contDiv).hide();
-        contDiv++;
+        $('.div3').hide();
         $("#standard-project").show();
-        contBack++;
-
-        $("#btn-go").css('display', 'block');
-        $("#jump").css('display', 'none');
-        $("#btnBack").css('display', 'block');
-
     });
 
     $("#project-shopify").click(function () {
-        contProgress += 320;
-        progressBar(contProgress);
-        $('.div' + contDiv).hide();
-        contDiv++;
+        $('.div3').hide();
         $("#shopify-project").show();
-        contBack++;
-
-        $("#btn-go").css('display', 'block');
-        $("#jump").css('display', 'none');
-        $("#btnBack").css('display', 'block');
-
     });
-
-    //ajax save user
-    function saveUser() {
-        let firstName = $('#firstname').val();
-        let lastName = $('#lastname').val();
-        let email = $('#email').val();
-        let phone = $('#phone').val();
-        let password = $('#password').val();
-        let invite = $('#invite').val();
-
-        $.ajax({
-            method: "POST",
-            url: "/register/",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                name: firstName + ' ' + lastName,
-                email: email,
-                celphone: phone,
-                password: password,
-                // invite: invite
-            },
-            error: function () {
-                //
-            },
-            success: function (data) {
-
-            }
-
-        });
-
-    }
-
-    //
-    function saveEmpresaBr() {
-        let country = $('#options').val();
-        let fantasyname = $('#fantasyname').val();
-        let zip_code = $('#zip_code').val();
-        let street = $('#logradouro').val();
-        let number = $('#numero').val();
-        let neighborhood = $('#bairro').val();
-        let state = $('#estado').val();
-        let city = $('#cidade').val();
-
-        $.ajax({
-            method: "POST",
-            url: "/register/",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                country: country,
-                fantasyname: fantasyname,
-                zip_code: zip_code,
-                street: street,
-                number: number,
-                neighborhood: neighborhood,
-                state: state,
-                city: city,
-            },
-            error: function () {
-                //
-            },
-            success: function (data) {
-
-            }
-
-        });
-    }
-
-    function saveEmpresaUSA() {
-
-    }
-
-    function saveProjectStandard() {
-        let name = $('#project_name_standard').val();
-        let description = $('#project_desc_standard').val();
-        let photo = $('#file-upload').val();
-
-        $.ajax({
-            method: "POST",
-            url: "/register/",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                photo: photo,
-                name: name,
-                description: description,
-
-            },
-            error: function () {
-                //
-            },
-            success: function (data) {
-
-            }
-
-        });
-    }
-
-    function saveProjectShopify() {
-        let name = $('#project_name_shopify').val();
-        let description = $('#project_desc_standard').val();
-        let photo = $('#file-upload').val();
-
-        $.ajax({
-            method: "POST",
-            url: "/register/",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                photo: photo,
-                name: name,
-                description: description,
-
-            },
-            error: function () {
-                //
-            },
-            success: function (data) {
-
-            }
-
-        });
-    }
 
     ///////////
     if (window.File && window.FileList && window.FileReader) {
@@ -420,6 +317,23 @@ $(document).ready(function () {
     } else {
         alert("Your Browser doesn't support to File API");
     }*/
+
+    function registerComplete(){
+
+        location.href="/dashboard";
+    }
+
+    function alertCustom(type, message){
+
+        swal({
+            position: 'top-right',
+            type: type,
+            toast: 'true',
+            title: message,
+            showConfirmButton: false,
+            timer: 6000
+        });
+    }
 
 });
 
