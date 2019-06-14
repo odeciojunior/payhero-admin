@@ -1,19 +1,25 @@
 $(document).ready(function () {
 
+    $("#progress-bar-register").css('width','33%');
+
     // MASCARA CNPJ/CPF
     var options = {
         onKeyPress: function (identificatioNumber, e, field, options) {
             var masks = ['000.000.000-000', '00.000.000/0000-00'];
             var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
-            $('#identificatioNumber').mask(mask, options);
+            $('#brasil_company_document').mask(mask, options);
         }
     };
 
     //mascara cpf
-    $('#identificatioNumber').mask('000.000.000-000', options);
+    $('#brasil_company_document').mask('000.000.000-000', options);
 
     // mascara cep
-    $("#zip_code").mask("99.999-999");
+    $("#brasil_zip_code").mask("99.999-999");
+
+    // mascara number
+    $("#brasil_number").mask("0#");
+    $("#eua_number").mask("0#");
 
     // mascara numero telefone
     $("#phone").mask("(00) 0000-00009");
@@ -30,22 +36,22 @@ $(document).ready(function () {
     });
 
     // replica texto na criação do projeto standard
-    $("#project_name_standard").keydown(function () {
-        $("#name_preview_standard").text($("#project_name_standard").val());
-    });
+    // $("#project_name_standard").keydown(function () {
+    //     $("#name_preview_standard").text($("#project_name_standard").val());
+    // });
 
-    $("#project_desc_standard").keydown(function () {
-        $("#description_preview_standard").text($("#project_desc_standard").val());
-    });
+    // $("#project_desc_standard").keydown(function () {
+    //     $("#description_preview_standard").text($("#project_desc_standard").val());
+    // });
 
     ///// replica texto na criação do projeto standard
-    $("#project_name_shopify").keydown(function () {
-        $("#name_preview_shopify").text($("#project_name_shopify").val());
-    });
+    // $("#project_name_shopify").keydown(function () {
+    //     $("#name_preview_shopify").text($("#project_name_shopify").val());
+    // });
 
-    $("#project_desc_shopify").keydown(function () {
-        $("#description_preview_shopify").text($("#project_desc_shopify").val());
-    });
+    // $("#project_desc_shopify").keydown(function () {
+    //     $("#description_preview_shopify").text($("#project_desc_shopify").val());
+    // });
 
     $("#btnBrasil").on("click", function(){
         $("#country").val('brasil');
@@ -55,35 +61,8 @@ $(document).ready(function () {
         $("#country").val('usa');
     });
 
-    // contagem das divs do registro
-    var contDiv = 1;
-    var contBack = 0;
-    var contProgress = 0;
-
     ///// botão prosseguir
     $("#btn-go").click(function () {
-
-        nextStep();
-
-        buttonsVisible();
-    });
-
-    function buttonsVisible() {
-
-        if (contProgress == 640) {
-            $("#btn-go").css('display', 'none');
-        }
-
-        /// ESTA NA ULTIMA DIV
-        if (contProgress == 1280) {
-            $("#jump").css('display', 'none');
-            $(".progress").css('display', 'none');
-            $(".wrap-footer").css('display', 'none');
-            $(".toptitle").html('Parabéns cadastro finalizado com sucesso!')
-        }
-    }
-
-    function nextStep() {
 
         if(currentPage == 'user'){
             basicDataComplete();
@@ -91,45 +70,50 @@ $(document).ready(function () {
         else if(currentPage == 'company'){
             companyComplete();
         }
-    }
+    });
 
     function companyComplete(){
 
-        $(".div2").hide();
-        $(".div3").show();
-
-        return true;
+        if(!validateCompanyData()){
+            alertCustom('error','Revise os dados informados');
+            return false;
+        }
 
         $.ajax({
             method: "POST",
-            url: "/register/",
+            url: "/companies",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
                 country: $('#country').val(),
-                fantasyname: ($('#country').val() == 'brasil') ? $('#fantasyname').val() : '',
-                zip_code: ($('#country').val() == 'brasil') ? $('#zip_code').val() : '',
-                street: ($('#country').val() == 'brasil') ? $('#logradouro').val() : '',
-                number: ($('#country').val() == 'brasil') ? $('#numero').val() : '',
-                neighborhood: ($('#country').val() == 'brasil') ? $('#bairro').val() : '',
-                state: ($('#country').val() == 'brasil') ? $('#estado').val() : '',
-                city: ($('#country').val() == 'brasil') ? $('#cidade').val() : '',
+                fantasy_name: ($('#country').val() == 'brasil') ? $('#brasil_fantasy_name').val() : $('#eua_fantasy_name').val(),
+                cnpj: ($('#country').val() == 'brasil') ? $('#brasil_company_document').val() : $('#eua_company_document').val(),
+                zip_code: ($('#country').val() == 'brasil') ? $('#brasil_zip_code').val() : $('#eua_zip_code').val(),
+                state: ($('#country').val() == 'brasil') ? $('#brasil_state').val() : $('#eua_state').val(),
+                city: ($('#country').val() == 'brasil') ? $('#brasil_city').val() : $('#eua_city').val(),
+                neighborhood: ($('#country').val() == 'brasil') ? $('#brasil_neighborhood').val() : $('#eua_neighborhood').val(),
+                street: ($('#country').val() == 'brasil') ? $('#brasil_street').val() : $('#eua_street').val(),
+                number: ($('#country').val() == 'brasil') ? $('#brasil_number').val() : $('#eua_number').val(),
             },
-            error: function () {
-                //
+            error: function (response) {
+                alertCustom('error','Ocorreu algum erro');
             },
-            success: function (data) {
-
+            success: function (response) {
+                $("#company_id").val(response.data.id);
+                alertCustom('success','Empresa cadastrada com sucesso');
+                $(".div2").hide();
+                $(".div3").show();
+                $("#jump").click();
             }
 
         });
-
     }
 
     function basicDataComplete(){
 
         if(!validateBasicData()){
+            alertCustom('error','Revise os dados informados');
             return false;
         }
 
@@ -147,15 +131,20 @@ $(document).ready(function () {
                 invite: $('#invite').val()
             },
             error: function ( response) {
-                //
+                if(response.status == '422'){
+                    for(error in response.responseJSON.errors){
+                        alertCustom('error',String(response.responseJSON.errors[error]));
+                    }
+                }
             },
             success: function ( response ) {
                 if(response.success == 'true'){
                     currentPage = 'company';
                     $(".div1").hide();
                     $(".div2").show();
-                    $("#jump").show();
                     alertCustom('success','Cadastro realizado com sucesso');
+                    $("#progress-bar-register").css('width','66%');
+                    $("#jump").show();
                 }
                 else{
                     alertCustom('error','revise os dados informados');
@@ -163,6 +152,39 @@ $(document).ready(function () {
             }
         });
 
+    }
+
+    function validateCompanyData(){
+
+        $("#brasilFantasyNameError").css('display', 'none');
+        $("#brasilCompanyDocumentError").css('display', 'none');
+        $("#euaFantasyNameError").css('display', 'none');
+        $("#euaCompanyDocumentError").css('display', 'none');
+
+        var isDataValid = true;
+
+        if($('#country').val() == 'brasil'){
+            if($("#brasil_fantasy_name").val().length < 3) {
+                $("#brasilFantasyNameError").show();
+                isDataValid = false;
+            }
+            if($("#brasil_company_document").val().length < 3) {
+                $("#brasilCompanyDocumentError").show();
+                isDataValid = false;
+            }
+        }
+        else{
+            if($("#eua_fantasy_name").val().length < 3) {
+                $("#euaFantasyNameError").show();
+                isDataValid = false;
+            }
+            if($("#eua_company_document").val().length < 3) {
+                $("#euaCompanyDocumentError").show();
+                isDataValid = false;
+            }
+        }
+
+        return isDataValid;
     }
 
     function validateBasicData(){
@@ -180,7 +202,10 @@ $(document).ready(function () {
             $("#passwordError").show();
             isDataValid = false;
         }
-        if ($("#email").val().length < 3) {
+
+        var emailFilter=/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        var illegalChars= /[\(\)\<\>\,\;\:\\\/\"\[\]]/
+        if(!(emailFilter.test($("#email").val())) || $("#email").val().match(illegalChars) || $("#email").val().indexOf(" ") !== -1){
             $("#emailError").show();
             isDataValid = false;
         }
@@ -209,26 +234,13 @@ $(document).ready(function () {
             return false;
         }
         if($("#password").val().replace(/[^a-zA-Z]/g,'').length < 1){
-            alert($("#password").val().replace(/[^a-zA-Z]/g,'').length < 1);
             return false;
         }
         return true;
     }
 
-    function finalyDiv() {
-
-        if (contProgress >= 1280) {
-            $(".div5").hide();
-            $(".div6").show();
-            $("#cadastroUsuario").css('display', 'none');
-            $("#jump").css('display', 'none');
-            $(".progress").css('display', 'none');
-            $(".wrap-footer").css('display', 'none');
-            $(".toptitle").html('Parabéns cadastro finalizado com sucesso!');
-        }
-    }
-
     $("#jump").on("click", function(){
+        $("#progress-bar-register").css('width','99%');
         $(".div2").hide();
         $(".div3").hide();
         $(".div4").hide();
@@ -237,13 +249,6 @@ $(document).ready(function () {
         $(this).hide();
         setTimeout(registerComplete, 10000);
     });
-
-    // barra de progresso cadastro
-    var bar = $("#progress-bar-register");
-    function progressBar(value) {
-        // console.log('progress bar: ' + value);
-        bar.width(value);
-    }
 
     ///  radio button escolhe tipo de projeto
     $("#btnBrasil").click(function () {
@@ -256,67 +261,6 @@ $(document).ready(function () {
         $("#brasil-form").hide();
         $("#eua-form").show();
     });
-
-    $("#project-default").click(function () {
-        $('.div3').hide();
-        $("#standard-project").show();
-    });
-
-    $("#project-shopify").click(function () {
-        $('.div3').hide();
-        $("#shopify-project").show();
-    });
-
-    ///////////
-    if (window.File && window.FileList && window.FileReader) {
-
-        $("#file-upload").on("change", function (e) {
-            let files = e.target.files;
-            let filesLength = files.length;
-            for (let i = 0; i < filesLength; i++) {
-                let f = files[i];
-                if (/\.(jpe?g|png)$/i.test(f.name)) {
-                    let fileReader = new FileReader();
-                    fileReader.onload = (function (e) {
-                        let file = e.target;
-                        $("#image_standard").attr('src', e.target.result);
-                    });
-
-                    fileReader.readAsDataURL(f);
-                }
-
-            }
-        });
-
-    } else {
-        alert("Your Browser doesn't support to File API");
-    }
-
-
-   /*
-    if (window.File && window.FileList && window.FileReader) {
-        $("#file-upload-shopify").on("change", function (e) {
-            alert('aki');
-            let files = e.target.files;
-            let filesLength = files.length;
-            for (let i = 0; i < filesLength; i++) {
-                let f = files[i];
-                if (/\.(jpe?g|png)$/i.test(f.name)) {
-                    let fileReader = new FileReader();
-                    fileReader.onload = (function (e) {
-                        let file = e.target;
-                        $("#image-shopify").attr('src', e.target.result);
-                    });
-
-                    fileReader.readAsDataURL(f);
-                    // verificaImagemPerfil();
-                }
-
-            }
-        });
-    } else {
-        alert("Your Browser doesn't support to File API");
-    }*/
 
     function registerComplete(){
 

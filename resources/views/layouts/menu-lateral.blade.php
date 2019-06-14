@@ -140,7 +140,7 @@
                   Perfil 
                 </a>
                 @if(Auth::user()->hasRole('administrador empresarial'))
-                  <a class="dropdown-item" href="{{ route('companies') }}" role="menuitem">
+                  <a class="dropdown-item" href="{{ route('companies.index') }}" role="menuitem">
                     <i class="icon wb-home" aria-hidden="true"></i>
                     Empresas
                   </a>
