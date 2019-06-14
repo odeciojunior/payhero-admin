@@ -9,7 +9,7 @@
             <div class="page-content d-flex flex-column justify-content-center">
 
                 <div class="logobar text-center">
-                    <img src="{{ asset('adminremark/assets/images/logo-oficial.svg') }}" alt="CloudFox">
+                    <img src="{{ asset('modules/global/adminremark/assets/images/logo-oficial.svg') }}" alt="CloudFox">
                 </div>
 
                 <div class="toggle d-flex justify-content-center">
@@ -108,20 +108,20 @@
 
 
                             </form>
-                    </div>
+                        </div>
 
-                    <div class="hr"></div>
+                        <div class="hr"></div>
 
-<div class="d-flex justify-content-center align-items-center">
-    <a class="sm-text linkfooter" href="#"> Política de Privacidade </a>
-    <div class="oval"></div>
-    <a class="sm-text linkfooter" href="#"> Termos e Condições </a>
-    <div class="oval"></div>
-    <a class="sm-text linkfooter" href="#"> Suporte </a>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a class="sm-text linkfooter" href="#"> Política de Privacidade </a>
+                            <div class="oval"></div>
+                            <a class="sm-text linkfooter" href="#"> Termos e Condições </a>
+                            <div class="oval"></div>
+                            <a class="sm-text linkfooter" href="#"> Suporte </a>
 
-</div>
+                        </div>
 
-<div class="clearfix"></div>
+                    <div class="clearfix"></div>
 
                 </div>
 

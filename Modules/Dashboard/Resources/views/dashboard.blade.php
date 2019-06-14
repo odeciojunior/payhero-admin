@@ -46,7 +46,7 @@
             <div class="card card-shadow bg-white">
                <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                   <div class="font-size-14 gray-600">
-                     <img src="{{ asset('assets/img/svg/moeda-laranja.svg') }}" width="35px">
+                     <img src="{{ asset('modules/global/assets/img/svg/moeda-laranja.svg') }}" width="35px">
                      <span class="card-desc">Pendente</span>
                   </div>
                </div>
@@ -57,14 +57,14 @@
                   <div class="indices row justify-content-center align-items-center">
                     <div class="col-4">
                       <div class="d-flex justify-content-around">
-                        <img src="{{ asset('assets/img/svg/arrow.svg') }}">
+                        <img src="{{ asset('modules/global/assets/img/svg/arrow.svg') }}">
                         <span class="card-p"> +24% ao dia </span>
                       </div>
                     </div>
                   
                     <div class="col-4">
                       <div class="d-flex justify-content-around">
-                        <img src="{{ asset('assets/img/svg/arrow-down.svg') }}">
+                        <img src="{{ asset('modules/global/assets/img/svg/arrow-down.svg') }}">
                         <span class="card-p"> -2% ao dia </span>
                       </div>
                     </div>
@@ -77,7 +77,7 @@
             <div class="card card-shadow bg-white">
                <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                   <div class="font-size-14 gray-600">
-                     <img src="{{ asset('assets/img/svg/moeda-vermelha.svg') }}" width="35px">
+                     <img src="{{ asset('modules/global/assets/img/svg/moeda-vermelha.svg') }}" width="35px">
                      <span class="card-desc">Antecipação</span>
                   </div>
                </div>
@@ -91,7 +91,7 @@
             <div class="card card-shadow bg-white">
                <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                   <div class="font-size-14 gray-600">
-                     <img src="{{ asset('assets/img/svg/moeda.svg') }}" width="35px">
+                     <img src="{{ asset('modules/global/assets/img/svg/moeda.svg') }}" width="35px">
                      <span class="card-desc">Disponível</span>
                   </div>
                </div>
@@ -105,7 +105,7 @@
             <div class="card card-shadow bg-white">
                <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                   <div class="font-size-14 gray-600">
-                     <img src="{{ asset('assets/img/svg/moeda-azul.svg') }}" width="35px">
+                     <img src="{{ asset('modules/global/assets/img/svg/moeda-azul.svg') }}" width="35px">
                      <span class="card-desc">Total</span>
                   </div>
                </div>
@@ -136,16 +136,15 @@
           </div>
         </div><div class="p-2 texto-filtro gray text-right align-items-center justify-content-lg-end"> 
 
-  <span class="gray-svg"> 
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M5 19h-4v-4h4v4zm6 0h-4v-8h4v8zm6 0h-4v-13h4v13zm6 0h-4v-19h4v19zm1 2h-24v2h24v-2z"></path></svg>
-  </span> 
-  03 a 10 de junho de 2019
+        <span class="gray-svg"> 
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M5 19h-4v-4h4v4zm6 0h-4v-8h4v8zm6 0h-4v-13h4v13zm6 0h-4v-19h4v19zm1 2h-24v2h24v-2z"></path></svg>
+        </span> 
+        03 a 10 de junho de 2019
 
-</div>
+      </div>
 
-</div>
-</div>
-     
+      </div>
+      </div>
    </div>
 </div>
 

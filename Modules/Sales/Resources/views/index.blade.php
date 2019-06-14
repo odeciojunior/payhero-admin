@@ -191,16 +191,16 @@
                 dados += "<td style='vertical-align: middle' class='text-center'>"+value.comprador+"</td>";
 
                 if(value.forma == 'boleto'){
-                  dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/boleto.jpeg' style='width: 60px'></td>";
+                  dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global//assets/img/boleto.jpeg' style='width: 60px'></td>";
                 }else{
                   if(value.brand == 'mastercard'){
-                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/master.1.svg' style='width: 60px'></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global//assets/img/master.1.svg' style='width: 60px'></td>";
                   }
                   else if(value.brand == 'visa'){
-                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/visa.svg' style='width: 60px'></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global//assets/img/visa.svg' style='width: 60px'></td>";
                   }
                   else{
-                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/assets/img/cartao.jpg' style='width: 60px'></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global//assets/img/cartao.jpg' style='width: 60px'></td>";
                   }
                 }
 

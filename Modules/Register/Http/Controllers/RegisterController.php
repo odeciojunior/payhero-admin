@@ -49,6 +49,7 @@ class RegisterController extends Controller
             $dados['email_amount']                        = '0';
             $dados['call_amount']                         = '0';
             $dados['score']                               = '0';
+            $dados['sms_zenvia_amount']                   = '0';
 
             $user = User::create($dados);
 

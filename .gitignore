@@ -71,3 +71,4 @@ package-lock.json
 ### TesteController ###
 app/Http/Controllers/Dev/TesteController.php
 
+public/tmp/
