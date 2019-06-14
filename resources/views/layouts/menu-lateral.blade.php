@@ -216,7 +216,7 @@
         </a>
       </li>
       <li class="site-menu-item has-sub">
-          <a class="animsition-link" href="{{ route('products.index') }}">
+          <a class="animsition-link" href="/products">
         <img src="{{ asset('assets/img/svg/produtos.svg') }}">
             <span class="site-menu-title">Produtos</span>
         </a>

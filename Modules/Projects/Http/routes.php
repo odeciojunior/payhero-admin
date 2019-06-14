@@ -1,7 +1,9 @@
 <?php
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Projects\Http\Controllers'], function() {
-    Route::Resource('/projects', 'ProjectsController')->only('index', 'create', 'show');
+
+    Route::Resource('/projects', 'ProjectsController')
+         ->only('index', 'create', 'edit', 'show', 'store', 'deleteExtraMaterial');
     /*Route::get('/', [
         'uses' => 'ProjectsController@index',
         'as' => 'projetos',
@@ -41,16 +43,16 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'M
         'as' => 'projetos.dados',
         'uses' => 'ProjectsController@getDadosProjeto'
     ]);
+*/
+    /* Route::post('/addmaterialextra',[
+         'as' => 'projects.addmaterialextra',
+         'uses' => 'ProjectsController@addMaterialExtra'
+     ]);*/
 
-    Route::post('/addmaterialextra',[
-        'as' => 'projetos.addmaterialextra',
-        'uses' => 'ProjectsController@addMaterialExtra'
+    Route::post('/deletematerialextra', [
+        'as'   => 'projetos.deletematerialextra',
+        'uses' => 'ProjectsController@deleteExtraMaterial',
     ]);
-
-    Route::post('/deletarmaterialextra',[
-        'as' => 'projetos.deletarmaterialextra',
-        'uses' => 'ProjectsController@deletarMaterialExtra'
-    ]);*/
 });
 /*
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos', 'namespace' => 'Modules\Projetos\Http\Controllers'], function()

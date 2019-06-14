@@ -1,8 +1,9 @@
 <?php
 
-Route::group(['middleware' => ['web','auth'], 'prefix' => 'pixels', 'namespace' => 'Modules\Pixels\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Pixels\Http\Controllers'], function() {
 
-    Route::post('/data-source',[
+    Route::Resource('/pixels', 'PixelsController')->only('create', 'index');
+    /*Route::post('/data-source',[
         'as' => 'pixels.index',
         'uses' => 'PixelsController@index'
     ]);
@@ -35,12 +36,10 @@ Route::group(['middleware' => ['web','auth'], 'prefix' => 'pixels', 'namespace' 
     Route::post('/getformeditarpixel',[
         'as' => 'pixels.edit',
         'uses' => 'PixelsController@edit'
-    ]);
-
+    ]);*/
 });
 
-
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/pixels', 'namespace' => 'Modules\Pixels\Http\Controllers'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/pixels', 'namespace' => 'Modules\Pixels\Http\Controllers'], function() {
 
     Route::get('/', [
         'uses' => 'PixelsApiController@index',
@@ -61,5 +60,4 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}
     Route::get('/{id_pixel}', [
         'uses' => 'PixelsApiController@show',
     ]);
-
 });

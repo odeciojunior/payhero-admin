@@ -18,7 +18,7 @@
                         <div class="col-xl-3 col-md-6 info-panel">
                             <div class="card card-shadow">
                                 <a href='/projects/{{Hashids::encode($project->id)}}'>
-                                    <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project['photo'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                                    <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project->photo !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                                 </a>
                                 <div class="card-block">
                                     <a href='/projects/{{Hashids::encode($project->id)}}' class="text-center">
@@ -74,11 +74,9 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
+    @push('scripts')
 
-        });
-    </script>
+    @endpush
 
 @endsection
 
