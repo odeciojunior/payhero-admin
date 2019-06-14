@@ -1,7 +1,6 @@
 body {
 	font-family: 'Muli', sans-serif;
 	min-height: 100vh;
-	background: url({{ asset('adminremark/assets/images/gradient-bg.png') }}) bottom left no-repeat;
 }
 
 a.sm-text,
@@ -36,13 +35,12 @@ a:hover { text-decoration: none;}
 input {
 	font-family: "Muli", sans-serif !important;
 	width: 100%;
-	border: 2px solid transparent;
+	border: 2px solid #c8c8c8;
 	border-radius: 10px;
 	font-size: 14px;
 	letter-spacing: -0.01em;
 	color: #1a1a1a;
 	padding: 10px 16px;
-	box-shadow: 0 20px 15px 0 rgba(0, 0, 0, 0.05);
 }
 input:focus {
 	outline: none;

@@ -69,16 +69,7 @@
 
                             <div class="btnfix"></div>
 
-                            <a href=""
-                                class="btn btn-primary d-flex justify-content-center social-login google align-items-center">
-                                <span class="logo-btn"><img src="{{ asset('adminremark/assets/images/g-icon.svg') }}"></span> Entrar com Google </a>
-                            <div class="btnfix"></div>
-
-                            <a href=""
-                                class="btn btn-primary d-flex justify-content-center social-login facebook align-items-center">
-                                <span class="logo-btn"><img src="{{ asset('adminremark/assets/images/facebook-icon.svg') }}"></span> Entrar com Facebook </a>
-
-                            <div class="clearfix"></div>
+                         
                         </form>
 
 
@@ -92,26 +83,7 @@
 
                             <div class="btnfix"></div>
 
-                            <div class="row nm justify-content-center">
-
-                                <div class="col-6 text-center">
-                                    <a href=""
-                                        class="btn btn-primary d-flex justify-content-center social-login google align-items-center">
-                                        <span class="logo-btn"><img src="g-icon.svg"></span> Google </a>
-                                    <div class="btnfix"></div>
-
-                                </div>
-                                <div class="col-6 text-center">
-                                    <a href=""
-                                        class="btn btn-primary d-flex justify-content-center social-login facebook align-items-center">
-                                        <span class="logo-btn"><img src="facebook-icon.svg"></span> Facebook </a>
-                                </div>
-                            </div>
-
-
-
-
-
+                
                             <div class="input-holder">
                                 <input type="text" id="newuser_name" placeholder="Nome completo" required>
                             </div>
