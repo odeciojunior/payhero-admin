@@ -11,14 +11,32 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 use Exception;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 
+/**
+ * uploads/user/ID/profile/photo.jpg
+ * uploads/user/ID/private/documents/*
+ * uploads/user/ID/private/company-documents/*
+ *
+ * uploads/product/ID/photo.jpg
+ * uploads/product/ID/private/product.pdf
+ */
+
+/**
+ * Class ProfileController
+ * @package Modules\Profile\Http\Controllers
+ */
 class ProfileController extends Controller
 {
     /**
      * @var User
      */
     private $userModel;
+    /**
+     * @var DigitalOceanFileService
+     */
+    private $digitalOceanFileService;
 
     /**
      * ProfileController constructor.
@@ -26,6 +44,18 @@ class ProfileController extends Controller
     public function __construct()
     {
         //
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDigitalOceanFileService()
+    {
+        if (!$this->digitalOceanFileService) {
+            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
+        }
+
+        return $this->digitalOceanFileService;
     }
 
     /**
@@ -65,26 +95,47 @@ class ProfileController extends Controller
     {
         try {
 
-            $requestData = $request->all();
+            $requestData = $request->validated();
 
-            $user = $this->getUserModel()->find($requestData['id']);
+            $this->getUserModel()
+                 ->where('id', auth()->user()->id)
+                 ->update([
+                              'name'         => $requestData['name'],
+                              'email'        => $requestData['email'],
+                              'document'     => $requestData['document'],
+                              'cellphone'    => $requestData['cellphone'],
+                              'date_birth'   => $requestData['date_birth'],
+                              //'photo_x1'     => $requestData['photo_x1'],
+                              //'photo_y1'     => $requestData['photo_y1'],
+                              //'photo_w'      => $requestData['photo_w'],
+                              //'photo_h'      => $requestData['photo_h'],
+                              'zip_code'     => $requestData['zip_code'],
+                              'country'      => $requestData['country'],
+                              'state'        => $requestData['state'],
+                              'city'         => $requestData['city'],
+                              'neighborhood' => $requestData['neighborhood'],
+                              'street'       => $requestData['street'],
+                              'number'       => $requestData['number'],
+                              'complement'   => $requestData['complement'],
 
-            $this->getUserModel()->update($requestData, $user->id);
+                          ]);
 
-            $userPhoto = $request->file('foto_usuario');
+            $userPhoto = $request->file('profile_photo');
 
             if ($userPhoto != null) {
 
                 try {
-                    $photoName = 'user_' . $user->id . '_.' . $userPhoto->getClientOriginalExtension();
+                    $photoName = 'user_' . auth()->user()->id . '_.' . $userPhoto->getClientOriginalExtension();
 
                     Storage::delete('public/upload/perfil/' . $photoName);
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()->uploadFile('uploads/user/ID/public/profile/');
 
                     $userPhoto->move(CaminhoArquivosHelper::CAMINHO_FOTO_USER, $photoName);
 
                     $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
 
-                    $img->crop($requestData['foto_w'], $requestData['foto_h'], $requestData['foto_x1'], $requestData['foto_y1']);
+                    $img->crop($requestData['photo_w'], $requestData['photo_h'], $requestData['photo_x1'], $requestData['photo_y1']);
 
                     $img->resize(200, 200);
 

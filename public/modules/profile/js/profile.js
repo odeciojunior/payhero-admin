@@ -1,16 +1,30 @@
 $(document).ready(function () {
 
-    $("#update_profile").on("click", function () {
+   //
+/*
+    $.ajax({
+        method: "POST",
+        url: "/sms/enviarsmsmanual",
+        processData: false,
+        contentType: false,
+        cache: false,
+        data: form_data,
+        */
+
+    $("#profile_update_form").on("submit", function (event) {
+        event.preventDefault();
+        var form_data = new FormData(document.getElementById('profile_update_form'));
 
         $.ajax({
-            method: "PUT",
-            url: $("#update_profile").attr('action'),
+            method: "POST",
+            url: $('#profile_update_form').attr('action'),
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: {
-                data: $("#update_profile").serialize()
-            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
             error: function ( response) {
                 if(response.status == '422'){
                     for(error in response.responseJSON.errors){
@@ -33,7 +47,7 @@ $(document).ready(function () {
             }
         });
 
-        $('#profile_update_form')
+
     });
 
     var p = $("#previewimage");

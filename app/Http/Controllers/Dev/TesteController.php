@@ -37,7 +37,7 @@ class TesteController extends Controller
         dd($teste->disk());
 */
         $teste = app(DigitalOceanFileService::class);
-        $url = $teste->deleteFile('upload/nA1z65DxwuBJRtmpQ3gwFY9WDbB7Wwjy6iEtrMHQ.jpeg');
+        //$url = $teste->deleteFile('upload/nA1z65DxwuBJRtmpQ3gwFY9WDbB7Wwjy6iEtrMHQ.jpeg');
         $files = Storage::disk('openSpaces')->files('upload');
         dd($files);
 

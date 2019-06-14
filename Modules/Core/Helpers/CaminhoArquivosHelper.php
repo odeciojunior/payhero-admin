@@ -23,9 +23,15 @@ images
 gifs
 extramaterials
 files
+
 uploads/product/ID/private
 images
 gifs
 extramaterials
 files
 */
+
+
+//uploads/user/ID/public
+
+

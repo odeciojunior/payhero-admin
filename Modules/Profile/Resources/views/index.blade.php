@@ -127,7 +127,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group" style="margin-top: 30px">
-                                            <input id="update_profile" type="button" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
+                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
                                         </div>
                                     </form>
                                 </div>
