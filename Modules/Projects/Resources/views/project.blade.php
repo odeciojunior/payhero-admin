@@ -10,7 +10,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <h1 class="page-title">Projeto {{ $project->name }}</h1>
             <div class="page-header-actions">
                 <a class="btn btn-success float-right" href="/projetos">
@@ -18,10 +18,9 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container-fluid">
-            <div class="panel pt-10 p-10" data-plugin="matchHeight">
-                <div class="col-xl-12">
-                    <div class="example-wrap">
+        <div class="page-content container">
+
+        <div class="mb-30">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
                                 <li class="nav-item" role="presentation">
@@ -53,7 +52,7 @@
                                 @endif
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" data-toggle="tab" href="#tab_cupons"
-                                       aria-controls="tab_cupons" role="tab">Cupons de desconto
+                                       aria-controls="tab_cupons" role="tab">Cupons
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
@@ -81,7 +80,14 @@
                                     </a>
                                 </li>
                             </ul>
-                            <div class="tab-content pt-20">
+                           
+                        </div>
+                    </div>
+
+            <div class="panel pt-10 p-10" data-plugin="matchHeight">
+                <div class="col-xl-12">
+
+                <div class="tab-content pt-20">
                                 <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
                                     <div class="row">
                                         <div class="col-lg-3 col-xl-3">
@@ -243,8 +249,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                    
                     <!-- Modal para ver detalhes de * no projeto -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-simple">

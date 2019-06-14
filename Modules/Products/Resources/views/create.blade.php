@@ -42,7 +42,7 @@
                                 <input name="product_photo" type="file" class="form-control" id="foto" style="display:none">
                                 <label for="name">Selecione uma imagem</label>
                                 <button style="max-width: 250px;" type="button" class="btn btn-primary mt-10 mb-10" id="selecionar_foto"><i class="icon wb-upload" aria-hidden="true"></i> Selecionar foto</button>
-                                <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="http://localhost/assets/img/produto.png" style="max-height: 250px; max-width: 300px;">
+                                <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('assets/img/produto.png') }}" style="max-height: 250px; max-width: 300px;">
                                 <input type="hidden" name="foto_x1"> <input type="hidden" name="foto_y1">
                                 <input type="hidden" name="foto_w"> <input type="hidden" name="foto_h">
                                 <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato JPG, ou PNG. <br> Dimensões ideais: 600x500 pixels.
