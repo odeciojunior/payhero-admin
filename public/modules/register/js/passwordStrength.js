@@ -18,21 +18,16 @@ $("#password").keyup(function (e) {
         $('#text-password').html('forte!');
         $("#number-count-incorrect").css('display', 'none');
         $("#number-count-correct").css('display', 'block');
-
         score = 100;
-
     } else if (passwordMedium) {
-
         $('#text-password').html('boa!');
         $("#number-count-correct").css('display', 'block');
         $("#number-count-incorrect").css('display', 'none');
-
         score = 50;
     } else {
         $('#text-password').html('fraca');
         $("#number-count-correct").css('display', 'block');
         $("#number-count-incorrect").css('display', 'none');
-
         score = 25;
     }
 
@@ -43,6 +38,15 @@ $("#password").keyup(function (e) {
     else{
         $("#length-correct").hide();
         $("#length-incorrect").show();
+    }
+
+    if($("#password").val().replace(/[^a-zA-Z]/g,'').length > 0){
+        $("#character-count-correct").show();
+        $("#character-count-incorrect").hide();
+    }
+    else{
+        $("#character-count-correct").hide();
+        $("#character-count-incorrect").show();
     }
 
     let widt = 0 + '%';

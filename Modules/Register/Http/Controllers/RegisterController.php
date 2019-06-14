@@ -43,7 +43,7 @@ class RegisterController extends Controller
             $dados['foxcoin']                             = '0';
             $dados['credit_card_antecipation_money_days'] = '15';
             $dados['release_money_days']                  = '30';
-            $dados['boleto_antecipation_money_days']      = '7';
+            $dados['boleto_antecipation_money_days']      = '7'; 
             $dados['antecipation_tax']                    = '5.0';
             $dados['percentage_antecipable']              = '80';
             $dados['email_amount']                        = '0';

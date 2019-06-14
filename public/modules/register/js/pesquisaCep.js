@@ -1,30 +1,30 @@
-function limpa_formulário_cep() {
+function clearZipCodeForm() {
     //Limpa valores do formulário de cep.
-    document.getElementById('logradouro').value = ("");
-    document.getElementById('bairro').value = ("");
-    document.getElementById('cidade').value = ("");
-    document.getElementById('estado').value = ("");
+    document.getElementById('brasil_street').value = ("");
+    document.getElementById('brasil_neighborhood').value = ("");
+    document.getElementById('brasil_city').value = ("");
+    document.getElementById('brasil_state').value = ("");
 }
 
-function meu_callback(conteudo) {
-    if (!("erro" in conteudo)) {
+function myCallback(data) {
+    if (!("erro" in data)) {
         //Atualiza os campos com os valores.
-        document.getElementById('logradouro').value = (conteudo.logradouro);
-        document.getElementById('bairro').value = (conteudo.bairro);
-        document.getElementById('cidade').value = (conteudo.localidade);
-        document.getElementById('estado').value = (conteudo.uf);
+        document.getElementById('brasil_street').value = (data.logradouro);
+        document.getElementById('brasil_neighborhood').value = (data.bairro);
+        document.getElementById('brasil_city').value = (data.localidade);
+        document.getElementById('brasil_state').value = (data.uf);
     } //end if.
     else {
         //CEP não Encontrado.
-        limpa_formulário_cep();
-        alert("CEP não encontrado.");
+        clearZipCodeForm();
+        // alert("CEP não encontrado.");
     }
 }
 
-function pesquisacep(valor) {
+$("#brasil_zip_code").on("blur", function(){
 
     //Nova variável "cep" somente com dígitos.
-    var cep = valor.replace(/\D/g, '');
+    var cep = $(this).val().replace(/\D/g, '');
 
     //Verifica se campo cep possui valor informado.
     if (cep != "") {
@@ -36,16 +36,16 @@ function pesquisacep(valor) {
         if (validacep.test(cep)) {
 
             //Preenche os campos com "..." enquanto consulta webservice.
-            document.getElementById('logradouro').value = "...";
-            document.getElementById('bairro').value = "...";
-            document.getElementById('cidade').value = "...";
-            document.getElementById('estado').value = "...";
+            document.getElementById('brasil_street').value = "...";
+            document.getElementById('brasil_neighborhood').value = "...";
+            document.getElementById('brasil_city').value = "...";
+            document.getElementById('brasil_state').value = "...";
 
             //Cria um elemento javascript.
             var script = document.createElement('script');
 
             //Sincroniza com o callback.
-            script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+            script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=myCallback';
 
             //Insere script no documento e carrega o conteúdo.
             document.body.appendChild(script);
@@ -53,12 +53,14 @@ function pesquisacep(valor) {
         } //end if.
         else {
             //cep é inválido.
-            limpa_formulário_cep();
+            clearZipCodeForm();
             alert("Formato de CEP inválido.");
         }
     } //end if.
     else {
         //cep sem valor, limpa formulário.
-        limpa_formulário_cep();
+        clearZipCodeForm();
     }
-};
+});
+
+

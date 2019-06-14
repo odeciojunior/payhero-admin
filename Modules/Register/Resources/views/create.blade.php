@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{{asset('modules/register/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('modules/register/css/jquery-ui.min.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href="{{ asset('/assets/css/sweetalert2.min.css') }}">
+
     <script
         src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -29,7 +31,7 @@
         </div>
     </section>
     <div class="progress">
-        <div class="progress-bar " id="progress-bar-register" role="progressbar" aria-valuenow="25" aria-valuemin="0"
+        <div class="progress-bar" id="progress-bar-register" role="progressbar" aria-valuenow="25" aria-valuemin="0"
             aria-valuemax="100">
         </div>
     </div>
@@ -98,10 +100,8 @@
                                     <h5> Sua senha deve conter: </h5>
                                     <div class="passtip-item mt10 d-flex align-items-center">
                                         <span id='number-count-correct' class="check" style='display:none;'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                height="24" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>
                                             </svg>
                                         </span>
                                         <span id='number-count-incorrect' class="check">
@@ -124,90 +124,97 @@
                                         </span>
                                         <span> Pelo menos um número</span>
                                     </div>
+                                    <div class="passtip-item d-flex align-items-center">
+                                        <span id='character-count-correct' class="check" style='display:none;'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.393 7.5l-5.643 5.784-2.644-2.506-1.856 1.858 4.5 4.364 7.5-7.643-1.857-1.857z"/>
+                                            </svg>
+                                        </span>
+                                        <span id='character-count-incorrect' class="check">
+                                            <svg class="wrong" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style='fill:#D30D0C'>
+                                                <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5 15.538l-3.592-3.548 3.546-3.587-1.416-1.403-3.545 3.589-3.588-3.543-1.405 1.405 3.593 3.552-3.547 3.592 1.405 1.405 3.555-3.596 3.591 3.55 1.403-1.416z"/>
+                                            </svg>
+                                        </span>
+                                        <span> Pelo menos uma letra </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div id="empresa" class="div2" style="display: none;">
                         <h4 class="bold title-content">Cadastre sua empresa</h4>
-                        <p class="desc" style="width: 60%;"> Para cadastras seus produtos e começar a vender, você precisa cadastrar sua empresa primeiro.
-                        </p>
+                        <p class="desc"> Para cadastrar seus produtos e começar a vender, você precisa cadastrar sua empresa primeiro.
+                        </p><br>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
-                                    <label>Selecione o país:</label>
+                                    <label>Selecione o país de sua empresa:</label>
                                     <div class="btn-group colors select-country" data-toggle="buttons">
                                         <label id='btnBrasil' class="btn btn-outline-primary ">
-                                            <input type="radio" class="typeBrasil" name="options" value="BRA"
-                                                autocomplete="off" checked='checked'> Brasil
+                                            <input type="radio" class="typeBrasil" name="country" value="brasil" autocomplete="off" checked='checked'> Brasil
                                         </label>
                                         <label id='btnUSA' class="btn btn-outline-primary">
-                                            <input type="radio" class="typeUSA" name="options" value="USA"
-                                                autocomplete="off"> United States
+                                            <input type="radio" class="typeUSA" name="country" value="usa" autocomplete="off"> United States
                                         </label>
                                     </div>
+                                    <input type="hidden" id="country" value="brasil">
                                 </div>
                             </div>
                         </div>
-                        <div id="brasil-form" style='display:none;'>
+                        <div id="brasil-form">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="identificatioNumber">CPF/CNPJ</label>
-                                        <input type="text" name="identificatioNumber" id="identificatioNumber"
-                                            placeholder="Digite seu CPF ou CNPJ da empresa" required>
+                                        <label for="brasil_company_document">CPF/CNPJ</label>
+                                        <p class='sm-tex text-danger' id='brasilCompanyDocumentError' style='display:none;'>Documeto inválido</p>
+                                        <input type="text" name="brasil_company_document" id="brasil_company_document" placeholder="Digite seu CPF ou CNPJ da empresa" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="fantasyname">Nome Fantasia</label>
-                                        <input type="text" name="fantasyname" id="fantasyname"
-                                            placeholder="Digite o nome fantasia" required>
+                                        <label for="brasil_fantasy_name">Nome Fantasia</label>
+                                        <p class='sm-tex text-danger' id='brasilFantasyNameError' style='display:none;'>Documeto inválido</p>
+                                        <input type="text" name="brasil_fantasy_name" id="brasil_fantasy_name" placeholder="Digite o nome fantasia" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt30">
                                 <div class="col-lg-3">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="zip_code">CEP</label>
-                                        <input type="text" name="zip_code" id="zip_code" placeholder="Digite o CEP" onblur='pesquisacep(this.value)'
-                                            required>
+                                        <label for="brasil_zip_code">CEP</label>
+                                        <input type="text" name="brasil_zip_code" id="brasil_zip_code" placeholder="Digite o CEP" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="logradouro">Logradouro</label>
-                                        <input type="text" name="logradouro" id="logradouro" placeholder="Rua, Avenida..."
-                                            required>
+                                        <label for="brasil_street">Rua</label>
+                                        <input type="text" name="brasil_street" id="brasil_street" placeholder="Rua, Avenida..." required>
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="numero">Nº</label>
-                                        <input type="text" name="numero" id="numero" required>
+                                        <label for="brasil_number">Nº</label>
+                                        <input type="text" name="brasil_number" id="brasil_number" placeholder="Nº">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="bairro">Bairro</label>
-                                        <input type="text" name="bairro" id="bairro" placeholder="Digite o bairro"
-                                            required>
+                                        <label for="brasil_neighborhood">Bairro</label>
+                                        <input type="text" name="brasil_neighborhood" id="brasil_neighborhood" placeholder="Digite o bairro" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="estado">Estado</label>
-                                        <input type="text" name="estado" id="estado" placeholder="Digite a cidade"
-                                            required>
+                                        <label for="brasil_state">Estado</label>
+                                        <input type="text" name="brasil_state" id="brasil_state" placeholder="Estado" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="cidade">Cidade</label>
-                                        <input type="text" name="cidade" id="cidade" placeholder="Digite a cidade"
-                                            required>
+                                        <label for="brasil_city">Cidade</label>
+                                        <input type="text" name="brasil_city" id="brasil_city" placeholder="Digite a cidade" required>
                                     </div>
                                 </div>
                             </div>
@@ -216,46 +223,44 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="name_eua">Legal Business Name</label>
-                                        <input type="text" name="name_eua" id="name_eua" placeholder="Enter your Legal Business Name" required>
+                                        <label for="eua_fantasy_name">Legal Business Name</label>
+                                        <p class='sm-tex text-danger' id='euaFantasyNameError' style='display:none;'>Invalid name</p>
+                                        <input type="text" name="eua_fantasy_name" id="eua_fantasy_name" placeholder="Enter your Legal Business Name" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="ein">EIN</label>
-                                        <input type="text" name="ein" id="ein" placeholder="Enter your document"
-                                            required>
+                                        <label for="eua_company_document">EIN</label>
+                                        <p class='sm-tex text-danger' id='euaCompanyDocumentError' style='display:none;'>Invalid EIN</p>
+                                        <input type="text" name="eua_company_document" id="eua_company_document" placeholder="Enter your document" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt30">
                                 <div class="col-lg-3">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="zip_code_eua">ZIP/Postal Code</label>
-                                        <input type="text" name="zip_code_eua" id="zip_code_eua" placeholder="Enter your ZIP Code"
-                                            required>
+                                        <label for="eua_zip_code">ZIP/Postal Code</label>
+                                        <input type="text" name="eua_zip_code" id="eua_zip_code" placeholder="Enter your ZIP Code" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-8">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="street"> Street Address</label>
-                                        <input type="text" name="street" id="street" placeholder="Enter your address"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="input-holder d-flex flex-column">
-                                        <label for="address">Address Line 2</label>
-                                        <input Enter="text" name="address" id="cpf-cnpj"
-                                            placeholder="Enter your Apt/Suite/Other">
+                                        <label for="eua_street"> Street Address</label>
+                                        <input type="text" name="eua_street" id="eua_street" placeholder="Enter your address" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="state">State</label>
-                                        <select name="state" id="state" required>
+                                        <label for="eua_number">Nº</label>
+                                        <input Enter="text" name="eua_number" id="eua_number" placeholder="Nº">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="input-holder d-flex flex-column">
+                                        <label for="eua_state">State</label>
+                                        <select name="eua_state" id="eua_state" required>
                                             <option value="AL">Alabama</option>
                                             <option value="AK">Alaska</option>
                                             <option value="AZ">Arizona</option>
@@ -269,7 +274,7 @@
                                             <option value="GA">Georgia</option>
                                             <option value="HI">Hawaii</option>
                                             <option value="ID">Idaho</option>
-                                            <option value="IL">Illinois</option>
+                                            <option value="IL">Illinois</option> 
                                             <option value="IN">Indiana</option>
                                             <option value="IA">Iowa</option>
                                             <option value="KS">Kansas</option>
@@ -312,15 +317,14 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="input-holder d-flex flex-column">
-                                        <label for="city">City</label>
-                                        <input type="text" name="city" id="city" placeholder="Enter your city"
-                                            required>
+                                        <label for="eua_city">City</label>
+                                        <input type="text" name="eua_city" id="eua_city" placeholder="Enter your city" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="select-projeto" class="div3" style="display: none;">
+                    {{-- <div id="select-projeto" class="div3" style="display: none;">
                         <div class="text-center">
                             <h4 class="bold title-content">Vamos criar seu primeiro projeto?</h4>
                             <p class="desc"> Primeiro, conta pra gente, qual tipo de projeto? </p>
@@ -381,6 +385,7 @@
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" id="company_id">
                     </div>
                     <div id="standard-project" class="div4" style="display: none;">
                         <div class="row align-items-center">
@@ -481,7 +486,7 @@
                             </div>
                             <div class="col-lg-6 hidden-m d-flex justify-content-center">
                                 <div class="project-card d-flex flex-column align-items-center hidden-m">
-                                    {{--<div class="private-over justify-content-center text-center">
+                                    <div class="private-over justify-content-center text-center">
                                         <div class="private-card-content">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
                                                 viewBox="0 0 24 24">
@@ -490,7 +495,7 @@
                                             </svg>
                                             <h4 class="bold">Privado</h4>
                                         </div>
-                                    </div>--}}
+                                    </div>
                                     <div class="card-img">
                                         <img class="card-img-top" id='image-shopify' src="{{asset('modules/register/img/projeto.png')}}" style='height:240px; width:240px;'>
                                     </div>
@@ -501,12 +506,12 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div id="success" class="div6" style="display: none">
                         <div class="content-success">
-                            <img src="{{asset('modules/register/img/loader.svg')}}">
+                            <img src="{{asset('modules/global/gif/cloudfox-loading-1.gif')}}">
                             <h1 class="bold orange mt10"> Tudo pronto! </h1>
-                            <p class="mt10"> Só um momento. Estamos preparando a sua plataforma para você! Em alguns instantes, você estara na sua nova dashboard.
+                            <p class="mt10"> Só um momento. Estamos preparando a plataforma para você! Em alguns instantes, você estara na sua nova dashboard.
                         </div>
                     </div>
                 </form>
@@ -556,25 +561,7 @@
     <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
     <script src="{{asset('modules/register/js/register.js')}}"></script>
     <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
+    <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
-    <script>
-        // MASCARA CNPJ/CPF
-        var options = {
-            onKeyPress: function (identificatioNumber, e, field, options) {
-                var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
-                $('#identificatioNumber').mask(mask, options);
-            }
-        };
-
-        //mascara cpf
-        $('#identificatioNumber').mask('000.000.000-000', options);
-
-        // mascara cep
-        $("#zip_code").mask("99.999-999");
-
-        // mascara numero telefone
-        $("#phone").mask("(00) 0000-00009");
-    </script>
 </body>
 </html>
