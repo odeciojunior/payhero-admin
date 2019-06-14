@@ -17,4 +17,15 @@ class CaminhoArquivosHelper {
 
 }
 
-
+/*
+uploads/product/ID/public
+images
+gifs
+extramaterials
+files
+uploads/product/ID/private
+images
+gifs
+extramaterials
+files
+*/
