@@ -19,6 +19,7 @@
             </div>
         </div>
         <div class="page-content container">
+            <input type='hidden' id='project-id' value='{{Hashids::encode($project->id)}}'/>
 
         <div class="mb-30">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">

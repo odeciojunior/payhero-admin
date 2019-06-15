@@ -90,7 +90,7 @@ class PixelsController extends Controller
         return response()->json('sucesso');
     }
 
-    public function details(Request $request)
+    /*public function details(Request $request)
     {
 
         $dados = $request->all();
@@ -129,12 +129,12 @@ class PixelsController extends Controller
         $modalBody .= "</div>";
 
         return response()->json($modalBody);
-    }
+    }*/
 
     public function create()
     {
         try {
-            dd('aldso');
+            dd('chegou no create');
             $view = view('pixels::create');
 
             return response()->json($view->render());
