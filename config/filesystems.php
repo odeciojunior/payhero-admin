@@ -54,7 +54,6 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
-
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -63,7 +62,26 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        'downloadSpaces'     => [
+            'driver'   => 's3',
+            'key'      => env('DO_SPACES_KEY'),
+            'secret'   => env('DO_SPACES_SECRET'),
+            'endpoint' => env('DO_SPACES_ENDPOINT'),
+            'region'   => env('DO_SPACES_REGION'),
+            'bucket'   => env('DO_SPACES_BUCKET'),
+            'options'  => array(
+                'ContentDisposition' => 'attachment'
+            ),
+        ],
+        'openSpaces'     => [
+            'driver'   => 's3',
+            'key'      => env('DO_SPACES_KEY'),
+            'secret'   => env('DO_SPACES_SECRET'),
+            'endpoint' => env('DO_SPACES_ENDPOINT'),
+            'region'   => env('DO_SPACES_REGION'),
+            'bucket'   => env('DO_SPACES_BUCKET'),
 
+        ],
     ],
 
 ];

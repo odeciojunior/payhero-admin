@@ -14,8 +14,9 @@
         <div class="page-content container">
             <div class="panel pt-30 p-30" data-plugin="matchHeight">
                 @if($companies->count() > 0)
-                    <form method="post" action="/projects" enctype="multipart/form-data">
+                    <form method="POST" action="/projects" enctype="multipart/form-data">
                         @csrf
+                        @method('POST')
                         <h4> Dados gerais </h4>
                         <div style="width:100%">
                             <div class='row'>
@@ -24,61 +25,54 @@
                                     <br>
                                     <div class='row'>
                                         <div class='col-md-6'>
-                                            <label for='select-photo'>Imagem do Projeto</label>
+                                            <input name='project-photo' type='file' class='form-control' id='photo' style="display:none">
+                                            <div style="margin: 20px 0 0 30px;">
+                                                <img id='preview-image-project' alt='Selecione a foto do produto' src='{{asset('modules/projects/img/projeto.png')}}'>
+                                            </div>
+                                            <input type='hidden' name='foto_x1'/> <input type='hidden' name='foto_y1'/>
+                                            <input type='hidden' name='foto_w'/> <input type='hidden' name='foto_h'/>
+                                            <br>
+                                            <div class='col-md-8'>
+                                                <input type='button' id='select-photo' class='btn btn-default' value='Selecionar foto do projeto'>
+                                            </div>
+                                        </div>
+                                        <div class='col-md-6'>
+                                            <div class='form-group col-xl-12'>
+                                                <label for='name'>Nome</label>
+                                                <input name='name' type='text' class='form-controll' id='name' placeholder='Nome do projeto' required>
+                                                @if ($errors->has('name'))
+                                                    <div class="invalid-feedback d-block">
+                                                        <strong>{{ $errors->first('name') }}</strong>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class='form-group col-xl-12'>
+                                                <label for='company'>Empresa</label>
+                                                <select name='company' class='form-control' id='company' required>
+                                                    <option value=''>Selecione</option>
+                                                    @foreach($companies as $company)
+                                                        <option value='{{Hashids::encode($company->id)}}'>{{$company->fantasy_name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('company'))
+                                                    <div class="invalid-feedback d-block">
+                                                        <strong>{{ $errors->first('company') }}</strong>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class='form-group col-xl-12'>
+                                                <label for='description'>Descrição</label>
+                                                <textarea name='description' class='form-control' id='description' placeholder='Descrição' rows='4' cols='50'></textarea>
+                                                @if ($errors->has('description'))
+                                                    <div class="invalid-feedback d-block">
+                                                        <strong>{{ $errors->first('description') }}</strong>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <input type='hidden' value='private' name='visibility'>
+                                            <input type='hidden' value='1' name='status'>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-xl-6">
-                                    <label for="nome">Nome</label>
-                                    <input name="name" type="text" class="form-control" id="nome" placeholder="Nome do projeto" required>
-                                </div>
-                                <div class="form-group col-xl-6">
-                                    <label for="emrpesa">Empresa</label>
-                                    <select name="company" class="form-control" id="empresa" required>
-                                        <option value="">Selecione</option>
-                                        @foreach($companies as $company)
-                                            <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-xl-12">
-                                    <label for="descricao">Descrição</label>
-                                    <input name="description" type="text" class="form-control" id="descricao" placeholder="Descrição">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-xl-6">
-                                    <label for="visibilidade">Visibilidade</label>
-                                    <select name="visibility" class="form-control" id="visibilidade" required>
-                                        <option value="">Selecione</option>
-                                        <option value="public">Projeto público</option>
-                                        <option value="private">Projeto privado</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-xl-6">
-                                    <label for="status">Status</label>
-                                    <select name="status" class="form-control" id="status" required>
-                                        <option value="">Selecione</option>
-                                        <option value="1">Ativo</option>
-                                        <option value="0">Inativo</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-12">
-                                    <label for="selecionar_foto">Imagem do projeto</label>
-                                    <br>
-                                    <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto">
-                                    <input name="project_photo" type="file" class="form-control" id="foto" style="display:none" accept="image/*">
-                                    <div style="margin: 20px 0 0 30px;">
-                                        <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;"/>
-                                    </div>
-                                    <input type="hidden" name="foto_x1"/> <input type="hidden" name="foto_y1"/>
-                                    <input type="hidden" name="foto_w"/> <input type="hidden" name="foto_h"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 30px">
@@ -100,11 +94,11 @@
     <script>
         $(document).ready(function () {
 
-            var p = $("#previewimage");
-            $("#foto").on("change", function () {
+            var p = $("#preview-image-project");
+            $("#photo").on("change", function () {
 
                 var imageReader = new FileReader();
-                imageReader.readAsDataURL(document.getElementById("foto").files[0]);
+                imageReader.readAsDataURL(document.getElementById("photo").files[0]);
 
                 imageReader.onload = function (oFREvent) {
                     p.attr('src', oFREvent.target.result).fadeIn();
@@ -157,8 +151,8 @@
 
             });
 
-            $("#selecionar_foto").on("click", function () {
-                $("#foto").click();
+            $("#select-photo").on("click", function () {
+                $("#photo").click();
             });
 
         });

@@ -49,12 +49,35 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use SoftDeletes;
-
     protected $dates = ['deleted_at'];
     /**
      * @var array
      */
-    protected $fillable = ['carrier', 'photo', 'visibility', 'status', 'name', 'description', 'sms_status', 'invoice_description', 'percentage_affiliates', 'url_page', 'automatic_affiliation', 'shopify_id', 'shipment', 'shipment_value', 'shipment_responsible', 'installments_amount', 'installments_interest_free', 'cookie_duration', 'url_cookies_checkout', 'contact', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'carrier',
+        'photo',
+        'visibility',
+        'status',
+        'name',
+        'description',
+        'sms_status',
+        'invoice_description',
+        'percentage_affiliates',
+        'url_page',
+        'automatic_affiliation',
+        'shopify_id',
+        'shipment',
+        'shipment_value',
+        'shipment_responsible',
+        'installments_amount',
+        'installments_interest_free',
+        'cookie_duration',
+        'url_cookies_checkout',
+        'contact',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -158,6 +181,11 @@ class Project extends Model
     public function shopifyIntegrations()
     {
         return $this->hasMany('App\Entities\ShopifyIntegration', 'project');
+    }
+
+    public function shippings()
+    {
+        return $this->hasMany('App\Entities\Shipping', 'project');
     }
 
     /**

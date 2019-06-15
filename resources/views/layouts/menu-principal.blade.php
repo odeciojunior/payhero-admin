@@ -135,7 +135,7 @@
                 </span>
               </a>
               <div class="dropdown-menu" role="menu">
-                <a class="dropdown-item" href="{!! route('profile') !!}" role="menuitem">
+                <a class="dropdown-item" href="{!! route('profile.index') !!}" role="menuitem">
                   <i class="icon wb-user" aria-hidden="true"></i> 
                   Perfil 
                 </a>
