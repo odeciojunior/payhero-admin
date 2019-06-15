@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property string $status
  * @property string $release_date
+ * @property string $antecipation_date
  * @property string $created_at
  * @property string $updated_at
  * @property Company $company
@@ -30,7 +31,7 @@ class Transaction extends Model
     /**
      * @var array
      */
-    protected $fillable = ['sale', 'company', 'value', 'type', 'status', 'release_date', 'created_at', 'updated_at'];
+    protected $fillable = ['sale', 'company', 'value', 'type', 'status', 'release_date', 'antecipation_date', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

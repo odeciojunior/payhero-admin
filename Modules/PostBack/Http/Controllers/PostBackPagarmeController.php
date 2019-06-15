@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Modules\Core\HotZapp\HotZapp;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use App\Entities\ShopifyIntegration;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Transportadoras\Kapsula;
@@ -30,14 +31,14 @@ class PostBackPagarmeController extends Controller {
  
         if(isset($requestData['event']) && $requestData['event'] = 'transaction_status_changed'){
 
-            $sale = Sale::find($requestData['transaction']['metadata']['sale_id']);
-
-            Log::write('info', 'alterando dados da venda : '. $sale['id']);
+            $sale = Sale::find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
 
             if($sale == null){
-                Log::write('info', 'VENDA NÃO ENCONTRADA!!!');
+                Log::write('info', 'VENDA NÃO ENCONTRADA!!!' . Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
                 return 'sucesso';
             }
+
+            Log::write('info', 'alterando dados da venda : '. $sale['id']);
 
             if($requestData['transaction']['status'] == $sale['gateway_status']){
                 return 'sucesso';

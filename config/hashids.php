@@ -40,7 +40,7 @@ return [
     'connections' => [
 
         'main' => [
-            'salt' => env('APP_KEY', ''),
+            'salt' => '7d124336feb18d280c0f32d7fc5e57a1',  // gerado aleatoriamente na internet (igual ao do checkout)
             'length' => '15',
         ],
 

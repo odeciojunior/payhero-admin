@@ -3,13 +3,21 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Auth;
+use Exception;
 use App\Entities\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
+use Modules\Companies\Transformers\CompanyResource;
 
 class CompaniesController extends Controller {
+
+    /**
+     * @var Company
+     */
+    private $companytModel;
 
     public function index() {
 
@@ -23,13 +31,20 @@ class CompaniesController extends Controller {
 
     public function store(Request $request){
 
-        $requestData = $request->all();
+        try{
+            $requestData = $request->all();
 
-        $requestData['user'] = \Auth::user()->id;
+            $requestData['user'] = \Auth::user()->id;
 
-        $company = Company::create($requestData);
+            $company = $this->getCompanyModel()->create($requestData);
 
-        return redirect()->route('companies');
+            return new CompanyResource($company);
+        }
+        catch(Exception $e){
+            Log::warning('Erro ao cadastrar empresa (CompaniesController - store)');
+            report($e);
+            return response()->json('erro');
+        }
     }
 
     public function getCreateForm(Request $request){
@@ -43,7 +58,7 @@ class CompaniesController extends Controller {
             $view = view('companies::create_american_company');
         }
 
-        return response()->json($view->render());
+        return reponse()->json($view->render());
     }
 
     public function edit($id){
@@ -325,6 +340,15 @@ class CompaniesController extends Controller {
 
         return $banks;
 
+    }
+
+    private function getCompanyModel(){
+
+        if($this->companytModel == null){
+            $this->companytModel = new Company();
+        }
+
+        return $this->companytModel;
     }
 
 }

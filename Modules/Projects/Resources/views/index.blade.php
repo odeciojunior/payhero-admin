@@ -4,18 +4,19 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <a href="/projects/create" class="btn btn-floating btn-danger" style="position: relative; float: right">
                 <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i></a>
             <h1 class="page-title">Meus projetos</h1>
             <div class="page-header-actions">
             </div>
         </div>
-        <div class="page-content container-fluid" style="margin-top: 30px">
+        <div class="page-content container" style="margin-top: 30px">
+
             @if(isset($projects) && $projects->count() > 0)
                 <div class="row">
                     @foreach($projects as $project)
-                        <div class="col-xl-3 col-md-6 info-panel">
+                        <!-- <div class="col-xl-3 col-md-6 info-panel">
                             <div class="card card-shadow">
                                 <a href='/projects/{{Hashids::encode($project->id)}}'>
                                     <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project->photo !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
@@ -26,6 +27,18 @@
                                         <hr>
                                         <p class="card-text">{{$project->description}}</p>
                                     </a>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card">
+                                <img class="card-img-top" src="{{ asset('assets/img/produto.png') }}" alt="">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{$project->name}}</h5>
+                                    <p class="card-text sm">Criado em 14/06/2019</p>
+                                    <a href="/projects/{{Hashids::encode($project->id)}}" class="stretched-link"></a>
+
                                 </div>
                             </div>
                         </div>

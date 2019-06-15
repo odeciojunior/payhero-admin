@@ -1,7 +1,10 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'empresas', 'namespace' => 'Modules\Companies\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function()
 {
+
+    Route::resource('/companies', 'CompaniesController');
+
     Route::get('/', [
         'uses' => 'CompaniesController@index',
         'as' => 'companies',
@@ -27,10 +30,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'empresas', 'namespac
         'as' => 'companies.delete',
     ]);
 
-    Route::post('/cadastrarempresa', [
-        'uses' => 'CompaniesController@store',
-        'as' => 'companies.store',
-    ]);
+    // Route::post('/cadastrarempresa', [
+    //     'uses' => 'CompaniesController@store',
+    //     'as' => 'companies.store',
+    // ]);
 
     Route::post('/data-source',[
         'as' => 'companies.getCompaniesData',

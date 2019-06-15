@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <h1 class="page-title">Cadastrar novo projeto</h1>
             <div class="page-header-actions">
                 <a class="btn btn-primary float-right" href="/projects">
@@ -11,7 +11,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container-fluid">
+        <div class="page-content container">
             <div class="panel pt-30 p-30" data-plugin="matchHeight">
                 @if($companies->count() > 0)
                     <form method="POST" action="/projects" enctype="multipart/form-data">

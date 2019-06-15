@@ -6,74 +6,177 @@ use App\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
+use Exception;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 
-class ProfileController extends Controller {
+/**
+ * uploads/user/ID/profile/photo.jpg
+ * uploads/user/ID/private/documents/*
+ * uploads/user/ID/private/company-documents/*
+ *
+ * uploads/product/ID/photo.jpg
+ * uploads/product/ID/private/product.pdf
+ */
 
-    public function index() {
+/**
+ * Class ProfileController
+ * @package Modules\Profile\Http\Controllers
+ */
+class ProfileController extends Controller
+{
+    /**
+     * @var User
+     */
+    private $userModel;
+    /**
+     * @var DigitalOceanFileService
+     */
+    private $digitalOceanFileService;
 
-        $user = \Auth::user();
-
-        return view('profile::index', [
-            'user' => $user,
-        ]);
-
+    /**
+     * ProfileController constructor.
+     */
+    public function __construct()
+    {
+        //
     }
 
-    public function update(Request $request) {
-
-        $requestData = $request->all();
-
-        $user = User::find($requestData['id']);
-
-        $user->update($requestData);
-
-        $userPhoto = $request->file('foto_usuario');
- 
-        if ($userPhoto != null) {
-
-            try{
-                $photoName = 'user_' . $user->id . '_.' . $userPhoto->getClientOriginalExtension();
-
-                Storage::delete('public/upload/perfil/'.$photoName);
-                
-                $userPhoto->move(CaminhoArquivosHelper::CAMINHO_FOTO_USER, $photoName);
-
-                $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
-
-                $img->crop($requestData['foto_w'], $requestData['foto_h'], $requestData['foto_x1'], $requestData['foto_y1']);
-
-                $img->resize(200, 200);
-
-                Storage::delete('public/upload/perfil/'.$photoName);
-                
-                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
-
-                $user->update([
-                    'photo' => $photoName
-                ]);
-            }
-            catch(\Exception $e){
-                dd($e);
-            }
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDigitalOceanFileService()
+    {
+        if (!$this->digitalOceanFileService) {
+            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
         }
 
-        return redirect()->route('profile');
+        return $this->digitalOceanFileService;
     }
 
-    public function changePassword(Request $request){
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getUserModel()
+    {
+        if (!$this->userModel) {
+            $this->userModel = app(User::class);
+        }
 
-        $requestData = $request->all();
-
-        $user = \Auth::user();
-
-        $user->update([
-            'password' => bcrypt($requestData['nova_senha'])
-        ]);
-
-        return response()->json("sucesso");
+        return $this->userModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        try {
+            $user = auth()->user();
+
+            return view('profile::index', [
+                'user' => $user,
+            ]);
+        } catch (Exception $e) {
+            Log::warning('ProfileController index');
+            report($e);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(ProfileUpdateRequest $request, $profileId)
+    {
+        try {
+
+            $requestData = $request->validated();
+
+            $this->getUserModel()
+                 ->where('id', auth()->user()->id)
+                 ->update([
+                              'name'         => $requestData['name'],
+                              'email'        => $requestData['email'],
+                              'document'     => $requestData['document'],
+                              'cellphone'    => $requestData['cellphone'],
+                              'date_birth'   => $requestData['date_birth'],
+                              //'photo_x1'     => $requestData['photo_x1'],
+                              //'photo_y1'     => $requestData['photo_y1'],
+                              //'photo_w'      => $requestData['photo_w'],
+                              //'photo_h'      => $requestData['photo_h'],
+                              'zip_code'     => $requestData['zip_code'],
+                              'country'      => $requestData['country'],
+                              'state'        => $requestData['state'],
+                              'city'         => $requestData['city'],
+                              'neighborhood' => $requestData['neighborhood'],
+                              'street'       => $requestData['street'],
+                              'number'       => $requestData['number'],
+                              'complement'   => $requestData['complement'],
+
+                          ]);
+
+            $userPhoto = $request->file('profile_photo');
+
+            if ($userPhoto != null) {
+
+                try {
+                    $photoName = 'user_' . auth()->user()->id . '_.' . $userPhoto->getClientOriginalExtension();
+
+                    Storage::delete('public/upload/perfil/' . $photoName);
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()->uploadFile('uploads/user/ID/public/profile/');
+
+                    $userPhoto->move(CaminhoArquivosHelper::CAMINHO_FOTO_USER, $photoName);
+
+                    $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
+
+                    $img->crop($requestData['photo_w'], $requestData['photo_h'], $requestData['photo_x1'], $requestData['photo_y1']);
+
+                    $img->resize(200, 200);
+
+                    Storage::delete('public/upload/perfil/' . $photoName);
+
+                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
+
+                    $user->update([
+                                      'photo' => $photoName,
+                                  ]);
+                } catch (\Exception $e) {
+                    dd($e);
+                }
+            }
+
+            return redirect()->route('profile');
+        } catch (Exception $e) {
+            Log::warning('ProfileController update');
+            report($e);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changePassword(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+
+            $user = auth()->user();
+
+            $user->update([
+                              'password' => bcrypt($requestData['nova_senha']),
+                          ]);
+
+            return response()->json("sucesso");
+        } catch (Exception $e) {
+            Log::warning('ProfileController changePassword');
+            report($e);
+        }
+    }
 }

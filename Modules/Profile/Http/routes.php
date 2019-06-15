@@ -1,7 +1,9 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'perfil', 'namespace' => 'Modules\Profile\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Profile\Http\Controllers'], function() {
 
+    Route::resource('/profile', 'ProfileController')->only('index', 'create', 'store', 'edit', 'update', 'destroy')->names('profile');
+/*
     Route::get('/', [
         'uses' => 'ProfileController@index',
         'as'   => 'profile'
@@ -11,8 +13,8 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'perfil', 'namespace'
         'uses' => 'ProfileController@update',
         'as'   => 'profile.update'
     ]);
-
-    Route::post('/alterarsenha', [
+*/
+    Route::post('/changepassword', [
         'uses' => 'ProfileController@changePassword',
         'as'   => 'profile.changepassword'
     ]);

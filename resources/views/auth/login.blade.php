@@ -9,7 +9,7 @@
             <div class="page-content d-flex flex-column justify-content-center">
 
                 <div class="logobar text-center">
-                    <img src="{{ asset('adminremark/assets/images/logo-oficial.svg') }}" alt="CloudFox">
+                    <img src="{{ asset('modules/global/adminremark/assets/images/logo-oficial.svg') }}" alt="CloudFox">
                 </div>
 
                 <div class="toggle d-flex justify-content-center">
@@ -69,16 +69,7 @@
 
                             <div class="btnfix"></div>
 
-                            <a href=""
-                                class="btn btn-primary d-flex justify-content-center social-login google align-items-center">
-                                <span class="logo-btn"><img src="{{ asset('adminremark/assets/images/g-icon.svg') }}"></span> Entrar com Google </a>
-                            <div class="btnfix"></div>
-
-                            <a href=""
-                                class="btn btn-primary d-flex justify-content-center social-login facebook align-items-center">
-                                <span class="logo-btn"><img src="{{ asset('adminremark/assets/images/facebook-icon.svg') }}"></span> Entrar com Facebook </a>
-
-                            <div class="clearfix"></div>
+                         
                         </form>
 
 
@@ -92,26 +83,7 @@
 
                             <div class="btnfix"></div>
 
-                            <div class="row nm justify-content-center">
-
-                                <div class="col-6 text-center">
-                                    <a href=""
-                                        class="btn btn-primary d-flex justify-content-center social-login google align-items-center">
-                                        <span class="logo-btn"><img src="g-icon.svg"></span> Google </a>
-                                    <div class="btnfix"></div>
-
-                                </div>
-                                <div class="col-6 text-center">
-                                    <a href=""
-                                        class="btn btn-primary d-flex justify-content-center social-login facebook align-items-center">
-                                        <span class="logo-btn"><img src="facebook-icon.svg"></span> Facebook </a>
-                                </div>
-                            </div>
-
-
-
-
-
+                
                             <div class="input-holder">
                                 <input type="text" id="newuser_name" placeholder="Nome completo" required>
                             </div>
@@ -136,20 +108,20 @@
 
 
                             </form>
-                    </div>
+                        </div>
 
-                    <div class="hr"></div>
+                        <div class="hr"></div>
 
-<div class="d-flex justify-content-center align-items-center">
-    <a class="sm-text linkfooter" href="#"> Política de Privacidade </a>
-    <div class="oval"></div>
-    <a class="sm-text linkfooter" href="#"> Termos e Condições </a>
-    <div class="oval"></div>
-    <a class="sm-text linkfooter" href="#"> Suporte </a>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a class="sm-text linkfooter" href="#"> Política de Privacidade </a>
+                            <div class="oval"></div>
+                            <a class="sm-text linkfooter" href="#"> Termos e Condições </a>
+                            <div class="oval"></div>
+                            <a class="sm-text linkfooter" href="#"> Suporte </a>
 
-</div>
+                        </div>
 
-<div class="clearfix"></div>
+                    <div class="clearfix"></div>
 
                 </div>
 

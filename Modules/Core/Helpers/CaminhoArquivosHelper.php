@@ -16,3 +16,22 @@ class CaminhoArquivosHelper {
     const CAMINHO_MATERIAL_EXTRA_PROJETO_PDF  = "storage/upload/materialextra/pdfs/";
 
 }
+
+/*
+uploads/product/ID/public
+images
+gifs
+extramaterials
+files
+
+uploads/product/ID/private
+images
+gifs
+extramaterials
+files
+*/
+
+
+//uploads/user/ID/public
+
+
