@@ -1,585 +1,821 @@
-@extends("layouts.master")
+@extends("layouts.master") @section('styles')
 
-@section('styles')
+<link rel="stylesheet" href="{{ asset('css/style.css') }}"> @endsection @section('content')
 
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-@endsection
-
-@section('content')
-
-    <!-- Page -->
-    <div class="page">
-        <div class="page-header container">
-            <h1 class="page-title">Projeto {{ $project->name }}</h1>
-            <div class="page-header-actions">
-                <a class="btn btn-success float-right" href="/projetos">
+<!-- Page -->
+<div class="page">
+    <div class="page-header container">
+        <h1 class="page-title">Projeto {{ $project->name }}</h1>
+        <div class="page-header-actions">
+            <a class="btn btn-success float-right" href="/projetos">
                     Meus projetos
                 </a>
-            </div>
         </div>
-        <div class="page-content container">
+    </div>
+    <div class="page-content container">
 
         <div class="mb-30">
-                        <div class="nav-tabs-horizontal" data-plugin="tabs">
-                            <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" data-toggle="tab" href="#tab_info_geral"
-                                       aria-controls="tab_info_geral" role="tab">Informações gerais
+            <div class="nav-tabs-horizontal" data-plugin="tabs">
+                <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" data-toggle="tab" href="#tab_info_geral" aria-controls="tab_info_geral" role="tab">Informações
                                     </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_dominios"
-                                       aria-controls="tab_cupons" role="tab">Domínios
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_dominios" aria-controls="tab_cupons" role="tab">Domínios
                                     </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_layouts"
-                                       aria-controls="tab_cupons" role="tab">Layouts
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_layouts" aria-controls="tab_cupons" role="tab">Layouts
                                     </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_pixels"
-                                       aria-controls="tab_pixels" role="tab">Pixels
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_pixels" aria-controls="tab_pixels" role="tab">Pixels
                                     </a>
-                                </li>
-                                @if($project->shopify_id == '')
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" data-toggle="tab" href="#tab_brindes"
-                                           aria-controls="tab_brindes" role="tab">Brindes
+                    </li>
+                    @if($project->shopify_id == '')
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_brindes" aria-controls="tab_brindes" role="tab">Brindes
                                         </a>
-                                    </li>
-                                @endif
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_cupons"
-                                       aria-controls="tab_cupons" role="tab">Cupons
+                    </li>
+                    @endif
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_cupons" aria-controls="tab_cupons" role="tab">Cupons
                                     </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_sms"
-                                       aria-controls="tab_cupons" role="tab">Sms
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_sms" aria-controls="tab_cupons" role="tab">Notificações
                                     </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_planos" aria-controls="tab_planos" role="tab">
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_planos" aria-controls="tab_planos" role="tab">
                                         @if($project->shopify_id == '')
                                             Planos
                                         @else
                                             Produtos
                                         @endif
                                     </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_parceiros"
-                                       aria-controls="tab_parceiros" role="tab">Parceiros
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_parceiros" aria-controls="tab_parceiros" role="tab">Parceiros
                                     </a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" data-toggle="tab" href="#tab_configuracoes"
-                                       aria-controls="tab_cofiguracoes" role="tab">Configurações
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-toggle="tab" href="#tab_configuracoes" aria-controls="tab_cofiguracoes" role="tab">Configurações
                                     </a>
-                                </li>
-                            </ul>
-                           
-                        </div>
-                    </div>
+                    </li>
+                </ul>
 
-            <div class="panel pt-10 p-10" data-plugin="matchHeight">
-                <div class="col-xl-12">
+            </div>
+        </div>
 
-                <div class="tab-content pt-20">
-                                <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
-                                    <div class="row">
-                                        <div class="col-lg-3 col-xl-3">
-                                            <img src="{{ $photo }}" alt="Imagem não encontrada" style="height: 200px; width: 200px"/>
-                                        </div>
-                                        <div class="col-lg-9 col-xl-9">
-                                            <table class="table table-bordered table-hover table-striped">
-                                                <tbody>
-                                                    <tr>
-                                                        <td><b>Nome</b></td>
-                                                        <td>{{ $project->name }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Descrição</b></td>
-                                                        <td>{{ $project->description }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Visibilidade</b></td>
-                                                        <td>{{ ($project->visibility == 'public') ? 'Projeto público' : 'Projeto privado' }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><b>Status</b></td>
-                                                        <td>{{ $project->status ? 'Ativo' : 'Inativo' }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+        <div class="" data-plugin="matchHeight">
+            <div class="">
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
+
+                        <div class="card">
+                            <div class="row no-gutters">
+                                <div class="col-md-3">
+                                    <img src="{{ asset('modules/global/assets/img/projeto.png') }}" class="card-img" alt="">
                                 </div>
-                                <div class="tab-pane" id="tab_planos" role="tabpanel">
-                                    <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_plano" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar plano
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Código</th>
-                                            <th>Preço</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane" id="tab_pixels" role="tabpanel">
-                                    <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar pixel
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Nome</th>
-                                            <th>Código</th>
-                                            <th>Plataforma</th>
-                                            <th>Status</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                @if($project->shopify_id == '')
-                                    <div class="tab-pane" id="tab_brindes" role="tabpanel">
-                                        <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                            <a id="adicionar_brinde" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                                <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar brinde
-                                            </a>
-                                            <thead class="bg-blue-grey-100">
-                                                <th>Título</th>
-                                                <th>Descrição</th>
-                                                <th>Tipo</th>
-                                                <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @endif
-                                <div class="tab-pane" id="tab_cupons" role="tabpanel">
-                                    <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_cupom" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar cupom
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Nome</th>
-                                            <th>Tipo</th>
-                                            <th>Valor</th>
-                                            <th>Código</th>
-                                            <th>Status</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane" id="tab_dominios" role="tabpanel">
-                                    <table id="tabela_dominios" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_dominio" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar dominio
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Domínio</th>
-                                            <th>Ip do domínio</th>
-                                            <th>Status</th>
-                                            <th style="width: 160px">Opções</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane" id="tab_sms" role="tabpanel">
-                                    <table id="tabela_sms" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_sms" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar sms
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Plano</th>
-                                            <th>Evento</th>
-                                            <th>Tempo</th>
-                                            <th>Mensagem</th>
-                                            <th>Status</th>
-                                            <th style="width: 110px">Opções</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane" id="tab_layouts" role="tabpanel">
-                                    <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Descrição</th>
-                                            <th>Status</th>
-                                            <th style="width: 110px">Opções</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane" id="tab_parceiros" role="tabpanel">
-                                    <table id="tabela_parceiros" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_parceiro" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar parceiro
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Nome</th>
-                                            <th>Tipo</th>
-                                            <th>Status</th>
-                                            <th style="width: 160px">Opções</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane" id="tab_configuracoes" role="tabpanel">
-                                    <div id="configuracoes_projeto" style="padding: 30px">
-                                    </div>
-                                </div>
-                            </div>
-                    
-                    <!-- Modal para ver detalhes de * no projeto -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                                </div>
-                                <div id="modal_detalhes_body" class="modal-body">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal padrão para adicionar produtos no projeto -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_produto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <h4 class="modal-title" style="width: 100%; text-align:center">Selecione o produto</h4>
-                                </div>
-                                <div id="modal_detalhes_body" class="modal-body">
-                                    <div class="row">
-                                        <div class="form-group col-12" style="margin-top: 30px">
-                                            <select id="select_produtos" class="form-control">
-                                                <option value="">Selecione algo</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="adicionar_produto" type="button" class="btn btn-success" data-dismiss="modal">Adicionar</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal padrão para adicionar * no projeto -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div id="modal_add_tamanho" class="modal-dialog modal-simple">
-                            <div class="modal-content" id="conteudo_modal_add">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="row">
-                                    <div id="modal_add_body" class="form-group col-12" style="margin-top: 30px">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="cadastrar" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal padrão para editar * no projeto -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_editar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div id="modal_editar_tipo" class="modal-dialog modal-simple">
-                            <div class="modal-content" id="conteudo_modal_editar">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="row">
-                                    <div id="modal_editar_body" class="form-group col-12" style="margin-top: 30px">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="editar" type="button" class="btn btn-success" data-dismiss="modal">Salvar alterações</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal padrão para excluir * no plano -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
-                                </div>
-                                <div id="modal_excluir_body" class="modal-body">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    <button id="bt_excluir" type="button" class="btn btn-success">Confirmar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal para adicionar materiais extras no projeto -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_material_extra" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div style="text-align: center">
-                                    <h4>Adicionar material extra</h4>
-                                </div>
-                                <div class="page-content container-fluid">
-                                    <div class="panel" data-plugin="matchHeight">
-                                        <div style="width:100%">
-                                            <form id="add_material_extra" method="post" enctype="multipart/form-data">
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="descricao">Descrição</label>
-                                                        <input name="descricao_material_extra" id="descricao_material_extra" type="text" class="form-control" placeholder="Descrição">
+                                <div class="col-md-9 pl-10">
+                                    <div class="card-body">
+
+                                        <div class="row justify-content-between align-items-baseline">
+                                            <div class="col-md-6">
+                                                <h4 class="title-pad">{{ $project->name }}</h4>
+                                                <p class="card-text sm"> Criado em 14/06/2019 </p>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="d-flex">
+                                                    <div class="p-2 d-flex flex-column">
+                                                        <span class="details-text">Visibilidade</span>
+                                                        <p class="card-text sm"> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>
+
+                                                    </div>
+
+                                                    <div class="p-2 d-flex flex-column">
+                                                        <span class="details-text">Status</span>
+                                                        <p class="card-text sm"> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>
+
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="tipo">Tipo</label>
-                                                        <select name="tipo" class="form-control" id="tipo_material_extra">
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <h5 class="sm-title mt-30"> <strong> Descrição </strong> </h5>
+                                        <p class="card-text sm">
+                                            {{ $project->description }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLE PLANOS -->
+
+                    <div class="tab-pane" id="tab_planos" role="tabpanel">
+
+                        <div class="p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_plano" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                                    <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar plano
+                                                </a>
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="card p-30">
+                                <table id="tabela_planos" class="table">
+
+                                    <thead class="bg-blue-grey-100">
+                                        <th>Nome</th>
+                                        <th>Descrição</th>
+                                        <th>Código</th>
+                                        <th>Preço</th>
+                                        <th style="width: 200px">Detalhes</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLE PIXEL -->
+
+                    <div class="tab-pane" id="tab_pixels" role="tabpanel">
+                        <div class="p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                                    <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar pixel
+                                            </a>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-30">
+                                <table id="tabela_pixels" class="table">
+                                    <thead class="bg-blue-grey-100">
+                                        <th>Nome</th>
+                                        <th>Código</th>
+                                        <th>Plataforma</th>
+                                        <th>Status</th>
+                                        <th style="min-width: 200px;">Detalhes</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @if($project->shopify_id == '')
+
+                    <!-- TABLE BRINDES -->
+                    <div class="tab-pane" id="tab_brindes" role="tabpanel">
+
+                        <div class="pane-wrap p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_brinde" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar brinde
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-30">
+                                <table id="tabela_brindes" class="table">
+
+                                    <thead class="bg-blue-grey-100">
+                                        <th>Título</th>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    @endif
+
+                    <!-- TABLE CUPONS -->
+
+                    <div class="tab-pane" id="tab_cupons" role="tabpanel">
+                        <div class="pane-wrap p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_cupom" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar cupom
+                                        </a>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-30">
+                                <table id="tabela_cuponsdesconto" class="table">
+
+                                    <thead class="bg-blue-grey-100">
+                                        <th>Nome</th>
+                                        <th>Tipo</th>
+                                        <th>Valor</th>
+                                        <th>Código</th>
+                                        <th>Status</th>
+                                        <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <!-- TABLE DOMÍNIOS -->
+
+                    <div class="tab-pane" id="tab_dominios" role="tabpanel">
+
+                        <div class="pane-wrap p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_dominio" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar dominio
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-30">
+                                <table id="tabela_dominios" class="table">
+
+                                    <thead>
+                                        <th>Domínio</th>
+                                        <th>IP do domínio</th>
+                                        <th>Status</th>
+                                        <th style="width: 200px">Opções</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- TABLE NOTIFICAÇÕES -->
+
+                    <div class="tab-pane" id="tab_sms" role="tabpanel">
+                        <div class="pane-wrap p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_sms" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                    <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-30">
+                                <table id="tabela_sms" class="table">
+
+                                    <thead>
+                                        <th>Plano</th>
+                                        <th>Evento</th>
+                                        <th>Tempo</th>
+                                        <th>Mensagem</th>
+                                        <th>Status</th>
+                                        <th style="width: 180px">Opções</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- TABLE LAYOUTS -->
+                    <div class="tab-pane" id="tab_layouts" role="tabpanel">
+                        <div class="p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                                    <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
+                                                </a>
+
+                                </div>
+                            </div>
+
+
+                            <div class="card p-30">
+                                <table id="tabela_layouts" class="table">
+                                    <thead class="bg-blue-grey-100">
+                                        <th>Descrição</th>
+                                        <th>Status</th>
+                                        <th style="width: 180px">Opções</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLE PARCEIROS  -->
+
+                    <div class="tab-pane" id="tab_parceiros" role="tabpanel">
+                        <div class="p-30">
+
+                            <div class="row justify-content-between align-items-center" style="margin-top: -60px;">
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <div class="input-search">
+                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                            <input type="text" class="form-control" name="" placeholder="Digite sua pesquisa... ">
+                                            <button type="button" class="input-search-close icon wb-close" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <a id="adicionar_parceiro" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar parceiro
+                                        </a>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-30">
+                                <table id="tabela_parceiros" class="table">
+                                    <thead class="bg-blue-grey-100">
+                                        <th>Nome</th>
+                                        <th>Tipo</th>
+                                        <th>Status</th>
+                                        <th style="width: 200px">Opções</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLE CONFIGURAÇÕES -->
+
+                    <div class="tab-pane" id="tab_configuracoes" role="tabpanel">
+                        <div id="configuracoes_projeto" style="padding: 30px">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para ver detalhes de * no projeto -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
+                            </div>
+                            <div id="modal_detalhes_body" class="modal-body">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal padrão para adicionar produtos no projeto -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_produto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                <h4 class="modal-title" style="width: 100%; text-align:center">Selecione o produto</h4>
+                            </div>
+                            <div id="modal_detalhes_body" class="modal-body">
+                                <div class="row">
+                                    <div class="form-group col-12" style="margin-top: 30px">
+                                        <select id="select_produtos" class="form-control">
+                                                <option value="">Selecione algo</option>
+                                            </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="adicionar_produto" type="button" class="btn btn-success" data-dismiss="modal">Adicionar</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal padrão para adicionar * no projeto -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div id="modal_add_tamanho" class="modal-dialog modal-simple">
+                        <div class="modal-content" id="conteudo_modal_add">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                            </div>
+                            <div class="row">
+                                <div id="modal_add_body" class="form-group col-12" style="margin-top: 30px">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="cadastrar" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal padrão para editar * no projeto -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_editar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div id="modal_editar_tipo" class="modal-dialog modal-simple">
+                        <div class="modal-content" id="conteudo_modal_editar">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                            </div>
+                            <div class="row">
+                                <div id="modal_editar_body" class="form-group col-12" style="margin-top: 30px">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="editar" type="button" class="btn btn-success" data-dismiss="modal">Salvar alterações</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal padrão para excluir * no plano -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
+                            </div>
+                            <div id="modal_excluir_body" class="modal-body">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                <button id="bt_excluir" type="button" class="btn btn-success">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal para adicionar materiais extras no projeto -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_material_extra" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                            </div>
+                            <div style="text-align: center">
+                                <h4>Adicionar material extra</h4>
+                            </div>
+                            <div class="page-content container-fluid">
+                                <div class="panel" data-plugin="matchHeight">
+                                    <div style="width:100%">
+                                        <form id="add_material_extra" method="post" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="descricao">Descrição</label>
+                                                    <input name="descricao_material_extra" id="descricao_material_extra" type="text" class="form-control" placeholder="Descrição">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="tipo">Tipo</label>
+                                                    <select name="tipo" class="form-control" id="tipo_material_extra">
                                                             <option value="" selected>Selecione</option>
                                                             <option value="imagem">Imagem</option>
                                                             <option value="video">Vídeo (url)</option>
                                                             <option value="pdf">PDF</option>
                                                         </select>
-                                                    </div>
                                                 </div>
-                                                <div id="div_material_extra_imagem" class="row" style="display:none">
-                                                    <div class="form-group col-12">
-                                                        <label for="valor">Imagem</label>
-                                                        <br>
-                                                        <input type="button" id="selecionar_imagem_material_extra" class="btn btn-default" value="Selecionar imagem">
-                                                        <input name="material_extra_imagem" id="material_extra_imagem" type="file" style="display:none" accept="image/*">
-                                                    </div>
-                                                    <div style="margin: 20px 0 0 30px;">
-                                                        <img id="previewimage_material_extra" alt="Selecione a foto" style="max-height: 250px; max-width: 350px;"/>
-                                                    </div>
+                                            </div>
+                                            <div id="div_material_extra_imagem" class="row" style="display:none">
+                                                <div class="form-group col-12">
+                                                    <label for="valor">Imagem</label>
+                                                    <br>
+                                                    <input type="button" id="selecionar_imagem_material_extra" class="btn btn-default" value="Selecionar imagem">
+                                                    <input name="material_extra_imagem" id="material_extra_imagem" type="file" style="display:none" accept="image/*">
                                                 </div>
-                                                <div id="div_material_extra_pdf" class="row" style="display:none">
-                                                    <div class="form-group col-12">
-                                                        <label for="valor">PDF</label>
-                                                        <br>
-                                                        <input type="button" id="selecionar_pdf_material_extra" class="btn btn-default" value="Selecionar arquivo">
-                                                        <input name="material_extra_pdf" id="material_extra_pdf" type="file" style="display:none" accept="application/pdf">
-                                                    </div>
-                                                    <div style="margin: 20px 0 0 30px;">
-                                                        <label id="label_pdf_material_extra"> Selecione o arquivo</label>
-                                                    </div>
+                                                <div style="margin: 20px 0 0 30px;">
+                                                    <img id="previewimage_material_extra" alt="Selecione a foto" style="max-height: 250px; max-width: 350px;" />
                                                 </div>
-                                                <div id="div_material_extra_video" class="row" style="display:none">
-                                                    <div class="form-group col-12">
-                                                        <label for="valor">Vídeo (url)</label>
-                                                        <input name="material_extra_video" id="material_extra_video" type="text" class="form-control" placeholder="Url do vídeo">
-                                                    </div>
+                                            </div>
+                                            <div id="div_material_extra_pdf" class="row" style="display:none">
+                                                <div class="form-group col-12">
+                                                    <label for="valor">PDF</label>
+                                                    <br>
+                                                    <input type="button" id="selecionar_pdf_material_extra" class="btn btn-default" value="Selecionar arquivo">
+                                                    <input name="material_extra_pdf" id="material_extra_pdf" type="file" style="display:none" accept="application/pdf">
                                                 </div>
-                                            </form>
-                                        </div>
+                                                <div style="margin: 20px 0 0 30px;">
+                                                    <label id="label_pdf_material_extra"> Selecione o arquivo</label>
+                                                </div>
+                                            </div>
+                                            <div id="div_material_extra_video" class="row" style="display:none">
+                                                <div class="form-group col-12">
+                                                    <label for="valor">Vídeo (url)</label>
+                                                    <input name="material_extra_video" id="material_extra_video" type="text" class="form-control" placeholder="Url do vídeo">
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button id="bt_adicionar_material_extra" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="bt_adicionar_material_extra" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                             </div>
                         </div>
                     </div>
-                    <!-- Modal para adicionar tipos de frete no projeto -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </div>
+                <!-- Modal para adicionar tipos de frete no projeto -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
-                                </div>
-                                <div style="text-align: center">
-                                    <h4>Adicionar frete</h4>
-                                </div>
-                                <div class="page-content container-fluid">
-                                    <div class="panel" data-plugin="matchHeight">
-                                        <div style="width:100%">
-                                            <form id="form_add_shipping">
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="type">Tipo</label>
-                                                        <select id="shipping_type" name="type" class="form-control" id="tipo_material_extra">
+                            </div>
+                            <div style="text-align: center">
+                                <h4>Adicionar frete</h4>
+                            </div>
+                            <div class="page-content container-fluid">
+                                <div class="panel" data-plugin="matchHeight">
+                                    <div style="width:100%">
+                                        <form id="form_add_shipping">
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="type">Tipo</label>
+                                                    <select id="shipping_type" name="type" class="form-control" id="tipo_material_extra">
                                                             <option value="pac">PAC (calculado automaticamente pela API)</option>
                                                             <option value="sexed">SEXEX (calculado automaticamente pela API)</option>
                                                             <option value="static">Frete fixo(você define um valor fixo para o frete)</option>
                                                         </select>
-                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="name">Descrição</label>
-                                                        <input name="name" type="text" id="shipping_name" class="form-control" placeholder="PAC">
-                                                    </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="name">Descrição</label>
+                                                    <input name="name" type="text" id="shipping_name" class="form-control" placeholder="PAC">
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="information">Informação apresentada</label>
-                                                        <input name="information" type="text" id="shipping_information" class="form-control" placeholder="10 até 20 dias">
-                                                    </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="information">Informação apresentada</label>
+                                                    <input name="information" type="text" id="shipping_information" class="form-control" placeholder="10 até 20 dias">
                                                 </div>
-                                                <div class="row" id="value_shipping_row" style="display:none">
-                                                    <div class="form-group col-12">
-                                                        <label for="value">Valor</label>
-                                                        <input name="value" type="text" id="shipping_value" class="form-control" placeholder="30.00">
-                                                    </div>
+                                            </div>
+                                            <div class="row" id="value_shipping_row" style="display:none">
+                                                <div class="form-group col-12">
+                                                    <label for="value">Valor</label>
+                                                    <input name="value" type="text" id="shipping_value" class="form-control" placeholder="30.00">
                                                 </div>
-                                                <div class="row" id="zip_code_origin_shipping_row">
-                                                    <div class="form-group col-12">
-                                                        <label for="zip_code_origin">CEP de origem</label>
-                                                        <input name="zip_code_origin" id="shipping_zip_code_origin" type="text" class="form-control" placeholder="12345-678">
-                                                    </div>
+                                            </div>
+                                            <div class="row" id="zip_code_origin_shipping_row">
+                                                <div class="form-group col-12">
+                                                    <label for="zip_code_origin">CEP de origem</label>
+                                                    <input name="zip_code_origin" id="shipping_zip_code_origin" type="text" class="form-control" placeholder="12345-678">
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="status">Status</label>
-                                                        <select name="status" class="form-control">
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="status">Status</label>
+                                                    <select name="status" class="form-control">
                                                             <option value="1">Ativado</option>
                                                             <option value="0">Desativado</option>
                                                         </select>
-                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="pre_selected">Pré-selecionado</label>
-                                                        <select name="pre_selected" id="shipping_pre_selected" class="form-control">
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="pre_selected">Pré-selecionado</label>
+                                                    <select name="pre_selected" id="shipping_pre_selected" class="form-control">
                                                             <option value="1">Sim</option>
                                                             <option value="0">Não</option>
                                                         </select>
-                                                    </div>
                                                 </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button id="bt_add_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="bt_add_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                             </div>
                         </div>
                     </div>
-                    <!-- Modal para editar fretes no projeto -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_edit_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </div>
+                <!-- Modal para editar fretes no projeto -->
+                <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_edit_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-simple">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
-                                </div>
-                                <div style="text-align: center">
-                                    <h4>Editar frete</h4>
-                                </div>
-                                <div class="page-content container-fluid">
-                                    <div class="panel" data-plugin="matchHeight">
-                                        <div style="width:100%">
-                                            <form id="form_update_shipping">
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="type">Tipo</label>
-                                                        <select id="shipping_type_edit" name="type" class="form-control" id="tipo_material_extra">
+                            </div>
+                            <div style="text-align: center">
+                                <h4>Editar frete</h4>
+                            </div>
+                            <div class="page-content container-fluid">
+                                <div class="panel" data-plugin="matchHeight">
+                                    <div style="width:100%">
+                                        <form id="form_update_shipping">
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="type">Tipo</label>
+                                                    <select id="shipping_type_edit" name="type" class="form-control" id="tipo_material_extra">
                                                             <option value="pac">PAC (calculado automaticamente pela API)</option>
                                                             <option value="sexed">SEXEX (calculado automaticamente pela API)</option>
                                                             <option value="static">Frete fixo(você define um valor fixo para o frete)</option>
                                                         </select>
-                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="name">Descrição</label>
-                                                        <input name="name" type="text" id="shipping_name_edit" class="form-control" placeholder="PAC">
-                                                    </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="name">Descrição</label>
+                                                    <input name="name" type="text" id="shipping_name_edit" class="form-control" placeholder="PAC">
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="information">Informação apresentada</label>
-                                                        <input name="information" type="text" id="shipping_information_edit" class="form-control" placeholder="10 até 20 dias">
-                                                    </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="information">Informação apresentada</label>
+                                                    <input name="information" type="text" id="shipping_information_edit" class="form-control" placeholder="10 até 20 dias">
                                                 </div>
-                                                <div class="row" id="value_shipping_row_edit">
-                                                    <div class="form-group col-12">
-                                                        <label for="value">Valor</label>
-                                                        <input name="value" type="text" id="shipping_value_edit" class="form-control" placeholder="30.00">
-                                                    </div>
+                                            </div>
+                                            <div class="row" id="value_shipping_row_edit">
+                                                <div class="form-group col-12">
+                                                    <label for="value">Valor</label>
+                                                    <input name="value" type="text" id="shipping_value_edit" class="form-control" placeholder="30.00">
                                                 </div>
-                                                <div class="row" id="zip_code_origin_shipping_row_edit">
-                                                    <div class="form-group col-12">
-                                                        <label for="zip_code_origin">CEP de origem</label>
-                                                        <input name="zip_code_origin" id="shipping_zip_code_origin_edit" type="text" class="form-control" placeholder="12345-678">
-                                                    </div>
+                                            </div>
+                                            <div class="row" id="zip_code_origin_shipping_row_edit">
+                                                <div class="form-group col-12">
+                                                    <label for="zip_code_origin">CEP de origem</label>
+                                                    <input name="zip_code_origin" id="shipping_zip_code_origin_edit" type="text" class="form-control" placeholder="12345-678">
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="status">Status</label>
-                                                        <select name="status" id="shipping_status_edit" class="form-control">
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="status">Status</label>
+                                                    <select name="status" id="shipping_status_edit" class="form-control">
                                                             <option value="1">Ativado</option>
                                                             <option value="0">Desativado</option>
                                                         </select>
-                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12">
-                                                        <label for="pre_selected">Pré-selecionado</label>
-                                                        <select name="pre_selected" id="shipping_pre_selected_edit" class="form-control">
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for="pre_selected">Pré-selecionado</label>
+                                                    <select name="pre_selected" id="shipping_pre_selected_edit" class="form-control">
                                                             <option value="1">Sim</option>
                                                             <option value="0">Não</option>
                                                         </select>
-                                                    </div>
                                                 </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button id="bt_update_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="bt_update_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                             </div>
                         </div>
                     </div>
@@ -587,9 +823,10 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             var id_projeto = '{{Hashids::encode($project->id)}}';
 
@@ -1562,7 +1799,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -1664,7 +1901,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -1944,7 +2181,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -2117,7 +2354,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -2281,7 +2518,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -2528,7 +2765,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -2679,7 +2916,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -2921,7 +3158,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -3191,7 +3428,7 @@
                     "infoEmpty": "Nenhum registro encontrado",
                     "infoFiltered": "(filtrado por _MAX_ registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
+                    "sSearch": "Procurar:",
                     "sUrl": "",
                     "sInfoThousands": ",",
                     "sLoadingRecords": "Carregando...",
@@ -3804,7 +4041,6 @@
             updateConfiguracoes();
 
         });
-    </script>
+</script>
 
 @endsection
-
