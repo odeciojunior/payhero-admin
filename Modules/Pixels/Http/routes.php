@@ -2,7 +2,7 @@
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Pixels\Http\Controllers'], function() {
 
-    Route::Resource('/pixels', 'PixelsController')->only('create', 'index');
+    Route::Resource('/pixels', 'PixelsController')->only('edit', 'create', 'index', 'show', 'update', 'destroy', 'store');
     /*Route::post('/data-source',[
         'as' => 'pixels.index',
         'uses' => 'PixelsController@index'

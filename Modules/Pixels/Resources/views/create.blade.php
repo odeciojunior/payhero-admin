@@ -1,7 +1,7 @@
 <div style="text-align: center">
     <h4>Adicionar pixel</h4>
 </div>
-<form id='cadastrar_pixel' method="post" action="/pixels/cadastrarpixel">
+<form id='cadastrar_pixel' method="post" action="/pixels">
     @csrf
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">

@@ -157,7 +157,7 @@ $(function () {
                 });
 
                 ////// Botão Editar da tela Project/edit
-                $(".edit_shipping").unbid("click");
+                $(".edit_shipping").unbind("click");
                 $(".edit_shipping").on('click', function () {
                     var shipping_id = $(this).closest('tr').find('.shipping_id').html();
                     var shipping_type = $(this).closest('tr').find('.shipping_type').html();

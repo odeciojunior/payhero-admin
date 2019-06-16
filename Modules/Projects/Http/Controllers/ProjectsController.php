@@ -112,6 +112,7 @@ class ProjectsController extends Controller
 
                                                  ])->where('id', Hashids::decode($id))->first();
 
+
             $view = view('projects::edit', [
                 'project'         => $project,
                 'companies'       => $user->companies,

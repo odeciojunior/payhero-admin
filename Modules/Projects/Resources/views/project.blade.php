@@ -21,6 +21,7 @@
         <div class="page-content container">
             <input type='hidden' id='project-id' value='{{Hashids::encode($project->id)}}'/>
 
+
         <div class="mb-30">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
@@ -600,7 +601,7 @@
         </div>
     </div>
     @push('scripts')
-        <script src='{{asset('modules/pixels/js/pixels.js')}}'></script>
+        <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
         <script src='{{asset('modules/projects/js/projects.js')}}'></script>
     @endpush
 
@@ -750,69 +751,6 @@
                 });
 
             });
-
-            /*$('#adicionar_pixel').on('click', function () {
-
-                $('#modal_add_tamanho').addClass('modal-simple');
-                $('#modal_add_tamanho').removeClass('modal-lg');
-
-                $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                $.ajax({
-                    method: "GET",
-                    url: "/pixels/getformaddpixel",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    error: function () {
-                        $('#modal_add').hide();
-                        alertPersonalizado('error', 'Ocorreu algum erro');
-                    },
-                    success: function (data) {
-                        $('#modal_add_body').html(data);
-
-                        $('#cadastrar').unbind('click');
-
-                        $('#cadastrar').on('click', function () {
-
-                            if ($('#nome').val() == '' || $('#cod_pixel').val() == '' || $('#plataforma').val() == '' || $('#status_pixel').val() == '') {
-                                alertPersonalizado('error', 'Dados informados inválidos');
-                                return false;
-                            }
-
-                            $('.loading').css("visibility", "visible");
-
-                            var form_data = new FormData(document.getElementById('cadastrar_pixel'));
-                            form_data.append('projeto', id_projeto);
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/pixels/cadastrarpixel",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: form_data,
-                                processData: false,
-                                contentType: false,
-                                cache: false,
-                                error: function () {
-                                    $('#modal_add_produto').hide();
-                                    $('.loading').css("visibility", "hidden");
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('.loading').css("visibility", "hidden");
-                                    alertPersonalizado('success', 'Pixel adicionado!');
-                                    $('#modal_add_produto').hide();
-                                    $($.fn.dataTable.tables(true)).css('width', '100%');
-                                    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                }
-                            });
-                        });
-                    }
-                });
-
-            });*/
 
             $('#adicionar_cupom').on('click', function () {
 
@@ -1923,170 +1861,6 @@
 
             });
 
-            $("#tabela_pixels").DataTable({
-                bLengthChange: false,
-                ordering: false,
-                processing: true,
-                responsive: true,
-                serverSide: true,
-                ajax: {
-                    url: '/pixels/data-source',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'POST',
-                    data: {projeto: id_projeto}
-                },
-                columns: [
-                    {data: 'name', name: 'name'},
-                    {data: 'code', name: 'code'},
-                    {data: 'platform', name: 'platform'},
-                    {
-                        data: function (data) {
-                            if (data.status == 1) {
-                                return 'Ativo';
-                            } else {
-                                return 'Inativo';
-                            }
-                        }, name: 'status'
-                    },
-                    {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-                ],
-                "language": {
-                    "sProcessing": "Carregando...",
-                    "lengthMenu": "Apresentando _MENU_ registros por página",
-                    "zeroRecords": "Nenhum registro encontrado",
-                    "info": "Apresentando página _PAGE_ de _PAGES_",
-                    "infoEmpty": "Nenhum registro encontrado",
-                    "infoFiltered": "(filtrado por _MAX_ registros)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Procurar :",
-                    "sUrl": "",
-                    "sInfoThousands": ",",
-                    "sLoadingRecords": "Carregando...",
-                    "oPaginate": {
-                        "sFirst": "Primeiro",
-                        "sLast": "Último",
-                        "sNext": "Próximo",
-                        "sPrevious": "Anterior",
-                    },
-                },
-                "drawCallback": function () {
-
-                    $('.detalhes_pixel').on('click', function () {
-                        var pixel = $(this).attr('pixel');
-                        $('#modal_detalhes_titulo').html('Detalhes do pixel');
-                        $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                        var data = {id_pixel: pixel};
-                        $.post("/pixels/detalhe", data)
-                            .then(function (response, status) {
-                                $('#modal_detalhes_body').html(response);
-                            });
-                    });
-
-                    var id_pixel = '';
-
-                    $('.excluir_pixel').on('click', function () {
-
-                        id_pixel = $(this).attr('pixel');
-                        var name = $(this).closest("tr").find("td:first-child").text();
-                        $('#modal_excluir_titulo').html('Remover do projeto o pixel ' + name + ' ?');
-
-                        $('#bt_excluir').unbind('click');
-
-                        $('#bt_excluir').on('click', function () {
-
-                            $('.loading').css("visibility", "visible");
-                            $('#fechar_modal_excluir').click();
-
-                            $.ajax({
-                                method: "GET",
-                                url: "/pixels/deletarpixel/" + id_pixel,
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                error: function () {
-                                    $('.loading').css("visibility", "hidden");
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('.loading').css("visibility", "hidden");
-                                    alertPersonalizado('success', 'Pixel removido!');
-                                    $($.fn.dataTable.tables(true)).css('width', '100%');
-                                    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                }
-                            });
-
-                        });
-
-                    });
-
-                    $('.editar_pixel').on('click', function () {
-
-                        $('#modal_editar_tipo').addClass('modal-simple');
-                        $('#modal_editar_tipo').removeClass('modal-lg');
-
-                        id_pixel = $(this).attr('pixel');
-
-                        $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                        $.ajax({
-                            method: "POST",
-                            url: "/pixels/getformeditarpixel",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            data: {id: id_pixel},
-                            error: function () {
-                                alertPersonalizado('error', 'Ocorreu algum erro');
-                            },
-                            success: function (data) {
-                                $('#modal_editar_body').html(data);
-
-                                $('#editar').unbind('click');
-
-                                $('#editar').on('click', function () {
-
-                                    $('.loading').css("visibility", "visible");
-
-                                    var paramObj = {};
-                                    $.each($('#editar_pixel').serializeArray(), function (_, kv) {
-                                        if (paramObj.hasOwnProperty(kv.name)) {
-                                            paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                                            paramObj[kv.name].push(kv.value);
-                                        } else {
-                                            paramObj[kv.name] = kv.value;
-                                        }
-                                    });
-                                    paramObj['id'] = id_pixel;
-
-                                    $.ajax({
-                                        method: "POST",
-                                        url: "/pixels/editarpixel",
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                        },
-                                        data: {pixelData: paramObj},
-                                        error: function () {
-                                            $('.loading').css("visibility", "hidden");
-                                            alertPersonalizado('error', 'Ocorreu algum erro');
-                                        },
-                                        success: function (data) {
-                                            $('.loading').css("visibility", "hidden");
-                                            alertPersonalizado('success', 'Pixel atualizado!');
-                                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                        }
-                                    });
-                                });
-                            }
-                        });
-
-                    });
-
-                }
-
-            });
 
             $("#tabela_sms").DataTable({
                 bLengthChange: false,

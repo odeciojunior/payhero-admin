@@ -1,7 +1,7 @@
 <div style="text-align: center">
     <h4>Editar pixel</h4>
 </div>
-<form id="editar_pixel" method="post" action="/pixels/editarpixel">
+<form id="editar_pixel" method="post" action="/pixels">
     @csrf
     <input type="hidden" value="{!! $pixel->id !!}" name="id">
     <div class="page-content container-fluid">
