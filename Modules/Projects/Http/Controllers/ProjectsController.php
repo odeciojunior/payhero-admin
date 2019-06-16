@@ -29,12 +29,6 @@ class ProjectsController extends Controller
     private $extraMaterialsModel;
     private $shippingModel;
 
-    /*
-        public function __construct(Project $project, UserProject $userProject, Company $company, ExtraMaterial $extraMaterials, Shipping $shipping)
-        {
-
-        }*/
-
     function getProject()
     {
         if (!$this->projectModel) {
@@ -42,6 +36,15 @@ class ProjectsController extends Controller
         }
 
         return $this->projectModel;
+    }
+
+    private function getCompany()
+    {
+        if (!$this->companyModel) {
+            $this->companyModel = app(Company::class);
+        }
+
+        return $this->companyModel;
     }
 
     public function getExtraMaterials()
@@ -69,9 +72,14 @@ class ProjectsController extends Controller
 
     public function create()
     {
-        $companies = $this->company->where('user', auth()->user()->id)->get();
+        try {
+            $user = auth()->user()->load('companies');
 
-        return view('projects::create', ['companies' => $companies]);
+            return view('projects::create', ['companies' => $user->companies]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar pagina de criar Projeto (ProjectController - create)');
+            report($e);
+        }
     }
 
     public function edit($id)
@@ -112,13 +120,12 @@ class ProjectsController extends Controller
 
                                                  ])->where('id', Hashids::decode($id))->first();
 
-
             $view = view('projects::edit', [
-                'project'         => $project,
-                'companies'       => $user->companies,
+                'project'        => $project,
+                'companies'      => $user->companies,
                 'extraMaterials' => $project->extraMaterials,
-                'emp'             => $user->company,
-                'shippings'       => $project->shippings,
+                'emp'            => $user->company,
+                'shippings'      => $project->shippings,
 
             ]);
 
