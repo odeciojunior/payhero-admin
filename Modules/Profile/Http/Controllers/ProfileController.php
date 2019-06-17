@@ -3,6 +3,7 @@
 namespace Modules\Profile\Http\Controllers;
 
 use App\Entities\User;
+use Modules\Profile\Transformers\UserResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -78,9 +79,12 @@ class ProfileController extends Controller
         try {
             $user = auth()->user();
 
+            $userResource =  new UserResource($user);
+
             return view('profile::index', [
-                'user' => $user,
+                'user' => $userResource,
             ]);
+
         } catch (Exception $e) {
             Log::warning('ProfileController index');
             report($e);

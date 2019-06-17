@@ -1,0 +1,34 @@
+<?php
+
+namespace Modules\Profile\Transformers;
+
+use Illuminate\Http\Resources\Json\Resource;
+
+class UserResource extends Resource
+{
+    /**
+     * Transform the resource into an array.
+     * @param \Illuminate\Http\Request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        return [
+            'code'         => $this->code,
+            'name'         => $this->name,
+            'email'        => $this->email,
+            'cellphone'    => $this->cellphone,
+            'document'     => $this->document,
+            'zip_code'     => $this->zip_code,
+            'country'      => $this->country,
+            'state'        => $this->state,
+            'city'         => $this->city,
+            'neighborhood' => $this->neighborhood,
+            'street'       => $this->street,
+            'number'       => $this->number,
+            'complement'   => $this->complement,
+            'photo'        => $this->complement,
+            'date_birth'   => $this->date_birth,
+        ];
+    }
+}

@@ -3,21 +3,32 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Lang;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
- * Trait ModelEnumTrait
+ * Trait FoxModelTrait
  * @package App\Traits
  */
-trait ModelEnumTrait
+trait FoxModelTrait
 {
-
-    public static function bootModelEnumTrait(): void
+    /**
+     * Boot FoxModelTrait
+     */
+    public static function bootFoxModelTrait(): void
     {
         static::retrieved(function($model) {
             $model->appends = array_merge($model->appends, [
                 'code',
             ]);
         });
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodeAttribute()
+    {
+        return HashIds::encode($this->id);
     }
 
     /**
