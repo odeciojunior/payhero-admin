@@ -1,20 +1,17 @@
 <div style="text-align: center">
     <h4> Cadastrar cupom </h4>
 </div>
-
-<form id="cadastrar_cupom" method="post" action="/cuponsdesconto/cadastrarcupomdesconto">
+<form id="cadastrar_cupom" method="post" action="/couponsdiscounts">
     @csrf
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">
-
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="name">Nome</label>
                         <input name="name" type="text" class="form-control" id="nome_cupom" placeholder="Nome">
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="form-group col-xl-6">
                         <label for="type">Tipo</label>
@@ -23,19 +20,16 @@
                             <option value="1">Valor</option>
                         </select>
                     </div>
-
                     <div class="form-group col-xl-6">
                         <label for="value">Valor</label>
                         <input name="value" type="text" class="form-control" id="valor_cupom_cadastrar" placeholder="Valor" data-mask="0#">
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="form-group col-xl-6">
                         <label for="code">Código</label>
                         <input name="code" type="text" class="form-control" id="code" placeholder="Código">
                     </div>
-
                     <div class="form-group col-xl-6">
                         <label for="status">Status</label>
                         <select name="status" class="form-control" id="status_cupom" required>
@@ -44,7 +38,6 @@
                         </select>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

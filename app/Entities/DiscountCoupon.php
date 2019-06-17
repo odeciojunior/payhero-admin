@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -19,13 +20,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DiscountCoupon extends Model
 {
+    use SoftDeletes;
+    /**
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
