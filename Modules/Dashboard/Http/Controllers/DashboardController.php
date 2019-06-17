@@ -17,9 +17,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Entities\Checkout;
-
+ 
 class DashboardController extends Controller {
-
+ 
     public function index() {
 
         $availableBalance = 0;
@@ -81,6 +81,7 @@ class DashboardController extends Controller {
             'sales_count'       => $salesCount,
             'daily_balance'     => $dailyBalance,
             'checkouts'         => $checkouts,
+            'companies'         => $companies
         ]);
 
     }

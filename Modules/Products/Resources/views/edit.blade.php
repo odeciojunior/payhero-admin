@@ -9,7 +9,7 @@
 <!-- Page -->
 <div class="page">
     <div class="page-header container">
-        <h1 class="page-title">Cadastrar novo produto</h1>
+        <h1 class="page-title">Editar produto</h1>
         <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente.  </p>
         <div class="page-header-actions">
             <a class="d-none d-lg-block btn btn-primary float-right" href="{{ route('products.index') }}">
@@ -18,7 +18,8 @@
         </div>
     </div>
     <div class="page-content container">
-    <form method="post" action="/products" enctype="multipart/form-data">
+    <form method="post" action="/products/{!! Hashids::encode($product->id) !!}" enctype="multipart/form-data">
+        @method('PUT')
         @csrf
         <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
@@ -35,41 +36,43 @@
                     <div class="row justify-content-between align-items-baseline">
 
                     <div class="col-lg-12">
-                        <h5 class="page-title"> 1. Informações Básicas </h5>
+                        <h3> 1. Informações Básicas </h3>
                         <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
                     </div>
-                        <div class="col-lg-4">
+                    <div class="col-lg-4">
 
-                            <div class="d-flex flex-column">
-                                <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
-                                <label for="name">Selecione uma imagem</label>
-                                <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/assets/img/produto.png') }}" style="max-height: 250px; max-width: 300px;">
-                                <input type="hidden" name="foto_x1"> <input type="hidden" name="foto_y1">
-                                <input type="hidden" name="foto_w"> <input type="hidden" name="foto_h">
-                                <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato JPG, JPEG, ou PNG. <br> Dimensões ideais: 300 x 300 pixels.
-                            </p></div>
-
-                            <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility: hidden">
-                                <label for="digital_product">Produto digital</label>
-                                <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
-                                <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente. <br>.
-                            </div>
-
+                        <div class="d-flex flex-column">
+                            <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
+                            <label for="name">Selecione uma imagem</label>
+                            <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ $product->photo }}" style="height: 300px; width: 300px;">
+                            <input type="hidden" name="photo_x1"> <input type="hidden" name="photo_y1">
+                            <input type="hidden" name="photo_w"> <input type="hidden" name="photo_h">
+                            <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i>
+                                A imagem escolhida deve estar no formato JPG, JPEG, ou PNG. <br> Dimensões ideais: 300 x 300 pixels.
+                            </p>
                         </div>
 
-                        <div class="col-lg-8">
+                        <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility: hidden">
+                            <label for="digital_product">Produto digital</label>
+                            <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
+                            <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente. <br>.
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-8">
 
                         <div class="row">
 
-                        <div class="form-group col-lg-12">
+                            <div class="form-group col-lg-12">
                                 <label for="name">Nome</label>
-                                <input name="name" type="text" class="input-pad" id="name" placeholder="O nome do seu produto" required="">
+                                <input name="name" type="text" class="input-pad" id="name" value="{!! $product->name !!}" placeholder="O nome do seu produto" required="">
                             </div>
 
                             <div class="form-group col-lg-12">
                                 <label for="description">Descrição</label>
-                                <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required=""></textarea>
-                                <p> Máximo 150 caracteres. </p>
+                                <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required="">{!! $product->description !!}</textarea>
+                                <p> Máximo 30 caracteres. </p>
                             </div>
 
                             <div class="form-group col-lg-6">
@@ -94,19 +97,19 @@
                                 <select name="category" class="form-control select-pad">
                                     <option value="">Selecione</option>
                                     @foreach($categories as $category)
-                                        <option value="{!! $category['id'] !!}">{!! $category['name'] !!}</option>
+                                        <option value="{!! $category['id'] !!}" {!! $category['id'] == $product->category ? 'selected' : '' !!}>{!! $category['name'] !!}</option>
                                     @endforeach
                                 </select>
                             </div>
 
                             <div class="form-group col-lg-6">
                                 <label for="cost">Custo</label>
-                                <input name="cost" type="text" class="input-pad money" id="cost" placeholder="Digite o custo" autocomplete="off">
+                                <input name="cost" type="text" class="input-pad money" id="cost" value="{!! $product->cost !!}" placeholder="Digite o custo" autocomplete="off">
                             </div>
 
                             <div class="form-group col-lg-6">
                                 <label for="price">Preço</label>
-                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" autocomplete="off">
+                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" value="{!! $product->price !!}" autocomplete="off">
                             </div>
 
                             <div id="div_next_step" class="form-group col-lg-12 text-right">
@@ -131,35 +134,35 @@
                         <div class="row">
 
                         <div class="col-lg-12">
-                            <h5 class="page-title"> 2. Logística </h5>
+                            <h3> 2. Logística </h3>
                             <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
                             </div>
 
                             <div class="form-group col-lg-4">
-                            <label for="width">Altura (cm)</label>
-                            <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 150cm" data-mask="0#">
+                            <label for="height">Altura (cm)</label>
+                            <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 150cm" value="{!! $product->height !!}" data-mask="0#">
                         </div>
 
                         <div class="form-group col-lg-4">
-                            <label for="height">Largura (cm)</label>
-                            <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 135cm" data-mask="0#">
+                            <label for="width">Largura (cm)</label>
+                            <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 135cm" value="{!! $product->width !!}" data-mask="0#">
                         </div>
 
                         <div class="form-group col-lg-4">
-                            <label for="weight">Peso (g)</label>
-                            <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" data-mask="0#">
+                            <label for="height">Peso (g)</label>
+                            <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 950g" value="{!! $product->weight !!}" data-mask="0#">
                         </div> 
 
                         <div class="form-group col-lg-6">
                             <label for="shipping">Transportadora:</label>
                                 <select class="form-control select-pad" id="shipping">
-                                    <option value="proprio" selected>Envio próprio</option>
-                                    <option value="kapsula">Kapsula</option>
-                                    <option value="hubsmart">Hubsmart</option>
-                                    <option value="cosmarca">Cosmarca</option>
-                                    <option value="nutreno">Nutreno</option>
-                                    <option value="nutracaps">Nutracaps</option>
-                                    <option value="biosupra">Biosupra</option>
+                                    <option value="proprio" {!! 'proprio' == $product->shipping ? 'selected' : '' !!}>Envio próprio</option>
+                                    <option value="kapsula" {!! 'kapsula' == $product->shipping ? 'selected' : '' !!}>Kapsula</option>
+                                    <option value="hubsmart" {!! 'hubsmart' == $product->shipping ? 'selected' : '' !!}>Hubsmart</option>
+                                    <option value="cosmarca" {!! 'cosmarca' == $product->shipping ? 'selected' : '' !!}>Cosmarca</option>
+                                    <option value="nutreno" {!! 'nutreno' == $product->shipping ? 'selected' : '' !!}>Nutreno</option>
+                                    <option value="nutracaps" {!! 'nutracaps' == $product->shipping ? 'selected' : '' !!}>Nutracaps</option>
+                                    <option value="biosupra" {!! 'biosupra' == $product->shipping ? 'selected' : '' !!}>Biosupra</option>
                                 </select>
                             </div>
 
@@ -169,7 +172,7 @@
                             </div>
 
                             <div class="form-group col-lg-12 text-right">
-                                <button type="submit" class="btn btn-success">Salvar</button>
+                                <button type="submit" class="btn btn-success">Atualizar</button>
                             </div>
 
                         </div>

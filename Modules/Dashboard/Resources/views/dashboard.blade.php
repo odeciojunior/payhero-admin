@@ -1,10 +1,8 @@
 @extends("layouts.master")
+
 @section('title', '- Dashboard')
+
 @section('content')
-
-@section('styles')
-
-@endsection
 
 <div class="page">
 
@@ -20,16 +18,14 @@
 
            <div class="d-lg-flex align-items-center justify-content-end">
                 <div class="p-2 text-lg-right">
-                  Selecione:
+                  Empresa:
                 </div>
-
                 <div class="p-2 text-lg-right">
-
                   <select name="empresa" id="empresa" class="form-control new-select">
-                    <option value="emp1">Empresa 1</option>
-                    <option value="emp2">Empresa 2</option>
+                      @foreach($companies as $company)
+                          <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
+                      @endforeach
                   </select>
-
                 </div>
           </div>
 
@@ -37,7 +33,7 @@
 
 </div>
 
-      <div class="clearfix"></div>
+  <div class="clearfix"></div>
 
     <!-- CARDS EXTRATO -->
 
@@ -117,7 +113,7 @@
          </div>
       </div>
 
-      <div class="row justify-content-end align-items-center">
+      {{--  <div class="row justify-content-end align-items-center">
 
         <div class="p-2 text-lg-right align-items-center filtro">
           <div class="btn-group" data-toggle="buttons" role="group">
@@ -133,17 +129,17 @@
               <input type="radio" name="options" autocomplete="off" value="n/a">
                                   Mês
               </label>
-          </div>
-        </div><div class="p-2 texto-filtro gray text-right align-items-center justify-content-lg-end"> 
+            </div>
+          </div><div class="p-2 texto-filtro gray text-right align-items-center justify-content-lg-end"> 
 
-        <span class="gray-svg"> 
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M5 19h-4v-4h4v4zm6 0h-4v-8h4v8zm6 0h-4v-13h4v13zm6 0h-4v-19h4v19zm1 2h-24v2h24v-2z"></path></svg>
-        </span> 
-        03 a 10 de junho de 2019
+          <span class="gray-svg"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M5 19h-4v-4h4v4zm6 0h-4v-8h4v8zm6 0h-4v-13h4v13zm6 0h-4v-19h4v19zm1 2h-24v2h24v-2z"></path></svg>
+          </span> 
+          03 a 10 de junho de 2019
 
-      </div>
+        </div>
 
-      </div>
+      </div>  --}}
       </div>
    </div>
 </div>

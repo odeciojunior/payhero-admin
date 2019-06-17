@@ -34,20 +34,23 @@
 
                     <div class="row justify-content-between align-items-baseline">
 
-                    <div class="col-lg-12">
-                        <h5 class="page-title"> 1. Informações Básicas </h5>
-                        <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
-                    </div>
+                        <div class="col-lg-12">
+                            <h3> 1. Informações Básicas </h3>
+                            <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
+                        </div>
+
                         <div class="col-lg-4">
 
-                            <div class="d-flex flex-column">
+                            <div class="d-flex flex-column" id="div_img">
                                 <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
                                 <label for="name">Selecione uma imagem</label>
                                 <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/assets/img/produto.png') }}" style="max-height: 250px; max-width: 300px;">
-                                <input type="hidden" name="foto_x1"> <input type="hidden" name="foto_y1">
-                                <input type="hidden" name="foto_w"> <input type="hidden" name="foto_h">
-                                <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato JPG, JPEG, ou PNG. <br> Dimensões ideais: 300 x 300 pixels.
-                            </p></div>
+                                <input type="hidden" name="photo_x1"> <input type="hidden" name="photo_y1">
+                                <input type="hidden" name="photo_w"> <input type="hidden" name="photo_h">
+                                <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> 
+                                    A imagem escolhida deve estar no formato JPG, JPEG, ou PNG. <br> Dimensões ideais: 300 x 300 pixels.
+                                </p>
+                            </div>
 
                             <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility: hidden">
                                 <label for="digital_product">Produto digital</label>
@@ -61,7 +64,7 @@
 
                         <div class="row">
 
-                        <div class="form-group col-lg-12">
+                            <div class="form-group col-lg-12">
                                 <label for="name">Nome</label>
                                 <input name="name" type="text" class="input-pad" id="name" placeholder="O nome do seu produto" required="">
                             </div>
@@ -131,11 +134,11 @@
                         <div class="row">
 
                         <div class="col-lg-12">
-                            <h5 class="page-title"> 2. Logística </h5>
+                            <h3> 2. Logística </h3>
                             <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
-                            </div>
+                        </div>
 
-                            <div class="form-group col-lg-4">
+                        <div class="form-group col-lg-4">
                             <label for="width">Altura (cm)</label>
                             <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 150cm" data-mask="0#">
                         </div>

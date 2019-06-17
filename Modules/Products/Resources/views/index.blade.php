@@ -30,21 +30,20 @@
             @foreach($products as $product)
             <div class="col-xl-3 col-md-6 info-panel">
                 <div class="card card-shadow">
-                    <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO.$product['photo'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
+                    <img class="card-img-top img-fluid w-full" src="{!! $product->photo !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
                     <div class="card-block">
                         <h4 class="card-title text-center">{{$product->name}}</h4>
                         <hr>
                         <span data-toggle='modal' data-target='#modal_editar'>
-                                    <a href="/products/{{Hashids::encode($product->id)}}/edit" class='btn btn-outline btn-primary editar_produto' data-placement='top' data-toggle='tooltip' title='Editar'>
-                                        <i class='icon wb-pencil' aria-hidden='true'></i>
-                                    </a>
-
-                                    </span>
+                            <a href="/products/{{Hashids::encode($product->id)}}/edit" class='btn btn-outline btn-primary editar_produto' data-placement='top' data-toggle='tooltip' title='Editar'>
+                                <i class='icon wb-pencil' aria-hidden='true'></i>
+                            </a>
+                        </span>
                         <span data-toggle='modal' data-target='#modal_excluir' style="float:right">
-                                        <a class='btn btn-outline btn-danger delete-product' data-placement='top' data-toggle='tooltip' title='Excluir' product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}">
-                                            <i class='icon wb-trash' aria-hidden='true'></i>
-                                        </a>
-                                    </span>
+                            <a class='btn btn-outline btn-danger delete-product' data-placement='top' data-toggle='tooltip' title='Excluir' product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}">
+                                <i class='icon wb-trash' aria-hidden='true'></i>
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>

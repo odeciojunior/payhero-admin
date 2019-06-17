@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Intervention\Image\Facades\Image;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Products\Http\Requests\CreateProductRequest;
 
 class ProductsController extends Controller
@@ -22,6 +24,11 @@ class ProductsController extends Controller
      * @var Category
      */
     private $categoryModel;
+
+    /**
+     * @var DigitalOceanFileService
+     */
+    private $digitalOceanFileService;
 
     /**
      * ProductsController constructor.
@@ -91,12 +98,32 @@ class ProductsController extends Controller
     public function store(CreateProductRequest $request)
     {
         try {
-            $data         = $request->validated();
-            $data['user'] = auth()->user()->id;
-            $product      = $this->productModel->create($data);
+            $data            = $request->validated();
+            $data['shopify'] = '0';
+            $data['user']    = auth()->user()->id;
+            $product         = $this->productModel->create($data);
 
-            if(isset($request->product_photo)){
+            $productPhoto = $request->file('product_photo');
 
+            if ($productPhoto != null) {
+
+                try {
+                    $img = Image::make($productPhoto->getPathname());
+                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    $img->resize(200, 200);
+                    $img->save($productPhoto->getPathname());
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+
+                    $product->update([
+                                      'photo' => $digitalOceanPath,
+                                  ]);
+
+                } catch (Exception $e) {
+                    Log::warning('ProfileController - update - Erro ao enviar foto do profile');
+                    report($e);
+                }
             }
 
             return redirect()->route('products.index');
@@ -115,7 +142,11 @@ class ProductsController extends Controller
         try {
             $product = $this->productModel->find(Hashids::decode($id))->first();
 
-            return view('products::edit', ['product' => $product]);
+            return view('products::edit', [
+                'product'    => $product,
+                'categories' => $this->categoryModel->all()                
+            ]);
+
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de editar produto (ProductsController - edit)');
             report($e);
@@ -126,15 +157,42 @@ class ProductsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
         try {
             $data    = $request->all();
-            $product = $this->productModel->find(Hashids::decode($data['id']))->first();
+            $product = $this->productModel->findOrFail(Hashids::decode($id))->first();
             $product->update($data);
+
+            $productPhoto = $request->file('product_photo');
+
+            if ($productPhoto != null) {
+
+                try {
+                    $this->getDigitalOceanFileService()->deleteFile($product->photo);
+
+                    $img = Image::make($productPhoto->getPathname());
+                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    $img->resize(200, 200);
+                    $img->save($productPhoto->getPathname());
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+
+                    $product->update([
+                        'photo' => $digitalOceanPath,
+                    ]);
+
+                } catch (Exception $e) {
+                    dd($e);
+                    Log::warning('ProfileController - update - Erro ao enviar foto do profile');
+                    report($e);
+                }
+            }
 
             return redirect()->route('products.index');
         } catch (Exception $e) {
+            dd($e);
             Log::warning('Erro ao tentar atualizar produto (ProductsController - update)');
             report($e);
         }
