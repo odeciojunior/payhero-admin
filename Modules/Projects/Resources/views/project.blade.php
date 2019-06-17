@@ -595,6 +595,7 @@
             </div>
         </div>
         @push('scripts')
+{{--            <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>--}}
             <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
             <script src='{{asset('modules/projects/js/projects.js')}}'></script>
@@ -772,7 +773,8 @@
 
                             $('#cadastrar').on('click', function () {
 
-                                if ($('#plano_sms').val() == '' || $('#evento_sms').val() == '' || $('#tempo_sms').val() == '' || $('#periodo_sms').val() == '' || $('#status_sms').val() == '' || $('#mensagem_sms').val() == '') {
+                                if ($('#plano_sms').val() == '' || $('#evento_sms').val() == ''
+                                    || $('#tempo_sms').val() == '' || $('#periodo_sms').val() == '' || $('#status_sms').val() == '' || $('#mensagem_sms').val() == '') {
                                     alertPersonalizado('error', 'Dados informados inválidos');
                                     return false;
                                 }
@@ -1798,12 +1800,12 @@
                     responsive: true,
                     serverSide: true,
                     ajax: {
-                        url: '/sms/data-source',
+                        url: '/sms',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        type: 'POST',
-                        data: {projeto: id_projeto}
+                        type: 'GET',
+                        data: {project: id_projeto}
                     },
                     columns: [
                         {data: 'plan', name: 'plan'},

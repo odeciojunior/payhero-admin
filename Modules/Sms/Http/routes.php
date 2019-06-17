@@ -1,7 +1,9 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
 {
+    Route::Resource('/sms', 'SmsController')->only('index');
+
     Route::get('/enviarmensagem', [
         'uses' => 'SmsController@enviarMensagem',
         'as' => 'sms.enviarmensagem',
@@ -32,10 +34,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' =>
         'as' => 'sms.cadastrarsms',
     ]);
 
-    Route::post('/data-source',[
+   /* Route::post('/data-source',[
         'as' => 'sms.dadossms',
         'uses' => 'SmsController@dadosSms'
-    ]);
+    ]);*/
 
     Route::post('/detalhe',[
         'as' => 'sms.detalhes',
@@ -71,6 +73,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sms', 'namespace' =>
         'as' => 'sms.enviarsmsmanual',
         'uses' => 'SmsController@enviarSmsManual'
     ]);
+
 
 });
 
