@@ -1,6 +1,70 @@
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6, p { 
+    font-family: 'Muli', sans-serif;
+}
+
+.table td, .table th {
+    vertical-align: middle !important;
+}
+
+.table td { 
+    padding: 12px 10px !important;
+}
+
+.table th {
+    padding: 6px 10px !important;
+}
+
+
+.table-vendas, .table-vendas th, .table-vendas td {
+    font-size: 14px;
+    color: rgb(128, 128, 128);
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+}
+
+.table-title {
+
+  font-size: 12px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: black;
+}
+
 .card {
+    font-family: 'Muli', sans-serif;
     border-radius: 5px !important;
     box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+
+.sm-title {
+    font-size: 14px;
+    font-weight: 800;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 3.05;
+    letter-spacing: 0.7px;
+    color: black;
+    margin: 0;
+}
+
+.details-text {
+opacity: 0.5;
+  font-family: Muli;
+  font-size: 12px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: black;
 }
 
 .card-text {
@@ -26,6 +90,17 @@
   line-height: 1.75;
   letter-spacing: 0.1px;
 
+}
+
+.title-pad {
+    color: black;
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.17;
+    letter-spacing: 0.1px;
+    margin: 0;
 }
 
 .stretched-link::after {
@@ -211,4 +286,56 @@ input[type=radio] {
     font-stretch: normal;
     line-height: normal;
     letter-spacing: 1px;
+}
+
+.text-result {
+font-size: 10px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 1px;
+  text-align: right;
+  color: rgb(136, 136, 136);
+}
+
+.icon-results {
+    width: 20px;
+    height: 20px;
+    font-size: 18px;
+    -webkit-text-fill-color: #ff4c52;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.icon-download {
+    margin-right: 10px;
+    fill: #aaaaaa;
+    vertical-align: middle;
+}
+
+.btn-outline-default, .btn-outline.btn-default {
+    color: #76838f !important;
+    background-color: transparent;
+    border-color: #cdcdcd !important;
+}
+
+.h1, .h2, .h3, h1, h2, h3 {
+    margin-top: 0px !important;
+    margin-bottom: 11px;
+}
+
+.icon-filtro {
+
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    fill: #ee5261;
+
+}
+
+.text-filtros {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ee5261 !important;
 }

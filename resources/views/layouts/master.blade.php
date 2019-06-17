@@ -13,6 +13,9 @@
 
     <title>Cloudfox</title>
 
+     <!-- Datatables -->
+     <!-- <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"> -->
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
@@ -20,8 +23,6 @@
     <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
 
-    <!-- Datatables -->
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
