@@ -18,7 +18,7 @@ trait FoxModelTrait
     {
         static::retrieved(function($model) {
             $model->appends = array_merge($model->appends, [
-                'code',
+                'id_code',
             ]);
         });
     }
@@ -26,7 +26,7 @@ trait FoxModelTrait
     /**
      * @return string
      */
-    public function getCodeAttribute()
+    public function getIdCodeAttribute()
     {
         return HashIds::encode($this->id);
     }
