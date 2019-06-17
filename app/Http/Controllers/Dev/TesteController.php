@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\User;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -36,9 +37,14 @@ class TesteController extends Controller
         $teste->uploadFile('upload', '/var/www/fox/admin/public/favicon.ico');
         dd($teste->disk());
 */
+/*
+        $x = parse_url('http://a.com/uploads/user/wqP5LNZ8VgaRye0/public/profile/7OGabBYpgwN7cyzFQVoj1jkSaw7D7AeCxc1Ylbvj.jpeg');
+        dd($x);
+*/
+
         $teste = app(DigitalOceanFileService::class);
-        //$url = $teste->deleteFile('upload/nA1z65DxwuBJRtmpQ3gwFY9WDbB7Wwjy6iEtrMHQ.jpeg');
-        $files = Storage::disk('openSpaces')->files('upload');
+        $url = $teste->deleteFile('uploads/user/wqP5LNZ8VgaRye0/public/profile/mdNX4HV84XzFwp01sQSxoWXCv5JJl8JZIVn6vT9C.jpeg');
+        $files = Storage::disk('openSpaces')->files('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile/');
         dd($files);
 
 
