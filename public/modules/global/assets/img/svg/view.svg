@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="16px" viewBox="0 0 20 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 53.2 (72643) - https://sketchapp.com -->
+    <title>E602ABFB-1747-4EA2-A639-F03ABC053B7B</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M19.9234849,7.6 C17.9034849,2.91 14.1034849,0 10.0034849,0 C5.90348486,0 2.10348486,2.91 0.083484861,7.6 C-0.027828287,7.85505046 -0.027828287,8.14494954 0.083484861,8.4 C2.10348486,13.09 5.90348486,16 10.0034849,16 C14.1034849,16 17.9034849,13.09 19.9234849,8.4 C20.034798,8.14494954 20.034798,7.85505046 19.9234849,7.6 Z M10.0034849,14 C6.83348486,14 3.83348486,11.71 2.10348486,8 C3.83348486,4.29 6.83348486,2 10.0034849,2 C13.1734849,2 16.1734849,4.29 17.9034849,8 C16.1734849,11.71 13.1734849,14 10.0034849,14 Z M10.0034849,4 C7.79434586,4 6.00348486,5.790861 6.00348486,8 C6.00348486,10.209139 7.79434586,12 10.0034849,12 C12.2126239,12 14.0034849,10.209139 14.0034849,8 C14.0034849,6.93913404 13.5820575,5.92171839 12.831912,5.17157288 C12.0817665,4.42142736 11.0643508,4 10.0034849,4 Z M10.0034849,10 C8.89891536,10 8.00348486,9.1045695 8.00348486,8 C8.00348486,6.8954305 8.89891536,6 10.0034849,6 C11.1080544,6 12.0034849,6.8954305 12.0034849,8 C12.0034849,9.1045695 11.1080544,10 10.0034849,10 Z" id="path-1"></path>
+        <linearGradient x1="0%" y1="87.3016%" x2="211.535904%" y2="-63.0611359%" id="linearGradient-3">
+            <stop stop-color="#E6774C" offset="0%"></stop>
+            <stop stop-color="#F92278" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="CloudFox" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0.4.1.1-Projetos-Domínios" transform="translate(-1198.000000, -375.000000)">
+            <g id="icon/view" transform="translate(1197.000000, 375.000000)">
+                <g id="eye">
+                    <g id="color/primary/main-gradient" transform="translate(0.996515, 0.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Mask" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
+                        <g mask="url(#mask-2)" fill="url(#linearGradient-3)" fill-rule="nonzero">
+                            <g transform="translate(0.003485, -3.000000)">
+                                <rect x="0" y="0" width="20" height="20"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
