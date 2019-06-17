@@ -85,5 +85,4 @@ trait FoxModelTrait
             return array_search($value, $this->getEnumArray($enum));
         }
     }
-
 }
