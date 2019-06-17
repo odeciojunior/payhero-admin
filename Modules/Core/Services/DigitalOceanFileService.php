@@ -83,7 +83,7 @@ class DigitalOceanFileService
                     return false;
             }
 
-            return $url;
+            return $this->getUrlFile($url);
         } catch (Exception $ex) {
             report($ex);
             throw new ServiceException($ex->getMessage(), $ex->getCode(), $ex);
@@ -99,6 +99,7 @@ class DigitalOceanFileService
     public function checkIfFileExists($path, $extension = null)
     {
         try {
+            $path = $this->getPath($path);
             if ($extension) {
                 if ($this->disk->exists($path))
                     return true;
@@ -129,6 +130,7 @@ class DigitalOceanFileService
     public function getUrlFile($path)
     {
         try {
+            $path  = $this->getPath($path);
             $check = $this->check($path);
 
             if ($check == true) {
@@ -155,6 +157,7 @@ class DigitalOceanFileService
     public function deleteFile($path = null, $softDelete = true)
     {
         try {
+            $path = $this->getPath($path);
             if ($this->check($path)) {
                 if ($softDelete) {
                     $date  = str_replace(".", "", microtime(true));
@@ -175,6 +178,18 @@ class DigitalOceanFileService
     }
 
     /**
+     * @param $path
+     * @return mixed
+     */
+    public function getPath($path)
+    {
+        $result         = parse_url($path);
+        $result['path'] = ltrim($result['path'], '/');
+
+        return $result['path'];
+    }
+
+    /**
      * @param string $path
      * @return bool
      * @throws ServiceException
@@ -182,6 +197,7 @@ class DigitalOceanFileService
     public function check($path)
     {
         try {
+            $path        = $this->getPath($path);
             $pathExplode = explode(".", $path);
             if (isset($pathExplode[1]))
                 return $this->checkIfFileExists($path, true);

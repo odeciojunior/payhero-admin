@@ -3,6 +3,7 @@
 namespace Modules\Profile\Http\Controllers;
 
 use App\Entities\User;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -18,7 +19,6 @@ use Modules\Profile\Http\Requests\ProfileUpdateRequest;
  * uploads/user/ID/profile/photo.jpg
  * uploads/user/ID/private/documents/*
  * uploads/user/ID/private/company-documents/*
- *
  * uploads/product/ID/photo.jpg
  * uploads/product/ID/private/product.pdf
  */
@@ -97,18 +97,14 @@ class ProfileController extends Controller
 
             $requestData = $request->validated();
 
-            $this->getUserModel()
-                 ->where('id', auth()->user()->id)
-                 ->update([
+            $user = auth()->user();
+
+            $user->update([
                               'name'         => $requestData['name'],
                               'email'        => $requestData['email'],
                               'document'     => $requestData['document'],
                               'cellphone'    => $requestData['cellphone'],
                               'date_birth'   => $requestData['date_birth'],
-                              //'photo_x1'     => $requestData['photo_x1'],
-                              //'photo_y1'     => $requestData['photo_y1'],
-                              //'photo_w'      => $requestData['photo_w'],
-                              //'photo_h'      => $requestData['photo_h'],
                               'zip_code'     => $requestData['zip_code'],
                               'country'      => $requestData['country'],
                               'state'        => $requestData['state'],
@@ -125,33 +121,27 @@ class ProfileController extends Controller
             if ($userPhoto != null) {
 
                 try {
-                    $photoName = 'user_' . auth()->user()->id . '_.' . $userPhoto->getClientOriginalExtension();
+                    $this->getDigitalOceanFileService()->deleteFile($user->photo);
 
-                    Storage::delete('public/upload/perfil/' . $photoName);
-
-                    $digitalOceanPath = $this->getDigitalOceanFileService()->uploadFile('uploads/user/ID/public/profile/');
-
-                    $userPhoto->move(CaminhoArquivosHelper::CAMINHO_FOTO_USER, $photoName);
-
-                    $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
-
+                    $img = Image::make($userPhoto->getPathname());
                     $img->crop($requestData['photo_w'], $requestData['photo_h'], $requestData['photo_x1'], $requestData['photo_y1']);
-
                     $img->resize(200, 200);
+                    $img->save($userPhoto->getPathname());
 
-                    Storage::delete('public/upload/perfil/' . $photoName);
-
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_USER . $photoName);
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile', $userPhoto);
 
                     $user->update([
-                                      'photo' => $photoName,
+                                      'photo' => $digitalOceanPath,
                                   ]);
-                } catch (\Exception $e) {
-                    dd($e);
+                } catch (Exception $e) {
+                    Log::warning('ProfileController - update - Erro ao enviar foto do profile');
+                    report($e);
                 }
             }
 
             return redirect()->route('profile');
+
         } catch (Exception $e) {
             Log::warning('ProfileController update');
             report($e);
