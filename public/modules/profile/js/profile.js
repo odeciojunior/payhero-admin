@@ -1,15 +1,15 @@
 $(document).ready(function () {
 
-   //
-/*
-    $.ajax({
-        method: "POST",
-        url: "/sms/enviarsmsmanual",
-        processData: false,
-        contentType: false,
-        cache: false,
-        data: form_data,
-        */
+    //
+    /*
+        $.ajax({
+            method: "POST",
+            url: "/sms/enviarsmsmanual",
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            */
 
     $("#profile_update_form").on("submit", function (event) {
         event.preventDefault();
@@ -25,28 +25,26 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: form_data,
-            error: function ( response) {
-                if(response.status == '422'){
-                    for(error in response.responseJSON.errors){
-                        alertCustom('error',String(response.responseJSON.errors[error]));
+            error: function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 }
             },
-            success: function ( response ) {
-                if(response.success == 'true'){
+            success: function (response) {
+                if (response.success == 'true') {
                     currentPage = 'company';
                     $(".div1").hide();
                     $(".div2").show();
-                    alertCustom('success','Cadastro realizado com sucesso');
-                    $("#progress-bar-register").css('width','66%');
+                    alertCustom('success', 'Cadastro realizado com sucesso');
+                    $("#progress-bar-register").css('width', '66%');
                     $("#jump").show();
-                }
-                else{
-                    alertCustom('error','revise os dados informados');
+                } else {
+                    alertCustom('error', 'revise os dados informados');
                 }
             }
         });
-
 
     });
 
@@ -139,10 +137,18 @@ $(document).ready(function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: {
-                    new_password: $("#new_password").val()
+                    new_password: $("#new_password").val(),
+                    new_password_confirm: $("#new_password_confirm").val()
                 },
-                error: function () {
-                    //
+                error: function (data) {
+                    swal({
+                        position: 'bottom',
+                        type: 'error',
+                        toast: 'true',
+                        title: 'Não foi possivel alterar a senha!',
+                        showConfirmButton: false,
+                        timer: 6000
+                    });
                 },
                 success: function (data) {
 
@@ -159,23 +165,57 @@ $(document).ready(function () {
                     $('#new_password_confirm').val('');
 
                 }
-
             });
-
         }
 
     });
 
 });
 
-Dropzone.options.myAwesomeDropzone = {
-    paramName: "file", // The name that will be used to transfer the file
-    maxFilesize: 1, // MB
-    accept: function (file, done) {
-        if (file.name == "bird-box.w700.h700.jpg") {
-            done("Naha, you don't.");
-        } else {
-            done();
+Dropzone.options.dropzoneDocuments = {
+    paramName: "file",
+    maxFilesize: 10, // MB
+    // autoProcessQueue: false, //nao envia automaticamente
+    // init: function () {
+    //
+    //     // get the dropzone object
+    //     myDropzone = this;
+    //
+    //     // overwrite the addedfile function
+    //     myDropzone.on("addedfile", function (event) {
+    //
+    //         swal(
+    //             {title: 'Are you sure?', showCancelButton: true},
+    //             function(isConfirm) {
+    //                 if (isConfirm) {
+    //                     // handle confirm
+    //                     alert('a');
+    //                     myDropzone.processQueue();
+    //                 } else {
+    //                     // handle all other cases
+    //                 }
+    //             }
+    //         )
+    //
+    //     });
+    // }
+};
+
+Dropzone.confirm = function(question, accepted, rejected) {
+    // Do your thing, ask the user for confirmation or rejection, and call
+    // accepted() if the user accepts, or rejected() otherwise. Make
+    // sure that rejected is actually defined!
+
+    swal(
+        {title: 'Are you sure?', showCancelButton: true},
+        function(isConfirm) {
+            if (isConfirm) {
+                // handle confirm
+                accepted();
+            } else {
+                // handle all other cases
+                rejected();
+            }
         }
-    }
+    )
 };
