@@ -2,22 +2,15 @@
 
 namespace Modules\Projects\Http\Controllers;
 
-use App\Entities\Company;
 use App\Entities\Project;
-use App\Entities\Shipping;
 use App\Entities\UserProject;
 use App\Entities\ExtraMaterial;
-
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Projects\Http\Requests\ProjectRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
-
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -25,9 +18,7 @@ class ProjectsController extends Controller
 {
     private $projectModel;
     private $userProjectModel;
-    private $companyModel;
     private $extraMaterialsModel;
-    private $shippingModel;
 
     function getProject()
     {
@@ -38,13 +29,13 @@ class ProjectsController extends Controller
         return $this->projectModel;
     }
 
-    private function getCompany()
+    private function getUserProject()
     {
-        if (!$this->companyModel) {
-            $this->companyModel = app(Company::class);
+        if (!$this->userProjectModel) {
+            $this->userProjectModel = app(UserProject::class);
         }
 
-        return $this->companyModel;
+        return $this->userProjectModel;
     }
 
     public function getExtraMaterials()
@@ -85,30 +76,6 @@ class ProjectsController extends Controller
     public function edit($id)
     {
         try {
-
-            /*$project = Project::where('id', Hashids::decode($id))->first();
-
-           $materiaisExtras = ExtraMaterial::where('project', $project->id)->get()->toArray();
-
-           $companies = Company::where('user', \Auth::user()->id)->get()->toArray();
-
-           $shippings = Shipping::where('project', $project->id)->get()->toArray();
-
-           $producer = UserProject::where([
-                                              ['user', \Auth::user()->id],
-                                              ['project', $project['id']],
-                                          ])->first();
-
-           $view = view('projects::edit', [
-               'project'         => $project,
-               'companies'       => $companies,
-               'extra_materials' => $materiaisExtras,
-               'emp'             => $producer->company,
-               'shippings'       => $shippings,
-           ]);
-
-           return response()->json($view->render());*/
-
             $user    = auth()->user()->load('companies');
             $project = $this->getProject()->with([
                                                      'usersProjects' => function($query) use ($user) {
@@ -142,9 +109,9 @@ class ProjectsController extends Controller
             $data      = $request->all();
             $companyId = Hashids::decode($data['company']);
 
-            $project = $this->projectModel->create($data);
+            $project = $this->getProject()->create($data);
             if ($project) {
-                $userProject = $this->userProjectModel->create([
+                $userProject = $this->getUserProject()->create([
                                                                    'user'              => auth()->user()->id,
                                                                    'project'           => $project->id,
                                                                    'company'           => $companyId[0],
