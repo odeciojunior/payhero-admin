@@ -1,4 +1,4 @@
-@extends("layouts.master") 
+@extends("layouts.master")
 
 @section('content')
 
@@ -36,10 +36,10 @@
                         <h5 class="page-title"> 1. Informações Básicas </h5>
                         <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
                     </div>
-                
+
                         <div class="col-lg-4">
 
-                    
+
                             <div class="d-flex flex-column">
                                 <input name="product_photo" type="file" class="form-control" id="foto" style="display:none">
                                 <label for="name">Selecione uma imagem</label>
@@ -48,7 +48,7 @@
                                 <input type="hidden" name="foto_x1"> <input type="hidden" name="foto_y1">
                                 <input type="hidden" name="foto_w"> <input type="hidden" name="foto_h">
                                 <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato JPG, ou PNG. <br> Dimensões ideais: 600x500 pixels.
-                    
+
                             </p></div>
 
 
@@ -84,7 +84,7 @@
                                         <label for="digital">Digital</label>
                                     </div>
                                 </div>
-                                 
+
                             </div>
 
                             <div class="form-group col-lg-6">
@@ -145,7 +145,7 @@
                         <div class="form-group col-lg-4">
                             <label for="weight">Peso</label>
                             <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" data-mask="0#">
-                        </div> 
+                        </div>
 
                         <div class="form-group col-lg-6">
                             <label for="shipping">Transportadora:</label>

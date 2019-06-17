@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Dev;
 
+use App\Entities\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Storage;
+use Modules\Core\Services\DigitalOceanFileService;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Dom\TextNode;
@@ -20,6 +23,35 @@ class TesteController extends Controller
      */
     public function index()
     {
+
+        //$data['product_digital_path'] = $this->uploadFiles($folder, $this->extensionPathsAttachment, 'Attachment', $pathCheckOld, 'gcsPrivate');
+
+
+        /*$update  = [
+            'url_logo' => env('DO_SPACES_ENDPOINT') . '/' . env('DO_SPACES_BUCKET') . '/' . $fileurl,
+        ];*/
+
+/*
+
+        $teste->uploadFile('upload', '/var/www/fox/admin/public/favicon.ico');
+        dd($teste->disk());
+*/
+        $teste = app(DigitalOceanFileService::class);
+        //$url = $teste->deleteFile('upload/nA1z65DxwuBJRtmpQ3gwFY9WDbB7Wwjy6iEtrMHQ.jpeg');
+        $files = Storage::disk('openSpaces')->files('upload');
+        dd($files);
+
+
+
+
+
+        //composer require league/flysystem-aws-s3-v3
+
+
+
+
+
+
         $html = "{% comment %}
 
   This snippet provides the default handlebars.js templates for

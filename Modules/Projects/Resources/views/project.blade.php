@@ -13,12 +13,13 @@
         <div class="page-header container">
             <h1 class="page-title">Projeto {{ $project->name }}</h1>
             <div class="page-header-actions">
-                <a class="btn btn-success float-right" href="/projetos">
+                <a class="btn btn-success float-right" href="/projects">
                     Meus projetos
                 </a>
             </div>
         </div>
         <div class="page-content container">
+            <input type='hidden' id='project-id' value='{{Hashids::encode($project->id)}}'/>
 
         <div class="mb-30">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
@@ -80,7 +81,7 @@
                                     </a>
                                 </li>
                             </ul>
-                           
+
                         </div>
                     </div>
 
@@ -88,10 +89,12 @@
                 <div class="col-xl-12">
 
                 <div class="tab-content pt-20">
+                            <div class="tab-content pt-20">
+                                <!-- Painel de informações gerais -->
                                 <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
                                     <div class="row">
                                         <div class="col-lg-3 col-xl-3">
-                                            <img src="{{ $photo }}" alt="Imagem não encontrada" style="height: 200px; width: 200px"/>
+                                            <img src="{{ $project->photo }}" alt="Imagem não encontrada" style="height: 200px; width: 200px"/>
                                         </div>
                                         <div class="col-lg-9 col-xl-9">
                                             <table class="table table-bordered table-hover table-striped">
@@ -110,29 +113,45 @@
                                                     </tr>
                                                     <tr>
                                                         <td><b>Status</b></td>
-                                                        <td>{{ $project->status ? 'Ativo' : 'Inativo' }}</td>
+                                                        <td>{{ $project->status == 1 ? 'Ativo' : 'Inativo' }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab_planos" role="tabpanel">
-                                    <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_plano" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar plano
+                                <!-- Painel de Dominios -->
+                                <div class="tab-pane" id="tab_dominios" role="tabpanel">
+                                    <table id="tabela_dominios" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="adicionar_dominio" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar dominio
                                         </a>
                                         <thead class="bg-blue-grey-100">
-                                            <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Código</th>
-                                            <th>Preço</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                            <th>Domínio</th>
+                                            <th>Ip do domínio</th>
+                                            <th>Status</th>
+                                            <th style="width: 160px">Opções</th>
                                         </thead>
                                         <tbody>
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- Painel de Layouts -->
+                                <div class="tab-pane" id="tab_layouts" role="tabpanel">
+                                    <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
+                                        </a>
+                                        <thead class="bg-blue-grey-100">
+                                            <th>Descrição</th>
+                                            <th>Status</th>
+                                            <th style="width: 110px">Opções</th>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Painel de Pixels -->
                                 <div class="tab-pane" id="tab_pixels" role="tabpanel">
                                     <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -149,6 +168,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- Painel de Brindes -->
                                 @if($project->shopify_id == '')
                                     <div class="tab-pane" id="tab_brindes" role="tabpanel">
                                         <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -165,7 +185,8 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                @endif
+                            @endif
+                            <!-- Painel de Cupons de Descontos -->
                                 <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                     <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_cupom" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -183,21 +204,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="tab-pane" id="tab_dominios" role="tabpanel">
-                                    <table id="tabela_dominios" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_dominio" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar dominio
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Domínio</th>
-                                            <th>Ip do domínio</th>
-                                            <th>Status</th>
-                                            <th style="width: 160px">Opções</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <!-- Painel de Sms -->
                                 <div class="tab-pane" id="tab_sms" role="tabpanel">
                                     <table id="tabela_sms" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_sms" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -215,20 +222,24 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="tab-pane" id="tab_layouts" role="tabpanel">
-                                    <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
+                                <!--- Painel de Planos -->
+                                <div class="tab-pane" id="tab_planos" role="tabpanel">
+                                    <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                        <a id="adicionar_plano" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar plano
                                         </a>
                                         <thead class="bg-blue-grey-100">
+                                            <th>Nome</th>
                                             <th>Descrição</th>
-                                            <th>Status</th>
-                                            <th style="width: 110px">Opções</th>
+                                            <th>Código</th>
+                                            <th>Preço</th>
+                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
                                         </thead>
                                         <tbody>
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- Painel de Parceiros -->
                                 <div class="tab-pane" id="tab_parceiros" role="tabpanel">
                                     <table id="tabela_parceiros" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                         <a id="adicionar_parceiro" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -244,12 +255,13 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- Painel de Configurações  Abre a tela edit-->
                                 <div class="tab-pane" id="tab_configuracoes" role="tabpanel">
                                     <div id="configuracoes_projeto" style="padding: 30px">
                                     </div>
                                 </div>
                             </div>
-                    
+
                     <!-- Modal para ver detalhes de * no projeto -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-simple">
@@ -587,6 +599,10 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script src='{{asset('modules/pixels/js/pixels.js')}}'></script>
+        <script src='{{asset('modules/projects/js/projects.js')}}'></script>
+    @endpush
 
     <script>
         $(document).ready(function () {
@@ -735,7 +751,7 @@
 
             });
 
-            $('#adicionar_pixel').on('click', function () {
+            /*$('#adicionar_pixel').on('click', function () {
 
                 $('#modal_add_tamanho').addClass('modal-simple');
                 $('#modal_add_tamanho').removeClass('modal-lg');
@@ -796,7 +812,7 @@
                     }
                 });
 
-            });
+            });*/
 
             $('#adicionar_cupom').on('click', function () {
 
@@ -3403,7 +3419,7 @@
 
                 $.ajax({
                     method: "POST",
-                    url: "/projetos/addmaterialextra",
+                    url: "/projects/addmaterialextra",
                     processData: false,
                     contentType: false,
                     cache: false,
@@ -3426,11 +3442,11 @@
 
             });
 
-            function updateConfiguracoes() {
+            /*function updateConfiguracoes() {
 
                 $.ajax({
                     method: "GET",
-                    url: "/projetos/getconfiguracoesprojeto/" + id_projeto,
+                    url: "/projects/" + id_projeto + '/edit',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -3438,8 +3454,8 @@
                         alertPersonalizado('error', 'Ocorreu algum erro');
                     },
                     success: function (data) {
-
                         $('#configuracoes_projeto').html(data);
+                        alert(data.toSource());
 
                         $("#porcentagem_afiliados").mask("0#");
 
@@ -3554,7 +3570,9 @@
                                 alertPersonalizado('error', 'dados informados inválidos');
                                 return false;
                             }
-                            if (($("#shipping_type").val() == 'static' && $("#shipping_value").val() == '') || ($("#shipping_type").val() != 'static' && $("#shipping_zip_code_origin").val() == '')) {
+                            if (($("#shipping_type").val() == 'static' && $("#shipping_value").val() == '')
+
+                                || ($("#shipping_type").val() != 'static' && $("#shipping_zip_code_origin").val() == '')) {
                                 alertPersonalizado('error', 'dados informados inválidos');
                                 return false;
                             }
@@ -3714,7 +3732,7 @@
 
                             $.ajax({
                                 method: "POST",
-                                url: "/projetos/editarprojeto",
+                                url: "/projects/" + id_projeto,
                                 processData: false,
                                 contentType: false,
                                 cache: false,
@@ -3801,7 +3819,7 @@
                 });
             }
 
-            updateConfiguracoes();
+            updateConfiguracoes();*/
 
         });
     </script>

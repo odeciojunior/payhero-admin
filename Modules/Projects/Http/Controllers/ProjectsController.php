@@ -11,6 +11,7 @@ use App\Entities\ExtraMaterial;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Projects\Http\Requests\ProjectRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -24,19 +25,38 @@ class ProjectsController extends Controller
 {
     private $projectModel;
     private $userProjectModel;
-    private $company;
+    private $companyModel;
+    private $extraMaterialsModel;
+    private $shippingModel;
 
-    public function __construct(Project $project, UserProject $userProject, Company $company)
+    /*
+        public function __construct(Project $project, UserProject $userProject, Company $company, ExtraMaterial $extraMaterials, Shipping $shipping)
+        {
+
+        }*/
+
+    function getProject()
     {
-        $this->projectModel     = $project;
-        $this->userProjectModel = $userProject;
-        $this->company          = $company;
+        if (!$this->projectModel) {
+            $this->projectModel = app(Project::class);
+        }
+
+        return $this->projectModel;
+    }
+
+    public function getExtraMaterials()
+    {
+        if (!$this->extraMaterialsModel) {
+            $this->extraMaterialsModel = app(ExtraMaterial::class);
+        }
+
+        return $this->extraMaterialsModel;
     }
 
     public function index()
     {
         try {
-            $projects = $this->projectModel->whereHas('usersProjects', function($query) {
+            $projects = $this->getProject()->whereHas('usersProjects', function($query) {
                 $query->where('user', auth()->user()->id);
             })->get();
 
@@ -51,54 +71,90 @@ class ProjectsController extends Controller
     {
         $companies = $this->company->where('user', auth()->user()->id)->get();
 
-        return view('projects::create', [
-            'companies' => $companies,
-        ]);
+        return view('projects::create', ['companies' => $companies]);
+    }
+
+    public function edit($id)
+    {
+        try {
+
+            /*$project = Project::where('id', Hashids::decode($id))->first();
+
+           $materiaisExtras = ExtraMaterial::where('project', $project->id)->get()->toArray();
+
+           $companies = Company::where('user', \Auth::user()->id)->get()->toArray();
+
+           $shippings = Shipping::where('project', $project->id)->get()->toArray();
+
+           $producer = UserProject::where([
+                                              ['user', \Auth::user()->id],
+                                              ['project', $project['id']],
+                                          ])->first();
+
+           $view = view('projects::edit', [
+               'project'         => $project,
+               'companies'       => $companies,
+               'extra_materials' => $materiaisExtras,
+               'emp'             => $producer->company,
+               'shippings'       => $shippings,
+           ]);
+
+           return response()->json($view->render());*/
+
+            $user    = auth()->user()->load('companies');
+            $project = $this->getProject()->with([
+                                                     'usersProjects' => function($query) use ($user) {
+                                                         $query->where('user', $user->id)->first();
+                                                     },
+                                                     'usersProjects.company',
+                                                     'shippings',
+                                                     'extraMaterials',
+
+                                                 ])->where('id', Hashids::decode($id))->first();
+
+            $view = view('projects::edit', [
+                'project'         => $project,
+                'companies'       => $user->companies,
+                'extraMaterials' => $project->extraMaterials,
+                'emp'             => $user->company,
+                'shippings'       => $project->shippings,
+
+            ]);
+
+            return response()->json($view->render());
+        } catch (Exception $e) {
+            Log::error('Erro ao tentar buscar dados do edit (ProjectController - edit)');
+            report($e);
+        }
     }
 
     public function store(Request $request)
     {
+        try {
+            $data      = $request->all();
+            $companyId = Hashids::decode($data['company']);
 
-        $dataRequest = $request->all();
+            $project = $this->projectModel->create($data);
+            if ($project) {
+                $userProject = $this->userProjectModel->create([
+                                                                   'user'              => auth()->user()->id,
+                                                                   'project'           => $project->id,
+                                                                   'company'           => $companyId[0],
+                                                                   'type'              => 'producer',
+                                                                   'access_permission' => 1,
+                                                                   'edit_permission'   => 1,
+                                                                   'status'            => 'active',
+                                                               ]);
+                if (!$userProject) {
+                    $project->delete();
+                }
+            }
 
-        $project = Project::create($dataRequest);
-
-        $projectPhoto = $request->file('project_photo');
-
-        if ($projectPhoto != null) {
-            $photoName = 'project_' . $project->id . '_.' . $projectPhoto->getClientOriginalExtension();
-
-            Storage::delete('public/upload/project/' . $photoName);
-
-            $projectPhoto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $photoName);
-
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $photoName);
-
-            $img->crop($dataRequest['foto_w'], $dataRequest['foto_h'], $dataRequest['foto_x1'], $dataRequest['foto_y1']);
-
-            $img->resize(200, 200);
-
-            Storage::delete('public/upload/project/' . $photoName);
-
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $photoName);
-
-            $project->update([
-                                 'foto' => $photoName,
-                             ]);
+            return redirect()->route('projects.index');
+        } catch (Exception $e) {
+            Log::error('Erro ao tentar salvar projeto (ProjectsController - store)' . $e->getFile());
+            report($e);
         }
-
-        UserProject::create([
-                                'user'                 => \Auth::user()->id,
-                                'project'              => $project->id,
-                                'company'              => $dataRequest['company'],
-                                'type'                 => 'producer',
-                                'shipment_responsible' => true,
-                                'access_permission'    => true,
-                                'edit_permission'      => true,
-                                'status'               => 'ativo',
-                            ]);
-
-        return redirect()->route('projects');
     }
 
     public function update(Request $request)
@@ -166,8 +222,8 @@ class ProjectsController extends Controller
     public function show($id)
     {
         try {
-            if (!empty($id)) {
-                $project = $this->projectModel->where('id', Hashids::decode($id))->first();
+            if ($id) {
+                $project = $this->getProject()->where('id', Hashids::decode($id))->first();
                 $photo   = '/' . CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $project->photo . '?dummy=' . uniqid();
 
                 return view('projects::project', ['project' => $project, 'photo' => $photo]);
@@ -176,45 +232,6 @@ class ProjectsController extends Controller
             Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');
             report($e);
         }
-
-        //        $project = Project::where('id', Hashids::decode($id))->first();
-        //
-        //        $photo = '/' . CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $project->photo . "?dummy=" . uniqid();
-        //
-        //        $projectId = Hashids::encode($project->id);
-        //
-        //        return view('projects::project', [
-        //            'projeto'    => $project,
-        //            'foto'       => $photo,
-        //            'projeto_id' => $projectId,
-        //        ]);
-    }
-
-    public function edit($id)
-    {
-
-        $project = Project::where('id', Hashids::decode($id))->first();
-
-        $materiaisExtras = ExtraMaterial::where('project', $project->id)->get()->toArray();
-
-        $companies = Company::where('user', \Auth::user()->id)->get()->toArray();
-
-        $shippings = Shipping::where('project', $project->id)->get()->toArray();
-
-        $producer = UserProject::where([
-                                           ['user', \Auth::user()->id],
-                                           ['project', $project['id']],
-                                       ])->first();
-
-        $view = view('projects::edit', [
-            'project'         => $project,
-            'companies'       => $companies,
-            'extra_materials' => $materiaisExtras,
-            'emp'             => $producer->company,
-            'shippings'       => $shippings,
-        ]);
-
-        return response()->json($view->render());
     }
 
     public function getDadosProject($id)
@@ -307,13 +324,26 @@ class ProjectsController extends Controller
         return response()->json('sucesso');
     }
 
-    public function deletarMaterialExtra(Request $request)
+    public function deleteExtraMaterial(Request $request)
     {
+        try {
+            $data = $request->all();
 
-        $dataRequest = $request->all();
+            $extraMaterial = $this->getExtraMaterials()->find($data['idMaterialExtra']);
 
-        MaterialExtra::find($dataRequest['id_material_extra'])->delete();
+            if (!$extraMaterial) {
+                return response()->json('erro');
+            }
 
-        return response()->json('sucesso');
+            $extraMaterialDeleted = $extraMaterial->delete();
+            if ($extraMaterialDeleted) {
+                return response()->json('sucesso');
+            }
+
+            return response()->json('error');
+        } catch (Exception $e) {
+            Log::error('Erro ao tentar excluir ExtraMaterial (ProjectsController - deleteExtraMaterial)');
+            report($e);
+        }
     }
 }

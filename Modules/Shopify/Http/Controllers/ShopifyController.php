@@ -102,7 +102,7 @@ class ShopifyController extends Controller
                 break;
         }
 
-        $htmlCart = "";
+        $htmlCart      = "";
         $templateFiles = $client->getAssetManager()->findAll($theme->getId());
         foreach ($templateFiles as $file) {
             if ($file->getKey() == "sections/cart-template.liquid") {
@@ -290,13 +290,13 @@ class ShopifyController extends Controller
         $dom = new Dom;
 
         $dom->setOptions([
-                             'removeScripts' => false, // Set a global option to enable strict html parsing.
+                             'removeScripts' => false,
                          ]);
 
         $dom->load($htmlCart);
 
         $forms = $dom->find('script[id=cartTemplate]');
-        $x=$forms->innerHtml();
+        $x     = $forms->innerHtml();
 
         //$dom2 = new Dom2;
         $dom->load($x);
@@ -453,7 +453,7 @@ class ShopifyController extends Controller
 
             //}
 
-            return $newHtml;
+            return $html;
         } else {
             //thown parse error
         }
@@ -463,8 +463,6 @@ class ShopifyController extends Controller
     {
         $dom = new Dom;
         $dom->load($htmlCart);
-
-        $forms = $dom->find('script');
 
         $forms = $dom->find('form');
         foreach ($forms as $form) {
@@ -476,7 +474,6 @@ class ShopifyController extends Controller
         }
 
         if ($cartForm) {
-            //if ($cartForm->getAttribute('id') != 'cart_form') {
 
             //div Foxdata
             $divFoxData = new Selector('#foxData', new Parser());
@@ -612,13 +609,11 @@ class ShopifyController extends Controller
             foreach ($tokens[0] as $key => $item) {
                 if ((stripos($item[0], 'for ') !== false) &&
                     (stripos($item[0], ' in cart.items') !== false)) {
-                    $newHtml = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
+                    $html = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
                 }
             }
 
-            //}
-
-            return $newHtml;
+            return $html;
         } else {
             //thown parse error
         }
