@@ -1,15 +1,15 @@
 $(document).ready(function () {
 
-   //
-/*
-    $.ajax({
-        method: "POST",
-        url: "/sms/enviarsmsmanual",
-        processData: false,
-        contentType: false,
-        cache: false,
-        data: form_data,
-        */
+    //
+    /*
+        $.ajax({
+            method: "POST",
+            url: "/sms/enviarsmsmanual",
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            */
 
     $("#profile_update_form").on("submit", function (event) {
         event.preventDefault();
@@ -25,28 +25,26 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: form_data,
-            error: function ( response) {
-                if(response.status == '422'){
-                    for(error in response.responseJSON.errors){
-                        alertCustom('error',String(response.responseJSON.errors[error]));
+            error: function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 }
             },
-            success: function ( response ) {
-                if(response.success == 'true'){
+            success: function (response) {
+                if (response.success == 'true') {
                     currentPage = 'company';
                     $(".div1").hide();
                     $(".div2").show();
-                    alertCustom('success','Cadastro realizado com sucesso');
-                    $("#progress-bar-register").css('width','66%');
+                    alertCustom('success', 'Cadastro realizado com sucesso');
+                    $("#progress-bar-register").css('width', '66%');
                     $("#jump").show();
-                }
-                else{
-                    alertCustom('error','revise os dados informados');
+                } else {
+                    alertCustom('error', 'revise os dados informados');
                 }
             }
         });
-
 
     });
 
@@ -139,10 +137,18 @@ $(document).ready(function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: {
-                    new_password: $("#new_password").val()
+                    new_password: $("#new_password").val(),
+                    new_password_confirm: $("#new_password_confirm").val()
                 },
-                error: function () {
-                    //
+                error: function (data) {
+                    swal({
+                        position: 'bottom',
+                        type: 'error',
+                        toast: 'true',
+                        title: 'Não foi possivel alterar a senha!',
+                        showConfirmButton: false,
+                        timer: 6000
+                    });
                 },
                 success: function (data) {
 

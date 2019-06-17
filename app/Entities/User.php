@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -58,6 +59,7 @@ class User extends Authenticable {
     use HasApiTokens;
     use Notifiable;
     use HasRoles;
+    use FoxModelTrait;
 
     /**
      * @var array

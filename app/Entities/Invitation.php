@@ -2,7 +2,7 @@
 
 namespace App\Entities;
 
-use App\Traits\ModelEnumTrait;
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Invitation extends Model
 {
-    use ModelEnumTrait;
+    use FoxModelTrait;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
