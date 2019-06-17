@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -23,10 +24,25 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Pixel extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     /**
      * @var array
      */
-    protected $fillable = ['project', 'campaign', 'name', 'code', 'platform', 'status', 'created_at', 'updated_at', 'deleted_at', 'checkout', 'purchase_boleto', 'purchase_card'];
+    protected $fillable = [
+        'project',
+        'campaign',
+        'name',
+        'code',
+        'platform',
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'checkout',
+        'purchase_boleto',
+        'purchase_card',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

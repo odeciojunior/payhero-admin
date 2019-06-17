@@ -1,47 +1,11 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'cuponsdesconto', 'namespace' => 'Modules\DiscountCoupons\Http\Controllers'], function()
-{
-
-    Route::post('/editarcupom', [
-        'uses' => 'DiscountCouponsController@update',
-        'as' => 'cuponsdesconto.update',
-    ]);
-
-    Route::post('/deletarcupom', [
-        'uses' => 'DiscountCouponsController@delete',
-        'as' => 'cuponsdesconto.delete',
-    ]);
-
-    Route::post('/cadastrarcupom', [
-        'uses' => 'DiscountCouponsController@store',
-        'as' => 'cuponsdesconto.store',
-    ]);
-
-    Route::post('/data-source',[
-        'as' => 'cuponsdesconto.index',
-        'uses' => 'DiscountCouponsController@index'
-    ]);
-
-    Route::post('/detalhe',[
-        'as' => 'cuponsdesconto.details',
-        'uses' => 'DiscountCouponsController@details'
-    ]);
-
-    Route::post('/getformaddcupom',[
-        'as' => 'cuponsdesconto.create',
-        'uses' => 'DiscountCouponsController@create'
-    ]);
-
-    Route::post('/getformeditarcupom',[
-        'as' => 'cuponsdesconto.edit',
-        'uses' => 'DiscountCouponsController@edit'
-    ]);
-
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\DiscountCoupons\Http\Controllers'], function() {
+    Route::Resource('/couponsdiscounts', 'DiscountCouponsController')
+         ->only('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
 });
 
-
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/cuponsdesconto', 'namespace' => 'Modules\DiscountCoupons\Http\Controllers'], function(){
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/cuponsdesconto', 'namespace' => 'Modules\DiscountCoupons\Http\Controllers'], function() {
 
     Route::get('/', [
         'uses' => 'DiscountCouponsApiController@index',
@@ -62,5 +26,4 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}
     Route::get('/{id_cupom}', [
         'uses' => 'DiscountCouponsApiController@show',
     ]);
-
 });
