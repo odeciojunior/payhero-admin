@@ -166,10 +166,17 @@ class ProfileController extends Controller
                               'password' => bcrypt($requestData['new_password']),
                           ]);
 
-            return response()->json("sucesso");
+            return response()->json("success");
         } catch (Exception $e) {
             Log::warning('ProfileController changePassword');
             report($e);
         }
+    }
+
+    public function uploadDocuments(Request $request)
+    {
+        $x = $request->all();
+        dd($x);
+
     }
 }

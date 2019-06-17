@@ -6,4 +6,5 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Profile\H
          ->names('profile');
 
     Route::post('/profile/changepassword', 'ProfileController@changePassword')->name('profile.changepassword');
+    Route::post('/profile/uploaddocuments', 'ProfileController@uploadDocuments')->name('profile.uploaddocuments');
 });

@@ -133,21 +133,16 @@
                                 </div>
                                 <div class="tab-pane" id="tab_documentos" role="tabpanel">
                                     <div id="dropzone">
-                                        <form method="POST" action="{!! route('profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" class="dropzone" id='myAwesomeDropzone'>
+                                        <form method="POST" action="{!! route('profile.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
                                             @csrf
                                             <div class="dz-message needsclick">
                                                 Arraste os arquivos aqui ou click para selecionar.<br />
                                             </div>
 
+                                            <input id="type_document" name="type_document" value="xxxxx" type="hidden" class="form-control" >
+
                                         </form>
                                     </div>
-                                    <form method="POST" action="{!! route('profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data">
-                                        @csrf
-
-                                        <div class="form-group" style="margin-top: 30px">
-                                            <input type="submit" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
-                                        </div>
-                                    </form>
                                     <div class="row">
                                         <div class="panel-heading col-10">
                                             <h3 class="panel-title">Documentos</h3>
@@ -216,7 +211,6 @@
     @push('scripts')
         <script src="{{asset('/modules/profile/js/dropzone.js')}}"></script>
         <script src="{{asset('/modules/profile/js/profile.js')}}"></script>
-
     @endpush
 @endsection
 

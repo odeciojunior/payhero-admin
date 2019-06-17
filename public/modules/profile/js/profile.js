@@ -165,23 +165,57 @@ $(document).ready(function () {
                     $('#new_password_confirm').val('');
 
                 }
-
             });
-
         }
 
     });
 
 });
 
-Dropzone.options.myAwesomeDropzone = {
-    paramName: "file", // The name that will be used to transfer the file
-    maxFilesize: 1, // MB
-    accept: function (file, done) {
-        if (file.name == "bird-box.w700.h700.jpg") {
-            done("Naha, you don't.");
-        } else {
-            done();
+Dropzone.options.dropzoneDocuments = {
+    paramName: "file",
+    maxFilesize: 10, // MB
+    // autoProcessQueue: false, //nao envia automaticamente
+    // init: function () {
+    //
+    //     // get the dropzone object
+    //     myDropzone = this;
+    //
+    //     // overwrite the addedfile function
+    //     myDropzone.on("addedfile", function (event) {
+    //
+    //         swal(
+    //             {title: 'Are you sure?', showCancelButton: true},
+    //             function(isConfirm) {
+    //                 if (isConfirm) {
+    //                     // handle confirm
+    //                     alert('a');
+    //                     myDropzone.processQueue();
+    //                 } else {
+    //                     // handle all other cases
+    //                 }
+    //             }
+    //         )
+    //
+    //     });
+    // }
+};
+
+Dropzone.confirm = function(question, accepted, rejected) {
+    // Do your thing, ask the user for confirmation or rejection, and call
+    // accepted() if the user accepts, or rejected() otherwise. Make
+    // sure that rejected is actually defined!
+
+    swal(
+        {title: 'Are you sure?', showCancelButton: true},
+        function(isConfirm) {
+            if (isConfirm) {
+                // handle confirm
+                accepted();
+            } else {
+                // handle all other cases
+                rejected();
+            }
         }
-    }
+    )
 };
