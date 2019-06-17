@@ -1,7 +1,6 @@
 $(function () {
 
     var projectId = $("#project-id").val();
-    console.log(projectId);
 
     //criar novo pixel
     $("#adicionar_pixel").on('click', function () {
