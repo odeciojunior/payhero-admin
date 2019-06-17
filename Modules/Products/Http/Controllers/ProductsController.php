@@ -2,12 +2,14 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Exception;
 use App\Entities\Product;
+use App\Entities\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Exception;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Products\Http\Requests\CreateProductRequest;
 
 class ProductsController extends Controller
 {
@@ -17,12 +19,30 @@ class ProductsController extends Controller
     private $productModel;
 
     /**
+     * @var Category
+     */
+    private $categoryModel;
+
+    /**
      * ProductsController constructor.
      * @param Product $product
      */
-    function __construct(Product $product)
+    function __construct(Product $product, Category $category)
     {
         $this->productModel = $product;
+        $this->categoryModel = $category;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDigitalOceanFileService()
+    {
+        if (!$this->digitalOceanFileService) {
+            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
+        }
+
+        return $this->digitalOceanFileService;
     }
 
     /**
@@ -55,7 +75,9 @@ class ProductsController extends Controller
     public function create()
     {
         try {
-            return view('products::create');
+            return view('products::create',[
+                'categories' => $this->categoryModel->all()
+            ]);
         } catch (Exception $e) {
             Log::warning('Erro ao tenta acessar pagina de cadastro de produto (ProductsController - create)');
             report($e);
@@ -66,12 +88,16 @@ class ProductsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CreateProductRequest $request)
     {
         try {
-            $data         = $request->all();
+            $data         = $request->validated();
             $data['user'] = auth()->user()->id;
             $product      = $this->productModel->create($data);
+
+            if(isset($request->product_photo)){
+
+            }
 
             return redirect()->route('products.index');
         } catch (Exception $e) {
