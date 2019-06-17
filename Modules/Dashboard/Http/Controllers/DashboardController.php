@@ -81,6 +81,7 @@ class DashboardController extends Controller {
             'sales_count'       => $salesCount,
             'daily_balance'     => $dailyBalance,
             'checkouts'         => $checkouts,
+            'companies'         => $companies,
         ]);
 
     }
