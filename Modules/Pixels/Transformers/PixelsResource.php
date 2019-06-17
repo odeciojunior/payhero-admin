@@ -9,18 +9,17 @@ class PixelsResource extends Resource
 {
     /**
      * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request
+     * @param \Illuminate\Http\Request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'nome' => $this->nome,
-            'cod_pixel' => $this->cod_pixel,
-            'plataforma' => $this->plataforma,
-            'status' => $this->status
+            'id'         => $this->id,
+            'nome'       => $this->name,
+            'cod_pixel'  => $this->cod,
+            'plataforma' => $this->platform,
+            'status'     => $this->status,
         ];
     }
 }
