@@ -7,9 +7,9 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dashboard', 'namespa
         'as' => 'dashboard',
     ]);
 
-    Route::post('/lastsales',[
-        'uses' => 'DashboardController@lastSales',
-        'as' => 'dashboard.lastsales',
+    Route::post('/getvalues',[
+        'uses' => 'DashboardController@getValues',
+        'as' => 'dashboard.getvalues',
     ]);
 
 });

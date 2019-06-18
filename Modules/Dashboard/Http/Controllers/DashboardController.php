@@ -22,72 +22,15 @@ class DashboardController extends Controller {
 
     public function index() {
 
-        $availableBalance = 0;
-        $futureBalance    = 0;
-        $dailyBalance     = 0;
-
         $companies = Company::where('user',\Auth::user()->id)->get()->toArray();
 
-        foreach($companies as $company){
-
-            $pendingTransactions = Transaction::where('company',$company['id'])
-                ->where('status','paid')
-                ->whereDate('release_date', '>', Carbon::today()->toDateString())
-                ->get()->toArray();
-
-            if(count($pendingTransactions)){
-                foreach($pendingTransactions as $pendingTransaction){
-                    $futureBalance += $pendingTransaction['value'];
-                }
-            }
-
-            $todayTransactions = Transaction::where('company',$company['id'])
-                ->whereDate('created_at', Carbon::today())
-                ->get()->toArray();
-
-            if(count($todayTransactions)){
-                foreach($todayTransactions as $todayTransaction){
-                    $dailyBalance += $todayTransaction['value'];
-                }
-            }
-        }
-
-        if($availableBalance == 0){
-            $availableBalance = '000';
-        }
-
-        if($futureBalance == 0){
-            $futureBalance = '000';
-        }
-
-        $availableBalance = \Auth::user()->saldo;
-        $availableBalance = number_format($availableBalance,2);
-        $futureBalance    = substr_replace($futureBalance, '.',strlen($futureBalance) - 2, 0 );
-        $futureBalance    = number_format($futureBalance,2);
-        $dailyBalance     = substr_replace($dailyBalance, '.',strlen($dailyBalance) - 2, 0 );
-        $dailyBalance     = number_format($dailyBalance,2);
-
-        $userProjects = UserProject::where([
-            ['user', \Auth::user()->id],
-            ['type','producer']
-        ])->pluck('project')->toArray();
-
-        $salesCount = Sale::whereIn('project',$userProjects)->whereDate('start_date', Carbon::today())->count();
-        $checkouts  = Checkout::whereIn('project',$userProjects)->whereDate('created_at', Carbon::today())->count();
-
         return view('dashboard::dashboard',[
-            'available_balance' => $availableBalance,
-            'future_balance'    => $futureBalance,
-            'sales_count'       => $salesCount,
-            'daily_balance'     => $dailyBalance,
-            'checkouts'         => $checkouts,
-            'companies'         => $companies,
+            'companies' => $companies,
         ]);
-
     }
 
     public function lastSales(Request $request){
-
+ 
         $requestData = $request->all();
 
         $sales = Sale::select('id','start_date','total_paid_value','payment_form','ip')
@@ -113,4 +56,68 @@ class DashboardController extends Controller {
         return response()->json($sales);
     }
 
+    public function getValues(Request $request){
+
+        $requestData = $request->all();
+
+        $availableBalance = 0;
+        $futureBalance    = 0;
+        $dailyBalance     = 0;
+
+        $company = Company::find($request->company);
+
+        $pendingTransactions = Transaction::where('company',$request->company)
+            ->where('status','paid')
+            ->whereDate('release_date', '>', Carbon::today()->toDateString())
+            ->get()->toArray();
+
+        if(count($pendingTransactions)){
+            foreach($pendingTransactions as $pendingTransaction){
+                $futureBalance += $pendingTransaction['value'];
+            }
+        }
+
+        $todayTransactions = Transaction::where('company',$request->company)
+            ->whereDate('created_at', Carbon::today())
+            ->get()->toArray();
+
+        if(count($todayTransactions)){
+            foreach($todayTransactions as $todayTransaction){
+                $dailyBalance += $todayTransaction['value'];
+            }
+        }
+
+        if($availableBalance == 0){
+            $availableBalance = '000';
+        }
+
+        if($futureBalance == 0){
+            $futureBalance = '000';
+        }
+
+        $availableBalance = \Auth::user()->saldo;
+        $availableBalance = number_format($availableBalance,2);
+        $futureBalance    = substr_replace($futureBalance, '.',strlen($futureBalance) - 2, 0 );
+        $futureBalance    = number_format($futureBalance,2);
+        $dailyBalance     = substr_replace($dailyBalance, '.',strlen($dailyBalance) - 2, 0 );
+        $dailyBalance     = number_format($dailyBalance,2);
+
+        // $userProjects = UserProject::where([
+        //     ['user', \Auth::user()->id],
+        //     ['type','producer']
+        // ])->pluck('project')->toArray();
+
+        // $salesCount = Sale::whereIn('project',$userProjects)->whereDate('start_date', Carbon::today())->count();
+        // $checkouts  = Checkout::whereIn('project',$userProjects)->whereDate('created_at', Carbon::today())->count();
+
+        return response()->json([
+            'available_balance' => $availableBalance,
+            'future_balance'    => $futureBalance,
+            'currency'          => $company->country == 'usa' ? '$' : 'R$',
+        ]);
+
+    }
+
 }
+
+

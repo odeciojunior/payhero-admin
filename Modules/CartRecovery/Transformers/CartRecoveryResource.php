@@ -24,9 +24,9 @@ class CartRecoveryResource extends Resource
         if($log){
             $client = $log->name;
         }
-
+ 
         $status = '';
-        if($this->status == 'Carrinho abandonado'){
+        if($this->status == 'abandoned cart'){
             $status = 'Não recuperado';
         }
         else{
