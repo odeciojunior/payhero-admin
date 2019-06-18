@@ -595,7 +595,7 @@
             </div>
         </div>
         @push('scripts')
-{{--            <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>--}}
+            <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>
             <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
             <script src='{{asset('modules/projects/js/projects.js')}}'></script>
@@ -747,7 +747,7 @@
 
                 });
 
-                $('#adicionar_sms').on('click', function () {
+            /*    $('#adicionar_sms').on('click', function () {
 
                     $('#modal_add_tamanho').addClass('modal-simple');
                     $('#modal_add_tamanho').removeClass('modal-lg');
@@ -810,7 +810,7 @@
                         }
                     });
 
-                });
+                });*/
 
                 @if($project->shopify_id == '')
                 $('#adicionar_brinde').on('click', function () {

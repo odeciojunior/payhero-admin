@@ -24,6 +24,7 @@ use NotificationChannels\Zenvia\ZenviaMessage;
 class SmsController extends Controller
 {
     private $smsMessageModel;
+    private $plansModel;
 
     private function getSmsMessage()
     {
@@ -32,6 +33,15 @@ class SmsController extends Controller
         }
 
         return $this->smsMessageModel;
+    }
+
+    public function getPlans()
+    {
+        if (!$this->plansModel) {
+            $this->plansModel = app(Plan::class);
+        }
+
+        return $this->plansModel;
     }
 
     /*public function index()
@@ -77,10 +87,20 @@ class SmsController extends Controller
         ]);
     }*/
 
-    public function cadastro()
+    public function create(Request $request)
     {
+        try {
+            $projectId = $request->input('project');
+            if ($projectId) {
+                $projectId = Hashids::decode($projectId)[0];
+                $plans     = $this->getPlans()->where('project', $projectId)->get();
+            }
 
-        return view('sms::cadastro');
+            return view('sms::cadastro', ['plans' => $plans]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar redirecionar para pagina de cadastro de sms (SmsController - create)');
+            report($e);
+        }
     }
 
     public function cadastrarSms(Request $request)
@@ -163,15 +183,16 @@ class SmsController extends Controller
     public function index(Request $request)
     {
         try {
-            /*$dados = $request->all();
-            if ($dados['project']) {
-                $projectId = Hashids::decode($dados['project'])[0];
-                $sms       = $this->getSmsMessage()->with('plan')->whereHas('plan', function($query) use ($projectId) {
-                    $query->where("project", $projectId);
-                })->get();
-            } else {
-                return response()->json('Projeto não encontrado');
-            }*/
+            /* $dados = $request->all();
+             if ($dados['project']) {
+                 $projectId = Hashids::decode($dados['project'])[0];
+                 $sms       = $this->getSmsMessage()->whereHas('plan', function($query) use ($projectId) {
+                     $query->where("project", $projectId);
+                 })->get();
+             } else {
+                 return response()->json('Projeto não encontrado');
+             }*/
+
             $dados = $request->all();
 
             $sms = \DB::table('zenvia_sms as sms')
@@ -219,49 +240,6 @@ class SmsController extends Controller
             Log::warning("Erro ao tentar acessar dados (SmsController - index)");
             report($e);
         }
-        /*$dados = $request->all();
-
-        $sms = \DB::table('zenvia_sms as sms')
-                  ->leftJoin('plans', 'plans.id', 'sms.plan');
-
-        if (isset($dados['projeto'])) {
-            $sms = $sms->where('sms.project', '=', Hashids::decode($dados['projeto']));
-        } else {
-            return response()->json('projeto não encontrado');
-        }
-
-        $sms = $sms->get([
-                             'sms.id',
-                             'sms.event',
-                             'sms.time',
-                             'sms.period',
-                             'sms.message',
-                             'sms.status',
-                             'plans.name as plan',
-                         ]);
-
-        return Datatables::of($sms)
-                         ->editColumn('plan', function($sms) {
-                             if ($sms->plan == '') {
-                                 return 'Todos plans';
-                             }
-
-                             return $sms->plan;
-                         })
-                         ->addColumn('detalhes', function($sms) {
-                             return "<span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_sms' data-placement='top' data-toggle='tooltip' title='Editar' sms='" . Hashids::encode($sms->id) . "'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_sms' data-placement='top' data-toggle='tooltip' title='Excluir' sms='" . Hashids::encode($sms->id) . "'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-                         })
-                         ->rawColumns(['detalhes'])
-                         ->make(true);*/
     }
 
     public function getDetalhesSms(Request $request)

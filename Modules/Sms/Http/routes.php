@@ -2,7 +2,7 @@
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Sms\Http\Controllers'], function()
 {
-    Route::Resource('/sms', 'SmsController')->only('index');
+    Route::Resource('/sms', 'SmsController')->only('index', 'create');
 
     Route::get('/enviarmensagem', [
         'uses' => 'SmsController@enviarMensagem',

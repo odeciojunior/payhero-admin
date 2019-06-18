@@ -11,7 +11,7 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/sms/create",
-            data: {projeto: projectId},
+            data: {project: projectId},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -62,7 +62,7 @@ $(function () {
 
     });
 
-    $("#tabela_sms").DataTable({
+   /* $("#tabela_sms").DataTable({
         bLengthChange: false,
         ordering: false,
         processing: false,
@@ -122,6 +122,6 @@ $(function () {
             $("#modal_editar_tipo").addClass('modal-simple');
             $("#modal_editar_tipo").addClass('modal-lg);
         }
-    });
+    });*/
 
 });
