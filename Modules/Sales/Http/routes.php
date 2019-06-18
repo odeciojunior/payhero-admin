@@ -1,13 +1,13 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'relatorios', 'namespace' => 'Modules\Sales\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sales', 'namespace' => 'Modules\Sales\Http\Controllers'], function()
 {
-    Route::get('vendas',[
+    Route::get('/',[
         'as' => 'sales',
         'uses' => 'SalesController@index'
     ]);
 
-    Route::get('/getvendas', [
+    Route::get('/getsales', [
         'uses' => 'SalesController@getSales',
     ]);
 

@@ -45,14 +45,14 @@ class SalesResource extends Resource {
 
         return [
             'id'              => '#'.$this->id,
-            'projeto'         => $project,
-            'produto'         => $product,
-            'comprador'       => $client['name'],
-            'forma'           => $this->payment_form == 'cartao_credito' ? 'cartão' : $this->payment_form,
-            'status'          => $this->gateway_status,
-            'data_inicio'     => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
-            'data_finalizada' => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
-            'total_pago'      => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0 ),
+            'project'         => $project,
+            'product'         => $product,
+            'client'          => $client['name'],
+            'method'          => $this->payment_method,
+            'status'          => $this->gateway_status, 
+            'start_date'      => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
+            'end_date'        => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
+            'total_paid'      => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0 ),
             'brand'           => $this->flag,
         ];
 

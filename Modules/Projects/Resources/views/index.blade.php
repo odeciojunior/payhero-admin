@@ -21,7 +21,7 @@
                                 <img class="card-img-top" src="{!! $project->photo != '' ? $project->photo : '/modules/global/assets/img/projeto.png' !!}" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">{{$project->name}}</h5>
-                                    <p class="card-text sm">Criado em 14/06/2019</p>
+                                    <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p>
                                     <a href="/projects/{{Hashids::encode($project->id)}}" class="stretched-link"></a>
                                 </div>
                             </div>
