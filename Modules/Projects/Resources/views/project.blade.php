@@ -61,8 +61,8 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_fretes"
-                               aria-controls="tab_fretes" role="tab">Frete
+                            <a class="nav-link" data-toggle="tab" href="#tab-fretes"
+                               aria-controls="tab-fretes" role="tab">Frete
                             </a>
                         </li>
                         @if($project->shopify_id == '')
@@ -221,6 +221,10 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- Painel de Fretes -->
+                            <div class="tab-pane" id="tab-fretes" role="tabpanel">
+                                @include('shipping::index')
+                            </div>
                             <!--- Painel de Planos -->
                             <div class="tab-pane" id="tab_planos" role="tabpanel">
                                 <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -248,24 +252,6 @@
                                         <th>Nome</th>
                                         <th>Tipo</th>
                                         <th>Status</th>
-                                        <th style="width: 160px">Opções</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- Painel de Fretes -->
-                            <div class="tab-pane" id="tab_fretes" role="tabpanel">
-                                <table id="tabela_parceiros" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_parceiro" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar Frete
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Descrição</th>
-                                        <th>Valor</th>
-                                        <th>Informação</th>
-                                        <th>Status</th>
-                                        <th>Pré Selecionado</th>
                                         <th style="width: 160px">Opções</th>
                                     </thead>
                                     <tbody>
