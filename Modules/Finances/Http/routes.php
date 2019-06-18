@@ -3,26 +3,13 @@
 Route::group(
     [
         'prefix'     => 'transfers',
-        'middleware' => ['web'],
-        'namespace' => 'Modules\Finances\Http\Controllers'
-    ],
-    function() {
-        // rotas publicas
-
-    }
-);
-
-Route::group(
-    [
-        'prefix'     => 'transfers',
         'middleware' => ['web','auth'],
         'namespace' => 'Modules\Finances\Http\Controllers'
     ],
     function() {
         // rotas autenticadas
 
-        Route::get('/', 'WithdrawalController@index')->name('transfers');
-
+        Route::get('/', 'WithdrawalController@index')->name('finances');
 
     }
 );

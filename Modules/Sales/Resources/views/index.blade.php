@@ -8,145 +8,48 @@
   </style>
   <!-- Page -->
   <div class="page">
-    
 
-    <div class="page-header container">
+    <div class="page-header">
         <div class="row align-items-center justify-content-between">
             <div class="col-6">
-              <h1> Vendas </h1>
+              <h1 class="page-title">Vendas</h1>
             </div>
             <div class="col-6 text-right">
-                <div class="d-flex justify-content-end align-items-center">
+                {{--  <div class="d-flex justify-content-end align-items-center">
                   <div class="p-2 align-items-center">
                     <i class="icon wb-calendar icon-results" aria-hidden="true"></i> <span class="text-result"> RESULTADOS DE 15 A 26 DE MAIO DE 2019 </span>
                   </div>
 
                   <div class="p-2 align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg"class="icon-download" width="20" height="20" viewBox="0 0 24 24"><path d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/></svg>                      <div class="btn-group" role="group">
-                          <button type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
-                          <button type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
-                      </div>
+                    <svg xmlns="http://www.w3.org/2000/svg"class="icon-download" width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/></svg>                      
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-round btn-default btn-outline btn-pill-left">.XLS</button>
+                        <button type="button" class="btn btn-round btn-default btn-outline btn-pill-right">.CSV</button>
+                    </div>
                   </div>
-                </div>
+                </div>  --}}
+                <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
+                  Filtros
+                </a>
+    
             </div>
           </div>
       </div>
 
-    <div class="page-content container">
+      <div class="page-content">
 
-    <div class="row">
-         <div class="col-lg-3" >
-            <div class="card card-shadow bg-white">
-               <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
-                  <div class="font-size-14 gray-600">
-                     <img src="{{ asset('modules/global/assets/img/svg/moeda-laranja.svg') }}" width="35px">
-                     <span class="card-desc">Pendente</span>
-                  </div>
-               </div>
-               <div class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                  <span class="moeda">R$</span> <span class="text-money">1.000,00</span>
-               </div>
-               <!-- <div class="divider"></div>
-                  <div class="indices row justify-content-center align-items-center">
-                    <div class="col-4">
-                      <div class="d-flex justify-content-around">
-                        <img src="{{ asset('modules/global/assets/img/svg/arrow.svg') }}">
-                        <span class="card-p"> +24% ao dia </span>
-                      </div>
-                    </div>
-                  
-                    <div class="col-4">
-                      <div class="d-flex justify-content-around">
-                        <img src="{{ asset('modules/global/assets/img/svg/arrow-down.svg') }}">
-                        <span class="card-p"> -2% ao dia </span>
-                      </div>
-                    </div>
-                    
-                  </div> -->
-               <div class="card-bottom orange"> </div>
-            </div>
-         </div>
-         <div class="col-lg-3" >
-            <div class="card card-shadow bg-white">
-               <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
-                  <div class="font-size-14 gray-600">
-                     <img src="{{ asset('modules/global/assets/img/svg/moeda-vermelha.svg') }}" width="35px">
-                     <span class="card-desc">Antecipação</span>
-                  </div>
-               </div>
-               <div class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center" >
-                  <span class="moeda">R$</span> <span class="text-money">1.000,00</span>
-               </div>
-               <div class="card-bottom orangered"> </div>
-            </div>
-         </div>
-         <div class="col-lg-3" >
-            <div class="card card-shadow bg-white">
-               <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
-                  <div class="font-size-14 gray-600">
-                     <img src="{{ asset('modules/global/assets/img/svg/moeda.svg') }}" width="35px">
-                     <span class="card-desc">Disponível</span>
-                  </div>
-               </div>
-               <div class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                  <span class="moeda">R$</span> <span class="text-money">1.000,00</span>
-               </div>
-               <div class="card-bottom green"> </div>
-            </div>
-         </div>
-         <div class="col-lg-3" >
-            <div class="card card-shadow bg-white">
-               <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
-                  <div class="font-size-14 gray-600">
-                     <img src="{{ asset('modules/global/assets/img/svg/moeda-azul.svg') }}" width="35px">
-                     <span class="card-desc">Total</span>
-                  </div>
-               </div>
-               <div class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center">
-                  <span class="moeda">R$</span> <span class="text-money">1.000,00</span>
-               </div>
-               <div class="card-bottom blue"> </div>
-            </div>
-         </div>
-      </div>
-
-
-
-      <div class="row justify-content-between align-items-center">
-        <div class="col-lg-6">
-          <div class="row align-items-center justify-content-start">
-              <div class="col">
-              <div class="form-group">
-                                        <div class="input-search">
-                                            <i class="input-search-icon wb-search" aria-hidden="true"></i>
-                                            <input type="text" class="form-control input-pad" name="" placeholder="Digite sua pesquisa... ">
-                                        </div>
-                                    </div>
-              </div>
-
-              <div class="col">
-                
-                <select name="quantidade" id="" class="form-control select-pad">
-                  <option value="">50 itens por página</option>
-                  <option value="">100 itens por página</option>
-
-                </select>
-                
-              </div>
-
-
-          </div>
+        {{--  <div class="col-lg-6 text-right">
+            <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
+              Filtros
+            </a>
         </div>
-        <div class="col-lg-6 text-right">
-          <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
-           Filtros</a>
-        </div>
-      </div>
+      </div>  --}}
 
       <div class="fixhalf"></div>
 
     
-      <div id="div_filtros" class="panel pt-30 p-30" style="display:none">
+      <div id="div_filtros" class="panel pt-10 p-10" style="display:none">
         <div class="row">
           <div class="col-3">
             <label for="projeto">Projeto</label>
@@ -199,18 +102,18 @@
       <div class="panel pt-10 p-10" style="min-height: 300px">
         <div class="page-invoice-table table-responsive">
 
-          <table id="tabela_vendas" class="table text-right table-vendas" style="width:100%;">
-            <thead style="text-align:center" style="margin-bottom:8px">
-              <tr>
-                <th style='vertical-align: middle' class="table-title">Transação</th>
-                <th style='vertical-align: middle' class="table-title">Projeto</th>
-                <th style='vertical-align: middle' class="table-title">Descrição</th>
-                <th style='vertical-align: middle' class="table-title">Cliente</th>
-                <th style='vertical-align: middle' class="table-title">Forma</th>
-                <th style='vertical-align: middle' class="table-title">Status</th>
-                <th style='vertical-align: middle' class="table-title">Data</th>
-                <th style='vertical-align: middle' class="table-title">Pagamento</th>
-                <th style='vertical-align: middle' class="table-title">Comissão</th>
+          <table id="tabela_vendas" class="table text-right table-vendas table-hover" style="width:100%;">
+            <thead style="text-align:center">
+              <tr style="padding-bottom:18px">
+                <th style='vertical-align: middle' class="table-title"><b>Transação</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Projeto</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Descrição</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Cliente</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Forma</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Status</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Data</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Pagamento</b></th>
+                <th style='vertical-align: middle' class="table-title"><b>Comissão</b></th>
                 <th style='vertical-align: middle' class="table-title" width="80px;"> &nbsp; </th>
               </tr>
             </thead>
@@ -315,7 +218,7 @@
               $.each(response.data, function(index, value){
                 dados = '';
                 dados += '<tr>';
-                dados += "<td class='text-left' style='vertical-align: middle'>"+value.id+"</td>";
+                dados += "<td class='text-center' style='vertical-align: middle'>"+value.id+"</td>";
                 dados += "<td style='vertical-align: middle' class='text-center'>"+value.projeto+"</td>";
                 dados += "<td style='vertical-align: middle' class='text-center'>"+value.produto+"</td>";
                 dados += "<td style='vertical-align: middle' class='text-center'>"+value.comprador+"</td>";

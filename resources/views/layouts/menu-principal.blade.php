@@ -1,6 +1,6 @@
 <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation" style="background-color: white">
 
-    <div class="navbar-header">
+  <div class="navbar-header">
       <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided" data-toggle="menubar">
         <span class="sr-only">Toggle navigation</span>
         <span class="hamburger-bar"></span>
@@ -247,28 +247,15 @@
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a href="javascript:void(0)">
+        <a class="animsition-link" href="{!! route('finances') !!}">
         <img src="{{ asset('modules/global/assets/img/svg/financas.svg') }}">
             <span class="site-menu-title">Finanças</span>
-            <span class="site-menu-arrow"></span>
         </a>
-        <ul class="site-menu-sub">
-          <li class="site-menu-item">
-            <a class="animsition-link" href="{{ route('extrato') }}">
-              <span class="site-menu-title">Extrato</span>
-            </a>
-          </li>
-          <li class="site-menu-item">
-            <a class="animsition-link" href="{{ route('transferencias') }}">
-              <span class="site-menu-title">Transferências</span>
-            </a>
-          </li>
-        </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{!! route('tools') !!}">
+        <a class="animsition-link" href="{!! route('reports.index') !!}">
         <img src="{{ asset('modules/global/assets/img/svg/configuracao.svg') }}">
-            <span class="site-menu-title">Ferramentas</span>
+            <span class="site-menu-title">Relatórios</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">

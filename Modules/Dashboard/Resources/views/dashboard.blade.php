@@ -20,14 +20,15 @@
 
            <div class="d-lg-flex align-items-center justify-content-end">
                 <div class="p-2 text-lg-right">
-                  Selecione:
+                  Empresa:
                 </div>
 
                 <div class="p-2 text-lg-right">
 
                   <select name="empresa" id="empresa" class="form-control new-select">
-                    <option value="emp1">Empresa 1</option>
-                    <option value="emp2">Empresa 2</option>
+                      @foreach($companies as $company)
+                          <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
+                      @endforeach
                   </select>
 
                 </div>
@@ -117,7 +118,7 @@
          </div>
       </div>
 
-      <div class="row justify-content-end align-items-center">
+      {{--  <div class="row justify-content-end align-items-center">
 
         <div class="p-2 text-lg-right align-items-center filtro">
           <div class="btn-group" data-toggle="buttons" role="group">
@@ -143,7 +144,7 @@
 
       </div>
 
-      </div>
+      </div>  --}}
       </div>
    </div>
 </div>
