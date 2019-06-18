@@ -37,7 +37,7 @@ class ZenviaSms extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function plan()
+    public function plans()
     {
         return $this->belongsTo('App\Entities\Plan', 'plan');
     }

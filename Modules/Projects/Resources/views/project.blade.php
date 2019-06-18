@@ -33,23 +33,23 @@
                                aria-controls="tab_cupons" role="tab">Domínios
                             </a>
                         </li>
-                        <li class="nav-item" role="presentation">
+                        {{--<li class="nav-item" role="presentation">
                             <a class="nav-link" data-toggle="tab" href="#tab_layouts"
                                aria-controls="tab_cupons" role="tab">Layouts
                             </a>
-                        </li>
+                        </li>--}}
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" data-toggle="tab" href="#tab_pixels"
                                aria-controls="tab_pixels" role="tab">Pixels
                             </a>
                         </li>
-                        @if($project->shopify_id == '')
+                        {{--@if($project->shopify_id == '')
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" data-toggle="tab" href="#tab_brindes"
                                    aria-controls="tab_brindes" role="tab">Brindes
                                 </a>
                             </li>
-                        @endif
+                        @endif--}}
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" data-toggle="tab" href="#tab_cupons"
                                aria-controls="tab_cupons" role="tab">Cupons
@@ -57,18 +57,21 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" data-toggle="tab" href="#tab_sms"
-                               aria-controls="tab_cupons" role="tab">Sms
+                               aria-controls="tab_cupons" role="tab">Notificações
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_planos" aria-controls="tab_planos" role="tab">
-                                @if($project->shopify_id == '')
-                                    Planos
-                                @else
-                                    Produtos
-                                @endif
+                            <a class="nav-link" data-toggle="tab" href="#tab_fretes"
+                               aria-controls="tab_fretes" role="tab">Frete
                             </a>
                         </li>
+                        @if($project->shopify_id == '')
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-toggle="tab" href="#tab_planos" aria-controls="tab_planos" role="tab">
+                                    Planos
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" data-toggle="tab" href="#tab_parceiros"
                                aria-controls="tab_parceiros" role="tab">Parceiros
@@ -133,21 +136,21 @@
                                 </table>
                             </div>
                             <!-- Painel de Layouts -->
-                            <div class="tab-pane" id="tab_layouts" role="tabpanel">
-                                <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Descrição</th>
-                                        <th>Status</th>
-                                        <th style="width: 110px">Opções</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- Painel de Pixels -->
+                        {{--<div class="tab-pane" id="tab_layouts" role="tabpanel">
+                            <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                    <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
+                                </a>
+                                <thead class="bg-blue-grey-100">
+                                    <th>Descrição</th>
+                                    <th>Status</th>
+                                    <th style="width: 110px">Opções</th>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>--}}
+                        <!-- Painel de Pixels -->
                             <div class="tab-pane" id="tab_pixels" role="tabpanel">
                                 <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                     <a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -165,23 +168,23 @@
                                 </table>
                             </div>
                             <!-- Painel de Brindes -->
-                            @if($project->shopify_id == '')
-                                <div class="tab-pane" id="tab_brindes" role="tabpanel">
-                                    <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                        <a id="adicionar_brinde" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                            <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar brinde
-                                        </a>
-                                        <thead class="bg-blue-grey-100">
-                                            <th>Título</th>
-                                            <th>Descrição</th>
-                                            <th>Tipo</th>
-                                            <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                        @endif
+                        {{-- @if($project->shopify_id == '')
+                             <div class="tab-pane" id="tab_brindes" role="tabpanel">
+                                 <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                     <a id="adicionar_brinde" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                         <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar brinde
+                                     </a>
+                                     <thead class="bg-blue-grey-100">
+                                         <th>Título</th>
+                                         <th>Descrição</th>
+                                         <th>Tipo</th>
+                                         <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
+                                     </thead>
+                                     <tbody>
+                                     </tbody>
+                                 </table>
+                             </div>
+                     @endif--}}
                         <!-- Painel de Cupons de Descontos -->
                             <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                 <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -245,6 +248,24 @@
                                         <th>Nome</th>
                                         <th>Tipo</th>
                                         <th>Status</th>
+                                        <th style="width: 160px">Opções</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Painel de Fretes -->
+                            <div class="tab-pane" id="tab_fretes" role="tabpanel">
+                                <table id="tabela_parceiros" class="table-bordered table-hover w-full" style="margin-top: 80px">
+                                    <a id="adicionar_parceiro" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
+                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar Frete
+                                    </a>
+                                    <thead class="bg-blue-grey-100">
+                                        <th>Descrição</th>
+                                        <th>Valor</th>
+                                        <th>Informação</th>
+                                        <th>Status</th>
+                                        <th>Pré Selecionado</th>
                                         <th style="width: 160px">Opções</th>
                                     </thead>
                                     <tbody>
@@ -595,6 +616,9 @@
             </div>
         </div>
         @push('scripts')
+            @if(!$project->shopify_id)
+                <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
+            @endif
             <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>
             <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
@@ -742,344 +766,6 @@
                                     },
                                 });
                             });
-                        }
-                    });
-
-                });
-
-                @if($project->shopify_id == '')
-                $('#adicionar_brinde').on('click', function () {
-
-                    $('#modal_add_tamanho').addClass('modal-lg');
-                    $('#modal_add_tamanho').removeClass('modal-simple');
-
-                    $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                    $.ajax({
-                        method: "GET",
-                        url: "/brindes/getformaddbrinde",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
-                            $('#modal_add').hide();
-                            alertPersonalizado('error', 'Ocorreu algum erro');
-                        },
-                        success: function (data) {
-                            $('#modal_add_body').html(data);
-
-                            $('#cadastrar').unbind('click');
-
-                            $('#cadastrar').on('click', function () {
-
-                                if ($('#titulo_brinde').val() == '' || $('#descricao_brinde').val() == '' || $('#foto_brinde').val() == '' || $('#tipo_brinde').val() == '') {
-                                    alertPersonalizado('error', 'Dados informados inválidos');
-                                    return false;
-                                }
-
-                                $('.loading').css("visibility", "visible");
-
-                                var form_data = new FormData(document.getElementById('cadastrar_brinde'));
-                                form_data.append('projeto', id_projeto);
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/brindes/cadastrarbrinde",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    processData: false,
-                                    contentType: false,
-                                    cache: false,
-                                    data: form_data,
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                        $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('success', 'Brinde adicionado!');
-                                        $('#modal_add').hide();
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                        $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
-                                    },
-                                });
-                            });
-
-                            var p = $("#previewimage_brinde_cadastrar");
-                            $("#foto_brinde_cadastrar").on("change", function () {
-
-                                var imageReader = new FileReader();
-                                imageReader.readAsDataURL(document.getElementById("foto_brinde_cadastrar").files[0]);
-
-                                imageReader.onload = function (oFREvent) {
-                                    p.attr('src', oFREvent.target.result).fadeIn();
-
-                                    p.on('load', function () {
-
-                                        var img = document.getElementById('previewimage_brinde_cadastrar');
-                                        var x1, x2, y1, y2;
-
-                                        if (img.naturalWidth > img.naturalHeight) {
-                                            y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                            x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                            x2 = x1 + (y2 - y1);
-                                        } else {
-                                            if (img.naturalWidth < img.naturalHeight) {
-                                                x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                ;
-                                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                                y2 = y1 + (x2 - x1);
-                                            } else {
-                                                x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                            }
-                                        }
-
-                                        $('input[name="foto_brinde_cadastrar_x1"]').val(x1);
-                                        $('input[name="foto_brinde_cadastrar_y1"]').val(y1);
-                                        $('input[name="foto_brinde_cadastrar_w"]').val(x2 - x1);
-                                        $('input[name="foto_brinde_cadastrar_h"]').val(y2 - y1);
-
-                                        $('#modal_editar').on('hidden.bs.modal', function () {
-                                            $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
-                                        });
-                                        $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
-
-                                        $('#previewimage_brinde_cadastrar').imgAreaSelect({
-                                            x1: x1, y1: y1, x2: x2, y2: y2,
-                                            aspectRatio: '1:1',
-                                            handles: true,
-                                            imageHeight: this.naturalHeight,
-                                            imageWidth: this.naturalWidth,
-                                            onSelectEnd: function (img, selection) {
-                                                $('input[name="foto_brinde_cadastrar_x1"]').val(selection.x1);
-                                                $('input[name="foto_brinde_cadastrar_y1"]').val(selection.y1);
-                                                $('input[name="foto_brinde_cadastrar_w"]').val(selection.width);
-                                                $('input[name="foto_brinde_cadastrar_h"]').val(selection.height);
-                                            },
-                                            parent: $('#conteudo_modal_add'),
-                                        });
-                                    })
-                                };
-
-                            });
-
-                            $("#selecionar_foto_brinde_cadastrar").on("click", function () {
-                                $("#foto_brinde_cadastrar").click();
-                            });
-
-                            $('#tipo_brinde').on('change', function () {
-
-                                if ($(this).val() == 1) {
-                                    $('#div_input_arquivo').show();
-                                    $('#div_input_link').hide();
-                                }
-                                if ($(this).val() == 2) {
-                                    $('#div_input_arquivo').hide();
-                                    $('#div_input_link').show();
-
-                                }
-                            });
-
-                        }
-                    });
-
-                });
-                @endif
-
-                $('#adicionar_layout').on('click', function () {
-
-                    $('#modal_add_tamanho').addClass('modal-lg');
-                    $('#modal_add_tamanho').removeClass('modal-simple');
-
-                    $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                    $.ajax({
-                        method: "POST",
-                        url: "/layouts/getformaddlayout",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
-                            $('#modal_add').hide();
-                            alertPersonalizado('error', 'Ocorreu algum erro');
-                        },
-                        success: function (data) {
-
-                            $('#modal_add_body').html(data);
-
-                            atualizarPreView();
-
-                            function atualizarPreView() {
-
-                                $('#form-preview').submit();
-                            }
-
-                            $("#atualizar_preview_cadastro").on("click", function () {
-                                atualizarPreView();
-                            });
-
-                            $('#cadastrar').unbind('click');
-
-                            $('#cadastrar').on('click', function () {
-
-                                if ($('#descricao').val() == '' || $('#logo').val() == '') {
-                                    alertPersonalizado('error', 'Dados informados inválidos');
-                                    return false;
-                                }
-
-                                $('.loading').css("visibility", "visible");
-
-                                var form_data = new FormData(document.getElementById('cadastrar_layout'));
-                                form_data.append('projeto', id_projeto);
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/layouts/cadastrarlayout",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    processData: false,
-                                    contentType: false,
-                                    cache: false,
-                                    data: form_data,
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                        $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('success', 'Layout adicionado!');
-                                        $('#modal_add').hide();
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                        $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
-                                    },
-                                });
-                            });
-
-                            $("#formato_logo_cadastrar").on("change", function () {
-                                $("#foto_checkout").val('');
-                                $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
-                                $('#previewimage_checkout_cadastrar').attr('src', '#');
-                                $("#preview_logo_formato").val($(this).val());
-                            });
-
-                            var p = $("#previewimage_checkout_cadastrar");
-                            $("#foto_checkout").on("change", function () {
-
-                                var input = $(this).clone();
-                                $('#form-preview').append(input);
-
-                                var imageReader = new FileReader();
-                                imageReader.readAsDataURL(document.getElementById("foto_checkout").files[0]);
-
-                                imageReader.onload = function (oFREvent) {
-                                    p.attr('src', oFREvent.target.result).fadeIn();
-
-                                    p.on('load', function () {
-
-                                        var img = document.getElementById('previewimage_checkout_cadastrar');
-                                        var x1, x2, y1, y2;
-
-                                        if ($("#formato_logo_cadastrar").val() == 'quadrado') {
-                                            if (img.naturalWidth > img.naturalHeight) {
-                                                y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                                x2 = x1 + (y2 - y1);
-                                            } else {
-                                                if (img.naturalWidth < img.naturalHeight) {
-                                                    x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                    ;
-                                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                    y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                                    y2 = y1 + (x2 - x1);
-                                                } else {
-                                                    x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                }
-                                            }
-                                        } else {
-                                            if (img.naturalWidth > img.naturalHeight) {
-                                                y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1));
-                                                if (x1 < 0)
-                                                    x1 = 2;
-                                                x2 = x1 + ((y2 - y1) * 2);
-                                                if (x2 > img.naturalWidth) {
-                                                    x2 = img.naturalWidth - 2;
-                                                    y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
-                                                    y2 = y1 + Math.floor((x2 - x1) / 2);
-                                                }
-                                            } else {
-                                                x1 = 2
-                                                x2 = img.naturalWidth - 2;
-                                                y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
-                                                y2 = y1 + Math.floor((x2 - x1) / 2);
-                                            }
-
-                                        }
-
-                                        $('input[name="foto_checkout_cadastrar_x1"]').val(x1);
-                                        $('input[name="foto_checkout_cadastrar_y1"]').val(y1);
-                                        $('input[name="foto_checkout_cadastrar_w"]').val(x2 - x1);
-                                        $('input[name="foto_checkout_cadastrar_h"]').val(y2 - y1);
-                                        $('input[name="preview_logo_x1"]').val(x1);
-                                        $('input[name="preview_logo_y1"]').val(y1);
-                                        $('input[name="preview_logo_w"]').val(x2 - x1);
-                                        $('input[name="preview_logo_h"]').val(y2 - y1);
-
-                                        var formato = '';
-                                        if ($("#formato_logo_cadastrar").val() == 'quadrado') {
-                                            formato = '1:1';
-                                        } else {
-                                            formato = '2:1';
-                                        }
-
-                                        $('#modal_editar').on('hidden.bs.modal', function () {
-                                            $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
-                                        });
-                                        $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
-
-                                        $('#previewimage_checkout_cadastrar').imgAreaSelect({
-                                            x1: x1, y1: y1, x2: x2, y2: y2,
-                                            aspectRatio: formato,
-                                            handles: true,
-                                            imageHeight: this.naturalHeight,
-                                            imageWidth: this.naturalWidth,
-                                            onSelectEnd: function (img, selection) {
-                                                $('input[name="foto_checkout_cadastrar_x1"]').val(selection.x1);
-                                                $('input[name="foto_checkout_cadastrar_y1"]').val(selection.y1);
-                                                $('input[name="foto_checkout_cadastrar_w"]').val(selection.width);
-                                                $('input[name="foto_checkout_cadastrar_h"]').val(selection.height);
-                                                $('input[name="preview_logo_x1"]').val(selection.x1);
-                                                $('input[name="preview_logo_y1"]').val(selection.y1);
-                                                $('input[name="preview_logo_w"]').val(selection.width);
-                                                $('input[name="preview_logo_h"]').val(selection.height);
-                                            },
-                                            parent: $('#conteudo_modal_add'),
-                                        });
-                                    })
-                                };
-
-                            });
-
-                            $("#selecionar_foto_checkout_cadastrar").on("click", function () {
-                                $("#foto_checkout").click();
-                            });
-
                         }
                     });
 
@@ -1728,251 +1414,6 @@
 
                 });
 
-                $("#tabela_brindes").DataTable({
-                    bLengthChange: false,
-                    ordering: false,
-                    processing: true,
-                    responsive: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '/brindes/data-source',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: 'POST',
-                        data: {projeto: id_projeto}
-                    },
-                    columns: [
-                        {data: 'title', name: 'title'},
-                        {data: 'description', name: 'description'},
-                        {data: 'type', name: 'type'},
-                        {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-                    ],
-                    "language": {
-                        "sProcessing": "Carregando...",
-                        "lengthMenu": "Apresentando _MENU_ registros por página",
-                        "zeroRecords": "Nenhum registro encontrado",
-                        "info": "Apresentando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "Nenhum registro encontrado",
-                        "infoFiltered": "(filtrado por _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sSearch": "Procurar :",
-                        "sUrl": "",
-                        "sInfoThousands": ",",
-                        "sLoadingRecords": "Carregando...",
-                        "oPaginate": {
-                            "sFirst": "Primeiro",
-                            "sLast": "Último",
-                            "sNext": "Próximo",
-                            "sPrevious": "Anterior",
-                        },
-                    },
-                    "drawCallback": function () {
-
-                        $('.detalhes_brinde').on('click', function () {
-                            var brinde = $(this).attr('brinde');
-                            $('#modal_detalhes_titulo').html('Detalhes da brinde');
-                            $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                            var data = {id_brinde: brinde};
-                            $.post("/brindes/detalhe", data)
-                                .then(function (response, status) {
-                                    $('#modal_detalhes_body').html(response);
-                                });
-                        });
-
-                        var id_brinde = '';
-
-                        $('.excluir_brinde').on('click', function () {
-
-                            id_brinde = $(this).attr('brinde');
-                            var name = $(this).closest("tr").find("td:first-child").text();
-                            $('#modal_excluir_titulo').html('Remover do projeto o brinde ' + name + ' ?');
-
-                            $('#bt_excluir').unbind('click');
-
-                            $('#bt_excluir').on('click', function () {
-
-                                $('.loading').css("visibility", "visible");
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/brindes/deletarbrinde",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: {id: id_brinde},
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        $('#fechar_modal_excluir').click();
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('success', 'Brinde removido!');
-                                        $('#fechar_modal_excluir').click();
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    }
-                                });
-                            });
-                        });
-
-                        $('.editar_brinde').on('click', function () {
-
-                            $('#modal_editar_tipo').addClass('modal-simple');
-                            $('#modal_editar_tipo').removeClass('modal-lg');
-
-                            id_brinde = $(this).attr('brinde');
-
-                            $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/brindes/getformeditarbrinde",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: {id: id_brinde},
-                                error: function () {
-                                    $('#modal_editar').hide();
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('#modal_editar_body').html(data);
-
-                                    $('#editar').unbind('click');
-
-                                    $('#editar').on('click', function () {
-
-                                        $('.loading').css("visibility", "visible");
-
-                                        var form_data = new FormData(document.getElementById('editar_brinde'));
-                                        form_data.append('projeto', id_projeto);
-
-                                        $.ajax({
-                                            method: "POST",
-                                            url: "/brindes/editarbrinde",
-                                            headers: {
-                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                            },
-                                            processData: false,
-                                            contentType: false,
-                                            cache: false,
-                                            data: form_data,
-                                            error: function () {
-                                                $('.loading').css("visibility", "hidden");
-                                                $('#modal_editar').hide();
-                                                alertPersonalizado('error', 'Ocorreu algum erro');
-                                                $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
-                                            },
-                                            success: function (data) {
-                                                $('.loading').css("visibility", "hidden");
-                                                alertPersonalizado('success', 'Brinde atualizado!');
-                                                $('#modal_editar').hide();
-                                                $($.fn.dataTable.tables(true)).css('width', '100%');
-                                                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                                $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
-                                            }
-                                        });
-                                    });
-
-                                    var p = $("#previewimage_brinde_editar");
-                                    $("#foto_brinde_editar").on("change", function () {
-
-                                        var imageReader = new FileReader();
-                                        imageReader.readAsDataURL(document.getElementById("foto_brinde_editar").files[0]);
-
-                                        imageReader.onload = function (oFREvent) {
-                                            p.attr('src', oFREvent.target.result).fadeIn();
-
-                                            p.on('load', function () {
-
-                                                var img = document.getElementById('previewimage_brinde_editar');
-                                                var x1, x2, y1, y2;
-
-                                                if (img.naturalWidth > img.naturalHeight) {
-                                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                                    x2 = x1 + (y2 - y1);
-                                                } else {
-                                                    if (img.naturalWidth < img.naturalHeight) {
-                                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                        ;
-                                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                                        y2 = y1 + (x2 - x1);
-                                                    } else {
-                                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                    }
-                                                }
-
-                                                $('input[name="foto_brinde_editar_x1"]').val(x1);
-                                                $('input[name="foto_brinde_editar_y1"]').val(y1);
-                                                $('input[name="foto_brinde_editar_w"]').val(x2 - x1);
-                                                $('input[name="foto_brinde_editar_h"]').val(y2 - y1);
-
-                                                $('#modal_editar').on('hidden.bs.modal', function () {
-                                                    $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
-                                                });
-                                                $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
-
-                                                $('#previewimage_brinde_editar').imgAreaSelect({
-                                                    x1: x1, y1: y1, x2: x2, y2: y2,
-                                                    aspectRatio: '1:1',
-                                                    handles: true,
-                                                    imageHeight: this.naturalHeight,
-                                                    imageWidth: this.naturalWidth,
-                                                    onSelectEnd: function (img, selection) {
-                                                        $('input[name="foto_brinde_editar_x1"]').val(selection.x1);
-                                                        $('input[name="foto_brinde_editar_y1"]').val(selection.y1);
-                                                        $('input[name="foto_brinde_editar_w"]').val(selection.width);
-                                                        $('input[name="foto_brinde_editar_h"]').val(selection.height);
-                                                    },
-                                                    parent: $('#conteudo_modal_editar'),
-                                                });
-                                            })
-                                        };
-
-                                    });
-
-                                    $("#selecionar_foto_brinde_editar").on("click", function () {
-                                        $("#foto_brinde_editar").click();
-                                    });
-
-                                    $('#tipo_brinde').on('change', function () {
-
-                                        if ($(this).val() == 1) {
-                                            $('#div_input_arquivo').show();
-                                            $('#div_input_link').hide();
-                                        }
-                                        if ($(this).val() == 2) {
-                                            $('#div_input_arquivo').hide();
-                                            $('#div_input_link').show();
-
-                                        }
-                                    });
-
-                                    var tipo_brinde = '1';
-
-                                    if (tipo_brinde == '1') {
-                                        $('#div_input_arquivo').show();
-                                    }
-                                    if (tipo_brinde == '2') {
-                                        $('#div_input_link').show();
-                                    }
-
-                                }
-                            });
-
-                        });
-                    }
-
-                });
-
                 $("#tabela_dominios").DataTable({
                     bLengthChange: false,
                     ordering: false,
@@ -2209,268 +1650,6 @@
                                 success: function (response) {
                                     $('#modal_detalhes_body').html(response);
                                 }
-                            });
-                        });
-
-                    }
-
-                });
-
-                $("#tabela_layouts").DataTable({
-                    bLengthChange: false,
-                    ordering: false,
-                    processing: true,
-                    serverSide: true,
-                    responsive: true,
-                    ajax: {
-                        url: '/layouts/data-source',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: 'POST',
-                        data: {projeto: id_projeto}
-                    },
-                    columns: [
-                        {data: 'description', name: 'description'},
-                        {data: 'status', name: 'status'},
-                        {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-                    ],
-                    "language": {
-                        "sProcessing": "Carregando...",
-                        "lengthMenu": "Apresentando _MENU_ registros por página",
-                        "zeroRecords": "Nenhum registro encontrado",
-                        "info": "Apresentando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "Nenhum registro encontrado",
-                        "infoFiltered": "(filtrado por _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sSearch": "Procurar :",
-                        "sUrl": "",
-                        "sInfoThousands": ",",
-                        "sLoadingRecords": "Carregando...",
-                        "oPaginate": {
-                            "sFirst": "Primeiro",
-                            "sLast": "Último",
-                            "sNext": "Próximo",
-                            "sPrevious": "Anterior",
-                        },
-                    },
-                    "drawCallback": function () {
-
-                        $('.editar_layout').on('click', function () {
-
-                            $('#modal_editar_tipo').addClass('modal-lg');
-                            $('#modal_editar_tipo').removeClass('modal-simple');
-
-                            id_layout = $(this).attr('layout');
-
-                            $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/layouts/getformeditarlayout",
-                                data: {id: id_layout, projeto: id_projeto},
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                error: function () {
-                                    $('#modal_editar').hide();
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('#modal_editar_body').html(data);
-
-                                    atualizarPreView();
-
-                                    function atualizarPreView() {
-
-                                        $('#form_preview_editar').submit();
-                                    }
-
-                                    $("#formato_logo_editar").on("change", function () {
-                                        $("#foto_checkout").val('');
-                                        $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
-                                        $('#previewimage_checkout_editar').attr('src', '#');
-                                        $("#preview_logo_formato").val($(this).val());
-                                    });
-
-                                    var p = $("#previewimage_checkout_editar");
-                                    $("#foto_checkout").on("change", function () {
-
-                                        var input = $(this).clone();
-                                        $('#form_preview_editar').append(input);
-
-                                        var imageReader = new FileReader();
-                                        imageReader.readAsDataURL(document.getElementById("foto_checkout").files[0]);
-
-                                        imageReader.onload = function (oFREvent) {
-                                            p.attr('src', oFREvent.target.result).fadeIn();
-
-                                            p.on('load', function () {
-
-                                                var img = document.getElementById('previewimage_checkout_editar');
-                                                var x1, x2, y1, y2;
-
-                                                if ($("#formato_logo_editar").val() == 'quadrado') {
-                                                    if (img.naturalWidth > img.naturalHeight) {
-                                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                        x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                                        x2 = x1 + (y2 - y1);
-                                                    } else {
-                                                        if (img.naturalWidth < img.naturalHeight) {
-                                                            x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                            ;
-                                                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                            y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                                            y2 = y1 + (x2 - x1);
-                                                        } else {
-                                                            x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                            y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                        }
-                                                    }
-                                                } else {
-                                                    if (img.naturalWidth > img.naturalHeight) {
-                                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                        x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1));
-                                                        if (x1 < 0)
-                                                            x1 = 2;
-                                                        x2 = x1 + ((y2 - y1) * 2);
-                                                        if (x2 > img.naturalWidth) {
-                                                            x2 = img.naturalWidth - 2;
-                                                            y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
-                                                            y2 = y1 + Math.floor((x2 - x1) / 2);
-                                                        }
-                                                    } else {
-                                                        x1 = 2
-                                                        x2 = img.naturalWidth - 2;
-                                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
-                                                        y2 = y1 + Math.floor((x2 - x1) / 2);
-                                                    }
-                                                }
-
-                                                $('input[name="foto_checkout_editar_x1"]').val(x1);
-                                                $('input[name="foto_checkout_editar_y1"]').val(y1);
-                                                $('input[name="foto_checkout_editar_w"]').val(x2 - x1);
-                                                $('input[name="foto_checkout_editar_h"]').val(y2 - y1);
-                                                $('input[name="preview_logo_x1"]').val(x1);
-                                                $('input[name="preview_logo_y1"]').val(y1);
-                                                $('input[name="preview_logo_w"]').val(x2 - x1);
-                                                $('input[name="preview_logo_h"]').val(y2 - y1);
-
-                                                var formato = '';
-                                                if ($("#formato_logo_editar").val() == 'quadrado') {
-                                                    formato = '1:1';
-                                                } else {
-                                                    formato = '2:1';
-                                                }
-
-                                                $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
-                                                $('#modal_editar').on('hidden.bs.modal', function () {
-                                                    $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
-                                                });
-                                                $('#previewimage_checkout_editar').imgAreaSelect({
-                                                    x1: x1, y1: y1, x2: x2, y2: y2,
-                                                    aspectRatio: formato,
-                                                    handles: true,
-                                                    imageHeight: this.naturalHeight,
-                                                    imageWidth: this.naturalWidth,
-                                                    onSelectEnd: function (img, selection) {
-                                                        $('input[name="foto_checkout_editar_x1"]').val(selection.x1);
-                                                        $('input[name="foto_checkout_editar_y1"]').val(selection.y1);
-                                                        $('input[name="foto_checkout_editar_w"]').val(selection.width);
-                                                        $('input[name="foto_checkout_editar_h"]').val(selection.height);
-                                                        $('input[name="preview_logo_x1"]').val(selection.x1);
-                                                        $('input[name="preview_logo_y1"]').val(selection.y1);
-                                                        $('input[name="preview_logo_w"]').val(selection.width);
-                                                        $('input[name="preview_logo_h"]').val(selection.height);
-                                                    },
-                                                    parent: $('#conteudo_modal_editar'),
-                                                });
-                                            })
-                                        };
-
-                                    });
-
-                                    $("#selecionar_foto_checkout_editar").on("click", function () {
-                                        $("#foto_checkout").click();
-                                    });
-
-                                    $("#atualizar_preview_editar").on("click", function () {
-                                        atualizarPreView();
-                                    });
-
-                                    $('#editar').unbind('click');
-
-                                    $('#editar').on('click', function () {
-
-                                        $('.loading').css("visibility", "visible");
-
-                                        var form_data = new FormData(document.getElementById('editar_layout'));
-                                        form_data.append('projeto', id_projeto);
-
-                                        $.ajax({
-                                            method: "POST",
-                                            url: "/layouts/editarlayout",
-                                            processData: false,
-                                            contentType: false,
-                                            cache: false,
-                                            data: form_data,
-                                            headers: {
-                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                            },
-                                            error: function () {
-                                                $('.loading').css("visibility", "hidden");
-                                                alertPersonalizado('error', 'Ocorreu algum erro');
-                                                $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
-                                            },
-                                            success: function (data) {
-                                                $('.loading').css("visibility", "hidden");
-                                                alertPersonalizado('success', 'Layout atualizado!');
-                                                $('#modal_add').hide();
-                                                $($.fn.dataTable.tables(true)).css('width', '100%');
-                                                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                                $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
-                                            },
-                                        });
-                                    });
-                                }
-                            });
-                        });
-
-                        $('.excluir_layout').on('click', function () {
-
-                            id_layout = $(this).attr('layout');
-
-                            $('#modal_excluir_titulo').html('Remover layout do projeto ?');
-
-                            $('#bt_excluir').unbind('click');
-
-                            $('#bt_excluir').on('click', function () {
-
-                                $('.loading').css("visibility", "visible");
-                                $('#fechar_modal_excluir').click();
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/layouts/removerlayout",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: {id: id_layout},
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('success', 'Layout removido!');
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    }
-                                });
                             });
                         });
 
