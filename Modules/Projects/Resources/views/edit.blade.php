@@ -1,6 +1,7 @@
-<form id="atualizar_configuracoes" method="post" enctype="multipart/form-data">
+<form id="atualizar_configuracoes" enctype="multipart/form-data">
     @csrf
-    <input type="hidden" name="id" value="{{Hashids::encode($project->id)}}">
+    @method('PUT')
+    <input type="hidden" id="project_id" name="id" value="{{Hashids::encode($project->id)}}">
     <div style="width:100%">
         <h4>Configurações básicas</h4>
         <div class="row">
@@ -44,7 +45,7 @@
                 <label for="afiliacao_automatica">Afiliação automática</label>
                 <select name="automatic_affiliation" class="form-control" id="afiliacao_automatica" required>
                     <option value="1" {{ $project->automatic_affiliation == '1' ? 'selected' : '' }}>Sim</option>
-                    <option value="0" {{ $project->automatic_affiliation == '0' ? 'selected' : ''}}>Não</option>
+                    <option value="0" {{ $project->automatic_affiliation == '0' ? 'selected' : '' }}>Não</option>
                 </select>
             </div>
         </div>
@@ -228,13 +229,14 @@
         <div class="row">
             <div class="form-group col-12">
                 <label for="selecionar_foto">Imagem do projeto</label>
-                <br> <input type="button" id="selecionar_foto" class="btn btn-default" value="Alterar foto do projeto">
+                <br>
+                 <input type="button" id="selecionar_foto" class="btn btn-default" value="Alterar foto do projeto" style="width:200px">
                 <input name="project_photo" type="file" class="form-control" id="foto_projeto" style="display:none" accept="image/*">
                 <div style="margin: 20px 0 0 30px;">
-                    <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;" src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project->photo)!!}?dummy={!! uniqid() !!}"/>
+                    <img id="previewimage" alt="Selecione a foto do projeto" style="max-height: 250px; max-width: 350px;" src="{!! $project->photo !!}"/>
                 </div>
-                <input type="hidden" name="foto_x1"/> <input type="hidden" name="foto_y1"/>
-                <input type="hidden" name="foto_w"/> <input type="hidden" name="foto_h"/>
+                <input type="hidden" name="project_photo_x1"/> <input type="hidden" name="project_photo_y1"/>
+                <input type="hidden" name="project_photo_w"/> <input type="hidden" name="project_photo_h"/>
             </div>
         </div>
         <div class="row" style="margin-top: 30px">

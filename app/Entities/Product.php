@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $height
  * @property string $width
  * @property string $weight
+ * @property string $digital_product_url
  * @property boolean $shopify
  * @property string $created_at
  * @property string $updated_at
@@ -41,7 +42,7 @@ class Product extends Model
     /**
      * @var array
      */
-    protected $fillable = ['category', 'user', 'name', 'description', 'guarantee', 'format', 'cost', 'photo', 'height', 'width', 'weight', 'shopify', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['category', 'user', 'name', 'description', 'guarantee', 'format', 'cost', 'photo', 'height', 'width', 'weight', 'shopify','digital_product_url', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

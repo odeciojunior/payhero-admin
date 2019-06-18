@@ -2,24 +2,26 @@
 
 namespace Modules\Projects\Http\Controllers;
 
+use Exception;
 use App\Entities\Project;
+use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use App\Entities\ExtraMaterial;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
-use Exception;
-use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\DigitalOceanFileService;
 
 class ProjectsController extends Controller
 {
     private $projectModel;
     private $userProjectModel;
     private $extraMaterialsModel;
-
+    private $digitalOceanFileService;
+ 
     function getProject()
     {
         if (!$this->projectModel) {
@@ -45,6 +47,18 @@ class ProjectsController extends Controller
         }
 
         return $this->extraMaterialsModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDigitalOceanFileService()
+    {
+        if (!$this->digitalOceanFileService) {
+            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
+        }
+
+        return $this->digitalOceanFileService;
     }
 
     public function index()
@@ -110,88 +124,123 @@ class ProjectsController extends Controller
             $companyId = Hashids::decode($data['company']);
 
             $project = $this->getProject()->create($data);
-            if ($project) {
-                $userProject = $this->getUserProject()->create([
-                                                                   'user'              => auth()->user()->id,
-                                                                   'project'           => $project->id,
-                                                                   'company'           => $companyId[0],
-                                                                   'type'              => 'producer',
-                                                                   'access_permission' => 1,
-                                                                   'edit_permission'   => 1,
-                                                                   'status'            => 'active',
-                                                               ]);
-                if (!$userProject) {
-                    $project->delete();
+
+            $userProject = $this->getUserProject()->create([
+                'user'              => auth()->user()->id,
+                'project'           => $project->id,
+                'company'           => $companyId[0],
+                'type'              => 'producer',
+                'access_permission' => 1,
+                'edit_permission'   => 1,
+                'status'            => 'active',
+            ]);
+
+            $projectPhoto = $request->file('project_photo');
+
+            if ($projectPhoto != null) {
+
+                try {
+                    $img = Image::make($projectPhoto->getPathname());
+                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    $img->resize(200, 200);
+                    $img->save($projectPhoto->getPathname());
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects', $projectPhoto);
+
+                    $project->update([
+                        'photo' => $digitalOceanPath,
+                    ]); 
+
+                } catch (Exception $e) {
+                    dd($e);
+                    Log::warning('ProjectController - store - Erro ao enviar foto do project');
+                    report($e);
                 }
             }
 
             return redirect()->route('projects.index');
         } catch (Exception $e) {
+            dd($e);
             Log::error('Erro ao tentar salvar projeto (ProjectsController - store)' . $e->getFile());
             report($e);
         }
     }
 
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
+        try{
+            $dataRequest = $request->all();
 
-        $dataRequest = $request->all();
+            $project = Project::where('id', Hashids::decode($id))->first();
 
-        $project = Project::where('id', Hashids::decode($dataRequest['projeto']))->first();
+            $project->update($dataRequest);
 
-        $project->update($dataRequest);
+            $projectPhoto = $request->file('project_photo');
 
-        $imagem = $request->file('project_photo');
+            if ($projectPhoto != null) {
 
-        if ($imagem != null) {
-            $nomeFoto = 'project_' . $project->id . '_.' . $imagem->getClientOriginalExtension();
+                try {
+                    $this->getDigitalOceanFileService()->deleteFile($project->photo);
 
-            Storage::delete('public/upload/project/' . $nomeFoto);
+                    $img = Image::make($projectPhoto->getPathname());
+                    $img->crop($dataRequest['project_photo_w'], $dataRequest['project_photo_h'], $dataRequest['project_photo_x1'], $dataRequest['project_photo_y1']);
+                    $img->resize(200, 200);
+                    $img->save($projectPhoto->getPathname());
 
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nomeFoto);
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                                            ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects', $projectPhoto);
 
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
+                    $project->update([
+                        'photo' => $digitalOceanPath,
+                    ]);
 
-            $img->crop($dataRequest['foto_w'], $dataRequest['foto_h'], $dataRequest['foto_x1'], $dataRequest['foto_y1']);
+                } catch (Exception $e) {
+                    dd($e);
+                    Log::warning('ProjectController - update - Erro ao atualizar foto do project');
+                    report($e);
+                }
+            }
 
-            $img->resize(200, 200);
+            $userProject = UserProject::where([
+                ['user', \Auth::user()->id],
+                ['project', $project['id']],
+            ])->first();
 
-            Storage::delete('public/upload/project/' . $nomeFoto);
+            if ($userProject->company != $dataRequest['company']) {
+                $userProject->company = $dataRequest['company'];
+                $userProject->update();
+            }
 
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nomeFoto);
-
-            $project->update([
-                                 'photo' => $nomeFoto,
-                             ]);
+            return response()->json('sucesso');
         }
-
-        $userProject = UserProject::where([
-                                              ['user', \Auth::user()->id],
-                                              ['project', $project['id']],
-                                          ])->first();
-
-        if ($userProject->company != $dataRequest['company']) {
-            $userProject->company = $dataRequest['company'];
-            $userProject->update();
+        catch(\Exception $e){
+            Log::warning('ProjectController - update - Erro ao atualizar project');
+            report($e);
         }
-
-        return response()->json('sucesso');
     }
 
     public function delete(Request $request)
     {
+        try{
+            $dataRequest = $request->all();
 
-        $dataRequest = $request->all();
+            $project = Project::where('id', Hashids::decode($dataRequest['projeto']))->first();
 
-        $project = Project::where('id', Hashids::decode($dataRequest['projeto']))->first();
+            $plans = Plan::where('project', $project->id)->pluck('id')->toArray();
 
-        $plans = Plan::where('project', $project->id)->pluck('id')->toArray();
+            $productsPlans = ProductPlan::whereIn('plan', $plans)->pluck('product')->toArray();
 
-        $productsPlans = ProductPlan::whereIn('plan', $plans)->pluck('product')->toArray();
+            $this->getDigitalOceanFileService()->deleteFile($project->photo);
 
-        // $project->delete();
+            // $project->delete();
 
-        return response()->json('sucesso');
+            return response()->json('sucesso');
+        }
+        catch(\Exception $e){
+            Log::warning('ProjectController - delete - Erro ao deletar project');
+            report($e);
+        }
     }
 
     public function show($id)
@@ -199,9 +248,8 @@ class ProjectsController extends Controller
         try {
             if ($id) {
                 $project = $this->getProject()->where('id', Hashids::decode($id))->first();
-                $photo   = '/' . CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $project->photo . '?dummy=' . uniqid();
 
-                return view('projects::project', ['project' => $project, 'photo' => $photo]);
+                return view('projects::project', ['project' => $project]);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');

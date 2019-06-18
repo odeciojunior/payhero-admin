@@ -50,12 +50,12 @@ class DashboardController extends Controller {
                     $dailyBalance += $todayTransaction['value'];
                 }
             }
-                    
         }
 
         if($availableBalance == 0){
             $availableBalance = '000';
         }
+
         if($futureBalance == 0){
             $futureBalance = '000';
         }

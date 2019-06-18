@@ -16,29 +16,13 @@
             @if(isset($projects) && $projects->count() > 0)
                 <div class="row">
                     @foreach($projects as $project)
-                        <!-- <div class="col-xl-3 col-md-6 info-panel">
-                            <div class="card card-shadow">
-                                <a href='/projects/{{Hashids::encode($project->id)}}'>
-                                    <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project->photo !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
-                                </a>
-                                <div class="card-block">
-                                    <a href='/projects/{{Hashids::encode($project->id)}}' class="text-center">
-                                        <h4 class="card-title">{{$project->name}}</h4>
-                                        <hr>
-                                        <p class="card-text">{{$project->description}}</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <div class="col-xl-3 col-md-6">
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                             <div class="card">
-                                <img class="card-img-top" src="{{ asset('assets/img/produto.png') }}" alt="">
+                                <img class="card-img-top" src="{!! $project->photo != '' ? $project->photo : '/modules/global/assets/img/projeto.png' !!}" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">{{$project->name}}</h5>
                                     <p class="card-text sm">Criado em 14/06/2019</p>
                                     <a href="/projects/{{Hashids::encode($project->id)}}" class="stretched-link"></a>
-
                                 </div>
                             </div>
                         </div>

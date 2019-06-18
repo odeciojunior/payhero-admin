@@ -2,12 +2,16 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use Exception;
 use App\Entities\Product;
+use App\Entities\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Exception;
 use Vinkla\Hashids\Facades\Hashids;
+use Intervention\Image\Facades\Image;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Products\Http\Requests\CreateProductRequest;
 
 class ProductsController extends Controller
 {
@@ -17,12 +21,35 @@ class ProductsController extends Controller
     private $productModel;
 
     /**
+     * @var Category
+     */
+    private $categoryModel;
+
+    /**
+     * @var DigitalOceanFileService
+     */
+    private $digitalOceanFileService;
+
+    /**
      * ProductsController constructor.
      * @param Product $product
      */
-    function __construct(Product $product)
+    function __construct(Product $product, Category $category)
     {
         $this->productModel = $product;
+        $this->categoryModel = $category;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDigitalOceanFileService()
+    {
+        if (!$this->digitalOceanFileService) {
+            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
+        }
+
+        return $this->digitalOceanFileService;
     }
 
     /**
@@ -49,13 +76,15 @@ class ProductsController extends Controller
         }
     }
 
-    /**
+    /** 
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
         try {
-            return view('products::create');
+            return view('products::create',[
+                'categories' => $this->categoryModel->all()
+            ]);
         } catch (Exception $e) {
             Log::warning('Erro ao tenta acessar pagina de cadastro de produto (ProductsController - create)');
             report($e);
@@ -66,12 +95,36 @@ class ProductsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CreateProductRequest $request)
     {
         try {
-            $data         = $request->all();
-            $data['user'] = auth()->user()->id;
-            $product      = $this->productModel->create($data);
+            $data            = $request->validated();
+            $data['shopify'] = '0';
+            $data['user']    = auth()->user()->id;
+            $product         = $this->productModel->create($data);
+
+            $productPhoto = $request->file('product_photo');
+
+            if ($productPhoto != null) {
+
+                try {
+                    $img = Image::make($productPhoto->getPathname());
+                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    $img->resize(200, 200);
+                    $img->save($productPhoto->getPathname());
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+
+                    $product->update([
+                                      'photo' => $digitalOceanPath,
+                                  ]);
+
+                } catch (Exception $e) {
+                    Log::warning('ProductController - store - Erro ao enviar foto do product');
+                    report($e);
+                }
+            }
 
             return redirect()->route('products.index');
         } catch (Exception $e) {
@@ -89,7 +142,11 @@ class ProductsController extends Controller
         try {
             $product = $this->productModel->find(Hashids::decode($id))->first();
 
-            return view('products::edit', ['product' => $product]);
+            return view('products::edit', [
+                'product'    => $product,
+                'categories' => $this->categoryModel->all()                
+            ]);
+
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de editar produto (ProductsController - edit)');
             report($e);
@@ -100,12 +157,37 @@ class ProductsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
         try {
             $data    = $request->all();
-            $product = $this->productModel->find(Hashids::decode($data['id']))->first();
+            $product = $this->productModel->findOrFail(Hashids::decode($id))->first();
             $product->update($data);
+
+            $productPhoto = $request->file('product_photo');
+
+            if ($productPhoto != null) {
+
+                try {
+                    $this->getDigitalOceanFileService()->deleteFile($product->photo);
+
+                    $img = Image::make($productPhoto->getPathname());
+                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                    $img->resize(200, 200);
+                    $img->save($productPhoto->getPathname());
+
+                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+
+                    $product->update([
+                        'photo' => $digitalOceanPath,
+                    ]);
+
+                } catch (Exception $e) {
+                    Log::warning('ProfileController - update - Erro ao enviar foto do profile');
+                    report($e);
+                }
+            }
 
             return redirect()->route('products.index');
         } catch (Exception $e) {
@@ -122,6 +204,9 @@ class ProductsController extends Controller
     {
         try {
             $product = $this->productModel->find(Hashids::decode($id))->first();
+
+            $this->getDigitalOceanFileService()->deleteFile($product->photo);
+
             $product->delete();
 
             return redirect()->route('products.index');

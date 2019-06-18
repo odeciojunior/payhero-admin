@@ -2,8 +2,8 @@
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Projects\Http\Controllers'], function() {
 
-    Route::Resource('/projects', 'ProjectsController')
-         ->only('index', 'create', 'edit', 'show', 'store', 'deleteExtraMaterial');
+    Route::Resource('/projects', 'ProjectsController')->only('index', 'create', 'edit', 'show', 'update', 'store', 'deleteExtraMaterial');
+
     /*Route::get('/', [
         'uses' => 'ProjectsController@index',
         'as' => 'projetos',

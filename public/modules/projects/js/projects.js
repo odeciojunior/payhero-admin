@@ -46,10 +46,10 @@ $(function () {
                                 }
                             }
 
-                            $('input[name="foto_x1"]').val(x1);
-                            $('input[name="foto_y1"]').val(y1);
-                            $('input[name="foto_w1"]').val(x2 - x1);
-                            $('input[name="foto_h1"]').val(y2 - y1);
+                            $('input[name="project_photo_x1"]').val(x1);
+                            $('input[name="project_photo_y1"]').val(y1);
+                            $('input[name="project_photo_w1"]').val(x2 - x1);
+                            $('input[name="project_photo_h1"]').val(y2 - y1);
 
                             $("#previewimage").imgAreaSelect({remove: true});
                             $("#previewimage").imgAreaSelect({
@@ -59,10 +59,10 @@ $(function () {
                                 imageHeight: this.naturalHeight,
                                 imageWidth: this.naturalWidth,
                                 onSelectEnd: function (img, selection) {
-                                    $('input[name="foto_x1"]').val(selection.x1);
-                                    $('input[name="foto_y1"]').val(selection.y1);
-                                    $('input[name="foto_w"]').val(selection.width);
-                                    $('input[name="foto_h"]').val(selection.height);
+                                    $('input[name="project_photo_x1"]').val(selection.x1);
+                                    $('input[name="project_photo_y1"]').val(selection.y1);
+                                    $('input[name="project_photo_w"]').val(selection.width);
+                                    $('input[name="project_photo_h"]').val(selection.height);
                                 }
                             });
                         });
@@ -238,8 +238,6 @@ $(function () {
                     });
                 });
 
-
-
                 /// Botão deletar tela project/edit
                 $('.delete_shipping').unbind('click');
                 $('.delete_shipping').on('click', function () {
@@ -289,11 +287,11 @@ $(function () {
                     $('.loading').css("visibility", "visible");
 
                     var form_data = new FormData(document.getElementById('atualizar_configuracoes'));
-                    form_data.append('projeto', id_projeto);
+                    form_data.append('projeto', $("#project_id").val());
 
                     $.ajax({
                         method: "POST",
-                        url: "/projects/" + id_projeto,
+                        url: "/projects/" + $("#project_id").val(),
                         processData: false,
                         contentType: false,
                         cache: false,
@@ -330,7 +328,7 @@ $(function () {
                         $.ajax({
                             method: "POST",
                             url: "/projetos/deletarprojeto",
-                            data: {projeto: id_projeto},
+                            data: {projeto: $("#project_id").val()},
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
