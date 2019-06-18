@@ -2,29 +2,27 @@
 
 namespace Modules\Sms\Http\Controllers;
 
+use App\Entities\Plan;
+use App\Entities\SmsMessage;
+use App\Entities\ZenviaSms;
 use DateTimeZone;
 use Exception;
-use function foo\func;
-use Illuminate\Support\Facades\Log;
-use Zenvia\Model\Sms;
-use App\Entities\Plan;
-use App\Entities\ZenviaSms;
-use Zenvia\Model\SmsFacade;
-use App\Entities\SmsMessage;
 use Illuminate\Http\Request;
-use App\Entities\UserProject;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Log;
 use NotificationChannels\Zenvia\Zenvia;
-use Yajra\DataTables\Facades\DataTables;
 use NotificationChannels\Zenvia\ZenviaChannel;
 use NotificationChannels\Zenvia\ZenviaMessage;
+use Vinkla\Hashids\Facades\Hashids;
+use Yajra\DataTables\Facades\DataTables;
+use Zenvia\Model\Sms;
+use Zenvia\Model\SmsFacade;
 
 class SmsController extends Controller
 {
     private $smsMessageModel;
     private $plansModel;
+    private $zenviaSms;
 
     private function getSmsMessage()
     {
@@ -42,6 +40,15 @@ class SmsController extends Controller
         }
 
         return $this->plansModel;
+    }
+
+    public function getZenviaSms()
+    {
+        if (!$this->zenviaSms) {
+            $this->zenviaSms = app(ZenviaSms::class);
+        }
+
+        return $this->zenviaSms;
     }
 
     /*public function index()
@@ -87,6 +94,63 @@ class SmsController extends Controller
         ]);
     }*/
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request)
+    {
+        try {
+
+            $dados = $request->all();
+
+            if (isset($dados['projectId'])) {
+                $projectId = Hashids::decode($dados['projectId'])[0];
+                $sms       = $this->getZenviaSms()->with([
+                                                             'plan' => function($query) use ($projectId) {
+                                                                 $query->where('project', $projectId);
+                                                             },
+                                                         ])->where('project', $projectId)->get();
+            } else {
+                return response()->json('projeto não encontrado');
+            }
+
+            return Datatables::of($sms)
+                             ->editColumn('plan', function($sms) {
+                                 if ($sms->plan == '') {
+                                     return 'Todos plans';
+                                 }
+                                 $plan = $this->getPlans()->find($sms->plan);
+
+                                 return $plan->name;
+                             })
+                             ->addColumn('detalhes', function($sms) {
+                                 return "<span data-toggle='modal' data-target='#modal_detalhes'>
+                                            <a class='btn btn-outline btn-success detalhes_sms' data-placement='top' data-toggle='tooltip' title='Detalhes' sms='" . Hashids::encode($sms->id) . "'>
+                                                <i class='icon wb-order' aria-hidden='true'></i>
+                                            </a>
+                                        </span>
+                                        <span data-toggle='modal' data-target='#modal_editar'>
+                                            <a class='btn btn-outline btn-primary editar_sms' data-placement='top' data-toggle='tooltip' title='Editar' sms='" . Hashids::encode($sms->id) . "'>
+                                                <i class='icon wb-pencil' aria-hidden='true'></i>
+                                            </a>
+                                        </span>
+                                        <span data-toggle='modal' data-target='#modal_excluir'>
+                                            <a class='btn btn-outline btn-danger excluir_sms' data-placement='top' data-toggle='tooltip' title='Excluir' sms='" . Hashids::encode($sms->id) . "'>
+                                                <i class='icon wb-trash' aria-hidden='true'></i>
+                                            </a>
+                                        </span>";
+                             })->rawColumns(['detalhes'])->make(true);
+        } catch (Exception $e) {
+            Log::warning("Erro ao tentar acessar dados (SmsController - index)");
+            report($e);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create(Request $request)
     {
         try {
@@ -103,32 +167,208 @@ class SmsController extends Controller
         }
     }
 
-    public function cadastrarSms(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request)
     {
+        try {
+            $data            = $request->all();
+            $data['project'] = Hashids::decode($data['project'])[0];
 
-        $dados            = $request->all();
-        $dados['project'] = Hashids::decode($dados['projeto'])[0];
+            if ($data['time'] == '') {
+                $dat['time'] = '0';
+            }
 
-        if ($dados['time'] == '') {
-            $dados['time'] = '0';
+            if ($data['time'] == '1') {
+                if ($data['period'] == 'minutes') {
+                    $data['period'] = 'minute';
+                } else if ($data['period'] == 'hours') {
+                    $data['period'] = 'hour';
+                } else if ($data['period'] == 'days') {
+                    $data['period'] = "day";
+                }
+            }
+
+            if ($data['plan'] == 'all') {
+                $data['plan'] = null;
+            }
+
+            $zenviaSmsSaved = $this->getZenviaSms()->create($data);
+
+            if ($zenviaSmsSaved) {
+                return response()->json('Sucesso');
+            }
+
+            return response()->json('Erro');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar salvar sms (SmsController - store)');
+            report($e);
         }
+    }
 
-        if ($dados['time'] == '1') {
-            if ($dados['period'] == 'minutes')
-                $dados['period'] = 'minute';
-            else if ($dados['period'] == 'hours')
-                $dados['period'] = 'hour';
-            else if ($dados['period'] == 'days')
-                $dados['period'] = 'day';
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(Request $request)
+    {
+        try {
+
+            $data = $request->all();
+            if (isset($data['smsId'])) {
+                $idSms = Hashids::decode($data['smsId'])[0];
+                $sms   = $this->getZenviaSms()->find($idSms);
+
+                if (!$sms) {
+
+                    return response()->json('Erro não foi possivel encontrar os dados');
+                }
+
+                $plan      = $this->getPlans()->find($sms->plan);
+                $modalBody = '';
+
+                $modalBody .= "<div class='col-xl-12 col-lg-12'>";
+                $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
+                $modalBody .= "<thead>";
+                $modalBody .= "</thead>";
+                $modalBody .= "<tbody>";
+                $modalBody .= "<tr>";
+                $modalBody .= "<td><b>Plano:</b></td>";
+                if ($plan)
+                    $modalBody .= "<td>" . $plan->name . "</td>";
+                else
+                    $modalBody .= "<td>  </td>";
+                $modalBody .= "</tr>";
+                $modalBody .= "<tr>";
+                $modalBody .= "<td><b>Evento:</b></td>";
+                $modalBody .= "<td>" . $sms->event . "</td>";
+                $modalBody .= "</tr>";
+                $modalBody .= "<tr>";
+                $modalBody .= "<td><b>Tempo:</b></td>";
+                $modalBody .= "<td>" . $sms->time . " " . $sms->period . "</td>";
+                $modalBody .= "</tr>";
+                $modalBody .= "<tr>";
+                $modalBody .= "<td><b>Status:</b></td>";
+
+                if ($sms->status)
+                    $modalBody .= "<td>Ativo</td>";
+                else
+                    $modalBody .= "<td>Inativo</td>";
+                $modalBody .= "</tr>";
+                $modalBody .= "<td><b>Mensagem:</b></td>";
+                $modalBody .= "<td>" . $sms->message . "</td>";
+                $modalBody .= "</tr>";
+                $modalBody .= "<tr>";
+                $modalBody .= "</thead>";
+                $modalBody .= "</table>";
+                $modalBody .= "</div>";
+                $modalBody .= "</div>";
+
+                return response()->json($modalBody);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar buscar dados (SmsController - show)');
+            report($e);
         }
+    }
 
-        if ($dados['plan'] == 'all') {
-            unset($dados['plan']);
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function edit(Request $request)
+    {
+        try {
+            $data = $request->all();
+            if (isset($data['project'])) {
+                $projectId = Hashids::decode($data['project'])[0];
+                $sms       = Hashids::decode($data['id'])[0];
+                $plans     = $this->getPlans()->where('project', $projectId)->get();
+                $sms       = $this->getZenviaSms()->find($sms);
+
+                $view = view("sms::editar", [
+                    'sms_id' => $data['id'],
+                    'sms'    => $sms,
+                    'plans'  => $plans,
+                ]);
+
+                return response()->json($view->render());
+            }
+
+            return response()->json('Dados não encontrados');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar tela de editar sms');
+            report($e);
         }
+    }
 
-        ZenviaSms::create($dados);
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request)
+    {
+        try {
+            $data = $request->input('smsData');
 
-        return response()->json('Sucesso');
+            if (isset($data)) {
+                if ($data['time'] == '') {
+                    $data['time'] = '0';
+                }
+
+                if ($data['time'] == '1') {
+                    if ($data['period'] == 'minutes') {
+                        $data['period'] = 'minute';
+                    } else if ($data['period'] == 'hours') {
+                        $data['period'] = 'hour';
+                    } else if ($data['period'] == 'days') {
+                        $data['period'] = 'day';
+                    }
+                }
+
+                if ($data['plan'] == 'all') {
+                    $data['plan'] = null;
+                } else {
+                    $data['plan'] = Hashids::decode($data['plan'])[0];
+                }
+
+                $smsId      = Hashids::decode($data['id'])[0];
+                $sms        = $this->getZenviaSms()->find($smsId);
+                $smsUpdated = $sms->update($data);
+                if ($smsUpdated) {
+                    return response()->json('Sucesso');
+                }
+            }
+
+            return response()->json('Erro');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar atualizar sms (SmsController - update)');
+            report($e);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            $zenviaSmsId      = Hashids::decode($id)[0];
+            $zenviaSms        = $this->getZenviaSms()->where('id', $zenviaSmsId)->first();
+            $zenviaSmsDeleted = $zenviaSms->delete();
+            if ($zenviaSmsDeleted) {
+                return response()->json('Sucesso');
+            }
+
+            return response()->json('Erro');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar deletar zenviSms (SmsController - destroy)');
+            report($e);
+        }
     }
 
     public function editarSms($id)
@@ -139,154 +379,6 @@ class SmsController extends Controller
         return view('sms::editar', [
             'pixel' => $pixel,
         ]);
-    }
-
-    public function updateSms(Request $request)
-    {
-
-        $dados = $request->all();
-
-        unset($dados['projeto']);
-
-        if ($dados['time'] == '') {
-            $dados['time'] = '0';
-        }
-
-        if ($dados['time'] == '1') {
-            if ($dados['period'] == 'minutes')
-                $dados['period'] = 'minute';
-            else if ($dados['period'] == 'hours')
-                $dados['period'] = 'hour';
-            else if ($dados['period'] == 'days')
-                $dados['period'] = 'day';
-        }
-
-        if ($dados['plan'] == 'all') {
-            unset($dados['plan']);
-        }
-
-        $sms = ZenviaSms::where('id', Hashids::decode($dados['id']))->first();
-        $sms->update($dados);
-
-        return response()->json('Sucesso');
-    }
-
-    public function deletarSms($id)
-    {
-
-        $sms = ZenviaSms::where('id', Hashids::decode($id))->first();
-        $sms->delete();
-
-        return response()->json('sucesso');
-    }
-
-    public function index(Request $request)
-    {
-        try {
-            /* $dados = $request->all();
-             if ($dados['project']) {
-                 $projectId = Hashids::decode($dados['project'])[0];
-                 $sms       = $this->getSmsMessage()->whereHas('plan', function($query) use ($projectId) {
-                     $query->where("project", $projectId);
-                 })->get();
-             } else {
-                 return response()->json('Projeto não encontrado');
-             }*/
-
-            $dados = $request->all();
-
-            $sms = \DB::table('zenvia_sms as sms')
-                      ->leftJoin('plans', 'plans.id', 'sms.plan');
-
-            if (isset($dados['project'])) {
-                $sms = $sms->where('sms.project', '=', Hashids::decode($dados['project']));
-            } else {
-                return response()->json('projeto não encontrado');
-            }
-
-            $sms = $sms->get([
-                                 'sms.id',
-                                 'sms.event',
-                                 'sms.time',
-                                 'sms.period',
-                                 'sms.message',
-                                 'sms.status',
-                                 'plans.name as plan',
-                             ]);
-
-            return Datatables::of($sms)
-                             ->editColumn('plan', function($sms) {
-                                 if ($sms->plan == '') {
-                                     return 'Todos plans';
-                                 }
-
-                                 return $sms->plan;
-                             })
-                             ->addColumn('detalhes', function($sms) {
-                                 return "<span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_sms' data-placement='top' data-toggle='tooltip' title='Editar' sms='" . Hashids::encode($sms->id) . "'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_sms' data-placement='top' data-toggle='tooltip' title='Excluir' sms='" . Hashids::encode($sms->id) . "'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-                             })
-                             ->rawColumns(['detalhes'])
-                             ->make(true);
-        } catch (Exception $e) {
-            Log::warning("Erro ao tentar acessar dados (SmsController - index)");
-            report($e);
-        }
-    }
-
-    public function getDetalhesSms(Request $request)
-    {
-
-        $dados = $request->all();
-
-        $sms = ZenviaSms::where('id', Hashids::decode($dados['id_sms']))->first();
-
-        $plano = Plan::find($sms->plano);
-
-        $modalBody = '';
-
-        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
-        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
-        $modalBody .= "<thead>";
-        $modalBody .= "</thead>";
-        $modalBody .= "<tbody>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Plano:</b></td>";
-        $modalBody .= "<td>" . $plano['nome'] . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Evento:</b></td>";
-        $modalBody .= "<td>" . $sms->evento . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Tempo:</b></td>";
-        $modalBody .= "<td>" . $sms->tempo . " " . $sms->periodo . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Status:</b></td>";
-        if ($sms->status)
-            $modalBody .= "<td>Ativo</td>";
-        else
-            $modalBody .= "<td>Inativo</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<td><b>Mensagem:</b></td>";
-        $modalBody .= "<td>" . $sms->mensagem . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "</thead>";
-        $modalBody .= "</table>";
-        $modalBody .= "</div>";
-        $modalBody .= "</div>";
-
-        return response()->json($modalBody);
     }
 
     public function getFormAddSms(Request $request)
@@ -304,26 +396,6 @@ class SmsController extends Controller
 
         $form = view('sms::cadastro', [
             'plans' => $plans,
-        ]);
-
-        return response()->json($form->render());
-    }
-
-    public function getFormEditarSms(Request $request)
-    {
-
-        $dados = $request->all();
-
-        $plans = Plan::where('project', $dados['projeto'])->get()->toArray();
-
-        $sms = ZenviaSms::where('id', Hashids::decode($dados['id']))->first();
-
-        $idSms = Hashids::encode($sms->id);
-
-        $form = view('sms::editar', [
-            'sms_id' => $idSms,
-            'sms'    => $sms,
-            'plans'  => $plans,
         ]);
 
         return response()->json($form->render());
@@ -531,7 +603,7 @@ class SmsController extends Controller
                                        'status'    => 'Erro',
                                        'evento'    => 'Mensagem manual',
                                        'tipo'      => 'Enviada',
-                                       'user'      => \Auth::user()->id,
+                                       'user'      => auth()->user()->id,
                                    ]);
 
                 return response()->json('Ocorreu algum erro, verifique os dados informados!');
