@@ -33,16 +33,12 @@ $(document).ready(function () {
                 }
             },
             success: function (response) {
-                if (response.success == 'true') {
-                    currentPage = 'company';
-                    $(".div1").hide();
-                    $(".div2").show();
-                    alertCustom('success', 'Cadastro realizado com sucesso');
-                    $("#progress-bar-register").css('width', '66%');
-                    $("#jump").show();
-                } else {
-                    alertCustom('error', 'revise os dados informados');
-                }
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+
             }
         });
 
@@ -170,6 +166,16 @@ $(document).ready(function () {
 
     });
 
+    $("#nav_documents").on("click", function () {
+        $("#tab_documentos").click();
+        $("#previewimage").imgAreaSelect({remove: true});
+    });
+
+    $("#nav_users").on("click", function () {
+        $("#tab_user").click();
+        $("#previewimage").imgAreaSelect({remove: true});
+    });
+
 });
 
 Dropzone.options.dropzoneDocuments = {
@@ -209,11 +215,13 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function (file, response) {
         //update table
+        $('#td_personal_status').html(response.personal_document_translate);
+        $('#td_address_status').html(response.address_document_translate);
         swal({
             position: 'bottom',
             type: 'success',
             toast: 'true',
-            title: 'Arquivo enviado com sucesso !',
+            title: response.message,
             showConfirmButton: false,
             timer: 6000
         });
@@ -224,7 +232,7 @@ Dropzone.options.dropzoneDocuments = {
             position: 'bottom',
             type: 'error',
             toast: 'true',
-            title: 'Não foi possivel enviar o arquivo!',
+            title: response.message,
             showConfirmButton: false,
             timer: 6000
         });

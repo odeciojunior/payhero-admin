@@ -22,3 +22,15 @@ function alertCustom(type, message){
     });
 }
 
+$(document).ajaxStart(function(event, jqXHR, ajaxOptions, data) {
+    $(".loading").css("visibility", "visible");
+})
+
+$(document).ajaxError(function(event, jqXHR, ajaxOptions, data) {
+    $(".loading").css("visibility", "hidden");
+})
+
+$(document).ajaxSuccess(function(event, jqXHR, ajaxOptions, data) {
+    $(".loading").css("visibility", "hidden");
+})
+

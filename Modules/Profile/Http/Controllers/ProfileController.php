@@ -153,10 +153,13 @@ class ProfileController extends Controller
                 } catch (Exception $e) {
                     Log::warning('ProfileController - update - Erro ao enviar foto do profile');
                     report($e);
+
+                    return response()->json(['message' => 'Erro ao salvar foto'], 400);
                 }
             }
 
-            return redirect()->route('profile');
+            return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
+            //return redirect()->route('profile');
         } catch (Exception $e) {
             Log::warning('ProfileController update');
             report($e);
@@ -220,10 +223,16 @@ class ProfileController extends Controller
                               ]);
             }
 
-            return response()->json("success");
+            return response()->json([
+                                        'message'                     => 'Arquivo enviado com sucesso.',
+                                        'personal_document_translate' => $user->getEnum('personal_document_status', $user->personal_document_status, true),
+                                        'address_document_translate'  => $user->getEnum('address_document_status', $user->address_document_status, true),
+                                    ], 200);
         } catch (Exception $e) {
             Log::warning('ProfileController uploadDocuments');
             report($e);
+
+            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
         }
     }
 }

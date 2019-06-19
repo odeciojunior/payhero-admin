@@ -27,7 +27,7 @@ class TesteController extends Controller
 
         $user = auth()->user();
 
-        dd($user->getEnum('personal_document_status', 'pending'));
+        dd($user->getEnum('personal_document_status', 1, true));
 
 
 
