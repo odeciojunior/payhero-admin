@@ -1,4 +1,11 @@
 <!-- Page -->
+<div class='row'>
+    <div style='width:100%'>
+        <a id='add-shipping' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-add-shipping' style='color:white;'>
+            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Frete
+        </a>
+    </div>
+</div>
 <div class='panel pt-10 p-10' style='min-height: 300px'>
     <div class='page-invoice-table table-responsive'>
         <table id='tabela-fretes' class='table text-right table-fretes table-hover' style='width:100%'>
@@ -36,6 +43,7 @@
                     </div>
                 </div>
                 <div class='modal-footer'>
+                    <button type='button' id='btn-save-updated' class='btn btn-success' data-dismiss='modal'>Salvar</button>
                     <button type='button' class='btn btn-danger' data-dismiss='modal'>Fechar</button>
                 </div>
             </div>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
 use Modules\Shipping\Transformers\ShippingResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -122,37 +123,84 @@ class ShippingController extends Controller
 
     public function update(Request $request)
     {
+        try {
+            if ($request->input('freteData')) {
+                $shippingRequest = $request->input('freteData');
 
-        $requestData = $request->all();
+                $shippingId = Hashids::decode($shippingRequest['id'])[0];
+                $shipping   = $this->getShipping()->where('id', $shippingId)->first();
 
-        $shipping = Shipping::find($requestData['id']);
+                /*   if ($shippingRequest['pre_selected'] && !$shipping->pre_selected) {
+                       $shippingPreSelected = $this->getShipping()->where('project', $shipping->project)
+                                                   ->where('pre_selected', 1)->first();
+                       if ($shippingPreSelected) {
+                           $shippingPreSelected->update(['pre_selected' => 0]);
 
-        if ($shipping['pre_selected'] && (!$requestData['pre_selected'] || !$requestData['status'])) {
-            $s = Shipping::where([
-                                     ['project', $shipping['project']],
-                                     ['id', '!=', $shipping['id']],
-                                 ])->first();
-            if ($s) {
-                $s->update([
-                               'pre_selected' => '1',
-                           ]);
+                           $shippingUpdate = $shipping->update($shippingRequest);
+
+                           if ($shippingUpdate) {
+                               return response()->json('success');
+                           }
+                       }
+                   } else {
+                       $shipping->update($shippingRequest);
+                   }*/
+
+                if ($shippingRequest['pre_selected'] && (!$shippingRequest['pre_selected'] || !!$shippingRequest['status'])) {
+                    $shipp = $this->getShipping()->where(['project' => $shipping->project])
+                                  ->notWhere('id', $shipping->id)->first();
+                    if ($shipp) {
+                        $shipp->update(['pre_selected' => 1]);
+                    }
+                }
+
+                if (!$shipping->pre_selected && $shippingRequest['pre_selected']) {
+                    $shipp = $this->getShipping()->where([
+                                                             'project'      => $shipping->project,
+                                                             'pre_selected' => $shipping->pre_selected,
+                                                         ])->first();
+                    if ($shipp) {
+                        $shipp->update(['pre_selected' => 0]);
+                    }
+                }
+
+                $shipping->update($shippingRequest);
             }
+        } catch (Exception  $e) {
+            Log::warning('Erro ao tentar atualizar frete');
+            report($e);
         }
-        if (!$shipping['pre_selected'] && $requestData['pre_selected']) {
-            $s = Shipping::where([
-                                     ['project', $shipping['project']],
-                                     ['pre_selected', '1'],
-                                 ])->first();
-            if ($s) {
-                $s->update([
-                               'pre_selected' => '0',
-                           ]);
-            }
-        }
+        /*   $requestData = $request->all();
+           dd($requestData);
 
-        $shipping->update($requestData);
+           $shipping = Shipping::find($requestData['id']);
 
-        return response()->json('success');
+           if ($shipping['pre_selected'] && (!$requestData['pre_selected'] || !$requestData['status'])) {
+               $s = Shipping::where([
+                                        ['project', $shipping['project']],
+                                        ['id', '!=', $shipping['id']],
+                                    ])->first();
+               if ($s) {
+                   $s->update([
+                                  'pre_selected' => '1',
+                              ]);
+               }
+           }
+           if (!$shipping['pre_selected'] && $requestData['pre_selected']) {
+               $s = Shipping::where([
+                                        ['project', $shipping['project']],
+                                        ['pre_selected', '1'],
+                                    ])->first();
+               if ($s) {
+                   $s->update([
+                                  'pre_selected' => '0',
+                              ]);
+               }
+           }
+
+           $shipping->update($requestData);
+
+           return response()->json('success');*/
     }
 
     public function delete(Request $request)

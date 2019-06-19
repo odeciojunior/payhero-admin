@@ -53,9 +53,9 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger' id='detalhes-frete' frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger' id='editar-frete' frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger' id='excluir-frete' frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-frete'  frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     dados += '</tr>';
                     $("#dados-tabela-frete").append(dados);
@@ -64,16 +64,16 @@ $(document).ready(function () {
                 if (response.data === '') {
                     $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum frete encontrado</td></tr>")
                 }
-
-                $("#detalhes-frete").unbind('click');
-                $("#detalhes-frete").on('click', function () {
+                $(".detalhes-frete").unbind('click');
+                $(".detalhes-frete").on('click', function () {
 
                     var frete = $(this).attr('frete');
 
                     $("#modal-frete-titulo").html('Detalhes do frete <br><hr>');
                     $("#modal-frete-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
-
                     var data = {freteId: frete};
+
+                    $("#btn-save-updated").hide();
 
                     $.ajax({
                         method: "GET",
@@ -86,12 +86,12 @@ $(document).ready(function () {
                             //
                         }, success: function (response) {
                             $("#modal-frete-body").html(response);
+
                         }
                     });
                 });
 
-                $("#editar-frete").unbind("click");
-                $("#editar-frete").on("click", function () {
+                $(".editar-frete").on("click", function () {
                     var frete = $(this).attr('frete');
 
                     $("#modal-frete-titulo").html("Editar Frete<br><hr>");
@@ -109,7 +109,52 @@ $(document).ready(function () {
                         error: function () {
                             //
                         }, success: function (response) {
+                            $("#btn-save-updated").addClass('btn-update');
+                            $("#btn-save-updated").text('Atualizar');
+                            $("#btn-save-updated").show();
                             $("#modal-frete-body").html(response);
+                            $("#shipping_type").change(function () {
+                                var selected = $("#shipping_type").val();
+                                if (selected === 'static') {
+                                    $("#value-shipping-row").css('display', 'block');
+                                } else {
+                                    $("#value-shipping-row").css('display', 'none');
+                                }
+
+                            });
+
+                            $(".btn-update").on('click', function () {
+                                var paramObj = {};
+                                $.each($("#form-add-shipping").serializeArray(), function (_, kv) {
+                                    if (paramObj.hasOwnProperty(kv.name)) {
+                                        paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+                                        paramObj[kv.name].push(kv.value);
+                                    } else {
+                                        paramObj[kv.name] = kv.value;
+                                    }
+                                });
+                                paramObj['id'] = frete;
+                                $.ajax({
+                                    method: "PUT",
+                                    url: "/shipping/" + frete,
+                                    headers: {
+                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    data: {freteData: paramObj},
+                                    error: function () {
+                                        if (response.status == '422') {
+                                            for (error in response.responseJSON.errors) {
+                                                alertCustom('error', String(response.responseJSON.errors[error]));
+                                            }
+                                        }
+                                    },
+                                    success: function (data) {
+                                        alertCustom("success", "Frete atualizado com sucesso");
+                                        atualizarFrete();
+                                    }
+                                });
+
+                            });
                         }
                     });
                 });

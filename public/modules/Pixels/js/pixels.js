@@ -221,7 +221,7 @@ $(function () {
                                 data: {pixelData: paramObj},
                                 error: function () {
                                     $('.loading').css("visibility", "hidden");
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
+                                    alertCustom('error', 'Ocorreu algum erro');
                                 },
                                 success: function (data) {
                                     $('.loading').css("visibility", "hidden");
