@@ -26,13 +26,14 @@ class SalesController extends Controller {
         foreach($userProjects as $userProject){
             $project = Project::find($userProject['project']);
             $projects[] = [
-                'id' => $project['id'],
-                'nome' => $project['name']
+                'id'   => $project['id'],
+                'nome' => $project['name'],
             ];
         }
 
         return view('sales::index',[
-            'projetos' => $projects,
+            'projetos'     => $projects,
+            'sales_amount' => Sale::where('owner', auth()->user()->id)->get()->count()
         ]);
     }
 

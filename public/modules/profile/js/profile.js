@@ -1,5 +1,3 @@
-
-
 $(document).ready(function () {
 
     //
@@ -217,11 +215,13 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function (file, response) {
         //update table
+        $('#td_personal_status').html(response.personal_document_translate);
+        $('#td_address_status').html(response.address_document_translate);
         swal({
             position: 'bottom',
             type: 'success',
             toast: 'true',
-            title: 'Arquivo enviado com sucesso !',
+            title: response.message,
             showConfirmButton: false,
             timer: 6000
         });
@@ -232,7 +232,7 @@ Dropzone.options.dropzoneDocuments = {
             position: 'bottom',
             type: 'error',
             toast: 'true',
-            title: 'Não foi possivel enviar o arquivo!',
+            title: response.message,
             showConfirmButton: false,
             timer: 6000
         });

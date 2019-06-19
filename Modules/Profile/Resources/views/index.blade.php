@@ -154,16 +154,16 @@
                                                     <td>
                                                         Documento de identidade
                                                     </td>
-                                                    <td>
-                                                        Aguardando envio.
+                                                    <td id='td_personal_status'>
+                                                        {!! $user->personal_document_translate !!}
                                                     </td>
                                                 </tr>
                                                 <tr class='text-center'>
                                                     <td>
                                                         Comprovante de residencia
                                                     </td>
-                                                    <td>
-                                                        Aguardando envio.
+                                                    <td id='td_address_status'>
+                                                        {!! $user->address_document_translate !!}
                                                     </td>
                                                 </tr>
                                             </tbody>

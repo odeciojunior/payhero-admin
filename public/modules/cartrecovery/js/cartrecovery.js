@@ -1,0 +1,173 @@
+$(document).ready( function(){
+
+    atualizar();
+
+    function atualizar(link = null){
+
+        $('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
+
+        if(link == null){
+            link = '/recoverycart/getabandonatedcarts';
+        }
+        else{
+            link = '/recoverycart/getabandonatedcarts'+ link;
+        }
+
+        $.ajax({
+            method: "GET",
+            url: link,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function(){
+                //
+            },
+            success: function(response){
+
+                $('#table_data').html('');
+
+                $.each(response.data, function(index, value){
+
+                    dados = '';
+                    dados += '<tr>';
+                    dados += "<td class='text-center' style='vertical-align: middle'>"+value.date+"</td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.client+"</td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.email_status+"</td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.sms_status+"</td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.recovery_status+"</td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.value+"</td>";
+                    // dados += "<td style='vertical-align: middle' class='text-center'>"+value.link+"</td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'> <a class='btn btn-default copy_link' link='"+value.link+"'>Copiar link</a></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += '</tr>';
+                    $("#table_data").append(dados);
+
+                    $(".copy_link").on("click", function(){
+                        var temp = $("<input>");
+                        $("body").append(temp);
+                        temp.val($(this).attr('link')).select();
+                        document.execCommand("copy");
+                        temp.remove();
+                        alertCustom('success','Link copiado!');
+                    });
+
+                });
+                if(response.data == ''){
+                    $('#table_data').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
+                }
+                pagination(response);
+
+                var id_venda = ''; 
+
+                $('.detalhes_venda').unbind('click');
+
+                $('.detalhes_venda').on('click', function() {
+
+                    var venda = $(this).attr('venda');
+
+                    $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
+
+                    $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+
+                    var data = { sale_id : venda };
+
+                    $.ajax({
+                        method: "POST",
+                        url: '/sales/venda/detalhe',
+                        data: data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function(){
+                            //
+                        },
+                        success: function(response){
+                            $('#modal_venda_body').html(response);
+                        }
+                    });
+                });
+
+                $('.estornar_venda').unbind('click');
+
+                $('.estornar_venda').on('click', function() {
+
+                    id_venda = $(this).attr('venda');
+
+                    $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
+                    $('#modal_estornar_body').html('');
+
+                });
+
+            }
+        });
+    }
+
+    function pagination(response){
+
+        $("#pagination").html("");
+
+        var primeira_pagina = "<button id='primeira_pagina' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>1</button>";
+
+        $("#pagination").append(primeira_pagina);
+
+        if(response.meta.current_page == '1'){
+            $("#primeira_pagina").attr('disabled',true);
+        }
+
+        $('#primeira_pagina').on("click", function(){
+            atualizar('?page=1');
+        });
+
+        for(x=3;x>0;x--){
+
+            if(response.meta.current_page - x <= 1){
+                continue;
+            }
+
+            $("#pagination").append("<button id='pagina_"+( response.meta.current_page - x )+"' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page - x)+"</button>");
+
+            $('#pagina_'+( response.meta.current_page - x )).on("click", function(){
+                atualizar('?page='+$(this).html());
+            });
+
+        }
+
+        if(response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page){
+        var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page)+"</button>";
+
+        $("#pagination").append(pagina_atual);
+
+        $("#pagina_atual").attr('disabled',true);
+        }
+
+        for(x=1;x<4;x++){
+
+        if(response.meta.current_page + x >= response.meta.last_page){
+            continue;
+        }
+
+        $("#pagination").append("<button id='pagina_"+( response.meta.current_page + x )+"' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page + x)+"</button>");
+
+        $('#pagina_'+( response.meta.current_page + x )).on("click", function(){
+            atualizar('?page='+$(this).html());
+        });
+
+        }
+
+        if(response.meta.last_page != '1'){
+        var ultima_pagina = "<button id='ultima_pagina' class='btn' style='background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+response.meta.last_page+"</button>";
+
+        $("#pagination").append(ultima_pagina);
+
+        if(response.meta.current_page == response.meta.last_page){
+            $("#ultima_pagina").attr('disabled',true);
+        }
+
+        $('#ultima_pagina').on("click", function(){
+            atualizar('?page='+response.meta.last_page);
+        });
+        }
+
+    }
+
+});

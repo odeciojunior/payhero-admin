@@ -35,12 +35,13 @@ class InvitesController extends Controller
      * @var SiteInvitationRequest
      */
     private $siteInvitationRequest;
+
     /**
      * @var HubsmartInvitationRequest
      */
     private $hubsmartInvitationRequest;
 
-    /**
+    /**   
      * InvitesController constructor.
      * @param Invitation $invitation
      * @param Company $company
@@ -86,28 +87,17 @@ class InvitesController extends Controller
     public function sendInvitation(SendInvitationRequest $request)
     {
         try {
-
             $requestData = $request->validated();
 
             $requestData['invite'] = auth()->user()->id;
             $requestData['status'] = "Convite enviado";
-
-            $newParameter = false;
-
-            while (!$newParameter) {
-
-                //$parameter = Hashids::encode(auth()->user()->id + 77991133);
-                $parameter = StringHelper::randString(15);
-
-                $invite = $this->invitation->where('parameter', $parameter)->first();
-
-                if ($invite == null) {
-                    $newParameter             = true;
-                    $requestData['parameter'] = $parameter;
-                }
-            }
-
+            $requestData['parameter'] = Hashids::encode(auth()->user()->id + 77991133);
             $requestData['company'] = $this->company->where('user', auth()->user()->id)->first()->id;
+
+            $invite = $this->invitation->where('email_invited',$requestData['email_invited'])->first();
+            if($invite){
+                $invite->delete();
+            }
 
             $invite = $this->invitation->create($requestData);
 
@@ -117,6 +107,7 @@ class InvitesController extends Controller
 
             return redirect()->route('invitations.invites');
         } catch (Exception $ex) {
+            dd($ex);
             Log::warning('Erro ao enviar convite (InvitesController - sendInvitation)');
             report($ex);
         }
@@ -128,7 +119,6 @@ class InvitesController extends Controller
      */
     public function getInvitation(Request $request)
     {
-
         $requestData = $request->all();
 
         $this->siteInvitationRequest->create($requestData);

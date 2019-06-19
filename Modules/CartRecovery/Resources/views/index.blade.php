@@ -2,89 +2,47 @@
 
 @section('content')
 
+  @push('css')
+      <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+  @endpush
+
   <!-- Page -->
   <div class="page">
 
     <div class="page-header">
-        <h1 class="page-title">Recuperação de carrinhos abandonados</h1>
+        <h1 class="page-title">Carrinhos abandonados</h1>
     </div>
 
     <div class="page-content container-fluid">
-      <div class="panel pt-30 p-30" data-plugin="matchHeight">
 
-        <table id="tabela_carrinhosabandonados" class="table table-bordered table-hover w-full" style="margin-top: 80px">
-          <thead class="bg-blue-grey-100">
-            <tr>
-              <td>Data</td>
-              <td>Comprador</td>
-              <td>Status email</td>
-              <td>Status sms</td>
-              <td>Status de recuperação</td>
-              <td>Valor</td>
-              <td>Link</td>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-
-    </div>
+      <div class="panel pt-10 p-10" style="min-height: 300px">
+          <table class="table table-hover table-vendas">
+            <thead class="text-center">
+                <td><b>Data</b></td>
+                <td><b>Cliente</b></td>
+                <td><b>Email</b></td>
+                <td><b>Sms</b></td>
+                <td><b>Status</b></td>
+                <td><b>Valor</b></td>
+                <td><b>Link</b></td>
+                <td><b>Detalhes</b></td>
+            </thead>
+            <tbody id="table_data">
+            </tbody>
+          </table>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <ul id="pagination" class="pagination-sm m-30" style="margin-top:10px;position:relative;float:right">
+              {{-- js carrega... --}}
+          </ul>
+        </div>
+      </div>
   </div>
 
-
-  <script>
-
-    $(document).ready( function(){
-
-        $("#tabela_carrinhosabandonados").DataTable( {
-            bLengthChange: false,
-            ordering: false,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '/recuperacaocarrinho/data-source',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: 'POST'
-            },
-            columns: [
-                { data: 'created_at', name: 'created_at'},
-                { data: 'client', name: 'client'},
-                { data: 'email_status', name: 'email_status'},
-                { data: 'sms_status', name: 'sms_status'},
-                { data: 'recovery_status', name: 'recovery_status'},
-                { data: 'value', name: 'value'},
-                { data: 'link', name: 'link', },
-            ],
-            "language": {
-                "sProcessing":    "Procesando...",
-                "lengthMenu": "Apresentando _MENU_ registros por página",
-                "zeroRecords": "Nenhum registro encontrado",
-                "info": "Apresentando página _PAGE_ de _PAGES_",
-                "infoEmpty": "Nenhum registro encontrado",
-                "infoFiltered": "(filtrado por _MAX_ registros)",
-                "sInfoPostFix":   "",
-                "sSearch":        "Procurar :",
-                "sUrl":           "",
-                "sInfoThousands":  ",",
-                "sLoadingRecords": "Carregando...",
-                "oPaginate": {
-                    "sFirst":    "Primeiro",
-                    "sLast":    "Último",
-                    "sNext":    "Próximo",
-                    "sPrevious": "Anterior",
-                },
-            },
-            "drawCallback": function() {
-            }
-
-        });
-
-    });
-
-  </script>
-
+  @push('scripts')
+      <script src="{!! asset('modules/cartrecovery/js/cartrecovery.js') !!}"></script>
+  @endpush
 
 @endsection
 

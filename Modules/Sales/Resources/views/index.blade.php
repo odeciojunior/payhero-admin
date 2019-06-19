@@ -29,10 +29,11 @@
                     </div>
                   </div>
                 </div>  --}}
-                <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
-                  Filtros
-                </a>
-    
+                @if($sales_amount > 0)
+                    <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
+                      Filtros
+                    </a>
+                @endif
             </div>
           </div>
       </div>
@@ -97,57 +98,71 @@
           </div>
         </div>
       </div>
+  
+      @if($sales_amount > 0)
+        <div class="panel pt-10 p-10" style="min-height: 300px">
+          <div class="page-invoice-table table-responsive">
 
-      <div class="panel pt-10 p-10" style="min-height: 300px">
-        <div class="page-invoice-table table-responsive">
+            <table id="tabela_vendas" class="table text-right table-vendas table-hover" style="width:100%;">
+              <thead style="text-align:center">
+                <tr>
+                  <th style='vertical-align: middle' class="table-title"><b>Transação</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Projeto</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Descrição</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Cliente</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Forma</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Status</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Data</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Pagamento</b></th>
+                  <th style='vertical-align: middle' class="table-title"><b>Comissão</b></th>
+                  <th style='vertical-align: middle' class="table-title" width="80px;"> &nbsp; </th>
+                </tr>
+              </thead>
+              <tbody id="dados_tabela">
+                  {{-- js carrega... --}}
+              </tbody>
+            </table>
+          </div>
 
-          <table id="tabela_vendas" class="table text-right table-vendas table-hover" style="width:100%;">
-            <thead style="text-align:center">
-              <tr>
-                <th style='vertical-align: middle' class="table-title"><b>Transação</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Projeto</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Descrição</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Cliente</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Forma</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Status</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Data</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Pagamento</b></th>
-                <th style='vertical-align: middle' class="table-title"><b>Comissão</b></th>
-                <th style='vertical-align: middle' class="table-title" width="80px;"> &nbsp; </th>
-              </tr>
-            </thead>
-            <tbody id="dados_tabela">
-                {{-- js carrega... --}}
-            </tbody>
-          </table>
-        </div>
+          <ul id="pagination" class="pagination-sm m-30" style="margin-top:10px;position:relative;float:right">
+              {{-- js carrega... --}}
+          </ul>
 
-        <ul id="pagination" class="pagination-sm m-30" style="margin-top:10px;position:relative;float:right">
-            {{-- js carrega... --}}
-        </ul>
+          <!-- Modal detalhes da venda-->
+          <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-simple modal-sidebar modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                  <h4 id="modal_venda_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
+                </div>
+                <div id="modal_venda_body" class="modal-body">
 
-        <!-- Modal detalhes da venda-->
-        <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-          <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-                <h4 id="modal_venda_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-              </div>
-              <div id="modal_venda_body" class="modal-body">
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- End Modal -->
+          <!-- End Modal -->
 
-      </div>
+        </div>
+      @else
+        @push('css')
+          <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+        @endpush
+
+        <div class="content-error d-flex text-center">
+            <img src="{!! asset('modules/global/assets/img/emptyvendas.svg') !!}" width="250px">
+            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
+            <p class="desc gray">Comece agora mesmo a vender os produtos do seu projeto! </p>
+            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
+        </div>
+
+      @endif
     </div>
   </div>
 
