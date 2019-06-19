@@ -175,47 +175,66 @@ $(document).ready(function () {
 Dropzone.options.dropzoneDocuments = {
     paramName: "file",
     maxFilesize: 10, // MB
-    // autoProcessQueue: false, //nao envia automaticamente
-    // init: function () {
-    //
-    //     // get the dropzone object
-    //     myDropzone = this;
-    //
-    //     // overwrite the addedfile function
-    //     myDropzone.on("addedfile", function (event) {
-    //
-    //         swal(
-    //             {title: 'Are you sure?', showCancelButton: true},
-    //             function(isConfirm) {
-    //                 if (isConfirm) {
-    //                     // handle confirm
-    //                     alert('a');
-    //                     myDropzone.processQueue();
-    //                 } else {
-    //                     // handle all other cases
-    //                 }
-    //             }
-    //         )
-    //
-    //     });
-    // }
-};
+    acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
+    accept: function (file, done) {
+        var dropz = this;
 
-Dropzone.confirm = function(question, accepted, rejected) {
-    // Do your thing, ask the user for confirmation or rejection, and call
-    // accepted() if the user accepts, or rejected() otherwise. Make
-    // sure that rejected is actually defined!
-
-    swal(
-        {title: 'Are you sure?', showCancelButton: true},
-        function(isConfirm) {
-            if (isConfirm) {
-                // handle confirm
-                accepted();
+        swal({
+            title: 'Qual é o tipo do documento?',
+            type: 'warning',
+            input: 'select',
+            inputPlaceholder: 'Selecione o documento',
+            inputOptions: {
+                '1': 'Documento de identidade',
+                '2': 'Comprovante de residência',
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#3085D6',
+            cancelButtonColor: '#DD3333',
+            confirmButtonText: 'Enviar'
+        }).then(function (data) {
+            if (data.value) {
+                //ok
+                $('#document_type').val(data.value);
+                done();
             } else {
-                // handle all other cases
-                rejected();
+                //cancel
+                dropz.removeFile(file)
             }
-        }
-    )
+
+        }).catch(function (reason) {
+            //close
+            dropz.removeFile(file)
+        });
+    },
+    success: function (file, response) {
+        //update table
+        swal({
+            position: 'bottom',
+            type: 'success',
+            toast: 'true',
+            title: 'Arquivo enviado com sucesso !',
+            showConfirmButton: false,
+            timer: 6000
+        });
+    },
+    error: function (file, response) {
+
+        swal({
+            position: 'bottom',
+            type: 'error',
+            toast: 'true',
+            title: 'Não foi possivel enviar o arquivo!',
+            showConfirmButton: false,
+            timer: 6000
+        });
+
+        this.removeFile(file)
+    }
+
 };
+
+
+
+
+

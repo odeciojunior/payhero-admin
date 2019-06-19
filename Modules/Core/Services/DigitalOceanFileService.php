@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Container\Container as App;
 use Illuminate\Support\Facades\Storage;
@@ -149,7 +150,35 @@ class DigitalOceanFileService
     }
 
     /**
-     * @param null|string $path
+     * @param $path
+     * @param $seconds
+     * @return |null
+     * @throws ServiceException
+     */
+    public function getTemporaryUrlFile($path, $seconds)
+    {
+        try {
+            $path  = $this->getPath($path);
+            $check = $this->check($path);
+
+            if ($check == true) {
+                if ($this->extension == null) {
+                    return $this->disk->temporaryUrl($path, Carbon::now()->addSeconds($seconds));
+                } else {
+                    return $this->disk->temporaryUrl($path . '.' . $this->extension, Carbon::now()
+                                                                                           ->addSeconds($seconds));
+                }
+            }
+
+            return null;
+        } catch (Exception $ex) {
+            report($ex);
+            throw new ServiceException($ex->getMessage(), $ex->getCode(), $ex);
+        }
+    }
+
+    /**
+     * @param null $path
      * @param bool $softDelete
      * @return bool
      * @throws ServiceException
