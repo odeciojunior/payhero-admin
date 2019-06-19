@@ -15,19 +15,19 @@
                     <div class="example-wrap">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" data-toggle="tab" href="#tab_usuario"
-                                       aria-controls="tab_usuario" role="tab">Usuário
+                                <li class="nav-item" role="presentation" id='nav_users'>
+                                    <a class="nav-link active" data-toggle="tab" href="#tab_user"
+                                       aria-controls="tab_user" role="tab">Usuário
                                     </a>
                                 </li>
-                                <li class="nav-item" role="presentation">
+                                <li class="nav-item" role="presentation" id="nav_documents">
                                     <a class="nav-link" data-toggle="tab" href="#tab_documentos"
                                        aria-controls="tab_documentos" role="tab">Documentos
                                     </a>
                                 </li>
                             </ul>
                             <div class="tab-content pt-20">
-                                <div class="tab-pane active" id="tab_usuario" role="tabpanel">
+                                <div class="tab-pane active" id="tab_user" role="tabpanel">
                                     <form method="POST" action="{!! route('profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" id='profile_update_form'>
                                         @csrf
                                         @method('PUT')
@@ -63,7 +63,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="data_nascimento">Data de nascimento</label>
+                                                <label for="date_birth">Data de nascimento</label>
                                                 <input name="date_birth" value="{!! $user->date_birth !!}" type="date" class="form-control" id="date_birth">
                                             </div>
                                         </div>
@@ -74,7 +74,7 @@
                                                 <input type="button" id="select_profile_photo" class="btn btn-default" value="Selecionar foto do perfil">
                                                 <input name="profile_photo" type="file" class="form-control" id="profile_photo" style="display:none">
                                                 <div style="margin: 20px 0 0 30px;">
-                                                    <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.$user->foto)!!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
+                                                    <img src="{!!$user->photo!!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
                                                 </div>
                                                 <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>
