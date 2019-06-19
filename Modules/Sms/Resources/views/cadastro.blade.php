@@ -7,7 +7,7 @@
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">
 
-                <div class="row">
+                {{--<div class="row">
                     <div class="form-group col-12">
                         <label for="plano">Plano</label>
                         <select name="plan" type="text" class="form-control" id="plano_sms" required>
@@ -17,7 +17,7 @@
                             @endforeach
                         </select>
                     </div>
-                </div> 
+                </div> --}}
                 <div class="row">
                     <div class="form-group col-12">
                         <label for="event">Evento</label>

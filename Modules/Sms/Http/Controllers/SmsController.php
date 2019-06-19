@@ -20,19 +20,12 @@ use Zenvia\Model\SmsFacade;
 
 class SmsController extends Controller
 {
-    private $smsMessageModel;
     private $plansModel;
     private $zenviaSms;
 
-    private function getSmsMessage()
-    {
-        if (!$this->smsMessageModel) {
-            $this->smsMessageModel = app(SmsMessage::class);
-        }
-
-        return $this->smsMessageModel;
-    }
-
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     public function getPlans()
     {
         if (!$this->plansModel) {
@@ -42,6 +35,9 @@ class SmsController extends Controller
         return $this->plansModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     public function getZenviaSms()
     {
         if (!$this->zenviaSms) {
@@ -51,48 +47,10 @@ class SmsController extends Controller
         return $this->zenviaSms;
     }
 
-    /*public function index()
-    {
-
-        $amountAvailable = \Auth::user()->sms_zenvia_qtd;
-
-        $userProjects = UserProject::where([
-                                               ['user', \Auth::user()->id],
-                                               ['type', 'producer'],
-                                           ])->get()->toArray();
-
-        $planosUsuario = [];
-
-        foreach ($userProjects as $userProject) {
-            $planos = Plan::where('project', $userProject['project'])->pluck('id')->toArray();
-            if (count($planos) > 0) {
-                foreach ($planos as $plano) {
-                    $planosUsuario[] = $plano;
-                }
-            }
-        }
-
-        $qtdSmsEnviados = SmsMessage::whereIn('plan', $planosUsuario)->where('type', 'Enviada')->count();
-
-        $qtdSmsRecebidos = SmsMessage::whereIn('plan', $planosUsuario)->where('type', 'Recebida')->count();
-
-        // $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
-
-        foreach ($compras as &$compra) {
-            $compra['data_inicio'] = date('d/m/Y', strtotime($compra['data_inicio']));
-            if ($compra['status'] == 'paid')
-                $compra['status'] = 'Paga';
-            else if ($compra['status'] == 'waiting_payment')
-                $compra['status'] = 'Aguardando pagamento';
-        }
-
-        return view('sms::index', [
-            'sms_disponiveis' => $amountAvailable,
-            'sms_enviados'    => $qtdSmsEnviados,
-            'sms_recebidos'   => $qtdSmsRecebidos,
-            'compras'         => [],
-        ]);
-    }*/
+    /**
+     * SmsController constructor.
+     */
+    function __construct() { }
 
     /**
      * @param Request $request
@@ -101,29 +59,16 @@ class SmsController extends Controller
     public function index(Request $request)
     {
         try {
-
             $dados = $request->all();
-
             if (isset($dados['projectId'])) {
                 $projectId = Hashids::decode($dados['projectId'])[0];
-                $sms       = $this->getZenviaSms()->with([
-                                                             'plan' => function($query) use ($projectId) {
-                                                                 $query->where('project', $projectId);
-                                                             },
-                                                         ])->where('project', $projectId)->get();
+                $sms       = $this->getZenviaSms()->where('project', $projectId)->get();
             } else {
-                return response()->json('projeto não encontrado');
+                return response()->json('projeto não encontrado', 406);
             }
 
             return Datatables::of($sms)
-                             ->editColumn('plan', function($sms) {
-                                 if ($sms->plan == '') {
-                                     return 'Todos plans';
-                                 }
-                                 $plan = $this->getPlans()->find($sms->plan);
-
-                                 return $plan->name;
-                             })
+                             ->editColumn('plan', 'Todos os planos')
                              ->addColumn('detalhes', function($sms) {
                                  return "<span data-toggle='modal' data-target='#modal_detalhes'>
                                             <a class='btn btn-outline btn-success detalhes_sms' data-placement='top' data-toggle='tooltip' title='Detalhes' sms='" . Hashids::encode($sms->id) . "'>
@@ -154,13 +99,8 @@ class SmsController extends Controller
     public function create(Request $request)
     {
         try {
-            $projectId = $request->input('project');
-            if ($projectId) {
-                $projectId = Hashids::decode($projectId)[0];
-                $plans     = $this->getPlans()->where('project', $projectId)->get();
-            }
 
-            return view('sms::cadastro', ['plans' => $plans]);
+            return view('sms::cadastro');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar redirecionar para pagina de cadastro de sms (SmsController - create)');
             report($e);
@@ -191,14 +131,10 @@ class SmsController extends Controller
                 }
             }
 
-            if ($data['plan'] == 'all') {
-                $data['plan'] = null;
-            }
-
             $zenviaSmsSaved = $this->getZenviaSms()->create($data);
 
             if ($zenviaSmsSaved) {
-                return response()->json('Sucesso');
+                return response()->json('Sucesso', 200);
             }
 
             return response()->json('Erro');
@@ -226,21 +162,13 @@ class SmsController extends Controller
                     return response()->json('Erro não foi possivel encontrar os dados');
                 }
 
-                $plan      = $this->getPlans()->find($sms->plan);
                 $modalBody = '';
-
                 $modalBody .= "<div class='col-xl-12 col-lg-12'>";
                 $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
                 $modalBody .= "<thead>";
                 $modalBody .= "</thead>";
                 $modalBody .= "<tbody>";
                 $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Plano:</b></td>";
-                if ($plan)
-                    $modalBody .= "<td>" . $plan->name . "</td>";
-                else
-                    $modalBody .= "<td>  </td>";
-                $modalBody .= "</tr>";
                 $modalBody .= "<tr>";
                 $modalBody .= "<td><b>Evento:</b></td>";
                 $modalBody .= "<td>" . $sms->event . "</td>";
@@ -251,7 +179,6 @@ class SmsController extends Controller
                 $modalBody .= "</tr>";
                 $modalBody .= "<tr>";
                 $modalBody .= "<td><b>Status:</b></td>";
-
                 if ($sms->status)
                     $modalBody .= "<td>Ativo</td>";
                 else
@@ -266,8 +193,10 @@ class SmsController extends Controller
                 $modalBody .= "</div>";
                 $modalBody .= "</div>";
 
-                return response()->json($modalBody);
+                return response()->json($modalBody, 200);
             }
+
+            return response()->json('Erro ao tentar acessar detalhes');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar dados (SmsController - show)');
             report($e);
@@ -284,18 +213,15 @@ class SmsController extends Controller
         try {
             $data = $request->all();
             if (isset($data['project'])) {
-                $projectId = Hashids::decode($data['project'])[0];
-                $sms       = Hashids::decode($data['id'])[0];
-                $plans     = $this->getPlans()->where('project', $projectId)->get();
-                $sms       = $this->getZenviaSms()->find($sms);
+                $sms = Hashids::decode($data['id'])[0];
+                $sms = $this->getZenviaSms()->find($sms);
 
                 $view = view("sms::editar", [
                     'sms_id' => $data['id'],
                     'sms'    => $sms,
-                    'plans'  => $plans,
                 ]);
 
-                return response()->json($view->render());
+                return response()->json($view->render(), 200);
             }
 
             return response()->json('Dados não encontrados');
@@ -313,7 +239,6 @@ class SmsController extends Controller
     {
         try {
             $data = $request->input('smsData');
-
             if (isset($data)) {
                 if ($data['time'] == '') {
                     $data['time'] = '0';
@@ -329,17 +254,11 @@ class SmsController extends Controller
                     }
                 }
 
-                if ($data['plan'] == 'all') {
-                    $data['plan'] = null;
-                } else {
-                    $data['plan'] = Hashids::decode($data['plan'])[0];
-                }
-
                 $smsId      = Hashids::decode($data['id'])[0];
                 $sms        = $this->getZenviaSms()->find($smsId);
                 $smsUpdated = $sms->update($data);
                 if ($smsUpdated) {
-                    return response()->json('Sucesso');
+                    return response()->json('Sucesso', 200);
                 }
             }
 
@@ -361,7 +280,7 @@ class SmsController extends Controller
             $zenviaSms        = $this->getZenviaSms()->where('id', $zenviaSmsId)->first();
             $zenviaSmsDeleted = $zenviaSms->delete();
             if ($zenviaSmsDeleted) {
-                return response()->json('Sucesso');
+                return response()->json('Sucesso', 200);
             }
 
             return response()->json('Erro');
@@ -370,6 +289,8 @@ class SmsController extends Controller
             report($e);
         }
     }
+
+    /* Metodos usados para ferramenta de SMS */
 
     public function editarSms($id)
     {
@@ -613,5 +534,47 @@ class SmsController extends Controller
             return response()->json('Você não possui mensagens disponíveis!');
         }
     }
+    /*public function index()
+   {
+
+       $amountAvailable = \Auth::user()->sms_zenvia_qtd;
+
+       $userProjects = UserProject::where([
+                                              ['user', \Auth::user()->id],
+                                              ['type', 'producer'],
+                                          ])->get()->toArray();
+
+       $planosUsuario = [];
+
+       foreach ($userProjects as $userProject) {
+           $planos = Plan::where('project', $userProject['project'])->pluck('id')->toArray();
+           if (count($planos) > 0) {
+               foreach ($planos as $plano) {
+                   $planosUsuario[] = $plano;
+               }
+           }
+       }
+
+       $qtdSmsEnviados = SmsMessage::whereIn('plan', $planosUsuario)->where('type', 'Enviada')->count();
+
+       $qtdSmsRecebidos = SmsMessage::whereIn('plan', $planosUsuario)->where('type', 'Recebida')->count();
+
+       // $compras = CompraUsuario::where('comprador',\Auth::user()->id)->orderBy('id','DESC')->get()->toArray();
+
+       foreach ($compras as &$compra) {
+           $compra['data_inicio'] = date('d/m/Y', strtotime($compra['data_inicio']));
+           if ($compra['status'] == 'paid')
+               $compra['status'] = 'Paga';
+           else if ($compra['status'] == 'waiting_payment')
+               $compra['status'] = 'Aguardando pagamento';
+       }
+
+       return view('sms::index', [
+           'sms_disponiveis' => $amountAvailable,
+           'sms_enviados'    => $qtdSmsEnviados,
+           'sms_recebidos'   => $qtdSmsRecebidos,
+           'compras'         => [],
+       ]);
+   }*/
 }
 

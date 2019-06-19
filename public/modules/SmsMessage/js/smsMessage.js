@@ -206,12 +206,6 @@ $(function () {
                             });
                             paramObj['id'] = idSms;
 
-                            /* var formData = new FormData(document.getElementById('editar_sms'));
-                             formData.append("projeto", projectId);*/
-
-                            console.log(id_sms);
-                            console.log(idSms);
-
                             $.ajax({
                                 method: "PUT",
                                 url: "/sms/" + idSms,

@@ -9,17 +9,6 @@
             <div style="width:100%">
                 <div class="row">
                     <div class="form-group col-12">
-                        <label for="plano">Plano</label>
-                        <select name="plan" type="text" class="form-control" id="plano" required>
-                            <option value="all">Todos planos</option>
-                            @foreach($plans as $plan)
-                                <option value="{{Hashids::encode($plan->id)}}" {{Hashids::encode($sms->plan) == Hashids::encode($plan->id) ? 'selected' : ''}}>{{$plan->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-12">
                         <label for="event">Evento</label>
                         <select name="event" type="text" class="form-control" id="evento" required>
                             <option value="boleto_generated"{{$sms->event == 'boleto_generated' ? 'selected' : ''}}>Boleto gerado</option>
@@ -62,7 +51,7 @@
                     <div class="form-group col-xl-12">
                         <label for="message">Mensagem</label>
                         <textarea name="message" class="form-control" rows="5" id="message" maxlength="120" placeholder="mensagem">
-                            {!! $sms->message != '' ? $sms->message : '' !!}
+                           {{$sms->message ?? 'Mensagem'}}
                         </textarea>
                     </div>
                 </div>

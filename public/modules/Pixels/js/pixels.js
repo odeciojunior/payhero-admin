@@ -1,9 +1,10 @@
 $(function () {
 
     var projectId = $("#project-id").val();
-
     //criar novo pixel
     $("#adicionar_pixel").on('click', function () {
+        console.log("aki");
+
         $("#modal_add_tamanho").addClass('modal_simples');
         $("#modal_add_tamanho").removeClass('modal-lg');
 
@@ -220,7 +221,7 @@ $(function () {
                                 data: {pixelData: paramObj},
                                 error: function () {
                                     $('.loading').css("visibility", "hidden");
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
+                                    alertCustom('error', 'Ocorreu algum erro');
                                 },
                                 success: function (data) {
                                     $('.loading').css("visibility", "hidden");

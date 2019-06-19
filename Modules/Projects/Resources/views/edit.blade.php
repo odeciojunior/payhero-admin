@@ -35,7 +35,7 @@
                 <input name="contact" value="{{$project->contact}}" type="text" class="form-control" id="contato" placeholder="Contato">
             </div>
         </div>
-        <h4>Configurações de afiliados</h4>
+        {{--<h4>Configurações de afiliados</h4>
         <div class="row" id="div_dados_afiliados">
             <div class="form-group col-xl-6 col-lg-6">
                 <label for="porcentagem_afiliados">Porcentagem para afiliados</label>
@@ -101,7 +101,7 @@
                     @endif
                 </tbody>
             </table>
-        </div>
+        </div>--}}
         <h4> Configurações do frete</h4>
         <div class="row">
             <div class="form-group col-xl-6 col-lg-6">
@@ -153,7 +153,7 @@
                                 <td class="shipping_type" style="display:none">{{$shipping->type}}</td>
                                 <td class="shipping_value" style="display:none">{{$shipping->value}}</td>
                                 <td class="shipping_zip_code_origin" style="display:none">{{$shipping->zip_code_origin}}</td>
-                                <td class="shipping_name">{{$shipping->name}}{!! $shipping['name'] !!}</td>
+                                <td class="shipping_name">{{$shipping->name}}</td>
                                 <td class="shipping_type">{{$shipping->type == 'static'? $shipping->value : 'calculado automaticamente'}}</td>
                                 <td class="shipping_information">{{$shipping->information}}</td>
                                 <td class="shipping_status">{{$shipping->status == '1' ? 'Ativado': 'Desativado'}}</td>
