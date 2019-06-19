@@ -3,39 +3,38 @@
 namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
+use PHPHtmlParser\Dom;
 use App\Entities\Plan;
 use App\Entities\Company;
 use App\Entities\Product;
 use App\Entities\Project;
-use PHPHtmlParser\Selector\Parser;
-use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\Client;
+use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Cloudflare\API\Auth\APIKey;
+use PHPHtmlParser\Dom\HtmlNode;
+use PHPHtmlParser\Dom\TextNode;
 use Cloudflare\API\Endpoints\DNS;
-use Cloudflare\API\Adapter\Guzzle;
 use Illuminate\Routing\Controller;
+use Cloudflare\API\Adapter\Guzzle;
+use PHPHtmlParser\Selector\Parser;
 use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
+use PHPHtmlParser\Selector\Selector;
 use App\Entities\ShopifyIntegration;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
-use PHPHtmlParser\Dom\HtmlNode;
-use PHPHtmlParser\Dom\Tag;
-use PHPHtmlParser\Dom\TextNode;
-use Vinkla\Hashids\Facades\Hashids;
-use PHPHtmlParser\Dom;
 
 class ShopifyController extends Controller
 {
     public function index()
     {
-
         $companies = Company::where('user', \Auth::user()->id)->get()->toArray();
 
         $shopifyIntegrations = ShopifyIntegration::where('user', \Auth::user()->id)->get()->toArray();
@@ -59,7 +58,6 @@ class ShopifyController extends Controller
 
     public function adicionarIntegracao(Request $request)
     {
-
         $dados = $request->all();
 
         $shopifyIntegration = ShopifyIntegration::where('token', $dados['token'])->first();
@@ -265,13 +263,13 @@ class ShopifyController extends Controller
 
         $client->getWebhookManager()->create([
                                                  "topic"   => "products/create",
-                                                 "address" => "https://cloudfox.app/aplicativos/shopify/webhook/" . $project['id'],
+                                                 "address" => "https://cloudfox.app/apps/shopify/webhook/" . Hashids::encode($project['id']),
                                                  "format"  => "json",
                                              ]);
 
         $client->getWebhookManager()->create([
                                                  "topic"   => "products/update",
-                                                 "address" => "https://cloudfox.app/aplicativos/shopify/webhook/" . $project['id'],
+                                                 "address" => "https://cloudfox.app/apps/shopify/webhook/" . Hashids::encode($project['id']),
                                                  "format"  => "json",
                                              ]);
 
@@ -626,21 +624,21 @@ class ShopifyController extends Controller
         // Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
         // return 'success';
 
-        $project = Project::find($request->id_projeto);
+        $project = Project::find(Hashids::decode($request->id_projeto)->first());
 
         if (!$project) {
-            Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->id_projeto);
+            Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
 
             return 'error';
         } else {
-            Log::write('info', 'retorno do shopify, projeto = ' . $request->id_projeto);
+            Log::write('info', 'retorno do shopify, projeto = ' . $project->id);
         }
 
         foreach ($dados['variants'] as $variant) {
 
             $plan = Plan::where([
                                     ['shopify_variant_id', $variant['id']],
-                                    ['project', $request->id_projeto],
+                                    ['project', $project->id],
                                 ])->first();
 
             $description = '';

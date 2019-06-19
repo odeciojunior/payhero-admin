@@ -1,0 +1,15 @@
+tbody tr:hover {
+    transform: scale(1.03);
+}
+
+.table-responsive {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.menu-active{
+  border-right: 5px solid;
+  border-image-source: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
+  border-image-slice: 2;
+}
+

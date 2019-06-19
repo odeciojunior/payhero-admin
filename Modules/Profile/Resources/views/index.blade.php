@@ -16,10 +16,9 @@
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item" role="presentation" id='nav_users'>
-                                    <a class="nav-link active" data-toggle="tab" href="#tab_user"
-                                       aria-controls="tab_user" role="tab">Usuário
+                                    <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Usuário
                                     </a>
-                                </li>
+                                </li> 
                                 <li class="nav-item" role="presentation" id="nav_documents">
                                     <a class="nav-link" data-toggle="tab" href="#tab_documentos"
                                        aria-controls="tab_documentos" role="tab">Documentos
@@ -68,13 +67,13 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="form-group col-12">
+                                            <div class="form-group col-6">
                                                 <label for="select_profile_photo">Foto de perfil</label>
                                                 <br>
                                                 <input type="button" id="select_profile_photo" class="btn btn-default" value="Selecionar foto do perfil">
                                                 <input name="profile_photo" type="file" class="form-control" id="profile_photo" style="display:none">
                                                 <div style="margin: 20px 0 0 30px;">
-                                                    <img src="{!!$user->photo!!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
+                                                    <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/assets/img/user-default.png') !!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
                                                 </div>
                                                 <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>

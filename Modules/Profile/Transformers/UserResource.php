@@ -27,7 +27,7 @@ class UserResource extends Resource
             'street'                      => $this->street,
             'number'                      => $this->number,
             'complement'                  => $this->complement,
-            'photo'                       => $this->complement,
+            'photo'                       => $this->photo,
             'date_birth'                  => $this->date_birth,
             'personal_document_status'    => $this->personal_document_status,
             'address_document_status'     => $this->address_document_status,

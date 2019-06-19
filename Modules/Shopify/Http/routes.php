@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'ShopifyController@index',
@@ -18,7 +18,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'aplicativos/shopify'
     ]);
 });
 
-Route::group(['prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
+Route::group(['prefix' => 'apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
 
     Route::post('/webhook/{id_projeto}', [
@@ -33,7 +33,7 @@ Route::group(['prefix' => 'aplicativos/shopify', 'namespace' => 'Modules\Shopify
 
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/aplicativos/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
     Route::get('/', [
         'uses' => 'ShopifyApiController@index',

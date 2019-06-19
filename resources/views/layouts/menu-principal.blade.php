@@ -31,7 +31,6 @@
               </i>
             </a>
           </li>
-          
         </ul>
 
         <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
@@ -129,8 +128,7 @@
               <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
                 data-animation="scale-up" role="button">
                 <span class="avatar avatar-online">
-                  <!-- <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.\Auth::user()->photo)!!}" alt="..."> -->
-                  <img src="{{ asset('modules/global/assets/img/user.jpg') }}" alt="">
+                  <img src="{!! \Auth::user()->photo != '' ? \Auth::user()->photo : asset('modules/global/assets/img/user-default.png') !!}" alt="...">
                   <i></i>
                 </span>
               </a>
@@ -139,12 +137,10 @@
                   <i class="icon wb-user" aria-hidden="true"></i> 
                   Perfil 
                 </a>
-                @if(Auth::user()->hasRole('administrador empresarial'))
-                  <a class="dropdown-item" href="{{ route('companies.index') }}" role="menuitem">
-                    <i class="icon wb-home" aria-hidden="true"></i>
-                    Empresas
-                  </a>
-                @endif
+                <a class="dropdown-item" href="{!! route('companies.index') !!}" role="menuitem">
+                  <i class="icon wb-user" aria-hidden="true"></i> 
+                  Empresas 
+                </a>  
                 <div class="dropdown-divider" role="presentation"></div>
                 <a class="dropdown-item" href="" role="menuitem" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="icon wb-power" aria-hidden="true"></i> Logout </a>
                 <form id="logout-form" action="/logout" method="POST" style="display: none;">
@@ -161,8 +157,7 @@
             <div class="input-search">
               <i class="input-search-icon wb-search" aria-hidden="true"></i>
               <input type="text" class="form-control" name="site-search" placeholder="Search">
-              <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search"
-                data-toggle="collapse" aria-label="Close"></button>
+              <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search" data-toggle="collapse" aria-label="Close"></button>
             </div>
           </div>
         </form>
@@ -175,19 +170,19 @@
     <ul class="site-menu" style="margin-top:10px">
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="{{ route('dashboard') }}">
-           <img src="{{ asset('modules/global/assets/img/svg/dashboard.svg') }}">
+           <img id="dashboard_img" src="{{ asset('modules/global/assets/img/svg/dashboard.svg') }}">
             <span class="site-menu-title">Dashboard</span>
         </a>
       </li>
       <li class="site-menu-item has-sub disabled">
         <a class="animsition-link disabled"  href="{{ route('showcase') }}">
-        <img src="{{ asset('modules/global/assets/img/svg/vitrine.svg') }}">
+        <img id="showcase_img" src="{{ asset('modules/global/assets/img/svg/vitrine.svg') }}">
             <span class="site-menu-title">Vitrine (em breve)</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-        <img src="{{ asset('modules/global/assets/img/svg/vendas.svg') }}">
+        <img id="sales_img" src="{{ asset('modules/global/assets/img/svg/vendas.svg') }}">
             <span class="site-menu-title">Vendas</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -211,25 +206,25 @@
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link"  href="/projects">
-        <img src="{{ asset('modules/global/assets/img/svg/projetos.svg') }}" style="width:17px;">
+        <img id="projects_img" src="{{ asset('modules/global/assets/img/svg/projetos.svg') }}" style="width:17px;">
             <span class="site-menu-title">Projetos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
           <a class="animsition-link" href="{{ route('products.index') }}">
-        <img src="{{ asset('modules/global/assets/img/svg/produtos.svg') }}">
+        <img id="products_img" src="{{ asset('modules/global/assets/img/svg/produtos.svg') }}">
             <span class="site-menu-title">Produtos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub  disabled">
         <a class="animsition-link disabled"  href="{{ route('attendance') }}">
-        <img src="{{ asset('modules/global/assets/img/svg/atendimento.svg') }}">
+        <img id="attendance_img" src="{{ asset('modules/global/assets/img/svg/atendimento.svg') }}">
             <span class="site-menu-title">Atendimento (em breve)</span>
         </a>
       </li>
       <li class="site-menu-item has-sub  disabled">
         <a href="javascript:void(0)" class="disabled">
-        <img src="{{ asset('modules/global/assets/img/svg/afiliados.svg') }}">
+        <img id="affiliates_img" src="{{ asset('modules/global/assets/img/svg/afiliados.svg') }}">
             <span class="site-menu-title">Afiliados (em breve)</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -248,19 +243,19 @@
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link" href="{!! route('finances') !!}">
-        <img src="{{ asset('modules/global/assets/img/svg/financas.svg') }}">
+        <img id="finances_img" src="{{ asset('modules/global/assets/img/svg/financas.svg') }}">
             <span class="site-menu-title">Finanças</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link" href="{!! route('reports.index') !!}">
-        <img src="{{ asset('modules/global/assets/img/svg/configuracao.svg') }}">
+        <img id="reports_img" src="{{ asset('modules/global/assets/img/svg/configuracao.svg') }}">
             <span class="site-menu-title">Relatórios</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a class="animsition-link" href="{{ route('apps') }}">
-        <img src="{{ asset('modules/global/assets/img/svg/aplicativos.svg') }}">
+        <img id="apps_img" src="{{ asset('modules/global/assets/img/svg/aplicativos.svg') }}">
             <span class="site-menu-title">Aplicativos</span>
         </a>
       </li>
@@ -271,20 +266,17 @@
         </a>
       </li>
 
-      <li class="site-menu-item has-sub">
+      {{--  <li class="site-menu-item has-sub">
         <a class="animsition-link  lh-10" href="#">
         <img src="">
             <span class="site-menu-title footer-nav-link">Suporte</span>
         </a>
-      </li>
+      </li>  --}}
 
       <li class="site-menu-item has-sub ">
-        <a class="animsition-link lh-10" href="#">
-        <img src="">
+        <a target="_blank" href="https://cloudfox.net/terms">
             <span class="site-menu-title footer-nav-link">Termos e Políticas</span>
         </a>
       </li>
-
-
     </ul>
 </div>

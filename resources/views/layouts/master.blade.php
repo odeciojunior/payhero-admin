@@ -23,7 +23,6 @@
     <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
 
-
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/asscrollable/asScrollable.css') }}">
@@ -47,6 +46,7 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
 
     @stack('css')
 
