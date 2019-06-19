@@ -63,7 +63,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="data_nascimento">Data de nascimento</label>
+                                                <label for="date_birth">Data de nascimento</label>
                                                 <input name="date_birth" value="{!! $user->date_birth !!}" type="date" class="form-control" id="date_birth">
                                             </div>
                                         </div>
@@ -74,7 +74,7 @@
                                                 <input type="button" id="select_profile_photo" class="btn btn-default" value="Selecionar foto do perfil">
                                                 <input name="profile_photo" type="file" class="form-control" id="profile_photo" style="display:none">
                                                 <div style="margin: 20px 0 0 30px;">
-                                                    <img src="{!! url(\Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_USER.$user->foto)!!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
+                                                    <img src="{!!$user->photo!!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
                                                 </div>
                                                 <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>
