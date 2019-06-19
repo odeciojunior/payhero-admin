@@ -130,7 +130,7 @@
 
     <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
     <script src="{{ asset('modules/global/assets/js/notificacoes.js') }}"></script>
-    <script src="{{ asset('modules/global/js/customAlert.js') }}"></script>
+    <script src="{{ asset('modules/global/js/global.js') }}"></script>
 
     @stack('scripts')
 
