@@ -48,7 +48,7 @@
                                                 </div>
 
                                                 <div class="col-6 mb-15">
-                                                    <div class="price-holder antecipacao" id="pop-antecipacao">
+                                                    <div class="price-holder antecipacao">
                                                         <h6 class="label-price"> Disponível para antecipar </h6>
                                                         <h4 class="price align-items-baseline">
                                                             R$2.500,00 <span>
