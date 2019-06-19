@@ -50,21 +50,74 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property ShopifyIntegration[] $shopifyIntegrations
  * @property SmsMessage[] $smsMessages
  * @property Transfer[] $transfers
- * @property UserShopping[] $userShoppings
+ * @property UserShopping[] $userShoppings'
  * @property UsersProject[] $usersProjects
  */
-
-class User extends Authenticable {
-
+class User extends Authenticable
+{
     use HasApiTokens;
     use Notifiable;
     use HasRoles;
     use FoxModelTrait;
-
     /**
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'remember_token', 'celphone', 'document', 'zip_code', 'country', 'state', 'city', 'neighborhood', 'street', 'number', 'complement', 'photo', 'score', 'sms_zenvia_amount', 'percentage_rate', 'transaction_rate', 'foxcoin', 'email_amount', 'call_amount', 'boleto_antecipation_money_days', 'credit_card_antecipation_money_days', 'release_money_days', 'percentage_antecipable', 'antecipation_tax', 'updated_at', 'created_at', 'deleted_at'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'remember_token',
+        'cellphone',
+        'document',
+        'zip_code',
+        'country',
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+        'number',
+        'complement',
+        'photo',
+        'date_birth',
+        'address_document_status',
+        'personal_document_status',
+        'score',
+        'sms_zenvia_amount',
+        'percentage_rate',
+        'transaction_rate',
+        'foxcoin',
+        'email_amount',
+        'call_amount',
+        'boleto_antecipation_money_days',
+        'credit_card_antecipation_money_days',
+        'release_money_days',
+        'percentage_antecipable',
+        'antecipation_tax',
+        'updated_at',
+        'created_at',
+        'deleted_at',
+    ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'document_type' => [
+            1 => 'personal_document',
+            2 => 'address_document',
+        ],
+        'address_document_status'  => [
+            1 => 'pending',
+            2 => 'analyzing',
+            3 => 'approved',
+            4 => 'refused',
+        ],
+        'personal_document_status' => [
+            1 => 'pending',
+            2 => 'analyzing',
+            3 => 'approved',
+            4 => 'refused',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -3,8 +3,11 @@
 namespace Modules\Profile\Http\Controllers;
 
 use App\Entities\User;
+use App\Entities\UserDocument;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
+use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 use Modules\Profile\Transformers\UserResource;
+use function MongoDB\BSON\toJSON;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -39,17 +42,13 @@ class ProfileController extends Controller
      * @var DigitalOceanFileService
      */
     private $digitalOceanFileService;
-
     /**
-     * ProfileController constructor.
+     * @var UserDocument
      */
-    public function __construct()
-    {
-        //
-    }
+    private $userDocumentModel;
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|DigitalOceanFileService
      */
     private function getDigitalOceanFileService()
     {
@@ -61,7 +60,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return User|\Illuminate\Contracts\Foundation\Application|mixed
      */
     private function getUserModel()
     {
@@ -70,6 +69,18 @@ class ProfileController extends Controller
         }
 
         return $this->userModel;
+    }
+
+    /**
+     * @return UserDocument|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getUserDocumentModel()
+    {
+        if (!$this->userDocumentModel) {
+            $this->userDocumentModel = app(UserDocument::class);
+        }
+
+        return $this->userDocumentModel;
     }
 
     /**
@@ -83,7 +94,7 @@ class ProfileController extends Controller
             $userResource = new UserResource($user);
 
             return view('profile::index', [
-                'user' => $userResource,
+                'user' => json_decode(json_encode($userResource)),
             ]);
         } catch (Exception $e) {
             Log::warning('ProfileController index');
@@ -92,7 +103,8 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ProfileUpdateRequest $request
+     * @param $idCode
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ProfileUpdateRequest $request, $idCode)
@@ -152,7 +164,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param ProfilePasswordRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function changePassword(ProfilePasswordRequest $request)
@@ -173,10 +185,45 @@ class ProfileController extends Controller
         }
     }
 
-    public function uploadDocuments(Request $request)
+    /**
+     * @param ProfileUploadDocumentRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadDocuments(ProfileUploadDocumentRequest $request)
     {
-        $x = $request->all();
-        dd($x);
+        try {
+            $dataForm = $request->validated();
 
+            $document = $request->file('file');
+
+            $digitalOceanPath = $this->getDigitalOceanFileService()
+                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents', $document, null, null, 'private');
+
+            $this->getUserDocumentModel()->create([
+                                                      'user_id'            => auth()->user()->id,
+                                                      'document_url'       => $digitalOceanPath,
+                                                      'document_type_enum' => $dataForm["document_type"],
+                                                      'status'             => null,
+                                                  ]);
+
+            $user = auth()->user();
+
+            if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'personal_document')) {
+                $user->update([
+                                  'personal_document_status' => $user->getEnum('personal_document_status', 'pending'),
+                              ]);
+            }
+
+            if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'address_document')) {
+                $user->update([
+                                  'address_document_status' => $user->getEnum('address_document_status', 'pending'),
+                              ]);
+            }
+
+            return response()->json("success");
+        } catch (Exception $e) {
+            Log::warning('ProfileController uploadDocuments');
+            report($e);
+        }
     }
 }

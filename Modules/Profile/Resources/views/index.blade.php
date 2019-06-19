@@ -4,7 +4,6 @@
     <link rel="stylesheet" type="text/css" href="{{asset('/modules/profile/css/dropzone.css')}}">
 @endpush
 @section('content')
-
     <!-- Page -->
     <div class="page">
         <div class="page-header">
@@ -132,47 +131,39 @@
                                     </form>
                                 </div>
                                 <div class="tab-pane" id="tab_documentos" role="tabpanel">
+                                    Envie um documento de identidade e um comprovante de residência<br>
+
                                     <div id="dropzone">
                                         <form method="POST" action="{!! route('profile.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
                                             @csrf
                                             <div class="dz-message needsclick">
-                                                Arraste os arquivos aqui ou click para selecionar.<br />
+                                                Arraste os arquivos aqui ou click para selecionar.<br/>
                                             </div>
-
-                                            <input id="type_document" name="type_document" value="xxxxx" type="hidden" class="form-control" >
-
+                                            <input id="document_type" name="document_type" value="" type="hidden" class="form-control">
                                         </form>
+                                        Documento de identidade aceitos : Documento oficial com foto.<br>
+                                        Comprovante de residência: Conta de energia, água ou de serviços públicos<br>
                                     </div>
                                     <div class="row">
                                         <div class="panel-heading col-10">
-                                            <h3 class="panel-title">Documentos</h3>
+                                            <h3 class="panel-title">Documentos Enviados</h3>
                                         </div>
                                         <table class="table table-hover table-striped table-bordered mt-2">
-                                            <thead>
-                                                <tr class="text-center">
-                                                    <th>Conta</th>
-                                                    <th>Correntista</th>
-                                                    <th>Documentos</th>
-                                                    <th>Status</th>
-                                                    <th>Ação</th>
-                                                </tr>
-                                            </thead>
                                             <tbody>
                                                 <tr class="text-center">
                                                     <td>
-
+                                                        Documento de identidade
                                                     </td>
                                                     <td>
-
+                                                        Aguardando envio.
+                                                    </td>
+                                                </tr>
+                                                <tr class='text-center'>
+                                                    <td>
+                                                        Comprovante de residencia
                                                     </td>
                                                     <td>
-
-                                                    </td>
-                                                    <td>
-
-                                                    </td>
-                                                    <td>
-
+                                                        Aguardando envio.
                                                     </td>
                                                 </tr>
                                             </tbody>

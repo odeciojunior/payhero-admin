@@ -25,6 +25,12 @@ class TesteController extends Controller
     public function index()
     {
 
+        $user = auth()->user();
+
+        dd($user->getEnum('personal_document_status', 'pending'));
+
+
+
         //$data['product_digital_path'] = $this->uploadFiles($folder, $this->extensionPathsAttachment, 'Attachment', $pathCheckOld, 'gcsPrivate');
 
 
@@ -41,15 +47,11 @@ class TesteController extends Controller
         $x = parse_url('http://a.com/uploads/user/wqP5LNZ8VgaRye0/public/profile/7OGabBYpgwN7cyzFQVoj1jkSaw7D7AeCxc1Ylbvj.jpeg');
         dd($x);
 */
-
         $teste = app(DigitalOceanFileService::class);
-        $url = $teste->deleteFile('uploads/user/wqP5LNZ8VgaRye0/public/profile/mdNX4HV84XzFwp01sQSxoWXCv5JJl8JZIVn6vT9C.jpeg');
-        $files = Storage::disk('openSpaces')->files('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile/');
+        //$url = $teste->deleteFile('uploads/user/wqP5LNZ8VgaRye0/private/documents/vnfA8EFbcvJGM2XiX7bTtlfTm44ei2C6gmOficdU.jpeg');
+        //$files = Storage::disk('openSpaces')->files('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents');
+        $files = $teste->getTemporaryUrlFile('uploads/user/wqP5LNZ8VgaRye0/private/documents/qz2wIbDppEGYJvNRdrg0qLeB89JC74HHLFFZpL6n.jpeg',60);
         dd($files);
-
-
-
-
 
         //composer require league/flysystem-aws-s3-v3
 
