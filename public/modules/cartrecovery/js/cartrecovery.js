@@ -53,7 +53,7 @@ $(document).ready( function(){
 
                 });
                 if(response.data == ''){
-                    $('#table_data').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    $('#table_data').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
                 }
                 pagination(response);
 

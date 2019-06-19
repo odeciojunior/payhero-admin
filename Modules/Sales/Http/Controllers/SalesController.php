@@ -32,7 +32,8 @@ class SalesController extends Controller {
         }
 
         return view('sales::index',[
-            'projetos' => $projects,
+            'projetos'     => $projects,
+            'sales_amount' => Sale::where('owner', auth()->user()->id)->get()->count()
         ]);
     }
 

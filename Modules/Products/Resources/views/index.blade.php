@@ -10,7 +10,7 @@
                 <h1 class="page-title">Meus produtos</h1>
             </div>
             <div class="col-4">
-                <div class="panel pt-15 p-15">
+                {{--  <div class="panel pt-15 p-15">
                     <label for="nome">Nome do produto</label>
                     <div class="input-group">
                         <input id="nome" class="form-control" placeholder="Nome do produto">
@@ -18,17 +18,19 @@
                           <button id="procurar" class="btn btn-success">Procurar</button>
                       </span>
                     </div>
-                </div>
+                </div>  --}}
             </div>
             <div class="col-1">
-                <a href="/products/create" class="btn btn-floating btn-danger" style="position: relative; float: right">
-                    <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
-                </a>
+                @if($products->count() > 0)
+                    <a href="/products/create" class="btn btn-floating btn-danger" style="position: relative; float: right">
+                        <i class="icon wb-plus" aria-hidden="true" style="margin-top:8px"></i>
+                    </a>
+                @endif
             </div>
         </div>
     </div>
     <div class="page-content container">
-        @if(isset($products) && $products->count() > 0)
+        @if($products->count() > 0)
             <div class="row">
                 @foreach($products as $product)
                     <div class="col-xl-3 col-md-6 info-panel">
@@ -78,8 +80,15 @@
             </div>
 
         @else
-            <div class="alert alert-warning" role="alert">
-                Nenhum produto encontrado.
+            @push('css')
+                <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+            @endpush
+
+            <div class="content-error d-flex text-center">
+                <img src="{!! asset('modules/global/assets/img/emptyprodutos.svg') !!}" width="250px">
+                <h1 class="big gray">Zero produtos por aqui!</h1>
+                <p class="desc gray"> Vamos adicionar seu primeiro produto? </p>
+                <a href="/products/create" class="btn btn-primary gradient">Novo Produto</a>
             </div>
         @endif
 

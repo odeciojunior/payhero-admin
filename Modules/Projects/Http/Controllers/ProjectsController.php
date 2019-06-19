@@ -63,12 +63,15 @@ class ProjectsController extends Controller
 
     public function index()
     {
-        try {
+        try { 
             $projects = $this->getProject()->whereHas('usersProjects', function($query) {
                 $query->where('user', auth()->user()->id);
             })->get();
 
-            return view('projects::index', ['projects' => $projects]);
+            return view('projects::index', [
+                'projects' => $projects
+            ]);
+
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);

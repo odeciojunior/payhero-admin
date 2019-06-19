@@ -31,8 +31,7 @@ class CartRecoveryController extends Controller {
             ['type','producer']
         ])->pluck('project')->toArray();
 
-        $abandonedCarts = Checkout::where('status','abandoned cart')
-                                  ->orWhere('status','recovered')
+        $abandonedCarts = Checkout::whereIn('status',['abandoned cart', 'recovered'])
                                   ->whereIn('project',$userProjects)
                                   ->orderBy('id','DESC');
 

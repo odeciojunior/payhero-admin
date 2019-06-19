@@ -64,7 +64,9 @@
   <body class="animsition site-navbar-small dashboard">
 
     <div class="loading">
-        <div class="loader"></div>
+        <div class="loader">
+            {{--  <img src="{{asset('modules/global/gif/cloudfox-loading-1.gif')}}">  --}}
+        </div>
     </div>
 
     <style>

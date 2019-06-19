@@ -8,10 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{asset('modules/register/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('modules/register/css/animate.css')}}">
-    <link rel="stylesheet" href="{{asset('modules/register/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('modules/register/css/style.css')}}"> 
     <link rel="stylesheet" href="{{asset('modules/register/css/jquery-ui.min.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-    <link rel='stylesheet' href="{{ asset('/assets/css/sweetalert2.min.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
 
     <script
         src="https://code.jquery.com/jquery-3.4.1.js"
@@ -561,7 +561,7 @@
     <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
     <script src="{{asset('modules/register/js/register.js')}}"></script>
     <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
-    <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('modules/global/assets/js/sweetalert2.all.min.js') }}"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
 </body>
 </html>
