@@ -1,9 +1,10 @@
 $(function () {
 
     var projectId = $("#project-id").val();
-
     //criar novo pixel
     $("#adicionar_pixel").on('click', function () {
+        console.log("aki");
+
         $("#modal_add_tamanho").addClass('modal_simples');
         $("#modal_add_tamanho").removeClass('modal-lg');
 

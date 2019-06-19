@@ -1,5 +1,10 @@
-$(function () {
+$(document).ready(function () {
 
+    var projectId = $("#project-id").val();
+
+    $("#tab-fretes").on('click', function () {
+        atualizarFrete();
+    });
     atualizarFrete();
 
     function atualizarFrete() {
@@ -7,17 +12,106 @@ $(function () {
 
         $.ajax({
             method: "GET",
-            url: '',
+            url: '/shipping',
+            data: {project: projectId},
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
             error: function () {
-                //
+                $("#dados-tabela-frete").html('Erro ao encontrar dados');
             },
             success: function (response) {
-                $("#dados-tabela-frete").html('');
-                $.each(response.data, function (index, value) {
 
+                $("#dados-tabela-frete").html('');
+
+                $.each(response.data, function (index, value) {
+                    dados = '';
+                    dados += '<tr>';
+                    dados += '<td class="shipping-id text-center" style="vertical-align: middle; display: none;">' + value.shipping_id + '</td>';
+                    dados += '<td class="shipping-type text-center" style="vertical-align: middle; display: none;">' + value.type + '</td>';
+                    dados += '<td class="shipping-value text-center" style="vertical-align: middle; display: none;">' + value.value + '</td>';
+                    dados += '<td class="shipping-zip-code-origin text-center" style="vertical-align: middle; display: none;">' + value.zip_code_origin + '</td>';
+                    dados += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.type + '</td>';
+                    dados += '<td class="shipping-name text-center" style="vertical-align: middle;">' + value.name + '</td>';
+                    dados += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.value + '</td>';
+                    dados += '<td class="shipping-information text-center" style="vertical-align: middle;">' + value.information + '</td>';
+                    dados += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    if (value.status === 1) {
+                        dados += '<span class="badge badge-success">Ativo</span>';
+                    } else {
+                        dados += '<span class="badge badge-danger">Desativado</span>';
+                    }
+
+                    dados += '</td>';
+
+                    dados += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                    if (value.pre_selected === 1) {
+                        dados += '<span class="badge badge-success">Sim</span>';
+                    } else {
+                        dados += '<span class="badge badge-primary"> Não </span>';
+                    }
+
+                    dados += '</td>';
+
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger' id='detalhes-frete' frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger' id='editar-frete' frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger' id='excluir-frete' frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+
+                    dados += '</tr>';
+                    $("#dados-tabela-frete").append(dados);
+                });
+
+                if (response.data === '') {
+                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum frete encontrado</td></tr>")
+                }
+
+                $("#detalhes-frete").unbind('click');
+                $("#detalhes-frete").on('click', function () {
+
+                    var frete = $(this).attr('frete');
+
+                    $("#modal-frete-titulo").html('Detalhes do frete <br><hr>');
+                    $("#modal-frete-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+
+                    var data = {freteId: frete};
+
+                    $.ajax({
+                        method: "GET",
+                        url: "/shipping/" + frete,
+                        data: data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function () {
+                            //
+                        }, success: function (response) {
+                            $("#modal-frete-body").html(response);
+                        }
+                    });
+                });
+
+                $("#editar-frete").unbind("click");
+                $("#editar-frete").on("click", function () {
+                    var frete = $(this).attr('frete');
+
+                    $("#modal-frete-titulo").html("Editar Frete<br><hr>");
+                    $("#modal-frete-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+
+                    var data = {frete: frete};
+
+                    $.ajax({
+                        method: "GET",
+                        url: "/shipping/" + frete + "/edit",
+                        data: data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function () {
+                            //
+                        }, success: function (response) {
+                            $("#modal-frete-body").html(response);
+                        }
+                    });
                 });
             }
         });

@@ -61,7 +61,7 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab-fretes"
+                            <a id="tab-fretes" class="nav-link" data-toggle="tab" href="#tab-fretes-panel"
                                aria-controls="tab-fretes" role="tab">Frete
                             </a>
                         </li>
@@ -222,7 +222,7 @@
                                 </table>
                             </div>
                             <!-- Painel de Fretes -->
-                            <div class="tab-pane" id="tab-fretes" role="tabpanel">
+                            <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
                                 @include('shipping::index')
                             </div>
                             <!--- Painel de Planos -->
@@ -602,6 +602,7 @@
             </div>
         </div>
         @push('scripts')
+            <script src='{{asset('modules/Shipping/js/shipping.js')}}'></script>
             @if(!$project->shopify_id)
                 <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
             @endif

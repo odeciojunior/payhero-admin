@@ -153,7 +153,7 @@
                                 <td class="shipping_type" style="display:none">{{$shipping->type}}</td>
                                 <td class="shipping_value" style="display:none">{{$shipping->value}}</td>
                                 <td class="shipping_zip_code_origin" style="display:none">{{$shipping->zip_code_origin}}</td>
-                                <td class="shipping_name">{{$shipping->name}}{!! $shipping['name'] !!}</td>
+                                <td class="shipping_name">{{$shipping->name}}</td>
                                 <td class="shipping_type">{{$shipping->type == 'static'? $shipping->value : 'calculado automaticamente'}}</td>
                                 <td class="shipping_information">{{$shipping->information}}</td>
                                 <td class="shipping_status">{{$shipping->status == '1' ? 'Ativado': 'Desativado'}}</td>

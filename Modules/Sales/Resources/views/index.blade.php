@@ -98,7 +98,7 @@
           </div>
         </div>
       </div>
-  
+
       @if($sales_amount > 0)
         <div class="panel pt-10 p-10" style="min-height: 300px">
           <div class="page-invoice-table table-responsive">
