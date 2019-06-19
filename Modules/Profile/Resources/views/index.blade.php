@@ -15,19 +15,19 @@
                     <div class="example-wrap">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" data-toggle="tab" href="#tab_usuario"
-                                       aria-controls="tab_usuario" role="tab">Usuário
+                                <li class="nav-item" role="presentation" id='nav_users'>
+                                    <a class="nav-link active" data-toggle="tab" href="#tab_user"
+                                       aria-controls="tab_user" role="tab">Usuário
                                     </a>
                                 </li>
-                                <li class="nav-item" role="presentation">
+                                <li class="nav-item" role="presentation" id="nav_documents">
                                     <a class="nav-link" data-toggle="tab" href="#tab_documentos"
                                        aria-controls="tab_documentos" role="tab">Documentos
                                     </a>
                                 </li>
                             </ul>
                             <div class="tab-content pt-20">
-                                <div class="tab-pane active" id="tab_usuario" role="tabpanel">
+                                <div class="tab-pane active" id="tab_user" role="tabpanel">
                                     <form method="POST" action="{!! route('profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" id='profile_update_form'>
                                         @csrf
                                         @method('PUT')

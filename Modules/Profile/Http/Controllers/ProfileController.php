@@ -153,10 +153,13 @@ class ProfileController extends Controller
                 } catch (Exception $e) {
                     Log::warning('ProfileController - update - Erro ao enviar foto do profile');
                     report($e);
+
+                    return response()->json(['message' => 'Erro ao salvar foto'], 400);
                 }
             }
 
-            return redirect()->route('profile');
+            return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
+            //return redirect()->route('profile');
         } catch (Exception $e) {
             Log::warning('ProfileController update');
             report($e);

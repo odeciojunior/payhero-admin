@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
 
     //
@@ -33,16 +35,12 @@ $(document).ready(function () {
                 }
             },
             success: function (response) {
-                if (response.success == 'true') {
-                    currentPage = 'company';
-                    $(".div1").hide();
-                    $(".div2").show();
-                    alertCustom('success', 'Cadastro realizado com sucesso');
-                    $("#progress-bar-register").css('width', '66%');
-                    $("#jump").show();
-                } else {
-                    alertCustom('error', 'revise os dados informados');
-                }
+                $(".div1").hide();
+                $(".div2").show();
+                alertCustom('success', response.message);
+                $("#progress-bar-register").css('width', '66%');
+                $("#jump").show();
+
             }
         });
 
@@ -168,6 +166,16 @@ $(document).ready(function () {
             });
         }
 
+    });
+
+    $("#nav_documents").on("click", function () {
+        $("#tab_documentos").click();
+        $("#previewimage").imgAreaSelect({remove: true});
+    });
+
+    $("#nav_users").on("click", function () {
+        $("#tab_user").click();
+        $("#previewimage").imgAreaSelect({remove: true});
     });
 
 });
