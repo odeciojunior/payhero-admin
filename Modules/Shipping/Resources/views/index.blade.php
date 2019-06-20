@@ -1,7 +1,7 @@
 <!-- Page -->
 <div class='row'>
     <div style='width:100%'>
-        <a id='add-shipping' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-add-shipping' style='color:white;'>
+        <a id='add-shipping' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-detalhes-frete' style='color:white;'>
             <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Frete
         </a>
     </div>

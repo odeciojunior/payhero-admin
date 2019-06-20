@@ -3,7 +3,7 @@ $(function () {
     var projectId = $("#project-id").val();
     //criar novo pixel
     $("#adicionar_pixel").on('click', function () {
-        console.log("aki");
+
 
         $("#modal_add_tamanho").addClass('modal_simples');
         $("#modal_add_tamanho").removeClass('modal-lg');
@@ -148,6 +148,7 @@ $(function () {
                 id_pixel = $(this).attr('pixel');
                 var name = $(this).closest("tr").find("td:first-child").text();
                 $("#modal_excluir_titulo").html("Remover do projeto o pixel " + name + "?");
+
                 $("#bt_excluir").unbind('click');
                 $("#bt_excluir").on('click', function () {
                     $(".loading").css('visibility', 'visible');

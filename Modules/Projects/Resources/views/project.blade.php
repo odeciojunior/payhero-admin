@@ -308,6 +308,26 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Modal padrão para adicionar frete no projeto -->
+                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                            <div id="modal_add_tamanho_shipping" class="modal-dialog modal-simple">
+                                <div class="modal-content" id="conteudo_modal_add_shipping">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="row">
+                                        <div id="modal_add_body_shipping" class="form-group col-12" style="margin-top: 30px">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="cadastrar_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Modal padrão para adicionar * no projeto -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div id="modal_add_tamanho" class="modal-dialog modal-simple">

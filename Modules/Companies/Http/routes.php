@@ -1,33 +1,38 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function()
-{
+Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
+
+    Route::resource('/companies', 'CompaniesController')->only('index', 'create', 'store', 'edit', 'update', 'destroy')
+         ->names('companies');
+});
+/*
+Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
 
     Route::resource('/companies', 'CompaniesController');
 
     Route::get('/', [
         'uses' => 'CompaniesController@index',
-        'as' => 'companies',
+        'as'   => 'companies',
     ]);
 
     Route::get('/cadastro', [
         'uses' => 'CompaniesController@create',
-        'as' => 'companies.create',
+        'as'   => 'companies.create',
     ]);
 
     Route::get('/editar/{id}', [
         'uses' => 'CompaniesController@edit',
-        'as' => 'companies.edit',
+        'as'   => 'companies.edit',
     ]);
 
     Route::post('/editarempresa', [
         'uses' => 'CompaniesController@update',
-        'as' => 'companies.update',
+        'as'   => 'companies.update',
     ]);
 
     Route::get('/deletarempresa/{id}', [
         'uses' => 'CompaniesController@delete',
-        'as' => 'companies.delete',
+        'as'   => 'companies.delete',
     ]);
 
     // Route::post('/cadastrarempresa', [
@@ -35,26 +40,26 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies
     //     'as' => 'companies.store',
     // ]);
 
-    Route::post('/data-source',[
-        'as' => 'companies.getCompaniesData',
-        'uses' => 'CompaniesController@getCompaniesData'
+    Route::post('/data-source', [
+        'as'   => 'companies.getCompaniesData',
+        'uses' => 'CompaniesController@getCompaniesData',
     ]);
 
-    Route::post('/detalhe',[
-        'as' => 'usuario.details',
-        'uses' => 'CompaniesController@details'
+    Route::post('/detalhe', [
+        'as'   => 'usuario.details',
+        'uses' => 'CompaniesController@details',
     ]);
 
     Route::get("/getformcadastrarempresa/{country}", [
         'uses' => 'CompaniesController@getCreateForm',
     ]);
+});*/
 
-});
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'api', 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
 
-
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/empresas', 'namespace' => 'Modules\Companies\Http\Controllers'], function(){
-
-    Route::get('/', [
+    Route::resource('/companies', 'CompaniesApiController')->names('api.companies');
+    /*
+    Route::get('/companies/index', [
         'uses' => 'CompaniesApiController@index',
     ]);
 
@@ -69,7 +74,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/empresas', 'namespace
     Route::delete('/{id}', [
         'uses' => 'CompaniesApiController@delete',
     ]);
-    
+
     Route::get('/{id}', [
         'uses' => 'CompaniesApiController@show',
     ]);
@@ -77,5 +82,5 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/empresas', 'namespace
     Route::get('/getbancos', [
         'uses' => 'CompaniesApiController@getBancos',
     ]);
-    
+    */
 });

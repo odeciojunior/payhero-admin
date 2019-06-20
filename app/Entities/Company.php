@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -42,18 +43,59 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Company extends Model
 {
     use SoftDeletes;
+    use FoxModelTrait;
+    /**
+     * @var array
+     */
     protected $dates = ['deleted_at'];
     /**
      * @var array
      */
-    protected $fillable = ['user', 'fantasy_name', 'cnpj', 'zip_code', 'country', 'state', 'city', 'street', 'complement', 'neighborhood', 'agency', 'bank', 'number', 'agency_digit', 'account', 'account_digit', 'statement_descriptor', 'shortened_descriptor', 'business_website', 'support_email', 'support_telephone', 'created_at', 'deleted_at', 'updated_at'];
+    protected $fillable = [
+        'user_id',
+        'fantasy_name',
+        'cnpj',
+        'zip_code',
+        'country',
+        'state',
+        'city',
+        'street',
+        'complement',
+        'neighborhood',
+        'agency',
+        'bank',
+        'number',
+        'agency_digit',
+        'account',
+        'account_digit',
+        'statement_descriptor',
+        'shortened_descriptor',
+        'business_website',
+        'support_email',
+        'support_telephone',
+        'balance',
+        'created_at',
+        'deleted_at',
+        'updated_at',
+    ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'status' => [
+            1 => 'pending',
+            2 => 'analyzing',
+            3 => 'approved',
+            4 => 'refused',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'user');
+        return $this->belongsTo('App\Entities\User');
     }
 
     /**

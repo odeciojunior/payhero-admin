@@ -17,10 +17,9 @@ class ShippingUpdateRequest extends FormRequest
             "name"            => "required|string",
             "information"     => "required|string",
             "value"           => "nullable|string",
-            "zip-code-origin" => "required|string",
+            "zip_code_origin" => "required|string",
             "status"          => "required",
             "pre_selected"    => "required",
-
         ];
     }
 
@@ -30,7 +29,7 @@ class ShippingUpdateRequest extends FormRequest
             'type.required'            => 'O campo tipo é obrigatório',
             'name.required'            => 'O campo descrição é obrigatório',
             'information.required'     => 'O campo Informação é obrigatório',
-            'zip-code-origin.required' => 'O campo código de origem é obrigatório',
+            'zip_code_origin.required' => 'O campo código de origem é obrigatório',
             'status.required'          => 'O campo status é obrigatório',
             'pre_selected.required'    => 'O campo Pré-selecionado é obrigatório',
         ];
