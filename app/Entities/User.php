@@ -140,7 +140,7 @@ class User extends Authenticable
      */
     public function companies()
     {
-        return $this->hasMany('App\Entities\Company', 'user');
+        return $this->hasMany('App\Entities\Company');
     }
 
     /**

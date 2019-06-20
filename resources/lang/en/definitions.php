@@ -15,7 +15,13 @@ return [
             "approved"  => "Aprovado",
             "refused"   => "Recusado",
         ],
-        "address_document_status" => [
+        "address_document_status"  => [
+            "pending"   => "Pendente",
+            "analyzing" => "Em análise",
+            "approved"  => "Aprovado",
+            "refused"   => "Recusado",
+        ],
+        "status"                   => [
             "pending"   => "Pendente",
             "analyzing" => "Em análise",
             "approved"  => "Aprovado",

@@ -2,15 +2,13 @@
 
 @section('content')
 
-  <!-- Page -->
-  <div class="page">
-
+    <!-- Page -->
+    <div class="page">
         <div class="page-header">
             <h1 class="page-title">Cadastrar nova empresa</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/empresas">
-                    <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
-                    Voltar
+                <a class="btn btn-primary float-right" href="{{route('companies.index')}}">
+                    <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
                 </a>
             </div>
         </div>
@@ -31,55 +29,9 @@
         </div>
     </div>
 
-  <script>
-
-    $(document).ready( function(){
-
-        updateForm();
-
-        $("#country").on("change", function(){
-            updateForm();
-        });
-
-        function updateForm(){
-
-            $("#store_form").html('');
-
-            $.ajax({
-                method: "GET",
-                url: "/empresas/getformcadastrarempresa/"+$("#country").val(),
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                error: function(){
-                    $('.loading').css("visibility", "hidden");
-                },
-                success: function(data){
-                    $('.loading').css("visibility", "hidden");
-                    $("#store_form").html(data);
-
-                    $("#routing_number").on("blur", function(){
-
-                        $.ajax({
-                            method: "GET",
-                            url: "https://www.routingnumbers.info/api/data.json?rn="+$("#routing_number").val(),
-                            success: function(data){
-                                if(data.message == 'OK'){
-                                    $("#bank").val(data.customer_name);
-                                }
-                                else{
-                                    alert(data.message);
-                                }
-                            }
-                        });
-                    });
-                },
-            });
-        }
-
-    });
-
-  </script>
+    @push('scripts')
+        <script src="{{ asset('/modules/companies/js/create.js') }}"></script>
+    @endpush
 
 
 @endsection
