@@ -36,7 +36,7 @@ class WithdrawalController extends Controller
             $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
         }
 
-        $userCompanies = $this->company->where('user', auth()->user()->id)->get()->toArray();
+        $userCompanies = $this->company->where('user_id', auth()->user()->id)->get()->toArray();
 
         $selectedCompany = false;
         $companies       = [];

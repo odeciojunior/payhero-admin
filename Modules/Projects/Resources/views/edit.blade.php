@@ -221,7 +221,7 @@
                 <select name="company" class="form-control" id="empresa" required>
                     @foreach($companies as $company)
                         <option value="{{ $company->id }}" {{ ($company->id == $emp) ? 'selected' : '' }}>{{$company->fantasy_name}}</option>
-                    @endforeach
+                     @endforeach
                 </select>
             </div>
         </div>

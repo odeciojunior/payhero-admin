@@ -108,7 +108,7 @@ class ProjectsController extends Controller
                 'project'        => $project,
                 'companies'      => $user->companies,
                 'extraMaterials' => $project->extraMaterials,
-                'emp'            => $user->company,
+                'emp'            => $user->company_id,
                 'shippings'      => $project->shippings,
 
             ]);

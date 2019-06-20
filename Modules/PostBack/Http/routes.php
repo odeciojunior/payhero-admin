@@ -7,5 +7,4 @@ Route::group(['middleware' => 'web', 'prefix' => 'postback', 'namespace' => 'Mod
     Route::post('/ebanx', 'PostBackEbanxController@postBackListener');
 
     Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
-    Route::get('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
 });

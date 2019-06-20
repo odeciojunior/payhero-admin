@@ -32,7 +32,7 @@ class SalesResource extends Resource {
             $product = "Carrinho";
         }
 
-        $userCompanies = Company::where('user', \Auth::user()->id)->pluck('id');
+        $userCompanies = Company::where('user_id', \Auth::user()->id)->pluck('id');
 
         $transaction = Transaction::where('sale',$this->id)->whereIn('company',$userCompanies)->first();
 
