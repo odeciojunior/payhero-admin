@@ -18,8 +18,9 @@ class ShippingController extends Controller
     private $shippingModel;
     private $projectModel;
 
-    public function __construct() { }
-
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     private function getShipping()
     {
         if (!$this->shippingModel) {
@@ -29,6 +30,9 @@ class ShippingController extends Controller
         return $this->shippingModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     private function getProject()
     {
         if (!$this->projectModel) {
@@ -38,6 +42,10 @@ class ShippingController extends Controller
         return $this->projectModel;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index(Request $request)
     {
         try {
@@ -56,6 +64,9 @@ class ShippingController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         try {
@@ -66,6 +77,10 @@ class ShippingController extends Controller
         }
     }
 
+    /**
+     * @param ShippingStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(ShippingStoreRequest $request)
     {
         try {
@@ -94,6 +109,10 @@ class ShippingController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show(Request $request)
     {
         try {
@@ -113,6 +132,11 @@ class ShippingController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(Request $request, $id)
     {
         try {
@@ -131,6 +155,11 @@ class ShippingController extends Controller
         }
     }
 
+    /**
+     * @param ShippingUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(ShippingUpdateRequest $request, $id)
     {
         try {
@@ -192,6 +221,10 @@ class ShippingController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
         try {

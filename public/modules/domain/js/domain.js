@@ -9,8 +9,8 @@ $(document).ready(function () {
 
     $("#add-domain").on('click', function () {
 
-        $("#modal_add_title").html('Cadastrar domínio');
- 
+        $("#modal-title").html('Cadastrar domínio');
+
         $.ajax({
             method: "GET",
             url: "/domains/create",
@@ -19,11 +19,11 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
-                $("#modal_add_body").html('nao encontrado');
+                $("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
 
-                $("#modal_add_body").html(response);
+                $("#modal-add-body").html(response);
 
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
@@ -94,9 +94,9 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes-dominio'  domain='" + value.id + "' data-target='#modal-detalhes-dominio' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-dominio'  domain='" + value.id + "' data-target='#modal-detalhes-dominio' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-dominio'  domain='" + value.id + "'  data-toggle='modal' data-target='#modal_excluir' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes-dominio'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-dominio'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-dominio'  domain='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     dados += '</tr>';
                     $("#domain-table-body").append(dados);
@@ -111,10 +111,10 @@ $(document).ready(function () {
 
                     var dominio = $(this).attr('domain');
 
-                    $("#modal-dominio-titulo").html('Detalhes do dominio <br><hr>');
+                    $("#modal-title").html('Detalhes do dominio <br><hr>');
                     var data = {dominioId: dominio};
 
-                    $("#btn-save-updated").hide();
+                    $("#btn-modal").hide();
 
                     $.ajax({
                         method: "GET",
@@ -125,7 +125,7 @@ $(document).ready(function () {
                         error: function () {
                             //
                         }, success: function (response) {
-                            $("#modal-dominio-body").html(response);
+                            $("#modal-add-body").html(response);
                         }
                     });
                 });

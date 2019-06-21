@@ -73,8 +73,8 @@
                             </li>
                         @endif
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_parceiros"
-                               aria-controls="tab_parceiros" role="tab">Parceiros
+                            <a class="nav-link" data-toggle="tab" href="#tab_partners"
+                               aria-controls="tab_partners" role="tab">Parceiros
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -126,23 +126,6 @@
                                 @include('domains::index')
                             </div>
 
-
-                            <!-- Painel de Layouts -->
-                            {{--<div class="tab-pane" id="tab_layouts" role="tabpanel">
-                            <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                    <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
-                                </a>
-                                <thead class="bg-blue-grey-100">
-                                    <th>Descrição</th>
-                                    <th>Status</th>
-                                    <th style="width: 110px">Opções</th>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                            </div>--}}
-
                             <!-- Painel de Pixels -->
                             <div class="tab-pane" id="tab_pixels" role="tabpanel">
                                 <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -160,24 +143,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- Painel de Brindes -->
-                        {{-- @if($project->shopify_id == '')
-                             <div class="tab-pane" id="tab_brindes" role="tabpanel">
-                                 <table id="tabela_brindes" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                     <a id="adicionar_brinde" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                         <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar brinde
-                                     </a>
-                                     <thead class="bg-blue-grey-100">
-                                         <th>Título</th>
-                                         <th>Descrição</th>
-                                         <th>Tipo</th>
-                                         <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                     </thead>
-                                     <tbody>
-                                     </tbody>
-                                 </table>
-                             </div>
-                     @endif--}}
+
                         <!-- Painel de Cupons de Descontos -->
                             <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                 <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -216,7 +182,7 @@
                             </div>
 
                             <!-- Painel de Fretes -->
-                            <div class="tab-pane" id="tab-fretes-panel" role="tabpanel"> 
+                            <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
                                 @include('shipping::index')
                             </div>
 
@@ -238,20 +204,8 @@
                                 </table>
                             </div>
                             <!-- Painel de Parceiros -->
-                            <div class="tab-pane" id="tab_parceiros" role="tabpanel">
-                                <table id="tabela_parceiros" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_parceiro" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar parceiro
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Nome</th>
-                                        <th>Tipo</th>
-                                        <th>Status</th>
-                                        <th style="width: 160px">Opções</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                            <div class="tab-pane" id="tab_partners" role="tabpanel">
+                                @include('partners::index')
                             </div>
                             <!-- Painel de Configurações  Abre a tela edit-->
                             <div class="tab-pane" id="tab_configuracoes" role="tabpanel">
@@ -259,92 +213,29 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Modal para ver detalhes de * no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div class="modal-dialog modal-simple">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        <h4 id="modal_detalhes_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                                    </div>
-                                    <div id="modal_detalhes_body" class="modal-body">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal padrão para adicionar frete no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div id="modal_add_tamanho_shipping" class="modal-dialog modal-simple">
-                                <div class="modal-content" id="conteudo_modal_add_shipping">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div class="row">
-                                        <div id="modal_add_body_shipping" class="form-group col-12" style="margin-top: 30px">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="cadastrar_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal padrão para adicionar * no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <!-- Modal padrão para adicionar Adicionar e Editar -->
+                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div id="modal_add_tamanho" class="modal-dialog modal-simple">
                                 <div class="modal-content" id="conteudo_modal_add">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
-                                        <h4 id="modal_add_title" class="modal-title" style="width: 100%; text-align:center"></h4>
                                     </div>
+                                    <h4 id="modal-title" class="modal-title" style="width: 100%; text-align:center"></h4>
                                     <div class="row">
-                                        <div id="modal_add_body" class="form-group col-12" style="margin-top: 30px">
+                                        <div id="modal-add-body" class="form-group col-12" style="margin-top: 30px">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button id="cadastrar" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                                        <button id="btn-modal" type="button" class="btn btn-success" data-dismiss="modal"></button>
                                         <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Modal padrão para editar * no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_editar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div id="modal_editar_tipo" class="modal-dialog modal-simple">
-                                <div class="modal-content" id="conteudo_modal_editar">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div class="row">
-                                        <div id="modal_editar_body" class="form-group col-12" style="margin-top: 30px">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="editar" type="button" class="btn btn-success" data-dismiss="modal">Salvar alterações</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal padrão para excluir * no plano -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <!-- Modal padrão para excluir -->
+                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-simple">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -358,166 +249,6 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                                         <button id="bt_excluir" type="button" class="btn btn-success">Confirmar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal para adicionar tipos de frete no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div class="modal-dialog modal-simple">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div style="text-align: center">
-                                        <h4>Adicionar frete</h4>
-                                    </div>
-                                    <div class="page-content container-fluid">
-                                        <div class="panel" data-plugin="matchHeight">
-                                            <div style="width:100%">
-                                                <form id="form_add_shipping">
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="type">Tipo</label>
-                                                            <select id="shipping_type" name="type" class="form-control" id="tipo_material_extra">
-                                                                <option value="pac">PAC (calculado automaticamente pela API)</option>
-                                                                <option value="sexed">SEXEX (calculado automaticamente pela API)</option>
-                                                                <option value="static">Frete fixo(você define um valor fixo para o frete)</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="name">Descrição</label>
-                                                            <input name="name" type="text" id="shipping_name" class="form-control" placeholder="PAC">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="information">Informação apresentada</label>
-                                                            <input name="information" type="text" id="shipping_information" class="form-control" placeholder="10 até 20 dias">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="value_shipping_row" style="display:none">
-                                                        <div class="form-group col-12">
-                                                            <label for="value">Valor</label>
-                                                            <input name="value" type="text" id="shipping_value" class="form-control" placeholder="30.00">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="zip_code_origin_shipping_row">
-                                                        <div class="form-group col-12">
-                                                            <label for="zip_code_origin">CEP de origem</label>
-                                                            <input name="zip_code_origin" id="shipping_zip_code_origin" type="text" class="form-control" placeholder="12345-678">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="status">Status</label>
-                                                            <select name="status" class="form-control">
-                                                                <option value="1">Ativado</option>
-                                                                <option value="0">Desativado</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="pre_selected">Pré-selecionado</label>
-                                                            <select name="pre_selected" id="shipping_pre_selected" class="form-control">
-                                                                <option value="1">Sim</option>
-                                                                <option value="0">Não</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="bt_add_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal para editar fretes no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_edit_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div class="modal-dialog modal-simple">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div style="text-align: center">
-                                        <h4>Editar frete</h4>
-                                    </div>
-                                    <div class="page-content container-fluid">
-                                        <div class="panel" data-plugin="matchHeight">
-                                            <div style="width:100%">
-                                                <form id="form_update_shipping">
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="type">Tipo</label>
-                                                            <select id="shipping_type_edit" name="type" class="form-control" id="tipo_material_extra">
-                                                                <option value="pac">PAC (calculado automaticamente pela API)</option>
-                                                                <option value="sexed">SEXEX (calculado automaticamente pela API)</option>
-                                                                <option value="static">Frete fixo(você define um valor fixo para o frete)</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="name">Descrição</label>
-                                                            <input name="name" type="text" id="shipping_name_edit" class="form-control" placeholder="PAC">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="information">Informação apresentada</label>
-                                                            <input name="information" type="text" id="shipping_information_edit" class="form-control" placeholder="10 até 20 dias">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="value_shipping_row_edit">
-                                                        <div class="form-group col-12">
-                                                            <label for="value">Valor</label>
-                                                            <input name="value" type="text" id="shipping_value_edit" class="form-control" placeholder="30.00">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="zip_code_origin_shipping_row_edit">
-                                                        <div class="form-group col-12">
-                                                            <label for="zip_code_origin">CEP de origem</label>
-                                                            <input name="zip_code_origin" id="shipping_zip_code_origin_edit" type="text" class="form-control" placeholder="12345-678">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="status">Status</label>
-                                                            <select name="status" id="shipping_status_edit" class="form-control">
-                                                                <option value="1">Ativado</option>
-                                                                <option value="0">Desativado</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="pre_selected">Pré-selecionado</label>
-                                                            <select name="pre_selected" id="shipping_pre_selected_edit" class="form-control">
-                                                                <option value="1">Sim</option>
-                                                                <option value="0">Não</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="bt_update_shipping" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                                     </div>
                                 </div>
                             </div>
