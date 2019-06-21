@@ -15,11 +15,11 @@ class PixelsResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'         => $this->id,
-            'nome'       => $this->name,
-            'cod_pixel'  => $this->cod,
-            'plataforma' => $this->platform,
-            'status'     => $this->status,
+            'id'       => $this->id,
+            'name'     => $this->name,
+            'code'     => $this->code,
+            'platform' => $this->platform,
+            'status'   => $this->status,
         ];
     }
 }

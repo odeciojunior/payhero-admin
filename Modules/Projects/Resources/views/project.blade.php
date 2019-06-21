@@ -39,7 +39,7 @@
                             </a>
                         </li>--}}
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_pixels"
+                            <a id="tab_pixels" class="nav-link" data-toggle="tab" href="#tab_pixels-panel"
                                aria-controls="tab_pixels" role="tab">Pixels
                             </a>
                         </li>
@@ -124,21 +124,8 @@
                                 @include('domains::index')
                             </div>
                             <!-- Painel de Pixels -->
-                            <div class="tab-pane" id="tab_pixels" role="tabpanel">
-                                <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar pixel
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Nome</th>
-                                        <th>Código</th>
-                                        <th>Plataforma</th>
-                                        <th>Status</th>
-                                        <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                            <div class="tab-pane" id="tab_pixels-panel" role="tabpanel">
+                                @include('pixels::index')
                             </div>
                             <!-- Painel de Cupons de Descontos -->
 
