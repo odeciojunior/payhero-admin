@@ -8,6 +8,18 @@ use Illuminate\Container\Container as App;
 use Illuminate\Support\Facades\Storage;
 use Modules\Core\Exceptions\Services\ServiceException;
 
+/**
+ * uploads/user/ID/profile/photo.jpg
+ * uploads/user/ID/private/documents/*
+ * uploads/user/ID/private/company-documents/*
+ * uploads/product/ID/photo.jpg
+ * uploads/product/ID/private/product.pdf
+ */
+
+/**
+ * Class DigitalOceanFileService
+ * @package Modules\Core\Services
+ */
 class DigitalOceanFileService
 {
     /**

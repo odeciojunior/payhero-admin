@@ -4,6 +4,10 @@ namespace Modules\Profile\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
 
+/**
+ * Class UserResource
+ * @package Modules\Profile\Transformers
+ */
 class UserResource extends Resource
 {
     /**

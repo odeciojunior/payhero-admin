@@ -7,26 +7,13 @@ use App\Entities\UserDocument;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 use Modules\Profile\Transformers\UserResource;
-use function MongoDB\BSON\toJSON;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
-use Modules\Core\Helpers\CaminhoArquivosHelper;
 use Exception;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
-
-/**
- * uploads/user/ID/profile/photo.jpg
- * uploads/user/ID/private/documents/*
- * uploads/user/ID/private/company-documents/*
- * uploads/product/ID/photo.jpg
- * uploads/product/ID/private/product.pdf
- */
 
 /**
  * Class ProfileController

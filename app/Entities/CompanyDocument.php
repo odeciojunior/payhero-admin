@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property int $user_id
+ * @property int $company_id
  * @property string $document_url
  * @property boolean $document_type_enum
  * @property boolean $status
  * @property string $created_at
  * @property string $updated_at
- * @property User $user
+ * @property Company $company
  */
-class UserDocument extends Model
+class CompanyDocument extends Model
 {
     use FoxModelTrait;
     /**
@@ -27,7 +27,7 @@ class UserDocument extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'company_id',
         'document_url',
         'document_type_enum',
         'status',
@@ -49,8 +49,8 @@ class UserDocument extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function company()
     {
-        return $this->belongsTo('App\Entities\User');
+        return $this->belongsTo('App\Entities\Company');
     }
 }

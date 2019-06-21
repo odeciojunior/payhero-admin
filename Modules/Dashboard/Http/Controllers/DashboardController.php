@@ -22,7 +22,7 @@ class DashboardController extends Controller {
 
     public function index() {
 
-        $companies = Company::where('user',\Auth::user()->id)->get()->toArray();
+        $companies = Company::where('user_id',\Auth::user()->id)->get()->toArray();
 
         return view('dashboard::dashboard',[
             'companies' => $companies,

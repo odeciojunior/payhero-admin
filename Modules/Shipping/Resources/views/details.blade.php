@@ -4,7 +4,7 @@
             <tr style='height: 40%;'>
                 <th style='width:40%;' class='text-center'>Tipo</th>
                 <td style='width: 20px'></td>
-                <td class='text-left'>{{$shipping->type == 'static'? 'Estatico':'Calculado automaticamente'}}</td>
+                <td class='text-left'>{{$shipping->type == 'static'? 'Estatico': $shipping->type == 'pac'? 'PAC - Caculado automaticamente' : 'SEDEX - Caculado automaticamente'}}</td>
             </tr>
             <tr style='height: 40%;'>
                 <th style='width:40%;' class='text-center'>Descrição</th>
@@ -15,7 +15,7 @@
             <tr style='height: 40%;'>
                 <th style='width:40%;' class='text-center'>valor</th>
                 <td style='width: 20px'></td>
-                <td class='text-left'>{{$shipping->value}}</td>
+                <td class='text-left'>{{$shipping->value == null? ' Calculado automaticamente' : $shipping->value}}</td>
             </tr>
             <tr style='height: 40%;'>
                 <th style='width:40%;' class='text-center'>Informação</th>

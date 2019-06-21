@@ -46,6 +46,7 @@
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
 
     @stack('css')

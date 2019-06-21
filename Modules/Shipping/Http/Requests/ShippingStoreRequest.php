@@ -4,7 +4,7 @@ namespace Modules\Shipping\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ShippingUpdateRequest extends FormRequest
+class ShippingStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -20,6 +20,7 @@ class ShippingUpdateRequest extends FormRequest
             "zip_code_origin" => "required|string",
             "status"          => "required",
             "pre_selected"    => "required",
+            'project'         => 'required',
         ];
     }
 
