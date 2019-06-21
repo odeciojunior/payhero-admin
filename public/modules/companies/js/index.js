@@ -24,7 +24,7 @@ $(document).ready(function () {
                     dados += "<td>" + value.cnpj + "</td>";
                     dados += "<td>" + value.document_status + "</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'><a href='/companies/" + value.id_code + "/edit' class='btn btn-sm btn-outline btn-danger edit-company' data-company='" + value.id_code + "'  type='button'><i class='icon wb-pencil' aria-hidden='true'></i></a></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><a href='/companies/" + value.id_code + "/edit' class='btn btn-sm btn-outline btn-danger delete-company' data-company='" + value.id_code + "' type='button'><i class='icon wb-trash' aria-hidden='true'></i></a></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><a href='/companies/" + value.id_code + "/destroy' class='btn btn-sm btn-outline btn-danger delete-company' data-company='" + value.id_code + "' type='button'><i class='icon wb-trash' aria-hidden='true'></i></a></td>";
                     dados += "</tr>";
 
                     $("#companies_table_data").append(dados);

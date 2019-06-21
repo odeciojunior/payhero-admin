@@ -4,6 +4,8 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies
 
     Route::resource('/companies', 'CompaniesController')->only('index', 'create', 'store', 'edit', 'update', 'destroy')
          ->names('companies');
+
+    Route::post('/companies/uploaddocuments', 'CompaniesController@uploadDocuments')->name('companies.uploaddocuments');
 });
 /*
 Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
