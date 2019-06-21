@@ -2,16 +2,15 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use Hashids\Hashids;
 use App\Entities\Plan;
 use App\Entities\Product;
 use App\Entities\Project;
 use Illuminate\Http\Request;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 
 class PostBackShopifyController extends Controller
 {
@@ -21,7 +20,7 @@ class PostBackShopifyController extends Controller
         Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
         // return 'success';
 
-        $project = Project::find(Hashids::decode($request->id_projeto)->first());
+        $project = Project::find(Hashids::decode($request->project_id)[0]);
 
         if (!$project) {
             Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
@@ -148,5 +147,21 @@ class PostBackShopifyController extends Controller
 
         return 'success';
     }
+
+    function randString($size)
+    {
+
+        $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $randCode = "";
+
+        for ($count = 0; $size > $count; $count++) {
+
+            $randCode .= $basic[rand(0, strlen($basic) - 1)];
+        }
+
+        return $randCode;
+    }
+
 
 }

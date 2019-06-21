@@ -35,7 +35,7 @@ class ShopifyController extends Controller
 {
     public function index()
     {
-        $companies = Company::where('user', \Auth::user()->id)->get()->toArray();
+        $companies = Company::where('user_id', \Auth::user()->id)->get()->toArray();
 
         $shopifyIntegrations = ShopifyIntegration::where('user', \Auth::user()->id)->get()->toArray();
 
@@ -263,13 +263,13 @@ class ShopifyController extends Controller
 
         $client->getWebhookManager()->create([
                                                  "topic"   => "products/create",
-                                                 "address" => "https://cloudfox.app/postback/shopify/" . Hashids::encode($project['id']),
+                                                 "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
                                                  "format"  => "json",
                                              ]);
 
         $client->getWebhookManager()->create([
                                                  "topic"   => "products/update",
-                                                 "address" => "https://cloudfox.app/postback/shopify/" . Hashids::encode($project['id']),
+                                                 "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
                                                  "format"  => "json",
                                              ]);
 
