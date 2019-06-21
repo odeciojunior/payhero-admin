@@ -1,7 +1,7 @@
 <!-- Page -->
 <div class='row'>
     <div style='width: 100%'>
-        <a id='add-partnes' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-details-partnes' style='color:white;'>
+        <a id='add-partners' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
             <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Parceiro
         </a>
     </div>
@@ -16,8 +16,8 @@
                     <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
                 </tr>
             </thead>
-            <tbody id='data-table-partnes'>
-
+            <tbody id='data-table-partners'>
+                {{-- js carregando dados --}}
             </tbody>
         </table>
     </div>

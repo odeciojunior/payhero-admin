@@ -5,10 +5,14 @@ namespace Modules\Partners\Http\Controllers;
 use App\Entities\User;
 use App\Entities\Company;
 use App\Entities\Invitation;
+use Exception;
 use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
+use Modules\Partners\Http\Requests\PartnersStoreRequest;
+use Modules\Partners\Transformers\PartnersResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\StringHelper;
@@ -19,6 +23,8 @@ class PartnersController extends Controller
     private $userModel;
     private $companyModel;
     private $invitationModel;
+    private $projectModel;
+    private $userProject;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -56,52 +62,79 @@ class PartnersController extends Controller
         return $this->invitationModel;
     }
 
-    public function index(Request $request)
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getProject()
+
     {
+        if (!$this->projectModel) {
+            $this->projectModel = app(Invitation::class);
+        }
 
-        $requestData = $request->all();
-
-        $partners = \DB::table('projects as project')
-                       ->leftJoin('users_projects as user_project', 'project.id', 'user_project.project')
-                       ->leftJoin('users as user', 'user_project.user', 'user.id')
-                       ->where('type', '!=', 'producer')
-            // ->where('user_project.user','<',\Auth::user()->id)
-            // ->orWhereNull('user_project.user')
-                       ->where('project.id', Hashids::decode($requestData['projeto']))
-                       ->get([
-                                 'user_project.id',
-                                 'user.name',
-                                 'user_project.type',
-                                 'user_project.status',
-                             ]);
-
-        return Datatables::of($partners)
-                         ->addColumn('detalhes', function($partner) {
-                             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_parceiro' data-placement='top' data-toggle='tooltip' title='Detalhes' parceiro='" . Hashids::encode($partner->id) . "'>
-                            <i class='icon wb-menu' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_parceiro' data-placement='top' data-toggle='tooltip' title='Editar' parceiro='" . Hashids::encode($partner->id) . "'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_parceiro' data-placement='top' data-toggle='tooltip' title='Excluir' parceiro='" . Hashids::encode($partner->id) . "'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-                         })
-                         ->rawColumns(['detalhes'])
-                         ->make(true);
+        return $this->projectModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getUserProject()
+    {
+        if (!$this->userProject) {
+            $this->userProject = app(UserProject::class);
+        }
+
+        return $this->userProject;
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index(Request $request)
+    {
+        try {
+            if ($request->input('project')) {
+                $projectId = current(Hashids::decode($request->input('project')));
+
+                $partners = $this->getUserProject()->with('userId')->where('project', $projectId)
+                                 ->where('type', '!=', 'producer')->get();
+
+                return PartnersResource::collection($partners);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados (PartnersController - index)');
+            report($e);
+        }
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function create()
+    {
+        try {
+            return view('partners::create');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar pagina de cadastro de parceiro (PartnersController - create)');
+            report($e);
+        }
+    }
+
+    /**
+     * @param Request $request
+     */
     public function store(Request $request)
     {
-
-        $requestData            = $request->all();
-        $requestData['projeto'] = Hashids::decode($requestData['projeto'])[0];
+        try {
+            dd($request->all());
+            $requestValidate = $request->validated();
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar salvar parceiro (PartenersController - store)');
+            report($e);
+        }
+        /*$requestData            = $request->all();
+        $requestData['projeto'] = current(Hashids::decode($requestData['projeto']));
 
         $user = User::where('email', $requestData['email_parceiro'])->first();
 
@@ -155,43 +188,43 @@ class PartnersController extends Controller
 
         UserProject::create($requestData);
 
-        return response()->json('sucesso');
+        return response()->json('sucesso');*/
     }
 
-    public function update(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function show(Request $request)
     {
+        try {
+
+
+        } catch (Exception $e) {
+            Log::warning('Erro ao acessar detalhes do parceiro');
+            report($e);
+        }
 
         $requestData = $request->all();
 
-        unset($requestData['projeto']);
+        $partner = UserProjeto::where('id', Hashids::decode($requestData['parceiro']))->first();
 
-        $partner = UserProjeto::where('id', Hashids::decode($requestData['id']))->first();
+        $user = User::find($partner['user']);
 
-        $partner->update($requestData);
+        $detalhes = view('parceiros::detalhesparceiro', [
+            'parceiro' => $partner,
+            'user'     => $user,
+        ]);
 
-        return response()->json('sucesso');
+        return response()->json($detalhes->render());
     }
 
-    public function delete(Request $request)
-    {
-
-        $requestData = $request->all();
-
-        $partner = UserProjeto::where('id', Hashids::decode($requestData['id']))->first();
-
-        $partner->delete();
-
-        return response()->json('sucesso');
-    }
-
-    public function create()
-    {
-
-        $form = view('parceiros::cadastro');
-
-        return response()->json($form->render());
-    }
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function edit(Request $request)
     {
 
@@ -211,20 +244,37 @@ class PartnersController extends Controller
         return response()->json($form->render());
     }
 
-    public function details(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request)
     {
 
         $requestData = $request->all();
 
-        $partner = UserProjeto::where('id', Hashids::decode($requestData['parceiro']))->first();
+        unset($requestData['projeto']);
 
-        $user = User::find($partner['user']);
+        $partner = UserProjeto::where('id', Hashids::decode($requestData['id']))->first();
 
-        $detalhes = view('parceiros::detalhesparceiro', [
-            'parceiro' => $partner,
-            'user'     => $user,
-        ]);
+        $partner->update($requestData);
 
-        return response()->json($detalhes->render());
+        return response()->json('sucesso');
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Request $request)
+    {
+
+        $requestData = $request->all();
+
+        $partner = UserProjeto::where('id', Hashids::decode($requestData['id']))->first();
+
+        $partner->delete();
+
+        return response()->json('sucesso');
     }
 }

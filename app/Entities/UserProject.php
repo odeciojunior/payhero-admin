@@ -25,18 +25,14 @@ class UserProject extends Model
 {
     /**
      * The table associated with the model.
-     * 
      * @var string
      */
     protected $table = 'users_projects';
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
@@ -61,7 +57,7 @@ class UserProject extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function userId()
     {
         return $this->belongsTo('App\Entities\User', 'user');
     }

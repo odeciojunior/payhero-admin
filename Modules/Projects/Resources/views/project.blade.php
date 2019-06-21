@@ -39,7 +39,7 @@
                             </a>
                         </li>--}}
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_pixels"
+                            <a id="tab_pixels" class="nav-link" data-toggle="tab" href="#tab_pixels-panel"
                                aria-controls="tab_pixels" role="tab">Pixels
                             </a>
                         </li>
@@ -73,7 +73,7 @@
                             </li>
                         @endif
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_partners"
+                            <a id='tab-partners' class="nav-link" data-toggle="tab" href="#tab_partners"
                                aria-controls="tab_partners" role="tab">Parceiros
                             </a>
                         </li>
@@ -119,32 +119,16 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Painel de Dominios -->
-
                             <div id="tab_domains" class="tab-pane" role="tabpanel">
                                 @include('domains::index')
                             </div>
-
                             <!-- Painel de Pixels -->
-                            <div class="tab-pane" id="tab_pixels" role="tabpanel">
-                                <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar pixel
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Nome</th>
-                                        <th>Código</th>
-                                        <th>Plataforma</th>
-                                        <th>Status</th>
-                                        <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                            <div class="tab-pane" id="tab_pixels-panel" role="tabpanel">
+                                @include('pixels::index')
                             </div>
-
                             <!-- Painel de Cupons de Descontos -->
+
                             <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                 <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                     <a id="adicionar_cupom" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -181,12 +165,10 @@
                                     </tbody>
                                 </table>
                             </div>
-
                             <!-- Painel de Fretes -->
                             <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
                                 @include('shipping::index')
                             </div>
-
                             <!--- Painel de Planos -->
                             <div class="tab-pane" id="tab_planos" role="tabpanel">
                                 <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -256,24 +238,23 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-
         @push('scripts')
+            <script src='{{asset('modules/partners/js/partners.js')}}'></script>
             <script src='{{asset('modules/Shipping/js/shipping.js')}}'></script>
             <script src='{{asset('modules/domain/js/domain.js')}}'></script>
+
             <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>
             <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
             <script src='{{asset('modules/projects/js/projects.js')}}'></script>
-            @if(!$project->shopify_id)
+            {{--@if(!$project->shopify_id)
                 <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
-            @endif
+            @endif--}}
         @endpush
-
         <script>
             $(document).ready(function () {
 

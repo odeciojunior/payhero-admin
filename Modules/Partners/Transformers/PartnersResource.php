@@ -3,26 +3,21 @@
 namespace Modules\Partners\Transformers;
 
 use App\Entities\User;
+use League\Fractal\TransformerAbstract;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class PartnersResource extends Resource {
+class PartnersResource extends Resource
+{
+    protected $defaultIncludes = ['user'];
 
-    public function toArray($request) {
-
-        $user = User::find($this->user);
-        if($user){
-            $nome = $user['name'];
-        }
-        else{
-            $nome = '';
-        }
-
+    public function toArray($request)
+    {
         return [
-            'id' => Hashids::encode($this->id),
-            'nome' => $nome,
-            'tipo' => $this->tipo,
-            'status' => $this->status,   
+            'partnersId' => Hashids::encode($this->id),
+            'name'       => $this->userId->name,
+            'type'       => $this->type == 'partner' ? 'parceiro' : '',
+            'status'     => $this->status == 'active' ? 'ativo' : 'desativado',
         ];
     }
 }
