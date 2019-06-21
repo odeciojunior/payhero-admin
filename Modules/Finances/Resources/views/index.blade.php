@@ -11,6 +11,14 @@
     @else
         <div class="page-content container">
 
+        <div class="row">
+            <div class="col-lg-6 mb-30">
+            <h1 class="page-title">Finanças</h1>
+            </div>
+        </div>
+       
+
+
             <div class="card shadow">
 
                         <nav class="pt-20">

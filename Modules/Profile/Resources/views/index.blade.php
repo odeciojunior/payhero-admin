@@ -6,17 +6,15 @@
 @section('content')
     <!-- Page -->
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <h1 class="page-title">Configuração do perfil</h1>
         </div>
-        <div class="page-content container-fluid">
-            <div class="panel pt-30 p-30" data-plugin="matchHeight">
-                <div class="col-xl-12">
-                    <div class="example-wrap">
-                        <div class="nav-tabs-horizontal" data-plugin="tabs">
-                            <ul class="nav nav-tabs" role="tablist">
+        <div class="page-content container">
+            <div class="card shadow">
+                        <div class="nav-tabs-horizontal mt-15" data-plugin="tabs">
+                            <ul class="nav nav-tabs nav-tabs-line" role="tablist">
                                 <li class="nav-item" role="presentation" id='nav_users'>
-                                    <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Usuário
+                                    <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Meus dados
                                     </a>
                                 </li> 
                                 <li class="nav-item" role="presentation" id="nav_documents">
@@ -25,150 +23,198 @@
                                     </a>
                                 </li>
                             </ul>
-                            <div class="tab-content pt-20">
-                                <div class="tab-pane active" id="tab_user" role="tabpanel">
-                                    <form method="POST" action="{!! route('profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" id='profile_update_form'>
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="row">
-                                            <div class="panel-heading col-10">
-                                                <h3 class="panel-title">Informações básicas</h3>
-                                            </div>
-                                            <div class="col-2">
-                                                <button type="button" class="btn btn-success" data-toggle='modal' data-target='#modal_change_password'>
-                                                    Aterar senha
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="name">Nome</label>
-                                                <input name="name" value="{!! $user->name !!}" type="text" class="form-control" id="name">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="email">Email</label>
-                                                <input name="email" value="{!! $user->email !!}" type="text" class="form-control" id="email">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="cpf">Documento</label>
-                                                <input name="document" value="{!! $user->document !!}" type="text" class="form-control" id="document">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="celular">Celular</label>
-                                                <input name="cellphone" value="{!! $user->cellphone !!}" type="text" class="form-control" id="cellphone">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="date_birth">Data de nascimento</label>
-                                                <input name="date_birth" value="{!! $user->date_birth !!}" type="date" class="form-control" id="date_birth">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-6">
-                                                <label for="select_profile_photo">Foto de perfil</label>
-                                                <br>
-                                                <input type="button" id="select_profile_photo" class="btn btn-default" value="Selecionar foto do perfil">
-                                                <input name="profile_photo" type="file" class="form-control" id="profile_photo" style="display:none">
-                                                <div style="margin: 20px 0 0 30px;">
-                                                    <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/assets/img/user-default.png') !!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
-                                                </div>
-                                                <input type="hidden" name="photo_x1"/>
-                                                <input type="hidden" name="photo_y1"/>
-                                                <input type="hidden" name="photo_w"/>
-                                                <input type="hidden" name="photo_h"/>
-                                            </div>
-                                        </div>
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Endereço</h3>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="zip_code">CEP</label>
-                                                <input name="zip_code" value="{!! $user->zip_code !!}" type="text" class="form-control" id="zip_code">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="country">País</label>
-                                                <input name="country" value="{!! $user->country !!}" type="text" class="form-control" id="country">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="state">Estado</label>
-                                                <input name="state" value="{!! $user->state !!}" type="text" class="form-control" id="state">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="city">Cidade</label>
-                                                <input name="city" value="{!! $user->city !!}" type="text" class="form-control" id="city">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="neighborhood">Bairro</label>
-                                                <input name="neighborhood" value="{!! $user->neighborhood !!}" type="text" class="form-control" id="neighborhood">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="street">Rua</label>
-                                                <input name="street" value="{!! $user->street !!}" type="text" class="form-control" id="street">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="number">Número</label>
-                                                <input name="number" value="{!! $user->number !!}" type="text" class="form-control" id="number">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="complement">Complemento</label>
-                                                <input name="complement" value="{!! $user->complement !!}" type="text" class="form-control" id="complement">
-                                            </div>
-                                        </div>
-                                        <div class="form-group" style="margin-top: 30px">
-                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="tab-pane" id="tab_documentos" role="tabpanel">
-                                    Envie um documento de identidade e um comprovante de residência<br>
 
-                                    <div id="dropzone">
-                                        <form method="POST" action="{!! route('profile.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                            <div class="p-30 pt-20">
+
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="tab_user" role="tabpanel">
+                                        <form method="POST" action="{!! route('profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" id='profile_update_form'>
                                             @csrf
-                                            <div class="dz-message needsclick">
-                                                Arraste os arquivos aqui ou click para selecionar.<br/>
+                                            @method('PUT')
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <h5 class="title-pad"> Dados Pessoais </h5>
+                                                    <p class="sub-pad"> Precisamos saber um pouco sobre você  </p>
+                                                </div>
+                                                <div class="col">
+                                                    
+                                                </div>
                                             </div>
-                                            <input id="document_type" name="document_type" value="" type="hidden" class="form-control">
+
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="row">
+
+                                                            <div class="form-group col-xl-6">
+                                                                <label for="name">Nome Completo</label>
+                                                                <input name="name" value="{!! $user->name !!}" type="text" class="form-control input-pad" id="name">
+                                                            </div>
+
+                                                            <div class="form-group col-xl-6">
+                                                                <label for="email">Email</label>
+                                                                <input name="email" value="{!! $user->email !!}" type="text" class="form-control input-pad" id="email">
+                                                            </div>
+
+                                                            <div class="form-group col-xl-6">
+                                                                <label for="cpf">Documento</label>
+                                                                <input name="document" value="{!! $user->document !!}" type="text" class="form-control input-pad" id="document">
+                                                            </div>
+
+                                                            <div class="form-group col-xl-6">
+                                                                <label for="celular">Celular</label>
+                                                                <input name="cellphone" value="{!! $user->cellphone !!}" type="text" class="form-control input-pad" id="cellphone">
+                                                            </div>
+
+                                                            <div class="form-group col-xl-6">
+                                                                <label for="date_birth">Data de nascimento</label>
+                                                                <input name="date_birth" value="{!! $user->date_birth !!}" type="date" class="form-control input-pad" id="date_birth">
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4">
+                                                    <div class="form-group col-6">
+                                                        <label for="select_profile_photo">Foto de perfil</label>
+                                                        <br>
+                                                        <button id="select_profile_photo" class="btn btn-primary mt-15"> <i class="icon fa-cloud-upload" aria-hidden="true"></i> Upload </button>
+                                                        <input name="profile_photo" type="file" class="form-control input-pad" id="profile_photo" style="display:none">
+                                                        <div style="margin: 20px 0 0 30px;">
+                                                            <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/assets/img/user-default.png') !!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
+                                                        </div>
+
+                                                        <input type="hidden" name="photo_x1"/>
+                                                        <input type="hidden" name="photo_y1"/>
+                                                        <input type="hidden" name="photo_w"/>
+                                                        <input type="hidden" name="photo_h"/>
+                                                    </div>
+                                                    </div>
+                                                
+                                            </div>
+
+
+                                            <div class="row mt-15">
+                                                <div class="col-lg-6">
+                                                    <h5 class="title-pad"> Dados Residenciais </h5>
+                                                    <p class="sub-pad"> Não esqueça de enviar os comprovantes.  </p>
+                                                </div>
+                                                <div class="col">
+                                                    
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-lg-3">
+                                                    <label for="zip_code">CEP</label>
+                                                    <input name="zip_code" value="{!! $user->zip_code !!}" type="text" class="form-control input-pad" id="zip_code">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-xl-6">
+                                                    <label for="street">Rua</label>
+                                                    <input name="street" value="{!! $user->street !!}" type="text" class="form-control input-pad" id="street">
+                                                </div>
+                                                <div class="form-group col-xl-2">
+                                                    <label for="number">Número</label>
+                                                    <input name="number" value="{!! $user->number !!}" type="text" class="form-control input-pad" id="number">
+                                                </div>
+                                                <div class="form-group col-xl-4">
+                                                    <label for="neighborhood">Bairro</label>
+                                                    <input name="neighborhood" value="{!! $user->neighborhood !!}" type="text" class="form-control input-pad" id="neighborhood">
+                                                </div>
+
+                                                <div class="form-group col-xl-4">
+                                                    <label for="complement">Complemento</label>
+                                                    <input name="complement" value="{!! $user->complement !!}" type="text" class="form-control input-pad" id="complement">
+                                                </div>
+
+                                                
+                                                <div class="form-group col-xl-4">
+                                                    <label for="city">Cidade</label>
+                                                    <input name="city" value="{!! $user->city !!}" type="text" class="form-control input-pad" id="city">
+                                                </div>
+
+                                                <div class="form-group col-xl-4">
+                                                    <label for="state">Estado</label>
+                                                    <input name="state" value="{!! $user->state !!}" type="text" class="form-control input-pad" id="state">
+                                                </div>
+                                                
+                                               
+                                                <div class="col-lg-12 text-right" style="margin-top: 30px">
+                                                    
+                                                    <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10"> <i class="icon fa-lock" aria-hidden="true"></i> Alterar senha </a>
+
+                                                    <button id="update_profile" type="submit" class="btn btn-success">Atualizar Dados</button>
+                                                </div>
+                                            </div>                                        
                                         </form>
-                                        Documento de identidade aceitos : Documento oficial com foto.<br>
-                                        Comprovante de residência: Conta de energia, água ou de serviços públicos<br>
                                     </div>
-                                    <div class="row">
-                                        <div class="panel-heading col-10">
-                                            <h3 class="panel-title">Documentos Enviados</h3>
-                                        </div>
-                                        <table class="table table-hover table-striped table-bordered mt-2">
-                                            <tbody>
-                                                <tr class="text-center">
-                                                    <td>
-                                                        Documento de identidade
-                                                    </td>
-                                                    <td id='td_personal_status'>
-                                                        {!! $user->personal_document_translate !!}
-                                                    </td>
-                                                </tr>
-                                                <tr class='text-center'>
-                                                    <td>
-                                                        Comprovante de residencia
-                                                    </td>
-                                                    <td id='td_address_status'>
-                                                        {!! $user->address_document_translate !!}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="tab-pane fade" id="tab_documentos" role="tabpanel">
+
+                                        <div class="row">
+                                                <div class="col-lg-6">
+                                                    <h5 class="title-pad"> Documentos </h5>
+                                                    <p class="sub-pad"> Para movimentar sua conta externamente, precisamos de algumas comprovações. </p>
+                                                </div>
+                                                <div class="col">
+                                                    
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-15">
+
+                                                <div class="col-lg-6">
+                                                    <div id="dropzone">
+                                                        <form method="POST" action="{!! route('profile.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                                            @csrf
+                                                            <div class="dz-message needsclick">
+                                                                Arraste ou clique para fazer upload.<br/>
+                                                            </div>
+                                                            <input id="document_type" name="document_type" value="" type="hidden" class="form-control input-pad">
+                                                        </form>                                                        
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Documento</th>
+                                                                <th scope="col">Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="custom-t-body">
+                                                            <tr>
+
+                                                                <td>Identidade</td>
+                                                                <td  id="td_personal_status"><span class="badge badge-pendente">{!! $user->personal_document_translate !!}</span>
+                                                                </td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Residência</td>
+                                                                <td id="td_address_status"><span class="badge badge-pendente"> {!! $user->address_document_translate !!}</span>
+                                                                </td>
+
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                                <div class="col-lg-12  mt-10">
+                                                    <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto) <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos. </small>
+                                                </div>
+                                                
+
+
+                                            </div>
+                                        
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -183,9 +229,9 @@
                                 </div>
                                 <div class="modal-body" style="margin-top: 50px">
                                     <label for="new_password">Nova senha (mínimo 6 caracteres)</label>
-                                    <input id="new_password" type="password" class="form-control" placeholder="Nova senha">
+                                    <input id="new_password" type="password" class="form-control input-pad" placeholder="Nova senha">
                                     <label for="new_password_confirm" style="margin-top: 20px">Nova senha (confirmação)</label>
-                                    <input id="new_password_confirm" type="password" class="form-control" placeholder="Nova senha (confirmação)">
+                                    <input id="new_password_confirm" type="password" class="form-control input-pad" placeholder="Nova senha (confirmação)">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
@@ -195,9 +241,21 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
+
+    <style>
+    .dropzone {
+    display: flex !important;
+    min-height: 150px;
+    border: 1px solid #aaa;
+    background: white;
+    padding: 20px 20px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+    </style>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
         <script src="{{asset('/modules/profile/js/profile.js')}}"></script>
