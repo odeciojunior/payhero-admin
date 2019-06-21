@@ -7,7 +7,7 @@
                         <label for='type'>Tipo</label>
                         <select id='shipping-type' name='type' class='form-control type'>
                             <option value='pac' {{$shipping->type == "pac"?"selected":""}}>PAC (Calculado automaticamente pela API)</option>
-                            <option value='sexed' {{$shipping->type == "sedex"?"selected":""}}>SEDEX (Calculado automaticamente pela API)</option>
+                            <option value='sedex' {{$shipping->type == "sedex"?"selected":""}}>SEDEX (Calculado automaticamente pela API)</option>
                             <option value='static' {{$shipping->type == "static"?"selected":""}}>Frete fixo(vocễ define um valor fixo para o frete)</option>
                         </select>
                     </div>
