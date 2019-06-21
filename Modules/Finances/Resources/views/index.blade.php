@@ -56,11 +56,11 @@
                                                 </div>
 
                                                 <div class="col-6 mb-15">
-                                                    <div class="price-holder antecipacao">
+                                                    <div class="price-holder antecipacao" id="pop-antecipacao">
                                                         <h6 class="label-price"> Disponível para antecipar </h6>
                                                         <h4 class="price align-items-baseline">
                                                             R$2.500,00 <span>
-                                                            <a href="#" id="pop-antecipacao">
+                                                            <a href="#">
                                                                 <svg class="svg-antecipar"
                                                                     xmlns="http://www.w3.org/2000/svg" width="20"
                                                                     height="20" viewBox="0 0 24 24">
@@ -69,15 +69,13 @@
                                                                 </svg>
                                                             </a>
 
-                                                            <div class="custom-popover shadow-sm"
-                                                                id="antecipa-popover" style="display: none;">
+                                                            <div class="custom-popover shadow-sm" id="antecipa-popover" style="display: none">
                                                                 <div class="d-flex flex-column text-center">
                                                                     <p style="font-size: 12px; font-weight: 700;"> O
                                                                         valor antecipado será incluido no seu
                                                                         <strong style="color: green;"> Saldo
                                                                             Disponível </strong> </p>
-                                                                    <h5
-                                                                        style="font-size: 16px; font-weight: 700; margin: 0;">
+                                                                    <h5 style="font-size: 16px; font-weight: 700; margin: 0;">
                                                                         Saldo após antecipação </h5>
                                                                     <h3 style="font-size: 25px;font-weight: 700;">
                                                                         R$35.200,00 </h3>
@@ -141,8 +139,7 @@
                                                                 <path
                                                                     d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
                                                             </svg>Sacar dinheiro </button>
-                                                    </div> <small class="text-muted">Cada saque acarreta uma taxa de
-                                                        R$3,80*</small>
+                                                    </div> <small class="text-muted">Cada saque acarreta uma taxa de R$3,80*</small>
 
                                                 </div>
                                             </div>
@@ -271,22 +268,12 @@
                                                                 </svg>
                                                                 Personalizado
                                                             </a>
-
                                                         </div>
-
-
                                                     </div>
-
-
-
-
-
                                                 </div>
                                                 <div class="col-12">
-                                                    <span class="text-muted"> <small> Exibindo resultados de 16 de junho
-                                                            a 16 de julho </small> </span>
+                                                    <span class="text-muted"> <small> Exibindo resultados de 16 de junho a 16 de julho </small> </span>
                                                 </div>
-
                                             </div>
                                         </div>
 
@@ -335,7 +322,12 @@
         $(document).ready(function () {
 
             $("#pop-antecipacao").click(function () {
-                $("#antecipa-popover").toggle().fadeIn('slow');
+                if($("#antecipa-popover").css('display') == 'none'){
+                    $("#antecipa-popover").show(400);
+                }
+                else{
+                    $("#antecipa-popover").hide(400);
+                }
             });
         });
 
