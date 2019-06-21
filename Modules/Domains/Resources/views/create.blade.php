@@ -1,8 +1,4 @@
-<div style="text-align: center">
-    <h4>Cadastro de domínio no projeto</h4>
-</div>
-
-<form id="form_add_domain" method="post">
+<form id="form-add-domain" method="post">
     @csrf
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">

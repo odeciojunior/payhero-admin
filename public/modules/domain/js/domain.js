@@ -22,28 +22,29 @@ $(document).ready(function () {
                 $("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
-
+                
+                $("#btn-modal").addClass('btn-save');
+                $("#btn-modal").text('Salvar');
+                $("#btn-modal").show();
+                
                 $("#modal-add-body").html(response);
 
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
 
+                    var form_data = new FormData(document.getElementById('form-add-domain'));
+                    form_data.append('project_id', projectId);
+
                     $.ajax({
                         method: "POST",
                         url: "/domains/",
+                        processData: false,
+                        contentType: false,
+                        cache: false,
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: {
-                            type: $("#dominio-type").val(),
-                            name: $("#dominio-name").val(),
-                            information: $("#dominio-information").val(),
-                            value: $("#dominio-value").val(),
-                            zip_code_origin: $("#dominio-zip-code-origin").val(),
-                            status: $("#dominio-status").val(),
-                            pre_selected: $("#dominio-pre-selected").val(),
-                            project: projectId,
-                        },
+                        data: form_data,
                         error: function (response) {
                             if (response.status === 422) {
                                 for (error in response.errors) {

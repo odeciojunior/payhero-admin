@@ -66,7 +66,7 @@ class DomainsController extends Controller
 
         $requestData = $request->all();
 
-        $requestData['project'] = Hashids::decode($requestData['projeto'])[0];
+        $requestData['project'] = Hashids::decode($requestData['project_id'])[0];
 
         $project = Project::find($requestData['project']);
 
@@ -83,112 +83,112 @@ class DomainsController extends Controller
             return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
         }
 
-        $zoneID = $zones->getZoneID($requestData['name']);
+        // $zoneID = $zones->getZoneID($requestData['name']);
 
-        try {
-            if ($project['shopify_id'] == '') {
-                if ($dns->addRecord($zoneID, "A", $requestData['name'], $requestData['domain_ip'], 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "CNAME", 'www', $requestData['name'], 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-            } else {
-                $requestData['domain_ip'] = 'Domínio Shopify';
-                if ($dns->addRecord($zoneID, "A", $requestData['name'], '23.227.38.32', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-                if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
-                    // echo "DNS criado.". PHP_EOL;
-                }
-            }
-        } catch (Exception $e) {
-            try {
-                $zones->deleteZone($zoneID);
-            } catch (Exception $e) {
-                //
-            }
-            dd($e);
+        // try {
+        //     if ($project['shopify_id'] == '') {
+        //         if ($dns->addRecord($zoneID, "A", $requestData['name'], $requestData['domain_ip'], 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "CNAME", 'www', $requestData['name'], 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //     } else {
+        //         $requestData['domain_ip'] = 'Domínio Shopify';
+        //         if ($dns->addRecord($zoneID, "A", $requestData['name'], '23.227.38.32', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //         if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
+        //             // echo "DNS criado.". PHP_EOL;
+        //         }
+        //     }
+        // } catch (Exception $e) {
+        //     try {
+        //         $zones->deleteZone($zoneID);
+        //     } catch (Exception $e) {
+        //         //
+        //     }
+        //     dd($e);
 
-            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
-        }
+        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
+        // }
 
-        try {
-            $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+        // try {
+        //     $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
 
-            $requestBody = json_decode('{
-                "automatic_security": false,
-                "custom_spf" : true,
-                "default" : true,
-                "domain" : "' . $requestData['name'] . '"
-            }');
+        //     $requestBody = json_decode('{
+        //         "automatic_security": false,
+        //         "custom_spf" : true,
+        //         "default" : true,
+        //         "domain" : "' . $requestData['name'] . '"
+        //     }');
 
-            $response = $sendgrid->client->whitelabel()->domains()->post($requestBody);
+        //     $response = $sendgrid->client->whitelabel()->domains()->post($requestBody);
 
-            $response = json_decode($response->body());
+        //     $response = json_decode($response->body());
 
-            if (!isset($response->id)) {
-                dd($response);
-            }
+        //     if (!isset($response->id)) {
+        //         dd($response);
+        //     }
 
-            $senderAuthenticationId = $response->id;
+        //     $senderAuthenticationId = $response->id;
 
-            $requestData['id_sendgrid'] = $response->id;
+        //     $requestData['id_sendgrid'] = $response->id;
 
-            $response = $sendgrid->client->whitelabel()->domains()->_($response->id)->get();
+        //     $response = $sendgrid->client->whitelabel()->domains()->_($response->id)->get();
 
-            $response = json_decode($response->body());
+        //     $response = json_decode($response->body());
 
-            foreach ($response->dns as $responseDns) {
-                if ($responseDns->type == 'mx') {
-                    $dns->addRecord($zoneID, 'MX', $responseDns->host, $responseDns->data, 0, false, '1');
-                } else {
-                    $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-                }
-            }
+        //     foreach ($response->dns as $responseDns) {
+        //         if ($responseDns->type == 'mx') {
+        //             $dns->addRecord($zoneID, 'MX', $responseDns->host, $responseDns->data, 0, false, '1');
+        //         } else {
+        //             $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
+        //         }
+        //     }
 
-            $request_body = json_decode('{
-                "default": true,
-                "domain": "' . $requestData['name'] . '",
-                "subdomain": "mail"
-            }');
+        //     $request_body = json_decode('{
+        //         "default": true,
+        //         "domain": "' . $requestData['name'] . '",
+        //         "subdomain": "mail"
+        //     }');
 
-            $query_params = json_decode('{"limit": 1, "offset": 1}');
+        //     $query_params = json_decode('{"limit": 1, "offset": 1}');
 
-            $response = $sendgrid->client->whitelabel()->links()->post($request_body, $query_params);
+        //     $response = $sendgrid->client->whitelabel()->links()->post($request_body, $query_params);
 
-            $response = json_decode($response->body());
+        //     $response = json_decode($response->body());
 
-            $linkBrandingId = $response->id;
+        //     $linkBrandingId = $response->id;
 
-            foreach ($response->dns as $responseDns) {
-                $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-            }
+        //     foreach ($response->dns as $responseDns) {
+        //         $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
+        //     }
 
-            sleep(5);
-            $sendgrid->client->whitelabel()->domains()->_($senderAuthenticationId)->validate()->post();
-            $response = $sendgrid->client->whitelabel()->links()->_($linkBrandingId)->validate()->post();
-        } catch (Exception $e) {
-            dd($e);
-        }
+        //     sleep(5);
+        //     $sendgrid->client->whitelabel()->domains()->_($senderAuthenticationId)->validate()->post();
+        //     $response = $sendgrid->client->whitelabel()->links()->_($linkBrandingId)->validate()->post();
+        // } catch (Exception $e) {
+        //     dd($e);
+        // }
 
         $requestData['status'] = "Conectado";
 

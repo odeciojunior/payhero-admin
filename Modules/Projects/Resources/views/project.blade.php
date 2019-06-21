@@ -144,7 +144,7 @@
                                 </table>
                             </div>
 
-                        <!-- Painel de Cupons de Descontos -->
+                            <!-- Painel de Cupons de Descontos -->
                             <div class="tab-pane" id="tab_cupons" role="tabpanel">
                                 <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                     <a id="adicionar_cupom" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -162,6 +162,7 @@
                                     </tbody>
                                 </table>
                             </div>
+
                             <!-- Painel de Sms -->
                             <div class="tab-pane" id="tab_sms" role="tabpanel">
                                 <table id="tabela_sms" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -213,9 +214,10 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal padrão para adicionar Adicionar e Editar -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div id="modal_add_tamanho" class="modal-dialog modal-simple">
+                            <div id="modal_add_size" class="modal-dialog modal-simple">
                                 <div class="modal-content" id="conteudo_modal_add">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -234,6 +236,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal padrão para excluir -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-simple">
@@ -262,13 +265,13 @@
         @push('scripts')
             <script src='{{asset('modules/Shipping/js/shipping.js')}}'></script>
             <script src='{{asset('modules/domain/js/domain.js')}}'></script>
-            @if(!$project->shopify_id)
-                <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
-            @endif
             <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>
             <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
             <script src='{{asset('modules/projects/js/projects.js')}}'></script>
+            @if(!$project->shopify_id)
+                <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
+            @endif
         @endpush
 
         <script>
@@ -278,8 +281,8 @@
 
                 $('#adicionar_plano').on('click', function () {
 
-                    $('#modal_add_tamanho').addClass('modal-lg');
-                    $('#modal_add_tamanho').removeClass('modal-simple');
+                    $('#modal_add_size').addClass('modal-lg');
+                    $('#modal_add_size').removeClass('modal-simple');
 
                     $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
@@ -461,8 +464,8 @@
 
                 $('#adicionar_parceiro').on('click', function () {
 
-                    $('#modal_add_tamanho').addClass('modal-lg');
-                    $('#modal_add_tamanho').removeClass('modal-simple');
+                    $('#modal_add_size').addClass('modal-lg');
+                    $('#modal_add_size').removeClass('modal-simple');
 
                     $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
 
