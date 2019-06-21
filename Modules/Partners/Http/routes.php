@@ -1,24 +1,24 @@
 <?php
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
-    Route::Resource('/partnes', 'PartnesController')->only('index');
+    Route::Resource('/partners', 'PartnersController')
+         ->only('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
 
     /* Route::post('/data-source',[
          'as' => 'parceiros.index',
          'uses' => 'PartnersController@index'
      ]);*/
 
-    Route::get('/getformaddparceiro', [
-        'as'   => 'parceiros.create',
-        'uses' => 'PartnersController@create',
-    ]);
-
-    Route::post('/getformeditarparceiro', [
+    /* Route::get('/getformaddparceiro', [
+         'as'   => 'parceiros.create',
+         'uses' => 'PartnersController@create',
+     ]);*/
+    /*Route::post('/getformeditarparceiro', [
         'as'   => 'parceiros.edit',
         'uses' => 'PartnersController@edit',
     ]);
 
-    Route::post('/cadastrarparceiro', [
+   /* Route::post('/cadastrarparceiro', [
         'as'   => 'parceiros.store',
         'uses' => 'PartnersController@store',
     ]);
@@ -36,7 +36,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'M
     Route::post('/removerparceiro', [
         'as'   => 'parceiros.delete',
         'uses' => 'PartnersController@delete',
-    ]);
+    ]);*/
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/projetos/{id_projeto}/parceiros', 'namespace' => 'Modules\Partners\Http\Controllers'], function() {
