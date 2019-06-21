@@ -29,7 +29,7 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_dominios"
+                            <a id="tab-domains" class="nav-link" data-toggle="tab" href="#tab_domains"
                                aria-controls="tab_cupons" role="tab">Domínios
                             </a>
                         </li>
@@ -119,24 +119,16 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Painel de Dominios -->
-                            <div class="tab-pane" id="tab_dominios" role="tabpanel">
-                                <table id="tabela_dominios" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_dominio" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar dominio
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Domínio</th>
-                                        <th>Ip do domínio</th>
-                                        <th>Status</th>
-                                        <th style="width: 160px">Opções</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+
+                            <div id="tab_domains" class="tab-pane" role="tabpanel">
+                                @include('domains::index')
                             </div>
+
+
                             <!-- Painel de Layouts -->
-                        {{--<div class="tab-pane" id="tab_layouts" role="tabpanel">
+                            {{--<div class="tab-pane" id="tab_layouts" role="tabpanel">
                             <table id="tabela_layouts" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                 <a id="adicionar_layout" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
                                     <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar layout
@@ -149,8 +141,9 @@
                                 <tbody>
                                 </tbody>
                             </table>
-                        </div>--}}
-                        <!-- Painel de Pixels -->
+                            </div>--}}
+
+                            <!-- Painel de Pixels -->
                             <div class="tab-pane" id="tab_pixels" role="tabpanel">
                                 <table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">
                                     <a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
@@ -221,10 +214,12 @@
                                     </tbody>
                                 </table>
                             </div>
+
                             <!-- Painel de Fretes -->
-                            <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
+                            <div class="tab-pane" id="tab-fretes-panel" role="tabpanel"> 
                                 @include('shipping::index')
                             </div>
+
                             <!--- Painel de Planos -->
                             <div class="tab-pane" id="tab_planos" role="tabpanel">
                                 <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
@@ -264,6 +259,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal para ver detalhes de * no projeto -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-simple">
@@ -282,32 +278,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Modal padrão para adicionar produtos no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_produto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div class="modal-dialog modal-simple">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        <h4 class="modal-title" style="width: 100%; text-align:center">Selecione o produto</h4>
-                                    </div>
-                                    <div id="modal_detalhes_body" class="modal-body">
-                                        <div class="row">
-                                            <div class="form-group col-12" style="margin-top: 30px">
-                                                <select id="select_produtos" class="form-control">
-                                                    <option value="">Selecione algo</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="adicionar_produto" type="button" class="btn btn-success" data-dismiss="modal">Adicionar</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                         <!-- Modal padrão para adicionar frete no projeto -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div id="modal_add_tamanho_shipping" class="modal-dialog modal-simple">
@@ -328,6 +299,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal padrão para adicionar * no projeto -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div id="modal_add_tamanho" class="modal-dialog modal-simple">
@@ -336,6 +308,7 @@
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
+                                        <h4 id="modal_add_title" class="modal-title" style="width: 100%; text-align:center"></h4>
                                     </div>
                                     <div class="row">
                                         <div id="modal_add_body" class="form-group col-12" style="margin-top: 30px">
@@ -348,6 +321,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal padrão para editar * no projeto -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_editar" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div id="modal_editar_tipo" class="modal-dialog modal-simple">
@@ -368,6 +342,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal padrão para excluir * no plano -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-simple">
@@ -387,78 +362,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Modal para adicionar materiais extras no projeto -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_material_extra" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div class="modal-dialog modal-simple">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button id="fechar_modal_material_extra" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div style="text-align: center">
-                                        <h4>Adicionar material extra</h4>
-                                    </div>
-                                    <div class="page-content container-fluid">
-                                        <div class="panel" data-plugin="matchHeight">
-                                            <div style="width:100%">
-                                                <form id="add_material_extra" method="post" enctype="multipart/form-data">
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="descricao">Descrição</label>
-                                                            <input name="descricao_material_extra" id="descricao_material_extra" type="text" class="form-control" placeholder="Descrição">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="form-group col-12">
-                                                            <label for="tipo">Tipo</label>
-                                                            <select name="tipo" class="form-control" id="tipo_material_extra">
-                                                                <option value="" selected>Selecione</option>
-                                                                <option value="imagem">Imagem</option>
-                                                                <option value="video">Vídeo (url)</option>
-                                                                <option value="pdf">PDF</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div id="div_material_extra_imagem" class="row" style="display:none">
-                                                        <div class="form-group col-12">
-                                                            <label for="valor">Imagem</label>
-                                                            <br>
-                                                            <input type="button" id="selecionar_imagem_material_extra" class="btn btn-default" value="Selecionar imagem">
-                                                            <input name="material_extra_imagem" id="material_extra_imagem" type="file" style="display:none" accept="image/*">
-                                                        </div>
-                                                        <div style="margin: 20px 0 0 30px;">
-                                                            <img id="previewimage_material_extra" alt="Selecione a foto" style="max-height: 250px; max-width: 350px;"/>
-                                                        </div>
-                                                    </div>
-                                                    <div id="div_material_extra_pdf" class="row" style="display:none">
-                                                        <div class="form-group col-12">
-                                                            <label for="valor">PDF</label>
-                                                            <br>
-                                                            <input type="button" id="selecionar_pdf_material_extra" class="btn btn-default" value="Selecionar arquivo">
-                                                            <input name="material_extra_pdf" id="material_extra_pdf" type="file" style="display:none" accept="application/pdf">
-                                                        </div>
-                                                        <div style="margin: 20px 0 0 30px;">
-                                                            <label id="label_pdf_material_extra"> Selecione o arquivo</label>
-                                                        </div>
-                                                    </div>
-                                                    <div id="div_material_extra_video" class="row" style="display:none">
-                                                        <div class="form-group col-12">
-                                                            <label for="valor">Vídeo (url)</label>
-                                                            <input name="material_extra_video" id="material_extra_video" type="text" class="form-control" placeholder="Url do vídeo">
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="bt_adicionar_material_extra" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                         <!-- Modal para adicionar tipos de frete no projeto -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-simple">
@@ -538,6 +442,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal para editar fretes no projeto -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_edit_shipping" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-simple">
@@ -617,12 +522,15 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+
         @push('scripts')
             <script src='{{asset('modules/Shipping/js/shipping.js')}}'></script>
+            <script src='{{asset('modules/domain/js/domain.js')}}'></script>
             @if(!$project->shopify_id)
                 <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
             @endif
@@ -631,152 +539,11 @@
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
             <script src='{{asset('modules/projects/js/projects.js')}}'></script>
         @endpush
+
         <script>
             $(document).ready(function () {
 
                 var id_projeto = '{{Hashids::encode($project->id)}}';
-
-                /*$('#add_produto').on('click', function () {
-
-                    $('#modal_add_tamanho').addClass('modal-simple');
-                    $('#modal_add_tamanho').removeClass('modal-lg');
-
-                    $('#select_produtos').html("<option value=''>Selecione</option>");
-
-                    $.ajax({
-                        method: "POST",
-                        url: "/produtos/getprodutos",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: {projeto: id_projeto},
-                        error: function () {
-                            alertPersonalizado('error', 'Ocorreu algum erro');
-                        },
-                        success: function (data) {
-                            var options = "<option value=''>Selecione</option>";
-                            $.each(data, function (key, d) {
-
-                                options += "<option value='" + d.id + "'>" + d.nome + "</option>";
-
-                            });
-
-                            $('#select_produtos').html(options);
-                        }
-                    });
-                });*/
-
-                $('#adicionar_produto').on('click', function () {
-
-                    $('#modal_add_tamanho').addClass('modal-simple');
-                    $('#modal_add_tamanho').removeClass('modal-lg');
-
-                    var id_produto = $('#select_produtos').val();
-
-                    if (id_produto == '')
-                        return;
-
-                    $.ajax({
-                        method: "POST",
-                        url: "/produtos/addprodutoprojeto",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: {projeto: id_projeto, produto: id_produto},
-                        error: function () {
-                            alertPersonalizado('error', 'Ocorreu algum erro');
-                        },
-                        success: function (data) {
-                            $('#modal_add_produto').hide();
-                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                            alertPersonalizado('success', 'Produto adicionado!');
-                        }
-                    });
-
-                });
-
-                $('#adicionar_dominio').on('click', function () {
-
-                    $('#modal_add_tamanho').addClass('modal-lg');
-                    $('#modal_add_tamanho').removeClass('modal-simple');
-
-                    $('#modal_add_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                    $.ajax({
-                        method: "POST",
-                        url: "/dominios/getformadddominio",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: {projeto: id_projeto},
-                        error: function () {
-                            alertPersonalizado('error', 'Ocorreu algum erro');
-                        },
-                        success: function (data) {
-                            $('#modal_add_body').html(data);
-
-                            $('#ip_dominio_cadastrar').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
-                                translation: {
-                                    'Z': {
-                                        pattern: /[0-9]/,
-                                        optional: true
-                                    }
-                                }
-                            });
-
-                            $('#cadastrar').unbind('click');
-
-                            $('#cadastrar').on('click', function () {
-
-                                if ($('#dominio').val() == '') {
-                                    alertPersonalizado('error', 'Dados informados inválidos');
-                                    return false;
-                                }
-
-                                @if($project->shopify_id == '')
-                                if ($('#ip_dominio').val() == '') {
-                                    alertPersonalizado('error', 'Dados informados inválidos');
-                                    return false;
-                                }
-                                @endif
-
-                                $('.loading').css("visibility", "visible");
-
-                                var form_data = new FormData(document.getElementById('cadastrar_dominio'));
-                                form_data.append('projeto', id_projeto);
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/dominios/cadastrardominio",
-                                    processData: false,
-                                    contentType: false,
-                                    cache: false,
-                                    data: form_data,
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                    },
-                                    success: function (data) {
-                                        if (data != 'sucesso') {
-                                            alertPersonalizado('error', data);
-                                        } else {
-                                            alertPersonalizado('success', 'Domínio adicionado!');
-                                        }
-                                        $('.loading').css("visibility", "hidden");
-                                        $('#modal_add').hide();
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    },
-                                });
-                            });
-                        }
-                    });
-
-                });
 
                 $('#adicionar_plano').on('click', function () {
 
@@ -1022,123 +789,6 @@
                             });
                         }
                     });
-
-                });
-
-                $("#tabela_produtos").DataTable({
-                    bLengthChange: false,
-                    ordering: false,
-                    responsive: true,
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '/produtos/data-source',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: 'POST',
-                        data: {projeto: id_projeto}
-                    },
-                    columns: [
-                        {data: 'nome', name: 'nome'},
-                        {
-                            data: function (data) {
-                                return data.descricao.substr(0, 25);
-                            }, name: 'descricao'
-                        },
-                        {data: 'categoria_nome', name: 'categoria_nome'},
-                        {
-                            data: function (data) {
-                                if (data.formato == 1)
-                                    return 'Físico';
-                                if (data.formato == 0)
-                                    return 'Digital';
-                                return 'null';
-                            }, name: 'formato'
-                        },
-                        {data: 'quantidade', name: 'quantidade'},
-                        {
-                            data: function (data) {
-                                if (data.disponivel == 1)
-                                    return 'Disponível';
-                                if (data.disponivel == 0)
-                                    return 'Indisponível';
-                                return 'null';
-                            }, name: 'disponivel'
-                        },
-                        {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-                    ],
-                    "language": {
-                        "sProcessing": "Carregando...",
-                        "lengthMenu": "Apresentando _MENU_ registros por página",
-                        "zeroRecords": "Nenhum registro encontrado",
-                        "info": "Apresentando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "Nenhum registro encontrado",
-                        "infoFiltered": "(filtrado por _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sSearch": "Procurar :",
-                        "sUrl": "",
-                        "sInfoThousands": ",",
-                        "sLoadingRecords": "Carregando...",
-                        "oPaginate": {
-                            "sFirst": "Primeiro",
-                            "sLast": "Último",
-                            "sNext": "Próximo",
-                            "sPrevious": "Anterior",
-                        },
-                    },
-                    "drawCallback": function () {
-
-                        $('.detalhes_produto').on('click', function () {
-                            var produto = $(this).attr('produto');
-                            $('#modal_detalhes_titulo').html('Detalhes da produto');
-                            $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                            var data = {id_produto: produto};
-                            $.post("/produtos/detalhe", data)
-                                .then(function (response, status) {
-                                    $('#modal_detalhes_body').html(response);
-                                });
-                        });
-
-                        var id_produto = '';
-
-                        $('.excluir_produto').on('click', function () {
-
-                            id_produto = $(this).attr('produto');
-                            var name = $(this).closest("tr").find("td:first-child").text();
-                            $('#modal_excluir_titulo').html('Remover do projeto o produto ' + name + '?');
-
-                            $('#bt_excluir').unbind('click');
-
-                            $('#bt_excluir').on('click', function () {
-
-                                $('.loading').css("visibility", "visible");
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/produtos/deletarprodutoplano",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: {projeto: id_projeto, produto: id_produto},
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        $('#fechar_modal_excluir').click();
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('success', 'Produto removido!');
-                                        $('#fechar_modal_excluir').click();
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    }
-                                });
-
-                            });
-                        });
-
-                    }
 
                 });
 
@@ -1413,249 +1063,6 @@
 
                                         $('#brindes').append('<div class="row">' + nova_div.html() + '</div>');
                                     });
-                                }
-                            });
-                        });
-
-                    }
-
-                });
-
-                $("#tabela_dominios").DataTable({
-                    bLengthChange: false,
-                    ordering: false,
-                    processing: true,
-                    responsive: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '/dominios/data-source',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: 'POST',
-                        data: {projeto: id_projeto}
-                    },
-                    columns: [
-                        {data: 'name', name: 'name'},
-                        {data: 'domain_ip', name: 'domain_ip'},
-                        {data: 'status', name: 'status'},
-                        {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-                    ],
-                    "language": {
-                        "sProcessing": "Carregando...",
-                        "lengthMenu": "Apresentando _MENU_ registros por página",
-                        "zeroRecords": "Nenhum registro encontrado",
-                        "info": "Apresentando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "Nenhum registro encontrado",
-                        "infoFiltered": "(filtrado por _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sSearch": "Procurar :",
-                        "sUrl": "",
-                        "sInfoThousands": ",",
-                        "sLoadingRecords": "Carregando...",
-                        "oPaginate": {
-                            "sFirst": "Primeiro",
-                            "sLast": "Último",
-                            "sNext": "Próximo",
-                            "sPrevious": "Anterior",
-                        },
-                    },
-                    "drawCallback": function () {
-
-                        var id_dominio = '';
-
-                        $("#excluir_dominio").unbind("click");
-                        $('.excluir_dominio').on('click', function () {
-
-                            id_dominio = $(this).attr('dominio');
-                            var name = $(this).closest("tr").find("td:first-child").text();
-                            $('#modal_excluir_titulo').html('Remover do projeto o dominio ' + name + '?');
-
-                            $('#bt_excluir').unbind('click');
-
-                            $('#bt_excluir').on('click', function () {
-
-                                $('.loading').css("visibility", "visible");
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/dominios/deletardominio",
-                                    data: {id: id_dominio, projeto: id_projeto},
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        $('#fechar_modal_excluir').click();
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        if (data != 'sucesso') {
-                                            alertPersonalizado('error', data);
-                                        }
-                                        alertPersonalizado('success', 'Domínio removido!');
-                                        $('#fechar_modal_excluir').click();
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    }
-                                });
-
-                            });
-
-                        });
-
-                        $('#editar').unbind('click');
-
-                        $('.editar_dominio').on('click', function () {
-
-                            $('#modal_editar_tipo').addClass('modal-lg');
-                            $('#modal_editar_tipo').removeClass('modal-simple');
-
-                            id_dominio = $(this).attr('dominio');
-
-                            $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/dominios/getformeditardominio",
-                                data: {id: id_dominio, projeto: id_projeto},
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                error: function () {
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('#modal_editar_body').html(data);
-
-                                    var qtd_novos_registros = 1;
-
-                                    $('#ip_dominio_editar').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
-                                        translation: {
-                                            'Z': {
-                                                pattern: /[0-9]/,
-                                                optional: true
-                                            }
-                                        }
-                                    });
-
-                                    $("#bt_adicionar_entrada").on("click", function () {
-
-                                        $("#novos_registros").after("<tr registro='" + qtd_novos_registros + "'><td>" + $("#tipo_registro").val() + "</td><td>" + $("#nome_registro").val() + "</td><td>" + $("#valor_registro").val() + "</td><td><button type='button' class='btn btn-danger remover_entrada'>Remover</button></td></tr>");
-
-                                        $('#editar_dominio').append('<input type="hidden" name="tipo_registro_' + qtd_novos_registros + '" id="tipo_registro_' + qtd_novos_registros + '" value="' + $("#tipo_registro").val() + '" />');
-                                        $('#editar_dominio').append('<input type="hidden" name="nome_registro_' + qtd_novos_registros + '" id="nome_registro_' + qtd_novos_registros + '" value="' + $("#nome_registro").val() + '" />');
-                                        $('#editar_dominio').append('<input type="hidden" name="valor_registro_' + qtd_novos_registros + '" id="valor_registro_' + (qtd_novos_registros++) + '" value="' + $("#valor_registro").val() + '" />');
-
-                                        $(".remover_entrada").unbind("click");
-
-                                        $(".remover_entrada").on("click", function () {
-
-                                            var novo_registro = $(this).parent().parent();
-                                            var id_registro = novo_registro.attr('registro');
-                                            novo_registro.remove();
-                                            alert(id_registro);
-                                            $("#tipo_registro_" + id_registro).remove();
-                                            $("#nome_registro_" + id_registro).remove();
-                                            $("#valor_registro_" + id_registro).remove();
-                                        });
-
-                                        $("#tipo_registro").val("A");
-                                        $("#nome_registro").val("");
-                                        $("#valor_registro").val("");
-                                    });
-
-                                    $(".remover_registro").on("click", function () {
-
-                                        var id_registro = $(this).attr('id-registro');
-
-                                        var row = $(this).parent().parent();
-
-                                        $.ajax({
-                                            method: "POST",
-                                            url: "/dominios/removerregistrodns",
-                                            data: {
-                                                id_registro: id_registro,
-                                                id_dominio: $("#id_dominio").val()
-                                            },
-                                            headers: {
-                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                            },
-                                            error: function () {
-                                                alert('error', 'Ocorreu algum erro');
-                                            },
-                                            success: function (data) {
-                                                if (data == 'sucesso') {
-                                                    row.remove();
-                                                    alertPersonalizado('success', 'Registro removido!');
-                                                } else {
-                                                    alertPersonalizado('error', data);
-                                                }
-                                            },
-                                        });
-
-                                    });
-
-                                    $('#editar').unbind('click');
-
-                                    $('#editar').on('click', function () {
-
-                                        $('.loading').css("visibility", "visible");
-
-                                        var form_data = new FormData(document.getElementById('editar_dominio'));
-                                        form_data.append('projeto', id_projeto);
-
-                                        $.ajax({
-                                            method: "POST",
-                                            url: "/dominios/editardominio",
-                                            processData: false,
-                                            contentType: false,
-                                            cache: false,
-                                            data: form_data,
-                                            headers: {
-                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                            },
-                                            error: function () {
-                                                $('.loading').css("visibility", "hidden");
-                                                alertPersonalizado('error', 'Ocorreu algum erro');
-                                            },
-                                            success: function (data) {
-                                                $('.loading').css("visibility", "hidden");
-                                                if (data == 'sucesso')
-                                                    alertPersonalizado('success', 'Domínio atualizado!');
-                                                else
-                                                    alertPersonalizado('error', data);
-
-                                                $('#modal_add').hide();
-                                                $($.fn.dataTable.tables(true)).css('width', '100%');
-                                                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                            },
-                                        });
-                                    });
-                                }
-                            });
-                        });
-
-                        $('.detalhes_dominio').unbind('click');
-
-                        $('.detalhes_dominio').on('click', function () {
-                            var id_dominio = $(this).attr('dominio');
-
-                            $('#modal_detalhes_titulo').html('Detalhes do domínio');
-                            $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                            $.ajax({
-                                method: "POST",
-                                url: "/dominios/detalhesdominio",
-                                data: {dominio: id_dominio},
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                error: function () {
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (response) {
-                                    $('#modal_detalhes_body').html(response);
                                 }
                             });
                         });

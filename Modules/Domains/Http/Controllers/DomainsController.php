@@ -17,82 +17,46 @@ use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\AutorizacaoHelper;
+use Modules\Dominios\Transformers\DomainResource;
 
 class DomainsController extends Controller
 {
-    private $domainsModel;
+    private $domainModel;
+    private $projectModel;
 
-    private function getDomains()
+    private function getDomain()
     {
-        if (!$this->domainsModel) {
-            $this->domainsModel = app(Domain::class);
+        if (!$this->domainModel) {
+            $this->domainModel = app(Domain::class);
         }
 
-        return $this->domainsModel;
+        return $this->domainModel; 
+    }
+
+    private function getProject()
+    {
+        if (!$this->projectModel) {
+            $this->projectModel = app(Project::class);
+        }
+
+        return $this->projectModel; 
     }
 
     public function index(Request $request)
     {
         try {
-            $requestData = $request->all();
+            $projectId = $request->input("project");
 
-            if (isset($requestData['projeto'])) {
-                $projectId = Hashids::decode($requestData['projeto'])[0];
-                $domains   = $this->getDomains()->whereHas('project', function($query) use ($projectId) {
-                    $query->where('project', $projectId);
-                })->get();
-            } else {
-                return response()->json('projeto não informado');
+            if ($projectId) {
+                $projectId = Hashids::decode($projectId)[0];
+
+                $project = $this->getProject()->with('domains')->find($projectId);
+
+                return DomainResource::collection($project->domains);
             }
-
-            $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-            $adapter = new Guzzle($key);
-            $zones   = new Zones($adapter);
-
-            return Datatables::of($domains)
-                             ->addColumn('status', function($domain) use ($zones) {
-                                 try {
-                                     $zoneID = $zones->getZoneID($domain->name);
-                                     $status = $zones->activationCheck($zoneID);
-                                     if ($status) {
-                                         Domain::find($domain->id)->update(['status' => 'Conectado']);
-
-                                         return "<span class='badge badge-success'>Conectado</span>";
-                                     } else {
-                                         Domain::find($domain->id)->update(['status' => 'Desconectado']);
-
-                                         return "<span class='badge badge-warning'>Desconectado</span>";
-                                     }
-
-                                     return $status;
-                                 } catch (\Exception $e) {
-                                     if ($domain->status == 'Conectado')
-                                         return "<span class='badge badge-success'>" . $domain->status . "</span>";
-                                     else
-                                         return "<span class='badge badge-warning'>" . $domain->status . "</span>";
-                                 }
-                             })
-                             ->addColumn('detalhes', function($domain) {
-                                 return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                             <a class='btn btn-outline btn-success detalhes_domain' data-placement='top' data-toggle='tooltip' title='Detalhes' domain='" . Hashids::encode($domain->id) . "'>
-                                 <i class='icon wb-order' aria-hidden='true'></i>
-                             </a>
-                         </span>
-                         <span data-toggle='modal' data-target='#modal_editar'>
-                             <a class='btn btn-outline btn-primary editar_domain' data-placement='top' data-toggle='tooltip' title='Editar' domain='" . Hashids::encode($domain->id) . "'>
-                                 <i class='icon wb-pencil' aria-hidden='true'></i>
-                             </a>
-                         </span>
-                         <span data-toggle='modal' data-target='#modal_excluir'>
-                             <a class='btn btn-outline btn-danger excluir_domain' data-placement='top' data-toggle='tooltip' title='Excluir' domain='" . Hashids::encode($domain->id) . "'>
-                                 <i class='icon wb-trash' aria-hidden='true'></i>
-                             </a>
-                         </span>";
-                             })
-                             ->rawColumns(['detalhes', 'status'])
-                             ->make(true);
-        } catch (Exception $e) {
-            Log::warning('Erro ao buscar dominios (DomainsController - index)');
+        }
+        catch (Exception $e) {
+            Log::warning('Erro ao buscar dados (DomainsController - index)');
             report($e);
         }
     }
@@ -232,10 +196,9 @@ class DomainsController extends Controller
 
         return response()->json('sucesso');
     }
-
+ 
     public function edit($id)
     {
-
         $domain    = Domain::find($id);
         $companies = Company::all();
 
@@ -298,53 +261,44 @@ class DomainsController extends Controller
         return response()->json('sucesso');
     }
 
-    public function details(Request $request)
+    public function show($domainId)
     {
+        $domain = $this->getDomain()->where('id', Hashids::decode($domainId))->first();
 
-        $requestData = $request->all();
-
-        $domain = Domain::where('id', Hashids::decode($requestData['domain']))->first();
-
-        $modal_body = '';
-
-        $modal_body .= "<div class='col-xl-12 col-lg-12'>";
-        $modal_body .= "<table class='table table-bordered table-hover table-striped'>";
-        $modal_body .= "<thead>";
-        $modal_body .= "</thead>";
-        $modal_body .= "<tbody>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>Domínio:</b></td>";
-        $modal_body .= "<td>" . $domain['name'] . "</td>";
-        $modal_body .= "</tr>";
-        $modal_body .= "<tr>";
-        $modal_body .= "<td><b>IP que o domínio aponta:</b></td>";
-        $modal_body .= "<td>" . $domain['domain_ip'] . "</td>";
-        $modal_body .= "</tr>";
-
-        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        $key     = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
         $adapter = new Guzzle($key);
         $user    = new User($adapter);
         $dns     = new DNS($adapter);
         $zones   = new Zones($adapter);
 
-        foreach ($zones->listZones()->result as $zone) {
-            if ($zone->name == $domain['name']) {
+        $view = view('domains::show',[
+            'domain' => $domain,
+            'zones'  => $zones->listZones()->result,
+        ]);
 
-                $x = 1;
-                foreach ($zone->name_servers as $new_name_server) {
-                    $modal_body .= "<tr>";
-                    $modal_body .= "<td><b>Novo servidor DNS " . $x++ . ":</b></td>";
-                    $modal_body .= "<td>" . $new_name_server . "</td>";
-                    $modal_body .= "</tr>";
-                }
-            }
-        }
-
-        return response()->json($modal_body);
+        return response()->json($view->render());
     }
 
     public function create(Request $request)
     {
+        try {
+
+            $projectId = $request->project_id;
+
+            if ($projectId) {
+                $projectId = Hashids::decode($projectId)[0];
+            }
+
+            $project = $this->getProject()->find($projectId);
+
+            return view('domains::create',[
+                'project' => $project
+            ]);
+        }
+        catch (Exception $e) {
+            Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
+            report($e);
+        }
 
         $requestData = $request->all();
 
@@ -352,7 +306,7 @@ class DomainsController extends Controller
             return response()->json('Erro, projeto não encontrado');
         }
 
-        $project = Project::find(Hashids::decode($requestData['projeto'])[0]);
+        $project = $this->getProject()->find(Hashids::decode($requestData['projeto'])[0]);
 
         $form = view('domains::create', [
             'project' => $project,

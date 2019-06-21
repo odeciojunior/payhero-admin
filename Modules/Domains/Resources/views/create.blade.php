@@ -1,7 +1,8 @@
 <div style="text-align: center">
     <h4>Cadastro de domínio no projeto</h4>
 </div>
-<form id="cadastrar_dominio" method="post" action="/dominios/cadastrardominio">
+
+<form id="form_add_domain" method="post">
     @csrf
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
@@ -12,7 +13,7 @@
                         <input name="name" type="text" class="form-control" id="name" placeholder="Domínio">
                     </div>
                 </div>
-                @if($project['shopify_id'] == '')
+                @if($project->shopify_id == '')
                     <div class="row">
                         <div class="form-group col-12">
                             <label for="domain_ip">Ip que o domínio aponta</label>
@@ -24,4 +25,5 @@
         </div>
     </div>
 </form>
+
 

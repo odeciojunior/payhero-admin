@@ -19,9 +19,9 @@ $(document).ready(function () {
 
             //mask money
             $('#shipping-value').mask('#.###,#0', {reverse: true});
-
         });
     }
+
     //mask money
     $('#shipping-value').mask('#.###,#0', {reverse: true});
 
