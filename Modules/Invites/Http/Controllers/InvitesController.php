@@ -75,8 +75,11 @@ class InvitesController extends Controller
             }
         }
 
+        $companies = $this->company->where('user_id',\Auth::user()->id)->get();
+
         return view('invites::index', [
             'invites' => $invites,
+            'companies' => $companies
         ]);
     }
 
@@ -91,8 +94,8 @@ class InvitesController extends Controller
 
             $requestData['invite'] = auth()->user()->id;
             $requestData['status'] = "Convite enviado";
-            $requestData['parameter'] = Hashids::encode(auth()->user()->id + 77991133);
-            $requestData['company'] = $this->company->where('user', auth()->user()->id)->first()->id;
+            $requestData['parameter'] = $requestData['company'];
+            $requestData['company'] = current(Hashids::decode($requestData['company']));
 
             $invite = $this->invitation->where('email_invited',$requestData['email_invited'])->first();
             if($invite){
@@ -102,12 +105,11 @@ class InvitesController extends Controller
             $invite = $this->invitation->create($requestData);
 
             if ($invite) {
-                EmailHelper::enviarConvite($requestData['email_invited'], $requestData['parameter']);
+                EmailHelper::sendInvite($requestData['email_invited'], $requestData['parameter']);
             }
 
             return redirect()->route('invitations.invites');
         } catch (Exception $ex) {
-            dd($ex);
             Log::warning('Erro ao enviar convite (InvitesController - sendInvitation)');
             report($ex);
         }

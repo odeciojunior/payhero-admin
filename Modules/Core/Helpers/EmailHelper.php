@@ -71,24 +71,26 @@ class EmailHelper {
         return true;
     }
 
-    public static function enviarConvite($to, $parametro){
+    public static function sendInvite($to, $parameter){
 
-        $emailLayout = view('core::emails.invite', [
-            'link' => 'https://app.cloudfox.net/register/' . $parametro
-        ]);
-
-        $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("noreply@cloudfox.app", "Cloudfox");
-        $email->setSubject("Convite para o CloudFox");
-        $email->addTo($to, "CloudFox");
-        $email->addContent(
-                "text/html", $emailLayout->render()
-        );
-        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
         try {
+            $emailLayout = view('core::emails.invite', [
+                'link' => 'https://app.cloudfox.net/register/' . $parameter
+            ]);
+
+            $email = new \SendGrid\Mail\Mail();
+            $email->setFrom("noreply@cloudfox.app", "Cloudfox");
+            $email->setSubject("Convite para o CloudFox");
+            $email->addTo($to, "CloudFox");
+            $email->addContent(
+                    "text/html", $emailLayout->render()
+            );
+            $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+
             $response = $sendgrid->send($email);
         } catch (Exception $e) {
-
+            Log::warning('Erro ao enviar email de convite (EmailHelper - sendInvite)');
+            report($e);
         }
 
         return true;

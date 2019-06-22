@@ -15,6 +15,7 @@ class SendInvitationRequest extends FormRequest
     {
         return [
             'email_invited' => 'required|email',
+            'company'       => 'required'
         ];
     }
 

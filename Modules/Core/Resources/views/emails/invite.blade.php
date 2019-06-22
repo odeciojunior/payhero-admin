@@ -18,7 +18,7 @@
     #btn {
         padding: 12px 35px;
         color: white;
-        background: #f2571f;
+        background-color: #f2571f;
         font-weight: 700;
         font-size: 14px;
         border-radius: 5px;
@@ -94,44 +94,43 @@
     }
 </style>
 
-<body bgcolor="#f6f6f6" style="font-family: 'Muli', sans-serif; background-color: #f6f6f6;">
+<body style="font-family: 'Muli', sans-serif; background-color: #f6f6f6;">
 
-    <table width="600px" class="container" align="center" cellpadding="0" cellspacing="0">
+    <table style="width:600px; text-align:center" class="container" cellpadding="0" cellspacing="0">
 
-        <table align="center" style="padding: 20px 5px;">
+        <table style="padding: 20px 5px;text-align:center">
             <tr>
-                <td width="600px" align="center">
+                <td style="width:600px; text-align:center">
                     <img src="{!! asset('modules/global/assets/img/logoCloudfox.png') !!}" width="150px;" class="logo">
                 </td>
             </tr>
         </table>
 
-        <table width="600px" bgcolor="white" style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;" class="container" align="center" cellpadding="0" cellspacing="0">
+        <table width="600px" style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;background-color: white" class="container" align="center" cellpadding="0" cellspacing="0">
             <tr>
-                <td width="100%" align="center" style="padding-top: 20px;">
+                <td width="100%" style="padding-top: 20px;text-align:center">
                     <img src="{!! asset('modules/global/assets/img/beta-tester.png') !!}">
                 </td>
             </tr>
             <tr>
-                <td align="center">
-                    <h1 class="blue"> Seu convite chegou! </h1>
+                <td>
+                    <h1 class="blue" style="text-align:center"> Seu convite chegou! </h1>
                 </td>
             </tr>
             <tr>
-                <td align="center" style="padding-bottom: 20px;">
+                <td style="padding-bottom: 20px;text-align:center">
                     <span class="dark-grey"> Beta Tester, só falta você! </span>
                 </td>
             </tr>
         </table>
 
-        <table width="600px" class="container whitebg" align="center" cellpadding="0" cellspacing="0">
+        <table style="width:600px;text-align:center" class="container whitebg" cellpadding="0" cellspacing="0">
             <tr>
-                <td bgcolor="#ededed" colspan="3" style="width: 100%; height:2px;"> </td>
+                <td colspan="3" style="width: 100%; height:2px; background-color:#ededed "> </td>
             </tr>
         </table>
 
-        <table width="600px" class="container pad-padrao whitebg" align="center"
-            cellpadding="0" cellspacing="0">
+        <table width="600px" class="container pad-padrao whitebg" style="text-align: center" cellpadding="0" cellspacing="0">
             <tr class="dark-grey pad-bottom">
                 <td width="100%">
                     <p> 
@@ -154,30 +153,30 @@
 
         </table>
 
-        <table width="600px" class="container whitebg" align="center" cellpadding="0" cellspacing="0">
+        <table style="width:600px; text-align:center" class="container whitebg" cellpadding="0" cellspacing="0">
             <tr>
-                <td bgcolor="#ededed" colspan="3" style="width: 100%; height:2px;"> </td>
+                <td colspan="3" style="width: 100%; height:2px;background-color:#ededed"> </td>
             </tr>
         </table>
 
-        <table width="600px" class="container whitebg" style="padding: 10px 80px; padding-bottom: 20px; border-bottom-radius: 10px;" align="center" cellpadding="0" cellspacing="0">
+        <table style="width:600px;" class="container whitebg" style="padding: 10px 80px; padding-bottom: 20px; border-bottom-radius: 10px;" align="center" cellpadding="0" cellspacing="0">
 
             <tr id="half"> </tr>
 
             <tr class="dark-grey pad-bottom">
-                <td width="100%" align="center">
+                <td style="width:100%; text-align:center">
                     <a href="{!! $link !!}" id="btn">FINALIZAR CADASTRO </a>
                 </td>
             </tr>
             <tr id="half"> </tr>
         </table>
 
-        <table align="center" width="600px" style="padding: 0px 80px; ">
+        <table style="width:600px; text-align:center" style="padding: 0px 80px; ">
             <tr>
                 <td height="70">
                     <p style="color: #757575; font-size: 0.7rem; margin: 0; text-align:center;" class="small">
                         Esse é um e-mail automático. Não responda esse e-mail. Caso queira contatar nosso suporte,
-                        envie um e-mail para sac@cloudfox.net!
+                        envie um e-mail para sac@cloudfox.net
                     </p>
                 </td>
             </tr>
