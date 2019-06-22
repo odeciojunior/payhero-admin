@@ -339,3 +339,35 @@ font-size: 10px;
     font-weight: bold;
     color: #ee5261 !important;
 }
+
+
+.add-btn {
+    width: 35px;
+    text-decoration: none;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    box-shadow:  0 10px 20px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
+    transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.add-btn i {
+    color: #ee5261;
+    fill :#ee5261;
+}
+
+.add-btn:hover {
+    text-decoration: none;
+    height: 38px;
+    width: 38px;
+    top: 18px;
+    right: 15px;
+
+
+}

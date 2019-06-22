@@ -1,14 +1,19 @@
 $(function () {
 
     var projectId = $("#project-id").val();
+
+    $('#tab_pixels').on('click', function () {
+        console.log('oi');
+        atualizarPixel();
+    });
+    atualizarPixel();
     //criar novo pixel
-    $("#adicionar_pixel").on('click', function () {
+    $("#add-pixel").on('click', function () {
 
+        $("#modal_add_size").addClass('modal_simples');
+        $("#modal_add_size").removeClass('modal-lg');
 
-        $("#modal_add_tamanho").addClass('modal_simples');
-        $("#modal_add_tamanho").removeClass('modal-lg');
-
-        $("#modal_add_body").html("<div style='text-align:center;'>Carregando...</div>");
+        $("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");
 
         $.ajax({
             method: "GET",
@@ -17,21 +22,19 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
-                $("#modal_add").hide();
+                $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function (data) {
-                $('#modal_add_body').html(data);
-                $("#cadastrar").unbind('click');
-                $("#cadastrar").on('click', function () {
-                    if ($("#nome").val() === '' || $("#cod_pixel").val() === '' || $("#plataforma").val() === '' || $("#status_pixel").val() === '') {
-                        alertCustom('error', 'Dados informados inválidos');
-                        return false;
-                    }
+                $("#btn-modal").addClass('btn-save');
+                $("#btn-modal").text('Salvar');
+                $("#btn-modal").show();
+                $('#modal-add-body').html(data);
 
-                    $(".loading").css("visibility", "visible");
+                $(".btn-save").unbind('click');
+                $(".btn-save").on('click', function () {
 
-                    var formData = new FormData(document.getElementById('cadastrar_pixel'));
+                    var formData = new FormData(document.getElementById('form-register-pixel'));
                     formData.append('project', projectId);
 
                     $.ajax({
@@ -61,7 +64,43 @@ $(function () {
         });
 
     });
+    function atualizarPixel() {
+        $("#data-table-pixel").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        $.ajax({
+            method: "GET",
+            url: "/pixels",
+            data: {project: projectId},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function () {
+                $("#data-table-pixel").html('Erro ao encontrar dados');
+            },
+            success: function (response) {
+                $("#data-table-pixel").html('');
+                $.each(response.data, function (index, value) {
+                    data = '';
+                    data += '<tr>';
+                    data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.code + '</td>';
+                    data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.platform + '</td>';
+                    data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    if (value.status == 1) {
+                        data += '<span class="badge badge-success">Ativo</span>';
+                    } else {
+                        data += '<span class="badge badge-danger">Desativado</span>';
+                    }
+                    data += '</td>';
 
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-pixel'  frete='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-pixel'  frete='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-pixel'  frete='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    data += '</tr>';
+                    $("#data-table-pixel").append(data);
+                });
+            }
+        });
+    }
     /// tabela de pixels
     $("#tabela_pixels").DataTable({
         bLengthChange: false,

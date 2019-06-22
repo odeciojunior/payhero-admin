@@ -11,6 +11,14 @@
     @else
         <div class="page-content container">
 
+        <div class="row">
+            <div class="col-lg-6 mb-30">
+            <h1 class="page-title">Finanças</h1>
+            </div>
+        </div>
+       
+
+
             <div class="card shadow">
 
                         <nav class="pt-20">
@@ -48,43 +56,37 @@
                                                 </div>
 
                                                 <div class="col-6 mb-15">
-                                                    <div class="price-holder antecipacao">
+                                                    <div class="price-holder antecipacao" id="pop-antecipacao">
                                                         <h6 class="label-price"> Disponível para antecipar </h6>
                                                         <h4 class="price align-items-baseline">
                                                             R$2.500,00 <span>
-                                                                <a href="#" id="pop-antecipacao">
-                                                                    <svg class="svg-antecipar"
-                                                                        xmlns="http://www.w3.org/2000/svg" width="20"
-                                                                        height="20" viewBox="0 0 24 24">
-                                                                        <path
-                                                                            d="M11 6v8h7v-2h-5v-6h-2zm10.854 7.683l1.998.159c-.132.854-.351 1.676-.652 2.46l-1.8-.905c.2-.551.353-1.123.454-1.714zm-2.548 7.826l-1.413-1.443c-.486.356-1.006.668-1.555.933l.669 1.899c.821-.377 1.591-.844 2.299-1.389zm1.226-4.309c-.335.546-.719 1.057-1.149 1.528l1.404 1.433c.583-.627 1.099-1.316 1.539-2.058l-1.794-.903zm-20.532-5.2c0 6.627 5.375 12 12.004 12 1.081 0 2.124-.156 3.12-.424l-.665-1.894c-.787.2-1.607.318-2.455.318-5.516 0-10.003-4.486-10.003-10s4.487-10 10.003-10c2.235 0 4.293.744 5.959 1.989l-2.05 2.049 7.015 1.354-1.355-7.013-2.184 2.183c-2.036-1.598-4.595-2.562-7.385-2.562-6.629 0-12.004 5.373-12.004 12zm23.773-2.359h-2.076c.163.661.261 1.344.288 2.047l2.015.161c-.01-.755-.085-1.494-.227-2.208z" />
-                                                                    </svg>
-                                                                </a>
+                                                            <a href="#">
+                                                                <svg class="svg-antecipar"
+                                                                    xmlns="http://www.w3.org/2000/svg" width="20"
+                                                                    height="20" viewBox="0 0 24 24">
+                                                                    <path
+                                                                        d="M11 6v8h7v-2h-5v-6h-2zm10.854 7.683l1.998.159c-.132.854-.351 1.676-.652 2.46l-1.8-.905c.2-.551.353-1.123.454-1.714zm-2.548 7.826l-1.413-1.443c-.486.356-1.006.668-1.555.933l.669 1.899c.821-.377 1.591-.844 2.299-1.389zm1.226-4.309c-.335.546-.719 1.057-1.149 1.528l1.404 1.433c.583-.627 1.099-1.316 1.539-2.058l-1.794-.903zm-20.532-5.2c0 6.627 5.375 12 12.004 12 1.081 0 2.124-.156 3.12-.424l-.665-1.894c-.787.2-1.607.318-2.455.318-5.516 0-10.003-4.486-10.003-10s4.487-10 10.003-10c2.235 0 4.293.744 5.959 1.989l-2.05 2.049 7.015 1.354-1.355-7.013-2.184 2.183c-2.036-1.598-4.595-2.562-7.385-2.562-6.629 0-12.004 5.373-12.004 12zm23.773-2.359h-2.076c.163.661.261 1.344.288 2.047l2.015.161c-.01-.755-.085-1.494-.227-2.208z" />
+                                                                </svg>
+                                                            </a>
 
-                                                                <div class="custom-popover shadow-sm"
-                                                                    id="antecipa-popover" style="display: none;">
-                                                                    <div class="d-flex flex-column text-center">
-                                                                        <p style="font-size: 12px; font-weight: 700;"> O
-                                                                            valor antecipado será incluido no seu
-                                                                            <strong style="color: green;"> Saldo
-                                                                                Disponível </strong> </p>
-                                                                        <h5
-                                                                            style="font-size: 16px; font-weight: 700; margin: 0;">
-                                                                            Saldo após antecipação </h5>
-                                                                        <h3 style="font-size: 25px;font-weight: 700;">
-                                                                            R$35.200,00 </h3>
-                                                                        <p
-                                                                            style="font-weight: 300; font-size: 11px; color: black; opacity: 0.8;">
-                                                                            Uma taxa de R$67,90 será cobrada para
-                                                                            liberar o valor antecipado. </p>
-                                                                        <a class="btn btn-outline-success" href="#">
-                                                                            Antecipar </a>
-                                                                    </div>
+                                                            <div class="custom-popover shadow-sm" id="antecipa-popover" style="display: none">
+                                                                <div class="d-flex flex-column text-center">
+                                                                    <p style="font-size: 12px; font-weight: 700;"> O
+                                                                        valor antecipado será incluido no seu
+                                                                        <strong style="color: green;"> Saldo
+                                                                            Disponível </strong> </p>
+                                                                    <h5 style="font-size: 16px; font-weight: 700; margin: 0;">
+                                                                        Saldo após antecipação </h5>
+                                                                    <h3 style="font-size: 25px;font-weight: 700;">
+                                                                        R$35.200,00 </h3>
+                                                                    <p style="font-weight: 300; font-size: 11px; color: black; opacity: 0.8;">
+                                                                        Uma taxa de R$67,90 será cobrada para
+                                                                        liberar o valor antecipado. </p>
+                                                                    <a class="btn btn-outline-success" href="#">
+                                                                        Antecipar </a>
                                                                 </div>
+                                                            </div>
                                                         </h4>
-
-
-
                                                         <div class="grad-border purple"></div>
                                                     </div>
                                                 </div>
@@ -137,10 +139,7 @@
                                                                 <path
                                                                     d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
                                                             </svg>Sacar dinheiro </button>
-
-
-                                                    </div> <small class="text-muted">Cada saque acarreta uma taxa de
-                                                        R$3,80*</small>
+                                                    </div> <small class="text-muted">Cada saque acarreta uma taxa de R$3,80*</small>
 
                                                 </div>
                                             </div>
@@ -269,22 +268,12 @@
                                                                 </svg>
                                                                 Personalizado
                                                             </a>
-
                                                         </div>
-
-
                                                     </div>
-
-
-
-
-
                                                 </div>
                                                 <div class="col-12">
-                                                    <span class="text-muted"> <small> Exibindo resultados de 16 de junho
-                                                            a 16 de julho </small> </span>
+                                                    <span class="text-muted"> <small> Exibindo resultados de 16 de junho a 16 de julho </small> </span>
                                                 </div>
-
                                             </div>
                                         </div>
 
@@ -329,13 +318,20 @@
 
 
   <script>
-            $(document).ready(function () {
 
-                $("#pop-antecipacao").click(function () {
-                    $("#antecipa-popover").toggle().fadeIn('slow');
-                });
+        $(document).ready(function () {
+
+            $("#pop-antecipacao").click(function () {
+                if($("#antecipa-popover").css('display') == 'none'){
+                    $("#antecipa-popover").show(400);
+                }
+                else{
+                    $("#antecipa-popover").hide(400);
+                }
             });
-  </script>
+        });
+
+    </script>
 
 
 @endsection

@@ -74,6 +74,9 @@ class Company extends Model
         'support_email',
         'support_telephone',
         'balance',
+        'bank_document_status',
+        'address_document_status',
+        'contract_document_status',
         'created_at',
         'deleted_at',
         'updated_at',
@@ -82,7 +85,30 @@ class Company extends Model
      * @var array
      */
     private $enum = [
-        'status' => [
+        'document_type'            => [
+            1 => 'bank_document_status',
+            2 => 'address_document_status',
+            3 => 'contract_document_status',
+        ],
+        'bank_document_status'     => [
+            1 => 'pending',
+            2 => 'analyzing',
+            3 => 'approved',
+            4 => 'refused',
+        ],
+        'address_document_status'  => [
+            1 => 'pending',
+            2 => 'analyzing',
+            3 => 'approved',
+            4 => 'refused',
+        ],
+        'contract_document_status' => [
+            1 => 'pending',
+            2 => 'analyzing',
+            3 => 'approved',
+            4 => 'refused',
+        ],
+        'status'                   => [
             1 => 'pending',
             2 => 'analyzing',
             3 => 'approved',

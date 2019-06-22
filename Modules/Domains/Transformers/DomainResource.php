@@ -8,7 +8,7 @@ use Cloudflare\API\Endpoints\Zones;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class DomainsResource extends Resource {
+class DomainResource extends Resource {
 
     public function toArray($request) {
 
@@ -25,7 +25,7 @@ class DomainsResource extends Resource {
                 $status = 'conectado';
             }
             else{
-                $status = 'Desconectado';
+                $status = 'desconectado';
             }
         }
         catch(\Exception $e){
@@ -34,10 +34,11 @@ class DomainsResource extends Resource {
 
         return [
             'id'         => Hashids::encode($this->id),
-            'dominio'    => $this->name,
-            'ip_dominio' => $this->domain_ip,
+            'domain'     => $this->name,
+            'ip_domain'  => $this->domain_ip,
             'status'     => $status   
         ];
+
     }
 
 }

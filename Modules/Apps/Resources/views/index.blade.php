@@ -5,88 +5,53 @@
 @endsection
  
 <div class="page">
-  <div class="page-content container-fluid">
 
-    <h3 style="margin-bottom: 40px"> Aplicativos </h3>
-    <div class="row" style="margin-bottom: 200px">
-
-        <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-          <a href="#">
-            <div class="card card-inverse card-shadow bg-green-600 white" id="widgetSaleBar">
-              <div class="card-block p-0">
-                  <div class="row no-space">
-                    <div class="card-block">
-                      <h4 class="card-title">Hotzapp</h4>
-                      <div class="row">
-                          <div class="col-10">
-                              <p class="card-text">
-                                Integração com Hotzapp.
-                              </p>
-                          </div>
-                          <div class="col-2">
-                              <i class="icon wb-plugin" aria-hidden="true"></i>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-          <a href="{!! route('shopify.index') !!}">
-            <div class="card card-inverse card-shadow bg-blue-600 white" id="widgetSaleBar">
-              <div class="card-block p-0">
-                  <div class="row no-space">
-                    <div class="card-block">
-                      <h4 class="card-title">Shopify</h4>
-                      <div class="row">
-                          <div class="col-10">
-                              <p class="card-text">
-                                Integração com shopify.
-                              </p>
-                          </div>
-                          <div class="col-2">
-                              <i class="icon wb-plugin" aria-hidden="true"></i>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-          </a>
-
-        </div>
-
-        <div class="col-xxl-12 col-lg-4 h-p50 h-only-lg-p100 h-only-xl-p100">
-          {{--  <a href="{!! route('ferramentas.sms') !!}">  --}}
-          <a href="#">
-            <div class="card card-inverse card-shadow bg-yellow-600 white" id="widgetSaleBar">
-              <div class="card-block p-0">
-                  <div class="row no-space">
-                    <div class="card-block">
-                      <h4 class="card-title">SMS</h4>
-                      <div class="row">
-                          <div class="col-10">
-                              <p class="card-text">
-                                Serviço de envio de sms. 
-                              </p>
-                          </div>
-                          <div class="col-2">
-                              <i class="icon wb-envelope" aria-hidden="true"></i>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
-          </a>
-        </div>
-
-          
+<div class="page-header container">
+        <h1 class="page-title">Aplicativos</h1>
     </div>
-  </div>
+
+  <div class="page-content container">
+
+    
+            
+    <div class="row">
+
+
+                      <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="card">
+                                <a href="projetcasasd" class="add-btn"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
+                                <img class="card-img-top" src="{!! asset('modules/global/assets/img/hotzapp.png') !!}" alt="">
+                                <div class="card-body">
+                                    <h5 class="card-title">Hotzapp</h5>
+                                    <p class="card-text sm">Integração seus projetos com o HotZapp</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="card">
+                                <img class="card-img-top" src="{!! asset('modules/global/assets/img/shopify.png') !!}" alt="">
+                                <div class="card-body">
+                                    <h5 class="card-title">Shopify</h5>
+                                    <p class="card-text sm">Integração seus projetos com o Shopify </p>
+                                    <a href="{!! route('shopify.index') !!}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="card">
+                            <a href="#" class="add-btn"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
+                                <img class="card-img-top" src="{!! asset('modules/global/assets/img/sms.png') !!}" alt="">
+                                <div class="card-body">
+                                    <h5 class="card-title">SMS</h5>
+                                    <p class="card-text sm">Integração para disparos de SMS</p>
+                                </div>
+                            </div>
+                        </div>
+
+</div>
+
 </div>
 
 

@@ -9,9 +9,8 @@
         <div class="page-header">
             <h1 class="page-title">Editar empresa</h1>
             <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="/companies">
-                    <i class='icon wb-chevron-left-mini' aria-hidden='true'></i>
-                    Voltar
+                <a class="btn btn-primary float-right" href="{{route('companies.index')}}">
+                    <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
                 </a>
             </div>
         </div>
@@ -117,7 +116,7 @@
                                     </form>
                                 </div>
                                 <div class="tab-pane" id="tab_bank_data" role="tabpanel">
-                                    <form method="POST" action="{!! route('companies.update', ['id' => $company->id_code]) !!}" enctype="multipart/form-data" id='company_update_form'>
+                                    <form method="POST" action="{!! route('companies.update', ['id' => $company->id_code]) !!}" enctype="multipart/form-data" id='company_bank_update_form'>
                                         @csrf
                                         @method('PUT')
                                         <div class="row">
@@ -127,8 +126,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-12">
-                                                <label for="banco">Banco</label>
-                                                <select id="banco" name="banco" class="form-control">
+                                                <label for="bank">Banco</label>
+                                                <select id="bank" name="bank" class="form-control">
                                                     <option value="">Selecione</option>
                                                     @foreach($banks as $bank)
                                                         <option value="{!! $bank['code'] !!}" {!! $company->bank == $bank['code'] ? 'selected' : '' !!}>{!! $bank['code'] . ' - ' .$bank['name'] !!}</option>
@@ -162,18 +161,16 @@
                                     </form>
                                 </div>
                                 <div class="tab-pane" id="tab_documentos" role="tabpanel">
-                                    Envie um documento de identidade e um comprovante de residência<br>
-
+                                    Envie um extrato bancário, um comprovante de residência e o contrato social da empresa<br>
                                     <div id="dropzone">
-                                        <form method="POST" action="{!! route('profile.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                        <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
                                             @csrf
                                             <div class="dz-message needsclick">
                                                 Arraste os arquivos aqui ou click para selecionar.<br/>
                                             </div>
+                                            <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="form-control">
                                             <input id="document_type" name="document_type" value="" type="hidden" class="form-control">
                                         </form>
-                                        Documento de identidade aceitos : Documento oficial com foto.<br>
-                                        Comprovante de residência: Conta de energia, água ou de serviços públicos<br>
                                     </div>
                                     <div class="row">
                                         <div class="panel-heading col-10">
@@ -183,10 +180,10 @@
                                             <tbody>
                                                 <tr class="text-center">
                                                     <td>
-                                                        Documento de identidade
+                                                        Extrato bancário
                                                     </td>
-                                                    <td id='td_personal_status'>
-                                                        {!! $company->personal_document_translate !!}
+                                                    <td id='td_bank_status'>
+                                                        {!! $company->bank_document_translate !!}
                                                     </td>
                                                 </tr>
                                                 <tr class='text-center'>
@@ -197,31 +194,17 @@
                                                         {!! $company->address_document_translate !!}
                                                     </td>
                                                 </tr>
+                                                <tr class='text-center'>
+                                                    <td>
+                                                        Contrato social
+                                                    </td>
+                                                    <td id='td_contract_status'>
+                                                        {!! $company->contract_document_translate !!}
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_change_password" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <h4 class="modal-title" style="width: 100%; text-align:center">Alterar senha</h4>
-                                </div>
-                                <div class="modal-body" style="margin-top: 50px">
-                                    <label for="new_password">Nova senha (mínimo 6 caracteres)</label>
-                                    <input id="new_password" type="password" class="form-control" placeholder="Nova senha">
-                                    <label for="new_password_confirm" style="margin-top: 20px">Nova senha (confirmação)</label>
-                                    <input id="new_password_confirm" type="password" class="form-control" placeholder="Nova senha (confirmação)">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    <button id="password_update" type="button" class="btn btn-success" data-dismiss="modal" disabled>Alterar</button>
                                 </div>
                             </div>
                         </div>
@@ -231,8 +214,8 @@
         </div>
     </div>
     @push('scripts')
-        <script src="{{asset('/modules/profile/js/dropzone.js')}}"></script>
-        <script src="{{asset('/modules/profile/js/profile.js')}}"></script>
+        <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
+        <script src="{{asset('/modules/companies/js/edit.js')}}"></script>
     @endpush
 @endsection
 

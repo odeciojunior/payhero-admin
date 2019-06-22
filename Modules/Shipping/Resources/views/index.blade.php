@@ -1,7 +1,7 @@
 <!-- Page -->
 <div class='row'>
     <div style='width:100%'>
-        <a id='add-shipping' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-detalhes-frete' style='color:white;'>
+        <a id='add-shipping' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
             <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Frete
         </a>
     </div>
@@ -24,30 +24,4 @@
             </tbody>
         </table>
     </div>
-    <!-- Modal detalhes da venda -->
-    <div class='modal fade example-modal-lg modal-3d-flip-vertical' id='modal-detalhes-frete' aria-hidden='true' aria-labelledby='exampleModalTitle' role='dialog' tabindex='-1'>
-        <div class='modal-dialog modal-simple'>
-            <div class='modal-content'>
-                <div class='modal-header'>
-                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                        <span aria-hidden='true'></span>
-                    </button>
-                    <h4 id='modal-frete-titulo' class='modal-title' style='width:100%; text-align:center;'></h4>
-                </div>
-                <div id='modal-frete-body' class='modal-body'>
-                    <div class='row'>
-                        <div class='form-group col-12'>
-                            <label for='information'>Descrição</label>
-                            <input name='information' class='form-control' id='information' placeholder='descricao'>
-                        </div>
-                    </div>
-                </div>
-                <div class='modal-footer'>
-                    <button type='button' id='btn-save-updated' class='btn btn-success' data-dismiss='modal'>Salvar</button>
-                    <button type='button' class='btn btn-danger' data-dismiss='modal'>Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Modal -->
 </div>

@@ -1,0 +1,110 @@
+$(function () {
+
+    var projectId = $("#project-id").val();
+
+    $("#tab-partners").on('click', function () {
+        atualizarPartners();
+    });
+
+    atualizarPartners();
+
+    function maskPercent() {
+        $("#value-remuneration").mask("#0,00%", {reverse: true});
+    }
+
+    $("#add-partners").click(function () {
+        $("#modal-title").html("Cadastrar Parceiro <br><hr>");
+        $("#modal-add-body").html("<h5 style='width: 100%; tex-align: center;'>Carregando...</h5>");
+
+        $.ajax({
+            method: "GET",
+            url: "/partners/create",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function () {
+                $("#modal-add-body").html("Erro ao tentar acessar pagina");
+            },
+            success: function (response) {
+                $("#btn-modal").addClass('btn-save').text('Salvar').show();
+                $("#modal-add-body").html(response);
+
+                maskPercent();
+
+                $(".btn-save").unbind('click');
+                $(".btn-save").click(function () {
+                    var formData = new FormData(document.getElementById("register-partners"));
+                    console.log(formData);
+                    formData.append('project', projectId);
+
+                    $.ajax({
+                        method: "POST",
+                        ulr: "/partners",
+                        headers: {
+                            "X-CSRF-TOKEN": $('meta[name= "csrf-token"]').attr('content')
+                        },
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        data: {formData},
+                        error: function (response) {
+                            if (response.status == '422') {
+                                for (error in response.responseJSON.errors) {
+                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                                }
+                            }
+                        },
+                        success: function (response) {
+                            alertCustom("success", 'Parceiro registrado com sucesso!');
+                            atualizarPartners();
+                        }
+                    });
+                });
+            }
+        })
+
+    });
+
+    function atualizarPartners() {
+        $("#data-table-partners").html("<tr class='text-center'><td colspan='11'>Carregando...</td></tr>");
+
+        $.ajax({
+            method: "GET",
+            url: "/partners",
+            data: {project: projectId},
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            },
+            error: function () {
+                $("#data-table-partners").html("Erro ao encontrar dados");
+            },
+            success: function (response) {
+                $("#data-table-partners").html('');
+                $.each(response.data, function (index, value) {
+                    dados = '';
+                    dados += '<tr>';
+                    dados += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
+                    dados += '<td class="shipping-name text-center" style="vertical-align: middle;">' + value.type + '</td>';
+                    dados += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.status + '</td>';
+                    dados += '<div class="btn-group">';
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-partners'  partners='" + value.partnersId + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-partnes'  partners='" + value.partnersId + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-partnes'  partners='" + value.partnersId + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += '</div>';
+                    dados += '</tr>';
+
+                    $("#data-table-partners").append(dados);
+                });
+
+                if (response.data === '') {
+                    $("#data-table-partners").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align:middle;'>Nenhum registro encontrado </td></tr>")
+                }
+
+                $(".details-partners").unbind('click');
+                /*$(".details-partners").on('click', function () {
+                    var partners
+                })*/
+            }
+        });
+    }
+});

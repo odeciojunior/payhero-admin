@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
+use Modules\Pixels\Transformers\PixelsResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 use Exception;
@@ -38,37 +39,13 @@ class PixelsController extends Controller
     public function index(Request $request)
     {
         try {
-            $data = $request->all();
 
-            if (isset($data['projeto'])) {
-                $projectId = $data['projeto'];
-
-                $projectId = Hashids::decode($projectId)[0];
+            if ($request->has('project')) {
+                $projectId = current(Hashids::decode($request->input('project')));
                 $pixels    = $this->getPixel()->where('project', $projectId)->get();
-            } else {
-                return response()->json('projeto não encontrado');
-            }
 
-            return Datatables::of($pixels)
-                             ->addColumn('detalhes', function($pixel) {
-                                 return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_pixel' data-placement='top' data-toggle='tooltip' title='Detalhes' pixel='" . Hashids::encode($pixel->id) . "'>
-                            <i class='icon wb-order' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_pixel' data-placement='top' data-toggle='tooltip' title='Editar' pixel='" . Hashids::encode($pixel->id) . "'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_pixel' data-placement='top' data-toggle='tooltip' title='Excluir' pixel='" . Hashids::encode($pixel->id) . "'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-                             })
-                             ->rawColumns(['detalhes'])
-                             ->make(true);
+                return PixelsResource::collection($pixels);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar pixels (PixelsController - index)');
             report($e);
@@ -84,11 +61,13 @@ class PixelsController extends Controller
                 return response()->json('erro');
             }
 
-            $validator['project'] = Hashids::decode($validator['project'])[0];
+            $validator['project'] = current(Hashids::decode($validator['project']));
 
             $pixel = $this->getPixel()->create($validator);
+            dd($pixel);
+
             if ($pixel) {
-                return response()->json('Pixel Configurado com sucesso!');
+                return response()->json('Pixel Configurado com sucesso!', 200);
             }
 
             return response()->json('erro');
@@ -193,9 +172,10 @@ class PixelsController extends Controller
     public function create()
     {
         try {
-            $view = view('pixels::create');
+            //            $view = view('pixels::create');
 
-            return response()->json($view->render());
+            //            return response()->json($view->render());
+            return view('pixels::create');
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de cadastro (PixelsController - create)');
             report($e);

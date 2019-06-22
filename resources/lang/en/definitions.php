@@ -21,6 +21,18 @@ return [
             "approved"  => "Aprovado",
             "refused"   => "Recusado",
         ],
+        "contract_document_status"  => [
+            "pending"   => "Pendente",
+            "analyzing" => "Em análise",
+            "approved"  => "Aprovado",
+            "refused"   => "Recusado",
+        ],
+        "bank_document_status"  => [
+            "pending"   => "Pendente",
+            "analyzing" => "Em análise",
+            "approved"  => "Aprovado",
+            "refused"   => "Recusado",
+        ],
         "status"                   => [
             "pending"   => "Pendente",
             "analyzing" => "Em análise",

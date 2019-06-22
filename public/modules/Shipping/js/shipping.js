@@ -19,15 +19,16 @@ $(document).ready(function () {
 
             //mask money
             $('#shipping-value').mask('#.###,#0', {reverse: true});
-
         });
     }
+
     //mask money
     $('#shipping-value').mask('#.###,#0', {reverse: true});
 
     $("#add-shipping").on('click', function () {
-        $("#modal-frete-titulo").html('Cadastrar frete <br><hr>');
-        $("#modal-frete-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+
+        $("#modal-title").html('Cadastrar frete <br><hr>');
+        $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
 
         $.ajax({
             method: "GET",
@@ -36,13 +37,13 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
-                $("#modal-frete-body").html('nao encontrado');
+                $("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
-                $("#btn-save-updated").addClass('btn-save');
-                $("#btn-save-updated").text('Salvar');
-                $("#btn-save-updated").show();
-                $("#modal-frete-body").html(response);
+                $("#btn-modal").addClass('btn-save');
+                $("#btn-modal").text('Salvar');
+                $("#btn-modal").show();
+                $("#modal-add-body").html(response);
                 changeType();
 
                 $(".btn-save").unbind();
@@ -128,27 +129,27 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-detalhes-frete' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-frete'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal_excluir' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-frete'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     dados += '</tr>';
                     $("#dados-tabela-frete").append(dados);
                 });
 
                 if (response.data === '') {
-                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum frete encontrado</td></tr>")
+                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".detalhes-frete").unbind('click');
                 $(".detalhes-frete").on('click', function () {
 
                     var frete = $(this).attr('frete');
 
-                    $("#modal-frete-titulo").html('Detalhes do frete <br><hr>');
-                    $("#modal-frete-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+                    $("#modal-title").html('Detalhes do frete <br><hr>');
+                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
                     var data = {freteId: frete};
 
-                    $("#btn-save-updated").hide();
+                    $("#btn-modal").hide();
 
                     $.ajax({
                         method: "GET",
@@ -160,7 +161,7 @@ $(document).ready(function () {
                         error: function () {
                             //
                         }, success: function (response) {
-                            $("#modal-frete-body").html(response);
+                            $("#modal-add-body").html(response);
 
                         }
                     });
@@ -168,10 +169,11 @@ $(document).ready(function () {
 
                 $(".editar-frete").unbind('click');
                 $(".editar-frete").on("click", function () {
+                    $("#modal-add-body").html("");
                     var frete = $(this).attr('frete');
 
-                    $("#modal-frete-titulo").html("Editar Frete<br><hr>");
-                    $("#modal-frete-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+                    $("#modal-title").html("Editar Frete<br><hr>");
+                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
                     var data = {frete: frete};
 
@@ -185,10 +187,10 @@ $(document).ready(function () {
                         error: function () {
                             //
                         }, success: function (response) {
-                            $("#btn-save-updated").addClass('btn-update');
-                            $("#btn-save-updated").text('Atualizar');
-                            $("#btn-save-updated").show();
-                            $("#modal-frete-body").html(response);
+                            $("#btn-modal").addClass('btn-update');
+                            $("#btn-modal").text('Atualizar');
+                            $("#btn-modal").show();
+                            $("#modal-add-body").html(response);
                             changeType();
                             $('#shipping-value').mask('#.###,#0', {reverse: true});
 
