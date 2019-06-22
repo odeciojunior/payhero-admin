@@ -56,13 +56,13 @@ $(document).ready(function () {
                         }
                     }
 
-                    if (value.status == 'CO' || value.status == 'paid') {
+                    if (value.status == '1') {
                         dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-success'>Aprovada</span></td>";
-                    } else if (value.status == 'CA' || value.status == 'refused') {
+                    } else if (value.status == '3') {
                         dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-danger'>Recusada</span></td>";
-                    } else if (value.status == 'chargedback' || value.status == 'refunded') {
+                    } else if (value.status == '4') {
                         dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-secondary'>Estornada</span></td>";
-                    } else if (value.status == 'PE' || value.status == 'waiting_payment') {
+                    } else if (value.status == '2') {
                         dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-primary'>Pendente</span></td>";
                     } else {
                         dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-primary'>" + value.status + "</span></td>";

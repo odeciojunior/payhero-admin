@@ -72,9 +72,9 @@
             <label for="status">Status</label>
             <select id="status" class="form-control">
               <option value="">Todos status</option>
-              <option value="paid">Aprovado</option>
-              <option value="waiting_payment">Aguardando pagamento</option>
-              <option value="chargedback">Estornada</option>
+              <option value="1">Aprovado</option>
+              <option value="2">Aguardando pagamento</option>
+              <option value="4">Estornada</option>
             </select>
           </div>
           <div class="col-3">

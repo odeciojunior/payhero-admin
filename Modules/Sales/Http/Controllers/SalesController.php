@@ -76,7 +76,7 @@ class SalesController extends Controller {
         //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
         $sales = Sale::where('owner',\Auth::user()->id);
 
-        $sales = $sales->where('gateway_status','!=', 'refused');
+        $sales = $sales->where('status','!=', '3');
 
         if($request->projeto != ''){
             $plans = Plan::where('project',$request->projeto)->pluck('id');
@@ -94,7 +94,7 @@ class SalesController extends Controller {
         }
          
         if($request->status != ''){
-            $sales->where('gateway_status',$request->status);
+            $sales->where('status',$request->status);
         }
 
         if($request->data_inicial != '' && $request->data_final != ''){

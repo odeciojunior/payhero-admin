@@ -49,7 +49,7 @@ class SalesResource extends Resource {
             'product'         => $product,
             'client'          => $client['name'],
             'method'          => $this->payment_method,
-            'status'          => $this->gateway_status, 
+            'status'          => $this->status, 
             'start_date'      => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
             'end_date'        => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
             'total_paid'      => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0 ),
