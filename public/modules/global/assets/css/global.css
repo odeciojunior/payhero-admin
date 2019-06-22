@@ -13,3 +13,9 @@ tbody tr:hover {
   border-image-slice: 2;
 }
 
+.menu-img-active{
+  height:30px;
+  width:30px;
+  margin-left:-5px;
+}
+
