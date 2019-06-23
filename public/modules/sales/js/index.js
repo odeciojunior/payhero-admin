@@ -71,7 +71,7 @@ $(document).ready(function () {
                     dados += "<td style='vertical-align: middle' class='text-center'>" + value.start_date + "</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'>" + value.end_date + "</td>";
                     dados += "<td style='vertical-align: middle;white-space: nowrap' class='text-center'><b>" + value.total_paid + "</b></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes_venda' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes_venda' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' type='button' style='margin-right:10px'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
                     dados += '</tr>';
                     $("#dados_tabela").append(dados);
 
@@ -80,8 +80,6 @@ $(document).ready(function () {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
                 pagination(response);
-
-                var id_venda = '';
 
                 $('.detalhes_venda').unbind('click');
 

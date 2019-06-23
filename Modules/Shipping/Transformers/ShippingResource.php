@@ -19,7 +19,7 @@ class ShippingResource extends Resource
             'name'            => $this->name,
             'information'     => $this->information,
             'value'           => $this->value == null ? 'Calculado automaticamente' : $this->value,
-            'type'            => $this->type == 'static' ? 'Estatico' : ($this->type == 'sedex' ? 'SEDEX - Calculado automaticamente' : 'PAC - Calculado automaticamente'),
+            'type'            => $this->type == 'static' ? 'Estático' : ($this->type == 'sedex' ? 'SEDEX - Calculado automaticamente' : 'PAC - Calculado automaticamente'),
             'zip_code_origin' => $this->zip_code_origin,
             'status'          => $this->status,
             'pre_selected'    => $this->pre_selected,

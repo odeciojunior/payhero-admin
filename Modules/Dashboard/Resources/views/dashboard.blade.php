@@ -74,7 +74,7 @@
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
                       <img src="{{ asset('modules/global/assets/img/svg/moeda-vermelha.svg') }}" width="35px">
-                      <span class="card-desc">Antecipação</span>
+                      <span class="card-desc">Antecipável</span>
                     </div>
                 </div>
                 <div class="card-body font-size-24 text-center d-flex align-items-topline justify-content-center" >
