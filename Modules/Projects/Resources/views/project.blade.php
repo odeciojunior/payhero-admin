@@ -208,7 +208,7 @@
                                     </div>
                                     <h4 id="modal-title" class="modal-title" style="width: 100%; text-align:center"></h4>
                                     <div class="row">
-                                        <div id="modal-add-body" class="form-group col-12" style="margin-top: 30px">
+                                        <div id="modal-add-body" class="form-group col-12">
                                         </div>
                                     </div>
                                     <div class="modal-footer">

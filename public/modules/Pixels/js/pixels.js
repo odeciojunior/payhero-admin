@@ -1,5 +1,4 @@
 $(function () {
-
     var projectId = $("#project-id").val();
 
     $('#tab_pixels').on('click', function () {
@@ -30,11 +29,22 @@ $(function () {
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
 
+                $('.check').on('click', function () {
+                    if ($(this).is(':checked')) {
+                        $(this).val(1);
+                    } else {
+                        $(this).val(0);
+                    }
+                });
+
                 $(".btn-save").unbind('click');
                 $(".btn-save").on('click', function () {
 
                     var formData = new FormData(document.getElementById('form-register-pixel'));
                     formData.append('project', projectId);
+                    formData.append('checkout', $("#checkout").val());
+                    formData.append('purchase_card', $("#purchase_card").val());
+                    formData.append('purchase_boleto', $("#purchase_boleto").val());
 
                     $.ajax({
                         method: "POST",
@@ -140,6 +150,14 @@ $(function () {
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
+                            $('.check').on('click', function () {
+                                if ($(this).is(':checked')) {
+                                    $(this).val(1);
+                                } else {
+                                    $(this).val(0);
+                                }
+                            });
+
                             // changeType();
                             // $('#shipping-value').mask('#.###,#0', {reverse: true});
 
@@ -215,6 +233,7 @@ $(function () {
             }
         });
     }
+
     /// tabela de pixels
     // $("#tabela_pixels").DataTable({
     //     bLengthChange: false,
