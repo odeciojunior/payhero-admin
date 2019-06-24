@@ -201,12 +201,31 @@ class CompaniesController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete($id)
+    public function destroy($encodedId)
     {
+        try {
 
-        Company::find($id)->delete();
+            $company = $this->getCompanyModel()
+                            ->find(current(Hashids::decode($encodedId)));
+            if ($company) {
+                //empresa existe
+                $company->delete();
+            } else {
+                //empresa nao exsite
+                return response()->json(['message' => 'Empresa não emcontrada para remoção'], 422);
+            }
 
-        return redirect()->route('companies');
+            return response()->json(['message' => 'Empresa removida com sucesso'], 200);
+        } catch (Exception $e) {
+            Log::warning('CompaniesController - destroy - error');
+            report($e);
+
+            return response()->json('erro');
+        }
+
+        //Company::find($id)->delete();
+
+        //return redirect()->route('companies');
     }
 
     /**
