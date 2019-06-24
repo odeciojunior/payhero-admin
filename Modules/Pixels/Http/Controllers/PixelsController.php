@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
+use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelsResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
@@ -77,21 +78,20 @@ class PixelsController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function update(PixelUpdateRequest $request, $id)
     {
+        $validated = $request->validated();
         try {
-            $data = $request->input('pixelData');
-            if (empty($data['name']) || empty($data['code']) || empty($data['platform'])) {
-                return response()->json('Erro');
-            }
-            $pixelId      = Hashids::decode($data['id'])[0];
-            $pixel        = $this->getPixel()->find($pixelId);
-            $pixelUpdated = $pixel->update($data);
-            if ($pixelUpdated) {
-                return response()->json('Sucesso');
+            if (isset($validated) && isset($id)) {
+                $pixelId      = Hashids::decode($id)[0];
+                $pixel        = $this->getPixel()->find($pixelId);
+                $pixelUpdated = $pixel->update($validated);
+                if ($pixelUpdated) {
+                    return response()->json('Sucesso', 200);
+                }
             }
 
-            return response()->json('Erro');
+            return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar fazer update dos dados do pixel (PixelsController - update)');
             report($e);
@@ -101,17 +101,17 @@ class PixelsController extends Controller
     public function destroy($id)
     {
         try {
-            if ($id) {
+            if (isset($id)) {
                 $pixelId      = Hashids::decode($id)[0];
                 $pixelDeleted = $this->getPixel()->find($pixelId)->delete();
                 if ($pixelDeleted) {
-                    return response()->json('sucesso');
+                    return response()->json('sucesso', 200);
                 }
 
                 return response()->json('erro');
             }
 
-            return response()->json('erro');
+            return response()->json('erro', 422);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar excluir pixel (PixelsController - destroy)');
             report($e);
@@ -122,44 +122,12 @@ class PixelsController extends Controller
     {
         try {
             $data = $request->all();
-
             if (isset($data['pixelId'])) {
                 $pixelId = Hashids::decode($data['pixelId'])[0];
-
-                $pixel = $this->getPixel()->where('id', $pixelId)->first();
-
-                $modalBody = '';
-
-                $modalBody .= "<div class='col-xl-12 col-lg-12'>";
-                $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
-                $modalBody .= "<thead>";
-                $modalBody .= "</thead>";
-                $modalBody .= "<tbody>";
-                $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Nome:</b></td>";
-                $modalBody .= "<td>" . $pixel->name . "</td>";
-                $modalBody .= "</tr>";
-                $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Código:</b></td>";
-                $modalBody .= "<td>" . $pixel->code . "</td>";
-                $modalBody .= "</tr>";
-                $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Plataforma:</b></td>";
-                $modalBody .= "<td>" . $pixel->platform . "</td>";
-                $modalBody .= "</tr>";
-                $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Status:</b></td>";
-                if ($pixel->status)
-                    $modalBody .= "<td>Ativo</td>";
-                else
-                    $modalBody .= "<td>Inativo</td>";
-                $modalBody .= "</tr>";
-                $modalBody .= "</thead>";
-                $modalBody .= "</table>";
-                $modalBody .= "</div>";
-                $modalBody .= "</div>";
-
-                return response()->json($modalBody);
+                $pixel   = $this->getPixel()->find($pixelId);
+                if ($pixel) {
+                    return view("pixels::details", ['pixel' => $pixel]);
+                }
             }
 
             return response()->json('Erro ao buscar pixel');
@@ -185,12 +153,10 @@ class PixelsController extends Controller
     public function edit(Request $request)
     {
         try {
-            $pixelId = $request->input('id');
+            $pixelId = $request->input('pixelId');
             $pixel   = $this->getPixel()->find(Hashids::decode($pixelId)[0]);
             if ($pixel) {
-                $form = view('pixels::edit', ['pixel' => $pixel]);
-
-                return response()->json($form->render());
+                return view("pixels::edit", ['pixel' => $pixel]);
             }
 
             return response()->json('erro');
