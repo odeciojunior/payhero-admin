@@ -128,7 +128,7 @@ $(document).ready(function () {
                 email: $('#email').val(),
                 celphone: $('#phone').val(),
                 password: $('#password').val(),
-                invite: $('#invite').val()
+                parameter: $('#parameter').val()
             },
             error: function ( response) {
                 if(response.status == '422'){

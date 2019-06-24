@@ -1,7 +1,18 @@
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>
- */
+ */ 
+.dropzone {
+    display: flex !important;
+    min-height: 150px;
+    border: 1px solid #aaa;
+    background: white;
+    padding: 20px 20px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
 .dropzone, .dropzone * {
     box-sizing: border-box;
 }

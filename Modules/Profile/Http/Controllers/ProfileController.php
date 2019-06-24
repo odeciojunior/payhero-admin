@@ -109,14 +109,13 @@ class ProfileController extends Controller
                               'cellphone'    => $requestData['cellphone'],
                               'date_birth'   => $requestData['date_birth'],
                               'zip_code'     => $requestData['zip_code'],
-                              'country'      => $requestData['country'],
+                              'country'      => 'br',
                               'state'        => $requestData['state'],
                               'city'         => $requestData['city'],
                               'neighborhood' => $requestData['neighborhood'],
                               'street'       => $requestData['street'],
                               'number'       => $requestData['number'],
                               'complement'   => $requestData['complement'],
-
                           ]);
 
             $userPhoto = $request->file('profile_photo');
