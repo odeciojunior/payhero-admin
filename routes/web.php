@@ -62,7 +62,7 @@ Route::group(
     ],
     function() {
         // rotas autenticadas
-        Route::resource('/teste', 'TesteController')->names('teste');
+        Route::get('/teste', 'TesteController@index');
     }
 );
 
