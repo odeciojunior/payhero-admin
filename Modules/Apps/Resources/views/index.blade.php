@@ -30,7 +30,7 @@
 
                         <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                             <div class="card">
-                            <a href="#" class="add-btn added"> <i class="icon wb-check" aria-hidden="true"></i> </a>
+                            <a href="/apps/shopify" class="add-btn added"> <i class="icon wb-check" aria-hidden="true"></i> </a>
                                 <img class="card-img-top" src="{!! asset('modules/global/assets/img/shopify.png') !!}" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">Shopify</h5>

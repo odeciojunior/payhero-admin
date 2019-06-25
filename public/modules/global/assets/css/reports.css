@@ -1,0 +1,93 @@
+
+.relatorios {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #40525e !important;
+}
+
+.number {
+    font-weight: 600;
+    font-size: 1.5em;
+    margin-top: 0.2em;
+    
+}
+
+.green {
+    color: #44a44b;
+}
+
+.gray {
+    color: #89898d!important;
+}
+
+.red {
+    color: #ed4d4d!important;
+}
+
+.grafico {
+    min-height: 300px;
+    width: 100%;
+    display: flex;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.text {
+    display: flex;
+    margin-top: 30px;
+    opacity: 0.3;
+    text-transform: uppercase;
+    font-weight: 900 !important;
+    border: 2px solid #8888888c;
+    padding: 150px;
+    width: 100%;
+    align-content: center;
+    align-items:center;
+    justify-content: center;
+    border-radius: 10px;
+
+}
+
+.b-bottom {
+    border-bottom: 1px solid #e6e6e6;
+}
+
+
+
+.empty-400 {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.empty-200 {
+
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.card-min-200 {
+    min-height: 200px;
+}
+
+.card-header {
+    border-bottom: 0px;
+    font-size: 18px !important;
+    color: #40525e; } 
+
+.card-header h4 {
+    font-size: 22px;
+    margin: 0;
+}
+
+.op-5 {
+    opacity: 0.5;
+}
