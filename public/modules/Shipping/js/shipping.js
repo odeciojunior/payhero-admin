@@ -3,6 +3,7 @@ $(document).ready(function () {
     var projectId = $("#project-id").val();
 
     $("#tab-fretes").on('click', function () {
+        $("#previewimage").imgAreaSelect({remove: true});
         atualizarFrete();
     });
     atualizarFrete();

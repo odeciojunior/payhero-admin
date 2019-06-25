@@ -2,6 +2,7 @@ $(function () {
     var projectId = $("#project-id").val();
 
     $('#tab_pixels').on('click', function () {
+        $("#previewimage").imgAreaSelect({remove: true});
         atualizarPixel();
     });
     atualizarPixel();

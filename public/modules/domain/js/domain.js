@@ -3,6 +3,7 @@ $(document).ready(function () {
     var projectId = $("#project-id").val();
 
     $("#tab-domains").on('click', function () {
+        $("#previewimage").imgAreaSelect({remove: true});
         updateDomains();
     });
     updateDomains();

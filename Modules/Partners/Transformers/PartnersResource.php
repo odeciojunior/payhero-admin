@@ -15,9 +15,10 @@ class PartnersResource extends Resource
     {
         return [
             'partnersId' => Hashids::encode($this->id),
-            'name'       => $this->userId->name,
-            'type'       => $this->type == 'partner' ? 'parceiro' : '',
+            'name'       => $this->userId->name ?? '',
+            'type'       => $this->type == 'partner' ? 'parceiro' : 'produtor',
             'status'     => $this->status == 'active' ? 'ativo' : 'desativado',
+
         ];
     }
 }

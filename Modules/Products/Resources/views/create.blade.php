@@ -1,195 +1,162 @@
-@extends("layouts.master") 
+@extends("layouts.master")
 
 @section('content')
 
-@push('css')
-    <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
-@endpush
+    @push('css')
+        <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
+    @endpush
 
-<!-- Page -->
-<div class="page">
-    <div class="page-header container">
-        <h1 class="page-title">Cadastrar novo produto</h1>
-        <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente.  </p>
-        <div class="page-header-actions">
-            <a class="d-none d-lg-block btn btn-primary float-right" href="{{ route('products.index') }}">
-                Meus produtos
-            </a>
+    <!-- Page -->
+    <div class="page">
+        <div class="page-header container">
+            <h1 class="page-title">Cadastrar novo produto</h1>
+            <p class="desc mt-10"> Preencha os dados sobre seu produto atentamente. </p>
+            <div class="page-header-actions">
+                <a class="d-none d-lg-block btn btn-primary float-right" href="{{ route('products.index') }}">
+                    Meus produtos
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="page-content container">
-    <form method="post" action="/products" enctype="multipart/form-data">
-        @csrf
-        <div class="panel pt-30 p-30" data-plugin="matchHeight">
-
-            <nav> 
-                <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-basic-tab" data-toggle="tab" href="#nav-basic" role="tab" aria-controls="nav-basic" aria-selected="true">1. Informações Básicas</a>
-                    <a class="nav-item nav-link" id="nav-logistic-tab" data-toggle="tab" href="#nav-logistic" role="tab" aria-controls="nav-logistic" aria-selected="false">2. Logística</a>
-                </div>
-            </nav>
-
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active p-30" id="nav-basic" role="tabpanel" aria-labelledby="nav-basic-tab">
-
-                    <div class="row justify-content-between align-items-baseline">
-
-                        <div class="col-lg-12">
-                            <h3> 1. Informações Básicas </h3>
-                            <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
+        <div class="page-content container">
+            <form method="post" action="/products" enctype="multipart/form-data">
+                @csrf
+                <div class="panel pt-30 p-30" data-plugin="matchHeight">
+                    <nav>
+                        <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-basic-tab" data-toggle="tab" href="#nav-basic" role="tab" aria-controls="nav-basic" aria-selected="true">1. Informações Básicas</a>
+                            <a class="nav-item nav-link" id="nav-logistic-tab" data-toggle="tab" href="#nav-logistic" role="tab" aria-controls="nav-logistic" aria-selected="false">2. Logística</a>
                         </div>
-
-                        <div class="col-lg-4">
-
-                            <div class="d-flex flex-column" id="div_img" style="position: relative">
-                                <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
-                                <label for="name">Selecione uma imagem</label>
-                                <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/assets/img/produto.png') }}" style="max-height: 250px; max-width: 300px;">
-                                <input type="hidden" name="photo_x1"> <input type="hidden" name="photo_y1">
-                                <input type="hidden" name="photo_w"> <input type="hidden" name="photo_h">
-                                <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> 
-                                    A imagem escolhida deve estar no formato JPG, JPEG, ou PNG. <br> Dimensões ideais: 300 x 300 pixels.
-                                </p>
-                            </div>
-
-                            <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility: hidden">
-                                <label for="digital_product">Produto digital</label>
-                                <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
-                                <p class="info mt-5" style="font-size:10px;"> <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente. <br>.
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-8">
-
-                        <div class="row">
-
-                            <div class="form-group col-lg-12">
-                                <label for="name">Nome</label>
-                                <input name="name" type="text" class="input-pad" id="name" placeholder="O nome do seu produto" required="">
-                            </div>
-
-                            <div class="form-group col-lg-12">
-                                <label for="description">Descrição</label>
-                                <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required=""></textarea>
-                                <p> Máximo 150 caracteres. </p>
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label for="name">Tipo</label>
-
-                                <div class="d-flex justify-content-start">
-                                    <div class="radio-custom radio-primary pr-20">
-                                        <input type="radio" id="fisico" name="format" value="1" checked>
-                                        <label for="fisico">Físico</label>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active p-30" id="nav-basic" role="tabpanel" aria-labelledby="nav-basic-tab">
+                            <div class="row justify-content-between align-items-baseline">
+                                <div class="col-lg-12">
+                                    <h3> 1. Informações Básicas </h3>
+                                    <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="d-flex flex-column" id="div_img" style="position: relative">
+                                        <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
+                                        <label for="name">Selecione uma imagem</label>
+                                        <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/assets/img/produto.png') }}" style="max-height: 250px; max-width: 300px;">
+                                        <input type="hidden" name="photo_x1"> <input type="hidden" name="photo_y1">
+                                        <input type="hidden" name="photo_w"> <input type="hidden" name="photo_h">
+                                        <p class="info mt-5" style="font-size:10px;">
+                                            <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato JPG, JPEG, ou PNG.
+                                            <br> Dimensões ideais: 300 x 300 pixels.
+                                        </p>
                                     </div>
-
-                                    <div class="radio-custom radio-primary d-flex">
-                                        <input type="radio" id="digital" name="format" value="0" disabled>
-                                        <label for="digital">Digital (em breve)</label>
+                                    <div class="d-flex flex-column" id="div_digital_product_upload" style="visibility: hidden">
+                                        <label for="digital_product">Produto digital</label>
+                                        <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
+                                        <p class="info mt-5" style="font-size:10px;">
+                                            <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
+                                            <br>.
                                     </div>
                                 </div>
-
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label for="category">Categoria</label>
-                                <select name="category" class="form-control select-pad">
-                                    <option value="">Selecione</option>
-                                    @foreach($categories as $category)
-                                        <option value="{!! $category['id'] !!}">{!! $category['name'] !!}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label for="cost">Custo</label>
-                                <input name="cost" type="text" class="input-pad money" id="cost" placeholder="Digite o custo" autocomplete="off">
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label for="price">Preço</label>
-                                <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" autocomplete="off">
-                            </div>
-
-                            <div id="div_next_step" class="form-group col-lg-12 text-right">
-                                <button id="next_step" type="button" class="btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i></button>
-                            </div>
-
-                            <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
-                                <button id="save_digital_product" type="submit" class="btn btn-success">Salvar</button>
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="form-group col-lg-12">
+                                            <label for="name">Nome</label>
+                                            <input name="name" type="text" class="input-pad" id="name" placeholder="O nome do seu produto" required="">
+                                        </div>
+                                        <div class="form-group col-lg-12">
+                                            <label for="description">Descrição</label>
+                                            <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required=""></textarea>
+                                            <p> Máximo 150 caracteres. </p>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="name">Tipo</label>
+                                            <div class="d-flex justify-content-start">
+                                                <div class="radio-custom radio-primary pr-20">
+                                                    <input type="radio" id="fisico" name="format" value="1" checked>
+                                                    <label for="fisico">Físico</label>
+                                                </div>
+                                                <div class="radio-custom radio-primary d-flex">
+                                                    <input type="radio" id="digital" name="format" value="0" disabled>
+                                                    <label for="digital">Digital (em breve)</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="category">Categoria</label>
+                                            <select name="category" class="form-control select-pad">
+                                                <option value="">Selecione</option>
+                                                @foreach($categories as $category)
+                                                    <option value="{!! $category['id'] !!}">{!! $category['name'] !!}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="cost">Custo</label>
+                                            <input name="cost" type="text" class="input-pad money" id="cost" placeholder="Digite o custo" autocomplete="off">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="price">Preço</label>
+                                            <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" autocomplete="off">
+                                        </div>
+                                        <div id="div_next_step" class="form-group col-lg-12 text-right">
+                                            <button id="next_step" type="button" class="btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                        <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
+                                            <button id="save_digital_product" type="submit" class="btn btn-success">Salvar</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="tab-pane fade p-30" id="nav-logistic" role="tabpanel" aria-labelledby="nav-logistic-tab">
-
-                <div class="row mt50">
-                    <div class="col-lg-12">
-
-                        <div class="row">
-
-                        <div class="col-lg-12">
-                            <h3> 2. Logística </h3>
-                            <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
-                        </div>
-
-                        <div class="form-group col-lg-4">
-                            <label for="width">Altura (cm)</label>
-                            <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 150cm" data-mask="0#">
-                        </div>
-
-                        <div class="form-group col-lg-4">
-                            <label for="height">Largura (cm)</label>
-                            <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 135cm" data-mask="0#">
-                        </div>
-
-                        <div class="form-group col-lg-4">
-                            <label for="weight">Peso (g)</label>
-                            <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" data-mask="0#">
-                        </div> 
-
-                        <div class="form-group col-lg-6">
-                            <label for="shipping">Transportadora:</label>
-                                <select class="form-control select-pad" id="shipping">
-                                    <option value="proprio" selected>Envio próprio</option>
-                                    <option value="kapsula">Kapsula</option>
-                                    <option value="hubsmart">Hubsmart</option>
-                                    <option value="cosmarca">Cosmarca</option>
-                                    <option value="nutreno">Nutreno</option>
-                                    <option value="nutracaps">Nutracaps</option>
-                                    <option value="biosupra">Biosupra</option>
-                                </select>
+                        <div class="tab-pane fade p-30" id="nav-logistic" role="tabpanel" aria-labelledby="nav-logistic-tab">
+                            <div class="row mt50">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <h3> 2. Logística </h3>
+                                            <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <label for="width">Altura (cm)</label>
+                                            <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 150cm" data-mask="0#">
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <label for="height">Largura (cm)</label>
+                                            <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 135cm" data-mask="0#">
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <label for="weight">Peso (g)</label>
+                                            <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" data-mask="0#">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="shipping">Transportadora:</label>
+                                            <select class="form-control select-pad" id="shipping">
+                                                <option value="proprio" selected>Envio próprio</option>
+                                                <option value="kapsula">Kapsula</option>
+                                                <option value="hubsmart">Hubsmart</option>
+                                                <option value="cosmarca">Cosmarca</option>
+                                                <option value="nutreno">Nutreno</option>
+                                                <option value="nutracaps">Nutracaps</option>
+                                                <option value="biosupra">Biosupra</option>
+                                            </select>
+                                        </div>
+                                        <div id="div_carrier_id" class="form-group col-lg-6" style="display: none">
+                                            <label for="id_shipping">ID na Transportadora:</label>
+                                            <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
+                                        </div>
+                                        <div class="form-group col-lg-12 text-right">
+                                            <button type="submit" class="btn btn-success">Salvar</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div id="div_carrier_id" class="form-group col-lg-6" style="display: none">
-                                <label for="id_shipping">ID na Transportadora:</label>
-                                <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
-                            </div>
-
-                            <div class="form-group col-lg-12 text-right">
-                                <button type="submit" class="btn btn-success">Salvar</button>
-                            </div>
-
                         </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
-@push('scripts')
-    <script src="{!! asset('modules/products/js/products.js') !!}"> </script>
-    <script src="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') !!}"></script>
-    <script src="{!! asset('modules/global/adminremark/global/js/Plugin/dropify.js') !!}"></script>
-@endpush
+    @push('scripts')
+        <script src="{!! asset('modules/products/js/products.js') !!}"></script>
+        <script src="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') !!}"></script>
+        <script src="{!! asset('modules/global/adminremark/global/js/Plugin/dropify.js') !!}"></script>
+    @endpush
 
 @endsection
