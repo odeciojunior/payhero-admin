@@ -4,9 +4,9 @@ $(document).ready(function () {
 
     $("#filtros").on("click", function () {
         if ($("#div_filtros").is(":visible")) {
-            $("#div_filtros").hide(700);
+            $("#div_filtros").slideUp();
         } else {
-            $("#div_filtros").show(700);
+            $("#div_filtros").slideDown();
         }
     });
 

@@ -9,7 +9,7 @@
 <!-- Page -->
   <div class="page">
 
-    <div class="page-header">
+    <div class="page-header container">
         <div class="row align-items-center justify-content-between">
             <div class="col-6">
               <h1 class="page-title">Vendas</h1>
@@ -38,7 +38,7 @@
           </div>
       </div>
 
-      <div class="page-content">
+      <div class="page-content container">
 
         {{--  <div class="col-lg-6 text-right">
             <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
@@ -49,11 +49,11 @@
 
       <div class="fixhalf"></div>
 
-      <div id="div_filtros" class="panel pt-10 p-10" style="display:none">
-        <div class="row">
+      <div id="div_filtros" class="panel p-20" style="display:none">
+        <div class="row align-items-baseline">
           <div class="col-3">
             <label for="projeto">Projeto</label>
-            <select id="projeto" class="form-control">
+            <select id="projeto" class="form-control select-pad">
               <option value="">Todos projetos</option>
               @foreach($projetos as $projeto)
                 <option value="{!! $projeto['id'] !!}">{!! $projeto['nome'] !!}</option>
@@ -62,7 +62,7 @@
           </div>
           <div class="col-3">
             <label for="forma">Forma de pagamento</label>
-            <select id="forma" class="form-control">
+            <select id="forma" class="form-control select-pad">
               <option value="">Boleto e cartão de crédito</option>
               <option value="credit card">Cartão de crédito</option>
               <option value="boleto">Boleto</option>
@@ -70,7 +70,7 @@
           </div>
           <div class="col-3">
             <label for="status">Status</label>
-            <select id="status" class="form-control">
+            <select id="status" class="form-control select-pad">
               <option value="">Todos status</option>
               <option value="1">Aprovado</option>
               <option value="2">Aguardando pagamento</option>
@@ -79,28 +79,31 @@
           </div>
           <div class="col-3">
             <label for="comprador">Nome do cliente</label>
-            <input id="comprador" class="form-control" placeholder="cliente">
+            <input id="comprador" class="form-control input-pad" placeholder="cliente">
           </div>
         </div>
-        <div class="row" style="margin-top:30px">
+        <div class="row mt-15">
           <div class="col-3">
             <label for="data_inicial">Data inicial</label>
-            <input id="data_inicial" class="form-control" type="date">
+            <input id="data_inicial" class="form-control input-pad" type="date">
           </div>
           <div class="col-3">
             <label for="data_final">Data final</label>
-            <input id="data_final" class="form-control" type="date">
+            <input id="data_final" class="form-control input-pad" type="date">
           </div>
           <div class="col-4">
+            <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px"><i class="icon wb-check" aria-hidden="true"></i>Aplicar</button>
           </div>
           <div class="col-2">
-            <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">Aplicar filtros</button>
+           
           </div>
         </div>
       </div>
 
+      <div class="fixhalf"></div>
+
       @if($sales_amount > 0)
-        <div class="panel pt-10 p-10" style="min-height: 300px">
+        <div class="panel p-20" style="min-height: 300px">
           <div class="page-invoice-table table-responsive">
 
             <table id="tabela_vendas" class="table text-right table-vendas table-hover" style="width:100%;">
