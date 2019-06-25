@@ -19,7 +19,7 @@
                         <thead style="text-align:center">
                             <tr>
                                 <th style='vertical-align: middle' class="table-title"><b>Nome fantasia</b></th>
-                                <th style='vertical-align: middle' class="table-title"><b>CNPJ/CPF</b></th>
+                                <th style='vertical-align: middle' class="table-title"><b>Documento</b></th>
                                 <th style='vertical-align: middle' class="table-title"><b>Status</b></th>
                                 <th style='vertical-align: middle' class="table-title" style="width: 160px">
                                     <b>Opções</b>

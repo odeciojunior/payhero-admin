@@ -31,6 +31,7 @@ class CompanyUpdateRequest extends FormRequest
             'agency_digit'      => 'nullable|string|max:255',
             'account'           => 'nullable|string|max:255',
             'account_digit'     => 'nullable|string|max:255',
+            //'routing_number'    => 'nullable|string|max:255',
         ];
     }
 
