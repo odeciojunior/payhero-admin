@@ -2,6 +2,7 @@
 
 namespace Modules\Domains\Http\Controllers;
 
+use App\Entities\Company;
 use Exception;
 use App\Entities\Domain;
 use App\Entities\Project;
@@ -23,6 +24,7 @@ class DomainsController extends Controller
 {
     private $domainModel;
     private $projectModel;
+    private $companyModel;
 
     private function getDomain()
     {
@@ -30,7 +32,7 @@ class DomainsController extends Controller
             $this->domainModel = app(Domain::class);
         }
 
-        return $this->domainModel; 
+        return $this->domainModel;
     }
 
     private function getProject()
@@ -39,7 +41,16 @@ class DomainsController extends Controller
             $this->projectModel = app(Project::class);
         }
 
-        return $this->projectModel; 
+        return $this->projectModel;
+    }
+
+    private function getCompany()
+    {
+        if (!$this->companyModel) {
+            $this->companyModel = app(Company::class);
+        }
+
+        return $this->companyModel;
     }
 
     public function index(Request $request)
@@ -54,8 +65,7 @@ class DomainsController extends Controller
 
                 return DomainResource::collection($project->domains);
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Log::warning('Erro ao buscar dados (DomainsController - index)');
             report($e);
         }
@@ -70,18 +80,18 @@ class DomainsController extends Controller
 
         $project = Project::find($requestData['project']);
 
-        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        $adapter = new Guzzle($key);
-        $dns     = new DNS($adapter);
-        $zones   = new Zones($adapter);
+        //        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+        //        $adapter = new Guzzle($key);
+        //        $dns     = new DNS($adapter);
+        //        $zones   = new Zones($adapter);
 
-        try {
-            $zones->addZone($requestData['name']);
-        } catch (Exception $e) {
-            dd($e);
-
-            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        }
+        //        try {
+        //            $zones->addZone($requestData['name']);
+        //        } catch (Exception $e) {
+        //            dd($e);
+        //
+        //            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
+        //        }
 
         // $zoneID = $zones->getZoneID($requestData['name']);
 
@@ -190,22 +200,84 @@ class DomainsController extends Controller
         //     dd($e);
         // }
 
-        $requestData['status'] = "Conectado";
+        $requestData['status']    = "Conectado";
+        $requestData['domain_ip'] = 'Domínio Shopify';
 
         Domain::create($requestData);
 
         return response()->json('sucesso');
     }
- 
+
     public function edit($id)
     {
-        $domain    = Domain::find($id);
-        $companies = Company::all();
+        try {
+            $domain    = $this->getDomain()->find(Hashids::decode($id)[0]);
+            $companies = $this->getCompany()->all();
+            $project   = $this->getProject()->find($domain['project']);
 
-        return view('domains::editar', [
-            'domain'    => $domain,
-            'companies' => $companies,
-        ]);
+            $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+            $adapter = new Guzzle($key);
+            $dns     = new DNS($adapter);
+            $zones   = new Zones($adapter);
+            $zoneID  = $zones->getZoneID($domain['name']);
+
+            //            try {
+            //                $zoneID = $zones->getZoneID($domain['name']);
+            //            } catch (\Exception $e) {
+            //                //                $form = view('domains::edit', [
+            //                //                    'domain' => $domain,
+            //                //                ]);
+            //                //
+            //                //                return response()->json($form->render());
+            ////                return view('domains::edit', [
+            ////                    'domain' => $domain,
+            ////                ]);
+            //            }
+
+            $registros = [];
+
+            foreach ($dns->listRecords($zoneID)->result as $record) {
+
+                $novo_registro['id']   = $record->id;
+                $novo_registro['tipo'] = $record->type;
+
+                if ($record->name == $domain['name']) {
+                    $novo_registro['nome'] = $record->name;
+                } else {
+                    $subdomain             = explode('.', $record->name);
+                    $novo_registro['nome'] = $subdomain[0];
+                }
+                if ($record->content == "104.248.122.89")
+                    $novo_registro['valor'] = "Servidores CloudFox";
+                else
+                    $novo_registro['valor'] = $record->content;
+
+                if ($novo_registro['nome'] == 'checkout' || $novo_registro['nome'] == 'sac' || $novo_registro['nome'] == 'affiliate' || $novo_registro['nome'] == 'www' || $novo_registro['nome'] == $domain['name']) {
+                    $novo_registro['deletar'] = false;
+                } else {
+                    $novo_registro['deletar'] = true;
+                }
+
+                $registros[] = $novo_registro;
+            }
+            if ($domain) {
+                return view('domains::edit', [
+                    'domain'    => $domain,
+                    'companies' => $companies,
+                    'registers' => $registros,
+                    'project'   => $project,
+                ]);
+            }
+
+            //            $form = view('domains::edit', [
+            //                'domain'    => $domain,
+            //                'registros' => $registros,
+            //                'projeto'   => $project,
+            //            ]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar tela editar Domínio (DomainsController - edit)');
+            report($e);
+        }
     }
 
     public function update(Request $request)
@@ -236,29 +308,33 @@ class DomainsController extends Controller
         return response()->json('sucesso');
     }
 
-    public function delete(Request $request)
+    public function destroy($id)
     {
+        if (isset($id)) {
+            $domainId = Hashids::decode($id)[0];
 
-        $requestData = $request->all();
+            $domain = $this->getDomain()->find($domainId);
 
-        $domain = Domain::where('id', Hashids::decode($requestData['id']))->first();
+            $domainDeleted = $domain->delete();
 
-        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        $adapter = new Guzzle($key);
-        $zones   = new Zones($adapter);
+            $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
+            $adapter = new Guzzle($key);
+            $zones   = new Zones($adapter);
 
-        try {
-            $zones->deleteZone($zones->getZoneID($domain['name']));
-        } catch (Exception $e) {
-            dd($e);
-            flash('Não foi possível deletar o domínio!')->error();
+            try {
+                if ($domainDeleted) {
+                    return response()->json('sucesso', 200);
+                }
+                $zones->deleteZone($zones->getZoneID($domain['name']));
+            } catch (Exception $e) {
+                dd($e);
+                flash('Não foi possível deletar o domínio!')->error();
 
-            return response()->json('Não foi possível deletar o domínio!');
+                return response()->json('Não foi possível deletar o domínio!');
+            }
+
+            return response()->json('erro');
         }
-
-        Domain::find($requestData['id'])->delete();
-
-        return response()->json('sucesso');
     }
 
     public function show($domainId)
@@ -271,7 +347,7 @@ class DomainsController extends Controller
         $dns     = new DNS($adapter);
         $zones   = new Zones($adapter);
 
-        $view = view('domains::show',[
+        $view = view('domains::show', [
             'domain' => $domain,
             'zones'  => $zones->listZones()->result,
         ]);
@@ -291,11 +367,10 @@ class DomainsController extends Controller
 
             $project = $this->getProject()->find($projectId);
 
-            return view('domains::create',[
-                'project' => $project
+            return view('domains::create', [
+                'project' => $project,
             ]);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
             report($e);
         }
@@ -310,66 +385,6 @@ class DomainsController extends Controller
 
         $form = view('domains::create', [
             'project' => $project,
-        ]);
-
-        return response()->json($form->render());
-    }
-
-    public function getFormEditardomain(Request $request)
-    {
-
-        $requestData = $request->all();
-
-        $domain = Domain::where('id', Hashids::decode($requestData['id']))->first();
-
-        $project = Project::find($domain['projeto']);
-
-        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        $adapter = new Guzzle($key);
-        $dns     = new DNS($adapter);
-        $zones   = new Zones($adapter);
-
-        try {
-            $zoneID = $zones->getZoneID($domain['name']);
-        } catch (\Exception $e) {
-            $form = view('domains::editar', [
-                'domain' => $domain,
-            ]);
-
-            return response()->json($form->render());
-        }
-
-        $registros = [];
-
-        foreach ($dns->listRecords($zoneID)->result as $record) {
-
-            $novo_registro['id']   = $record->id;
-            $novo_registro['tipo'] = $record->type;
-
-            if ($record->name == $domain['name']) {
-                $novo_registro['nome'] = $record->name;
-            } else {
-                $subdomain             = explode('.', $record->name);
-                $novo_registro['nome'] = $subdomain[0];
-            }
-            if ($record->content == "104.248.122.89")
-                $novo_registro['valor'] = "Servidores CloudFox";
-            else
-                $novo_registro['valor'] = $record->content;
-
-            if ($novo_registro['nome'] == 'checkout' || $novo_registro['nome'] == 'sac' || $novo_registro['nome'] == 'affiliate' || $novo_registro['nome'] == 'www' || $novo_registro['nome'] == $domain['name']) {
-                $novo_registro['deletar'] = false;
-            } else {
-                $novo_registro['deletar'] = true;
-            }
-
-            $registros[] = $novo_registro;
-        }
-
-        $form = view('domains::edit', [
-            'domain'    => $domain,
-            'registros' => $registros,
-            'projeto'   => $project,
         ]);
 
         return response()->json($form->render());

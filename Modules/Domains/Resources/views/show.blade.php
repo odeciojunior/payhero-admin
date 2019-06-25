@@ -12,9 +12,9 @@
                 <td>{!! $domain->domain_ip !!}</td>
             </tr>
 
-            @foreach ($zones as $zone) {
-                @if($zone->name == $domain->name) {
-                    @foreach ($zone->name_servers as $new_name_server) {
+            @foreach ($zones as $zone)
+                @if($zone->name == $domain->name)
+                    @foreach ($zone->name_servers as $new_name_server)
                         <tr>
                             <td><b>Novo servidor DNS :</b></td>
                             <td> {!! $new_name_server !!}</td>
