@@ -19,7 +19,7 @@ $(document).ready(function () {
                 $.each(response.data, function (index, value) {
                     dados = "<tr>";
                     dados += "<td>" + value.fantasy_name + "</td>";
-                    dados += "<td>" + value.cnpj + "</td>";
+                    dados += "<td>" + value.company_document + "</td>";
                     dados += "<td>" + value.document_status + "</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'><a href='/companies/" + value.id_code + "/edit' class='btn btn-sm btn-outline btn-danger edit-company' data-company='" + value.id_code + "'  type='button'><i class='icon wb-pencil' aria-hidden='true'></i></a></td>";
                     dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-company' data-company='" + value.id_code + "' data-toggle='modal' data-target='#modal_excluir' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";

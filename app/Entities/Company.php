@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  * @property int $user
  * @property string $fantasy_name
- * @property string $cnpj
+ * @property string $company_document
  * @property string $zip_code
  * @property string $country
  * @property string $state
@@ -54,7 +54,7 @@ class Company extends Model
     protected $fillable = [
         'user_id',
         'fantasy_name',
-        'cnpj',
+        'company_document',
         'zip_code',
         'country',
         'state',

@@ -11,34 +11,50 @@ $(document).ready(function () {
         $("#store_form").html('');
 
         $.ajax({
-            method: "GET",
-            url: "/empresas/getformcadastrarempresa/" + $("#country").val(),
+            method: "POST",
+            url: "/companies/getcompanyform/",
+            data: {
+                country: $("#country").val()
+            },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
-                $('.loading').css("visibility", "hidden");
+            error: function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
             },
-            success: function (data) {
-                $('.loading').css("visibility", "hidden");
-                $("#store_form").html(data);
-
-                $("#routing_number").on("blur", function () {
-
-                    $.ajax({
-                        method: "GET",
-                        url: "https://www.routingnumbers.info/api/data.json?rn=" + $("#routing_number").val(),
-                        success: function (data) {
-                            if (data.message == 'OK') {
-                                $("#bank").val(data.customer_name);
-                            } else {
-                                alert(data.message);
-                            }
-                        }
-                    });
-                });
+            success: function (response) {
+                $("#store_form").html(response);
             },
         });
     }
+
+    $("#create_form").on("submit", function (event) {
+        event.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: "/companies",
+            data: $("#create_form").serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
+            },
+            success: function (response) {
+                alertCustom('success', response.message);
+                window.location.replace(response.redirect);
+            },
+        });
+
+    })
 
 });

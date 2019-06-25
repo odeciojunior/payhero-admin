@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Companies\Http\Requests\CompanyCreateFormRequest;
+use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
 use Modules\Core\Services\BankService;
@@ -108,21 +110,27 @@ class CompaniesController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|CompanyResource
      */
-    public function store(Request $request)
+    public function store(CompanyCreateRequest $request)
     {
         try {
-            $requestData = $request->all();
+            $requestData = $request->validated();
 
-            $requestData['user'] = auth()->user()->id;
+            $company = $this->getCompanyModel()->create([
+                                                            'user_id'          => auth()->user()->id,
+                                                            'country'          => $requestData["country"],
+                                                            'fantasy_name'     => $requestData["fantasy_name"],
+                                                            'company_document' => $requestData["company_document"],
+                                                        ]);
 
-            $company = $this->getCompanyModel()->create($requestData);
-
-            return new CompanyResource($company);
+            return response()->json([
+                                        'message'  => 'Dados atualizados com sucesso',
+                                        'redirect' => route('companies.edit', ['idEncoded' => Hashids::encode($company->id)]),
+                                    ], 200);
         } catch (Exception $e) {
             Log::warning('Erro ao cadastrar empresa (CompaniesController - store)');
             report($e);
 
-            return response()->json('erro');
+            return response()->json('erro', 400);
         }
     }
 
@@ -131,18 +139,25 @@ class CompaniesController extends Controller
      * @return mixed
      * @throws \Throwable
      */
-    public function getCreateForm(Request $request)
+    public function getCreateForm(CompanyCreateFormRequest $request)
     {
 
-        if ($request->country == 'brazil') {
-            $view = view('companies::create_brasilian_company', [
-                'bancos' => $this->getBankService()->getBanks('BR'),
-            ]);
-        } else {
-            $view = view('companies::create_american_company');
-        }
+        try {
+            if ($request->country == 'brazil') {
+                $view = view('companies::create_brazilian_company');
+            } else if ($request->country == 'usa') {
+                $view = view('companies::create_american_company');
+            } else {
+                $view = view('companies::create_brazilian_company');
+            }
 
-        return response()->json($view->render());
+            return response()->json($view->render());
+        } catch (Exception $e) {
+            Log::warning('Erro ao criar form de cadastro da empresa (CompaniesController - getCreateForm)');
+            report($e);
+
+            return response()->json('erro', 400);
+        }
     }
 
     /**
@@ -160,15 +175,22 @@ class CompaniesController extends Controller
 
             $companyResource = new CompanyResource($company);
 
-            return view('companies::edit', [
-                'company' => json_decode(json_encode($companyResource)),
-                'banks'   => $banks,
-            ]);
+            if ($company->country == 'brazil') {
+                return view('companies::edit_brazil', [
+                    'company' => json_decode(json_encode($companyResource)),
+                    'banks'   => $banks,
+                ]);
+            } else if ($company->country == 'usa') {
+                return view('companies::edit_usa', [
+                    'company' => json_decode(json_encode($companyResource)),
+                    'banks'   => $banks,
+                ]);
+            }
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
 
-            return response()->json('erro');
+            return response()->json('erro', 400);
         }
     }
 
@@ -193,7 +215,7 @@ class CompaniesController extends Controller
             Log::warning('CompaniesController - update - error');
             report($e);
 
-            return response()->json('erro');
+            return response()->json('erro', 400);
         }
     }
 
@@ -220,89 +242,8 @@ class CompaniesController extends Controller
             Log::warning('CompaniesController - destroy - error');
             report($e);
 
-            return response()->json('erro');
+            return response()->json('erro', 400);
         }
-
-        //Company::find($id)->delete();
-
-        //return redirect()->route('companies');
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function details(Request $request)
-    {
-
-        $requestData = $request->all();
-
-        $company = Company::find($requestData['id_empresa']);
-
-        $modalBody = '';
-
-        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
-        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
-        $modalBody .= "<thead>";
-        $modalBody .= "</thead>";
-        $modalBody .= "<tbody>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Status da conta bancária:</b></td>";
-        if ($company->recipient_id != '')
-            $modalBody .= "<td>Ativa</td>";
-        else
-            $modalBody .= "<td>Inativa</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>CNPJ:</b></td>";
-        $modalBody .= "<td>" . $company->cnpj . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Nome fantasia:</b></td>";
-        $modalBody .= "<td>" . $company->name . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Email:</b></td>";
-        $modalBody .= "<td>" . $company->email . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Telefone:</b></td>";
-        $modalBody .= "<td>" . $company->telefone . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>CEP:</b></td>";
-        $modalBody .= "<td>" . $company->cep . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Estado:</b></td>";
-        $modalBody .= "<td>" . $company->estado . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Cidade:</b></td>";
-        $modalBody .= "<td>" . $company->cidade . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Bairro:</b></td>";
-        $modalBody .= "<td>" . $company->bairro . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Rua:</b></td>";
-        $modalBody .= "<td>" . $company->logradouro . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Número:</b></td>";
-        $modalBody .= "<td>" . $company->numero . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Complemento:</b></td>";
-        $modalBody .= "<td>" . $company->complemento . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "</thead>";
-        $modalBody .= "</table>";
-        $modalBody .= "</div>";
-        $modalBody .= "</div>";
-
-        return response()->json($modalBody);
     }
 
     /**
@@ -329,19 +270,19 @@ class CompaniesController extends Controller
 
             if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'bank_document_status')) {
                 $company->update([
-                                     'bank_document_status' => $company->getEnum('bank_document_status', 'pending'),
+                                     'bank_document_status' => $company->getEnum('bank_document_status', 'analyzing'),
                                  ]);
             }
 
             if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'address_document_status')) {
                 $company->update([
-                                     'address_document_status' => $company->getEnum('address_document_status', 'pending'),
+                                     'address_document_status' => $company->getEnum('address_document_status', 'analyzing'),
                                  ]);
             }
 
             if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'contract_document_status')) {
                 $company->update([
-                                     'contract_document_status' => $company->getEnum('contract_document_status', 'pending'),
+                                     'contract_document_status' => $company->getEnum('contract_document_status', 'analyzing'),
                                  ]);
             }
 

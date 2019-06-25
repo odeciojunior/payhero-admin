@@ -55,6 +55,21 @@ $(document).ready(function () {
 
     });
 
+    $(document).on("blur", '#routing_number', function () {
+        $.ajax({
+            method: "GET",
+            url: "https://www.routingnumbers.info/api/data.json?rn=" + $("#routing_number").val(),
+            success: function (data) {
+                if (data.message == 'OK') {
+                    $("#bank").val(data.customer_name);
+                } else {
+                    alertCustom('error', data.message);
+                    $('#routing_number').focus();
+                }
+            }
+        });
+    });
+
 });
 
 Dropzone.options.dropzoneDocuments = {
