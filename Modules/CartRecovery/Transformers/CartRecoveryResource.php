@@ -42,7 +42,7 @@ class CartRecoveryResource extends Resource
         $value = substr_replace($value, '.',strlen($value) - 2, 0 );
 
         $domain = Domain::where('project',$this->project)->first();
-        $link = "https://checkout.".$domain['name']."/carrinho/".$this->id_log_session;
+        $link = "https://checkout.".$domain['name']."/recovery/".$this->id_log_session;
 
         return [
             'date'            => with(new Carbon($this->created_at))->format('d/m/Y H:i:s'),
@@ -51,7 +51,8 @@ class CartRecoveryResource extends Resource
             'sms_status'      => 'Não enviado',
             'recovery_status' => $status,
             'value'           => $value,
-            'link'            => $link
+            'link'            => $link,
+            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone)
         ];
 
         return parent::toArray($request);

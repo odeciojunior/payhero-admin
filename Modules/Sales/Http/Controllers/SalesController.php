@@ -55,6 +55,8 @@ class SalesController extends Controller {
 
         $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y H:i:s');
 
+        $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
+
         $details = view('sales::details',[
             'sale'     => $sale,
             'plans'    => $plans,

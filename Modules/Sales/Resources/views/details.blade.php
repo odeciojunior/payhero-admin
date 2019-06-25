@@ -26,7 +26,7 @@
                                     <td class="text-left">Boleto</td>
                                 @else
                                     <td class="text-left">Cartão de crédito</td>
-                                @endif
+                                @endif 
                             </tr>
                             <tr style="height: 40px">
                                 <td style="width: 40%" class="text-right">DATA:</td>
@@ -76,7 +76,7 @@
                                 <td style="width: 40%" class="text-right">CPF:</td>
                                 <td style="width:20px">
                                 <td class="text-left">{!! $client['document'] !!}</td>
-                            </tr>
+                            </tr> 
                             <tr style="height: 30px">
                                 <td style="width: 40%" class="text-right">Email:</td>
                                 <td style="width:20px">
@@ -85,7 +85,12 @@
                             <tr style="height: 30px">
                                 <td style="width: 40%" class="text-right">Telefone:</td>
                                 <td style="width:20px">
-                                <td class="text-left">{!! $client['telephone'] !!}</td>
+                                <td class="text-left">
+                                    {!! $client['telephone'] !!}
+                                    <a href="https://api.whatsapp.com/send?phone=55{!! preg_replace("/[^0-9]/", "", $client['telephone']); !!}" target="_blank">
+                                        <img style="height:25px" src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/whatsapp-default.jpg">
+                                    </a>
+                                </td>
                             </tr>
                             @if($delivery)
                                 <tr style="height: 30px">
