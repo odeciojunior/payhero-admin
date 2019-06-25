@@ -219,13 +219,13 @@
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
       <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="{{ route('dashboard') }}">
+        <a href="{{ route('dashboard') }}">
            <img id="dashboard_img" src="{{ asset('modules/global/assets/img/svg/dashboard.svg') }}">
             <span class="site-menu-title">Dashboard</span>
         </a>
       </li>
       <li class="site-menu-item has-sub disabled">
-        <a class="animsition-link disabled"  href="{{ route('showcase') }}">
+        <a class="disabled"  href="{{ route('showcase') }}">
         <img id="showcase_img" src="{{ asset('modules/global/assets/img/svg/vitrine.svg') }}">
             <span class="site-menu-title">Vitrine (em breve)</span>
         </a>
@@ -238,36 +238,36 @@
         </a>
         <ul class="site-menu-sub">
           <li class="site-menu-item has-sub">
-            <a class="animsition-link" href="{!! route('sales') !!}">
+            <a href="{!! route('sales') !!}">
               <span class="site-menu-title">Visão geral</span>
             </a>
           </li>
           <li class="site-menu-item">
-            <a class="animsition-link" href="{!! route('cartrecovery') !!}">
+            <a href="{!! route('cartrecovery') !!}">
               <span class="site-menu-title">Carrinhos abandonados</span>
             </a>
           </li>
           <li class="site-menu-item">
-            <a class="animsition-link" href="#" style="pointer-events: none;cursor: default;">
+            <a href="#" style="pointer-events: none;cursor: default;">
               <span class="site-menu-title">Central de reembolso</span>
             </a>
           </li>
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link"  href="/projects">
+        <a  href="/projects">
         <img id="projects_img" src="{{ asset('modules/global/assets/img/svg/projetos.svg') }}" style="width:17px;">
             <span class="site-menu-title">Projetos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-          <a class="animsition-link" href="{{ route('products.index') }}">
+          <a href="{{ route('products.index') }}">
         <img id="products_img" src="{{ asset('modules/global/assets/img/svg/produtos.svg') }}">
             <span class="site-menu-title">Produtos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub  disabled">
-        <a class="animsition-link disabled"  href="{{ route('attendance') }}">
+        <a class="disabled"  href="{{ route('attendance') }}">
         <img id="attendance_img" src="{{ asset('modules/global/assets/img/svg/atendimento.svg') }}">
             <span class="site-menu-title">Atendimento (em breve)</span>
         </a>
@@ -280,44 +280,44 @@
         </a>
         <ul class="site-menu-sub">
           <li class="site-menu-item">
-            <a class="animsition-link" href="{!! route('afiliados.minhasafiliacoes') !!}">
+            <a href="{!! route('afiliados.minhasafiliacoes') !!}">
               <span class="site-menu-title">Minhas afiliações</span>
             </a>
           </li>
           <li class="site-menu-item">
-            <a class="animsition-link" href="{!! route('afiliados.meusafiliados') !!}">
+            <a href="{!! route('afiliados.meusafiliados') !!}">
               <span class="site-menu-title">Meus afiliados</span>
             </a>
           </li>
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{!! route('finances') !!}">
+        <a href="{!! route('finances') !!}">
         <img id="finances_img" src="{{ asset('modules/global/assets/img/svg/financas.svg') }}">
             <span class="site-menu-title">Finanças</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{!! route('reports.index') !!}">
+        <a href="{!! route('reports.index') !!}">
         <img id="reports_img" src="{{ asset('modules/global/assets/img/svg/configuracao.svg') }}">
             <span class="site-menu-title">Relatórios</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{{ route('apps') }}">
+        <a href="{{ route('apps') }}">
         <img id="apps_img" src="{{ asset('modules/global/assets/img/svg/aplicativos.svg') }}">
             <span class="site-menu-title">Aplicativos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-        <a class="animsition-link" href="{{ route('invitations.invites') }}">
+        <a href="{{ route('invitations.invites') }}">
         <img id="apps_img" src="{{ asset('modules/global/assets/img/svg/convites.svg') }}">
             <span class="site-menu-title">Convites</span>
         </a>
       </li>
 
       {{--  <li class="site-menu-item has-sub">
-        <a class="animsition-link  lh-10" href="#">
+        <a class=" lh-10" href="#">
         <img src="">
             <span class="site-menu-title footer-nav-link">Suporte</span>
         </a>
