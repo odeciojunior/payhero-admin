@@ -35,11 +35,11 @@ class PostBackEbanxController extends Controller {
         $sale = Sale::where('gateway_id',$requestData['hash_codes'])->first();
 
         if(!$sale){
-            Log::write('info', 'Venda não encontrada');
+            Log::write('info', 'Venda não encontrada no retorno do Ebanx com código ' . $requestData['hash_codes']);
             return 'success';
         }
 
-        if($response->payment->status != $sale->pagamento_status){
+        if($response->payment->status != $sale->gateway_status){
 
             $sale->update([
                 'gateway_status' => $response->payment->status
@@ -49,6 +49,10 @@ class PostBackEbanxController extends Controller {
 
             if($response->payment->status == 'CA'){
  
+                $sale->update([
+                    'status' => '3'
+                ]);
+
                 foreach($transactions as $transaction){
                     Transaction::find($transaction['id'])->update('status','cancelada');
                 }
@@ -61,6 +65,7 @@ class PostBackEbanxController extends Controller {
                 $sale->update([
                     'end_date'       => \Carbon\Carbon::now(),
                     'gateway_status' => 'paid',
+                    'status'         => '1'
                 ]);
 
                 foreach($transactions as $t){
@@ -107,7 +112,7 @@ class PostBackEbanxController extends Controller {
                     }
                     catch(\Exception $e){
                         Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$sale['id']);
-                        Log::write('info',  print_r($e, true) );
+                        report($e);
                     }
 
                 }
