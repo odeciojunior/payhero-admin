@@ -15,7 +15,7 @@ class PixelsResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'       => $this->id,
+            'id'       => Hashids::encode($this->id),
             'name'     => $this->name,
             'code'     => $this->code,
             'platform' => $this->platform,

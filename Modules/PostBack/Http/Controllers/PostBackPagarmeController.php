@@ -53,6 +53,7 @@ class PostBackPagarmeController extends Controller {
                 $sale->update([
                     'end_date'       => Carbon::now(),
                     'gateway_status' => 'paid',
+                    'status'         => '1'
                 ]);
 
                 foreach($transactions as $t){
@@ -98,7 +99,7 @@ class PostBackPagarmeController extends Controller {
                     }
                     catch(\Exception $e){
                         Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$sale['id']);
-                        Log::write('info',  print_r($e, true) );
+                        report($e);
                     }
 
                 }

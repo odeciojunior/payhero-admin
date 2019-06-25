@@ -1,15 +1,13 @@
 $(function () {
-
     var projectId = $("#project-id").val();
 
     $('#tab_pixels').on('click', function () {
-        console.log('oi');
         atualizarPixel();
     });
     atualizarPixel();
     //criar novo pixel
     $("#add-pixel").on('click', function () {
-
+        $("#modal-title").html('Adicionar Pixel <br><hr class="my-0">');
         $("#modal_add_size").addClass('modal_simples');
         $("#modal_add_size").removeClass('modal-lg');
 
@@ -31,11 +29,22 @@ $(function () {
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
 
+                $('.check').on('click', function () {
+                    if ($(this).is(':checked')) {
+                        $(this).val(1);
+                    } else {
+                        $(this).val(0);
+                    }
+                });
+
                 $(".btn-save").unbind('click');
                 $(".btn-save").on('click', function () {
 
                     var formData = new FormData(document.getElementById('form-register-pixel'));
                     formData.append('project', projectId);
+                    formData.append('checkout', $("#checkout").val());
+                    formData.append('purchase_card', $("#purchase_card").val());
+                    formData.append('purchase_boleto', $("#purchase_boleto").val());
 
                     $.ajax({
                         method: "POST",
@@ -54,15 +63,12 @@ $(function () {
                         }, success: function () {
                             $(".loading").css("visibility", "hidden");
                             alertCustom("success", "Pixel Adicionado!");
-                            $("#modal_add_produto").hide();
-                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                            atualizarPixel();
                         }
                     });
                 });
             }
         });
-
     });
     function atualizarPixel() {
         $("#data-table-pixel").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
@@ -92,192 +98,319 @@ $(function () {
                     }
                     data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-pixel'  frete='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-pixel'  frete='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-pixel'  frete='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-pixel'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
                     data += '</tr>';
                     $("#data-table-pixel").append(data);
                 });
-            }
-        });
-    }
-    /// tabela de pixels
-    $("#tabela_pixels").DataTable({
-        bLengthChange: false,
-        ordering: false,
-        processing: true,
-        responsive: true,
-        serverSide: true,
-        ajax: {
-            url: '/pixels',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'GET',
-            data: {
-                projeto: projectId,
-            },
-        },
-        columns: [
-            {data: 'name', name: 'name'},
-            {data: 'code', name: 'code'},
-            {data: 'platform', name: 'platform'},
-            {
-                data: function (data) {
-                    if (data.status == 1) {
-                        return 'Ativo';
-                    } else {
-                        return 'Inativo';
-                    }
-                }, name: 'status'
-            },
-            {
-                data: 'detalhes',
-                name: 'detalhes',
-                orderable: false,
-                searchable: false
-            },
-        ],
-        "language": {
-            "sProcessing": "Carregando...",
-            "lengthMenu": "Apresentando _MENU_ registros por página",
-            "zeroRecords": "Nenhum registro encontrado",
-            "info": "Apresentando página _PAGE_ de _PAGES_",
-            "infoEmpty": "Nenhum registro encontrado",
-            "infoFiltered": "(filtrado por _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Procurar :",
-            "sUrl": "",
-            "sLoadingRecords": "Carregando...",
-            "oPaginate": {
-                "sFirst": "Primeiro",
-                "sLast": "Último",
-                "sNext": "Próximo",
-                "sPrevious": "Anterior",
-            },
-        },
-        "drawCallback": function () {
-            $(".detalhes_pixel").on('click', function () {
-                var pixel = $(this).attr('pixel');
-                $('#modal_detalhes_titulo').html('Detalhes do Pixel');
-                $("#modal_detalhes_body").html("<h5 style='width: 100%; text-align: center;'>Carregando...</h5>");
-                $.ajax({
-                    method: "GET",
-                    url: "/pixels/" + pixel,
-                    data: {pixelId: pixel},
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    error: function () {
-                        alertCustom('error', 'Ocorreu algum erro');
-                    },
-                    success: function (response) {
-                        $("#modal_detalhes_body").html(response);
-                    }
-                });
-
-                /*$.get("/pixels/", data).then(function () {
-                    $("#modal_detalhes_body").html(response);
-                });*/
-            });
-
-            //// Excluir pixel
-            var id_pixel = '';
-            $(".excluir_pixel").on('click', function () {
-                id_pixel = $(this).attr('pixel');
-                var name = $(this).closest("tr").find("td:first-child").text();
-                $("#modal_excluir_titulo").html("Remover do projeto o pixel " + name + "?");
-
-                $("#bt_excluir").unbind('click');
-                $("#bt_excluir").on('click', function () {
-                    $(".loading").css('visibility', 'visible');
-                    $("#fechar_modal_excluir").click();
-
+                if (response.data === '') {
+                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                }
+                $(".details-pixel").unbind('click');
+                $(".details-pixel").on('click', function () {
+                    var pixel = $(this).attr('pixel');
+                    $("#modal-title").html('Detalhes do pixel <br><hr>');
+                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+                    var data = {pixelId: pixel};
+                    $("#btn-modal").hide();
                     $.ajax({
-                        method: "DELETE",
-                        url: "/pixels/" + id_pixel,
+                        method: "GET",
+                        url: "/pixels/" + pixel,
+                        data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function () {
-                            $(".loading").css('visibility', 'hidden');
-                            alertCustom('error', 'Ocorreu algum erro');
-                        },
-                        success: function () {
-                            $(".loading").css('visibility', 'hidden');
-                            alertCustom('success', 'Pixel Removido com sucesso!');
-                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                            //
+                        }, success: function (response) {
+                            $("#modal-add-body").html(response);
+
                         }
                     });
                 });
-            });
-
-            /// Editar pixel
-            $(".editar_pixel").on('click', function () {
-                $("#modal_editar_tipo").addClass('modal-simple');
-                $("#modal_editar_tipo").removeClass('modal-lg');
-
-                id_pixel = $(this).attr('pixel');
-
-                $("#modal_editar_body").html("<div style='text-align:center'>Carregango...</div>");
-
-                $.ajax({
-                    method: "GET",
-                    url: "/pixels/" + id_pixel + "/edit",
-                    data: {id: id_pixel},
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    error: function () {
-                        alertPersonalizado('error', 'Ocorreu algum erro');
-                    },
-                    success: function (data) {
-                        $('#modal_editar_body').html(data);
-
-                        $('#editar').unbind('click');
-
-                        $('#editar').on('click', function () {
-
-                            $('.loading').css("visibility", "visible");
-
-                            var paramObj = {};
-                            $.each($('#editar_pixel').serializeArray(), function (_, kv) {
-                                if (paramObj.hasOwnProperty(kv.name)) {
-                                    paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                                    paramObj[kv.name].push(kv.value);
+                $(".edit-pixel").unbind('click');
+                $(".edit-pixel").on('click', function () {
+                    $("#modal-add-body").html("");
+                    var pixel = $(this).attr('pixel');
+                    $("#modal-title").html("Editar Pixel<br><hr>");
+                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+                    var data = {pixelId: pixel};
+                    $.ajax({
+                        method: "GET",
+                        url: "/pixels/" + pixel + "/edit",
+                        data: data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function () {
+                            //
+                        }, success: function (response) {
+                            $("#btn-modal").addClass('btn-update');
+                            $("#btn-modal").text('Atualizar');
+                            $("#btn-modal").show();
+                            $("#modal-add-body").html(response);
+                            $('.check').on('click', function () {
+                                if ($(this).is(':checked')) {
+                                    $(this).val(1);
                                 } else {
-                                    paramObj[kv.name] = kv.value;
-                                }
-                            });
-                            paramObj['id'] = id_pixel;
-
-                            $.ajax({
-                                method: "PUT",
-                                url: "/pixels/" + id_pixel,
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: {pixelData: paramObj},
-                                error: function () {
-                                    $('.loading').css("visibility", "hidden");
-                                    alertCustom('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('.loading').css("visibility", "hidden");
-                                    alertPersonalizado('success', 'Pixel atualizado!');
-                                    $($.fn.dataTable.tables(true)).css('width', '100%');
-                                    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                                    $(this).val(0);
                                 }
                             });
 
-                        });
+                            // changeType();
+                            // $('#shipping-value').mask('#.###,#0', {reverse: true});
 
-                    }
+                            $(".btn-update").unbind('click');
+                            $(".btn-update").on('click', function () {
+
+                                $.ajax({
+                                    method: "PUT",
+                                    url: "/pixels/" + pixel,
+                                    headers: {
+                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    data: {
+                                        name: $("#name").val(),
+                                        code: $("#code").val(),
+                                        platform: $("#platform").val(),
+                                        status: $("#status").val(),
+                                        checkout: $("#checkout").val(),
+                                        purchase_card: $("#purchase_card").val(),
+                                        purchase_boleto: $("#purchase_boleto").val(),
+                                        purchase_card: $("#purchase_card").val(),
+
+                                    },
+                                    error: function () {
+                                        if (response.status == '422') {
+                                            for (error in response.responseJSON.errors) {
+                                                alertCustom('error', String(response.responseJSON.errors[error]));
+                                            }
+                                        }
+                                    },
+                                    success: function (data) {
+                                        alertCustom("success", "Pixel atualizado com sucesso");
+                                        atualizarPixel();
+                                    }
+                                });
+
+                            });
+                        }
+                    });
+
                 });
-            });
 
-        }
-    });
+                $('.delete-pixel').on('click', function (event) {
+                    event.preventDefault();
+                    var pixel = $(this).attr('pixel');
+                    $("#modal_excluir_titulo").html("Remover Pixel?");
+                    $("#bt_excluir").unbind('click');
+                    $("#bt_excluir").on('click', function () {
+                        $("#fechar_modal_excluir").click();
+
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/pixels/" + pixel,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function () {
+                                if (response.status == '422') {
+                                    for (error in response.responseJSON.errors) {
+                                        alertCustom('error', String(response.responseJSON.errors[error]));
+                                    }
+                                }
+                            },
+                            success: function (data) {
+                                alertCustom("success", "Pixel Removido com sucesso");
+                                atualizarPixel();
+                            }
+
+                        })
+                    });
+
+                });
+            }
+        });
+    }
+
+    /// tabela de pixels
+    // $("#tabela_pixels").DataTable({
+    //     bLengthChange: false,
+    //     ordering: false,
+    //     processing: true,
+    //     responsive: true,
+    //     serverSide: true,
+    //     ajax: {
+    //         url: '/pixels',
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         type: 'GET',
+    //         data: {
+    //             projeto: projectId,
+    //         },
+    //     },
+    //     columns: [
+    //         {data: 'name', name: 'name'},
+    //         {data: 'code', name: 'code'},
+    //         {data: 'platform', name: 'platform'},
+    //         {
+    //             data: function (data) {
+    //                 if (data.status == 1) {
+    //                     return 'Ativo';
+    //                 } else {
+    //                     return 'Inativo';
+    //                 }
+    //             }, name: 'status'
+    //         },
+    //         {
+    //             data: 'detalhes',
+    //             name: 'detalhes',
+    //             orderable: false,
+    //             searchable: false
+    //         },
+    //     ],
+    //     "language": {
+    //         "sProcessing": "Carregando...",
+    //         "lengthMenu": "Apresentando _MENU_ registros por página",
+    //         "zeroRecords": "Nenhum registro encontrado",
+    //         "info": "Apresentando página _PAGE_ de _PAGES_",
+    //         "infoEmpty": "Nenhum registro encontrado",
+    //         "infoFiltered": "(filtrado por _MAX_ registros)",
+    //         "sInfoPostFix": "",
+    //         "sSearch": "Procurar :",
+    //         "sUrl": "",
+    //         "sLoadingRecords": "Carregando...",
+    //         "oPaginate": {
+    //             "sFirst": "Primeiro",
+    //             "sLast": "Último",
+    //             "sNext": "Próximo",
+    //             "sPrevious": "Anterior",
+    //         },
+    //     },
+    //     "drawCallback": function () {
+    //         $(".detalhes_pixel").on('click', function () {
+    //             var pixel = $(this).attr('pixel');
+    //             $('#modal_detalhes_titulo').html('Detalhes do Pixel');
+    //             $("#modal_detalhes_body").html("<h5 style='width: 100%; text-align: center;'>Carregando...</h5>");
+    //             $.ajax({
+    //                 method: "GET",
+    //                 url: "/pixels/" + pixel,
+    //                 data: {pixelId: pixel},
+    //                 headers: {
+    //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //                 },
+    //                 error: function () {
+    //                     alertCustom('error', 'Ocorreu algum erro');
+    //                 },
+    //                 success: function (response) {
+    //                     $("#modal_detalhes_body").html(response);
+    //                 }
+    //             });
+    //
+    //             /*$.get("/pixels/", data).then(function () {
+    //                 $("#modal_detalhes_body").html(response);
+    //             });*/
+    //         });
+    //
+    //         //// Excluir pixel
+    //         var id_pixel = '';
+    //         $(".excluir_pixel").on('click', function () {
+    //             id_pixel = $(this).attr('pixel');
+    //             var name = $(this).closest("tr").find("td:first-child").text();
+    //             $("#modal_excluir_titulo").html("Remover do projeto o pixel " + name + "?");
+    //
+    //             $("#bt_excluir").unbind('click');
+    //             $("#bt_excluir").on('click', function () {
+    //                 $(".loading").css('visibility', 'visible');
+    //                 $("#fechar_modal_excluir").click();
+    //
+    //                 $.ajax({
+    //                     method: "DELETE",
+    //                     url: "/pixels/" + id_pixel,
+    //                     headers: {
+    //                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //                     },
+    //                     error: function () {
+    //                         $(".loading").css('visibility', 'hidden');
+    //                         alertCustom('error', 'Ocorreu algum erro');
+    //                     },
+    //                     success: function () {
+    //                         $(".loading").css('visibility', 'hidden');
+    //                         alertCustom('success', 'Pixel Removido com sucesso!');
+    //                         $($.fn.dataTable.tables(true)).css('width', '100%');
+    //                         $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+    //                     }
+    //                 });
+    //             });
+    //         });
+    //
+    //         /// Editar pixel
+    //         $(".editar_pixel").on('click', function () {
+    //             $("#modal_editar_tipo").addClass('modal-simple');
+    //             $("#modal_editar_tipo").removeClass('modal-lg');
+    //
+    //             id_pixel = $(this).attr('pixel');
+    //
+    //             $("#modal_editar_body").html("<div style='text-align:center'>Carregango...</div>");
+    //
+    //             $.ajax({
+    //                 method: "GET",
+    //                 url: "/pixels/" + id_pixel + "/edit",
+    //                 data: {id: id_pixel},
+    //                 headers: {
+    //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //                 },
+    //                 error: function () {
+    //                     alertPersonalizado('error', 'Ocorreu algum erro');
+    //                 },
+    //                 success: function (data) {
+    //                     $('#modal_editar_body').html(data);
+    //
+    //                     $('#editar').unbind('click');
+    //
+    //                     $('#editar').on('click', function () {
+    //
+    //                         $('.loading').css("visibility", "visible");
+    //
+    //                         var paramObj = {};
+    //                         $.each($('#editar_pixel').serializeArray(), function (_, kv) {
+    //                             if (paramObj.hasOwnProperty(kv.name)) {
+    //                                 paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+    //                                 paramObj[kv.name].push(kv.value);
+    //                             } else {
+    //                                 paramObj[kv.name] = kv.value;
+    //                             }
+    //                         });
+    //                         paramObj['id'] = id_pixel;
+    //
+    //                         $.ajax({
+    //                             method: "PUT",
+    //                             url: "/pixels/" + id_pixel,
+    //                             headers: {
+    //                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //                             },
+    //                             data: {pixelData: paramObj},
+    //                             error: function () {
+    //                                 $('.loading').css("visibility", "hidden");
+    //                                 alertCustom('error', 'Ocorreu algum erro');
+    //                             },
+    //                             success: function (data) {
+    //                                 $('.loading').css("visibility", "hidden");
+    //                                 alertPersonalizado('success', 'Pixel atualizado!');
+    //                                 $($.fn.dataTable.tables(true)).css('width', '100%');
+    //                                 $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+    //                             }
+    //                         });
+    //
+    //                     });
+    //
+    //                 }
+    //             });
+    //         });
+    //
+    //     }
+    // });
 
 });

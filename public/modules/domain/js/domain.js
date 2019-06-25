@@ -22,11 +22,11 @@ $(document).ready(function () {
                 $("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
-                
+
                 $("#btn-modal").addClass('btn-save');
                 $("#btn-modal").text('Salvar');
                 $("#btn-modal").show();
-                
+
                 $("#modal-add-body").html(response);
 
                 $(".btn-save").unbind();
@@ -37,7 +37,7 @@ $(document).ready(function () {
 
                     $.ajax({
                         method: "POST",
-                        url: "/domains/",
+                        url: "/domains",
                         processData: false,
                         contentType: false,
                         cache: false,
@@ -95,9 +95,9 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes-dominio'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-dominio'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-dominio'  domain='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-domain'  domain='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     dados += '</tr>';
                     $("#domain-table-body").append(dados);
@@ -107,8 +107,8 @@ $(document).ready(function () {
                     $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum dominio encontrado</td></tr>")
                 }
 
-                $(".detalhes-dominio").unbind('click');
-                $(".detalhes-dominio").on('click', function () {
+                $(".details-domain").unbind('click');
+                $(".details-domain").on('click', function () {
 
                     var dominio = $(this).attr('domain');
 
@@ -131,15 +131,13 @@ $(document).ready(function () {
                     });
                 });
 
-                $(".editar-dominio").unbind('click');
-                $(".editar-dominio").on("click", function () {
-                    var dominio = $(this).attr('dominio');
-
-                    $("#modal-dominio-titulo").html("Editar dominio<br><hr>");
-                    $("#modal-dominio-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-
+                $(".edit-domain").unbind('click');
+                $(".edit-domain").on("click", function () {
+                    $("#modal-add-body").html("");
+                    var dominio = $(this).attr('domain');
+                    $("#modal-title").html("Editar Domínio<br><hr>");
+                    // $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
                     var data = {dominio: dominio};
-
                     $.ajax({
                         method: "GET",
                         url: "/domains/" + dominio + "/edit",
@@ -150,11 +148,16 @@ $(document).ready(function () {
                         error: function () {
                             //
                         }, success: function (response) {
-                            $("#btn-save-updated").addClass('btn-update');
-                            $("#btn-save-updated").text('Atualizar');
-                            $("#btn-save-updated").show();
-                            $("#modal-dominio-body").html(response);
-                            changeType();
+                            // $("#btn-save-updated").addClass('btn-update');
+                            // $("#btn-save-updated").text('Atualizar');
+                            // $("#btn-save-updated").show();
+                            // $("#modal-add-body").html(response);
+                            // changeType();
+                            $("#btn-modal").addClass('btn-update');
+                            $("#btn-modal").text('Atualizar');
+                            $("#modal_add_size").addClass('modal-lg');
+                            $("#btn-modal").show();
+                            $("#modal-add-body").html(response);
                             $('#dominio-value').mask('#.###,#0', {reverse: true});
 
                             $(".btn-update").unbind('click');
@@ -193,9 +196,9 @@ $(document).ready(function () {
                     });
                 });
 
-                $(".excluir-dominio").on('click', function (event) {
+                $(".delete-domain").on('click', function (event) {
                     event.preventDefault();
-                    var dominio = $(this).attr('dominio');
+                    var dominio = $(this).attr('domain');
 
                     $("#modal_excluir_titulo").html("Remover dominio?");
 

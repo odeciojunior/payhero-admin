@@ -17,17 +17,54 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $.each(response.data, function (index, value) {
-                    console.log(value.id_code);
-
                     dados = "<tr>";
                     dados += "<td>" + value.fantasy_name + "</td>";
                     dados += "<td>" + value.cnpj + "</td>";
                     dados += "<td>" + value.document_status + "</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'><a href='/companies/" + value.id_code + "/edit' class='btn btn-sm btn-outline btn-danger edit-company' data-company='" + value.id_code + "'  type='button'><i class='icon wb-pencil' aria-hidden='true'></i></a></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><a href='/companies/" + value.id_code + "/destroy' class='btn btn-sm btn-outline btn-danger delete-company' data-company='" + value.id_code + "' type='button'><i class='icon wb-trash' aria-hidden='true'></i></a></td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-company' data-company='" + value.id_code + "' data-toggle='modal' data-target='#modal_excluir' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
                     dados += "</tr>";
 
                     $("#companies_table_data").append(dados);
+
+                    $(".delete-company").unbind('click');
+                    $(".delete-company").on('click', function (event) {
+                        event.preventDefault();
+                        var companyId = $(this).attr('data-company');
+
+                        $("#modal_excluir_titulo").html("Remover empresa?");
+
+                        $("#bt_excluir").unbind('click');
+                        $("#bt_excluir").on("click", function (event) {
+                            event.preventDefault();
+                            $("#fechar_modal_excluir").click();
+
+                            $.ajax({
+                                method: "DELETE",
+                                url: "/companies/" + companyId,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                error: function () {
+                                    if (response.status == '422') {
+                                        for (error in response.responseJSON.errors) {
+                                            alertCustom('error', String(response.responseJSON.errors[error]));
+                                        }
+                                    }
+                                },
+                                success: function (data) {
+                                    alertCustom("success", data.message);
+                                    atualizar(page);
+                                }
+
+                            })
+
+                        });
+                    })
+
+
+
+
 
                 });
 

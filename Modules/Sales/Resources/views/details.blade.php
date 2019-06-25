@@ -46,7 +46,7 @@
                                     <td class="text-left">{!! $sale['gateway_status'] !!}</td>
                                 @endif
                             </tr>
-                            @if($sale['payment_form'] == 'boleto')
+                            @if($sale['payment_method'] == '2')
                                 <tr style="height: 60px">
                                     <td colspan='3' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
                                 </tr>

@@ -140,10 +140,9 @@
               </div>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
-                data-animation="scale-up" role="button">
+              <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
                 <span class="avatar avatar-online">
-                  <img src="{!! \Auth::user()->photo != '' ? \Auth::user()->photo : asset('modules/global/assets/img/user-default.png') !!}" alt="...">
+                  <img src="{!! \Auth::user()->photo ? \Auth::user()->photo : 'https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/user-default.png' !!}" alt="">
                   <i></i>
                 </span>
               </a>

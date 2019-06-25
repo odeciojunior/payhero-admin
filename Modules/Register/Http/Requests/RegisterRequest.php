@@ -14,11 +14,11 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'    => 'required|unique:users|max:200',
-            'name'     => 'required',
-            'celphone' => 'required',
-            'password' => 'required',
-            'invite'   => 'required',
+            'email'     => 'required|unique:users|max:200',
+            'name'      => 'required',
+            'celphone'  => 'required',
+            'password'  => 'required',
+            'parameter' => 'nullable',
         ];
     }
 
@@ -40,12 +40,12 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'    => 'Precisamos do seu email para continuar',
-            'email.unique'      => 'Email informado ja esta sendo utilizado',
-            'name.required'     => 'Precisamos do seu nome para continuar',
-            'celphone.required' => 'Precisamos do seu celular para continuar',
-            'password.required' => 'Password inválido',
-            'invite.required'   => 'Password inválido',
+            'email.required'     => 'Precisamos do seu email para continuar',
+            'email.unique'       => 'Email informado ja esta sendo utilizado',
+            'name.required'      => 'Precisamos do seu nome para continuar',
+            'celphone.required'  => 'Precisamos do seu celular para continuar',
+            'password.required'  => 'Password inválido',
         ];
     }
+
 }

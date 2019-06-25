@@ -13,8 +13,7 @@
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
 
-    <script
-        src="https://code.jquery.com/jquery-3.4.1.js"
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
         integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -39,7 +38,7 @@
         <div class="container">
             <div class="wrap">
                 <form class="mt10">
-                    <input type='hidden' id='invite' value='{{$invite->id}}'>
+                    <input type='hidden' id='parameter' value='{{$parameter}}'>
                     <div id="login" class="div1">
                         <h4 class="bold title-content">Confirme seus dados</h4>
                         <p class="desc"> Esses são os dados que recebemos na sua solicitação de convite. Confirme ou corrija-os.

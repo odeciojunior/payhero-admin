@@ -1,16 +1,5 @@
 $(document).ready(function () {
 
-    //
-    /*
-        $.ajax({
-            method: "POST",
-            url: "/sms/enviarsmsmanual",
-            processData: false,
-            contentType: false,
-            cache: false,
-            data: form_data,
-            */
-
     $("#profile_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('profile_update_form'));
@@ -100,7 +89,7 @@ $(document).ready(function () {
 
     });
 
-    $("#select_profile_photo").on("click", function () {
+    $("#previewimage").on("click", function () {
         $("#profile_photo").click();
     });
 
@@ -176,6 +165,38 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
+    $("#zip_code").on("input", function(){
+
+        var cep = $('#zip_code').val().replace(/[^0-9]/g, '');
+
+        if(cep.length != 8)
+            return false;
+
+        $.ajax({
+            url : "https://viacep.com.br/ws/"+ cep +"/json/", 
+            type : "GET",
+            cache: false,
+            async: false,
+            success : function(response) {
+
+                if(response.localidade){
+                    $("#city").val(unescape(response.localidade));
+                }
+                if(response.bairro){
+                    $("#neighborhood").val(unescape(response.bairro));
+                }
+                if(response.uf){
+                    $("#state").val(unescape(response.uf));
+                }
+                if(response.logradouro){
+                    $("#street").val(unescape(response.logradouro));
+                }
+
+            }
+        });
+
+    });
+
 });
 
 Dropzone.options.dropzoneDocuments = {
@@ -241,8 +262,4 @@ Dropzone.options.dropzoneDocuments = {
     }
 
 };
-
-
-
-
 
