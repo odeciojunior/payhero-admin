@@ -65,7 +65,6 @@ class PixelsController extends Controller
             $validator['project'] = current(Hashids::decode($validator['project']));
 
             $pixel = $this->getPixel()->create($validator);
-            dd($pixel);
 
             if ($pixel) {
                 return response()->json('Pixel Configurado com sucesso!', 200);
@@ -140,9 +139,6 @@ class PixelsController extends Controller
     public function create()
     {
         try {
-            //            $view = view('pixels::create');
-
-            //            return response()->json($view->render());
             return view('pixels::create');
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de cadastro (PixelsController - create)');
