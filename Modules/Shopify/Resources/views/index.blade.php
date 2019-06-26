@@ -5,41 +5,39 @@
   <!-- Page -->
   <div class="page">
 
-    <div class="page-header">
-        <h1 class="page-title">Integrações com shopify</h1>
+    <div class="page-header container">
+        <div class="row jusitfy-content-between">
+        <div class="col-lg-8">
+            <h1 class="page-title">Integração com Shopify</h1>
+        </div>
+            
+        <div class="col text-right">
+        <a data-toggle="modal" data-target="#modal_add_integracao" class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                <i class="icon wb-plus" aria-hidden="true"></i>
+        </a>
+        </div>
+    </div>
     </div>
 
-    <div class="page-content container-fluid">
-        <div class="panel pt-30 p-30" data-plugin="matchHeight" style="min-height: 400px">
-          <div class="row">
-              <div class="col-12">
-                  <button class="btn btn-primary"  data-toggle='modal' data-target='#modal_add_integracao' style="float:right">
-                      Adicionar integração
-                  </button>
-              </div>      
-          </div>
-
+    <div class="page-content container">
           @if(count($projects) == 0)
-            <div class="row" style="margin-top: 40px">
+            <div class="row mt-30">
                 <h4>Nenhuma integração encontrada</h4>
             </div>
           @else
 
-            <div class="row" style="margin-top: 50px">
+            <div class="clearfix"></div>
+
+            <div class="row">
                 @foreach($projects as $project)
                   <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                    <div class="card" style="border: 1px solid gray">
-                        <a href='/projetos/projeto/{!! $project['id'] !!}'>
-                            <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project['foto'] !!}" alt="Imagem não encontrada" style="height: 180px;width: 90%; margin: 8px 0 8px 0">
-                        </a>
-                        <div class="card-block">
-                          <a href='/projetos/projeto/{!! $project['id'] !!}'>
-                              <div class="text-center">
-                                  <h4 class="card-title">{!! $project['nome'] !!}</h4>
-                              </div>
-                          </a>
-                          <hr>
+                    <div class="card shadow">
+                        <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project['foto'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/produto.png') !!}';" alt="Imagem não encontrada" >
+                        <div class="card-body">
+                            <h4 class="card-title">Nome do Projeto {!! $project['nome'] !!}</h4>
+                            <p class="card-text sm">Criado em dd/mm/aaaa</p>
                         </div>
+                        <a href="/projetos/projeto/{!! $project['id'] !!}'" class="streched-link"></a>
                     </div>
                   </div>
                 @endforeach
@@ -110,7 +108,6 @@
         </div>
         <!-- End Modal -->
 
-        </div>
       </div>
   </div>
 

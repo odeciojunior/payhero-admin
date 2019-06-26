@@ -33,18 +33,19 @@
         @if($products->count() > 0)
             <div class="row">
                 @foreach($products as $product)
-                    <div class="col-xl-3 col-md-6 info-panel">
-                        <div class="card card-shadow">
-                            <img class="card-img-top img-fluid w-full product-image" src="{!! $product->photo !!}" data-link="/products/{{Hashids::encode($product->id)}}/edit" alt="Imagem não encontrada" style="height: 180px;width: 180px; margin: auto">
-                            <div class="card-block">
-                                <div class="row">
-                                    <div class="col-9">
-                                        <h5 class="card-title text-center">{{ substr($product->name, 0 ,18)}}</h5>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card shadow">
+                            <img class="card-img-top product-image" src="{!! $product->photo !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/semimagem.png') !!}';" data-link="/products/{{Hashids::encode($product->id)}}/edit" alt="Imagem não encontrada">
+                            <div class="card-body">
+                                <div class="row align-items-end justify-content-between">
+                                    <div class="col-10">
+                                        <h5 class="card-title">{{ substr($product->name, 0 ,18)}}</h5>
+                                        <p class="card-text sm">Criado em dd/mm/aaaa</p>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         <span data-toggle='modal' data-target='#modal_excluir' style="float:right">
-                                            <a class='btn btn-outline btn-danger delete-product' data-placement='top' data-toggle='tooltip' title='Excluir' product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}">
-                                                <i class='icon wb-trash' aria-hidden='true'></i>
+                                            <a class="delete-product" data-placement='top' data-toggle='tooltip' title='Excluir' product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}">
+                                                <i class='icon wb-trash' aria-hidden='true' style="color: #ff4c52;"></i>
                                             </a>
                                         </span>
                                     </div>
