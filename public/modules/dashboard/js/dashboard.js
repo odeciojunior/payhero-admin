@@ -10,7 +10,7 @@ $(document).ready(function(){
     function updateValues(){
 
         $.ajax({
-            method: "POST",
+            method: "POST", 
             url: "/dashboard/getvalues",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -22,30 +22,29 @@ $(document).ready(function(){
             success: function(data){
 
                 $(".moeda").html(data.currency);
-                $("#pending_money").html(data.future_balance);
-                $("#antecipation_money").html(data.future_balance);
+                $("#pending_money").html(data.pending_balance);
+                $("#antecipation_money").html(data.antecipable_balance);
                 $("#available_money").html(data.available_balance);
-                $("#total_money").html(data.available_balance);
+                $("#total_money").html(data.total_balance);
             }
-
         });
 
     }
 
-    Pusher.logToConsole = false;
+    // Pusher.logToConsole = false;
 
-    var pusher = new Pusher('339254dee7e0c0a31840', {
-        cluster: 'us2',
-        forceTLS: true
-    });
+    // var pusher = new Pusher('339254dee7e0c0a31840', {
+    //     cluster: 'us2',
+    //     forceTLS: true
+    // });
 
-    var channel = pusher.subscribe('channel-{!! \Auth::user()->id !!}');
+    // var channel = pusher.subscribe('channel-{!! \Auth::user()->id !!}');
 
-    channel.bind('my-event', function(data) {
-        alertPersonalizado('success','Nova venda realizada');
-        clear_map_points();
-        updateLastSales();
-    });
+    // channel.bind('my-event', function(data) {
+    //     alertPersonalizado('success','Nova venda realizada');
+    //     clear_map_points();
+    //     updateLastSales();
+    // });
 
 
 
