@@ -1,7 +1,4 @@
-<div style="text-align: center">
-    <h4> Cadastrar cupom </h4>
-</div>
-<form id="cadastrar_cupom" method="post" action="/couponsdiscounts">
+<form id="form-register-coupon" method="post" action="/couponsdiscounts">
     @csrf
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">

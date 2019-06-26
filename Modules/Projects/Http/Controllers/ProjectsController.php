@@ -21,7 +21,7 @@ class ProjectsController extends Controller
     private $userProjectModel;
     private $extraMaterialsModel;
     private $digitalOceanFileService;
- 
+
     function getProject()
     {
         if (!$this->projectModel) {
@@ -63,15 +63,14 @@ class ProjectsController extends Controller
 
     public function index()
     {
-        try { 
+        try {
             $projects = $this->getProject()->whereHas('usersProjects', function($query) {
                 $query->where('user', auth()->user()->id);
             })->get();
 
             return view('projects::index', [
-                'projects' => $projects
+                'projects' => $projects,
             ]);
-
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
@@ -93,25 +92,21 @@ class ProjectsController extends Controller
     public function edit($id)
     {
         try {
-            $user    = auth()->user()->load('companies');
-            $project = $this->getProject()->with([
-                                                     'usersProjects' => function($query) use ($user) {
-                                                         $query->where('user', $user->id)->first();
-                                                     },
-                                                     'usersProjects.company',
-                                                     'shippings',
-                                                     'extraMaterials',
+            $user      = auth()->user()->load('companies');
+            $idProject = current(Hashids::decode($id));
+            $project   = $this->getProject()->with([
+                                                       'usersProjects' => function($query) use ($user) {
+                                                           $query->where('user', $user->id)->first();
+                                                       },
+                                                       'usersProjects.company',
 
-                                                 ])->where('id', Hashids::decode($id))->first();
+                                                   ])->where('id', $idProject)->first();
 
-            $view = view('projects::edit', [
-                'project'        => $project,
-                'companies'      => $user->companies,
-                'extraMaterials' => $project->extraMaterials,
-                'emp'            => $user->company_id,
-                'shippings'      => $project->shippings,
-
-            ]);
+            $view = view('projects::edit', compact([
+                                                       'companies' => $project->companies,
+                                                       'project'   => $project,
+                                                       'emp'       => $user->company_id,
+                                                   ]));
 
             return response()->json($view->render());
         } catch (Exception $e) {
@@ -129,14 +124,14 @@ class ProjectsController extends Controller
             $project = $this->getProject()->create($data);
 
             $userProject = $this->getUserProject()->create([
-                'user'              => auth()->user()->id,
-                'project'           => $project->id,
-                'company'           => $companyId[0],
-                'type'              => 'producer',
-                'access_permission' => 1,
-                'edit_permission'   => 1,
-                'status'            => 'active',
-            ]);
+                                                               'user'              => auth()->user()->id,
+                                                               'project'           => $project->id,
+                                                               'company'           => $companyId[0],
+                                                               'type'              => 'producer',
+                                                               'access_permission' => 1,
+                                                               'edit_permission'   => 1,
+                                                               'status'            => 'active',
+                                                           ]);
 
             $projectPhoto = $request->file('project_photo');
 
@@ -152,9 +147,8 @@ class ProjectsController extends Controller
                                              ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects', $projectPhoto);
 
                     $project->update([
-                        'photo' => $digitalOceanPath,
-                    ]); 
-
+                                         'photo' => $digitalOceanPath,
+                                     ]);
                 } catch (Exception $e) {
                     dd($e);
                     Log::warning('ProjectController - store - Erro ao enviar foto do project');
@@ -172,7 +166,7 @@ class ProjectsController extends Controller
 
     public function update($id, Request $request)
     {
-        try{
+        try {
             $dataRequest = $request->all();
 
             $project = Project::where('id', Hashids::decode($id))->first();
@@ -192,12 +186,11 @@ class ProjectsController extends Controller
                     $img->save($projectPhoto->getPathname());
 
                     $digitalOceanPath = $this->getDigitalOceanFileService()
-                                            ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects', $projectPhoto);
+                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects', $projectPhoto);
 
                     $project->update([
-                        'photo' => $digitalOceanPath,
-                    ]);
-
+                                         'photo' => $digitalOceanPath,
+                                     ]);
                 } catch (Exception $e) {
                     dd($e);
                     Log::warning('ProjectController - update - Erro ao atualizar foto do project');
@@ -206,9 +199,9 @@ class ProjectsController extends Controller
             }
 
             $userProject = UserProject::where([
-                ['user', \Auth::user()->id],
-                ['project', $project['id']],
-            ])->first();
+                                                  ['user', \Auth::user()->id],
+                                                  ['project', $project['id']],
+                                              ])->first();
 
             if ($userProject->company != $dataRequest['company']) {
                 $userProject->company = $dataRequest['company'];
@@ -216,8 +209,7 @@ class ProjectsController extends Controller
             }
 
             return response()->json('sucesso');
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             Log::warning('ProjectController - update - Erro ao atualizar project');
             report($e);
         }
@@ -225,7 +217,7 @@ class ProjectsController extends Controller
 
     public function delete(Request $request)
     {
-        try{
+        try {
             $dataRequest = $request->all();
 
             $project = Project::where('id', Hashids::decode($dataRequest['projeto']))->first();
@@ -239,8 +231,7 @@ class ProjectsController extends Controller
             // $project->delete();
 
             return response()->json('sucesso');
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             Log::warning('ProjectController - delete - Erro ao deletar project');
             report($e);
         }
@@ -250,9 +241,14 @@ class ProjectsController extends Controller
     {
         try {
             if ($id) {
-                $project = $this->getProject()->where('id', Hashids::decode($id))->first();
+                $idProject = current(Hashids::decode($id));
 
-                return view('projects::project', ['project' => $project]);
+                $user      = auth()->user()->load('companies');
+                $companies = $user->companies;
+
+                $project = $this->getProject()->where('id', $idProject)->first();
+
+                return view('projects::project', ['project' => $project, 'companies' => $companies]);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');

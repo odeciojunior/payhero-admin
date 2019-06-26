@@ -1,7 +1,7 @@
 <div class='row'>
     <div style='width:100%'>
         <a id='add-coupon' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
-            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar sms
+            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Cupom
         </a>
     </div>
 </div>

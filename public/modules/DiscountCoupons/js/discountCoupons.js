@@ -1,11 +1,17 @@
 $(function () {
     var projectId = $("#project-id").val();
 
-    $("#adicionar_cupom").on('click', function () {
-        $("#modal_add_tamanho").addClass("modal-simple");
-        $("#modal_add_tamanho").addClass("modal-lg");
+    $('#tab_coupons').on('click', function () {
+        atualizarCoupon();
+    });
+    atualizarCoupon();
 
-        $("#modal_add_body").html("<div style='text-align'>Carregando...</div>");
+    $("#add-coupon").on('click', function () {
+        $("#modal-title").html('Adicionar Cupom <br><hr class="my-0">');
+        $("#modal_add_size").addClass('modal_simples');
+        $("#modal_add_size").removeClass('modal-lg');
+
+        $("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");
 
         $.ajax({
             method: "GET",
@@ -14,211 +20,201 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
-                $("#modal_add").hide();
+                $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
             }, success: function (data) {
-                $("#modal_add_body").html(data);
-                $("#valor_cupom_cadastrar").mask("0#");
-                $("#cadastrar").unbind('click');
-                $("#cadastrar").on('click', function () {
-                    if ($("#nome_cupom").val() === '' || $("#tipo_cupom").val() === '' || $("#valor_cupom_cadastrar").val() === ''
-                        || $("#code").val() === '' || $("#status_cupom").val() === '') {
-                        alertCustom('error', 'Dados informados inválidos');
-                        return false;
-                    }
+                $("#btn-modal").addClass('btn-save');
+                $("#btn-modal").text('Salvar');
+                $("#btn-modal").show();
+                $('#modal-add-body').html(data);
 
-                    $(".loading").css('visibility', 'visible');
+                $(".btn-save").unbind('click');
+                $(".btn-save").on('click', function () {
 
-                    var formData = new FormData(document.getElementById('cadastrar_cupom'));
+                    var formData = new FormData(document.getElementById('form-register-coupon'));
                     formData.append("project", projectId);
 
                     $.ajax({
                         method: "POST",
-                        url: '/couponsdiscounts',
+                        url: "/couponsdiscounts",
+                        headers: {
+                            'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                        },
+                        data: formData,
                         processData: false,
                         contentType: false,
                         cache: false,
-                        data: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
+                        error: function (data) {
+                            $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
-                            alertCustom('error', 'Ocorreu algum erro ao tentar salvar dados');
-                        },
-                        success: function (data) {
-                            $('.loading').css('visibility', 'hidden');
-                            alertCustom("success", "Cupom de desconto adicionado com sucesso!");
-                            $("#modal_add").hide();
-                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                        },
+                            alertCustom('error', 'Ocorreu algum erro');
+                        }, success: function () {
+                            $(".loading").css("visibility", "hidden");
+                            alertCustom("success", "Cupom Adicionado!");
+                            atualizarCoupon();
+                        }
                     });
                 });
             }
         });
 
     });
-
-    $("#tabela_cuponsdesconto").DataTable({
-        bLengthChange: false,
-        ordering: false,
-        processing: true,
-        responsive: true,
-        serverSide: true,
-        ajax: {
+    function atualizarCoupon() {
+        $("#data-table-coupon").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        $.ajax({
+            method: "GET",
             url: '/couponsdiscounts',
+            data: {project: projectId},
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            type: 'GET',
-            data: {projeto: projectId}
-        },
-        columns: [
-            {data: 'name', name: 'name'},
-            {data: 'type', name: 'type'},
-            {data: 'value', name: 'value'},
-            {data: 'code', name: 'code'},
-            {data: 'status', name: 'status'},
-            {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-        ],
-        "language": {
-            "sProcessing": "Carregando...",
-            "lengthMenu": "Apresentando _MENU_ registros por página",
-            "zeroRecords": "Nenhum registro encontrado",
-            "info": "Apresentando página _PAGE_ de _PAGES_",
-            "infoEmpty": "Nenhum registro encontrado",
-            "infoFiltered": "(filtrado por _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Procurar :",
-            "sUrl": "",
-            "sInfoThousands": ",",
-            "sLoadingRecords": "Carregando...",
-            "oPaginate": {
-                "sFirst": "Primeiro",
-                "sLast": "Último",
-                "sNext": "Próximo",
-                "sPrevious": "Anterior",
+            error: function () {
+                $("#data-table-coupon").html('Erro ao encontrar dados');
             },
-        },
-        "drawCallback": function () {
-            $(".detalhes_cupom").on("click", function () {
-                var cupom = $(this).attr("cupom");
-                $("#modal_detalhes_titulo").html("Detalhes do cupom");
-                $("#modal_detalhes_body").html("<h5 style='width::100%; text-align: center;'>Carregando</h5>");
-                $.ajax({
-                    method: "GET",
-                    url: "/couponsdiscounts/" + cupom,
-                    data: {id_cupom: cupom},
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    error: function () {
-                        alertCustom('error', 'Ocorreu algum erro');
-                    },
-                    success: function (response) {
-                        $("#modal_detalhes_body").html(response);
+            success: function (response) {
+                $("#data-table-coupon").html('');
+
+                $.each(response.data, function (index, value) {
+                    data = '';
+                    data += '<tr>';
+                    data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.type + '</td>';
+                    data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.value + '</td>';
+                    data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">' + value.code + '</td>';
+                    data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    if (value.status === 1) {
+                        data += '<span class="badge badge-success">Ativo</span>';
+                    } else {
+                        data += '<span class="badge badge-danger">Desativado</span>';
                     }
 
+                    data += '</td>';
+
+                    data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+
+                    data += '</td>';
+
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-coupon'  coupon='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+
+                    data += '</tr>';
+                    $("#data-table-coupon").append(data);
                 });
-            });
-
-            var id_cupom = '';
-
-            $(".excluir_cupom").on("click", function () {
-                id_cupom = $(this).attr('cupom');
-                var name = $(this).closest("tr").find("td:first-child").text();
-                $("#modal_excluir_titulo").html("Remover do projeto o cupom " + name + " ?");
-
-                $("#bt_excluir").unbind('click');
-                $("#bt_excluir").on('click', function () {
-                    $(".loading").css("visibility", "visible");
-                    $("#fechar_modal_excluir").click();
-
+                if (response.data == '') {
+                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                }
+                $(".details-coupon").unbind('click');
+                $(".details-coupon").on('click', function () {
+                    var coupon = $(this).attr('coupon');
+                    $("#modal-title").html('Detalhes do Cupom <br><hr>');
+                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+                    var data = {couponId: coupon};
+                    $("#btn-modal").hide();
                     $.ajax({
-                        method: "DELETE",
-                        url: "/couponsdiscounts/" + id_cupom,
+                        method: "GET",
+                        url: "/couponsdiscounts/" + coupon,
+                        data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: {id: id_cupom},
                         error: function () {
-                            $(".loading").css("visibility", "hidden");
-                            alertCustom('error', 'Ocorreu algum erro!');
-                        },
-                        success: function (data) {
-                            $(".loading").css("visibility", "hidden");
-                            alertCustom('success', 'Cupom removido');
-                            $($.fn.dataTable.tables(true)).css('width', '100%');
-                            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                            //
+                        }, success: function (response) {
+                            $("#modal-add-body").html(response);
+
                         }
                     });
                 });
-            });
+                $(".edit-coupon").unbind('click');
+                $(".edit-coupon").on('click', function () {
+                    $("#modal-add-body").html("");
+                    var coupon = $(this).attr('coupon');
+                    $("#modal-title").html("Editar Cupom<br><hr>");
+                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+                    var data = {couponId: coupon};
+                    $.ajax({
+                        method: "GET",
+                        url: "/couponsdiscounts/" + coupon + "/edit",
+                        data: data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function () {
+                            //
+                        }, success: function (response) {
+                            $("#btn-modal").addClass('btn-update');
+                            $("#btn-modal").text('Atualizar');
+                            $("#btn-modal").show();
+                            $("#modal-add-body").html(response);
 
-            $(".editar_cupom").on('click', function () {
-                $("#modal_editar_tipo").addClass('modal-simple');
-                $("#modal_editar_tipó").removeClass('modal-lg');
+                            $(".btn-update").unbind('click');
+                            $(".btn-update").on('click', function () {
 
-                id_cupom = $(this).attr('cupom');
+                                $.ajax({
+                                    method: "PUT",
+                                    url: "/couponsdiscounts/" + coupon,
+                                    headers: {
+                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    data: {
+                                        name: $("#name").val(),
+                                        code: $("#code").val(),
+                                        type: $("#type").val(),
+                                        value: $("#value").val(),
+                                        code: $("#code").val(),
+                                        status: $("#status").val(),
+                                    },
+                                    error: function () {
+                                        if (response.status == '422') {
+                                            for (error in response.responseJSON.errors) {
+                                                alertCustom('error', String(response.responseJSON.errors[error]));
+                                            }
+                                        }
+                                    },
+                                    success: function (data) {
+                                        alertCustom("success", "Cupom atualizado com sucesso");
+                                        atualizarCoupon();
+                                    }
+                                });
 
-                $("#modal_editar_body").html("<div style='text-align:center'>Carregando</div>");
-                $.ajax({
-                    method: "GET",
-                    url: "/couponsdiscounts/" + id_cupom + "/edit",
-                    data: {idCupom: id_cupom},
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    error: function () {
-                        $("#modal_editar").hide();
-                        alertCustom('error', 'Ocorreu algum erro');
-                    },
-                    success: function (data) {
-                        $("#modal_editar_body").html(data);
-                        $("#valor_cupom_editar").mask("0#");
-                        $("#editar").unbind('click');
-                        $("#editar").on('click', function () {
-                            $(".loading").css("visibility", "visible");
-                            /*  var formData = new FormData(document.getElementById("editar_cupom"));
-                              formData.append("projeto", projectId);*/
-                            var paramObj = {};
-                            $.each($('#editar_cupom').serializeArray(), function (_, kv) {
-                                if (paramObj.hasOwnProperty(kv.name)) {
-                                    paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                                    paramObj[kv.name].push(kv.value);
-                                } else {
-                                    paramObj[kv.name] = kv.value;
-                                }
                             });
-                            paramObj['id'] = id_cupom;
+                        }
+                    });
 
-                            $.ajax({
-                                method: "PUT",
-                                url: "/couponsdiscounts/" + id_cupom,
-                                /* processData: false,
-                                 contentType: false,
-                                 cache: false,*/
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: {coupomData: paramObj},
-                                error: function () {
-                                    $(".loading").css("visibility", 'hidden');
-                                    alertCustom("error", "Ocorreu algum error");
-                                }, success: function (data) {
-                                    $(".loading").css("visibility", 'hidden');
-                                    alertCustom('success', 'Cupom atualizado com sucesso');
-                                    $("#modal.add").hide();
-                                    $($.fn.dataTable.tables(true)).css('width', '100%');
-                                    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                }
-                            });
-                        });
-                    }
                 });
-            });
-        }
-    });
+                $('.delete-coupon').on('click', function (event) {
+                    event.preventDefault();
+                    var coupon = $(this).attr('coupon');
+                    $("#modal_excluir_titulo").html("Remover Cupom?");
+                    $("#bt_excluir").unbind('click');
+                    $("#bt_excluir").on('click', function () {
+                        $("#fechar_modal_excluir").click();
 
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/couponsdiscounts/" + coupon,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function () {
+                                if (response.status == '422') {
+                                    for (error in response.responseJSON.errors) {
+                                        alertCustom('error', String(response.responseJSON.errors[error]));
+                                    }
+                                }
+                            },
+                            success: function (data) {
+                                alertCustom("success", "Cupom Removido com sucesso");
+                                atualizarCoupon();
+                            }
+
+                        })
+                    });
+
+                });
+
+            }
+        });
+    }
 });

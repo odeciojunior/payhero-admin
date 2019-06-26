@@ -1,8 +1,7 @@
 <div style="text-align: center">
     <h4>Editar parceiro</h4>
 </div>
-
-<form id="editar_parceiro" method="post">
+<form id="form-edit-partners">
     @csrf
     <input type="hidden" name="id" value="{!! $id_parceiro !!}">
     <div class="page-content container-fluid">

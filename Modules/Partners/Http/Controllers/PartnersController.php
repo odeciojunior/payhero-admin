@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Partners\Http\Requests\PartnersStoreRequest;
+use Modules\Partners\Http\Requests\PartnersUpdateRequest;
 use Modules\Partners\Transformers\PartnersResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
@@ -124,11 +125,55 @@ class PartnersController extends Controller
     /**
      * @param Request $request
      */
-    public function store(Request $request)
+    public function store(PartnersStoreRequest $request)
     {
         try {
-            dd($request->all());
-            $requestValidate = $request->validated();
+            $requestvalidated = $request->validated();
+            if ($requestvalidated) {
+
+                $user                        = $this->getUser()->where('email', $requestvalidated['email_invited'])
+                                                    ->first();
+                $requestvalidated['project'] = current(Hashids::decode($requestvalidated['project']));
+                if ($user) {
+                    $company                    = $this->getCompany()->where('user', $user->id)->first();
+                    $requestvalidated['status'] = 'active';
+
+                    if ($company) {
+                        $requestvalidated['company'] = $company->id;
+                    }
+                } else {
+                    $requestDataInvitation['status'] = 'convite enviado';
+
+                    $requestDataInvitation['email_invited'] = $requestvalidated['email_invited'];
+
+                    $parameter = false;
+
+                    while (!$parameter) {
+                        $parameter = StringHelper::randString(15);
+                        $invite    = $this->getInvitation()->where('parameter', $parameter)->first();
+
+                        if (!$invite) {
+                            $parameter                          = true;
+                            $requestDataInvitation['parameter'] = $parameter;
+                        }
+                    }
+
+                    $requestDataInvitation['company'] = $this->getCompany()->where('user_id', auth()->user()->id)
+                                                             ->first()->id;
+                    $requestDataInvitation['invite']  = auth()->user()->id;
+                    $invite                           = $this->getInvitation()->create($requestDataInvitation);
+                    /*Mail::send('convites::email_convite', ['convite' => $invite], function($mail) use ($requestDataInvitation) {
+                        $mail->from('teste@teste', 'cloudfox');
+                        $mail->to($requestDataInvitation['email_invited'], 'Cloudfox')
+                             ->subject('Convite para participar de um projeto no Cloudfox');
+                    });*/
+                }
+                $requestvalidated['status'] = 'inactive';
+                $requestvalidated['user']   = $user->id ?? null;
+                $this->getUserProject()->create($requestvalidated);
+
+                return response()->json('success');
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar salvar parceiro (PartenersController - store)');
             report($e);
@@ -199,25 +244,22 @@ class PartnersController extends Controller
     public function show(Request $request)
     {
         try {
+            if ($request->input('data')) {
+                $partnerId = current(Hashids::decode($request->input('data')));
+                $partner   = $this->getUserProject()->with(['userId'])->find($partnerId);
 
+                if ($partner) {
+                    $view = view("partners::details", ['partner' => $partner, 'user' => $partner->userId]);
 
+                    return response()->json($view->render(), 200);
+                }
+
+                return response()->json('erro', 402);
+            }
         } catch (Exception $e) {
-            Log::warning('Erro ao acessar detalhes do parceiro');
+            Log::warning('Erro ao acessar detalhes do parceiro (PartnersController - show)');
             report($e);
         }
-
-        $requestData = $request->all();
-
-        $partner = UserProjeto::where('id', Hashids::decode($requestData['parceiro']))->first();
-
-        $user = User::find($partner['user']);
-
-        $detalhes = view('parceiros::detalhesparceiro', [
-            'parceiro' => $partner,
-            'user'     => $user,
-        ]);
-
-        return response()->json($detalhes->render());
     }
 
     /**
@@ -248,8 +290,24 @@ class PartnersController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request)
+    public function update(PartnersUpdateRequest $request, $id)
     {
+        try {
+            $requestValidated = $request->validated();
+            if ($requestValidated) {
+                $userProjectId = current(Hashids::decode($id));
+                $partner        = $this->getUserProject()->where('id', $userProjectId)->first();
+                $partnerDeleted = $partner->update($requestValidated);
+                if ($partnerDeleted) {
+                    return response()->json('Parceito atualizado com sucesso!', 200);
+                }
+            }
+
+            return response()->json('Erro ao tentar atualizar dados!', 402);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tenta atualizar dados');
+            report($e);
+        }
 
         $requestData = $request->all();
 
@@ -266,15 +324,22 @@ class PartnersController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
+        try {
+            if ($id) {
+                $userProject    = current(Hashids::decode($id));
+                $partner        = $this->getUserProject()->where('id', $userProject)->first();
+                $partnerDeleted = $partner->delete();
+                if ($partnerDeleted) {
+                    return response()->json('Parceiro removido com sucesso', 200);
+                }
+            }
 
-        $requestData = $request->all();
-
-        $partner = UserProjeto::where('id', Hashids::decode($requestData['id']))->first();
-
-        $partner->delete();
-
-        return response()->json('sucesso');
+            return response()->json('Erro ao tentar deletar parceiro', 422);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar remover parceiro (PartnersController - destroy)');
+            report($e);
+        }
     }
 }

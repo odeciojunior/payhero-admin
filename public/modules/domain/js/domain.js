@@ -3,6 +3,7 @@ $(document).ready(function () {
     var projectId = $("#project-id").val();
 
     $("#tab-domains").on('click', function () {
+        $("#previewimage").imgAreaSelect({remove: true});
         updateDomains();
     });
     updateDomains();
@@ -103,7 +104,7 @@ $(document).ready(function () {
                     $("#domain-table-body").append(dados);
                 });
 
-                if (response.data === '') {
+                if (response.data == '') {
                     $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum dominio encontrado</td></tr>")
                 }
 
