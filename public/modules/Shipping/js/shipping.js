@@ -138,7 +138,7 @@ $(document).ready(function () {
                     $("#dados-tabela-frete").append(dados);
                 });
 
-                if (response.data === '') {
+                if (response.data == '') {
                     $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".detalhes-frete").unbind('click');
