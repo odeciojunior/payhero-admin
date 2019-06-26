@@ -8,10 +8,24 @@ use App\Entities\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Register\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|DigitalOceanFileService
+     */
+    private function getDigitalOceanFileService()
+    {
+        if (!$this->digitalOceanFileService) {
+            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
+        }
+
+        return $this->digitalOceanFileService;
+    }
 
     public function create($parameter)
     {
@@ -25,7 +39,7 @@ class RegisterController extends Controller
         try{
             $requestData = $request->validated();
 
-            $requestData = $request->all();
+            // $requestData = $request->all();
 
             $requestData['password']                            = bcrypt($requestData['password']);
             $requestData['percentage_rate']                     = '6.5';
@@ -34,17 +48,19 @@ class RegisterController extends Controller
             $requestData['foxcoin']                             = '0';
             $requestData['credit_card_antecipation_money_days'] = '15';
             $requestData['release_money_days']                  = '30';
-            $requestData['boleto_antecipation_money_days']      = '7';
+            $requestData['boleto_antecipation_money_days']      = '7'; 
             $requestData['antecipation_tax']                    = '5.0';
             $requestData['percentage_antecipable']              = '80';
             $requestData['email_amount']                        = '0';
             $requestData['call_amount']                         = '0';
             $requestData['score']                               = '0';
             $requestData['sms_zenvia_amount']                   = '0';
-
+ 
             $user = User::create($requestData);
 
             $user->assignRole('administrador empresarial');
+
+            auth()->loginUsingId($user['id']);
 
             $invite = Invitation::where('email',$requestData['email'])->first();
 
@@ -71,8 +87,6 @@ class RegisterController extends Controller
                     'email_invited'   => $requestData['email'],
                 ]);
             }
-
-            auth()->loginUsingId($user['id']);
 
             return response()->json([
                 'success' => 'true',

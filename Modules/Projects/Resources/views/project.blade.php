@@ -78,8 +78,8 @@
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_configuracoes"
-                               aria-controls="tab_cofiguracoes" role="tab">Configurações
+                            <a id="tab_configuration" class="nav-link" data-toggle="tab" href="#tab_configuration_project"
+                               aria-controls="tab_configuration_project" role="tab">Configurações
                             </a>
                         </li>
                     </ul>
@@ -133,7 +133,7 @@
                             </div>
                             <!-- Painel de Sms -->
                             <div class="tab-pane" id="tab_sms-panel" role="tabpanel">
-                                @include('discountcoupons::index')
+                                @include('sms::index')
                             </div>
                             <!-- Painel de Fretes -->
                             <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
@@ -161,9 +161,8 @@
                                 @include('partners::index')
                             </div>
                             <!-- Painel de Configurações  Abre a tela edit-->
-                            <div class="tab-pane" id="tab_configuracoes" role="tabpanel">
-                                <div id="configuracoes_projeto" style="padding: 30px">
-                                </div>
+                            <div class="tab-pane" id="tab_configuration_project" role="tabpanel">
+                                @include('projects::edit')
                             </div>
                         </div>
                         <!-- Modal padrão para adicionar Adicionar e Editar -->
@@ -752,174 +751,6 @@
 
                     }
 
-                });
-
-                $("#tabela_parceiros").DataTable({
-                    bLengthChange: false,
-                    ordering: false,
-                    processing: true,
-                    responsive: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '/parceiros/data-source',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: 'POST',
-                        data: {projeto: id_projeto}
-                    },
-                    columns: [
-                        {
-                            data: function (data) {
-                                if (data.name == null)
-                                    return 'Pendente';
-                                else
-                                    return data.name;
-                            }, name: 'name'
-                        },
-                        {data: 'type', name: 'type'},
-                        {data: 'status', name: 'status'},
-                        {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-                    ],
-                    "language": {
-                        "sProcessing": "Carregando...",
-                        "lengthMenu": "Apresentando _MENU_ registros por página",
-                        "zeroRecords": "Nenhum registro encontrado",
-                        "info": "Apresentando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "Nenhum registro encontrado",
-                        "infoFiltered": "(filtrado por _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sSearch": "Procurar :",
-                        "sUrl": "",
-                        "sInfoThousands": ",",
-                        "sLoadingRecords": "Carregando...",
-                        "oPaginate": {
-                            "sFirst": "Primeiro",
-                            "sLast": "Último",
-                            "sNext": "Próximo",
-                            "sPrevious": "Anterior",
-                        },
-                    },
-                    "drawCallback": function () {
-
-                        $('.detalhes_parceiro').unbind('click');
-
-                        $('.detalhes_parceiro').on('click', function () {
-                            var id_parceiro = $(this).attr('parceiro');
-
-                            $('#modal_detalhes_titulo').html('Detalhes da parceiro');
-                            $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                            $.ajax({
-                                method: "POST",
-                                url: "/parceiros/detalhesparceiro",
-                                data: {parceiro: id_parceiro},
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                error: function () {
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (response) {
-                                    $('#modal_detalhes_body').html(response);
-                                }
-                            });
-                        });
-
-                        var id_parceiro = '';
-
-                        $('.excluir_parceiro').on('click', function () {
-
-                            id_parceiro = $(this).attr('parceiro');
-
-                            $('#modal_excluir_titulo').html('Remover parceiro do projeto ?');
-
-                            $('#bt_excluir').unbind('click');
-
-                            $('#bt_excluir').on('click', function () {
-
-                                $('.loading').css("visibility", "visible");
-                                $('#fechar_modal_excluir').click();
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/parceiros/removerparceiro",
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: {id: id_parceiro},
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    }
-                                });
-                            });
-                        });
-
-                        $('.editar_parceiro').on('click', function () {
-
-                            $('#modal_editar_tipo').addClass('modal-simple');
-                            $('#modal_editar_tipo').removeClass('modal-lg');
-
-                            id_parceiro = $(this).attr('parceiro');
-
-                            $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/parceiros/getformeditarparceiro",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: {id_parceiro: id_parceiro},
-                                error: function () {
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('#modal_editar_body').html(data);
-
-                                    $("#valor_parceiro_editar").mask("0#");
-
-                                    $('#editar').unbind('click');
-
-                                    $('#editar').on('click', function () {
-
-                                        $('.loading').css("visibility", "visible");
-
-                                        var form_data = new FormData(document.getElementById('editar_parceiro'));
-                                        form_data.append('projeto', id_projeto);
-
-                                        $.ajax({
-                                            method: "POST",
-                                            url: "/parceiros/editarparceiro",
-                                            headers: {
-                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                            },
-                                            processData: false,
-                                            contentType: false,
-                                            cache: false,
-                                            data: form_data,
-                                            error: function () {
-                                                $('.loading').css("visibility", "hidden");
-                                                $('#modal_editar').hide();
-                                                alertPersonalizado('error', 'Ocorreu algum erro');
-                                            },
-                                            success: function (data) {
-                                                $('.loading').css("visibility", "hidden");
-                                                $('#modal_editar').hide();
-                                                $($.fn.dataTable.tables(true)).css('width', '100%');
-                                                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                            }
-                                        });
-                                    });
-                                }
-                            });
-                        });
-                    }
                 });
 
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

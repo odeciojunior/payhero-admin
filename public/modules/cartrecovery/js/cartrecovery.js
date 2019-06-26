@@ -37,6 +37,7 @@ $(document).ready( function(){
                     dados += "<td style='vertical-align: middle' class='text-center'>"+value.recovery_status+"</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'>"+value.value+"</td>";
                     // dados += "<td style='vertical-align: middle' class='text-center'>"+value.link+"</td>";
+                    dados += "<td style='vertical-align: middle' class='text-center'><a href='"+ value.whatsapp_link +"', '', $client['telephone']); !!}' target='_blank'><img style='height:25px' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/whatsapp-default.jpg'></a></td>";
                     dados += "<td style='vertical-align: middle' class='text-center'> <a class='btn btn-default copy_link' link='"+value.link+"'>Copiar link</a></td>";
                     dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
                     dados += '</tr>';

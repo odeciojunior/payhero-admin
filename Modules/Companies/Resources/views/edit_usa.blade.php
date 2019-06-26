@@ -7,10 +7,10 @@
     <!-- Page -->
     <div class="page">
         <div class="page-header">
-            <h1 class="page-title">Editar empresa</h1>
+            <h1 class="page-title">Edit Company</h1>
             <div class="page-header-actions">
                 <a class="btn btn-primary float-right" href="{{route('companies.index')}}">
-                    <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Voltar
+                    <i class='icon wb-chevron-left-mini' aria-hidden='true'></i> Back
                 </a>
             </div>
         </div>
@@ -21,16 +21,16 @@
                         <div class="nav-tabs-horizontal" data-plugin="tabs">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item" role="presentation" id='nav_users'>
-                                    <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Empresa
+                                    <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Company
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation" id='nav_bank_data'>
-                                    <a class="nav-link" data-toggle="tab" href="#tab_bank_data" aria-controls="tab_bank_data" role="tab">Dados bancários
+                                    <a class="nav-link" data-toggle="tab" href="#tab_bank_data" aria-controls="tab_bank_data" role="tab">Bank Accounts
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation" id="nav_documents">
                                     <a class="nav-link" data-toggle="tab" href="#tab_documentos"
-                                       aria-controls="tab_documentos" role="tab">Documentos
+                                       aria-controls="tab_documentos" role="tab">Documents
                                     </a>
                                 </li>
                             </ul>
@@ -41,7 +41,7 @@
                                         @method('PUT')
                                         <div class="row">
                                             <div class="panel-heading col-10">
-                                                <h3 class="panel-title">Informações básicas</h3>
+                                                <h3 class="panel-title">Basic information</h3>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -56,62 +56,62 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="support_telephone">Telefone</label>
+                                                <label for="support_telephone">Telephone</label>
                                                 <input name="support_telephone" value="{!! $company->support_telephone !!}" type="text" class="form-control" id="support_telephone">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="fantasy_name">Nome fantasia</label>
+                                                <label for="fantasy_name">Fantasy Name</label>
                                                 <input name="fantasy_name" value="{!! $company->fantasy_name !!}" type="text" class="form-control" id="fantasy_name">
                                             </div>
                                             <div class="form-group col-xl-6">
-                                                <label for="cnpj">CNPJ</label>
-                                                <input name="cnpj" value="{!! $company->cnpj !!}" type="text" class="form-control" id="cnpj">
+                                                <label for="company_document">Company Document</label>
+                                                <input name="company_document" value="{!! $company->company_document !!}" type="text" class="form-control" id="company_document">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="zip_code">CEP</label>
+                                                <label for="zip_code">Zipcode</label>
                                                 <input name="zip_code" value="{!! $company->zip_code !!}" type="text" class="form-control" id="zip_code">
                                             </div>
                                             <div class="form-group col-xl-6">
-                                                <label for="state">Estado</label>
+                                                <label for="state">State</label>
                                                 <input name="state" value="{!! $company->state !!}" type="text" class="form-control" id="state">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="city">Município</label>
+                                                <label for="city">City</label>
                                                 <input name="city" value="{!! $company->city !!}" type="text" class="form-control" id="city">
                                             </div>
                                             <div class="form-group col-xl-6">
-                                                <label for="neighborhood">Bairro</label>
+                                                <label for="neighborhood">Neighborhood</label>
                                                 <input name="neighborhood" value="{!! $company->neighborhood !!}" type="text" class="form-control" id="neighborhood">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="street">Rua</label>
+                                                <label for="street">Street</label>
                                                 <input name="street" value="{!! $company->street !!}" type="text" class="form-control" id="street">
                                             </div>
                                             <div class="form-group col-xl-6">
-                                                <label for="number">Número</label>
+                                                <label for="number">Number</label>
                                                 <input name="number" value="{!! $company->number !!}" type="text" class="form-control" id="number">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="complement">Complemento</label>
+                                                <label for="complement">Complement</label>
                                                 <input name="complement" value="{!! $company->complement !!}" type="text" class="form-control" id="complement">
                                             </div>
                                             <div class="form-group col-xl-6">
-                                                <label for="country">País</label>
+                                                <label for="country">Country</label>
                                                 <input name="country" value="{!! $company->country !!}" type="text" class="form-control" id="country">
                                             </div>
                                         </div>
                                         <div class="form-group" style="margin-top: 30px">
-                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
+                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Save" style="width: 30%">
                                         </div>
                                     </form>
                                 </div>
@@ -121,52 +121,37 @@
                                         @method('PUT')
                                         <div class="row">
                                             <div class="panel-heading col-10">
-                                                <h3 class="panel-title">Informações Bancárias</h3>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-12">
-                                                <label for="bank">Banco</label>
-                                                <select id="bank" name="bank" class="form-control">
-                                                    <option value="">Selecione</option>
-                                                    @foreach($banks as $bank)
-                                                        <option value="{!! $bank['code'] !!}" {!! $company->bank == $bank['code'] ? 'selected' : '' !!}>{!! $bank['code'] . ' - ' .$bank['name'] !!}</option>
-                                                    @endforeach
-                                                </select>
+                                                <h3 class="panel-title">Bank account</h3>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-xl-6">
-                                                <label for="agency">Agência</label>
-                                                <input name="agency" value="{!! $company->agency !!}" type="text" class="form-control" id="agency">
+                                                <label>Routing Number</label>
+                                                <input id="routing_number" name="bank" type="text" class="form-control" placeholder="Routing Number">
                                             </div>
                                             <div class="form-group col-xl-6">
-                                                <label for="agency_digit">Digito</label>
-                                                <input name="agency_digit" value="{!! $company->agency_digit !!}" type="text" class="form-control" id="agency_digit">
+                                                <label>Bank</label>
+                                                <input id="bank" type="text" name="bank_name" class="form-control" placeholder="Bank" disabled>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="account">Conta</label>
-                                                <input name="account" value="{!! $company->account !!}" type="text" class="form-control" id="account">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="account_digit">Digito</label>
-                                                <input name="account_digit" value="{!! $company->account_digit !!}" type="text" class="form-control" id="account_digit">
+                                            <div class="form-group col-12">
+                                                <label>Account number</label>
+                                                <input name="account" type="text" class="form-control" placeholder="Account number">
                                             </div>
                                         </div>
                                         <div class="form-group" style="margin-top: 30px">
-                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
+                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Save" style="width: 30%">
                                         </div>
                                     </form>
                                 </div>
                                 <div class="tab-pane" id="tab_documentos" role="tabpanel">
-                                    Envie um extrato bancário, um comprovante de residência e o contrato social da empresa<br>
+                                    Send a bank statement, proof of residence and the company's contract<br>
                                     <div id="dropzone">
                                         <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
                                             @csrf
                                             <div class="dz-message needsclick">
-                                                Arraste os arquivos aqui ou click para selecionar.<br/>
+                                                Drag the files here or click to select.<br/>
                                             </div>
                                             <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="form-control">
                                             <input id="document_type" name="document_type" value="" type="hidden" class="form-control">
@@ -174,13 +159,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="panel-heading col-10">
-                                            <h3 class="panel-title">Documentos Enviados</h3>
+                                            <h3 class="panel-title">Uploaded Documents</h3>
                                         </div>
                                         <table class="table table-hover table-striped table-bordered mt-2">
                                             <tbody>
                                                 <tr class="text-center">
                                                     <td>
-                                                        Extrato bancário
+                                                        Bank statement
                                                     </td>
                                                     <td id='td_bank_status'>
                                                         {!! $company->bank_document_translate !!}
@@ -188,7 +173,7 @@
                                                 </tr>
                                                 <tr class='text-center'>
                                                     <td>
-                                                        Comprovante de residencia
+                                                        Proof of address
                                                     </td>
                                                     <td id='td_address_status'>
                                                         {!! $company->address_document_translate !!}
@@ -196,7 +181,7 @@
                                                 </tr>
                                                 <tr class='text-center'>
                                                     <td>
-                                                        Contrato social
+                                                        Company Contract
                                                     </td>
                                                     <td id='td_contract_status'>
                                                         {!! $company->contract_document_translate !!}

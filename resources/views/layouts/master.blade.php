@@ -48,12 +48,13 @@
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/reports.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
 
     @stack('css')
 
     <!-- Scripts -->
-    <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>  
+    <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
       Breakpoints();

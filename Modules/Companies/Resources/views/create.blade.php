@@ -13,19 +13,26 @@
             </div>
         </div>
         <div class="page-content container-fluid">
-            <div class="panel pt-30 p-30" data-plugin="matchHeight">
-                <div class="row" style="margin-bottom: 30px">
-                    <div class="col-3">
-                        <label for="country">Company country</label>
-                        <select id="country" class="form-control">
+            <form id='create_form' method="post" action="{{route('companies.store')}}">
+                @csrf
+                @method('POST')
+                <div class="panel pt-30 p-30" data-plugin="matchHeight">
+                    <div class="form-group col-3">
+                        <label for="country">País da empresa</label>
+                        <select id="country" name='country' class="form-control">
                             <option value="usa">United States</option>
                             <option value="brazil">Brasil</option>
                         </select>
                     </div>
+                    <div id="store_form" style="width:100%">
+                    </div>
+                    <div class="form-group col-xl-4">
+                        <button class="form-control btn btn-success" type='submit'>
+                            Proximo <i class='icon wb-chevron-right-mini' aria-hidden='true'></i>
+                        </button>
+                    </div>
                 </div>
-                <div id="store_form" style="width:100%">
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
