@@ -17,7 +17,6 @@ $(function () {
             }, error: function () {
                 alertCustom('error', 'Ocorreu algum error');
             }, success: function (data) {
-                console.log(data.valueOf());
                 var verifyJuros = true;
 
                 /* verifica quantidade parcelas com a quantidade parcelas sem juros */
@@ -47,13 +46,12 @@ $(function () {
                 });
 
                 function verificaParcelas(parcelas, parcelasJuros) {
-                    console.log('Parcelas: ' + parcelas + '/////' + 'juros: ' + parcelasJuros);
                     if (parcelas < parcelasJuros) {
                         $("#error-juros").css('display', 'block');
-                        verifyJuros = false;
+                        return true;
                     } else {
-                        verifyJuros = true;
                         $("#error-juros").css('display', 'none');
+                        return false;
                     }
                 }
 
@@ -90,10 +88,10 @@ $(function () {
                                 }
                             }
 
-                            $('input[name="photo_x1"]').val(x1);
-                            $('input[name="photo_y1"]').val(y1);
-                            $('input[name="photo_w"]').val(x2 - x1);
-                            $('input[name="photo_h"]').val(y2 - y1);
+                            $('#photo_x1').val(x1);
+                            $('#photo_y1').val(y1);
+                            $('#photo_w').val(x2 - x1);
+                            $('#photo_h').val(y2 - y1);
 
                             $('#previewimage').imgAreaSelect({
                                 x1: x1, y1: y1, x2: x2, y2: y2,
@@ -102,10 +100,10 @@ $(function () {
                                 imageHeight: this.naturalHeight,
                                 imageWidth: this.naturalWidth,
                                 onSelectEnd: function (img, selection) {
-                                    $('input[name="photo_x1"]').val(selection.x1);
-                                    $('input[name="photo_y1"]').val(selection.y1);
-                                    $('input[name="photo_w"]').val(selection.width);
-                                    $('input[name="photo_h"]').val(selection.height);
+                                    $('#photo_x1').val(selection.x1);
+                                    $('#photo_y1').val(selection.y1);
+                                    $('#photo_w').val(selection.width);
+                                    $('#photo_h').val(selection.height);
                                 }
                             });
                         })
@@ -156,6 +154,7 @@ $(function () {
                         y1 = Math.floor(img.naturalHeight / 100 * 10);
                         y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
                         x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                        x2 = x1 + (y2 - y1);
                     } else {
                         if (img.naturalWidth < img.naturalHeight) {
                             x1 = Math.floor(img.naturalWidth / 100 * 10);
@@ -189,43 +188,80 @@ $(function () {
                     });
                 }
 
-                // deletar projeto
-                $('#bt_deletar_projeto').on('click', function () {
+                $("#bt-update-project").unbind('click');
+                $("#bt-update-project").on('click', function (event) {
+                    event.preventDefault();
 
-                    var name = $(this).closest("tr").find("td:first-child").text();
-                    $('#modal_excluir_titulo').html('Excluir o projeto ?');
+                    parcelas = parseInt($(".installment_amount option:selected").val());
+                    parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
+                    var verify = verificaParcelas(parcelas, parcelasJuros);
 
-                    $('#bt_excluir').unbind('click');
+                    var formData = new FormData(document.getElementById("update-project"));
+                    console.log(formData);
 
-                    $('#bt_excluir').on('click', function () {
-
-                        $('.loading').css("visibility", "visible");
-
+                    if (!verify) {
                         $.ajax({
                             method: "POST",
-                            url: "/projetos/deletarprojeto",
-                            data: {projeto: $("#project_id").val()},
+                            url: "/projects/" + projectId,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            headers: {
+                                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: formData,
+                            error: function (response) {
+                                if (response.status === 422) {
+                                    for (error in response.errors) {
+                                        alertCustom('error', String(response.errors[error]));
+                                    }
+                                }
+                            }, success: function (response) {
+                                if (response == 'success') {
+                                    alertCustom('success', 'Projeto autalizado com sucesso');
+
+                                } else {
+                                    alertCustom('error', 'Erro ao tentar atualizar Projeto');
+                                }
+
+                                updateConfiguracoes();
+                            }
+                        });
+                    } else {
+                        $("#error-juros").css('display', 'block');
+                    }
+
+                });
+
+                $('#bt-delete-project').on('click', function (event) {
+                    event.preventDefault();
+                    var name = $("#name").val();
+                    $("#modal_excluir_titulo").html("Remover projeto " + name + " ?");
+
+                    $("#bt_excluir").unbind('click');
+                    $("#bt_excluir").on('click', function () {
+                        $("#fechar_modal_excluir");
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/projects/" + projectId,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function () {
-                                $('.loading').css("visibility", "hidden");
-                                $('#fechar_modal_excluir').click();
-                                alertPersonalizado('error', 'Ocorreu algum erro');
+                                alertCustom('error', 'Ocorreu algum erro');
                             },
                             success: function (data) {
-                                $('.loading').css("visibility", "hidden");
-                                if (data != 'sucesso') {
-                                    alertPersonalizado('error', data);
+                                if (data == 'success') {
+                                    alertCustom('success', 'Projeto Removido com sucesso');
+                                    window.location = "/projects";
                                 } else {
-                                    window.location = "/projetos";
+                                    alertCustom('error', "Erro ao deletar projeto");
                                 }
                             }
                         });
-
                     });
-                });
 
+                });
             }
         });
     }

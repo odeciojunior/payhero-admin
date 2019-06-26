@@ -41,7 +41,7 @@ class UserProject extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function company()
+    public function companyId()
     {
         return $this->belongsTo('App\Entities\Company', 'company');
     }

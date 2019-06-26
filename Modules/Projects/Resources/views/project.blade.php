@@ -33,23 +33,11 @@
                                aria-controls="tab_cupons" role="tab">Domínios
                             </a>
                         </li>
-                        {{--<li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_layouts"
-                               aria-controls="tab_cupons" role="tab">Layouts
-                            </a>
-                        </li>--}}
                         <li class="nav-item" role="presentation">
                             <a id="tab_pixels" class="nav-link" data-toggle="tab" href="#tab_pixels-panel"
                                aria-controls="tab_pixels" role="tab">Pixels
                             </a>
                         </li>
-                        {{--@if($project->shopify_id == '')
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-toggle="tab" href="#tab_brindes"
-                                   aria-controls="tab_brindes" role="tab">Brindes
-                                </a>
-                            </li>
-                        @endif--}}
                         <li class="nav-item" role="presentation">
                             <a id='tab_coupons' class="nav-link" data-toggle="tab" href="#tab_coupons-panel"
                                aria-controls="tab_coupons" role="tab">Cupons
@@ -210,6 +198,7 @@
             </div>
         </div>
         @push('scripts')
+           
             <script src='{{asset('modules/partners/js/partners.js')}}'></script>
             <script src='{{asset('modules/Shipping/js/shipping.js')}}'></script>
             <script src='{{asset('modules/domain/js/domain.js')}}'></script>
