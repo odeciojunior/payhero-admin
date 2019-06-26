@@ -51,13 +51,13 @@
                             </li>
                         @endif--}}
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_cupons"
-                               aria-controls="tab_cupons" role="tab">Cupons
+                            <a id='tab_coupons' class="nav-link" data-toggle="tab" href="#tab_coupons-panel"
+                               aria-controls="tab_coupons" role="tab">Cupons
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-toggle="tab" href="#tab_sms"
-                               aria-controls="tab_cupons" role="tab">Notificações
+                            <a id='tab_sms' class="nav-link" data-toggle="tab" href="#tab_sms-panel"
+                               aria-controls="tab_coupons" role="tab">Notificações
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -128,42 +128,12 @@
                                 @include('pixels::index')
                             </div>
                             <!-- Painel de Cupons de Descontos -->
-
-                            <div class="tab-pane" id="tab_cupons" role="tabpanel">
-                                <table id="tabela_cuponsdesconto" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_cupom" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar cupom
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Nome</th>
-                                        <th>Tipo</th>
-                                        <th>Valor</th>
-                                        <th>Código</th>
-                                        <th>Status</th>
-                                        <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                            <div class="tab-pane" id="tab_coupons-panel" role="tabpanel">
+                                @include('discountcoupons::index')
                             </div>
-
                             <!-- Painel de Sms -->
-                            <div class="tab-pane" id="tab_sms" role="tabpanel">
-                                <table id="tabela_sms" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_sms" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar sms
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Plano</th>
-                                        <th>Evento</th>
-                                        <th>Tempo</th>
-                                        <th>Mensagem</th>
-                                        <th>Status</th>
-                                        <th style="width: 110px">Opções</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                            <div class="tab-pane" id="tab_sms-panel" role="tabpanel">
+                                @include('discountcoupons::index')
                             </div>
                             <!-- Painel de Fretes -->
                             <div class="tab-pane" id="tab-fretes-panel" role="tabpanel">
@@ -196,7 +166,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Modal padrão para adicionar Adicionar e Editar -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div id="modal_add_size" class="modal-dialog modal-simple">
@@ -218,7 +187,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Modal padrão para excluir -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog modal-simple">

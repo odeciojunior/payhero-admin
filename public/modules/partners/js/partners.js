@@ -96,7 +96,7 @@ $(function () {
                     $("#data-table-partners").append(dados);
                 });
 
-                if (response.data === '') {
+                if (response.data == '') {
                     $("#data-table-partners").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align:middle;'>Nenhum registro encontrado </td></tr>")
                 }
 
