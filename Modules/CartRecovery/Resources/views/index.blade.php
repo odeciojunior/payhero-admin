@@ -24,8 +24,8 @@
                 <td><b>Sms</b></td>
                 <td><b>Status</b></td>
                 <td><b>Valor</b></td>
-                <td><b>Link</b></td>
                 <td></td>
+                <td><b>Link</b></td>
                 <td><b>Detalhes</b></td>
             </thead>
             <tbody id="table_data">

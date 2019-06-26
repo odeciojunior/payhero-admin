@@ -7,16 +7,17 @@ use Pusher\Pusher;
 use PagarMe\Client;
 use App\Entities\Plan;
 use App\Entities\Sale;
+use Cknow\Money\Money;
 use App\Entities\Company;
 use App\Entities\Project;
+use App\Entities\Checkout;
 use App\Entities\PlanSale;
 use Illuminate\Http\Request;
-use App\Entities\UserProject;
 use App\Entities\Transaction;
+use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use App\Entities\Checkout;
 
 class DashboardController extends Controller {
 
@@ -27,6 +28,50 @@ class DashboardController extends Controller {
         return view('dashboard::dashboard',[
             'companies' => $companies,
         ]);
+    }
+
+    public function getValues(Request $request){
+
+        $requestData = $request->all();
+
+        $antecipableBalance = 0;
+        $pendingBalance     = 0;
+
+        $company = Company::find($request->company);
+
+        $pendingTransactions = Transaction::where('company',$request->company)
+            ->where('status','paid')
+            ->whereDate('release_date', '>', Carbon::today()->toDateString())
+            ->get()->toArray();
+
+        if(count($pendingTransactions)){
+            foreach($pendingTransactions as $pendingTransaction){
+                $pendingBalance += $pendingTransaction['value'];
+            }
+        }
+
+        $antecipableTransactions = Transaction::where('company',$request->company)
+            ->whereDate('release_date', '>', Carbon::today())
+            ->whereDate('antecipation_date', '<=', Carbon::today())
+            ->get()->toArray();
+
+        if(count($antecipableTransactions)){
+            foreach($antecipableTransactions as $antecipableTransaction){
+                $antecipableBalance += $antecipableTransaction['antecipable_value'];
+            }
+        }
+
+        $availableBalance   = $company->balance;
+        $totalBalance       = $availableBalance + $pendingBalance;
+
+        return response()->json([
+            'available_balance'   => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+            'antecipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
+            'total_balance'       => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+            'pending_balance'     => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+            'currency'            => $company->country == 'usa' ? '$' : 'R$',
+        ]);
+
     }
 
     public function lastSales(Request $request){
@@ -56,68 +101,5 @@ class DashboardController extends Controller {
         return response()->json($sales);
     }
 
-    public function getValues(Request $request){
-
-        $requestData = $request->all();
-
-        $availableBalance = 0;
-        $futureBalance    = 0;
-        $dailyBalance     = 0;
-
-        $company = Company::find($request->company);
-
-        $pendingTransactions = Transaction::where('company',$request->company)
-            ->where('status','paid')
-            ->whereDate('release_date', '>', Carbon::today()->toDateString())
-            ->get()->toArray();
-
-        if(count($pendingTransactions)){
-            foreach($pendingTransactions as $pendingTransaction){
-                $futureBalance += $pendingTransaction['value'];
-            }
-        }
-
-        $todayTransactions = Transaction::where('company',$request->company)
-            ->whereDate('created_at', Carbon::today())
-            ->get()->toArray();
-
-        if(count($todayTransactions)){
-            foreach($todayTransactions as $todayTransaction){
-                $dailyBalance += $todayTransaction['value'];
-            }
-        }
-
-        if($availableBalance == 0){
-            $availableBalance = '000';
-        }
-
-        if($futureBalance == 0){
-            $futureBalance = '000';
-        }
-
-        $availableBalance = \Auth::user()->saldo;
-        $availableBalance = number_format($availableBalance,2);
-        $futureBalance    = substr_replace($futureBalance, '.',strlen($futureBalance) - 2, 0 );
-        $futureBalance    = number_format($futureBalance,2);
-        $dailyBalance     = substr_replace($dailyBalance, '.',strlen($dailyBalance) - 2, 0 );
-        $dailyBalance     = number_format($dailyBalance,2);
-
-        // $userProjects = UserProject::where([
-        //     ['user', \Auth::user()->id],
-        //     ['type','producer']
-        // ])->pluck('project')->toArray();
-
-        // $salesCount = Sale::whereIn('project',$userProjects)->whereDate('start_date', Carbon::today())->count();
-        // $checkouts  = Checkout::whereIn('project',$userProjects)->whereDate('created_at', Carbon::today())->count();
-
-        return response()->json([
-            'available_balance' => $availableBalance,
-            'future_balance'    => $futureBalance,
-            'currency'          => $company->country == 'usa' ? '$' : 'R$',
-        ]);
-
-    }
-
 }
-
 

@@ -22,7 +22,7 @@
                             <tr style="height: 40px">
                                 <td style="width: 40%" class="text-right">FORMA DE PAGAMENTO:</td>
                                 <td style="width:20px">
-                                @if($sale['payment_form'] == 'boleto')
+                                @if($sale['payment_method'] == '2')
                                     <td class="text-left">Boleto</td>
                                 @else
                                     <td class="text-left">Cartão de crédito</td>

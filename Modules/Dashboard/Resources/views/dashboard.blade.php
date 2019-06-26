@@ -28,10 +28,10 @@
                       </select>
                   </div>
               </div>
-          </div>
+          </div> 
       @endif
 
-    </div>
+    </div> 
 
     <div class="clearfix"></div>
 
@@ -157,7 +157,7 @@
 
 @push('scripts')
   <script src="{{ asset('assets/js/OpenLayers.js') }}"></script>
-  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
+  {{-- <script src="https://js.pusher.com/4.4/pusher.min.js"></script> --}}
   <script src="{{ asset('modules/dashboard/js/dashboard.js') }}"></script>
 @endpush
 
