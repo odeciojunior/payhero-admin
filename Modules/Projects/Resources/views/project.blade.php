@@ -213,7 +213,6 @@
             <script src='{{asset('modules/partners/js/partners.js')}}'></script>
             <script src='{{asset('modules/Shipping/js/shipping.js')}}'></script>
             <script src='{{asset('modules/domain/js/domain.js')}}'></script>
-
             <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>
             <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
@@ -222,6 +221,7 @@
                 <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
             @endif--}}
         @endpush
+
         <script>
             $(document).ready(function () {
 
