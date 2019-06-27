@@ -30,33 +30,10 @@ class WithdrawalController extends Controller
      */
     public function index()
     {
-        if (getenv('PAGAR_ME_PRODUCAO') == 'true') {
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCAO'));
-        } else {
-            $pagarMe = new Client(getenv('PAGAR_ME_PUBLIC_KEY_SANDBOX'));
-        }
-
         $userCompanies = $this->company->where('user_id', auth()->user()->id)->get()->toArray();
 
-        $selectedCompany = false;
-        $companies       = [];
-
-        foreach ($userCompanies as $company) {
-
-            $companies[] = [
-                'id'   => $company['id'],
-                'name' => $company['fantasy_name'],
-            ];
-
-            if (!$selectedCompany) {
-                $company_ativa   = $company['id'];
-                $selectedCompany = true;
-            }
-        }
-
         return view('finances::index', [
-            'company'   => $selectedCompany,
-            'companies' => $companies,
+            'companies' => $userCompanies,
         ]);
     }
 

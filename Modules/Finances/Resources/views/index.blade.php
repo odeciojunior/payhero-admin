@@ -2,337 +2,288 @@
 
 @section('content')
 
-  <!-- Page --> 
-  
-  <div class="page">
+<div class="page">
 
-    @if(1 != 1)
-
-    @else
-        <div class="page-content container">
-
+    <div class="page-content container">
         <div class="row">
             <div class="col-lg-6 mb-30">
-            <h1 class="page-title">Finanças</h1>
+                <h1 class="page-title">Finanças</h1>
             </div>
         </div>
-       
+        <div class="card shadow">
+            <nav class="pt-20">
+                <div class="nav-tabs-horizontal">
+                    <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                            role="tab" aria-controls="nav-home" aria-selected="true">Transferências</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                            role="tab" aria-controls="nav-profile" aria-selected="false">Extrato</a>
+                    </div>
+                </div>
+            </nav>
 
+            <div class="p-30 pt-20">
 
-            <div class="card shadow">
-
-                        <nav class="pt-20">
-                            <div class="nav-tabs-horizontal">
-                                <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
-                                        role="tab" aria-controls="nav-home" aria-selected="true">Transferências</a>
-                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                                        role="tab" aria-controls="nav-profile" aria-selected="false">Extrato</a>
-                                </div>
+                <div class="tab-content" id="nav-tabContent">
+                    <!-- TRANSFERENCIAS -->
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="row justify-content-start">
+                            <div class="col-12 mb-3">
+                                <h5 class="title-pad"> Nova transferência </h5>
+                                <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
+                                </p>
                             </div>
-                        </nav>
 
-                        <div class="p-30 pt-20">
-
-                            <div class="tab-content" id="nav-tabContent">
-                                <!-- TRANSFERENCIAS -->
-                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                    aria-labelledby="nav-home-tab">
-                                    <div class="row justify-content-start">
-                                        <div class="col-12 mb-3">
-                                            <h5 class="title-pad"> Nova transferência </h5>
-                                            <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
-                                            </p>
-                                        </div>
-
-                                        <div class="col-lg-5">
-                                            <div class="row">
-                                                <div class="col-6 mb-15">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price"> Saldo pendente </h6>
-                                                        <h4 class="price">R$2.500,00</h4>
-                                                        <div class="grad-border"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-6 mb-15">
-                                                    <div class="price-holder antecipacao" id="pop-antecipacao">
-                                                        <h6 class="label-price"> Disponível para antecipar </h6>
-                                                        <h4 class="price align-items-baseline">
-                                                            R$2.500,00 <span>
-                                                            <a href="#">
-                                                                <svg class="svg-antecipar"
-                                                                    xmlns="http://www.w3.org/2000/svg" width="20"
-                                                                    height="20" viewBox="0 0 24 24">
-                                                                    <path
-                                                                        d="M11 6v8h7v-2h-5v-6h-2zm10.854 7.683l1.998.159c-.132.854-.351 1.676-.652 2.46l-1.8-.905c.2-.551.353-1.123.454-1.714zm-2.548 7.826l-1.413-1.443c-.486.356-1.006.668-1.555.933l.669 1.899c.821-.377 1.591-.844 2.299-1.389zm1.226-4.309c-.335.546-.719 1.057-1.149 1.528l1.404 1.433c.583-.627 1.099-1.316 1.539-2.058l-1.794-.903zm-20.532-5.2c0 6.627 5.375 12 12.004 12 1.081 0 2.124-.156 3.12-.424l-.665-1.894c-.787.2-1.607.318-2.455.318-5.516 0-10.003-4.486-10.003-10s4.487-10 10.003-10c2.235 0 4.293.744 5.959 1.989l-2.05 2.049 7.015 1.354-1.355-7.013-2.184 2.183c-2.036-1.598-4.595-2.562-7.385-2.562-6.629 0-12.004 5.373-12.004 12zm23.773-2.359h-2.076c.163.661.261 1.344.288 2.047l2.015.161c-.01-.755-.085-1.494-.227-2.208z" />
-                                                                </svg>
-                                                            </a>
-
-                                                            <div class="custom-popover shadow-sm" id="antecipa-popover" style="display: none">
-                                                                <div class="d-flex flex-column text-center">
-                                                                    <p style="font-size: 12px; font-weight: 700;"> O
-                                                                        valor antecipado será incluido no seu
-                                                                        <strong style="color: green;"> Saldo
-                                                                            Disponível </strong> </p>
-                                                                    <h5 style="font-size: 16px; font-weight: 700; margin: 0;">
-                                                                        Saldo após antecipação </h5>
-                                                                    <h3 style="font-size: 25px;font-weight: 700;">
-                                                                        R$35.200,00 </h3>
-                                                                    <p style="font-weight: 300; font-size: 11px; color: black; opacity: 0.8;">
-                                                                        Uma taxa de R$67,90 será cobrada para
-                                                                        liberar o valor antecipado. </p>
-                                                                    <a class="btn btn-outline-success" href="#">
-                                                                        Antecipar </a>
-                                                                </div>
-                                                            </div>
-                                                        </h4>
-                                                        <div class="grad-border purple"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-6 mb-15">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price"> Saldo Disponível </h6>
-                                                        <h4 class="price">R$2.500,00</h4>
-                                                        <div class="grad-border green"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-6 mb-15">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price"> Saldo Total </h6>
-                                                        <h4 class="price">R$2.500,00 </h4>
-                                                        <div class="grad-border blue"></div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6">
-                                            <div class="row flex-column">
-                                                <div class="col-lg-6 mb-3">
-                                                    <div class="input-holder">
-                                                        <label for="company"> Empresa </label>
-                                                        <select class="form-control">
-                                                            <option> Empresa 1</option>
-                                                            <option value=""> Empresa 2</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-lg-12">
-                                                    <label for="company"> Valor a transferir </label>
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text" id="basic-addon1">R$</span>
-                                                        </div>
-                                                        <input type="number" class="form-control"
-                                                            placeholder="Digite o valor" aria-label="Digite o valor"
-                                                            aria-describedby="basic-addon1">
-                                                        <button class="btn btn-success btn-sacar ml-3"> <svg
-                                                                class="mr-2"
-                                                                style="fill: white; vertical-align: middle;"
-                                                                xmlns="http://www.w3.org/2000/svg" width="16"
-                                                                height="16" viewBox="0 0 24 24">
-                                                                <path
-                                                                    d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
-                                                            </svg>Sacar dinheiro </button>
-                                                    </div> <small class="text-muted">Cada saque acarreta uma taxa de R$3,80*</small>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-12 mb-3 mt-3">
-                                            <h5 class="card-title"> Histórico de transferências </h5>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Conta</th>
-                                                        <th scope="col">Solicitação</th>
-                                                        <th scope="col">Liberação</th>
-                                                        <th scope="col">Valor</th>
-                                                        <th scope="col">Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="custom-t-body">
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-flex flex-column">
-                                                                <span> <strong> Banco Itaú </strong> <small> CC: 19394-3
-                                                                    </small> </span>
-                                                            </div>
-                                                        </td>
-                                                        <td>22/06/2019</td>
-                                                        <td>Aguardando</td>
-                                                        <td class="money-td">R$500,00</td>
-                                                        <td><span class="badge badge-pendente">Pendente</span>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-flex flex-column">
-                                                                <span> <strong> Banco Itaú </strong> <small> CC: 19394-3
-                                                                    </small> </span>
-                                                            </div>
-                                                        </td>
-                                                        <td>10/06/2019</td>
-                                                        <td>12/06/2019</td>
-                                                        <td class="money-td">R$2.500,00</td>
-                                                        <td><span class="badge badge-aprovado">Aprovado</span>
-                                                        </td>
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
+                            <div class="col-lg-5">
+                                <div class="row">
+                                    <div class="col-6 mb-15">
+                                        <div class="price-holder">
+                                            <h6 class="label-price"> Saldo pendente </h6>
+                                            <h4 class="price">R$0,00</h4>
+                                            <div class="grad-border"></div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- EXTRATO -->
-                                <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                    aria-labelledby="nav-profile-tab">
+                                    <div class="col-6 mb-15">
+                                        <div class="price-holder antecipacao" id="pop-antecipacao">
+                                            <h6 class="label-price"> Disponível para antecipar </h6>
+                                            <h4 class="price align-items-baseline">
+                                                R$0,00 <span>
+                                                <a href="#">
+                                                    <svg class="svg-antecipar"
+                                                        xmlns="http://www.w3.org/2000/svg" width="20"
+                                                        height="20" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M11 6v8h7v-2h-5v-6h-2zm10.854 7.683l1.998.159c-.132.854-.351 1.676-.652 2.46l-1.8-.905c.2-.551.353-1.123.454-1.714zm-2.548 7.826l-1.413-1.443c-.486.356-1.006.668-1.555.933l.669 1.899c.821-.377 1.591-.844 2.299-1.389zm1.226-4.309c-.335.546-.719 1.057-1.149 1.528l1.404 1.433c.583-.627 1.099-1.316 1.539-2.058l-1.794-.903zm-20.532-5.2c0 6.627 5.375 12 12.004 12 1.081 0 2.124-.156 3.12-.424l-.665-1.894c-.787.2-1.607.318-2.455.318-5.516 0-10.003-4.486-10.003-10s4.487-10 10.003-10c2.235 0 4.293.744 5.959 1.989l-2.05 2.049 7.015 1.354-1.355-7.013-2.184 2.183c-2.036-1.598-4.595-2.562-7.385-2.562-6.629 0-12.004 5.373-12.004 12zm23.773-2.359h-2.076c.163.661.261 1.344.288 2.047l2.015.161c-.01-.755-.085-1.494-.227-2.208z" />
+                                                    </svg>
+                                                </a>
 
-                                    <div class="row justify-content-between">
-                                        <div class="col-12 fix-5">
-                                            <div class="d-flex no-gutters justify-content-between">
-                                                <div class="p-2 mb-3">
-                                                    <h5 class="title-pad"> Extrato </h5>
-                                                    <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua conta.
-                                                    </p>
-                                                </div>
-
-                                                <div class="p-2">
-                                                    <div class="price-holder">
-                                                        <h6 class="label-price"> Total na conta </h6>
-                                                        <h4 class="price">R$12.500,00</h4>
-                                                        <div class="grad-border blue"></div>
+                                                <div class="custom-popover shadow-sm" id="antecipa-popover" style="display: none">
+                                                    <div class="d-flex flex-column text-center">
+                                                        <p style="font-size: 12px; font-weight: 700;"> O
+                                                            valor antecipado será incluido no seu
+                                                            <strong style="color: green;"> Saldo
+                                                                Disponível </strong> </p>
+                                                        <h5 style="font-size: 16px; font-weight: 700; margin: 0;">
+                                                            Saldo após antecipação </h5>
+                                                        <h3 style="font-size: 25px;font-weight: 700;">
+                                                            R$0,00 </h3>
+                                                        <p style="font-weight: 300; font-size: 11px; color: black; opacity: 0.8;">
+                                                            Uma taxa de R$0,00 será cobrada para
+                                                            liberar o valor antecipado. </p>
+                                                        <a class="btn btn-outline-success" href="#">
+                                                            Antecipar </a>
                                                     </div>
                                                 </div>
-
-                                            </div>
+                                            </h4>
+                                            <div class="grad-border purple"></div>
                                         </div>
+                                    </div>
 
-
-                                        <div class="col-lg-12">
-                                            <div class="row justify-content-between align-items-baseline">
-
-                                                <div class="col-3">
-                                                    <div class="input-holder">
-                                                        <label for="company"> Empresa </label>
-                                                        <select class="form-control">
-                                                            <option> Empresa 1</option>
-                                                            <option> Empresa 2</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-lg-6">
-                                                    <label> </label>
-
-                                                    <div class="d-flex align-items-center justify-content-around">
-
-                                                        <div class="p-2">
-                                                            <div class="btn-group" data-toggle="buttons" role="group"
-                                                                style="margin-top: 2px;">
-                                                                <label class="btn btn-outline-primary fix-m active">
-                                                                    <input type="radio" name="radio-filtro"
-                                                                        value="semana" checked> Semana
-                                                                </label>
-                                                                <label class="btn btn-outline-primary fix-m">
-                                                                    <input type="radio"   name="radio-filtro"
-                                                                        value="mes"> Mês
-                                                                </label>
-                                                                <label class="btn btn-outline-primary fix-m">
-                                                                    <input type="radio"  name="radio-filtro"
-                                                                        value="ano"> Ano
-                                                                </label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="p-2 d-flex">
-
-                                                            <a id="personalizado" class="text-filtros">
-                                                                <svg class="icon-filtro"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    viewBox="0 0 24 24">
-                                                                    <path
-                                                                        d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z" />
-                                                                </svg>
-                                                                Personalizado
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <span class="text-muted"> <small> Exibindo resultados de 16 de junho a 16 de julho </small> </span>
-                                                </div>
-                                            </div>
+                                    <div class="col-6 mb-15">
+                                        <div class="price-holder">
+                                            <h6 class="label-price"> Saldo Disponível </h6>
+                                            <h4 class="price">R$0,00</h4>
+                                            <div class="grad-border green"></div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-12 mt-3">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Razão</th>
-                                                        <th scope="col">Data</th>
-                                                        <th scope="col">Valor</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="custom-t-body">
-                                                    <tr>
-                                                        <td> Venda Bolsa Kluth | Loja X</td>
-                                                        <td>12/06/2019</td>
-                                                        <td class="money-td entrada">R$500,00</td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td> Saque para conta</td>
-                                                        <td>5/06/2019</td>
-                                                        <td class="money-td saida">R$2.500,00</td>
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
+                                    <div class="col-6 mb-15">
+                                        <div class="price-holder">
+                                            <h6 class="label-price"> Saldo Total </h6>
+                                            <h4 class="price">R$0,00 </h4>
+                                            <div class="grad-border blue"></div>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
 
+                            <div class="col-lg-6">
+                                <div class="row flex-column">
+                                    <div class="col-lg-6 mb-3">
+                                        <div class="input-holder">
+                                            <label for="company"> Empresa </label>
+                                            <select class="form-control">
+                                                @foreach($companies as $company)
+                                                    <option value="{!! Hashids::encode($company['id']) !!}">{!! $company['fantasy_name'] !!}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <label for="company"> Valor a transferir </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">R$</span>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
+                                            <button class="btn btn-success btn-sacar ml-3"> 
+                                                <svg class="mr-2" style="fill: white; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                                    <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
+                                                </svg>
+                                                Sacar dinheiro
+                                            </button>
+                                        </div>
+                                        <small class="text-muted">Cada saque acarreta uma taxa de R$3,80*</small>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12 mb-3 mt-3">
+                                <h5 class="card-title"> Histórico de transferências </h5>
+                            </div>
+
+                            <div class="col-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Conta</th>
+                                            <th scope="col">Solicitação</th>
+                                            <th scope="col">Liberação</th>
+                                            <th scope="col">Valor</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="custom-t-body">
+                                        <tr>
+                                            <td colspan="5" class="text-center"> Nenhum saque realizado até o momento</td>
+                                        </tr>
+
+                                        {{--  <tr>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span> <strong> Banco Itaú </strong> <small> CC: 19394-3
+                                                        </small> </span>
+                                                </div>
+                                            </td>
+                                            <td>10/06/2019</td>
+                                            <td>12/06/2019</td>
+                                            <td class="money-td">R$2.500,00</td>
+                                            <td><span class="badge badge-aprovado">Aprovado</span>
+                                            </td>
+                                        </tr>  --}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EXTRATO -->
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+                        <div class="row justify-content-between">
+                            <div class="col-12 fix-5">
+                                <div class="d-flex no-gutters justify-content-between">
+                                    <div class="p-2 mb-3">
+                                        <h5 class="title-pad"> Extrato </h5>
+                                        <p class="sub-pad"> Pra você controlar tudo que entra e sai da sua conta.
+                                        </p>
+                                    </div>
+
+                                    <div class="p-2">
+                                        <div class="price-holder">
+                                            <h6 class="label-price"> Total na conta </h6>
+                                            <h4 class="price">R$0,00</h4>
+                                            <div class="grad-border blue"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="row justify-content-between align-items-baseline">
+                                    <div class="col-3">
+                                        <div class="input-holder">
+                                            <label for="company"> Empresa </label>
+                                            <select class="form-control">
+                                                @foreach($companies as $company)
+                                                    <option value="{!! Hashids::encode($company['id']) !!}"> {!! $company['fantasy_name'] !!}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <label> </label>
+
+                                        <div class="d-flex align-items-center justify-content-around">
+
+                                            <div class="p-2">
+                                                <div class="btn-group" data-toggle="buttons" role="group"
+                                                    style="margin-top: 2px;">
+                                                    <label class="btn btn-outline-primary fix-m active">
+                                                        <input type="radio" name="radio-filtro"
+                                                            value="semana" checked> Semana
+                                                    </label>
+                                                    <label class="btn btn-outline-primary fix-m">
+                                                        <input type="radio"   name="radio-filtro"
+                                                            value="mes"> Mês
+                                                    </label>
+                                                    <label class="btn btn-outline-primary fix-m">
+                                                        <input type="radio"  name="radio-filtro"
+                                                            value="ano"> Ano
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="p-2 d-flex">
+
+                                                <a id="personalizado" class="text-filtros">
+                                                    <svg class="icon-filtro"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z" />
+                                                    </svg>
+                                                    Personalizado
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <span class="text-muted"> <small> Exibindo resultados de 16 de junho a 16 de julho </small> </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Razão</th>
+                                            <th scope="col">Data</th>
+                                            <th scope="col">Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="custom-t-body">
+                                        <tr>
+                                            <td colspan="3" class="text-center"> Nenhuma movimentação financeira encontrada</td>
+                                        </tr>
+
+                                        {{--  <tr>
+                                            <td> Saque para conta</td>
+                                            <td>5/06/2019</td>
+                                            <td class="money-td saida">R$2.500,00</td>
+                                        </tr>  --}}
+
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
-
                     </div>
-               
-    
-    @endif
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
-
-  <script>
-
-        $(document).ready(function () {
-
-            $("#pop-antecipacao").click(function () {
-                if($("#antecipa-popover").css('display') == 'none'){
-                    $("#antecipa-popover").show(400);
-                }
-                else{
-                    $("#antecipa-popover").hide(400);
-                }
-            });
-        });
-
-    </script>
-
+@push('scripts')
+    <script src="{!! asset('modules/finances/js/index.js') !!}"></script>
+@endpush
 
 @endsection
 

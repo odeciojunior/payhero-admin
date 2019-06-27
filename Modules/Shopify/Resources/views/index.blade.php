@@ -7,16 +7,15 @@
 
     <div class="page-header container">
         <div class="row jusitfy-content-between">
-        <div class="col-lg-8">
-            <h1 class="page-title">Integração com Shopify</h1>
+            <div class="col-lg-8">
+                <h1 class="page-title">Integrações com Shopify</h1>
+            </div>
+            <div class="col text-right">
+                <a data-toggle="modal" data-target="#modal_add_integracao" class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                    <i class="icon wb-plus" aria-hidden="true"></i>
+                </a>
+            </div>
         </div>
-            
-        <div class="col text-right">
-        <a data-toggle="modal" data-target="#modal_add_integracao" class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
-                <i class="icon wb-plus" aria-hidden="true"></i>
-        </a>
-        </div>
-    </div>
     </div>
 
     <div class="page-content container">
@@ -30,19 +29,20 @@
 
             <div class="row">
                 @foreach($projects as $project)
-                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                    <div class="card shadow">
-                        <img class="card-img-top img-fluid w-full" src="{!! '/'.Modules\Core\Helpers\CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO.$project['foto'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/produto.png') !!}';" alt="Imagem não encontrada" >
-                        <div class="card-body">
-                            <h4 class="card-title">Nome do Projeto {!! $project['nome'] !!}</h4>
-                            <p class="card-text sm">Criado em dd/mm/aaaa</p>
-                        </div>
-                        <a href="/projetos/projeto/{!! $project['id'] !!}'" class="streched-link"></a>
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                        <a href="/projects/{!! Hashids::encode($project['id']) !!}" class="streched-link">
+                            <div class="card shadow">
+                                <img class="card-img-top img-fluid w-full" src="{!! $project['photo'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/produto.png') !!}';" alt="{!! asset('modules/global/assets/img/produto.png') !!}" >
+                                <div class="card-body">
+                                    <h4 class="card-title"> {!! $project['name'] !!}</h4>
+                                    <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p> 
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                  </div>
                 @endforeach
             </div>
-          @endif
+        @endif
 
         <!-- Modal add integração -->
         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -111,129 +111,9 @@
       </div>
   </div>
 
-  <script>
-
-    $(document).ready( function(){
-
-        var p = $("#previewimage");
-        $("#foto").on("change", function(){
-
-            var imageReader = new FileReader();
-            imageReader.readAsDataURL(document.getElementById("foto").files[0]);
-
-            imageReader.onload = function (oFREvent) {
-                p.attr('src', oFREvent.target.result).fadeIn();
-
-                p.on('load', function(){
-
-                    var img = document.getElementById('previewimage');
-                    var x1, x2, y1, y2;
-    
-                    if (img.naturalWidth > img.naturalHeight) {
-                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                        x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                        x2 = x1 + (y2 - y1);
-                    }
-                    else {
-                        if (img.naturalWidth < img.naturalHeight) {
-                            x1 = Math.floor(img.naturalWidth / 100 * 10);;
-                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                            y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                            y2 = y1 + (x2 - x1);
-                        }
-                        else {
-                            x1 = Math.floor(img.naturalWidth / 100 * 10);
-                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                            y1 = Math.floor(img.naturalHeight / 100 * 10);
-                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                        }
-                    }
-
-                    $('input[name="foto_x1"]').val(x1);
-                    $('input[name="foto_y1"]').val(y1);
-                    $('input[name="foto_w"]').val(x2 - x1);
-                    $('input[name="foto_h"]').val(y2 - y1);
-
-                    $('#previewimage').imgAreaSelect({
-                        x1: x1, y1: y1, x2: x2, y2: y2,
-                        aspectRatio: '1:1',
-                        handles: true,
-                        imageHeight: this.naturalHeight,
-                        imageWidth: this.naturalWidth,
-                        onSelectEnd: function (img, selection) {
-                            $('input[name="foto_x1"]').val(selection.x1);
-                            $('input[name="foto_y1"]').val(selection.y1);
-                            $('input[name="foto_w"]').val(selection.width);
-                            $('input[name="foto_h"]').val(selection.height);
-                        },
-                        parent: $('#conteudo_modal_add')
-                    });
-                })
-            };
-
-        });
-
-        $("#selecionar_foto").on("click", function(){
-            $("#foto").click();
-        });
-
-        $("#bt_adicionar_integracao").on("click", function(){
-
-            if($('#token').val() == '' || $('#url_store').val() == '' || $('#foto_projeto').val() == '' || $('#company').val() == ''){
-                alertPersonalizado('error','Dados informados inválidos');
-                return false;
-            }
-            $('.loading').css("visibility", "visible");
-
-            var form_data = new FormData(document.getElementById('form_add_integracao'));
-
-            $.ajax({
-                method: "POST",
-                url: "/apps/shopify/adicionarintegracao",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                processData: false,
-                contentType: false,
-                cache: false,
-                data: form_data,
-                error: function(){
-                    $('.loading').css("visibility", "hidden");
-                    alertPersonalizado('error','Ocorreu algum erro');
-                    $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
-                },
-                success: function(data){
-                    $('.loading').css("visibility", "hidden");
-                    if(data == 'Sucesso'){
-                      alertPersonalizado('success','Integração adicionada!');
-                      window.location.reload(true); 
-                    }
-                    else{
-                      alertPersonalizado('error',data);
-                    }
-                    $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
-                },
-            });
-
-        });
-
-        function alertPersonalizado(tipo, mensagem){
-
-            swal({
-                position: 'bottom',
-                type: tipo,
-                toast: 'true',
-                title: mensagem,
-                showConfirmButton: false,
-                timer: 6000
-            });
-        }
-
-
-    });
-
-  </script>
+@push('scripts')
+  <script src="/modules/shopify/js/index.js"></script>
+@endpush
 
 @endsection
 

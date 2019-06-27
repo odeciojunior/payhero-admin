@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="{{ asset('modgitules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 

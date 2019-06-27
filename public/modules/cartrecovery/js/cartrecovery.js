@@ -34,7 +34,12 @@ $(document).ready( function(){
                     dados += "<td style='vertical-align: middle' class='text-center'>"+value.client+"</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'>"+value.email_status+"</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'>"+value.sms_status+"</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.recovery_status+"</td>";
+                    if(value.recovery_status == 'Recuperado'){
+                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-success'>"+value.recovery_status+"</span></td>";
+                    }
+                    else{
+                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-danger'>"+value.recovery_status+"</span></td>";
+                    }
                     dados += "<td style='vertical-align: middle' class='text-center'>"+value.value+"</td>";
                     // dados += "<td style='vertical-align: middle' class='text-center'>"+value.link+"</td>";
                     dados += "<td style='vertical-align: middle' class='text-center'><a href='"+ value.whatsapp_link +"', '', $client['telephone']); !!}' target='_blank'><img style='height:25px' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/whatsapp-default.jpg'></a></td>";
