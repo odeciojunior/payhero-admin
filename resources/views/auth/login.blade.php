@@ -57,18 +57,44 @@
                                 </div>
 
                                 <div class="forgot-pass d-flex text-right">
-                                    <a href="#" class="sm-text"> Forgot my password </a>
+                                    <a id="forgotClick" role="button" class="sm-text d-flex align-items-center"> <i class="material-icons md-18 mr-">fingerprint</i> Forgot my password </a>
                                 </div>
 
                             </div>
 
                             <div class="clearfix"></div>
-
+                            
                             <button type="submit" value="Entrar com e-mail" class="btn btn-primary orange"> Sign in </button>
 
                             <div class="btnfix"></div>
-                        </form>
+                        </form>                         
+
                     </div>
+
+                    <div id="panel-recover" style="display:none;">
+                            <h3 class="text-center"> Recover your password </h3>
+
+                                <form>
+                                    <div class="input-holder">
+                                        <input type="email" name="email" class="{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail') }}" required autofocus>
+                                            </span>
+                                    </div>
+                                </form>
+
+                                <div class="password-alert text-center">
+                                    We will send a recover link to your e-mail address.
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <button type="submit" value="Entrar com e-mail" class="btn btn-primary orange"> Send recover link </button>
+                                <div class="btnfix"></div>
+
+                                <div class="text-left">
+                                    <a id="backLogin" role="button" class="sm-text d-flex align-items-center">  <i class="material-icons md-18">keyboard_arrow_left</i> Back to Login </a>
+                                </div>
+
+                        </div>
                 </div>
                 <div class="hr"></div>
 
@@ -85,6 +111,23 @@
 
         </div>
     </div>
+    
+
+    <script>
+       $(document).ready(function(){
+        $("#forgotClick").click(function(){
+            $("#panel-login").slideUp( "800" ).delay( "250" ).fadeOut( "800" ).hide();
+            $("#panel-recover").slideDown( "800" ).delay( "250" ).fadeIn( "800" ).show();
+        });
+
+        $("#backLogin").click(function(){
+            $("#panel-recover").slideUp( "800" ).delay( "250" ).fadeOut( "800" ).hide();
+            $("#panel-login").slideDown( "800" ).delay( "250" ).fadeIn( "800" ).show();
+        });
+        });
+
+    </script>
+    
 @endsection
 
 

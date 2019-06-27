@@ -9,11 +9,11 @@
   <!-- Page -->
   <div class="page">
 
-    <div class="page-header">
+    <div class="page-header container">
         <h1 class="page-title">Carrinhos abandonados</h1>
     </div>
 
-    <div class="page-content container-fluid">
+    <div class="page-content container">
 
       <div class="panel pt-10 p-10" style="min-height: 300px">
           <table class="table table-hover table-vendas">
@@ -24,8 +24,8 @@
                 <td><b>Sms</b></td>
                 <td><b>Status</b></td>
                 <td><b>Valor</b></td>
-                <td></td>
                 <td><b>Link</b></td>
+                <td></td>
                 <td><b>Detalhes</b></td>
             </thead>
             <tbody id="table_data">

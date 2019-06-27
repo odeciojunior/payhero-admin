@@ -150,6 +150,10 @@ input[type=button]:focus {
 .panel {
 	width: 100%;
 	height: auto;
+	min-height: 350px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 	padding: 20px 60px;
 	border-radius: 5px;
 	box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1);
@@ -246,6 +250,22 @@ input:checked + .slider:before {
 .linkfooter {
 	color: white !important;
 }
+
+.password-alert {
+	width: 100%;
+    padding: 15px 22px;
+    background-color: rgb(234, 234, 234);
+    margin: 0px;
+    color: rgb(92, 92, 92);
+    border-radius: 6px;
+    font-size: 0.8em;
+    display: flex;
+    align-self: center;
+
+}
+
+
+
 
 
 

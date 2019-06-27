@@ -8,10 +8,17 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" href="{{ asset('adminremark/assets/images/cloudfox_logo.png') }}">
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/assets/img/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/assets/img/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/assets/img/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ asset('modules/global/assets/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#603cba">
+    <meta name="theme-color" content="#ffffff">
 
     <title>CloudFox - Admin</title>
+
+    
 
      <!-- Datatables -->
      <!-- <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"> -->
@@ -40,6 +47,8 @@
     <!--link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/weather-icons/weather-icons.css') }}" -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <!--link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/brand-icons/brand-icons.min.css') }}" -->
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">    
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
@@ -73,7 +82,9 @@
     </div>
 
     <style>
-        body { font-family: 'Muli', sans-serif !important;}
+        body { 
+          background-color: #f1f4f5;
+          font-family: 'Muli', sans-serif !important;}
     </style>
 
     @include("layouts.menu-principal")

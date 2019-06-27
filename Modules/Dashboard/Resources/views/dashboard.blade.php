@@ -17,10 +17,10 @@
       @if(count($companies) > 0)
           <div class="col-lg-6">
               <div class="d-lg-flex align-items-center justify-content-end">
-                  <div class="p-2 text-lg-right">
+                <div class="mr-10 text-lg-right">
                       Empresa:
                   </div>
-                  <div class="p-2 text-lg-right">
+                  <div class=" text-lg-right">
                       <select id="company" class="form-control new-select">
                           @foreach($companies as $company)
                               <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
@@ -112,6 +112,18 @@
               </div>
           </div>
         </div>
+
+
+        <div class="row">
+          <div class="col-lg-12" id="cardWelcome">
+            <div class="card shadow br15">
+              <a class="close-card pointer" id="closeWelcome" role="button">
+                <i class="material-icons md-16">close</i>
+              </a>
+              <img class="card-img-top product-image br15" src="{!! asset('modules/global/assets/img/welcome-gradient.png') !!}">
+            </div>
+          </div>
+        </div>
       @else
         @push('css')
           <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
@@ -161,4 +173,17 @@
   <script src="{{ asset('modules/dashboard/js/dashboard.js') }}"></script>
 @endpush
 
+
+<script>
+
+        $("#closeWelcome").click(function(){
+            $("#cardWelcome").slideUp( "600" );
+        });
+      
+
+
+</script>
+
 @endsection
+
+
