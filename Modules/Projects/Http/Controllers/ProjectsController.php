@@ -2,6 +2,7 @@
 
 namespace Modules\Projects\Http\Controllers;
 
+use App\Entities\Carrier;
 use Exception;
 use App\Entities\Project;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use App\Entities\UserProject;
 use App\Entities\ExtraMaterial;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -17,11 +19,30 @@ use Modules\Core\Services\DigitalOceanFileService;
 
 class ProjectsController extends Controller
 {
+    /**
+     * @var Project
+     */
     private $projectModel;
+    /**
+     * @var UserProject
+     */
     private $userProjectModel;
+    /**
+     * @var Carrier
+     */
+    private $carrierModel;
+    /**
+     * @var ExtraMaterial
+     */
     private $extraMaterialsModel;
+    /**
+     * @var DigitalOceanFileService
+     */
     private $digitalOceanFileService;
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     function getProject()
     {
         if (!$this->projectModel) {
@@ -31,6 +52,9 @@ class ProjectsController extends Controller
         return $this->projectModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     private function getUserProject()
     {
         if (!$this->userProjectModel) {
@@ -40,6 +64,21 @@ class ProjectsController extends Controller
         return $this->userProjectModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getCarrier()
+    {
+        if (!$this->carrierModel) {
+            $this->carrierModel = app(Carrier::class);
+        }
+
+        return $this->carrierModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     public function getExtraMaterials()
     {
         if (!$this->extraMaterialsModel) {
@@ -61,6 +100,9 @@ class ProjectsController extends Controller
         return $this->digitalOceanFileService;
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         try {
@@ -77,6 +119,9 @@ class ProjectsController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         try {
@@ -89,32 +134,10 @@ class ProjectsController extends Controller
         }
     }
 
-    public function edit($id)
-    {
-        try {
-            $user      = auth()->user()->load('companies');
-            $idProject = current(Hashids::decode($id));
-            $project   = $this->getProject()->with([
-                                                       'usersProjects' => function($query) use ($user) {
-                                                           $query->where('user', $user->id)->first();
-                                                       },
-                                                       'usersProjects.company',
-
-                                                   ])->where('id', $idProject)->first();
-
-            $view = view('projects::edit', compact([
-                                                       'companies' => $project->companies,
-                                                       'project'   => $project,
-                                                       'emp'       => $user->company_id,
-                                                   ]));
-
-            return response()->json($view->render());
-        } catch (Exception $e) {
-            Log::error('Erro ao tentar buscar dados do edit (ProjectController - edit)');
-            report($e);
-        }
-    }
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         try {
@@ -150,7 +173,6 @@ class ProjectsController extends Controller
                                          'photo' => $digitalOceanPath,
                                      ]);
                 } catch (Exception $e) {
-                    dd($e);
                     Log::warning('ProjectController - store - Erro ao enviar foto do project');
                     report($e);
                 }
@@ -158,85 +180,15 @@ class ProjectsController extends Controller
 
             return redirect()->route('projects.index');
         } catch (Exception $e) {
-            dd($e);
             Log::error('Erro ao tentar salvar projeto (ProjectsController - store)' . $e->getFile());
             report($e);
         }
     }
 
-    public function update($id, Request $request)
-    {
-        try {
-            $dataRequest = $request->all();
-
-            $project = Project::where('id', Hashids::decode($id))->first();
-
-            $project->update($dataRequest);
-
-            $projectPhoto = $request->file('project_photo');
-
-            if ($projectPhoto != null) {
-
-                try {
-                    $this->getDigitalOceanFileService()->deleteFile($project->photo);
-
-                    $img = Image::make($projectPhoto->getPathname());
-                    $img->crop($dataRequest['project_photo_w'], $dataRequest['project_photo_h'], $dataRequest['project_photo_x1'], $dataRequest['project_photo_y1']);
-                    $img->resize(200, 200);
-                    $img->save($projectPhoto->getPathname());
-
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects', $projectPhoto);
-
-                    $project->update([
-                                         'photo' => $digitalOceanPath,
-                                     ]);
-                } catch (Exception $e) {
-                    dd($e);
-                    Log::warning('ProjectController - update - Erro ao atualizar foto do project');
-                    report($e);
-                }
-            }
-
-            $userProject = UserProject::where([
-                                                  ['user', \Auth::user()->id],
-                                                  ['project', $project['id']],
-                                              ])->first();
-
-            if ($userProject->company != $dataRequest['company']) {
-                $userProject->company = $dataRequest['company'];
-                $userProject->update();
-            }
-
-            return response()->json('sucesso');
-        } catch (\Exception $e) {
-            Log::warning('ProjectController - update - Erro ao atualizar project');
-            report($e);
-        }
-    }
-
-    public function delete(Request $request)
-    {
-        try {
-            $dataRequest = $request->all();
-
-            $project = Project::where('id', Hashids::decode($dataRequest['projeto']))->first();
-
-            $plans = Plan::where('project', $project->id)->pluck('id')->toArray();
-
-            $productsPlans = ProductPlan::whereIn('plan', $plans)->pluck('product')->toArray();
-
-            $this->getDigitalOceanFileService()->deleteFile($project->photo);
-
-            // $project->delete();
-
-            return response()->json('sucesso');
-        } catch (\Exception $e) {
-            Log::warning('ProjectController - delete - Erro ao deletar project');
-            report($e);
-        }
-    }
-
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show($id)
     {
         try {
@@ -248,7 +200,12 @@ class ProjectsController extends Controller
 
                 $project = $this->getProject()->where('id', $idProject)->first();
 
-                return view('projects::project', ['project' => $project, 'companies' => $companies]);
+                if ($project) {
+
+                    return view('projects::project', ['project' => $project, 'companies' => $companies]);
+                }
+
+                return redirect()->route('projects.index');
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');
@@ -256,7 +213,153 @@ class ProjectsController extends Controller
         }
     }
 
-    public function getDadosProject($id)
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function edit($id)
+    {
+        try {
+            $user      = auth()->user()->load('companies');
+            $idProject = current(Hashids::decode($id));
+            $project = $this->getProject()->with([
+                                                     'usersProjects' => function($query) use ($user, $idProject) {
+                                                         $query->where('user', $user->id)
+                                                               ->where('project', $idProject)->first();
+                                                     },
+                                                 ])->where('id', $idProject)->first();
+
+            $view = view('projects::edit', compact([
+                                                       'companies' => $user->companies,
+                                                       'project'   => $project,
+                                                   ]));
+
+            return response()->json($view->render());
+        } catch (Exception $e) {
+            Log::error('Erro ao tentar buscar dados do edit (ProjectController - edit)');
+            report($e);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(ProjectUpdateRequest $request, $id)
+    {
+        try {
+
+            $requestValidated = $request->validated();
+            if ($requestValidated) {
+                $project = $this->getProject()->where('id', Hashids::decode($id))->first();
+
+                $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
+                if (!$requestValidated['shipment']) {
+                    $requestValidated['carrier']              = null;
+                    $requestValidated['shipment_responsible'] = null;
+                }
+
+                if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
+                    $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
+                }
+                $requestValidated['cookie_duration'] = 60;
+                $projectUpdate                       = $project->update($requestValidated);
+                if ($projectUpdate) {
+                    try {
+                        $projectPhoto = $request->file('photo');
+                        if ($projectPhoto != null) {
+                            $this->getDigitalOceanFileService()->deleteFile($project->photo);
+
+                            $img = Image::make($projectPhoto->getPathname());
+                            $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                            $img->resize(200, 200);
+                            $img->save($projectPhoto->getPathname());
+
+                            $digitalOceanPath = $this->getDigitalOceanFileService()
+                                                     ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code, $projectPhoto);
+                            $project->update([
+                                                 'photo' => $digitalOceanPath,
+                                             ]);
+                        }
+
+                        $projectLogo = $request->file('logo');
+                        if ($projectLogo != null) {
+                            $this->getDigitalOceanFileService()->deleteFile($project->logo);
+                            $img = Image::make($projectLogo->getPathname());
+                            $img->crop($requestValidated['logo_w'], $requestValidated['logo_h'], $requestValidated['logo_x1'], $requestValidated['logo_y1']);
+                            $img->resize(200, 200);
+                            $img->save($projectLogo->getPathname());
+
+                            $digitalOceanPathLogo = $this->getDigitalOceanFileService()
+                                                         ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code, $projectLogo);
+
+                            $project->update([
+                                                 'logo' => $digitalOceanPathLogo,
+                                             ]);
+                            dd($project);
+                        }
+                    } catch (Exception $e) {
+                        Log::warning('ProjectController - update - Erro ao enviar foto');
+                        report($e);
+                    }
+
+                    $userProject = $this->getUserProject()->where([
+                                                                      ['user', auth()->user()->id],
+                                                                      ['project', $project->id],
+                                                                  ])->first();
+
+                    if ($userProject->company != $requestValidated['company']) {
+                        $userProject->update(['company' => $requestValidated['company']]);
+                    }
+
+                    return response()->json('success');
+                }
+            }
+
+            return response()->json('error');
+        } catch (Exception $e) {
+            Log::warning('ProjectController - update - Erro ao atualizar project');
+            report($e);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            $idProject = current(Hashids::decode($id));
+
+            $project = $this->getProject()->where('id', $idProject)->first();
+            try {
+
+                if ($project->photo != null) {
+                    $this->getDigitalOceanFileService()->deleteFile($project->photo);
+                }
+
+                if ($project->logo != null) {
+                    $this->getDigitalOceanFileService()->deleteFile($project->logo);
+                }
+            } catch (Exception $e) {
+                Log::warning('ProjectController - destroy - Erro ao deletar foto e logo do project');
+                report($e);
+            }
+            $projectDeleted = $project->delete();
+            if ($projectDeleted) {
+                return response()->json('success', 200);
+            }
+
+            return response()->json('error', 422);
+        } catch (Exception $e) {
+            Log::warning('ProjectController - delete - Erro ao deletar project');
+            report($e);
+        }
+    }
+    /*public function getDadosProject($id)
     {
 
         $project   = Project::find(Hashids::decode($id)[0]);
@@ -367,5 +470,5 @@ class ProjectsController extends Controller
             Log::error('Erro ao tentar excluir ExtraMaterial (ProjectsController - deleteExtraMaterial)');
             report($e);
         }
-    }
+    }*/
 }

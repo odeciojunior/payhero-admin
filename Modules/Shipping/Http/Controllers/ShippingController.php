@@ -240,12 +240,13 @@ class ShippingController extends Controller
                                                                 ['id', '!=', $shipping->id],
                                                             ])->first();
 
-                        $shipUpdateSelected = $shippingPreSelected->update(['pre_selected' => 1]);
-
-                        if (!$shipUpdateSelected) {
-
-                            return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
+                        if ($shippingPreSelected != null) {
+                            $shipUpdateSelected = $shippingPreSelected->update(['pre_selected' => 1]);
                         }
+//                        if (!$shipUpdateSelected) {
+//
+//                            return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
+//                        }
                     }
 
                     if ($shipping->delete()) {

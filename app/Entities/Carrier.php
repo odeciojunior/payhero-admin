@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Carrier extends Model
 {
+    use FoxModelTrait;
     /**
      * @var array
      */

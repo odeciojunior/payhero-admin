@@ -1,7 +1,7 @@
 <div class='row'>
     <div style='width:100%'>
-        <a id='add-coupon' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
-            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar sms
+        <a id='add-sms' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
+            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar SMS
         </a>
     </div>
 </div>
@@ -10,14 +10,13 @@
         <table id='table-coupon' class='table text-right table-pixels table-hover' style='width:100%'>
             <thead style='text-align:center;'>
                 <tr>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Nome</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Tipo</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Valor</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Código</b></th>
+                    <th style='vertical-align: middle;' class='table-title text-center'><b>Evento</b></th>
+                    <th style='vertical-align: middle;' class='table-title text-center'><b>Tempo</b></th>
+                    <th style='vertical-align: middle;' class='table-title text-center'><b>Período</b></th>
                     <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
                 </tr>
             </thead>
-            <tbody id='data-table-coupon'>
+            <tbody id='data-table-sms'>
                 {{-- js carregando dados --}}
             </tbody>
         </table>
