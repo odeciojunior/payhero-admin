@@ -4,5 +4,6 @@
 </div>
 <div class="form-group col-xl-6">
     <label>CPF/CNPJ</label>
-    <input name="company_document" type="text" class="form-control" id="company_document" placeholder="Cpf/Cnpj" required>
+    <input name="company_document" type="text" class="form-control" id="brazil_company_document" placeholder="Cpf/Cnpj" required>
 </div>
+ 
