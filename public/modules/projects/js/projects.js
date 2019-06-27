@@ -1,6 +1,7 @@
 $(function () {
 
     $("#tab_configuration").click(function () {
+        $("#image-logo-email").imgAreaSelect({remove: true});
         $("#previewimage").imgAreaSelect({remove: true});
         updateConfiguracoes();
     });
@@ -224,6 +225,8 @@ $(function () {
                                     alertCustom('error', 'Erro ao tentar atualizar Projeto');
                                 }
 
+                                $("#image-logo-email").imgAreaSelect({remove: true});
+                                $("#previewimage").imgAreaSelect({remove: true});
                                 updateConfiguracoes();
                             }
                         });
