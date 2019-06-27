@@ -18,7 +18,7 @@ class ProjectUpdateRequest extends FormRequest
             'status'                     => 'required',
             'name'                       => 'required',
             'description'                => 'nullable',
-            'invoice_description'        => 'nullable',
+            'invoice_description'        => 'nullable|string|max:15',
             'url_page'                   => 'nullable',
             'shipment'                   => 'required',
             'shipment_responsible'       => 'required',

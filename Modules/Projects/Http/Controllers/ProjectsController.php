@@ -3,19 +3,17 @@
 namespace Modules\Projects\Http\Controllers;
 
 use App\Entities\Carrier;
-use Exception;
-use App\Entities\Project;
-use Illuminate\Http\Request;
-use App\Entities\UserProject;
 use App\Entities\ExtraMaterial;
+use App\Entities\Project;
+use App\Entities\UserProject;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Intervention\Image\Facades\Image;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Vinkla\Hashids\Facades\Hashids;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
-use Modules\Core\Helpers\CaminhoArquivosHelper;
-use Modules\Core\Services\DigitalOceanFileService;
 
 class ProjectsController extends Controller
 {
@@ -223,12 +221,12 @@ class ProjectsController extends Controller
         try {
             $user      = auth()->user()->load('companies');
             $idProject = current(Hashids::decode($id));
-            $project = $this->getProject()->with([
-                                                     'usersProjects' => function($query) use ($user, $idProject) {
-                                                         $query->where('user', $user->id)
-                                                               ->where('project', $idProject)->first();
-                                                     },
-                                                 ])->where('id', $idProject)->first();
+            $project   = $this->getProject()->with([
+                                                       'usersProjects' => function($query) use ($user, $idProject) {
+                                                           $query->where('user', $user->id)
+                                                                 ->where('project', $idProject)->first();
+                                                       },
+                                                   ])->where('id', $idProject)->first();
 
             $view = view('projects::edit', compact([
                                                        'companies' => $user->companies,
@@ -278,7 +276,7 @@ class ProjectsController extends Controller
                             $img->save($projectPhoto->getPathname());
 
                             $digitalOceanPath = $this->getDigitalOceanFileService()
-                                                     ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code, $projectPhoto);
+                                                     ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code . '/main', $projectPhoto);
                             $project->update([
                                                  'photo' => $digitalOceanPath,
                                              ]);
@@ -293,12 +291,11 @@ class ProjectsController extends Controller
                             $img->save($projectLogo->getPathname());
 
                             $digitalOceanPathLogo = $this->getDigitalOceanFileService()
-                                                         ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code, $projectLogo);
+                                                         ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code . '/logo', $projectLogo);
 
                             $project->update([
                                                  'logo' => $digitalOceanPathLogo,
                                              ]);
-                            dd($project);
                         }
                     } catch (Exception $e) {
                         Log::warning('ProjectController - update - Erro ao enviar foto');
@@ -314,11 +311,11 @@ class ProjectsController extends Controller
                         $userProject->update(['company' => $requestValidated['company']]);
                     }
 
-                    return response()->json('success');
+                    return response()->json('success', 200);
                 }
             }
 
-            return response()->json('error');
+            return response()->json('error', 422);
         } catch (Exception $e) {
             Log::warning('ProjectController - update - Erro ao atualizar project');
             report($e);

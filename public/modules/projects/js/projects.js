@@ -1,6 +1,7 @@
 $(function () {
 
     $("#tab_configuration").click(function () {
+        $("#image-logo-email").imgAreaSelect({remove: true});
         $("#previewimage").imgAreaSelect({remove: true});
         updateConfiguracoes();
     });
@@ -124,10 +125,8 @@ $(function () {
 
                 $('#ratioImage').unbind('change');
                 $("#ratioImage").on('change', function () {
-                    console.log($('#ratioImage option:selected').val());
                     ratio = $('#ratioImage option:selected').val();
                     $("#photoProject").imgAreaSelect({remove: true});
-                    console.log(ratio);
                     updateConfiguracoes();
                     imgNatural(ratio);
                 });
@@ -135,7 +134,6 @@ $(function () {
                 var photoLogo = $("#image-logo-email");
                 $("#photo-logo-email").on('change', function () {
                     $(".container-image").css('display', 'block');
-                    console.log(ratio);
                     let imageReader = new FileReader();
                     imageReader.readAsDataURL(document.getElementById("photo-logo-email").files[0]);
                     imageReader.onload = function (ofREvent) {
@@ -197,7 +195,6 @@ $(function () {
                     var verify = verificaParcelas(parcelas, parcelasJuros);
 
                     var formData = new FormData(document.getElementById("update-project"));
-                    console.log(formData);
 
                     if (!verify) {
                         $.ajax({
@@ -224,6 +221,8 @@ $(function () {
                                     alertCustom('error', 'Erro ao tentar atualizar Projeto');
                                 }
 
+                                $("#image-logo-email").imgAreaSelect({remove: true});
+                                $("#previewimage").imgAreaSelect({remove: true});
                                 updateConfiguracoes();
                             }
                         });
