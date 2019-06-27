@@ -51,6 +51,9 @@ class Project extends Model
 {
     use FoxModelTrait;
     use SoftDeletes;
+    /**
+     * @var array
+     */
     protected $dates = ['deleted_at'];
     /**
      * @var array
@@ -206,6 +209,6 @@ class Project extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('App\Entities\ZenviaSm', 'project');
+        return $this->hasMany('App\Entities\ZenviaSms', 'project');
     }
 }

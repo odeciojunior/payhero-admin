@@ -345,7 +345,11 @@ class ProjectsController extends Controller
         try {
             $idProject = current(Hashids::decode($id));
 
-            $project = $this->getProject()->where('id', $idProject)->first();
+            $project = $this->getProject()->with(['plans', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                            ->where('id', $idProject)->first();
+
+            $deletedDependecis = $this->deleteDependences($project);
+
             try {
 
                 if ($project->photo != null) {
@@ -359,9 +363,12 @@ class ProjectsController extends Controller
                 Log::warning('ProjectController - destroy - Erro ao deletar foto e logo do project');
                 report($e);
             }
-            $projectDeleted = $project->delete();
-            if ($projectDeleted) {
-                return response()->json('success', 200);
+
+            if ($deletedDependecis) {
+                $projectDeleted = $project->delete();
+                if ($projectDeleted) {
+                    return response()->json('success', 200);
+                }
             }
 
             return response()->json('error', 422);
@@ -370,116 +377,40 @@ class ProjectsController extends Controller
             report($e);
         }
     }
-    /*public function getDadosProject($id)
+
+    public function deleteDependences(Project $project)
     {
 
-        $project   = Project::find(Hashids::decode($id)[0]);
-        $idProject = Hashids::encode($project->id);
-
-        $userProject = UserProject::where([
-                                              ['project', $project['id']],
-                                              ['tipo', 'produtor'],
-                                          ])->first();
-
-        $usuario = User::find($userProject['user']);
-        $planos  = Plano::where('project', $project['id'])->get()->toArray();
-
-        foreach ($planos as &$plano) {
-            $plano['lucro'] = number_format($plano['preco'] * $project['porcentagem_afiliados'] / 100, 2);
+        if (isset($project->plans)) {
+            foreach ($project->plans as $plan) {
+                $plan->delete();
+            }
         }
 
-        $view = view('projects::detalhes', [
-            'id_project' => $idProject,
-            'project'    => $project,
-            'planos'     => $planos,
-            'produtor'   => $usuario['name'],
-            'empresa'    => $produtor->empresa,
-        ]);
+        if (isset($project->pixels)) {
+            foreach ($project->pixels as $pixel) {
+                $pixel->delete();
+            }
+        }
 
-        return response()->json($view->render());
+        if (isset($project->discountCoupons)) {
+            foreach ($project->discountCoupons as $discountCoupon) {
+                $discountCoupon->delete();
+            }
+        }
+
+        if (isset($project->zenviaSms)) {
+            foreach ($project->zenviaSms as $zenviaSms) {
+                $zenviaSms->delete();
+            }
+        }
+
+        if (isset($project->shippings)) {
+            foreach ($project->shippings as $shipping) {
+                $shipping->delete();
+            }
+        }
+
+        return true;
     }
-
-    public function addMaterialExtra(Request $request)
-    {
-
-        $dataRequest = $request->all();
-
-        $dataRequest['descricao'] = $dataRequest['descricao_material_extra'];
-
-        if ($dataRequest['tipo'] == 'video') {
-            $dataRequest['material'] = $dataRequest['material_extra_video'];
-            MaterialExtra::create($dataRequest);
-        } else if ($dataRequest['tipo'] == 'imagem') {
-
-            $materialExtra = MaterialExtra::create($dataRequest);
-
-            $imagem = $request->file('material_extra_imagem');
-
-            if ($imagem != null) {
-                $nomeFoto = 'foto_' . $materialExtra->id . '_.' . $imagem->getClientOriginalExtension();
-
-                Storage::delete('public/upload/materialextra/fotos/' . $nomeFoto);
-
-                $imagem->move(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJEct_FOTO, $nomeFoto);
-
-                $img = Image::make(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJEct_FOTO . $nomeFoto);
-
-                Storage::delete('public/upload/materialextra/fotos/' . $nomeFoto);
-
-                $img->save(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJEct_FOTO . $nomeFoto);
-
-                $materialExtra->update([
-                                           'material' => $nomeFoto,
-                                       ]);
-            }
-        } else if ($dataRequest['tipo'] == 'pdf') {
-
-            $materialExtra = MaterialExtra::create($dataRequest);
-
-            $arquivo = $request->file('material_extra_pdf');
-
-            if ($arquivo != null) {
-                $nome_pdf = 'pdf_' . $materialExtra->id . '_.' . $arquivo->getClientOriginalExtension();
-
-                Storage::delete('public/upload/materialextra/pdfs/' . $nome_pdf);
-
-                $arquivo->move(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJEct_FOTO, $nome_pdf);
-
-                $img = Image::make(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJEct_FOTO . $nome_pdf);
-
-                Storage::delete('public/upload/materialextra/pdfs/' . $nome_pdf);
-
-                $img->save(CaminhoArquivosHelper::CAMINHO_MATERIAL_EXTRA_PROJEct_FOTO . $nome_pdf);
-
-                $materialExtra->update([
-                                           'material' => $nome_pdf,
-                                       ]);
-            }
-        }
-
-        return response()->json('sucesso');
-    }
-
-    public function deleteExtraMaterial(Request $request)
-    {
-        try {
-            $data = $request->all();
-
-            $extraMaterial = $this->getExtraMaterials()->find($data['idMaterialExtra']);
-
-            if (!$extraMaterial) {
-                return response()->json('erro');
-            }
-
-            $extraMaterialDeleted = $extraMaterial->delete();
-            if ($extraMaterialDeleted) {
-                return response()->json('sucesso');
-            }
-
-            return response()->json('error');
-        } catch (Exception $e) {
-            Log::error('Erro ao tentar excluir ExtraMaterial (ProjectsController - deleteExtraMaterial)');
-            report($e);
-        }
-    }*/
 }

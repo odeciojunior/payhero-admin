@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,7 +23,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ZenviaSms extends Model
 {
+    use FoxModelTrait;
     use SoftDeletes;
+    /**
+     * @var array
+     */
     protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
