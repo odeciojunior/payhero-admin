@@ -232,14 +232,15 @@ class ProjectsController extends Controller
     public function edit($id)
     {
         try {
-            $user      = auth()->user()->load('companies');
+            $user = auth()->user()->load('companies');
+
             $idProject = current(Hashids::decode($id));
-            $project   = $this->getProject()->with([
-                                                       'usersProjects' => function($query) use ($user, $idProject) {
-                                                           $query->where('user', $user->id)
-                                                                 ->where('project', $idProject)->first();
-                                                       },
-                                                   ])->where('id', $idProject)->first();
+            $project = $this->getProject()->with([
+                                                     'usersProjects' => function($query) use ($user, $idProject) {
+                                                         $query->where('user', $user->id)
+                                                               ->where('project', $idProject)->first();
+                                                     },
+                                                 ])->where('id', $idProject)->first();
 
             $view = view('projects::edit', compact([
                                                        'companies' => $user->companies,

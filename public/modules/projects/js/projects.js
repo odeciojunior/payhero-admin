@@ -250,6 +250,7 @@ $(function () {
                                 alertCustom('error', 'Ocorreu algum erro');
                             },
                             success: function (data) {
+                                console.log(data);
                                 if (data == 'success') {
                                     alertCustom('success', 'Projeto Removido com sucesso');
                                     window.location = "/projects";
@@ -265,5 +266,4 @@ $(function () {
         });
     }
 
-    updateConfiguracoes();
 });
