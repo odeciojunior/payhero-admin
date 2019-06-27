@@ -2,7 +2,9 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -39,17 +41,40 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Plan extends Model
 {
-    /**
-     * The "type" of the auto-incrementing ID.
-     * 
-     * @var string
-     */
-    protected $keyType = 'integer';
-
+    use SoftDeletes;
+    use FoxModelTrait;
     /**
      * @var array
      */
-    protected $fillable = ['company', 'project', 'layout', 'hotzapp_integration', 'carrier', 'name', 'description', 'amount', 'code', 'price', 'status', 'id_plan_carrier', 'created_at', 'updated_at', 'deleted_at', 'photo', 'shopify_id', 'shopify_variant_id'];
+    protected $dates = ['deleted_at'];
+    /**
+     * The "type" of the auto-incrementing ID.
+     * @var string
+     */
+    protected $keyType = 'integer';
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'company',
+        'project',
+        'layout',
+        'hotzapp_integration',
+        'carrier',
+        'name',
+        'description',
+        'amount',
+        'code',
+        'price',
+        'status',
+        'id_plan_carrier',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'photo',
+        'shopify_id',
+        'shopify_variant_id',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
