@@ -55,7 +55,7 @@
                         </li>
                         @if($project->shopify_id == '')
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-toggle="tab" href="#tab_planos" aria-controls="tab_planos" role="tab">
+                                <a class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
                                     Planos
                                 </a>
                             </li>
@@ -128,21 +128,8 @@
                                 @include('shipping::index')
                             </div>
                             <!--- Painel de Planos -->
-                            <div class="tab-pane" id="tab_planos" role="tabpanel">
-                                <table id="tabela_planos" class="table-bordered table-hover w-full" style="margin-top: 80px">
-                                    <a id="adicionar_plano" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">
-                                        <i class='icon wb-user-add' aria-hidden='true'></i> Adicionar plano
-                                    </a>
-                                    <thead class="bg-blue-grey-100">
-                                        <th>Nome</th>
-                                        <th>Descrição</th>
-                                        <th>Código</th>
-                                        <th>Preço</th>
-                                        <th style="min-width: 159px;max-width:161px;width:160px">Detalhes</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                            <div class="tab-pane" id="tab_plans-panel" role="tabpanel">
+                                @include('plans::index')
                             </div>
                             <!-- Painel de Parceiros -->
                             <div class="tab-pane" id="tab_partners" role="tabpanel">
@@ -206,6 +193,7 @@
             <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
             <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
             <script src='{{asset('modules/projects/js/projects.js')}}'></script>
+            <script src='{{asset('modules/plans/js/plans.js')}}'></script>
             {{--@if(!$project->shopify_id)
                 <script src='{{asset('modules/Gifts/js/gift.js')}}'></script>
             @endif--}}
@@ -715,25 +703,7 @@
 
                                     });
 
-                                    var qtd_brindes = '1';
 
-                                    var div_brindes = $('#brindes_div_' + qtd_brindes).clone();
-
-                                    $('#add_brinde').on('click', function () {
-
-                                        qtd_brindes++;
-
-                                        var nova_div = div_brindes;
-
-                                        var select = nova_div.find('select');
-
-                                        select.attr('id', 'brinde_' + qtd_brindes);
-                                        select.attr('name', 'brinde_' + qtd_brindes);
-
-                                        div_brindes = nova_div;
-
-                                        $('#brindes').append('<div class="row">' + nova_div.html() + '</div>');
-                                    });
                                 }
                             });
                         });
@@ -742,107 +712,7 @@
 
                 });
 
-                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
-                    $($.fn.dataTable.tables(true)).css('width', '100%');
-                    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-
-                });
-
-                $("#tipo_material_extra").on("change", function () {
-
-                    $("#div_material_extra_imagem").css('display', 'none');
-                    $("#div_material_extra_pdf").css('display', 'none');
-                    $("#div_material_extra_video").css('display', 'none');
-
-                    if ($(this).val() == 'imagem') {
-                        $("#div_material_extra_imagem").css('display', 'block');
-                    } else if ($(this).val() == 'pdf') {
-                        $("#div_material_extra_pdf").css('display', 'block');
-                    } else if ($(this).val() == 'video') {
-                        $("#div_material_extra_video").css('display', 'block');
-                    }
-                });
-
-                $("#selecionar_imagem_material_extra").on("click", function () {
-                    $("#material_extra_imagem").click();
-                });
-
-                $("#selecionar_pdf_material_extra").on("click", function () {
-                    $("#material_extra_pdf").click();
-                });
-
-                $("#material_extra_imagem").on("change", function () {
-
-                    var imageReader = new FileReader();
-                    imageReader.readAsDataURL(document.getElementById("material_extra_imagem").files[0]);
-
-                    imageReader.onload = function (oFREvent) {
-                        $("#previewimage_material_extra").attr('src', oFREvent.target.result).fadeIn();
-                    };
-                });
-
-                $("#material_extra_pdf").on('change', function () {
-                    $("#label_pdf_material_extra").html('Arquivo selecionado');
-                });
-
-                $("#bt_adicionar_material_extra").on("click", function () {
-
-                    if ($("#descricao_material_extra").val() == '') {
-                        $("#fechar_modal_material_extra").click();
-                        alertPersonalizado('error', 'Descrição não informada');
-                        return false;
-                    }
-                    if ($("#tipo_material_extra").val() == '') {
-                        $("#fechar_modal_material_extra").click();
-                        alertPersonalizado('error', 'Informe o tipo do material extra');
-                        return false;
-                    }
-                    if ($("#tipo_material_extra").val() == 'imagem' && document.getElementById("material_extra_imagem").files.length == 0) {
-                        $("#fechar_modal_material_extra").click();
-                        alertPersonalizado('error', 'Imagem não selecionada');
-                        return false;
-                    }
-                    if ($("#tipo_material_extra").val() == 'pdf' && document.getElementById("material_extra_pdf").files.length == 0) {
-                        $("#fechar_modal_material_extra").click();
-                        alertPersonalizado('error', 'Arquivo não selecionado');
-                        return false;
-                    }
-                    if ($("#tipo_material_extra").val() == 'video' && $("#material_extra_video").val() == '') {
-                        $("#fechar_modal_material_extra").click();
-                        alertPersonalizado('error', 'Url do vídeo não informada');
-                        return false;
-                    }
-
-                    $('.loading').css("visibility", "visible");
-
-                    var form_data = new FormData(document.getElementById('add_material_extra'));
-                    form_data.append('projeto', id_projeto);
-
-                    $.ajax({
-                        method: "POST",
-                        url: "/projects/addmaterialextra",
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        data: form_data,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
-                            $('.loading').css("visibility", "hidden");
-                            alertPersonalizado('error', 'Ocorreu algum erro');
-                            $('#previewimage').imgAreaSelect({remove: true});
-                        },
-                        success: function (data) {
-                            $('.loading').css("visibility", "hidden");
-                            alertPersonalizado('success', 'Material extra adicionado!');
-                            $('#previewimage').imgAreaSelect({remove: true});
-                            updateConfiguracoes();
-                        },
-                    });
-
-                });
 
             });
         </script>

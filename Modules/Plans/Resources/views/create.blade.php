@@ -1,14 +1,10 @@
-<div style="text-align: center">
-    <h3> Cadastrar plano </h3>
-</div>
-
-<form id="cadastrar_plano" method="post" action="/planos/cadastrarplano" enctype="multipart/form-data">
+<form id="form-register-plan" method="post" action="/plans" enctype="multipart/form-data">
     @csrf
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div style="width:100%">
-                <h4> Dados gerais </h4>
-                <div class="row">
+                <h4 class='mt-0'> Dados gerais </h4>
+                <div class="row mt-2">
                     <div class="form-group col-xl-6 col-lg-6">
                         <label for="nome">Nome</label>
                         <input name="nome" type="text" class="form-control" id="nome_plano" placeholder="Nome" required>
@@ -44,22 +40,6 @@
                     </div>
                 </div>  --}}
 
-                <h4> Foto do plano </h4> 
-
-                <div class="row">
-                    <div class="form-group col-12">
-                        <input type="button" id="selecionar_foto_plano_cadastrar" class="btn btn-default" value="Selecionar foto do plano">
-                        <input name="foto_plano_cadastrar" type="file" class="form-control" id="foto_plano_cadastrar" accept="image/*" style="display:none">
-                        <div  style="margin: 20px 0 0 30px;">
-                            <img id="preview_image_plano_cadastrar" alt="Selecione a foto do plano" style="max-height: 250px; max-width: 350px;"/>
-                        </div>
-                        <input type="hidden" name="foto_plano_cadastrar_x1"/>
-                        <input type="hidden" name="foto_plano_cadastrar_y1"/>
-                        <input type="hidden" name="foto_plano_cadastrar_w"/>
-                        <input type="hidden" name="foto_plano_cadastrar_h"/>
-                    </div>
-                </div>
-
                 <h4> Produtos do plano </h4>
                 <div id="produtos">
                     <div id="produtos_div_1" class="row">
@@ -67,8 +47,8 @@
                         <div class="form-group col-xl-10">
                             <select id="produto_1" name="produto_1" class="form-control">
                                 <option value="" selected>Selecione</option>
-                                @foreach($produtos as $produto)
-                                    <option value="{{ $produto['id'] }}">{{ $produto['nome'] }}</option>
+                                @foreach($products as $product)
+                                    <option value="{{ $product->id }}">{{ $product->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -80,31 +60,9 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-xl-12">
-                        <button type="button" id="add_produtoplano" class="btn btn-primary">Adicionar produto</button>
+                        <button type="button" id="add_produtc_plan" class="btn btn-primary">Adicionar produto</button>
                     </div>
                 </div>
-
-                @if(count($brindes) > 0)
-                    <h4> Brindes do plano</h4>
-                    <div id="brindes">
-                        <div id="brindes_div_1" class="row">
-                            <div class="form-group col-xl-12">
-                                <select id="brinde_1" name="brinde_1" class="form-control">
-                                    <option value="" selected>Selecione</option>
-                                    @foreach($brindes as $brinde)
-                                        <option value="{{ $brinde['id'] }}">{{ $brinde['descricao'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-xl-12">
-                            <button type="button" id="add_brinde" class="btn btn-primary">Adicionar brinde</button>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
     </div>

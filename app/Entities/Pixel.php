@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -25,6 +26,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Pixel extends Model
 {
     use SoftDeletes;
+    use FoxModelTrait;
+    /**
+     * @var array
+     */
     protected $dates = ['deleted_at'];
     /**
      * @var array

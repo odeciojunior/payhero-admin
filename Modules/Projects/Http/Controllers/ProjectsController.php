@@ -345,7 +345,11 @@ class ProjectsController extends Controller
         try {
             $idProject = current(Hashids::decode($id));
 
-            $project = $this->getProject()->where('id', $idProject)->first();
+            $project = $this->getProject()->with(['plans', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                            ->where('id', $idProject)->first();
+
+            $deletedDependecis = $this->deleteDependences($project);
+
             try {
 
                 if ($project->photo != null) {
@@ -359,9 +363,12 @@ class ProjectsController extends Controller
                 Log::warning('ProjectController - destroy - Erro ao deletar foto e logo do project');
                 report($e);
             }
-            $projectDeleted = $project->delete();
-            if ($projectDeleted) {
-                return response()->json('success', 200);
+
+            if ($deletedDependecis) {
+                $projectDeleted = $project->delete();
+                if ($projectDeleted) {
+                    return response()->json('success', 200);
+                }
             }
 
             return response()->json('error', 422);
@@ -371,4 +378,39 @@ class ProjectsController extends Controller
         }
     }
 
+    public function deleteDependences(Project $project)
+    {
+
+        if (isset($project->plans)) {
+            foreach ($project->plans as $plan) {
+                $plan->delete();
+            }
+        }
+
+        if (isset($project->pixels)) {
+            foreach ($project->pixels as $pixel) {
+                $pixel->delete();
+            }
+        }
+
+        if (isset($project->discountCoupons)) {
+            foreach ($project->discountCoupons as $discountCoupon) {
+                $discountCoupon->delete();
+            }
+        }
+
+        if (isset($project->zenviaSms)) {
+            foreach ($project->zenviaSms as $zenviaSms) {
+                $zenviaSms->delete();
+            }
+        }
+
+        if (isset($project->shippings)) {
+            foreach ($project->shippings as $shipping) {
+                $shipping->delete();
+            }
+        }
+
+        return true;
+    }
 }

@@ -5,10 +5,12 @@ namespace Modules\Plans\Http\Controllers;
 use App\Entities\Gift;
 use App\Entities\Plan;
 use App\Entities\PlanGift;
+use App\Entities\Product;
 use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Plans\Transformers\PlansResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -17,49 +19,81 @@ use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class PlansController extends Controller
 {
-    public function index(Request $request)
+    private $planModel;
+    private $productModel;
+
+    private function getPlan()
     {
-
-
-        $requestData = $request->all();
-
-        $plans = \DB::table('plans as plan')
-                    ->whereNull('deleted_at');
-
-        if (isset($requestData['projeto'])) {
-            $plans = $plans->where('plan.project', '=', Hashids::decode($requestData['projeto']));
-        } else {
-            return response()->json('projeto não encontrado');
+        if (!$this->planModel) {
+            $this->planModel = app(Plan::class);
         }
 
-        $plans = $plans->get([
-                                 'plan.id',
-                                 'plan.name',
-                                 'plan.description',
-                                 'plan.code',
-                                 'plan.price',
-                             ]);
+        return $this->planModel;
+    }
 
-        return Datatables::of($plans)
-                         ->addColumn('detalhes', function($plan) {
-                             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_plano' data-placement='top' data-toggle='tooltip' title='Detalhes' plano='" . Hashids::encode($plan->id) . "'>
-                            <i class='icon wb-order' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_editar'>
-                        <a class='btn btn-outline btn-primary editar_plano' data-placement='top' data-toggle='tooltip' title='Editar' plano='" . Hashids::encode($plan->id) . "'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_plano' data-placement='top' data-toggle='tooltip' title='Excluir' plano='" . Hashids::encode($plan->id) . "'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-                         })
-                         ->rawColumns(['detalhes'])
-                         ->make(true);
+    private function getProduct()
+    {
+        if (!$this->productModel) {
+            $this->productModel = app(Product::class);
+        }
+
+        return $this->productModel;
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            if ($request->has('project')) {
+                $projectId = current(Hashids::decode($request->input('project')));
+                $plans     = $this->getPlan()->where('project', $projectId)->get();
+
+                return PlansResource::collection($plans);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar buscar planos (PlansController - index)');
+            report($e);
+        }
+        //        $requestData = $request->all();
+        //
+        //        $plans = \DB::table('plans as plan')
+        //                    ->whereNull('deleted_at');
+        //
+        //        if (isset($requestData['projeto'])) {
+        //            $plans = $plans->where('plan.project', '=', Hashids::decode($requestData['projeto']));
+        //        } else {
+        //            return response()->json('projeto não encontrado');
+        //        }
+        //
+        //        $plans = $plans->get([
+        //                                 'plan.id',
+        //                                 'plan.name',
+        //                                 'plan.description',
+        //                                 'plan.code',
+        //                                 'plan.price',
+        //                             ]);
+        //
+        //        return PlansResource::collection($plans);
+
+        //        return Datatables::of($plans)
+        //                         ->addColumn('detalhes', function($plan) {
+        //                             return "<span data-toggle='modal' data-target='#modal_detalhes'>
+        //                        <a class='btn btn-outline btn-success detalhes_plano' data-placement='top' data-toggle='tooltip' title='Detalhes' plano='" . Hashids::encode($plan->id) . "'>
+        //                            <i class='icon wb-order' aria-hidden='true'></i>
+        //                        </a>
+        //                    </span>
+        //                    <span data-toggle='modal' data-target='#modal_editar'>
+        //                        <a class='btn btn-outline btn-primary editar_plano' data-placement='top' data-toggle='tooltip' title='Editar' plano='" . Hashids::encode($plan->id) . "'>
+        //                            <i class='icon wb-pencil' aria-hidden='true'></i>
+        //                        </a>
+        //                    </span>
+        //                    <span data-toggle='modal' data-target='#modal_excluir'>
+        //                        <a class='btn btn-outline btn-danger excluir_plano' data-placement='top' data-toggle='tooltip' title='Excluir' plano='" . Hashids::encode($plan->id) . "'>
+        //                            <i class='icon wb-trash' aria-hidden='true'></i>
+        //                        </a>
+        //                    </span>";
+        //                         })
+        //                         ->rawColumns(['detalhes'])
+        //                         ->make(true);
     }
 
     public function store(Request $request)
@@ -90,29 +124,6 @@ class PlansController extends Controller
 
         $plan = Plan::create($requestData);
 
-        $photo = $request->file('foto_plano_cadastrar');
-
-        if ($photo != null) {
-            $photoName = 'plano_' . $plan->id . '_.' . $photo->getClientOriginalExtension();
-
-            Storage::delete('public/upload/plano/' . $photoName);
-
-            $photo->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $photoName);
-
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $photoName);
-
-            $img->crop($requestData['foto_plano_cadastrar_w'], $requestData['foto_plano_cadastrar_h'], $requestData['foto_plano_cadastrar_x1'], $requestData['foto_plano_cadastrar_y1']);
-
-            $img->resize(200, 200);
-
-            Storage::delete('public/upload/plano/' . $photoName);
-
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $photoName);
-
-            $plan->update([
-                              'foto' => $photoName,
-                          ]);
-        }
 
         $qtdProduto = 1;
 
@@ -123,16 +134,6 @@ class PlansController extends Controller
                                     'plan'           => $plan->id,
                                     'product_amount' => $requestData['produto_qtd_' . $qtdProduto++],
                                 ]);
-        }
-
-        $giftIndex = 1;
-
-        while (isset($requestData['brinde_' . $giftIndex]) && $requestData['brinde_' . $giftIndex] != '') {
-
-            PlanGift::create([
-                                 'brinde' => $requestData['brinde_' . $giftIndex++],
-                                 'plano'  => $plan->id,
-                             ]);
         }
 
         return response()->json('sucesso');
@@ -387,25 +388,17 @@ class PlansController extends Controller
 
     public function create(Request $request)
     {
+        try {
 
-        $requestData = $request->all();
+            $products = $this->getProduct()->where('user', \Auth::user()->id)->whereNull('shopify')->get();
 
-        $transportadoras = Transportadora::all();
-
-        $produtos = Produto::where('user', \Auth::user()->id)->get()->toArray();
-
-        $brindes = Gift::where('projeto', $requestData['projeto'])->get()->toArray();
-
-        $requestData_hotzapp = DadosHotZapp::all();
-
-        $form = view('planos::create', [
-            'transportadoras' => $transportadoras,
-            'produtos'        => $produtos,
-            'brindes'         => $brindes,
-            'dados_hotzapp'   => $requestData_hotzapp,
-        ]);
-
-        return response()->json($form->render());
+            return view('plans::create', [
+                'products' => $products,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Erro ao tentar acessar tela de cadastro (PlansController - create)');
+            report($e);
+        }
     }
 
     public function edit(Request $request)
