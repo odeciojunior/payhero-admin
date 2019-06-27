@@ -91,7 +91,7 @@
                     <label for='company'>Empresas</label>
                     <select id='companies' name='company'>
                         @foreach($companies as $company)
-                            <option value='{{$company->id_code}}'>{{$company->fantasy_name}}</option>
+                            <option value='{{$company->id_code}}' {{$company->id_code == Hashids::encode($project->usersProjects[0]->company)? 'selected' : ''}}>{{$company->fantasy_name}}</option>
                         @endforeach
                     </select>
                 </div>

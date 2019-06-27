@@ -235,17 +235,17 @@ class ProjectsController extends Controller
             $user = auth()->user()->load('companies');
 
             $idProject = current(Hashids::decode($id));
-            $project = $this->getProject()->with([
-                                                     'usersProjects' => function($query) use ($user, $idProject) {
-                                                         $query->where('user', $user->id)
-                                                               ->where('project', $idProject)->first();
-                                                     },
-                                                 ])->where('id', $idProject)->first();
+            $project   = $this->getProject()->with([
+                                                       'usersProjects' => function($query) use ($user, $idProject) {
+                                                           $query->where('user', $user->id)
+                                                                 ->where('project', $idProject)->first();
+                                                       },
+                                                   ])->find($idProject);
 
-            $view = view('projects::edit', compact([
-                                                       'companies' => $user->companies,
-                                                       'project'   => $project,
-                                                   ]));
+            $view = view('projects::edit', [
+                'companies' => $user->companies,
+                'project'   => $project,
+            ]);
 
             return response()->json($view->render());
         } catch (Exception $e) {
