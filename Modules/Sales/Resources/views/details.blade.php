@@ -61,6 +61,16 @@
                                     <td class="text-left">{!! $sale['boleto_digitable_line'] !!}</td>
                                 </tr>
                             @endif
+                            @if($checkout && $checkout['src'] != '')
+                                <tr style="height: 60px">
+                                    <td colspan='3' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES ADICIONAIS</b></td>
+                                </tr>
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">UTMs:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $checkout['src'] !!}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>

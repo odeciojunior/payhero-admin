@@ -7,6 +7,7 @@ use App\Entities\Plan;
 use App\Entities\Sale;
 use App\Entities\Client;
 use App\Entities\Project;
+use App\Entities\Checkout;
 use App\Entities\Delivery;
 use App\Entities\PlanSale;
 use Illuminate\Http\Request;
@@ -57,11 +58,14 @@ class SalesController extends Controller {
 
         $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
+        $checkout = Checkout::find($sale['checkout']);
+
         $details = view('sales::details',[
             'sale'     => $sale,
             'plans'    => $plans,
             'client'   => $client,
-            'delivery' => $delivery
+            'delivery' => $delivery,
+            'checkout' => $checkout,
         ]);
 
         return response()->json($details->render());

@@ -16,17 +16,19 @@
     <div class="page-content container">
 
       <div class="panel pt-10 p-10" style="min-height: 300px">
-          <table class="table table-hover table-vendas">
+          <table class="table table-hover">
             <thead class="text-center">
-                <td><b>Data</b></td>
-                <td><b>Cliente</b></td>
-                <td><b>Email</b></td>
-                <td><b>Sms</b></td>
-                <td><b>Status</b></td>
-                <td><b>Valor</b></td>
-                <td><b>Link</b></td>
-                <td></td>
-                <td><b>Detalhes</b></td>
+                <tr>
+                    <td><b>Data</b></td>
+                    <td><b>Cliente</b></td>
+                    <td><b>Email</b></td>
+                    <td><b>Sms</b></td>
+                    <td><b>Status</b></td>
+                    <td><b>Valor</b></td>
+                    <td><b>Link</b></td>
+                    <td></td>
+                    <td><b>Detalhes</b></td>
+                </tr>
             </thead>
             <tbody id="table_data">
             </tbody>
