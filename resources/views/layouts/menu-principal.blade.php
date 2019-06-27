@@ -109,9 +109,10 @@
                         @endforeach
                       @else
 
+
                         <div class="media d-flex align-items-center p-20">
                             <div class="pr-10">
-                              <i class="icon wb-check white bg-green-600 icon-circle" aria-hidden="true"></i>
+                              <i class="material-icons">check</i>
                             </div>
                             <div class="d-flex align-items-center">
                               <span class="">Nenhuma nova notificação</span>
