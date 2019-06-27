@@ -16,17 +16,17 @@ class CreateProductRequest extends FormRequest
         return [
             'name'          => 'required|max:200',
             'description'   => 'required|max:200',
-            'format'        => 'required',
-            'category'      => 'required',
-            'cost'          => '',
-            'height'        => '',
-            'width'         => '',
-            'weight'        => '',
-            'product_photo' => '',
-            'photo_x1'      => 'required',
-            'photo_y1'      => 'required',
-            'photo_w'       => 'required',
-            'photo_h'       => 'required',
+            'format'        => 'nullable',
+            'category'      => 'nullable',
+            'cost'          => 'nullable',
+            'height'        => 'nullable',
+            'width'         => 'nullable',
+            'weight'        => 'nullable',
+            'product_photo' => 'nullable',
+            'photo_x1'      => 'nullable',
+            'photo_y1'      => 'nullable',
+            'photo_w'       => 'nullable',
+            'photo_h'       => 'nullable',
         ];
     }
 
