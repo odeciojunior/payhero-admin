@@ -6,11 +6,15 @@ use App\Entities\Gift;
 use App\Entities\Plan;
 use App\Entities\PlanGift;
 use App\Entities\Product;
+use App\Entities\ProductPlan;
+use App\Entities\ZenviaSms;
 use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansResource;
+use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +25,9 @@ class PlansController extends Controller
 {
     private $planModel;
     private $productModel;
+    private $userProjectModel;
+    private $productPlanModel;
+    private $zenviaSmsModel;
 
     private function getPlan()
     {
@@ -40,6 +47,33 @@ class PlansController extends Controller
         return $this->productModel;
     }
 
+    private function getUserProject()
+    {
+        if (!$this->userProjectModel) {
+            $this->userProjectModel = app(UserProject::class);
+        }
+
+        return $this->userProjectModel;
+    }
+
+    private function getProductPlan()
+    {
+        if (!$this->productPlanModel) {
+            $this->productPlanModel = app(ProductPlan::class);
+        }
+
+        return $this->productPlanModel;
+    }
+
+    private function getZenviaSms()
+    {
+        if (!$this->zenviaSmsModel) {
+            $this->zenviaSmsModel = app(ZenviaSms::class);
+        }
+
+        return $this->zenviaSmsModel;
+    }
+
     public function index(Request $request)
     {
         try {
@@ -53,61 +87,21 @@ class PlansController extends Controller
             Log::warning('Erro ao tentar buscar planos (PlansController - index)');
             report($e);
         }
-        //        $requestData = $request->all();
-        //
-        //        $plans = \DB::table('plans as plan')
-        //                    ->whereNull('deleted_at');
-        //
-        //        if (isset($requestData['projeto'])) {
-        //            $plans = $plans->where('plan.project', '=', Hashids::decode($requestData['projeto']));
-        //        } else {
-        //            return response()->json('projeto não encontrado');
-        //        }
-        //
-        //        $plans = $plans->get([
-        //                                 'plan.id',
-        //                                 'plan.name',
-        //                                 'plan.description',
-        //                                 'plan.code',
-        //                                 'plan.price',
-        //                             ]);
-        //
-        //        return PlansResource::collection($plans);
-
-        //        return Datatables::of($plans)
-        //                         ->addColumn('detalhes', function($plan) {
-        //                             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-        //                        <a class='btn btn-outline btn-success detalhes_plano' data-placement='top' data-toggle='tooltip' title='Detalhes' plano='" . Hashids::encode($plan->id) . "'>
-        //                            <i class='icon wb-order' aria-hidden='true'></i>
-        //                        </a>
-        //                    </span>
-        //                    <span data-toggle='modal' data-target='#modal_editar'>
-        //                        <a class='btn btn-outline btn-primary editar_plano' data-placement='top' data-toggle='tooltip' title='Editar' plano='" . Hashids::encode($plan->id) . "'>
-        //                            <i class='icon wb-pencil' aria-hidden='true'></i>
-        //                        </a>
-        //                    </span>
-        //                    <span data-toggle='modal' data-target='#modal_excluir'>
-        //                        <a class='btn btn-outline btn-danger excluir_plano' data-placement='top' data-toggle='tooltip' title='Excluir' plano='" . Hashids::encode($plan->id) . "'>
-        //                            <i class='icon wb-trash' aria-hidden='true'></i>
-        //                        </a>
-        //                    </span>";
-        //                         })
-        //                         ->rawColumns(['detalhes'])
-        //                         ->make(true);
     }
 
-    public function store(Request $request)
+    public function store(PlanStoreRequest $request)
     {
 
-        $requestData            = $request->all();
-        $requestData['project'] = Hashids::decode($requestData['projeto'])[0];
+        $requestData            = $request->validated();
+        $requestData['project'] = Hashids::decode($requestData['project'])[0];
+        $requestData['status']  = 1;
 
-        $userProjeto = UserProject::where([
-                                              ['projeto', $requestData['project']],
-                                              ['tipo', 'producer'],
-                                          ])->first();
+        $userProject = $this->getUserProject()->where([
+                                                          ['project', $requestData['project']],
+                                                          ['type', 'producer'],
+                                                      ])->first();
 
-        $requestData['company'] = $userProjeto->company;
+        $requestData['company'] = $userProject->company;
         $requestData['price']   = $this->getValue($requestData['price']);
 
         $planCode = false;
@@ -115,36 +109,33 @@ class PlansController extends Controller
         while ($planCode == false) {
 
             $code = $this->randString(3) . rand(100, 999);
-            $plan = Plan::where('code', $code)->first();
+            $plan = $this->getPlan()->where('code', $code)->first();
             if ($plan == null) {
                 $planCode            = true;
                 $requestData['code'] = $code;
             }
         }
+        $plan = $this->getPlan()->create($requestData);
 
-        $plan = Plan::create($requestData);
+        $productAmount = 1;
 
-
-        $qtdProduto = 1;
-
-        while (isset($requestData['produto_' . $qtdProduto]) && $requestData['produto_' . $qtdProduto] != '') {
-
-            ProductPlan::create([
-                                    'product'        => $requestData['produto_' . $qtdProduto],
-                                    'plan'           => $plan->id,
-                                    'product_amount' => $requestData['produto_qtd_' . $qtdProduto++],
-                                ]);
+        while (isset($requestData['product_' . $productAmount]) && $requestData['product_' . $productAmount] != '') {
+            $this->getProduct()->create([
+                                            'product'        => $requestData['product_' . $productAmount],
+                                            'plan'           => $plan->id,
+                                            'product_amount' => $requestData['product_amount_' . $productAmount++],
+                                        ]);
         }
 
         return response()->json('sucesso');
     }
 
-    public function update(Request $request)
+    public function update(PlanUpdateRequest $request)
     {
 
-        $requestData = $request->all();
+        $requestData = $request->validated();
 
-        unset($requestData['projeto']);
+        unset($requestData['project']);
 
         $requestData['price'] = $this->getValue($requestData['price']);
 
@@ -152,41 +143,10 @@ class PlansController extends Controller
 
         $plan->update($requestData);
 
-        $photo = $request->file('foto_plano_editar');
-
-        if ($photo != null) {
-            $photoName = 'plano_' . $plan['id'] . '_.' . $photo->getClientOriginalExtension();
-
-            Storage::delete('public/upload/plano/' . $photoName);
-
-            $photo->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $photoName);
-
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $photoName);
-
-            $img->crop($requestData['foto_plano_editar_w'], $requestData['foto_plano_editar_h'], $requestData['foto_plano_editar_x1'], $requestData['foto_plano_editar_y1']);
-
-            $img->resize(200, 200);
-
-            Storage::delete('public/upload/plano/' . $photoName);
-
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $photoName);
-
-            $plan->update([
-                              'foto' => $photoName,
-                          ]);
-        }
-
         $produtosPlanos = ProductPlan::where('plano', $plan['id'])->get()->toArray();
         if (count($produtosPlanos) > 0) {
             foreach ($produtosPlanos as $produto_plano) {
                 ProductPlan::find($produto_plano['id'])->delete();
-            }
-        }
-
-        $plansBrindes = PlanGift::where('plano', $plan['id'])->get()->toArray();
-        if (count($plansBrindes) > 0) {
-            foreach ($plansBrindes as $plan_brinde) {
-                PlanGift::find($plan_brinde['id'])->delete();
             }
         }
 
@@ -200,49 +160,46 @@ class PlansController extends Controller
                                 ]);
         }
 
-        $qtdBrinde = 1;
+        return response()->json('sucesso');
+    }
 
-        while (isset($requestData['brinde_' . $qtdBrinde]) && $requestData['brinde_' . $qtdBrinde] != '') {
+    public function destroy($id)
+    {
+        if (isset($id)) {
+            $planId      = Hashids::decode($id)[0];
+            $service_sms = $this->getZenviaSms()->where('plan', $planId)->first();
 
-            PlanGift::create([
-                                 'gift' => $requestData['brinde_' . $qtdBrinde++],
-                                 'plan' => $plan->id,
-                             ]);
+            if ($service_sms != null) {
+                return response()->json('Impossível excluir, possui serviço de sms integrado.');
+            }
+            $plan         = $this->getPlan()->where('id', $planId)->first();
+            $productPlans = $this->getProductPlan()->where('plan', $plan['id'])->get()->toArray();
+            if (count($productPlans) > 0) {
+                foreach ($productPlans as $productPlan) {
+                    ProductPlan::find($productPlan['id'])->delete();
+                }
+            }
+            $plan->delete();
         }
 
         return response()->json('sucesso');
     }
 
-    public function delete(Request $request)
+    public function show($id)
     {
+        try {
+            if (isset($id)) {
+                $planId = Hashids::decode($id)[0];
+                $plan   = $this->getPlan()->find($planId);
 
-        $requestData = $request->all();
-
-        $servico_sms = ZenviaSms::where('plano', $requestData['id'])->first();
-
-        if ($servico_sms != null) {
-            return response()->json('Impossível excluir, possui serviço de sms integrado.');
-        }
-
-        $plan = Plan::where('id', Hashids::decode($requestData['id']))->first();
-
-        $produtosPlanos = ProductPlan::where('plano', $plan['id'])->get()->toArray();
-        if (count($produtosPlanos) > 0) {
-            foreach ($produtosPlanos as $produto_plano) {
-                ProductPlan::find($produto_plano['id'])->delete();
+                return view('plans::details', ['plan' => $plan]);
             }
+
+            return response()->json('Erro ao buscar Plano');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar detalhes do Plano (PlansController - show)');
+            report($e);
         }
-
-        $plansBrindes = PlanGift::where('plano', $plan['id'])->get()->toArray();
-        if (count($plansBrindes) > 0) {
-            foreach ($plansBrindes as $plan_brinde) {
-                PlanGift::find($plan_brinde['id'])->delete();
-            }
-        }
-
-        $plan->delete();
-
-        return response()->json('sucesso');
     }
 
     public function details(Request $request)
@@ -390,7 +347,7 @@ class PlansController extends Controller
     {
         try {
 
-            $products = $this->getProduct()->where('user', \Auth::user()->id)->whereNull('shopify')->get();
+            $products = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get();
 
             return view('plans::create', [
                 'products' => $products,
@@ -403,38 +360,46 @@ class PlansController extends Controller
 
     public function edit(Request $request)
     {
+        try {
+            $planId = Hashids::decode($request->input('planId'))[0];
+            $plan   = $this->getPlan()->find($planId);
+            if ($plan) {
+                $idPlan       = Hashids::encode($plan->id);
+                $products     = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get()
+                                     ->toArray();
+                $productPlans = $this->getProductPlan()->where('plan', $plan->id)->get()->toArray();
 
-        $requestData = $request->all();
+                return view('plans::edit', [
+                    'id_plan'      => $idPlan,
+                    'plan'         => $plan,
+                    'products'     => $products,
+                    'productPlans' => $productPlans,
+                ]);
+            }
 
-        $plan = Plan::where('id', Hashids::decode($requestData['id']))->first();
-
-        $idPlano = Hashids::encode($plan->id);
-
-        $transportadoras = Transportadora::all();
-
-        $produtos = Produto::where('user', \Auth::user()->id)->get()->toArray();
-
-        $brindes = Gift::where('projeto', $requestData['projeto'])->get()->toArray();
-
-        $requestData_hotzapp = DadosHotZapp::all();
-
-        $produtosPlanos = ProductPlan::where('plano', $plan['id'])->get()->toArray();
-
-        $planBrindes = PlanGift::where('plano', $plan['id'])->get()->toArray();
-
-        $caminho_foto = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $plan['foto'] . "?dummy=" . uniqid());
-
-        $form = view('planos::edit', [
-            'id_plano'        => $idPlano,
-            'plano'           => $plan,
-            'transportadoras' => $transportadoras,
-            'foto'            => $caminho_foto,
-            'produtos_planos' => $produtosPlanos,
-            'produtos'        => $produtos,
-            'brindes'         => $brindes,
-            'planoBrindes'    => $planBrindes,
-        ]);
-
-        return response()->json($form->render());
+            return response()->json('erro');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar tela editar pixel (PlansController - edit)');
+            report($e);
+        }
+        //
+        //        $requestData = $request->all();
+        //
+        //        $plan = Plan::where('id', Hashids::decode($requestData['id']))->first();
+        //
+        //        $idPlano = Hashids::encode($plan->id);
+        //
+        //        $produtos = Produto::where('user', \Auth::user()->id)->get()->toArray();
+        //
+        //        $produtosPlanos = ProductPlan::where('plano', $plan['id'])->get()->toArray();
+        //
+        //        $form = view('planos::edit', [
+        //            'id_plano'        => $idPlano,
+        //            'plano'           => $plan,
+        //            'produtos_planos' => $produtosPlanos,
+        //            'produtos'        => $produtos,
+        //        ]);
+        //
+        //        return response()->json($form->render());
     }
 }
