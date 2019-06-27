@@ -30,11 +30,7 @@ class WithdrawalController extends Controller
      */
     public function index()
     {
-        $userCompanies = $this->company->where('user_id', auth()->user()->id)->get()->toArray();
 
-        return view('finances::index', [
-            'companies' => $userCompanies,
-        ]);
     }
 
     /**
