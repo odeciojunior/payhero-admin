@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -48,6 +49,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
+    use FoxModelTrait;
     use SoftDeletes;
     protected $dates = ['deleted_at'];
     /**

@@ -19,12 +19,14 @@
                         @method('POST')
                         <div class='row'>
                             <div class='col-md-6'>
-                                <input name='project_photo' type='file' class='form-control' id='project-photo' style="display:none">
+                                <input name='photo-main' type='file' class='form-control' id='project-photo' style="display:none">
                                 <div style="margin: 20px 0 0 30px;">
                                     <label for='preview-image-project'>Selecione a foto do projeto</label>
-                                    <img id="preview-image-project"  alt='Selecione a foto do projeto' src="{{asset('modules/global/assets/img/projeto.png')}}" style="max-height: 300px; max-width: 300px;">
-                                   <br> <a href="#" id="preview-image-project" class="btn btn-primary mt-15"> <i class="icon fa-cloud-upload" aria-hidden="true"></i> Upload </a>
-
+                                    <img id="preview-image-project" alt='Selecione a foto do projeto' src="{{asset('modules/global/assets/img/projeto.png')}}" style="max-height: 300px; max-width: 300px;">
+                                    <br>
+                                    <a href="#" id="preview-image-project" class="btn btn-primary mt-15">
+                                        <i class="icon fa-cloud-upload" aria-hidden="true"></i> Upload
+                                    </a>
                                 </div>
                                 <input type='hidden' name='photo_x1'/> <input type='hidden' name='photo_y1'/>
                                 <input type='hidden' name='photo_w'/> <input type='hidden' name='photo_h'/>
@@ -44,7 +46,7 @@
                                     <select name='company' class='form-control select-pad' id='company' required>
                                         <option value=''>Selecione</option>
                                         @foreach($companies as $company)
-                                            <option value='{{Hashids::encode($company->id)}}'>{{$company->fantasy_name}}</option>
+                                            <option value='{{$company->id_code}}'>{{$company->fantasy_name}}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('company'))
@@ -62,8 +64,6 @@
                                         </div>
                                     @endif
                                 </div>
-                                <input type='hidden' value='private' name='visibility'>
-                                <input type='hidden' value='1' name='status'>
                             </div>
                         </div>
                         <div class="row" style="margin: 30px 10px 0 0 ">
@@ -78,8 +78,8 @@
                     <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
                 @endpush
 
-                <div class="content-error d-flex text-center">        
-                    <img src="{!! asset('modules/global/assets/img/emptyempresas.svg') !!}" width="250px">
+                <div class="content-error d-flex text-center">
+                    <img src="{!! asset('modules/global/assets/img/emptyempresas.svg') !!}" width="250px" alt='Image principal'>
                     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
                     <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
                     <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>
@@ -88,9 +88,9 @@
         </div>
     </div>
 
-@push('scripts')
-    <script src="{!! asset('modules/projects/js/create.js') !!}"></script>
-@endpush
+    @push('scripts')
+        <script src="{!! asset('modules/projects/js/create.js') !!}"></script>
+    @endpush
 
 
 @endsection

@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -136,49 +137,61 @@ class ProjectsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ProjectStoreRequest $request)
     {
         try {
-            $data      = $request->all();
-            $companyId = Hashids::decode($data['company']);
+            $requestValidated = $request->validated();
+            if ($requestValidated) {
+                $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
 
-            $project = $this->getProject()->create($data);
+                $project = $this->getProject()->create([
+                                                           'name'                       => $requestValidated['name'],
+                                                           'description'                => $requestValidated['description'],
+                                                           'installments_amount'        => 12,
+                                                           'installments_interest_free' => 12,
+                                                           'visibility'                 => 'private',
+                                                       ]);
 
-            $userProject = $this->getUserProject()->create([
-                                                               'user'              => auth()->user()->id,
-                                                               'project'           => $project->id,
-                                                               'company'           => $companyId[0],
-                                                               'type'              => 'producer',
-                                                               'access_permission' => 1,
-                                                               'edit_permission'   => 1,
-                                                               'status'            => 'active',
-                                                           ]);
+                if ($project) {
+                    $photo = $request->file('photo-main');
+                    if ($photo != null) {
+                        try {
+                            $img = Image::make($photo->getPathname());
+                            $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                            $img->save($photo->getPathname());
 
-            $projectPhoto = $request->file('project_photo');
+                            $digitalOceanPath = $this->getDigitalOceanFileService()
+                                                     ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
+                            $project->update(['photo' => $digitalOceanPath]);
+                        } catch (Exception $e) {
+                            Log::warning('Erro ao tentar salvar foto projeto - ProjectsController - store');
+                            report($e);
+                        }
+                    }
 
-            if ($projectPhoto != null) {
+                    $userProject = $this->getUserProject()->create([
+                                                                       'user'              => auth()->user()->id,
+                                                                       'project'           => $project->id,
+                                                                       'company'           => $requestValidated['company'],
+                                                                       'type'              => 'producer',
+                                                                       'access_permission' => 1,
+                                                                       'edit_permission'   => 1,
+                                                                       'status'            => 'active',
+                                                                   ]);
+                    if (!$userProject) {
+                        $digitalOceanPath->deleteFile($project->photo);
+                        $project->delete();
 
-                try {
-                    $img = Image::make($projectPhoto->getPathname());
-                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    $img->resize(200, 200);
-                    $img->save($projectPhoto->getPathname());
+                        return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
+                    }
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects', $projectPhoto);
-
-                    $project->update([
-                                         'photo' => $digitalOceanPath,
-                                     ]);
-                } catch (Exception $e) {
-                    Log::warning('ProjectController - store - Erro ao enviar foto do project');
-                    report($e);
+                    return redirect()->route('projects.index');
                 }
             }
 
-            return redirect()->route('projects.index');
+            return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
         } catch (Exception $e) {
-            Log::error('Erro ao tentar salvar projeto (ProjectsController - store)' . $e->getFile());
+            Log::warning('Erro ao tentar salvar projeto - ProjectsController -store');
             report($e);
         }
     }
@@ -276,7 +289,7 @@ class ProjectsController extends Controller
                             $img->save($projectPhoto->getPathname());
 
                             $digitalOceanPath = $this->getDigitalOceanFileService()
-                                                     ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code . '/main', $projectPhoto);
+                                                     ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
                             $project->update([
                                                  'photo' => $digitalOceanPath,
                                              ]);
@@ -291,7 +304,7 @@ class ProjectsController extends Controller
                             $img->save($projectLogo->getPathname());
 
                             $digitalOceanPathLogo = $this->getDigitalOceanFileService()
-                                                         ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects' . $project->id_code . '/logo', $projectLogo);
+                                                         ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/logo', $projectLogo);
 
                             $project->update([
                                                  'logo' => $digitalOceanPathLogo,

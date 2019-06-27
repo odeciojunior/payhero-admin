@@ -36,7 +36,19 @@ class UserProject extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'project', 'company', 'type', 'remuneration_value', 'access_permission', 'edit_permission', 'status', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'user',
+        'project',
+        'company',
+        'type',
+        'remuneration_value',
+        'access_permission',
+        'edit_permission',
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
