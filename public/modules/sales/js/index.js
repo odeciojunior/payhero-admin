@@ -39,7 +39,7 @@ $(document).ready(function () {
                 $.each(response.data, function (index, value) {
                     dados = '';
                     dados += '<tr>';
-                    dados += "<td>" + value.id + "</td>";
+                    dados += "<td>" + value.sale_code + "</td>";
                     dados += "<td>" + value.project + "</td>";
                     dados += "<td>" + value.product + "</td>";
                     dados += "<td>" + value.client + "</td>";

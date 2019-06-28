@@ -13,6 +13,7 @@ use App\Entities\PlanSale;
 use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
+use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Modules\Sales\Transformers\SalesResource;
 
@@ -41,7 +42,7 @@ class SalesController extends Controller {
     public function getSaleDetail(Request $request){
 
         $requestData = $request->all();
-        $sale = Sale::find(preg_replace("/[^0-9]/", "", $requestData['sale_id']));
+        $sale = Sale::find(current(Hashids::decode($requestData['sale_id'])));
 
         $plansSales = PlanSale::where('sale', $sale->id)->get()->toArray();
         $plans = [];

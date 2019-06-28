@@ -27,7 +27,7 @@ class SalesResource extends Resource {
             $project = Project::find($plano['project']);
             $project = $project['name'];
         }
-
+ 
         if(count($plansSale) > 1){
             $product = "Carrinho";
         }
@@ -44,7 +44,8 @@ class SalesResource extends Resource {
         }
 
         return [
-            'id'              => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)), 
+            'sale_code'       => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)), 
+            'id'              => Hashids::connection('main')->encode($this->id), 
             'project'         => $project,
             'product'         => $product,
             'client'          => $client['name'],
