@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     function atualizar(link = null) {
 
-        $('#dados_tabela').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
+        $('#dados_tabela').html("<tr><td colspan='11'> Carregando...</td></tr>");
 
         if (link == null) {
             link = '/sales/getsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
@@ -39,45 +39,45 @@ $(document).ready(function () {
                 $.each(response.data, function (index, value) {
                     dados = '';
                     dados += '<tr>';
-                    dados += "<td class='text-center' style='vertical-align: middle'>" + value.id + "</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>" + value.project + "</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>" + value.product + "</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>" + value.client + "</td>";
+                    dados += "<td>" + value.sale_code + "</td>";
+                    dados += "<td>" + value.project + "</td>";
+                    dados += "<td>" + value.product + "</td>";
+                    dados += "<td>" + value.client + "</td>";
 
                     if (value.method == '2') {
-                        dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global/assets/img/boleto.jpeg' style='width: 60px'></td>";
+                        dados += "<td><img src='/modules/global/assets/img/cartoes/boleto.png' style='width: 60px'></td>";
                     } else {
                         if (value.brand == 'mastercard') {
-                            dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global/assets/img/master.1.svg' style='width: 60px'></td>";
+                            dados += "<td><img src='/modules/global/assets/img/cartoes/master.png' style='width: 60px'></td>";
                         } else if (value.brand == 'visa') {
-                            dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global/assets/img/visa.svg' style='width: 60px'></td>";
+                            dados += "<td><img src='/modules/global/assets/img/cartoes/visa.png' style='width: 60px'></td>";
                         } else {
-                            dados += "<td style='vertical-align: middle' class='text-center'><img src='/modules/global/assets/img/cartao.jpg' style='width: 60px'></td>";
+                            dados += "<td><img src='/modules/global/assets/img/cartoes/generico.png' style='width: 60px'></td>";
                         }
                     }
 
                     if (value.status == '1') {
-                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-success'>Aprovada</span></td>";
+                        dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
                     } else if (value.status == '3') {
-                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-danger'>Recusada</span></td>";
+                        dados += "<td><span class='badge badge-danger'>Recusada</span></td>";
                     } else if (value.status == '4') {
-                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-secondary'>Estornada</span></td>";
+                        dados += "<td><span class='badge badge-secondary'>Estornada</span></td>";
                     } else if (value.status == '2') {
-                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-primary'>Pendente</span></td>";
+                        dados += "<td><span class='badge badge-pendente'>Pendente</span></td>";
                     } else {
-                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-primary'>" + value.status + "</span></td>";
+                        dados += "<td><span class='badge badge-primary'>" + value.status + "</span></td>";
                     }
 
-                    dados += "<td style='vertical-align: middle' class='text-center'>" + value.start_date + "</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>" + value.end_date + "</td>";
-                    dados += "<td style='vertical-align: middle;white-space: nowrap' class='text-center'><b>" + value.total_paid + "</b></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes_venda' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' type='button' style='margin-right:10px'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td>" + value.start_date + "</td>";
+                    dados += "<td>" + value.end_date + "</td>";
+                    dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
+                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' style='margin-right:10px'><i class='material-icons gradient'>remove_red_eye</i></button></a></td>";
                     dados += '</tr>';
                     $("#dados_tabela").append(dados);
 
                 });
                 if (response.data == '') {
-                    $('#dados_tabela').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    $('#dados_tabela').html("<tr><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
                 pagination(response);
 

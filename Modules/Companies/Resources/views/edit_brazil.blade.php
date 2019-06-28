@@ -73,7 +73,7 @@
                                         <div class="row">
                                             <div class="form-group col-xl-6">
                                                 <label for="zip_code">CEP</label>
-                                                <input name="zip_code" value="{!! $company->zip_code !!}" type="text" class="form-control" id="zip_code">
+                                                <input name="zip_code" value="{!! $company->zip_code !!}" type="text" class="form-control" id="brazil_zip_code" data-mask="00000-000">
                                             </div>
                                             <div class="form-group col-xl-6">
                                                 <label for="state">Estado</label>
@@ -97,7 +97,7 @@
                                             </div>
                                             <div class="form-group col-xl-6">
                                                 <label for="number">Número</label>
-                                                <input name="number" value="{!! $company->number !!}" type="text" class="form-control" id="number">
+                                                <input name="number" value="{!! $company->number !!}" type="text" class="form-control" id="number" data-mask="0#">
                                             </div>
                                         </div>
                                         <div class="row">

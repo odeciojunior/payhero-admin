@@ -9,8 +9,13 @@ Route::group(
     function() {
         // rotas autenticadas
 
-        Route::get('/', 'WithdrawalController@index')->name('finances');
+        Route::get('/', 'FinancesController@index')->name('finances');
 
+        Route::get('/getbalances/{company_id}', 'FinancesController@getBalances')->name('finances.balances');
     }
+
+
 );
+
+
 

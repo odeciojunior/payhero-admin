@@ -140,7 +140,7 @@ class Project extends Model
      */
     public function domains()
     {
-        return $this->hasMany('App\Entities\Domain', 'project');
+        return $this->hasMany('App\Entities\Domain');
     }
 
     /**
@@ -210,5 +210,13 @@ class Project extends Model
     public function zenviaSms()
     {
         return $this->hasMany('App\Entities\ZenviaSms', 'project');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sales()
+    {
+        return $this->hasMany('App\Entities\Sale', 'project');
     }
 }

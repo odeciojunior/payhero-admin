@@ -19,8 +19,9 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
-                $("#modal-add-body").html('nao encontrado');
+            error: function (response) {
+                alertCustom('error', String(response.message));
+                //$("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
 
@@ -45,16 +46,19 @@ $(document).ready(function () {
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                         },
+                        dataType: "json",
                         data: form_data,
                         error: function (response) {
                             if (response.status === 422) {
                                 for (error in response.errors) {
                                     alertCustom('error', String(response.errors[error]));
                                 }
+                            } else {
+                                alertCustom('error', String(response.responseJSON.message));
                             }
                         },
-                        success: function (data) {
-                            alertCustom("success", data.message);
+                        success: function (response) {
+                            alertCustom("success", response.message);
                             updateDomains();
                         }
                     });
@@ -75,8 +79,8 @@ $(document).ready(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function () {
-                $("#domain-table-body").html('Erro ao encontrar dados');
+            error: function (response) {
+                $("#domain-table-body").html(response.message);
             },
             success: function (response) {
 
@@ -210,18 +214,25 @@ $(document).ready(function () {
                         $.ajax({
                             method: "DELETE",
                             url: "/domains/" + dominio,
+                            data:{
+                                id: dominio
+                            },
+                            dataType: 'json',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function (response) {
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 }
+                                else {
+                                    alertCustom("error", response.responseJSON.message)
+                                }
                             },
-                            success: function (data) {
-                                alertCustom("success", "dominio Removido com sucesso");
+                            success: function (response) {
+                                alertCustom("success", response.message);
                                 updateDomains();
                             }
 

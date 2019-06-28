@@ -17,7 +17,7 @@ use Cloudflare\API\Endpoints\Zones;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Dominios\Transformers\DominiosResource;
 
-class DominiosApiController extends Controller {
+class domainsApiController extends Controller {
 
     public function index(Request $request) {
 

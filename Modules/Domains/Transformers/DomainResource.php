@@ -5,40 +5,53 @@ namespace Modules\Dominios\Transformers;
 use Cloudflare\API\Auth\APIKey;
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\Zones;
+use Modules\Core\Services\CloudFlareService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class DomainResource extends Resource {
+class DomainResource extends Resource
+{
+    /**
+     * @var CloudFlareService
+     */
+    private $cloudFlareService;
 
-    public function toArray($request) {
-
-        $key = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-
-        $adapter = new Guzzle($key);
-        $zones   = new Zones($adapter);
-
-        $status = '';
-        try{
-            $zoneID = $zones->getZoneID($dominio->name); 
-            $status = $zones->activationCheck($zoneID);
-            if($status){
-                $status = 'conectado';
-            }
-            else{
-                $status = 'desconectado';
-            }
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
+     */
+    private function getCloudFlareService()
+    {
+        if (!$this->cloudFlareService) {
+            $this->cloudFlareService = app(CloudFlareService::class);
         }
-        catch(\Exception $e){
-            $status = $this->status;
+
+        return $this->cloudFlareService;
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     * @throws \Cloudflare\API\Endpoints\EndpointException
+     */
+    public function toArray($request)
+    {
+
+        if ($this->status != $this->getEnum('status', 'approved')) {
+            $activated = $this->getCloudFlareService()->activationCheck($this->name);
+
+            if ($activated) {
+                $this->update([
+                                            'status' => $this->resource->getEnum('status', 'approved'),
+                                        ]);
+            }
         }
 
         return [
-            'id'         => Hashids::encode($this->id),
-            'domain'     => $this->name,
-            'ip_domain'  => $this->domain_ip,
-            'status'     => $status   
+            'id'                => Hashids::encode($this->id),
+            'domain'            => $this->name,
+            'ip_domain'         => $this->domain_ip,
+            'status'            => $this->status,
+            'status_translated' => $this->getEnum('status', $this->status, true),
         ];
-
     }
-
 }

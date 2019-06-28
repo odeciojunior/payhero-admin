@@ -30,21 +30,21 @@ $(document).ready( function(){
 
                     dados = '';
                     dados += '<tr>';
-                    dados += "<td class='text-center' style='vertical-align: middle'>"+value.date+"</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.client+"</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.email_status+"</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.sms_status+"</td>";
+                    dados += "<td>"+value.date+"</td>";
+                    dados += "<td>"+value.client+"</td>";
+                    dados += "<td>"+value.email_status+"</td>";
+                    dados += "<td>"+value.sms_status+"</td>";
                     if(value.recovery_status == 'Recuperado'){
-                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-success'>"+value.recovery_status+"</span></td>";
+                        dados += "<td><span class='badge badge-success'>"+value.recovery_status+"</span></td>";
                     }
                     else{
-                        dados += "<td style='vertical-align: middle' class='text-center'><span class='badge badge-danger'>"+value.recovery_status+"</span></td>";
+                        dados += "<td><span class='badge badge-danger'>"+value.recovery_status+"</span></td>";
                     }
-                    dados += "<td style='vertical-align: middle' class='text-center'>"+value.value+"</td>";
-                    // dados += "<td style='vertical-align: middle' class='text-center'>"+value.link+"</td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><a href='"+ value.whatsapp_link +"', '', $client['telephone']); !!}' target='_blank'><img style='height:25px' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/whatsapp-default.jpg'></a></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'> <a class='btn btn-default copy_link' link='"+value.link+"'>Copiar link</a></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td>"+value.value+"</td>";
+                    // dados += "<td>"+value.link+"</td>";
+                    dados += "<td><a href='"+ value.whatsapp_link +"', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
+                    dados += "<td> <a role='button' class='copy_link' link='"+value.link+"'><i class='material-icons gradient'>file_copy</i></a></td>";
+                    dados += "<td><a  role='button' class='detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
                     dados += '</tr>';
                     $("#table_data").append(dados);
 
@@ -59,7 +59,7 @@ $(document).ready( function(){
 
                 });
                 if(response.data == ''){
-                    $('#table_data').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
+                    $('#table_data').html("<tr><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
                 }
                 pagination(response);
 

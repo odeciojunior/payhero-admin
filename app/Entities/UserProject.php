@@ -2,7 +2,9 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -23,6 +25,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserProject extends Model
 {
+    use SoftDeletes, FoxModelTrait;
+    /**
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
     /**
      * The table associated with the model.
      * @var string
@@ -61,7 +68,7 @@ class UserProject extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function project()
+    public function projectId()
     {
         return $this->belongsTo('App\Entities\Project', 'project');
     }
