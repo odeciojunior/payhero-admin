@@ -87,7 +87,7 @@ class PostBackEbanxController extends Controller {
 
                         $company = Company::find($transaction['company']);
 
-                        $user = User::find($company['user']);
+                        $user = User::find($company['user_id']);
 
                         Log::write('info', 'Notificação do Ebanx : '. print_r($user, true));
 
