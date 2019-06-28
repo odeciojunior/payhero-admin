@@ -42,13 +42,13 @@
                                         <h5 class="card-title">{{ substr($product->name, 0 ,18)}}</h5>
                                         <p class="card-text sm">Criado em dd/mm/aaaa</p>
                                     </div>
-                                    <div class="col-2">
+                                    <!-- <div class="col-2">
                                         <span data-toggle='modal' data-target='#modal_excluir' style="float:right">
                                             <a class="delete-product" data-placement='top' data-toggle='tooltip' title='Excluir' product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}">
                                                 <i class='icon wb-trash' aria-hidden='true' style="color: #ff4c52;"></i>
                                             </a>
                                         </span>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

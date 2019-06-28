@@ -143,9 +143,7 @@ class CompaniesController extends Controller
     {
 
         try {
-            if ($request->country == 'brazil') {
-                $view = view('companies::create_brazilian_company');
-            } else if ($request->country == 'usa') {
+            if ($request->country == 'usa') {
                 $view = view('companies::create_american_company');
             } else {
                 $view = view('companies::create_brazilian_company');
@@ -175,13 +173,14 @@ class CompaniesController extends Controller
 
             $companyResource = new CompanyResource($company);
 
-            if ($company->country == 'brazil') {
-                return view('companies::edit_brazil', [
+            if ($company->country == 'usa') {
+                return view('companies::edit_usa', [
                     'company' => json_decode(json_encode($companyResource)),
                     'banks'   => $banks,
                 ]);
-            } else if ($company->country == 'usa') {
-                return view('companies::edit_usa', [
+            }
+            else {
+                return view('companies::edit_brazil', [
                     'company' => json_decode(json_encode($companyResource)),
                     'banks'   => $banks,
                 ]);
