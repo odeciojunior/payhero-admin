@@ -32,6 +32,11 @@ class PostBackEbanxController extends Controller {
             'hash' => $requestData['hash_codes']
         ]);
 
+        if(!isset($response->payment->status)){
+            Log::write('info', 'Erro com response do ebanx ' . print_r($response, true));
+            return 'success';
+        }
+
         $sale = Sale::where('gateway_id',$requestData['hash_codes'])->first();
 
         if(!$sale){
