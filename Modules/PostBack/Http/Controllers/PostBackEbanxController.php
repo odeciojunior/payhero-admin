@@ -2,6 +2,7 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
+use \Ebanx\Config;
 use Carbon\Carbon;
 use App\Entities\Plan;
 use App\Entities\Sale;
@@ -28,9 +29,19 @@ class PostBackEbanxController extends Controller {
 
         Log::write('info', 'Notificação do Ebanx : '. print_r($requestData, true));
 
+        Config::set([
+            'integrationKey' => 'live_ik_mTLNBPdU-RmtpVW6FTF0Ug',
+            'testMode'       => false
+        ]);
+
         $response = \Ebanx\Ebanx::doQuery([
             'hash' => $requestData['hash_codes']
         ]);
+
+        if(!isset($response->payment->status)){
+            Log::write('info', 'Erro com response do ebanx ' . print_r($response, true));
+            return 'success';
+        }
 
         $sale = Sale::where('gateway_id',$requestData['hash_codes'])->first();
 
@@ -42,7 +53,7 @@ class PostBackEbanxController extends Controller {
         if($response->payment->status != $sale->gateway_status){
 
             $sale->update([
-                'gateway_status' => $response->payment->status
+                'gateway_status' => $response->payment->status,
             ]);
 
             $transactions = Transaction::where('sale',$sale->id)->get()->toArray();
@@ -64,7 +75,7 @@ class PostBackEbanxController extends Controller {
 
                 $sale->update([
                     'end_date'       => \Carbon\Carbon::now(),
-                    'gateway_status' => 'paid',
+                    'gateway_status' => 'CO',
                     'status'         => '1'
                 ]);
 
@@ -76,11 +87,12 @@ class PostBackEbanxController extends Controller {
 
                         $company = Company::find($transaction['company']);
 
-                        $user = User::find($company['user']);
+                        $user = User::find($company['user_id']);
 
                         $transaction->update([
-                            'status'       => 'paid',
-                            'release_date' => Carbon::now()->addDays($user['antecipation_days'])->format('Y-m-d')
+                            'status'            => 'paid',
+                            'release_date'      => Carbon::now()->addDays($user->release_money_days)->format('Y-m-d'),
+                            'antecipation_date' => Carbon::now()->addDays($user->boleto_antecipation_money_days)->format('Y-m-d'),
                         ]);
                     }
                     else{
@@ -124,3 +136,5 @@ class PostBackEbanxController extends Controller {
     }
 
 }
+
+

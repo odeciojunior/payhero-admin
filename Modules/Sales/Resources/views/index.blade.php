@@ -30,9 +30,9 @@
                   </div>
                 </div>  --}}
                 @if($sales_amount > 0)
-                    <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
+                   <!-- <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
                       Filtros
-                    </a>
+                    </a> -->
                 @endif
             </div>
           </div>
@@ -49,7 +49,7 @@
 
       <div class="fixhalf"></div>
 
-      <div id="div_filtros" class="panel p-20" style="display:none">
+      <div id="" class="card shadow p-20">
         <div class="row align-items-baseline">
           <div class="col-3">
             <label for="projeto">Projeto</label>
@@ -79,7 +79,7 @@
           </div>
           <div class="col-3">
             <label for="comprador">Nome do cliente</label>
-            <input id="comprador" class="form-control input-pad" placeholder="cliente">
+            <input id="comprador" class="input-pad" placeholder="cliente">
           </div>
         </div>
         <div class="row mt-15">
@@ -103,22 +103,22 @@
       <div class="fixhalf"></div>
 
       @if($sales_amount > 0)
-        <div class="panel p-20" style="min-height: 300px">
+        <div class="card shadow" style="min-height: 300px">
           <div class="page-invoice-table table-responsive">
 
-            <table id="tabela_vendas" class="table text-right table-vendas table-hover" style="width:100%;">
-              <thead style="text-align:center">
+            <table id="tabela_vendas" class="table-vendas table table-striped" style="width:100%;">
+              <thead>
                 <tr>
-                  <th style='vertical-align: middle' class="table-title"><b>Transação</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Projeto</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Descrição</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Cliente</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Forma</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Status</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Data</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Pagamento</b></th>
-                  <th style='vertical-align: middle' class="table-title"><b>Comissão</b></th>
-                  <th style='vertical-align: middle' class="table-title" width="80px;"> &nbsp; </th>
+                  <td class="table-title">Transação</td>
+                  <td class="table-title">Projeto</td>
+                  <td class="table-title">Descrição</td>
+                  <td class="table-title">Cliente</td>
+                  <td class="table-title">Forma</td>
+                  <td class="table-title">Status</td>
+                  <td class="table-title">Data</td>
+                  <td class="table-title">Pagamento</td>
+                  <td class="table-title">Comissão</td>
+                  <td class="table-title" width="80px;"> &nbsp; </td>
                 </tr>
               </thead>
               <tbody id="dados_tabela">
@@ -126,10 +126,6 @@
               </tbody>
             </table>
           </div>
-
-          <ul id="pagination" class="pagination-sm m-30" style="margin-top:10px;position:relative;float:right">
-              {{-- js carrega... --}}
-          </ul>
 
           <!-- Modal detalhes da venda-->
           <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
@@ -151,9 +147,10 @@
             </div>
           </div>
           <!-- End Modal -->
+     
+    </div>
 
-        </div>
-      @else
+    @else
         @push('css')
           <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
         @endpush
@@ -166,7 +163,14 @@
         </div>
 
       @endif
-    </div>
+
+    
+    <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+              {{-- js carrega... --}}
+          </ul>
+
+        </div>
+        
   </div>
 
 @push('scripts')

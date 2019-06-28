@@ -70,6 +70,36 @@ $(document).ready(function () {
         });
     });
 
+    $("#brazil_zip_code").on("input", function(){
+
+        var zip_code = $('#brazil_zip_code').val().replace(/[^0-9]/g, '');
+
+        if(zip_code.length != 8)
+            return false;
+
+        $.ajax({
+            url : "https://viacep.com.br/ws/"+ zip_code +"/json/", 
+            type : "GET",
+            cache: false,
+            async: false,
+            success : function(response) {
+                if(response.localidade){
+                    $("#city").val(unescape(response.localidade));
+                }
+                if(response.bairro){
+                    $("#neighborhood").val(unescape(response.bairro));
+                }
+                if(response.uf){
+                    $("#state").val(unescape(response.uf));
+                }
+                if(response.logradouro){
+                    $("#street").val(unescape(response.logradouro));
+                }
+            }
+        });
+
+    });
+
 });
 
 Dropzone.options.dropzoneDocuments = {
