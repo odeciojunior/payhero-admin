@@ -49,7 +49,7 @@ class Sale extends Model
     /**
      * @var array
      */
-    protected $fillable = ['owner', 'affiliate', 'client', 'delivery', 'payment_form', 'total_paid_value', 'shipment_value', 'start_date', 'end_date', 'gateway_id', 'gateway_status', 'installments_amount', 'installments_value', 'flag', 'boleto_link', 'boleto_digitable_line', 'boleto_due_date', 'cupom_code', 'shopify_order', 'ip', 'dolar_quotation', 'created_at', 'deleted_at', 'updated_at'];
+    protected $fillable = ['owner', 'affiliate', 'client', 'delivery', 'payment_form', 'total_paid_value', 'shipment_value', 'start_date', 'end_date', 'gateway_id','status', 'gateway_status', 'installments_amount', 'installments_value', 'flag', 'boleto_link', 'boleto_digitable_line', 'boleto_due_date', 'cupom_code', 'shopify_order', 'ip', 'dolar_quotation', 'created_at', 'deleted_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
