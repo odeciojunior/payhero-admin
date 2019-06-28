@@ -15,7 +15,7 @@ class PlansResource extends Resource
             'name'        => $this->name,
             'description' => $this->description,
             'code'        => $this->code,
-            'price'       => $this->price,
+            'price'       => 'R$ '.number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status'      => $this->status,
         ];
     }
