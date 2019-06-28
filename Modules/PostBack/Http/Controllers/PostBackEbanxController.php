@@ -2,6 +2,7 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
+use \Ebanx\Config;
 use Carbon\Carbon;
 use App\Entities\Plan;
 use App\Entities\Sale;
@@ -27,6 +28,11 @@ class PostBackEbanxController extends Controller {
         $requestData = $request->all();
 
         Log::write('info', 'Notificação do Ebanx : '. print_r($requestData, true));
+
+        Config::set([
+            'integrationKey' => 'live_ik_mTLNBPdU-RmtpVW6FTF0Ug',
+            'testMode'       => false
+        ]);
 
         $response = \Ebanx\Ebanx::doQuery([
             'hash' => $requestData['hash_codes']
