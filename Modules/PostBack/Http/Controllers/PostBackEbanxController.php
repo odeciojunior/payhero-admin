@@ -91,7 +91,7 @@ class PostBackEbanxController extends Controller {
 
                         $transaction->update([
                             'status'       => 'paid',
-                            'release_date' => Carbon::now()->addDays($user['antecipation_days'])->format('Y-m-d')
+                            'release_date' => Carbon::now()->addDays($user['boleto_antecipation_money_days'])->format('Y-m-d')
                         ]);
                     }
                     else{
