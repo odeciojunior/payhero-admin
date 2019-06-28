@@ -140,7 +140,7 @@ class Project extends Model
      */
     public function domains()
     {
-        return $this->hasMany('App\Entities\Domain', 'project');
+        return $this->hasMany('App\Entities\Domain');
     }
 
     /**

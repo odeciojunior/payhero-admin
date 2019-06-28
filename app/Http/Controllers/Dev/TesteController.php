@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\User;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\SendgridService;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
@@ -22,7 +24,27 @@ class TesteController extends Controller {
 
     public function index() {
 
-        echo $this->checkDNS('gmail.com.b');
+        $sg = new SendgridService();
+        dd($sg->getLinkBrand('cloudteste.tk'));
+        //$sg->addZone('cloudteste.tk', true);
+        //dd($sg->deleteZone('cloudteste.tk'));
+        //$sg->setZone('cloudteste.tk');
+
+        dd($sg->teste());
+
+
+        $cf = new CloudFlareService();
+        dd( $this->checkDNS('cloudteste.tk'));
+        //dd($cf->addZone('cloudteste.tk'));
+        //dd($cf->getZones());
+
+        //dd(Hashids::encode(2));
+
+        dd($cf->zone('cloudteste.tk')->addRecord('A','cloudteste.tk', '1.1.1.1'));
+
+        dd($cf->zone('cloudteste.tk')->getRecords());
+
+        dd( $this->checkDNS('gmail.com.br'));
     }
 
     protected function checkDNS($host) {

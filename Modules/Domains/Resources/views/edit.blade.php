@@ -40,7 +40,7 @@
                                         <td class='col-2'>{{ $register['nome'] }}</td>
                                         <td class='col-6' style='overflow-x:scroll'>{{ $register['valor'] }}</td>
                                         <td class='col-2 text-center align-middle'>
-                                            <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro" {!! !$register['deletar'] ? 'disabled' : '' !!}>Remover</button>
+                                            <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro" disabled {!! !$register['deletar'] ? 'disabled' : '' !!}>Remover</button>
                                         </td>
                                     </tr>
                                 @endforeach

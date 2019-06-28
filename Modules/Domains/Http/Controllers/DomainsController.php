@@ -15,18 +15,44 @@ use Cloudflare\API\Endpoints\User;
 use Illuminate\Routing\Controller;
 use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\FoxUtils;
+use Modules\Domains\Http\Requests\DomainCreateRequest;
+use Modules\Domains\Http\Requests\DomainDestroyRequest;
+use Modules\Domains\Http\Requests\DomainIndexRequest;
+use Modules\Domains\Http\Requests\DomainStoreRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\AutorizacaoHelper;
 use Modules\Dominios\Transformers\DomainResource;
 
+/**
+ * Class DomainsController
+ * @package Modules\Domains\Http\Controllers
+ */
 class DomainsController extends Controller
 {
+    /**
+     * @var Domain
+     */
     private $domainModel;
+    /**
+     * @var Project
+     */
     private $projectModel;
+    /**
+     * @var Company
+     */
     private $companyModel;
+    /**
+     * @var CloudFlareService
+     */
+    private $cloudFlareService;
 
-    private function getDomain()
+    /**
+     * @return Domain|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDomainModel()
     {
         if (!$this->domainModel) {
             $this->domainModel = app(Domain::class);
@@ -35,7 +61,10 @@ class DomainsController extends Controller
         return $this->domainModel;
     }
 
-    private function getProject()
+    /**
+     * @return Project|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getProjectModel()
     {
         if (!$this->projectModel) {
             $this->projectModel = app(Project::class);
@@ -44,7 +73,10 @@ class DomainsController extends Controller
         return $this->projectModel;
     }
 
-    private function getCompany()
+    /**
+     * @return Company|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getCompanyModel()
     {
         if (!$this->companyModel) {
             $this->companyModel = app(Company::class);
@@ -53,190 +85,116 @@ class DomainsController extends Controller
         return $this->companyModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
+     */
+    private function getCloudFlareService()
+    {
+        if (!$this->cloudFlareService) {
+            $this->cloudFlareService = app(CloudFlareService::class);
+        }
+
+        return $this->cloudFlareService;
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index(Request $request)
     {
         try {
-            $projectId = $request->input("project");
+            $dataRequest = $request->all();
+            if (isset($dataRequest["project"])) {
+                $projectId = current(Hashids::decode($dataRequest["project"]));
 
-            if ($projectId) {
-                $projectId = Hashids::decode($projectId)[0];
-
-                $project = $this->getProject()->with('domains')->find($projectId);
+                $project = $this->getProjectModel()->with('domains')->find($projectId);
 
                 return DomainResource::collection($project->domains);
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao listar dados de domínios',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados (DomainsController - index)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao listar dados de domínios',
+                                    ], 400);
         }
     }
 
-    public function store(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(DomainStoreRequest $request)
     {
+        try {
+            $requestData = $request->validated();
 
-        $requestData = $request->all();
+            $projectId = $requestData['project_id'] ?? null;
+            $projectId = current(Hashids::decode($projectId));
 
-        $requestData['project'] = Hashids::decode($requestData['project_id'])[0];
+            if ($projectId) {
 
-        $project = Project::find($requestData['project']);
+                $project = $this->getProjectModel()->find($projectId);
 
-        //        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        //        $adapter = new Guzzle($key);
-        //        $dns     = new DNS($adapter);
-        //        $zones   = new Zones($adapter);
+                if ($project->shopify_id == null) {
+                    $newDomain = $this->getCloudFlareService()
+                                      ->integrationWebsite($requestData['name'], $requestData['domain_ip']);
+                } else {
+                    $newDomain                = $this->getCloudFlareService()
+                                                     ->integrationShopify($requestData['name']);
+                    $requestData['domain_ip'] = 'Domínio Shopify';
+                }
 
-        //        try {
-        //            $zones->addZone($requestData['name']);
-        //        } catch (Exception $e) {
-        //            dd($e);
-        //
-        //            return response()->json('Não foi possível adicionar o domínio, verifique os dados informados!');
-        //        }
+                if ($newDomain) {
+                    $domainCreated = $this->getDomainModel()->create([
+                                                                         'project_id' => $projectId,
+                                                                         'name'       => $requestData['name'],
+                                                                         'domain_ip'  => $requestData['domain_ip'],
+                                                                         'status'     => $this->getDomainModel()
+                                                                                              ->getEnum('status', 'pending'),
+                                                                     ]);
 
-        // $zoneID = $zones->getZoneID($requestData['name']);
+                    //Domain::create($requestData);
 
-        // try {
-        //     if ($project['shopify_id'] == '') {
-        //         if ($dns->addRecord($zoneID, "A", $requestData['name'], $requestData['domain_ip'], 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "CNAME", 'www', $requestData['name'], 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //     } else {
-        //         $requestData['domain_ip'] = 'Domínio Shopify';
-        //         if ($dns->addRecord($zoneID, "A", $requestData['name'], '23.227.38.32', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "CNAME", 'www', 'shops.myshopify.com', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "A", 'checkout', '104.248.122.89', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "A", 'sac', '104.248.122.89', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //         if ($dns->addRecord($zoneID, "A", 'affiliate', '104.248.122.89', 0, true) === true) {
-        //             // echo "DNS criado.". PHP_EOL;
-        //         }
-        //     }
-        // } catch (Exception $e) {
-        //     try {
-        //         $zones->deleteZone($zoneID);
-        //     } catch (Exception $e) {
-        //         //
-        //     }
-        //     dd($e);
+                    return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
+                } else {
+                    //problema ao cadastrar dominio
+                    return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                }
+            } else {
+                //nao veio projectid
 
-        //     return response()->json('Não foi possível adicionar o domínio, verifique os dados informados !');
-        // }
+                return response()->json(['message' => 'Projeto não encontrado.'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
+            report($e);
 
-        // try {
-        //     $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
-
-        //     $requestBody = json_decode('{
-        //         "automatic_security": false,
-        //         "custom_spf" : true,
-        //         "default" : true,
-        //         "domain" : "' . $requestData['name'] . '"
-        //     }');
-
-        //     $response = $sendgrid->client->whitelabel()->domains()->post($requestBody);
-
-        //     $response = json_decode($response->body());
-
-        //     if (!isset($response->id)) {
-        //         dd($response);
-        //     }
-
-        //     $senderAuthenticationId = $response->id;
-
-        //     $requestData['id_sendgrid'] = $response->id;
-
-        //     $response = $sendgrid->client->whitelabel()->domains()->_($response->id)->get();
-
-        //     $response = json_decode($response->body());
-
-        //     foreach ($response->dns as $responseDns) {
-        //         if ($responseDns->type == 'mx') {
-        //             $dns->addRecord($zoneID, 'MX', $responseDns->host, $responseDns->data, 0, false, '1');
-        //         } else {
-        //             $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-        //         }
-        //     }
-
-        //     $request_body = json_decode('{
-        //         "default": true,
-        //         "domain": "' . $requestData['name'] . '",
-        //         "subdomain": "mail"
-        //     }');
-
-        //     $query_params = json_decode('{"limit": 1, "offset": 1}');
-
-        //     $response = $sendgrid->client->whitelabel()->links()->post($request_body, $query_params);
-
-        //     $response = json_decode($response->body());
-
-        //     $linkBrandingId = $response->id;
-
-        //     foreach ($response->dns as $responseDns) {
-        //         $dns->addRecord($zoneID, strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
-        //     }
-
-        //     sleep(5);
-        //     $sendgrid->client->whitelabel()->domains()->_($senderAuthenticationId)->validate()->post();
-        //     $response = $sendgrid->client->whitelabel()->links()->_($linkBrandingId)->validate()->post();
-        // } catch (Exception $e) {
-        //     dd($e);
-        // }
-
-        $requestData['status']    = "Conectado";
-        $requestData['domain_ip'] = 'Domínio Shopify';
-
-        Domain::create($requestData);
-
-        return response()->json('sucesso');
+            return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+        }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         try {
-            $domain    = $this->getDomain()->find(Hashids::decode($id)[0]);
-            $companies = $this->getCompany()->all();
-            $project   = $this->getProject()->find($domain['project']);
+            $domain    = $this->getDomainModel()->with(['project'])->find(current(Hashids::decode($id)));
+            $companies = $this->getCompanyModel()->all();
+            //$project   = $this->getProjectModel()->find($domain->project_id);
 
-            $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-            $adapter = new Guzzle($key);
-            $dns     = new DNS($adapter);
-            $zones   = new Zones($adapter);
-            $zoneID  = $zones->getZoneID($domain['name']);
-
-            //            try {
-            //                $zoneID = $zones->getZoneID($domain['name']);
-            //            } catch (\Exception $e) {
-            //                //                $form = view('domains::edit', [
-            //                //                    'domain' => $domain,
-            //                //                ]);
-            //                //
-            //                //                return response()->json($form->render());
-            ////                return view('domains::edit', [
-            ////                    'domain' => $domain,
-            ////                ]);
-            //            }
+            $records = $this->getCloudFlareService()->getRecords($domain->name);
 
             $registros = [];
-
-            foreach ($dns->listRecords($zoneID)->result as $record) {
+            foreach ($records as $record) {
 
                 $novo_registro['id']   = $record->id;
                 $novo_registro['tipo'] = $record->type;
@@ -265,21 +223,20 @@ class DomainsController extends Controller
                     'domain'    => $domain,
                     'companies' => $companies,
                     'registers' => $registros,
-                    'project'   => $project,
+                    'project'   => $domain->project,
                 ]);
             }
-
-            //            $form = view('domains::edit', [
-            //                'domain'    => $domain,
-            //                'registros' => $registros,
-            //                'projeto'   => $project,
-            //            ]);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar Domínio (DomainsController - edit)');
             report($e);
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Cloudflare\API\Endpoints\EndpointException
+     */
     public function update(Request $request)
     {
 
@@ -308,38 +265,46 @@ class DomainsController extends Controller
         return response()->json('sucesso');
     }
 
-    public function destroy($id)
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(DomainDestroyRequest $request)
     {
-        if (isset($id)) {
-            $domainId = Hashids::decode($id)[0];
+        try {
+            $requestData = $request->validated();
 
-            $domain = $this->getDomain()->find($domainId);
+            $domainId = current(Hashids::decode($requestData['id']));
 
-            $domainDeleted = $domain->delete();
+            $domain = $this->getDomainModel()->find($domainId);
 
-            $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-            $adapter = new Guzzle($key);
-            $zones   = new Zones($adapter);
+            if ($this->getCloudFlareService()->deleteZone($domain->name)) {
+                //zona deletada
+                $domainDeleted = $domain->delete();
 
-            try {
                 if ($domainDeleted) {
-                    return response()->json('sucesso', 200);
+                    return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                } else {
+                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
                 }
-                $zones->deleteZone($zones->getZoneID($domain['name']));
-            } catch (Exception $e) {
-                dd($e);
-                flash('Não foi possível deletar o domínio!')->error();
-
-                return response()->json('Não foi possível deletar o domínio!');
+            } else {
+                //erro ao deletar zona
+                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
             }
-
-            return response()->json('erro');
+        } catch (Exception $e) {
+            Log::warning('DomainsController destroy - erro ao deletar domínio');
+            report($e);
         }
     }
 
+    /**
+     * @param $domainId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function show($domainId)
     {
-        $domain = $this->getDomain()->where('id', Hashids::decode($domainId))->first();
+        $domain = $this->getDomainModel()->where('id', Hashids::decode($domainId))->first();
 
         $key     = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
         $adapter = new Guzzle($key);
@@ -355,44 +320,50 @@ class DomainsController extends Controller
         return response()->json($view->render());
     }
 
-    public function create(Request $request)
+    /**
+     * @param DomainCreateRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function create(DomainCreateRequest $request)
     {
         try {
 
-            $projectId = $request->project_id;
+            $requestData = $request->validated();
+
+            $projectId = $requestData['project_id'] ?? null;
+            $projectId = current(Hashids::decode($projectId));
 
             if ($projectId) {
-                $projectId = Hashids::decode($projectId)[0];
+
+                $project = $this->getProjectModel()->find($projectId);
+
+                $form = view('domains::create', [
+                    'project' => $project,
+                ]);
+
+                return response()->json($form->render());
+            } else {
+                //nao veio projectid
+
+                return response()->json(['message' => 'Projeto não encontrado.'], 400);
             }
-
-            $project = $this->getProject()->find($projectId);
-
-            return view('domains::create', [
-                'project' => $project,
-            ]);
         } catch (Exception $e) {
             Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
             report($e);
         }
-
-        $requestData = $request->all();
-
-        if (!isset($requestData['projeto'])) {
-            return response()->json('Erro, projeto não encontrado');
-        }
-
-        $project = $this->getProject()->find(Hashids::decode($requestData['projeto'])[0]);
-
-        $form = view('domains::create', [
-            'project' => $project,
-        ]);
-
-        return response()->json($form->render());
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Cloudflare\API\Endpoints\EndpointException
+     */
     public function removerRegistroDns(Request $request)
     {
 
+        return response()->json('Ocorreu algum erro ao remover o registro DNS');
+        /*
         $requestData = $request->all();
 
         $domain = Domain::find($requestData['id_domain']);
@@ -410,5 +381,7 @@ class DomainsController extends Controller
         }
 
         return response()->json('sucesso');
+
+        */
     }
 }
