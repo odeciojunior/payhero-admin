@@ -75,7 +75,7 @@ class PostBackEbanxController extends Controller {
 
                 $sale->update([
                     'end_date'       => \Carbon\Carbon::now(),
-                    'gateway_status' => 'paid',
+                    'gateway_status' => 'CO',
                     'status'         => '1'
                 ]);
 
@@ -88,8 +88,6 @@ class PostBackEbanxController extends Controller {
                         $company = Company::find($transaction['company']);
 
                         $user = User::find($company['user_id']);
-
-                        Log::write('info', 'Notificação do Ebanx : '. print_r($user, true));
 
                         $transaction->update([
                             'status'            => 'paid',
