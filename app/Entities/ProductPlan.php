@@ -47,7 +47,7 @@ class ProductPlan extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function product()
+    public function getProduct()
     {
         return $this->belongsTo('App\Entities\Product', 'product');
     }

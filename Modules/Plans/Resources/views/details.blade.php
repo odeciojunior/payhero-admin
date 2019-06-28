@@ -23,6 +23,13 @@
                 <td class='text-left'>{{$plan->price}}</td>
             </tr>
             <tr style='height: 40%;'>
+                <th style='width:40%;' class='text-center'>Produtos</th>
+                <td style='width: 20px'></td>
+                @foreach($plan->productsPlans as $productPlan)
+                    <td class='text-left'>{{$productPlan->getProduct->name}}</td>
+                @endforeach
+            </tr>
+            <tr style='height: 40%;'>
                 <th style='width:40%;' class='text-center'>Status</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>

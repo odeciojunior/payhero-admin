@@ -91,76 +91,103 @@ class PlansController extends Controller
 
     public function store(PlanStoreRequest $request)
     {
+        try {
+            $requestData            = $request->validated();
+            $requestData['project'] = Hashids::decode($requestData['project'])[0];
+            $requestData['status']  = 1;
 
-        $requestData            = $request->validated();
-        $requestData['project'] = Hashids::decode($requestData['project'])[0];
-        $requestData['status']  = 1;
+            $userProject = $this->getUserProject()->where([
+                                                              ['project', $requestData['project']],
+                                                              ['type', 'producer'],
+                                                          ])->first();
 
-        $userProject = $this->getUserProject()->where([
-                                                          ['project', $requestData['project']],
-                                                          ['type', 'producer'],
-                                                      ])->first();
+            $requestData['company'] = $userProject->company;
+            $requestData['price']   = $this->getValue($requestData['price']);
 
-        $requestData['company'] = $userProject->company;
-        $requestData['price']   = $this->getValue($requestData['price']);
+            $planCode = false;
 
-        $planCode = false;
+            while ($planCode == false) {
 
-        while ($planCode == false) {
-
-            $code = $this->randString(3) . rand(100, 999);
-            $plan = $this->getPlan()->where('code', $code)->first();
-            if ($plan == null) {
-                $planCode            = true;
-                $requestData['code'] = $code;
+                $code = $this->randString(3) . rand(100, 999);
+                $plan = $this->getPlan()->where('code', $code)->first();
+                if ($plan == null) {
+                    $planCode            = true;
+                    $requestData['code'] = $code;
+                }
             }
+            $plan = $this->getPlan()->create($requestData);
+
+            if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
+                foreach ($requestData['products'] as $keyProduct => $product) {
+                    foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
+                        if ($keyProduct == $keyAmount) {
+                            $dataProductPlan = [
+                                'product' => $product,
+                                'plan'    => $plan->id,
+                                'amount'  => $productAmount,
+                            ];
+                            $this->getProductPlan()->create($dataProductPlan);
+                        }
+                    }
+                }
+            }
+
+            return response()->json('Plano Configurado com sucesso!', 200);
+        } catch (Exception $e) {
+            Log::warning('Erro tentar salvar Plano (PlansController - store)');
+            report($e);
         }
-        $plan = $this->getPlan()->create($requestData);
-
-        $productAmount = 1;
-
-        while (isset($requestData['product_' . $productAmount]) && $requestData['product_' . $productAmount] != '') {
-            $this->getProduct()->create([
-                                            'product'        => $requestData['product_' . $productAmount],
-                                            'plan'           => $plan->id,
-                                            'product_amount' => $requestData['product_amount_' . $productAmount++],
-                                        ]);
-        }
-
-        return response()->json('sucesso');
     }
 
-    public function update(PlanUpdateRequest $request)
+    public function update(PlanUpdateRequest $request, $id)
     {
+        try {
+            $requestData = $request->validated();
+            dd($requestData);
+            unset($requestData['project']);
+            $planId               = Hashids::decode($id)[0];
+            $requestData['price'] = $this->getValue($requestData['price']);
 
-        $requestData = $request->validated();
+            $plan = $this->getPlan()->where('id', $planId)->first();
+            $plan->update($requestData);
 
-        unset($requestData['project']);
-
-        $requestData['price'] = $this->getValue($requestData['price']);
-
-        $plan = Plan::where('id', Hashids::decode($requestData['id']))->first();
-
-        $plan->update($requestData);
-
-        $produtosPlanos = ProductPlan::where('plano', $plan['id'])->get()->toArray();
-        if (count($produtosPlanos) > 0) {
-            foreach ($produtosPlanos as $produto_plano) {
-                ProductPlan::find($produto_plano['id'])->delete();
+            $productPlans = $this->getProductPlan()->where('plan', $plan['id'])->get()->toArray();
+            if (count($productPlans) > 0) {
+                foreach ($productPlans as $productPlan) {
+                    $this->getProductPlan()->find($productPlan['id'])->delete();
+                }
             }
+
+            //            $productAmount = 1;
+            //            while (isset($requestData['product_' . $productAmount]) && $requestData['product_' . $productAmount] != '') {
+            //
+            //                $this->getProductPlan()->create([
+            //                                                    'product' => $requestData['product_' . $productAmount],
+            //                                                    'plan'    => $plan->id,
+            //                                                    'amount'  => $requestData['product_amount_' . $productAmount++],
+            //                                                ]);;
+            //            }
+
+            if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
+                foreach ($requestData['products'] as $keyProduct => $product) {
+                    foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
+                        if ($keyProduct == $keyAmount) {
+                            $dataProductPlan = [
+                                'product' => $product,
+                                'plan'    => $plan->id,
+                                'amount'  => $productAmount,
+                            ];
+                            $this->getProductPlan()->create($dataProductPlan);
+                        }
+                    }
+                }
+            }
+
+            return response()->json('Sucesso', 200);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar fazer update dos dados do plano (PlansController - update)');
+            report($e);
         }
-
-        $qtdProduto = 1;
-        while (isset($requestData['produto_' . $qtdProduto]) && $requestData['produto_' . $qtdProduto] != '') {
-
-            ProductPlan::create([
-                                    'product'        => $requestData['produto_' . $qtdProduto],
-                                    'plan'           => $plan->id,
-                                    'product_amount' => $requestData['produto_qtd_' . $qtdProduto++],
-                                ]);
-        }
-
-        return response()->json('sucesso');
     }
 
     public function destroy($id)
@@ -190,7 +217,7 @@ class PlansController extends Controller
         try {
             if (isset($id)) {
                 $planId = Hashids::decode($id)[0];
-                $plan   = $this->getPlan()->find($planId);
+                $plan   = $this->getPlan()->with(['productsPlans.getProduct'])->find($planId);
 
                 return view('plans::details', ['plan' => $plan]);
             }
@@ -364,13 +391,11 @@ class PlansController extends Controller
             $planId = Hashids::decode($request->input('planId'))[0];
             $plan   = $this->getPlan()->find($planId);
             if ($plan) {
-                $idPlan       = Hashids::encode($plan->id);
                 $products     = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get()
                                      ->toArray();
                 $productPlans = $this->getProductPlan()->where('plan', $plan->id)->get()->toArray();
 
                 return view('plans::edit', [
-                    'id_plan'      => $idPlan,
                     'plan'         => $plan,
                     'products'     => $products,
                     'productPlans' => $productPlans,
@@ -382,24 +407,5 @@ class PlansController extends Controller
             Log::warning('Erro ao tentar acessar tela editar pixel (PlansController - edit)');
             report($e);
         }
-        //
-        //        $requestData = $request->all();
-        //
-        //        $plan = Plan::where('id', Hashids::decode($requestData['id']))->first();
-        //
-        //        $idPlano = Hashids::encode($plan->id);
-        //
-        //        $produtos = Produto::where('user', \Auth::user()->id)->get()->toArray();
-        //
-        //        $produtosPlanos = ProductPlan::where('plano', $plan['id'])->get()->toArray();
-        //
-        //        $form = view('planos::edit', [
-        //            'id_plano'        => $idPlano,
-        //            'plano'           => $plan,
-        //            'produtos_planos' => $produtosPlanos,
-        //            'produtos'        => $produtos,
-        //        ]);
-        //
-        //        return response()->json($form->render());
     }
 }

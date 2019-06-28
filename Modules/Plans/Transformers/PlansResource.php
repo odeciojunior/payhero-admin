@@ -14,8 +14,8 @@ class PlansResource extends Resource
             'id'          => Hashids::encode($this->id),
             'name'        => $this->name,
             'description' => $this->description,
-            'code'        => $this->code,
-            'price'       => 'R$ '.number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
+            'code'        => Hashids::encode($this->id),
+            'price'       => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status'      => $this->status,
         ];
     }

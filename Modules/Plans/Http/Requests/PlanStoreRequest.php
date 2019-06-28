@@ -3,6 +3,7 @@
 namespace Modules\Plans\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class PlanStoreRequest extends FormRequest
 {
@@ -13,12 +14,12 @@ class PlanStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project'          => 'required',
-            'name'             => 'required',
-            'price'            => 'required',
-            'description'      => 'required|max:200',
-            'product_1'        => 'required',
-            'product_amount_1' => 'required',
+            'project'         => 'required',
+            'name'            => 'required',
+            'price'           => 'required',
+            'description'     => 'required|max:200',
+            'products'        => 'required|array',
+            'product_amounts' => 'required|array',
         ];
     }
 

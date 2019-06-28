@@ -12,7 +12,7 @@
 
                     <div class="form-group col-xl-6 col-lg-6">
                         <label for="price">Preço</label>
-                        <input name="price" type="text" class="form-control price" id="price" required>
+                        <input name="price" type="text" class="form-control" id="price" required>
                     </div>
                 </div>
 
@@ -45,7 +45,7 @@
                         <div class='col-xl-10'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>
-                                <select id="product_1" name="product_1" class="form-control">
+                                <select id="product_1" name="products[]" class="form-control">
                                     <option value="" selected>Selecione</option>
                                     @foreach($products as $product)
                                         <option value="{{ $product->id }}">{{ $product->name }}</option>
@@ -56,7 +56,7 @@
                         <div class='col-xl-2'>
                             <div class="form-group">
                                 <label>Quantidade:</label>
-                                <input class="form-control products_amount" type="text" name="product_amount_1" placeholder="quantidade" data-mask='0#' value="1">
+                                <input class="form-control products_amount" type="text" name="product_amounts[]" placeholder="quantidade" data-mask='0#' value="1">
                             </div>
                         </div>
 

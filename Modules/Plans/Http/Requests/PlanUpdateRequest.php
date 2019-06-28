@@ -13,12 +13,12 @@ class PlanUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'project'          => 'nullable',
-            'name'             => 'required',
-            'price'            => 'required',
-            'description'      => 'required|max:200',
-            'product_1'        => 'required',
-            'product_amount_1' => 'required',
+            'project'         => 'nullable',
+            'name'            => 'required',
+            'price'           => 'required',
+            'description'     => 'required|max:200',
+            'products'        => 'required|array',
+            'product_amounts' => 'required|array',
         ];
     }
 

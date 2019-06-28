@@ -26,6 +26,11 @@ $(function () {
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
 
+                $(document).on('click', '.btnDelete', function (event) {
+                    event.preventDefault();
+                    $(this).parent().parent().remove();
+                });
+
                 //product
                 $('#price').mask('#.###,#0', {reverse: true});
                 var qtd_produtos = '1';
@@ -42,13 +47,15 @@ $(function () {
                     var input = nova_div.find('.products_amount');
 
                     select.attr('id', 'product_' + qtd_produtos);
-                    select.attr('name', 'product_' + qtd_produtos);
-                    input.attr('name', 'products_amount_' + qtd_produtos);
+                    // select.attr('name', 'product_' + qtd_produtos);
+                    // input.attr('name', 'products_amount_' + qtd_produtos);
                     input.addClass('products_amount');
 
                     div_produtos = nova_div;
 
                     $('#products').append(nova_div.html());
+
+
 
                 });
 
@@ -173,11 +180,17 @@ $(function () {
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
 
+                            $(document).on('click', '.btnDelete', function (event) {
+                                event.preventDefault();
+                                $(this).parent().parent().remove();
+                            });
+
                             //product
-                            $('#price').mask('#.###,#0', {reverse: true});
+                            $('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_produtos = '1';
 
                             var div_produtos = $('#produtos_div_' + qtd_produtos).parent().clone();
+
 
                             $('#add_product_plan').on('click', function () {
 
@@ -189,11 +202,12 @@ $(function () {
                                 var input = nova_div.find('.products_amount');
 
                                 select.attr('id', 'product_' + qtd_produtos);
-                                select.attr('name', 'product_' + qtd_produtos);
-                                input.attr('name', 'products_amount_' + qtd_produtos);
+                                // select.attr('name', 'product_' + qtd_produtos);
+                                // input.attr('name', 'products_amount_' + qtd_produtos);
                                 input.addClass('products_amount');
 
                                 div_produtos = nova_div;
+
 
                                 $('#products').append(nova_div.html());
 
@@ -201,7 +215,6 @@ $(function () {
 
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
-
                                 $.ajax({
                                     method: "PUT",
                                     url: "/plans/" + plan,
@@ -209,11 +222,12 @@ $(function () {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
                                     data: {
-                                        name: $("#name").val(),
-                                        description: $("#description").val(),
-                                        code: $("#code").val(),
-                                        price: $("#price").val(),
-                                        status: $("#status").val(),
+                                        name: $("#plan-name").val(),
+                                        price: $("#plan-price").val(),
+                                        description: $("#plan-description").val(),
+                                        'products[]': $("#product_1").val(),
+                                        'product_amounts[]': $("#product_amount_1").val(),
+
                                     },
                                     error: function () {
                                         if (response.status == '422') {
