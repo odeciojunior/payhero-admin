@@ -189,7 +189,7 @@ $(function () {
                             $('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_produtos = '1';
 
-                            var div_produtos = $('#produtos_div_' + qtd_produtos).parent().clone();
+                            var div_produtos = $('#produtos_div_1').clone();
 
 
                             $('#add_product_plan').on('click', function () {
@@ -209,7 +209,7 @@ $(function () {
                                 div_produtos = nova_div;
 
 
-                                $('#products').append(nova_div.html());
+                                $('#products').append('<div class="row">'+nova_div.html()+'</div>');
 
                             });
 
