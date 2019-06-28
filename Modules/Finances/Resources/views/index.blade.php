@@ -27,7 +27,7 @@
                 <div class="tab-content" id="nav-tabContent">
                     <!-- TRANSFERENCIAS -->
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <div class="row justify-content-start">
+                        <div class="row justify-content-start align-items-baseline">
                             <div class="col-12 mb-3">
                                 <h5 class="title-pad"> Nova transferência </h5>
                                 <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
@@ -112,7 +112,7 @@
                                         <label for="company"> Valor a transferir </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon1"><span class="currency">R$</span>0</span>
+                                                <span class="input-group-text" id="basic-addon1"><span class="currency">R$</span></span>
                                             </div>
                                             <input type="text" class="form-control" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
                                             <button class="btn btn-success btn-sacar ml-3"> 
