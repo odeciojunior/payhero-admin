@@ -2,7 +2,9 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -39,17 +41,43 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Sale extends Model
 {
+    use FoxModelTrait, SoftDeletes;
+    protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
-    protected $fillable = ['owner', 'affiliate', 'client', 'delivery', 'payment_form', 'total_paid_value', 'shipment_value', 'start_date', 'end_date', 'gateway_id', 'gateway_status', 'installments_amount', 'installments_value', 'flag', 'boleto_link', 'boleto_digitable_line', 'boleto_due_date', 'cupom_code', 'shopify_order', 'ip', 'dolar_quotation', 'created_at', 'deleted_at', 'updated_at'];
+    protected $fillable = [
+        'owner',
+        'affiliate',
+        'client',
+        'delivery',
+        'payment_form',
+        'total_paid_value',
+        'shipment_value',
+        'start_date',
+        'end_date',
+        'gateway_id',
+        'gateway_status',
+        'installments_amount',
+        'installments_value',
+        'flag',
+        'boleto_link',
+        'boleto_digitable_line',
+        'boleto_due_date',
+        'cupom_code',
+        'shopify_order',
+        'ip',
+        'dolar_quotation',
+        'project',
+        'created_at',
+        'deleted_at',
+        'updated_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -97,5 +125,13 @@ class Sale extends Model
     public function transactions()
     {
         return $this->hasMany('App\Entities\Transaction', 'sale');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function project()
+    {
+        return $this->belongsTo('App\Entities\Project', 'project');
     }
 }

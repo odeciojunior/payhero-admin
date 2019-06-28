@@ -211,4 +211,12 @@ class Project extends Model
     {
         return $this->hasMany('App\Entities\ZenviaSms', 'project');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sales()
+    {
+        return $this->hasMany('App\Entities\Sale', 'project');
+    }
 }

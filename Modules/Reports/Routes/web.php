@@ -13,6 +13,10 @@
 
 Route::prefix('reports')->group(function() {
     Route::get('/', 'ReportsController@index')->name('reports.index');
+
+//    Route::get('/search', 'ReportsController@search')->name('reports.search');
 });
+
+
 
 

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta name="description" content="cloudfox">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/assets/img/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/assets/img/favicon-32x32.png') }}">
@@ -15,41 +14,36 @@
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
     <title>CloudFox - Admin</title>
-
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/site.min.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
-
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
-
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
-
     <!-- New CSS -->
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/reports.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+@stack('css')
 
-    @stack('css')
-
-    <!-- Scripts -->
+<!-- Scripts -->
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
         Breakpoints();
     </script>
-
     <!-- Datatables -->
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 </head>
