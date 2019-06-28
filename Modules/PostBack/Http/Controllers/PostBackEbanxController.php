@@ -89,6 +89,8 @@ class PostBackEbanxController extends Controller {
 
                         $user = User::find($company['user']);
 
+                        Log::write('info', 'Notificação do Ebanx : '. print_r($user, true));
+
                         $transaction->update([
                             'status'            => 'paid',
                             'release_date'      => Carbon::now()->addDays($user['release_money_days'])->format('Y-m-d'),
@@ -136,3 +138,5 @@ class PostBackEbanxController extends Controller {
     }
 
 }
+
+
