@@ -44,7 +44,7 @@ class SalesResource extends Resource {
         }
 
         return [
-            'id'              => '#'.$this->id,
+            'id'              => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)), 
             'project'         => $project,
             'product'         => $product,
             'client'          => $client['name'],
