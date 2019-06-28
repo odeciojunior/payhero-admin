@@ -15,7 +15,7 @@ class CompanyResource extends Resource
      */
     private function documentStatus()
     {
-        //criar logica para trazer o status correto
+        //TODO criar logica para trazer o status correto
         return $this->getEnum('status', 2, true);
     }
 
