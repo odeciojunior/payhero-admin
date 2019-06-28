@@ -53,7 +53,7 @@ class PostBackEbanxController extends Controller {
         if($response->payment->status != $sale->gateway_status){
 
             $sale->update([
-                'gateway_status' => $response->payment->status
+                'gateway_status' => $response->payment->status,
             ]);
 
             $transactions = Transaction::where('sale',$sale->id)->get()->toArray();
@@ -90,8 +90,9 @@ class PostBackEbanxController extends Controller {
                         $user = User::find($company['user']);
 
                         $transaction->update([
-                            'status'       => 'paid',
-                            'release_date' => Carbon::now()->addDays($user['boleto_antecipation_money_days'])->format('Y-m-d')
+                            'status'            => 'paid',
+                            'release_date'      => Carbon::now()->addDays($user['release_money_days'])->format('Y-m-d'),
+                            'antecipation_date' => Carbon::now()->addDays($user['boleto_antecipation_money_days'])->format('Y-m-d'),
                         ]);
                     }
                     else{
