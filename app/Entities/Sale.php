@@ -4,7 +4,6 @@ namespace App\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -41,7 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Sale extends Model
 {
-    use FoxModelTrait, SoftDeletes;
+    use FoxModelTrait;
     protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.

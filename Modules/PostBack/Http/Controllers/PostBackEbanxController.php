@@ -75,7 +75,7 @@ class PostBackEbanxController extends Controller {
 
                 $sale->update([
                     'end_date'       => \Carbon\Carbon::now(),
-                    'gateway_status' => 'paid',
+                    'gateway_status' => 'CO',
                     'status'         => '1'
                 ]);
 
@@ -87,12 +87,12 @@ class PostBackEbanxController extends Controller {
 
                         $company = Company::find($transaction['company']);
 
-                        $user = User::find($company['user']);
+                        $user = User::find($company['user_id']);
 
                         $transaction->update([
                             'status'            => 'paid',
-                            'release_date'      => Carbon::now()->addDays($user['release_money_days'])->format('Y-m-d'),
-                            'antecipation_date' => Carbon::now()->addDays($user['boleto_antecipation_money_days'])->format('Y-m-d'),
+                            'release_date'      => Carbon::now()->addDays($user->release_money_days)->format('Y-m-d'),
+                            'antecipation_date' => Carbon::now()->addDays($user->boleto_antecipation_money_days)->format('Y-m-d'),
                         ]);
                     }
                     else{
@@ -136,3 +136,5 @@ class PostBackEbanxController extends Controller {
     }
 
 }
+
+

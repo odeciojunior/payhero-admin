@@ -44,9 +44,9 @@ return [
             'length' => '15',
         ],
 
-        'alternative' => [
-            'salt' => 'your-salt-string',
-            'length' => 'your-length-integer',
+        'sale_id' => [
+            'salt' => '7d124336feb18d280c0f32d7fc5e57a1',
+            'length' => '8',
         ],
 
     ],
