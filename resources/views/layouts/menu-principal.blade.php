@@ -293,14 +293,14 @@
         }
     });
 
-    $( document ).ready(function() {
-      if ('mm.panels').hasClass('is-enabled') {
-        $('.menu-footer').hide;
-      }
+    // $( document ).ready(function() {
+    //   if ('mm.panels').hasClass('is-enabled') {
+    //     $('.menu-footer').hide;
+    //   }
 
-      if('mm.panels').hasClass('is-disabled') {
-        $('.menu-footer').show;
-      }
-    });
+    //   if('mm.panels').hasClass('is-disabled') {
+    //     $('.menu-footer').show;
+    //   }
+    // });
     
 </script>
