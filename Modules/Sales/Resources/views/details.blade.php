@@ -61,14 +61,39 @@
                                     <td class="text-left">{!! $sale['boleto_digitable_line'] !!}</td>
                                 </tr>
                             @endif
-                            @if($checkout && $checkout['src'] != '')
+                            @if($checkout != null)
                                 <tr style="height: 60px">
                                     <td colspan='3' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES ADICIONAIS</b></td>
                                 </tr>
                                 <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">UTMs:</td>
+                                    <td style="width: 40%" class="text-right">SRC:</td>
                                     <td style="width:20px">
                                     <td class="text-left">{!! $checkout['src'] !!}</td>
+                                </tr>    
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">UTM source:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $checkout['utm_source'] !!}</td>
+                                </tr>
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">UTM medium:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $checkout['utm_medium'] !!}</td>
+                                </tr>
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">UTM campaign:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $checkout['utm_campaign'] !!}</td>
+                                </tr>
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">UTM term:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $checkout['utm_term'] !!}</td>
+                                </tr>
+                                <tr style="height: 40px; margin-top:10px">
+                                    <td style="width: 40%" class="text-right">UTM content:</td>
+                                    <td style="width:20px">
+                                    <td class="text-left">{!! $checkout['utm_content'] !!}</td>
                                 </tr>
                             @endif
                         </tbody>
