@@ -1,19 +1,18 @@
 $(document).ready(function () {
 
-    var project = $(".project").val();
-
     /// calendario ///////////
-    var start = moment().subtract(29, 'days');
-    var end = moment();
-    updateReports(project, start, end);
+    var startDate = moment().subtract(29, 'days');
+    var endDate = moment();
 
-    function cb(start, end) {
-        $('#reportrange span').html(start.format('D  MMMM , YYYY') + ' - ' + end.format('D  MMMM , YYYY'));
-    }
+    /*  function cb(start, end) {
+          $('#reportrange span').html(start.format('D  MMMM , YYYY') + ' - ' + end.format('D  MMMM , YYYY'));
+      }*/
+
+    updateReports();
 
     $('#reportrange').daterangepicker({
-        startDate: start,
-        endDate: end,
+        startDate: startDate,
+        endDate: endDate,
         lang: 'pt-br',
         "timePicker24Hour": true,
         "autoApply": true,
@@ -28,8 +27,6 @@ $(document).ready(function () {
         locale: {
             "format": "DD/MM/YYYY",
             "separator": "-",
-            "fromLabel": "From",
-            "toLabel": "To",
             "customRangeLabel": 'Personalizado',
             "daysOfWeek": [
                 'Dom',
@@ -71,33 +68,43 @@ $(document).ready(function () {
             firstDay: 1
         },
         "alwaysShowCalendar": true,
-    }, cb);
+    }, function (start, end) {
+        startDate = start;
+        endDate = end;
+        alert(startDate);
+    });
 
-    cb(start, end);
+    // cb(start, end);
     /// calendario Fim ///////////
 
-    $(".project").change(function () {
-        project = $(".project option:selected").val();
+    $("#project").on('change', function () {
+        $('#project').val($(this).val());
         updateReports();
     });
 
-    function updateReports(project,start, end) {
+    function updateReports() {
         $.ajax({
-            method: 'GET',
-            url: '/reports',
-            data: {
-                project: project,
-                dateStart: start,
-                dateEnd: end,
-            },
+            url: '/reports/getValues/' + $("#project").val(),
+            type: 'GET',
+            data: {project: $("#project").val()},
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
-            success: function (data) {
+            success: function (response) {
+                console.log(response);
+                $("#revenue-generated").html(response.totalPaidValue);
+                $("#qtd-aproved").html(response.contAproved);
+                $("#qtd-boletos").html(response.contBoleto);
+                $("#qtd-recusadas").html(response.contRecused);
+                $("#qtd-reembolso").html(response.contChargeBack);
+                $("#percent-credit-card").html(response.totalPercentCartao + ' %');
+                $("#percent-values-boleto").html(response.totalPercentPaidBoleto + ' %');
 
+                $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
+                $("#boleto-value").html('R$ ' + response.totalValueBoleto);
             }
         })
     }

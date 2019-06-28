@@ -14,7 +14,7 @@
                     <div class="row justify-content-between align-items-start">
                         <div class="col-3">
                             <div class="input-holder">
-                                <select class='project' class="form-control">
+                                <select id='project' class="form-control">
                                     @foreach($projects as $project)
                                         <option value='{{$project->id_code}}'>{{$project->name}}</option>
                                     @endforeach
@@ -44,11 +44,11 @@
                                         Personalizado
                                     </a>
                                 </div>--}}
-                                <div id='reportrange' class='col-lg-5 text-right' style='background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%;'>
-                                    <i class='fa fa-caldendar'></i>&nbsp;
+                                {{--<div id='reportrange' class='col-lg-5 text-right' style='background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%;'>
+                                    <i class='fa fa-calendar'></i>&nbsp;
                                     <span></span>
                                     <i class='fa fa-caret-down'></i>
-                                </div>
+                                </div>--}}
                             </div>
                         </div>
                     </div>
@@ -74,23 +74,24 @@
                                         <div class="row justify-content-between gutter_top">
                                             <div class="col-lg-2">
                                                 <h6 class="label-price relatorios"> Receita gerada </h6>
-                                                <h4 class="number green">R$ 2.500,00</h4>
+                                                <h4 class="number green " id='revenue-generated'>0</h4>
                                             </div>
                                             <div class="col-lg-2">
                                                 <h6 class="label-price relatorios"> Aprovadas </h6>
-                                                <h4 class="number green"><i class="fas fa-check"></i>20</h4>
+                                                <h4 class="number green" id='qtd-aproved'>0<i class="fas fa-check"></i>
+                                                </h4>
                                             </div>
                                             <div class="col-lg-2">
                                                 <h6 class="label-price relatorios"> Boletos </h6>
-                                                <h4 class="number gray">62</h4>
+                                                <h4 class="number gray" id='qtd-boletos'>0</h4>
                                             </div>
                                             <div class="col-lg-2">
                                                 <h6 class="label-price relatorios"> Recusadas </h6>
-                                                <h4 class="number red">3</h4>
+                                                <h4 class="number red" id='qtd-recusadas'>0</h4>
                                             </div>
                                             <div class="col-lg-2">
                                                 <h6 class="label-price relatorios"> Reembolsos </h6>
-                                                <h4 class="number purple">2</h4>
+                                                <h4 class="number purple" id='qtd-reembolso'>0</h4>
                                             </div>
                                             <div class="col-lg-12">
                                                 <div class="grafico">
@@ -103,7 +104,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12 gutter_top">
+                            {{--<div class="col-lg-12 gutter_top">
                                 <div class="card shadow">
                                     <div class="card-header">
                                         <h4> Origens </h4>
@@ -155,7 +156,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--}}
                             <div class="col-lg-6 gutter_top">
                                 <div class="card shadow">
                                     <div class="card-header">
@@ -170,10 +171,10 @@
                                                             Desktop
                                                         </div>
                                                         <div class="col">
-                                                            0%
+                                                            {{--0%--}} Em Breve
                                                         </div>
                                                         <div class="col-lg-3">
-                                                            <span class="money-td green">R$500,00</span>
+                                                            <span class="money-td green">{{--R$500,00--}}Em Breve</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -185,10 +186,10 @@
                                                             Mobile
                                                         </div>
                                                         <div class="col">
-                                                            30%
+                                                            {{-- 30%--}}Em Breve
                                                         </div>
                                                         <div class="col-lg-3">
-                                                            <span class="money-td green">R$1.200,00</span>
+                                                            <span class="money-td green">{{--R$1.200,00--}}Em Breve</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -200,10 +201,10 @@
                                                             Tablet
                                                         </div>
                                                         <div class="col">
-                                                            60%
+                                                            {{--60%--}}Em Breve
                                                         </div>
                                                         <div class="col-lg-3">
-                                                            <span class="money-td green">R$500,00</span>
+                                                            <span class="money-td green">{{--R$500,00--}}Em Breve</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -211,7 +212,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card shadow gutter_top">
+                                <div class="card shadow  gutter_top">
                                     <div class="card-header">
                                         <h4> Meios de Pagamento </h4>
                                     </div>
@@ -223,14 +224,14 @@
                                                         <div class="col-lg-4">
                                                             Cartão
                                                         </div>
-                                                        <div class="col-lg-2">
-                                                            30%
+                                                        <div class="col-lg-4" id='percent-credit-card'>
+                                                            0
                                                         </div>
-                                                        <div class="col-lg-2">
+                                                        {{--<div class="col-lg-2" id='percent-credit-total'>
                                                             16%
-                                                        </div>
+                                                        </div>--}}
                                                         <div class="col-lg-4">
-                                                            <span class="money-td green">R$2.500,00</span>
+                                                            <span class="money-td green" id='credit-card-value'></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -241,14 +242,14 @@
                                                         <div class="col-lg-4">
                                                             Boleto
                                                         </div>
-                                                        <div class="col-lg-2">
-                                                            30%
+                                                        <div class="col-lg-4" id='percent-values-boleto'>
+                                                            0
                                                         </div>
-                                                        <div class="col-lg-2">
-                                                            16%
-                                                        </div>
+                                                        {{-- <div class="col-lg-2" id='percent-boleto-total'>
+                                                             16%
+                                                         </div>--}}
                                                         <div class="col-lg-4">
-                                                            <span class="money-td green">R$2.500,00</span>
+                                                            <span class="money-td green" id='boleto-value'></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -257,18 +258,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 gutter_top ">
+                            {{--<div class="col-lg-6 gutter_top ">
                                 <div class="card shadow">
                                     <div class="card-header">
                                         <h4> Páginas </h4>
                                     </div>
                                     <div class="data-holder empty-400"></div>
                                 </div>
-                            </div>
+                            </div>--}}
                         </div>
                     </div>
                     <!-- VISITAS -->
-                    <div class="tab-pane fade" id="nav-visitas" role="tabpanel">
+                    {{--<div class="tab-pane fade" id="nav-visitas" role="tabpanel">
                         <div class="row justify-content-between">
                             <div class="col-lg-12">
                                 <div class="card shadow">
@@ -416,7 +417,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>
