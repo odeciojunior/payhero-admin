@@ -15,19 +15,19 @@
 
     <div class="page-content container">
 
-      <div class="panel pt-10 p-10" style="min-height: 300px">
-          <table class="table table-hover">
-            <thead class="text-center">
+      <div class="card shadow" style="min-height: 300px">
+          <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td><b>Data</b></td>
-                    <td><b>Cliente</b></td>
-                    <td><b>Email</b></td>
-                    <td><b>Sms</b></td>
-                    <td><b>Status</b></td>
-                    <td><b>Valor</b></td>
-                    <td><b>Link</b></td>
-                    <td></td>
-                    <td><b>Detalhes</b></td>
+                    <td class="table-title" >Data</td>
+                    <td class="table-title">Cliente</td>
+                    <td class="table-title">Email</td>
+                    <td class="table-title">Sms</td>
+                    <td class="table-title">Status</td>
+                    <td class="table-title">Valor</td>
+                    <td class="table-title">Link</td>
+                    <td class="table-title"></td>
+                    <td class="table-title">Detalhes</td>
                 </tr>
             </thead>
             <tbody id="table_data">
@@ -36,7 +36,7 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <ul id="pagination" class="pagination-sm m-30" style="margin-top:10px;position:relative;float:right">
+          <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
               {{-- js carrega... --}}
           </ul>
         </div>

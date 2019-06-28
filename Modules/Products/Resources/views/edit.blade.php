@@ -21,7 +21,7 @@
     <form method="post" action="/products/{!! Hashids::encode($product->id) !!}" enctype="multipart/form-data">
         @method('PUT')
         @csrf
-        <div class="panel pt-30 p-30" data-plugin="matchHeight">
+        <div class="card shadow pt-15">
 
             <nav>
                 <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
@@ -30,15 +30,17 @@
                 </div>
             </nav>
 
+            <div class="p-15">
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active p-30" id="nav-basic" role="tabpanel" aria-labelledby="nav-basic-tab">
 
                     <div class="row justify-content-between align-items-baseline">
 
-                    <div class="col-lg-12">
+                    <div class="col-lg-10">
                         <h3> 1. Informações Básicas </h3>
-                        <p class="pt-10"> Preencha atentamente as informações sobre seu produto </p>
+                        <p> Preencha atentamente as informações sobre seu produto </p>
                     </div>
+
                     <div class="col-lg-4">
 
                         <div class="d-flex flex-column">
@@ -103,17 +105,21 @@
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for="cost">Custo</label>
+                                <label for="cost">Custo <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span> </label>
                                 <input name="cost" type="text" class="input-pad money" id="cost" value="{!! $product->cost !!}" placeholder="Digite o custo" autocomplete="off">
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for="price">Preço</label>
+                                <label for="price">Preço <span class="ml-5 sm-text text-muted" style="font-size: 0.8em; font-weight: normal;"> Opcional </span> </label>
                                 <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" value="{!! $product->price !!}" autocomplete="off">
                             </div>
 
-                            <div id="div_next_step" class="form-group col-lg-12 text-right">
-                                <button id="next_step" type="button" class="btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i></button>
+                        
+                            <div id="div_next_step" class="form-group col-lg-12 d-flex justify-content-between mt-10">
+                            <a class="btn btn-danger d-flex delete-product white" role="button" data-placement='top' data-toggle='tooltip' title='Excluir' product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}" data-original-title="Excluir">
+                                <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i>  Excluir produto 
+                             </a>
+                                <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i></button>
                             </div>
 
                             <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
@@ -181,6 +187,9 @@
                 </div>
 
             </div>
+            </div>
+
+            
 
         </form>
     </div>

@@ -1,6 +1,4 @@
-tbody tr:hover {
-    transform: scale(1.03);
-}
+
 
 .table-responsive {
     overflow-x: hidden;

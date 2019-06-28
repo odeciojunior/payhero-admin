@@ -169,19 +169,19 @@
     <ul class="site-menu" style="margin-top:10px">
       <li class="site-menu-item has-sub">
         <a href="{{ route('dashboard') }}">
-           <img id="dashboard_img" src="{{ asset('modules/global/assets/img/svg/dashboard.svg') }}">
-            <span class="site-menu-title">Dashboard</span>
+          <i class="material-icons align-middle">dashboard</i>
+            <span class="site-menu-title ml-5">Dashboard</span>
         </a>
       </li>
       <li class="site-menu-item has-sub disabled">
         <a class="disabled"  href="{{ route('showcase') }}">
-        <img id="showcase_img" src="{{ asset('modules/global/assets/img/svg/vitrine.svg') }}">
+        <i class="material-icons align-middle">store</i>
             <span class="site-menu-title">Vitrine (em breve)</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a href="javascript:void(0)">
-        <img id="sales_img" src="{{ asset('modules/global/assets/img/svg/vendas.svg') }}">
+        <i class="material-icons align-middle">shopping_basket</i>
             <span class="site-menu-title">Vendas</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -205,25 +205,25 @@
       </li>
       <li class="site-menu-item has-sub">
         <a  href="/projects">
-        <img id="projects_img" src="{{ asset('modules/global/assets/img/svg/projetos.svg') }}" style="width:17px;">
+        <i class="material-icons">style</i>
             <span class="site-menu-title">Projetos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
           <a href="{{ route('products.index') }}">
-        <img id="products_img" src="{{ asset('modules/global/assets/img/svg/produtos.svg') }}">
+          <i class="material-icons">laptop</i>
             <span class="site-menu-title">Produtos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub  disabled">
         <a class="disabled"  href="{{ route('attendance') }}">
-        <img id="attendance_img" src="{{ asset('modules/global/assets/img/svg/atendimento.svg') }}">
+        <i class="material-icons">chat_bubble_outline</i>
             <span class="site-menu-title">Atendimento (em breve)</span>
         </a>
       </li>
       <li class="site-menu-item has-sub  disabled">
         <a href="javascript:void(0)" class="disabled">
-        <img id="affiliates_img" src="{{ asset('modules/global/assets/img/svg/afiliados.svg') }}">
+        <i class="material-icons">people</i>
             <span class="site-menu-title">Afiliados (em breve)</span>
             <span class="site-menu-arrow"></span>
         </a>
@@ -242,25 +242,25 @@
       </li>
       <li class="site-menu-item has-sub">
         <a href="{!! route('finances') !!}">
-        <img id="finances_img" src="{{ asset('modules/global/assets/img/svg/financas.svg') }}">
+        <i class="material-icons align-middle">local_atm</i>
             <span class="site-menu-title">Finanças</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a href="{!! route('reports.index') !!}">
-        <img id="reports_img" src="{{ asset('modules/global/assets/img/svg/configuracao.svg') }}">
+        <i class="material-icons">insert_chart_outlined</i>
             <span class="site-menu-title">Relatórios</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a href="{{ route('apps') }}">
-        <img id="apps_img" src="{{ asset('modules/global/assets/img/svg/aplicativos.svg') }}">
+        <i class="material-icons">apps</i>
             <span class="site-menu-title">Aplicativos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
         <a href="{{ route('invitations.invites') }}">
-        <img id="apps_img" src="{{ asset('modules/global/assets/img/svg/convites.svg') }}">
+        <i class="material-icons">person_add</i>
             <span class="site-menu-title">Convites</span>
         </a>
       </li>
@@ -279,3 +279,13 @@
       </li>
     </ul>
 </div>
+
+
+<script>
+    var links = $('.site-menubar .site-menu-item a');
+    $.each(links, function (key, va) {
+        if (va.href == document.URL) {
+            $(this).addClass('menu-active');
+        }
+    });
+</script>
