@@ -166,9 +166,9 @@
 </nav>
 
  
-<div class="menu-footer">
+<!--div class="menu-footer">
       <div class="menu-footer-content"> CloudFox LLC <br> <a href="#"> Termos e Condições </a>  </div>
-</div>
+</div-->
 
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
