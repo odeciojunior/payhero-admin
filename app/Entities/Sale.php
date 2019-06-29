@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $end_date
  * @property string $gateway_id
  * @property string $gateway_status
+ * @property string $status
  * @property int $installments_amount
  * @property string $installments_value
  * @property string $flag
@@ -62,6 +63,7 @@ class Sale extends Model
         'end_date',
         'gateway_id',
         'gateway_status',
+        'status',
         'installments_amount',
         'installments_value',
         'flag',
