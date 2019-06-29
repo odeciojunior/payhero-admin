@@ -9,6 +9,7 @@
             <div class="row">
                 <div class="col-12">
                     <h1 class="page-title">Relatórios</h1>
+                    <span type="hidden" class="error-data"></span>
                 </div>
                 <div class="col-lg-12 mt-30">
                     <div class="row justify-content-between align-items-start">
@@ -21,21 +22,11 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-6 align-items-baseline">
+                        <div class="col-lg-4 align-items-baseline">
+                            <div class="col-4">
+
+                            </div>
                             <div class="row justify-content-end align-items-center">
-                                {{--<div class="col-lg-3 text-right">
-                                    <div class="btn-group" data-toggle="buttons" role="group" style="margin-top: 2px;">
-                                        <label class="btn btn-outline-primary fix-m">
-                                            <input type="radio" name="radio-filtro" value="week" checked=""> Semana
-                                        </label>
-                                        <label class="btn btn-outline-primary fix-m">
-                                            <input type="radio" name="radio-filtro" value="month"> Mês
-                                        </label>
-                                        <label class="btn btn-outline-primary fix-m active">
-                                            <input type="radio" name="radio-filtro" value="year"> Ano
-                                        </label>
-                                    </div>
-                                </div>--}}
                                 {{--<div class="col-lg-5 text-right" id='calendar-range'>
                                     <a id="calendar" class="text-filtros">
                                         <svg class="icon-filtro" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -44,11 +35,17 @@
                                         Personalizado
                                     </a>
                                 </div>--}}
-                                {{--<div id='reportrange' class='col-lg-5 text-right' style='background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%;'>
-                                    <i class='fa fa-calendar'></i>&nbsp;
-                                    <span></span>
-                                    <i class='fa fa-caret-down'></i>
-                                </div>--}}
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text px-1 px-md-2">
+                                        <svg class="icon-filtro" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                            <path d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z"></path>
+                                        </svg>
+                                    </div>
+                                    <input type="text" name="daterange" class="form-control pull-right" value="">
+
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -421,13 +418,13 @@
                 </div>
             </div>
         </div>
-        @endsection
+    </div>
+@endsection
 
-        @push('scripts')
-            <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-            <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
-            <script type='text/javascript' src='{{asset('modules/reports/js/reports.js')}}'></script>
-    @endpush
+@push('scripts')
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js')}}'></script>
+@endpush
 

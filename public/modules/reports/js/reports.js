@@ -1,43 +1,33 @@
-$(document).ready(function () {
-
-    /// calendario ///////////
-    var startDate = moment().subtract(29, 'days');
-    var endDate = moment();
-
-    /*  function cb(start, end) {
-          $('#reportrange span').html(start.format('D  MMMM , YYYY') + ' - ' + end.format('D  MMMM , YYYY'));
-      }*/
-
-    updateReports();
-
-    $('#reportrange').daterangepicker({
-        startDate: startDate,
-        endDate: endDate,
-        lang: 'pt-br',
-        "timePicker24Hour": true,
-        "autoApply": true,
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Último 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este Mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês Passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
+$(function () {
+    var startDate = moment().subtract('days', 29).format('YYYY-MM-DD');
+    var endDate = moment().format('YYYY-MM-DD');
+    $('input[name="daterange"]').daterangepicker({
+        startDate: moment().subtract('days', 29),
+        endDate: moment(),
+        opens: 'left',
+        maxDate: moment().endOf("day"),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
+        autoUpdateInput: true,
         locale: {
-            "format": "DD/MM/YYYY",
-            "separator": "-",
-            "customRangeLabel": 'Personalizado',
-            "daysOfWeek": [
+            locale: 'pt-br',
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
+            fromLabel: 'De',
+            toLabel: 'Até',
+            customRangeLabel: 'Customizado',
+            weekLabel: 'W',
+            daysOfWeek: [
                 'Dom',
                 'Seg',
                 'Ter',
                 'Qua',
                 'Qui',
                 'Sex',
-                'Sab',
+                'Sab'
             ],
-            "monthNames": [
+            monthNames: [
                 'Janeiro',
                 'Fevereiro',
                 'Março',
@@ -49,44 +39,55 @@ $(document).ready(function () {
                 'Setembro',
                 'Outubro',
                 'Novembro',
-                'Dezembro',
+                'Dezembro'
             ],
-            "monthNamesShort": [
-                'Jan',
-                'Fev',
-                'Mar',
-                'Abr',
-                'Mai',
-                'Jun',
-                'Jul',
-                'Ago',
-                'Set',
-                'Out',
-                'Nov',
-                'Dez',
-            ],
-            firstDay: 1
+            firstDay: 0,
         },
-        "alwaysShowCalendar": true,
+        ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        },
     }, function (start, end) {
-        startDate = start;
-        endDate = end;
-        alert(startDate);
-    });
+        startDate = start.format('YYYY-MM-DD');
+        endDate = end.format('YYYY-MM-DD');
+        console.log(startDate, endDate);
+        updateReports();
 
-    // cb(start, end);
-    /// calendario Fim ///////////
+    });/* function (start, end, label) {
+        endDate = end.format('YYYY-MM-DD');
+        startDate = start.format('YYYY-MM-DD');
+        // console.log(endDate, startDate);
+        updateReports();
+    */
+
+
+    /*$('#date_range_requests').on('change', function (e) {
+        e.preventDefault();
+        updateReports();
+    });*/
+
 
     $("#project").on('change', function () {
         $('#project').val($(this).val());
         updateReports();
+
     });
 
     function updateReports() {
+        var date_range = $('#date_range_requests').val();
+        console.log(date_range);
         $.ajax({
             url: '/reports/getValues/' + $("#project").val(),
             type: 'GET',
-            data: {project: $("#project").val()},
+            data: {
+                project: $("#project").val(),
+                endDate: endDate,
+                startDate: startDate
+            },
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -94,19 +95,38 @@ $(document).ready(function () {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
             success: function (response) {
-                console.log(response);
-                $("#revenue-generated").html(response.totalPaidValue);
-                $("#qtd-aproved").html(response.contAproved);
-                $("#qtd-boletos").html(response.contBoleto);
-                $("#qtd-recusadas").html(response.contRecused);
-                $("#qtd-reembolso").html(response.contChargeBack);
-                $("#percent-credit-card").html(response.totalPercentCartao + ' %');
-                $("#percent-values-boleto").html(response.totalPercentPaidBoleto + ' %');
+                if (response.msg) {
+                    $(".error-data").css('display', 'block').addClass('text-danger').html(response.msg);
+                    $("#revenue-generated").html(0);
+                    $("#qtd-aproved").html(0);
+                    $("#qtd-boletos").html(0);
+                    $("#qtd-recusadas").html(0);
+                    $("#qtd-reembolso").html(0);
+                    $("#percent-credit-card").html(0);
+                    $("#percent-values-boleto").html(0);
 
-                $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
-                $("#boleto-value").html('R$ ' + response.totalValueBoleto);
+                    $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
+                    $("#boleto-value").html('R$ ' + response.totalValueBoleto);
+
+                } else {
+                    $(".error-data").css('display', 'none');
+                    $("#revenue-generated").html(response.totalPaidValueAproved);
+                    $("#qtd-aproved").html(response.contAproved);
+                    $("#qtd-boletos").html(response.contBoleto);
+                    $("#qtd-recusadas").html(response.contRecused);
+                    $("#qtd-reembolso").html(response.contChargeBack);
+                    $("#percent-credit-card").html(response.totalPercentCartao + ' %');
+                    $("#percent-values-boleto").html(response.totalPercentPaidBoleto + ' %');
+
+                    $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
+                    $("#boleto-value").html('R$ ' + response.totalValueBoleto);
+                }
+
             }
         })
     }
+
+    updateReports();
+
 
 });
