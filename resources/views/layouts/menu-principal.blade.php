@@ -164,7 +164,12 @@
       <!-- End Site Navbar Seach -->
     </div>
 </nav>
+
  
+<div class="menu-footer">
+      <div class="menu-footer-content"> CloudFox LLC <br> <a href="#"> Termos e Condições </a>  </div>
+</div>
+
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
       <li class="site-menu-item has-sub">
@@ -272,13 +277,12 @@
         </a>
       </li>  --}}
 
-      <li class="site-menu-item has-sub ">
-        <a target="_blank" href="https://cloudfox.net/terms">
-            <span class="site-menu-title footer-nav-link">Termos e Políticas</span>
-        </a>
-      </li>
     </ul>
+
 </div>
+
+</div>
+
 
 
 <script>
@@ -288,4 +292,15 @@
             $(this).addClass('menu-active');
         }
     });
+
+    // $( document ).ready(function() {
+    //   if ('mm.panels').hasClass('is-enabled') {
+    //     $('.menu-footer').hide;
+    //   }
+
+    //   if('mm.panels').hasClass('is-disabled') {
+    //     $('.menu-footer').show;
+    //   }
+    // });
+    
 </script>
