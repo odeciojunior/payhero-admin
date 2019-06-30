@@ -107,7 +107,6 @@ $(function () {
 
                     $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
                     $("#boleto-value").html('R$ ' + response.totalValueBoleto);
-
                 } else {
                     $(".error-data").css('display', 'none');
                     $("#revenue-generated").html(response.totalPaidValueAproved);
@@ -121,7 +120,7 @@ $(function () {
                     $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
                     $("#boleto-value").html('R$ ' + response.totalValueBoleto);
                 }
-
+                updateGraph(response.chartData);
             }
         })
     }
@@ -129,4 +128,89 @@ $(function () {
     updateReports();
 
 
+    function updateGraph(chartData){
+
+        var scoreChart=function(id, labelList, series1List, series2List) {
+            var scoreChart=new Chartist.Line("#"+id, {
+                labels: labelList, series: [series1List, series2List]
+            }, 
+            {
+                lineSmooth:Chartist.Interpolation.simple( {
+                    divisor: 2
+                }), 
+                fullWidth:!0, 
+                chartPadding: {
+                    right: 25
+                }, 
+                series: {
+                    "credit-card-data": {
+                        showArea: !0
+                    }, 
+                    "boleto-data": {
+                        showArea: !0
+                    }
+                }, 
+                axisX: {
+                    showGrid: !1
+                },
+                axisY: {
+                    labelInterpolationFnc:function(value) {
+                        return chartData.currency + value;
+                        return value/1e3+"K"
+                    }, 
+                    scaleMinSpace:40
+                }, 
+                plugins:[
+                    Chartist.plugins.tooltip({
+                        position: 'bottom'
+                    }),
+                    Chartist.plugins.legend()
+                ],
+                low:0,
+                height:300
+            });
+            scoreChart.on("created", function(data) {
+                var defs=data.svg.querySelector("defs")||data.svg.elem("defs"), filter=(data.svg.width(), data.svg.height(), defs.elem("filter", {
+                    x: 0, y: "-10%", id: "shadow"+id
+                }, "", !0));
+                return filter.elem("feGaussianBlur", {
+                    in: "SourceAlpha", stdDeviation: "8", result: "offsetBlur"
+                }), 
+                filter.elem("feOffset", {
+                    dx: "0", dy: "10"
+                }), 
+                filter.elem("feBlend", {
+                    in: "SourceGraphic", mode: "multiply"
+                }), 
+                defs
+            }
+            ).on("draw", function(data) {
+                "line"===data.type?data.element.attr( {
+                    filter: "url(#shadow"+id+")"
+                }
+                ):"point"===data.type&&new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                    x1: data.x, y1: data.y, x2: data.x+.01, y2: data.y, class: "ct-point-content"
+                }), 
+                "line"!==data.type&&"area"!=data.type||data.element.animate( {
+                    d: {
+                        begin: 1e3*data.index, dur: 1e3, from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(), to: data.path.clone().stringify(), easing: Chartist.Svg.Easing.easeOutQuint
+                    }
+                })
+            })
+        },
+        labelList= chartData.label_list, 
+        creditCardSalesData= {
+            name: "Cartão de crédito", data: chartData.credit_card_data
+        }, 
+        boletoSalesData= {
+            name: "Boleto", data: chartData.boleto_data
+        };
+        createChart=function(button) {
+                scoreChart("scoreLineToDay", labelList, creditCardSalesData, boletoSalesData);
+        },
+        createChart(), $(".chart-action li a").on("click", function() {
+            createChart($(this))
+        })
+
+    }
 });

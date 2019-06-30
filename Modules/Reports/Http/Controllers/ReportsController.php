@@ -2,11 +2,13 @@
 
 namespace Modules\Reports\Http\Controllers;
 
-use App\Entities\Project;
-use App\Entities\Sale;
-use App\Entities\UserProject;
 use Exception;
+use Carbon\Carbon;
+use App\Entities\Sale;
+use App\Entities\Company;
+use App\Entities\Project;
 use Illuminate\Http\Request;
+use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
@@ -25,6 +27,10 @@ class ReportsController extends Controller
      * @var Sale
      */
     private $salesModel;
+    /**
+     * @var Company
+     */
+    private $companyModel;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -60,6 +66,15 @@ class ReportsController extends Controller
         return $this->salesModel;
     }
 
+    public function getCompany()
+    {
+        if (!$this->companyModel) {
+            $this->companyModel = app(Company::class);
+        }
+
+        return $this->companyModel;
+    }
+
     public function index()
     {
         try {
@@ -86,9 +101,16 @@ class ReportsController extends Controller
     {
         try {
             $dataSearch = $request->all();
-            $msg = 'Ocorreu um erro';
+
+            $projectId = current(Hashids::decode($dataSearch['project']));
+
+            $userProject = $this->getUserProjects()->where([
+                ['user', \Auth::user()->id],
+                ['type', 'producer'],
+                ['project', $projectId]
+            ])->first();
+
             if (isset($dataSearch['project'])) {
-                $projectId = current(Hashids::decode($dataSearch['project']));
                 $sales = $this->getSales()
                     ->where([['project', $projectId], ['owner', auth()->user()->id]])
                     ->whereBetween('start_date', [$dataSearch['startDate'], [$dataSearch['endDate']]])
@@ -99,7 +121,6 @@ class ReportsController extends Controller
                 $contAproved = 0;
                 $contChargeBack = 0;
 
-
                 $totalPercentPaidCredit = 0;
                 $totalPercentPaidBoleto = 0;
 
@@ -108,7 +129,7 @@ class ReportsController extends Controller
                 $totalValueBoleto = 0;
                 $totalValueCreditCard = 0;
 
-                if (isset($sales) && count($sales) > 0) {
+                if (count($sales) > 0) {
                     foreach ($sales as $sale) {
 
                         // cartao
@@ -148,25 +169,117 @@ class ReportsController extends Controller
                     $totalPaidValueAproved = number_format(intval($totalPaidValueAproved), 2, ',', '.');
                     $totalValueBoleto = number_format(intval($totalValueBoleto), 2, ',', ' . ');
                     $totalValueCreditCard = number_format(intval($totalValueCreditCard), 2, ',', '.');
-                    return response()->json([
-                        'totalPaidValueAproved' => $totalPaidValueAproved,
-                        'contAproved' => $contAproved,
-                        'contBoleto' => $contBoleto,
-                        'contRecused' => $contRecused,
-                        'contChargeBack' => $contChargeBack,
-                        'totalPercentCartao' => $totalPercentPaidCredit,
-                        'totalPercentPaidBoleto' => $totalPercentPaidBoleto,
-                        'totalValueBoleto' => $totalValueBoleto,
-                        'totalValueCreditCard' => $totalValueCreditCard,
-                    ]);
+
                 }
-                $msg = 'Este projeto não tem vendas no periodo selecionado';
+
             }
-            return response()->json(['msg' => $msg]);
+
+            if($userProject->companyId->country == 'usa'){
+                $currency = '$';
+            }
+            else{
+                $currency = 'R$';
+            }
+
+            $chartData = $this->getChartData($dataSearch, $projectId, $currency);
+
+            return response()->json([
+                'totalPaidValueAproved' => $totalPaidValueAproved,
+                'contAproved' => $contAproved,
+                'contBoleto' => $contBoleto,
+                'contRecused' => $contRecused,
+                'contChargeBack' => $contChargeBack,
+                'totalPercentCartao' => $totalPercentPaidCredit,
+                'totalPercentPaidBoleto' => $totalPercentPaidBoleto,
+                'totalValueBoleto' => $totalValueBoleto,
+                'totalValueCreditCard' => $totalValueCreditCard,
+                'chartData' => $chartData,
+                'currency' => $currency
+            ]);
+
         } catch (Exception $e) {
+            dd($e);
             Log::warning('Erro ao buscar dados - ReportsController - index');
             report($e);
             return redirect()->back();
         }
     }
+
+    private function getChartData($data, $projectId, $currency){
+
+        if($data['startDate'] == $data['endDate']){
+
+            date_default_timezone_set('America/Sao_Paulo');
+
+            if(Carbon::parse($data['startDate'])->format('"m/d/y') == Carbon::now()->format('"m/d/y')){
+
+                $labelList = [];
+                $currentHour = date('H');
+                $startHour = 0;
+                while($startHour <= $currentHour){
+                    array_push($labelList, $startHour.'h');
+                    $startHour++;
+                }
+            }
+            else{
+                $labelList = ['0h','1h','2h','3h','4h','5h','6h','7h','8h','9h','10h','11h',
+                              '12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h','23h'];
+            }
+
+            $userCompanies = $this->getCompany()
+            ->where('user_id',\Auth::user()->id)
+            ->pluck('id')
+            ->toArray();
+
+            $orders = $this->getSales()
+            ->select(\DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
+            ->leftJoin('transactions as transaction', function($join) use($userCompanies){
+                    $join->on('transaction.sale', '=', 'sales.id');
+                    $join->whereIn('transaction.company',$userCompanies);
+            })
+            ->where('sales.owner',\Auth::user()->id)
+            ->where('sales.project',$projectId)
+            ->whereDate('sales.created_at', $data['startDate'])
+            ->groupBy('hour','sales.payment_method')
+            ->get()->toArray();
+
+            $creditCardData = [];            
+            $boletoData = [];            
+
+            foreach($labelList as $label){
+                $creditCardValue = 0;
+                $boletoValue = 0;
+                foreach($orders as $order){
+                    if($order['hour'] == preg_replace("/[^0-9]/", "", $label)){
+                        if($order['payment_method'] == 1){
+                            $creditCardValue = substr(intval($order['value']), 0, -2);
+                        }
+                        else{
+                            $boletoValue = substr(intval($order['value']), 0, -2);
+                        }
+                    }
+                }
+                array_push($creditCardData,$creditCardValue);
+                array_push($boletoData,$boletoValue);
+            }
+
+            return [
+                'label_list' => $labelList,
+                'credit_card_data' => $creditCardData,
+                'boleto_data' => $boletoData,
+                'currency' => $currency
+            ];
+
+        }
+        else{
+
+            return [
+                'label_list' => [],
+                'credit_card_data' => [],
+                'boleto_data' => [],
+                'currency' => $currency
+            ];
+        }
+    }
+
 }

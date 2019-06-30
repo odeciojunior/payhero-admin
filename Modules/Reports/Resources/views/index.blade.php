@@ -3,6 +3,31 @@
 
 @section('content')
 
+    @push('css')
+        <link rel="stylesheet" href="https://getbootstrapadmin.com/remark/global/vendor/chartist/chartist.min.css?v4.0.2">
+        <link rel="stylesheet" href="https://getbootstrapadmin.com/remark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.min.css?v4.0.2">
+        <style>
+.ct-legend {
+    position: relative;
+    width: 100%;
+    z-index: 10;
+    margin:0 0 20px 0;
+    list-style: none;
+    text-align: center;
+}
+.ct-legend li {
+		display: inline;
+        margin: 40px;
+	}
+    .ct-legend .ct-series-0{
+        color:#00FF7F;
+    }
+    .ct-legend .ct-series-1{
+        color:#1E90FF;
+    }
+    </style>
+    @endpush
+
     <div class="page">
         <div class="page-header container">
             <div class="row">
@@ -86,59 +111,30 @@
                                     </div>
                                 </div>
                             </div>
-                            {{--<div class="col-lg-12 gutter_top">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <h4> Origens </h4>
+                            <div class="col-lg-12 gutter_top" class="ct-chart" id="ecommerceChartView">
+                                <div class="card card-shadow">
+                                    <div class="card-header card-header-transparent py-20">
+                                        <!--div class="btn-group dropdown"-->
+                                            <!--a href="#" class="text-body dropdown-toggle blue-grey-700" data-toggle="dropdown">PRODUCTS SALES</a-->
+                                            <!--div class="dropdown-menu animate" role="menu">
+                                                <a class="dropdown-item" href="#" role="menuitem">Sales</a>
+                                                <a class="dropdown-item" href="#" role="menuitem">Total sales</a>
+                                                <a class="dropdown-item" href="#" role="menuitem">profit</a>
+                                            </div-->
+                                        <!--/div-->
+                                        <ul class="nav nav-pills nav-pills-rounded chart-action" style="display: none">
+                                            <li class="nav-item"><a class="active nav-link" data-toggle="tab" href="#scoreLineToDay">Day</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#scoreLineToWeek">Week</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#scoreLineToMonth">Month</a></li>
+                                        </ul>
                                     </div>
-                                    <div class="custom-table min-250">
-                                        <div class="row">
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            origem.html
-                                                        </div>
-                                                        <div class="col">
-                                                            2
-                                                        </div>
-                                                        <div class="col">
-                                                            2
-                                                        </div>
-                                                        <div class="col">
-                                                            2
-                                                        </div>
-                                                        <div class="col-lg-2">
-                                                            <span class="money-td green">R$500,00</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            origem.html
-                                                        </div>
-                                                        <div class="col">
-                                                            2
-                                                        </div>
-                                                        <div class="col">
-                                                            2
-                                                        </div>
-                                                        <div class="col">
-                                                            2
-                                                        </div>
-                                                        <div class="col-lg-2">
-                                                            <span class="money-td green">R$500,00</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="widget-content tab-content bg-white p-20">
+                                        <div class="ct-chart tab-pane active" id="scoreLineToDay"></div>
+                                        <div class="ct-chart tab-pane" id="scoreLineToWeek"></div>
+                                        <div class="ct-chart tab-pane" id="scoreLineToMonth"></div>
                                     </div>
                                 </div>
-                            </div>--}}
+                            </div>
                             <div class="col-lg-6 gutter_top">
                                 <div class="card shadow">
                                     <div class="card-header">
@@ -412,6 +408,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script type="text/javascript" src="https://getbootstrapadmin.com/remark/global/vendor/chartist/chartist.min.js?v4.0.2"></script>
+    <script type="text/javascript" src="https://getbootstrapadmin.com/remark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js?v4.0.2"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chartist-plugin-legend/0.6.2/chartist-plugin-legend.min.js"></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/reports.js')}}'></script>
 @endpush
 

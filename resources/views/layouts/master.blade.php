@@ -48,7 +48,7 @@
         Breakpoints();
     </script>
     <!-- Datatables -->
-    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <!--script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script-->
 </head>
 <body class="animsition site-navbar-small dashboard">
 <div class="loading">
