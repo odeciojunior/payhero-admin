@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('reports')->group(function() {
+Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
     Route::get('/', 'ReportsController@index')->name('reports.index');
 
     Route::get('/getValues/{project_id}', 'ReportsController@getValues')->name('reports.values');

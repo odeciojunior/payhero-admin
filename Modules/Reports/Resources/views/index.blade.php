@@ -172,7 +172,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12 ">
+                                            <!--div class="col-lg-12 ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-6">
@@ -186,7 +186,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div-->
                                         </div>
                                     </div>
                                 </div>

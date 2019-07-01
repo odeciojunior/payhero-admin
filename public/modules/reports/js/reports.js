@@ -95,31 +95,16 @@ $(function () {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
             success: function (response) {
-                if (response.msg) {
-                    $(".error-data").css('display', 'block').addClass('text-danger').html(response.msg);
-                    $("#revenue-generated").html(0);
-                    $("#qtd-aproved").html(0);
-                    $("#qtd-boletos").html(0);
-                    $("#qtd-recusadas").html(0);
-                    $("#qtd-reembolso").html(0);
-                    $("#percent-credit-card").html(0);
-                    $("#percent-values-boleto").html(0);
+                $("#revenue-generated").html(response.currency + ' ' + response.totalPaidValueAproved);
+                $("#qtd-aproved").html(response.contAproved);
+                $("#qtd-boletos").html(response.contBoleto);
+                $("#qtd-recusadas").html(response.contRecused);
+                $("#qtd-reembolso").html(response.contChargeBack);
+                $("#percent-credit-card").html(response.totalPercentCartao + ' %');
+                $("#percent-values-boleto").html(response.totalPercentPaidBoleto + ' %');
+                $("#credit-card-value").html(response.currency + ' ' + response.totalValueCreditCard);
+                $("#boleto-value").html(response.currency + ' ' + response.totalValueBoleto);
 
-                    $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
-                    $("#boleto-value").html('R$ ' + response.totalValueBoleto);
-                } else {
-                    $(".error-data").css('display', 'none');
-                    $("#revenue-generated").html(response.totalPaidValueAproved);
-                    $("#qtd-aproved").html(response.contAproved);
-                    $("#qtd-boletos").html(response.contBoleto);
-                    $("#qtd-recusadas").html(response.contRecused);
-                    $("#qtd-reembolso").html(response.contChargeBack);
-                    $("#percent-credit-card").html(response.totalPercentCartao + ' %');
-                    $("#percent-values-boleto").html(response.totalPercentPaidBoleto + ' %');
-
-                    $("#credit-card-value").html('R$ ' + response.totalValueCreditCard);
-                    $("#boleto-value").html('R$ ' + response.totalValueBoleto);
-                }
                 updateGraph(response.chartData);
             }
         })
@@ -200,10 +185,10 @@ $(function () {
         },
         labelList= chartData.label_list, 
         creditCardSalesData= {
-            name: "Cartão de crédito", data: chartData.credit_card_data
+            name: "Cartão de crédito", data: chartData.boleto_data
         }, 
         boletoSalesData= {
-            name: "Boleto", data: chartData.boleto_data
+            name: "Boleto", data: chartData.credit_card_data
         };
         createChart=function(button) {
                 scoreChart("scoreLineToDay", labelList, creditCardSalesData, boletoSalesData);

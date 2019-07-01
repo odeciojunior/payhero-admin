@@ -94,7 +94,6 @@ class ReportsController extends Controller
             report($e);
             return redirect()->back();
         }
-
     }
 
     public function getValues(Request $request)
@@ -112,8 +111,14 @@ class ReportsController extends Controller
 
             if (isset($dataSearch['project'])) {
                 $sales = $this->getSales()
+                    ->select('sales.*', 'transaction.value')
+                    ->leftJoin('transactions as transaction', function($join) use($userProject){
+                        $join->where('transaction.company','=', $userProject->company);
+                        $join->on('transaction.sale', '=', 'sales.id');
+                    })
                     ->where([['project', $projectId], ['owner', auth()->user()->id]])
-                    ->whereBetween('start_date', [$dataSearch['startDate'], [$dataSearch['endDate']]])
+                    //->whereBetween('start_date', [$dataSearch['startDate'], [$dataSearch['endDate']]])
+                    ->whereDate('start_date', $dataSearch['startDate'])
                     ->get();
 
                 $contBoleto = 0;
@@ -124,20 +129,20 @@ class ReportsController extends Controller
                 $totalPercentPaidCredit = 0;
                 $totalPercentPaidBoleto = 0;
 
-                $totalPaidValueAproved = 0;
+                $totalPaidValueAproved = '000';
 
-                $totalValueBoleto = 0;
-                $totalValueCreditCard = 0;
+                $totalValueBoleto = '000';
+                $totalValueCreditCard = '000';
 
                 if (count($sales) > 0) {
                     foreach ($sales as $sale) {
 
                         // cartao
                         if ($sale->payment_method == 1 && $sale->status == 1) {
-                            $totalValueCreditCard += $sale->total_paid_value;
+                            $totalValueCreditCard += $sale->value;
                         }
                         if ($sale->payment_method == 2 && $sale->status == 1) {
-                            $totalValueBoleto += $sale->total_paid_value;
+                            $totalValueBoleto += $sale->value;
                         }
                         // boleto
                         if ($sale->payment_method == 2) {
@@ -146,7 +151,7 @@ class ReportsController extends Controller
 
                         // vendas aprovadas
                         if ($sale->status == 1) {
-                            $totalPaidValueAproved += $sale->total_paid_value;
+                            $totalPaidValueAproved += $sale->value;
                             $contAproved++;
                         }
 
@@ -166,9 +171,8 @@ class ReportsController extends Controller
                         $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
                     }
 
-                    $totalPaidValueAproved = number_format(intval($totalPaidValueAproved), 2, ',', '.');
-                    $totalValueBoleto = number_format(intval($totalValueBoleto), 2, ',', ' . ');
-                    $totalValueCreditCard = number_format(intval($totalValueCreditCard), 2, ',', '.');
+                    //$totalValueBoleto = number_format(intval($totalValueBoleto), 2, ',', ' . ');
+                    //$totalValueCreditCard = number_format(intval($totalValueCreditCard), 2, ',', '.');
 
                 }
 
@@ -184,15 +188,15 @@ class ReportsController extends Controller
             $chartData = $this->getChartData($dataSearch, $projectId, $currency);
 
             return response()->json([
-                'totalPaidValueAproved' => $totalPaidValueAproved,
+                'totalPaidValueAproved' => number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved)) / 100, 2, ',', '.'),
                 'contAproved' => $contAproved,
                 'contBoleto' => $contBoleto,
                 'contRecused' => $contRecused,
                 'contChargeBack' => $contChargeBack,
                 'totalPercentCartao' => $totalPercentPaidCredit,
                 'totalPercentPaidBoleto' => $totalPercentPaidBoleto,
-                'totalValueBoleto' => $totalValueBoleto,
-                'totalValueCreditCard' => $totalValueCreditCard,
+                'totalValueBoleto' => number_format(intval(preg_replace("/[^0-9]/", "", $totalValueBoleto)) / 100, 2, ',', '.'),
+                'totalValueCreditCard' => number_format(intval(preg_replace("/[^0-9]/", "", $totalValueCreditCard)) / 100, 2, ',', '.'), 
                 'chartData' => $chartData,
                 'currency' => $currency
             ]);
@@ -239,7 +243,7 @@ class ReportsController extends Controller
             })
             ->where('sales.owner',\Auth::user()->id)
             ->where('sales.project',$projectId)
-            ->whereDate('sales.created_at', $data['startDate'])
+            ->whereDate('sales.start_date', $data['startDate'])
             ->groupBy('hour','sales.payment_method')
             ->get()->toArray();
 
@@ -251,7 +255,7 @@ class ReportsController extends Controller
                 $boletoValue = 0;
                 foreach($orders as $order){
                     if($order['hour'] == preg_replace("/[^0-9]/", "", $label)){
-                        if($order['payment_method'] == 1){
+                        if($order['payment_method'] == '1'){
                             $creditCardValue = substr(intval($order['value']), 0, -2);
                         }
                         else{
@@ -274,9 +278,9 @@ class ReportsController extends Controller
         else{
 
             return [
-                'label_list' => [],
-                'credit_card_data' => [],
-                'boleto_data' => [],
+                'label_list' => ['',''],
+                'credit_card_data' => [0, 0],
+                'boleto_data' => [0, 0],
                 'currency' => $currency
             ];
         }
