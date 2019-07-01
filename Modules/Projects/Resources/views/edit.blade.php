@@ -7,7 +7,6 @@
                 <h3>Configurações Básicas</h3>
                 <p class='pt-10'>Preencha atentamente as informações</p>
             </div>
-            <input type='hidden' name='status' value='1'/>
             <div class='col-lg-4'>
                 <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
                     <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
@@ -85,7 +84,7 @@
                 </div>
                 <div class='form-group col-4 col-xs-12'>
                     <label for='url_redirection'>Url Redirecionamento</label>
-                    <input name='url_redirect' value='{{$project->url_finish}}' type='text' class='form-control' id='url_redirection' placeholder='Descrição da fatura'>
+                    <input name='url_redirect' value='{{$project->url_redirect}}' type='text' class='form-control' id='url_redirection' placeholder='Descrição da fatura'>
                 </div>
                 <div class='form-group col-4 col-xs-12'>
                     <label for='company'>Empresas</label>
@@ -116,9 +115,9 @@
                 </div>
                 <div class='col-4 col-xs-12'>
                     <label for="parcelas_sem_juros">Boleto no checkout</label>
-                    <select name='ticket'>
-                        <option value='1'>Sim</option>
-                        <option value='0'>Não</option>
+                    <select name='boleto'>
+                        <option value='1' {{$project->boleto == 1 ? 'selected' : ''}}>Sim</option>
+                        <option value='0' {{$project->boleto == 0 ? 'selected' : ''}}>Não</option>
                     </select>
                 </div>
             </div>
