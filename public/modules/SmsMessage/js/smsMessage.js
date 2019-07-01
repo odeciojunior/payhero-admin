@@ -73,37 +73,76 @@ $(function () {
             },
             success: function (response) {
                 $("#data-table-sms").html('');
+                data = '';
+                data += '<tr>';
+                data += '<td class="shipping-id text-center" style="vertical-align: middle;">Boleto gerado</td>';
+                data += '<td class="shipping-type text-center" style="vertical-align: middle;">0</td>';
+                data += '<td class="shipping-value text-center" style="vertical-align: middle;">minutos</td>';
+                data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">Olá {primeiro_nome}, não esqueça de pagar seu boleto para enviarmos seu pedido! {url_boleto}</td>';
+                data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                data += '<span class="badge badge-success">Ativo</span>';
+                data += '</td>';
 
-                $.each(response.data, function (index, value) {
-                    data = '';
-                    data += '<tr>';
-                    data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.event + '</td>';
-                    data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.time + '</td>';
-                    data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.period + '</td>';
-                    data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">' + value.message + '</td>';
-                    data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
-                    if (value.status === 1) {
-                        data += '<span class="badge badge-success">Ativo</span>';
-                    } else {
-                        data += '<span class="badge badge-danger">Desativado</span>';
-                    }
+                data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
 
-                    data += '</td>';
+                data += '</td>';
 
-                    data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-sms' disabled  data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-sms' disabled data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-sms' disabled  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
-                    data += '</td>';
+                data += '</tr>';
+                data += '';
+                data += '<tr>';
+                data += '<td class="shipping-id text-center" style="vertical-align: middle;">Boleto vencendo</td>';
+                data += '<td class="shipping-type text-center" style="vertical-align: middle;">0</td>';
+                data += '<td class="shipping-value text-center" style="vertical-align: middle;">minutos</td>';
+                data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">Olá {primeiro_nome}, seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! {url_boleto}</td>';
+                data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                data += '<span class="badge badge-success">Ativo</span>';
+                data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-sms'  sms='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-sms'  sms='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-sms'  sms='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
 
-                    data += '</tr>';
-                    $("#data-table-sms").append(data);
-                });
-                if (response.data == '') {
-                    $("#data-table-sms").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
-                }
+                data += '</td>';
+
+                data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-sms' disabled  data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-sms' disabled data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-sms' disabled data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+
+                data += '</tr>';
+                $("#data-table-sms").append(data);
+
+                // $.each(response.data, function (index, value) {
+                //     data = '';
+                //     data += '<tr>';
+                //     data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.event + '</td>';
+                //     data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.time + '</td>';
+                //     data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.period + '</td>';
+                //     data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">' + value.message + '</td>';
+                //     data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                //     if (value.status === 1) {
+                //         data += '<span class="badge badge-success">Ativo</span>';
+                //     } else {
+                //         data += '<span class="badge badge-danger">Desativado</span>';
+                //     }
+                //
+                //     data += '</td>';
+                //
+                //     data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                //
+                //     data += '</td>';
+                //
+                //     data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-sms'  sms='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                //     data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-sms'  sms='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                //     data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-sms'  sms='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                //
+                //     data += '</tr>';
+                //     $("#data-table-sms").append(data);
+                // });
+                // if (response.data == '') {
+                //     $("#data-table-sms").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                // }
                 $(".details-sms").unbind('click');
                 $(".details-sms").on('click', function () {
                     var sms = $(this).attr('sms');
