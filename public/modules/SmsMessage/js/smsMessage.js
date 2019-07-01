@@ -80,7 +80,8 @@ $(function () {
                 data += '<td class="shipping-value text-center" style="vertical-align: middle;">minutos</td>';
                 data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">Olá {primeiro_nome}, não esqueça de pagar seu boleto para enviarmos seu pedido! {url_boleto}</td>';
                 data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
-                data += '<span class="badge badge-success">Ativo</span>';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
                 data += '</td>';
 
                 data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
@@ -99,7 +100,8 @@ $(function () {
                 data += '<td class="shipping-value text-center" style="vertical-align: middle;">minutos</td>';
                 data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">Olá {primeiro_nome}, seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! {url_boleto}</td>';
                 data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
-                data += '<span class="badge badge-success">Ativo</span>';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
                 data += '</td>';
 
                 data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
