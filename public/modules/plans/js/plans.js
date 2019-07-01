@@ -4,7 +4,6 @@ $(function () {
     $('#tab_plans').on('click', function () {
         atualizarPlan();
     });
-    atualizarPlan();
     $("#add-plan").on('click', function () {
         $("#modal-title").html('Adicionar Plano <br><hr class="my-0">');
         $("#modal_add_size").addClass('modal_simples');
@@ -42,20 +41,19 @@ $(function () {
                     qtd_produtos++;
 
                     var nova_div = div_produtos.clone();
-
+                    var opt = nova_div.find('option:selected');
+                    opt.remove();
                     var select = nova_div.find('select');
                     var input = nova_div.find('.products_amount');
 
-                    select.attr('id', 'product_' + qtd_produtos);
+                    // select.attr('id', 'product_' + qtd_produtos);
                     // select.attr('name', 'product_' + qtd_produtos);
                     // input.attr('name', 'products_amount_' + qtd_produtos);
                     input.addClass('products_amount');
 
                     div_produtos = nova_div;
 
-                    $('#products').append(nova_div.html());
-
-
+                    $('#products').append('<div class="">' + nova_div.html() + '</div>');
 
                 });
 
@@ -78,7 +76,11 @@ $(function () {
                         error: function (data) {
                             $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
-                            alertCustom('error', 'Ocorreu algum erro');
+                            if (data.status == '422') {
+                                for (error in data.responseJSON.errors) {
+                                    alertCustom('error', String(data.responseJSON.errors[error]));
+                                }
+                            }
                         }, success: function () {
                             $(".loading").css("visibility", "hidden");
                             alertCustom("success", "Plano Adicionado!");
@@ -191,44 +193,41 @@ $(function () {
 
                             var div_produtos = $('#produtos_div_1').clone();
 
-
                             $('#add_product_plan').on('click', function () {
 
                                 qtd_produtos++;
 
                                 var nova_div = div_produtos.clone();
-
+                                var opt = nova_div.find('option:selected');
+                                opt.remove();
                                 var select = nova_div.find('select');
                                 var input = nova_div.find('.products_amount');
 
-                                select.attr('id', 'product_' + qtd_produtos);
+                                // select.attr('id', 'product_' + qtd_produtos);
                                 // select.attr('name', 'product_' + qtd_produtos);
                                 // input.attr('name', 'products_amount_' + qtd_produtos);
                                 input.addClass('products_amount');
 
                                 div_produtos = nova_div;
 
-
-                                $('#products').append('<div class="row">'+nova_div.html()+'</div>');
+                                $('#products').append('<div class="row">' + nova_div.html() + '</div>');
 
                             });
 
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
+                                var formData = new FormData(document.getElementById('form-update-plan'));
+                                formData.append("project", projectId);
                                 $.ajax({
-                                    method: "PUT",
+                                    method: "POST",
                                     url: "/plans/" + plan,
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data: {
-                                        name: $("#plan-name").val(),
-                                        price: $("#plan-price").val(),
-                                        description: $("#plan-description").val(),
-                                        'products[]': $("#product_1").val(),
-                                        'product_amounts[]': $("#product_amount_1").val(),
-
-                                    },
+                                    data:formData,
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
                                     error: function () {
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {

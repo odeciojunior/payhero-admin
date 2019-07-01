@@ -143,7 +143,6 @@ class PlansController extends Controller
     {
         try {
             $requestData = $request->validated();
-            dd($requestData);
             unset($requestData['project']);
             $planId               = Hashids::decode($id)[0];
             $requestData['price'] = $this->getValue($requestData['price']);
@@ -151,7 +150,7 @@ class PlansController extends Controller
             $plan = $this->getPlan()->where('id', $planId)->first();
             $plan->update($requestData);
 
-            $productPlans = $this->getProductPlan()->where('plan', $plan['id'])->get()->toArray();
+            $productPlans = $this->getProductPlan()->where('plan', $plan->id)->get()->toArray();
             if (count($productPlans) > 0) {
                 foreach ($productPlans as $productPlan) {
                     $this->getProductPlan()->find($productPlan['id'])->delete();
@@ -167,7 +166,6 @@ class PlansController extends Controller
             //                                                    'amount'  => $requestData['product_amount_' . $productAmount++],
             //                                                ]);;
             //            }
-
             if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
                 foreach ($requestData['products'] as $keyProduct => $product) {
                     foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {

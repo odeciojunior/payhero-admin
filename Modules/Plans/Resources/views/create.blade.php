@@ -42,24 +42,25 @@
 
                 <div id="products">
                     <div id="produtos_div_1" class="row">
-                        <div class='col-xl-10'>
+                        <div class='col-xl-8'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>
                                 <select id="product_1" name="products[]" class="form-control">
-                                    <option value="" selected>Selecione</option>
                                     @foreach($products as $product)
                                         <option value="{{ $product->id }}">{{ $product->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class='col-xl-2'>
+                        <div class='col-xl-3'>
                             <div class="form-group">
                                 <label>Quantidade:</label>
                                 <input class="form-control products_amount" type="text" name="product_amounts[]" placeholder="quantidade" data-mask='0#' value="1">
                             </div>
                         </div>
-
+                        <div class='col-xl-1 mt-30'>
+                            <button class='btn btn-sm btn-outline btn-danger btnDelete'><i class='icon wb-trash' aria-hidden='true'></i></button></button>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

@@ -31,4 +31,15 @@ class PlanStoreRequest extends FormRequest
     {
         return true;
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'O campo Nome é obrigatório',
+            'price.required' => 'O campo Preço é obrigatório',
+            'description.required' => 'O campo Descrição é obrigatório',
+            'products.required' => 'O campo Produto é obrigatório',
+            'product_amounts.required' => 'O campo Quantidade é obrigatório',
+        ];
+    }
 }
