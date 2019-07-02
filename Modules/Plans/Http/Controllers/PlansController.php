@@ -7,19 +7,17 @@ use App\Entities\Plan;
 use App\Entities\PlanGift;
 use App\Entities\Product;
 use App\Entities\ProductPlan;
-use App\Entities\ZenviaSms;
-use Illuminate\Http\Request;
 use App\Entities\UserProject;
-use Illuminate\Http\Response;
+use App\Entities\ZenviaSms;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Helpers\CaminhoArquivosHelper;
+use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansResource;
-use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Vinkla\Hashids\Facades\Hashids;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
-use Yajra\DataTables\Facades\DataTables;
-use Modules\Core\Helpers\CaminhoArquivosHelper;
 
 class PlansController extends Controller
 {
@@ -79,7 +77,12 @@ class PlansController extends Controller
         try {
             if ($request->has('project')) {
                 $projectId = current(Hashids::decode($request->input('project')));
-                $plans     = $this->getPlan()->where('project', $projectId)->get();
+                $plans     = $this->getPlan()->with([
+                                                        'projectId.domains' => function($query) use ($projectId) {
+                                                            $query->where([['project_id', $projectId], ['status', 3]])
+                                                                  ->first();
+                                                        },
+                                                    ])->where('project', $projectId)->get();
 
                 return PlansResource::collection($plans);
             }
@@ -93,7 +96,7 @@ class PlansController extends Controller
     {
         try {
             $requestData            = $request->validated();
-            $requestData['project'] = Hashids::decode($requestData['project'])[0];
+            $requestData['project'] = current(Hashids::decode($requestData['project']));
             $requestData['status']  = 1;
 
             $userProject = $this->getUserProject()->where([
@@ -101,22 +104,11 @@ class PlansController extends Controller
                                                               ['type', 'producer'],
                                                           ])->first();
 
-            $requestData['company'] = $userProject->company;
-            $requestData['price']   = $this->getValue($requestData['price']);
+            $requestData['price'] = $this->getValue($requestData['price']);
 
-            $planCode = false;
-
-            while ($planCode == false) {
-
-                $code = $this->randString(3) . rand(100, 999);
-                $plan = $this->getPlan()->where('code', $code)->first();
-                if ($plan == null) {
-                    $planCode            = true;
-                    $requestData['code'] = $code;
-                }
-            }
-            $plan = $this->getPlan()->create($requestData);
-
+            $requestData['code'] = '312asd';
+            $plan                = $this->getPlan()->create($requestData);
+            $plan->update(['code' => $plan->id_code]);
             if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
                 foreach ($requestData['products'] as $keyProduct => $product) {
                     foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {

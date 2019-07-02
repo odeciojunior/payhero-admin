@@ -4,4 +4,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => '', 'namespace' => 'M
 
     Route::Resource("/shippings", "ShippingController")
          ->only('index', 'create', 'store', 'show', 'edit', 'update', 'destroy');
+
+    Route::post('/shipping/config/{project}', "ShippingController@updateConfig");
 });

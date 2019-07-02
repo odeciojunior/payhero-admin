@@ -51,7 +51,7 @@
                     <input name="contact" value="{{$project->contact}}" type="email" class="form-control" id="contact" placeholder="Contato">
                 </div>
             </div>
-            <h4>Configuração Frete</h4>
+            {{--<h4>Configuração Frete</h4>
             <div class='row'>
                 <div class='form-group col-xl-6 col-lg-6'>
                     <label for='shipping_project'>Possui Frete</label>
@@ -73,7 +73,7 @@
                         <option value='partners' {{$project->shipment_responsible == 'partners'? 'selected':''}}>Proprietário + parceiros</option>
                     </select>
                 </div>
-            </div>
+            </div>--}}
         </div>
         <div class=''>
             <h4>Configurações Avançadas</h4>

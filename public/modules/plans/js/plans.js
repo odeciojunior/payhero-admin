@@ -110,7 +110,7 @@ $(function () {
                     data = '';
                     data += '<tr>';
                     data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.description + '</td>';
+                    // data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.description + '</td>';
                     data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.code + '</td>';
                     data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">' + value.price + '</td>';
                     data += '<td class="shipping-status text-center" style="vertical-align: middle;">';

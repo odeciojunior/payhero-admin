@@ -14,19 +14,19 @@
                 </div>
                 <div class='row'>
                     <div class='form-group col-12'>
-                        <label for='name'>Descrição</label>
+                        <label for='name'>Descrição no Checkout</label>
                         <input name='name' type='text' id='shipping-name' class='form-control' value='' placeholder='PAC'>
                     </div>
                 </div>
                 <div class='row'>
                     <div class='form-group col-12'>
-                        <label for='information'>Informação Apresentada</label>
+                        <label for='information'>Informação Apresentada no Checkout</label>
                         <input name='information' type='text' id='shipping-information' class='form-control' value='' placeholder='10 até 20 dias'>
                     </div>
                 </div>
                 <div class='row' id='value-shipping-row' style='display:none;'>
                     <div class='form-group col-12'>
-                        <label for='value'>Valor</label>
+                        <label for='value'>Valor do Frete</label>
                         <input name='value' type='text' id='shipping-value' class='form-control' value='' placeholder='0'>
                     </div>
                 </div>
