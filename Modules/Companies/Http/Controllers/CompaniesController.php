@@ -178,8 +178,7 @@ class CompaniesController extends Controller
                     'company' => json_decode(json_encode($companyResource)),
                     'banks'   => $banks,
                 ]);
-            }
-            else {
+            } else {
                 return view('companies::edit_brazil', [
                     'company' => json_decode(json_encode($companyResource)),
                     'banks'   => $banks,
@@ -204,7 +203,9 @@ class CompaniesController extends Controller
 
             $company = $this->getCompanyModel()
                             ->find(current(Hashids::decode($encodedId)));
-
+            if ($company->company_document != $requestData['company_document']) {
+                $company->bank_document_status = $this->getCompanyModel()->getEnum('bank_document_status', 'pending');
+            }
             $requestData = array_filter($requestData);
 
             $company->update($requestData);

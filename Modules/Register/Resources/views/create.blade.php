@@ -166,14 +166,14 @@
                                     <div class="input-holder d-flex flex-column">
                                         <label for="brasil_company_document">CPF/CNPJ</label>
                                         <p class='sm-tex text-danger' id='brasilCompanyDocumentError' style='display:none;'>Documeto inválido</p>
-                                        <input type="text" name="brasil_company_document" id="brasil_company_document" placeholder="Digite seu CPF ou CNPJ da empresa" required>
+                                        <input type="text" name="company_document" id="brasil_company_document" placeholder="Digite seu CPF ou CNPJ da empresa" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="brasil_fantasy_name">Nome Fantasia</label>
                                         <p class='sm-tex text-danger' id='brasilFantasyNameError' style='display:none;'>Documeto inválido</p>
-                                        <input type="text" name="brasil_fantasy_name" id="brasil_fantasy_name" placeholder="Digite o nome fantasia" required>
+                                        <input type="text" name="fantasy_name" id="brasil_fantasy_name" placeholder="Digite o nome fantasia" required>
                                     </div>
                                 </div>
                             </div>
@@ -224,14 +224,14 @@
                                     <div class="input-holder d-flex flex-column">
                                         <label for="eua_fantasy_name">Legal Business Name</label>
                                         <p class='sm-tex text-danger' id='euaFantasyNameError' style='display:none;'>Invalid name</p>
-                                        <input type="text" name="eua_fantasy_name" id="eua_fantasy_name" placeholder="Enter your Legal Business Name" required>
+                                        <input type="text" name="fantasy_name" id="eua_fantasy_name" placeholder="Enter your Legal Business Name" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="input-holder d-flex flex-column">
                                         <label for="eua_company_document">EIN</label>
                                         <p class='sm-tex text-danger' id='euaCompanyDocumentError' style='display:none;'>Invalid EIN</p>
-                                        <input type="text" name="eua_company_document" id="eua_company_document" placeholder="Enter your document" required>
+                                        <input type="text" name="company_document" id="eua_company_document" placeholder="Enter your document" required>
                                     </div>
                                 </div>
                             </div>
