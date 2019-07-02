@@ -6,6 +6,7 @@ use Cloudflare\API\Auth\APIKey;
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\Zones;
 use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -15,6 +16,10 @@ class DomainResource extends Resource
      * @var CloudFlareService
      */
     private $cloudFlareService;
+    /**
+     * @var SendgridService
+     */
+    private $sendgridService;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
@@ -29,6 +34,18 @@ class DomainResource extends Resource
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     */
+    private function getSendgridService()
+    {
+        if (!$this->sendgridService) {
+            $this->sendgridService = app(SendgridService::class);
+        }
+
+        return $this->sendgridService;
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      * @return array
      * @throws \Cloudflare\API\Endpoints\EndpointException
@@ -39,10 +56,16 @@ class DomainResource extends Resource
         if ($this->status != $this->getEnum('status', 'approved')) {
             $activated = $this->getCloudFlareService()->activationCheck($this->name);
 
-            if ($activated) {
+            $linkBrandResponse = $this->getSendgridService()->getLinkBrand($this->name);
+            $sendgridResponse  = $this->getSendgridService()->getZone($this->name);
+
+            $responseValidateDomain = $this->getSendgridService()->validateDomain($sendgridResponse->id);
+            $responseValidateLink   = $this->getSendgridService()->validateBrandLink($linkBrandResponse->id);
+
+            if ($activated && $responseValidateDomain && $responseValidateLink) {
                 $this->update([
-                                            'status' => $this->resource->getEnum('status', 'approved'),
-                                        ]);
+                                  'status' => $this->resource->getEnum('status', 'approved'),
+                              ]);
             }
         }
 
