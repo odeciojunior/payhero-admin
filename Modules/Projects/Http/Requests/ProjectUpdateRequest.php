@@ -13,31 +13,30 @@ class ProjectUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'photo'                      => 'nullable',
-            'visibility'                 => 'required',
-            'status'                     => 'required',
             'name'                       => 'required',
             'description'                => 'nullable',
-            'invoice_description'        => 'nullable|string|max:15',
+            'visibility'                 => 'nullable',
             'url_page'                   => 'nullable',
-            'shipment'                   => 'required',
-            'shipment_responsible'       => 'required',
-            'installments_amount'        => 'required',
-            'installments_interest_free' => 'required',
-            'carrier'                    => 'required',
-            'logo'                       => 'nullable',
+            'contact'                    => 'nullable',
+            'shipment'                   => 'nullable',
+            'carrier'                    => 'nullable',
+            'shipment_responsible'       => 'nullable',
+            'invoice_description'        => 'nullable',
             'url_redirect'               => 'nullable',
-            'ticket'                     => 'required',
-            "photo_x1"                   => 'nullable',
-            "photo_y1"                   => 'nullable',
-            "photo_w"                    => 'nullable',
-            "photo_h"                    => 'nullable',
-            "contact"                    => 'nullable',
-            "logo_x1"                    => 'nullable',
-            "logo_y1"                    => 'nullable',
-            "logo_w"                     => 'nullable',
-            "logo_h"                     => 'nullable',
-            "company"                    => 'nullable',
+            'company'                    => 'nullable',
+            'installments_amount'        => 'nullable',
+            'installments_interest_free' => 'nullable',
+            'boleto'                     => 'nullable',
+            'photo'                      => 'nullable',
+            'photo_x1'                   => 'nullable',
+            'photo_y1'                   => 'nullable',
+            'photo_w'                    => 'nullable',
+            'photo_h'                    => 'nullable',
+            'logo'                       => 'nullable',
+            'logo_x1'                    => 'nullable',
+            'logo_y1'                    => 'nullable',
+            'logo_w'                     => 'nullable',
+            'logo_h'                     => 'nullable',
 
         ];
     }
@@ -45,7 +44,7 @@ class ProjectUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'required' => "O campo devem ser preenchidos corretamente",
+            'required' => "Os campos devem ser preenchidos corretamente",
         ];
     }
 

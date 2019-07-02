@@ -77,9 +77,10 @@
                                     </div>
 
                                     <div class="col-6 mb-15">
-                                        <div class="price-holder">
+                                        <div class="price-holder pointer">
                                             <h6 class="label-price"> Saldo Disponível </h6>
-                                            <h4 class="price"><span class="currency">R$</span><span class="available-balance">0,00</span></h4>
+                                            <h4 class="price"><span class="currency">R$</span>
+                                            <span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>
                                             <div class="grad-border green"></div>
                                         </div>
                                     </div>

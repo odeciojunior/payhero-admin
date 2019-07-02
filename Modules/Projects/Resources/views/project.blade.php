@@ -55,16 +55,16 @@
                         </li>
                         @if($project->shopify_id == '')
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
+                                <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
                                     Planos
                                 </a>
                             </li>
                         @endif
-                        <li class="nav-item" role="presentation">
-                            <a id='tab-partners' class="nav-link" data-toggle="tab" href="#tab_partners"
-                               aria-controls="tab_partners" role="tab">Parceiros
-                            </a>
-                        </li>
+                        {{--<li class="nav-item" role="presentation">--}}
+                            {{--<a id='tab-partners' class="nav-link" data-toggle="tab" href="#tab_partners"--}}
+                               {{--aria-controls="tab_partners" role="tab">Parceiros--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                         <li class="nav-item" role="presentation">
                             <a id="tab_configuration" class="nav-link" data-toggle="tab" href="#tab_configuration_project"
                                aria-controls="tab_configuration_project" role="tab">Configurações
@@ -451,266 +451,266 @@
 
                 });
 
-                $("#tabela_planos").DataTable({
-                    bLengthChange: false,
-                    ordering: false,
-                    processing: true,
-                    responsive: true,
-                    serverSide: true,
-                    ajax: {
-                        url: '/planos/data-source',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        type: 'POST',
-                        data: {projeto: id_projeto}
-                    },
-                    columns: [
-                        {data: 'name', name: 'name'},
-                        {
-                            data: function (data) {
-                                if (data.description == null)
-                                    return '';
-                                else
-                                    return data.description.substr(0, 25);
-                            }, name: 'description'
-                        },
-                        {data: 'code', name: 'code'},
-                        {data: 'price', name: 'price'},
-                        {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-                    ],
-                    "language": {
-                        "sProcessing": "Carregando...",
-                        "lengthMenu": "Apresentando _MENU_ registros por página",
-                        "zeroRecords": "Nenhum registro encontrado",
-                        "info": "Apresentando página _PAGE_ de _PAGES_",
-                        "infoEmpty": "Nenhum registro encontrado",
-                        "infoFiltered": "(filtrado por _MAX_ registros)",
-                        "sInfoPostFix": "",
-                        "sSearch": "Procurar :",
-                        "sUrl": "",
-                        "sInfoThousands": ",",
-                        "sLoadingRecords": "Carregando...",
-                        "oPaginate": {
-                            "sFirst": "Primeiro",
-                            "sLast": "Último",
-                            "sNext": "Próximo",
-                            "sPrevious": "Anterior",
-                        },
-                    },
-                    "drawCallback": function () {
-
-                        $('.detalhes_plano').on('click', function () {
-                            var plano = $(this).attr('plano');
-                            $('#modal_detalhes_titulo').html('Detalhes da plano');
-                            $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                            var data = {id_plano: plano};
-                            $.post("/planos/detalhe", data)
-                                .then(function (response, status) {
-                                    $('#modal_detalhes_body').html(response);
-                                });
-                        });
-
-                        var id_cupom = '';
-
-                        $('.excluir_plano').on('click', function () {
-
-                            id_plano = $(this).attr('plano');
-                            var name = $(this).closest("tr").find("td:first-child").text();
-                            $('#modal_excluir_titulo').html('Remover do projeto o plano ' + name + ' ?');
-
-                            $('#bt_excluir').unbind('click');
-
-                            $('#bt_excluir').on('click', function () {
-
-                                $('.loading').css("visibility", "visible");
-                                $('#fechar_modal_excluir').click();
-
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/planos/deletarplano",
-                                    data: {id: id_plano},
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    error: function () {
-                                        $('.loading').css("visibility", "hidden");
-                                        alertPersonalizado('error', 'Ocorreu algum erro');
-                                    },
-                                    success: function (data) {
-                                        $('.loading').css("visibility", "hidden");
-                                        if (data != 'sucesso') {
-                                            alertPersonalizado('error', data);
-                                        } else {
-                                            alertPersonalizado('success', 'Plano removido!');
-                                        }
-                                        $($.fn.dataTable.tables(true)).css('width', '100%');
-                                        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    }
-                                });
-                            });
-                        });
-
-                        $('.editar_plano').on('click', function () {
-                            $('#modal_editar_tipo').addClass('modal-lg');
-                            $('#modal_editar_tipo').removeClass('modal-simple');
-                            id_plano = $(this).attr('plano');
-
-                            $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
-
-                            $.ajax({
-                                method: "POST",
-                                url: "/planos/getformeditarplano",
-                                data: {id: id_plano, projeto: id_projeto},
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                error: function () {
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                },
-                                success: function (data) {
-                                    $('#modal_editar_body').html(data);
-
-                                    $(".qtd-produtos").mask("0#");
-
-                                    $('#editar').unbind('click');
-
-                                    $('#editar').on('click', function () {
-
-                                        $('.loading').css("visibility", "visible");
-
-                                        var form_data = new FormData(document.getElementById('editar_plano'));
-                                        form_data.append('projeto', id_projeto);
-
-                                        $.ajax({
-                                            method: "POST",
-                                            url: "/planos/editarplano",
-                                            processData: false,
-                                            contentType: false,
-                                            cache: false,
-                                            data: form_data,
-                                            headers: {
-                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                            },
-                                            error: function () {
-                                                $('.loading').css("visibility", "hidden");
-                                                alertPersonalizado('error', 'Ocorreu algum erro');
-                                                $('#previewimage_plano_editar').imgAreaSelect({remove: true});
-                                            },
-                                            success: function (data) {
-                                                $('.loading').css("visibility", "hidden");
-                                                alertPersonalizado('success', 'Plano atualizado!');
-                                                $($.fn.dataTable.tables(true)).css('width', '100%');
-                                                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                                $('#previewimage_plano_editar').imgAreaSelect({remove: true});
-                                            },
-                                        });
-                                    });
-
-                                    $('.dinheiro').mask('#.###,#0', {reverse: true});
-
-                                    var p = $("#previewimage_plano_editar");
-                                    $("#foto_plano_editar").on("change", function () {
-
-                                        var imageReader = new FileReader();
-                                        imageReader.readAsDataURL(document.getElementById("foto_plano_editar").files[0]);
-
-                                        imageReader.onload = function (oFREvent) {
-
-                                            p.attr('src', oFREvent.target.result).fadeIn();
-
-                                            p.on('load', function () {
-
-                                                var img = document.getElementById('previewimage_plano_editar');
-                                                var x1, x2, y1, y2;
-
-                                                if (img.naturalWidth > img.naturalHeight) {
-                                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                                                    x2 = x1 + (y2 - y1);
-                                                } else {
-                                                    if (img.naturalWidth < img.naturalHeight) {
-                                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                        ;
-                                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                        y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                                                        y2 = y1 + (x2 - x1);
-                                                    } else {
-                                                        x1 = Math.floor(img.naturalWidth / 100 * 10);
-                                                        x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                                                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                                                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                                    }
-                                                }
-
-                                                $('input[name="foto_plano_editar_x1"]').val(x1);
-                                                $('input[name="foto_plano_editar_y1"]').val(y1);
-                                                $('input[name="foto_plano_editar_w"]').val(x2 - x1);
-                                                $('input[name="foto_plano_editar_h"]').val(y2 - y1);
-
-                                                $('#modal_editar').on('hidden.bs.modal', function () {
-                                                    $('#previewimage_plano_editar').imgAreaSelect({remove: true});
-                                                });
-                                                $('#previewimage_plano_editar').imgAreaSelect({remove: true});
-
-                                                $('#previewimage_plano_editar').imgAreaSelect({
-                                                    x1: x1, y1: y1, x2: x2, y2: y2,
-                                                    aspectRatio: '1:1',
-                                                    handles: true,
-                                                    imageHeight: this.naturalHeight,
-                                                    imageWidth: this.naturalWidth,
-                                                    onSelectEnd: function (img, selection) {
-                                                        $('input[name="foto_plano_editar_x1"]').val(selection.x1);
-                                                        $('input[name="foto_plano_editar_y1"]').val(selection.y1);
-                                                        $('input[name="foto_plano_editar_w"]').val(selection.width);
-                                                        $('input[name="foto_plano_editar_h"]').val(selection.height);
-                                                    },
-                                                    parent: $('#conteudo_modal_editar'),
-                                                });
-                                            })
-                                        };
-
-                                    });
-
-                                    $("#selecionar_foto_plano_editar").on("click", function () {
-                                        $("#foto_plano_editar").click();
-                                    });
-
-                                    var qtd_produtos = '1';
-
-                                    var div_produtos = $('#produtos_div_' + qtd_produtos).parent().clone();
-
-                                    $('#add_produto_plano').on('click', function () {
-
-                                        qtd_produtos++;
-
-                                        var nova_div = div_produtos.clone();
-
-                                        var select = nova_div.find('select');
-                                        var input = nova_div.find('.qtd-produtos');
-
-                                        select.attr('id', 'produto_' + qtd_produtos);
-                                        select.attr('name', 'produto_' + qtd_produtos);
-                                        input.attr('name', 'produto_qtd_' + qtd_produtos);
-                                        input.addClass('qtd-produtos');
-
-                                        div_produtos = nova_div;
-
-                                        $('#produtos').append(nova_div.html());
-
-                                        $(".qtd-produtos").mask("0#");
-
-                                    });
-
-
-                                }
-                            });
-                        });
-
-                    }
-
-                });
+                // $("#tabela_planos").DataTable({
+                //     bLengthChange: false,
+                //     ordering: false,
+                //     processing: true,
+                //     responsive: true,
+                //     serverSide: true,
+                //     ajax: {
+                //         url: '/planos/data-source',
+                //         headers: {
+                //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                //         },
+                //         type: 'POST',
+                //         data: {projeto: id_projeto}
+                //     },
+                //     columns: [
+                //         {data: 'name', name: 'name'},
+                //         {
+                //             data: function (data) {
+                //                 if (data.description == null)
+                //                     return '';
+                //                 else
+                //                     return data.description.substr(0, 25);
+                //             }, name: 'description'
+                //         },
+                //         {data: 'code', name: 'code'},
+                //         {data: 'price', name: 'price'},
+                //         {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
+                //     ],
+                //     "language": {
+                //         "sProcessing": "Carregando...",
+                //         "lengthMenu": "Apresentando _MENU_ registros por página",
+                //         "zeroRecords": "Nenhum registro encontrado",
+                //         "info": "Apresentando página _PAGE_ de _PAGES_",
+                //         "infoEmpty": "Nenhum registro encontrado",
+                //         "infoFiltered": "(filtrado por _MAX_ registros)",
+                //         "sInfoPostFix": "",
+                //         "sSearch": "Procurar :",
+                //         "sUrl": "",
+                //         "sInfoThousands": ",",
+                //         "sLoadingRecords": "Carregando...",
+                //         "oPaginate": {
+                //             "sFirst": "Primeiro",
+                //             "sLast": "Último",
+                //             "sNext": "Próximo",
+                //             "sPrevious": "Anterior",
+                //         },
+                //     },
+                //     "drawCallback": function () {
+                //
+                //         $('.detalhes_plano').on('click', function () {
+                //             var plano = $(this).attr('plano');
+                //             $('#modal_detalhes_titulo').html('Detalhes da plano');
+                //             $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                //             var data = {id_plano: plano};
+                //             $.post("/planos/detalhe", data)
+                //                 .then(function (response, status) {
+                //                     $('#modal_detalhes_body').html(response);
+                //                 });
+                //         });
+                //
+                //         var id_cupom = '';
+                //
+                //         $('.excluir_plano').on('click', function () {
+                //
+                //             id_plano = $(this).attr('plano');
+                //             var name = $(this).closest("tr").find("td:first-child").text();
+                //             $('#modal_excluir_titulo').html('Remover do projeto o plano ' + name + ' ?');
+                //
+                //             $('#bt_excluir').unbind('click');
+                //
+                //             $('#bt_excluir').on('click', function () {
+                //
+                //                 $('.loading').css("visibility", "visible");
+                //                 $('#fechar_modal_excluir').click();
+                //
+                //                 $.ajax({
+                //                     method: "POST",
+                //                     url: "/planos/deletarplano",
+                //                     data: {id: id_plano},
+                //                     headers: {
+                //                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                //                     },
+                //                     error: function () {
+                //                         $('.loading').css("visibility", "hidden");
+                //                         alertPersonalizado('error', 'Ocorreu algum erro');
+                //                     },
+                //                     success: function (data) {
+                //                         $('.loading').css("visibility", "hidden");
+                //                         if (data != 'sucesso') {
+                //                             alertPersonalizado('error', data);
+                //                         } else {
+                //                             alertPersonalizado('success', 'Plano removido!');
+                //                         }
+                //                         $($.fn.dataTable.tables(true)).css('width', '100%');
+                //                         $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                //                     }
+                //                 });
+                //             });
+                //         });
+                //
+                //         $('.editar_plano').on('click', function () {
+                //             $('#modal_editar_tipo').addClass('modal-lg');
+                //             $('#modal_editar_tipo').removeClass('modal-simple');
+                //             id_plano = $(this).attr('plano');
+                //
+                //             $('#modal_editar_body').html("<div style='text-align: center'>Carregando...</div>");
+                //
+                //             $.ajax({
+                //                 method: "POST",
+                //                 url: "/planos/getformeditarplano",
+                //                 data: {id: id_plano, projeto: id_projeto},
+                //                 headers: {
+                //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                //                 },
+                //                 error: function () {
+                //                     alertPersonalizado('error', 'Ocorreu algum erro');
+                //                 },
+                //                 success: function (data) {
+                //                     $('#modal_editar_body').html(data);
+                //
+                //                     $(".qtd-produtos").mask("0#");
+                //
+                //                     $('#editar').unbind('click');
+                //
+                //                     $('#editar').on('click', function () {
+                //
+                //                         $('.loading').css("visibility", "visible");
+                //
+                //                         var form_data = new FormData(document.getElementById('editar_plano'));
+                //                         form_data.append('projeto', id_projeto);
+                //
+                //                         $.ajax({
+                //                             method: "POST",
+                //                             url: "/planos/editarplano",
+                //                             processData: false,
+                //                             contentType: false,
+                //                             cache: false,
+                //                             data: form_data,
+                //                             headers: {
+                //                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                //                             },
+                //                             error: function () {
+                //                                 $('.loading').css("visibility", "hidden");
+                //                                 alertPersonalizado('error', 'Ocorreu algum erro');
+                //                                 $('#previewimage_plano_editar').imgAreaSelect({remove: true});
+                //                             },
+                //                             success: function (data) {
+                //                                 $('.loading').css("visibility", "hidden");
+                //                                 alertPersonalizado('success', 'Plano atualizado!');
+                //                                 $($.fn.dataTable.tables(true)).css('width', '100%');
+                //                                 $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
+                //                                 $('#previewimage_plano_editar').imgAreaSelect({remove: true});
+                //                             },
+                //                         });
+                //                     });
+                //
+                //                     $('.dinheiro').mask('#.###,#0', {reverse: true});
+                //
+                //                     var p = $("#previewimage_plano_editar");
+                //                     $("#foto_plano_editar").on("change", function () {
+                //
+                //                         var imageReader = new FileReader();
+                //                         imageReader.readAsDataURL(document.getElementById("foto_plano_editar").files[0]);
+                //
+                //                         imageReader.onload = function (oFREvent) {
+                //
+                //                             p.attr('src', oFREvent.target.result).fadeIn();
+                //
+                //                             p.on('load', function () {
+                //
+                //                                 var img = document.getElementById('previewimage_plano_editar');
+                //                                 var x1, x2, y1, y2;
+                //
+                //                                 if (img.naturalWidth > img.naturalHeight) {
+                //                                     y1 = Math.floor(img.naturalHeight / 100 * 10);
+                //                                     y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                //                                     x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                //                                     x2 = x1 + (y2 - y1);
+                //                                 } else {
+                //                                     if (img.naturalWidth < img.naturalHeight) {
+                //                                         x1 = Math.floor(img.naturalWidth / 100 * 10);
+                //                                         ;
+                //                                         x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                //                                         y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                //                                         y2 = y1 + (x2 - x1);
+                //                                     } else {
+                //                                         x1 = Math.floor(img.naturalWidth / 100 * 10);
+                //                                         x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                //                                         y1 = Math.floor(img.naturalHeight / 100 * 10);
+                //                                         y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                //                                     }
+                //                                 }
+                //
+                //                                 $('input[name="foto_plano_editar_x1"]').val(x1);
+                //                                 $('input[name="foto_plano_editar_y1"]').val(y1);
+                //                                 $('input[name="foto_plano_editar_w"]').val(x2 - x1);
+                //                                 $('input[name="foto_plano_editar_h"]').val(y2 - y1);
+                //
+                //                                 $('#modal_editar').on('hidden.bs.modal', function () {
+                //                                     $('#previewimage_plano_editar').imgAreaSelect({remove: true});
+                //                                 });
+                //                                 $('#previewimage_plano_editar').imgAreaSelect({remove: true});
+                //
+                //                                 $('#previewimage_plano_editar').imgAreaSelect({
+                //                                     x1: x1, y1: y1, x2: x2, y2: y2,
+                //                                     aspectRatio: '1:1',
+                //                                     handles: true,
+                //                                     imageHeight: this.naturalHeight,
+                //                                     imageWidth: this.naturalWidth,
+                //                                     onSelectEnd: function (img, selection) {
+                //                                         $('input[name="foto_plano_editar_x1"]').val(selection.x1);
+                //                                         $('input[name="foto_plano_editar_y1"]').val(selection.y1);
+                //                                         $('input[name="foto_plano_editar_w"]').val(selection.width);
+                //                                         $('input[name="foto_plano_editar_h"]').val(selection.height);
+                //                                     },
+                //                                     parent: $('#conteudo_modal_editar'),
+                //                                 });
+                //                             })
+                //                         };
+                //
+                //                     });
+                //
+                //                     $("#selecionar_foto_plano_editar").on("click", function () {
+                //                         $("#foto_plano_editar").click();
+                //                     });
+                //
+                //                     var qtd_produtos = '1';
+                //
+                //                     var div_produtos = $('#produtos_div_' + qtd_produtos).parent().clone();
+                //
+                //                     $('#add_produto_plano').on('click', function () {
+                //
+                //                         qtd_produtos++;
+                //
+                //                         var nova_div = div_produtos.clone();
+                //
+                //                         var select = nova_div.find('select');
+                //                         var input = nova_div.find('.qtd-produtos');
+                //
+                //                         select.attr('id', 'produto_' + qtd_produtos);
+                //                         select.attr('name', 'produto_' + qtd_produtos);
+                //                         input.attr('name', 'produto_qtd_' + qtd_produtos);
+                //                         input.addClass('qtd-produtos');
+                //
+                //                         div_produtos = nova_div;
+                //
+                //                         $('#produtos').append(nova_div.html());
+                //
+                //                         $(".qtd-produtos").mask("0#");
+                //
+                //                     });
+                //
+                //
+                //                 }
+                //             });
+                //         });
+                //
+                //     }
+                //
+                // });
 
 
 

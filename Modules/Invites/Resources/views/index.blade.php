@@ -4,7 +4,7 @@
 
 <div class="page">
 
-    <div class="page-header">
+    <div class="page-header container">
         <button id="enviar_convite" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" data-target='#modal_convite' data-toggle='modal'><i class="icon wb-plus" aria-hidden="true"></i></button>
         <h2 class="page-title">Convites</h2>
         @if(count($invites) > 0)
@@ -12,19 +12,18 @@
         @endif
     </div>
 
-    <div class="page-content container-fluid">
+    <div class="page-content container">
         @if(count($invites) > 0)
-            <div class="panel pt-30 p-30" data-plugin="matchHeight">
-                <div class="col-xl-12">
+            <div class="card shadow" data-plugin="matchHeight">
                     <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
 
-                        <table class="table table-hover" style="margin-top:10px">
+                        <table class="table table-striped">
                             <thead class="text-center">
                                 <th class="text-left">Convite</th>
-                                <th>Email convidado</th>
-                                <th>Status</th>
-                                <th>Data cadastro</th>
-                                <th>Data expiração</th>
+                                <td>Email convidado</td>
+                                <td>Status</td>
+                                <td>Data cadastro</td>
+                                <td>Data expiração</td>
                             </thead>
                             <tbody>
                                 @foreach($invites as $key => $invites)
@@ -40,7 +39,6 @@
                         </table>
 
                     </div>
-                </div>
             </div>
         @else
             @push('css')

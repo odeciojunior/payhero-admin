@@ -1,36 +1,29 @@
-<div class='page-content container-fluid'>
-    <table class='table-hover' style='width: 100%'>
+<div class='container-fluid'>
+    <table class='table table-bordered table-striped table-hover'>
         <tbody>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Nome</th>
+            <tr>
+                <th style='width:40%;' class='text-center'>Nome:</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$plan->name}}</td>
                 <br>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Descrição</th>
+            <tr>
+                <th style='width:40%;' class='text-center'>Descrição:</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$plan->description}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Código</th>
+            <tr>
+                <th style='width:40%;' class='text-center'>Código:</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$plan->code}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Preço</th>
+            <tr>
+                <th style='width:40%;' class='text-center'>Preço:</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$plan->price}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Produtos</th>
-                <td style='width: 20px'></td>
-                @foreach($plan->productsPlans as $productPlan)
-                    <td class='text-left'>{{$productPlan->getProduct->name}}</td>
-                @endforeach
-            </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Status</th>
+            <tr>
+                <th style='width:40%;' class='text-center'>Status:</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>
                     @if($plan->status == 1)
@@ -41,5 +34,17 @@
                 </td>
             </tr>
         </tbody>
+    </table>
+    <table class='table table-bordered table-striped table-hover mt-2 text-center'>
+        <tr>
+            <th>Produto:</th>
+            <th>Quantidade:</th>
+        </tr>
+        @foreach($plan->productsPlans as $productPlan)
+            <tr>
+                <td>{{$productPlan->getProduct->name}}</td>
+                <td>{{$productPlan->amount}}</td>
+            </tr>
+        @endforeach
     </table>
 </div>

@@ -267,7 +267,6 @@ class ProjectsController extends Controller
             if ($requestValidated) {
                 $project = $this->getProject()->where('id', Hashids::decode($id))->first();
 
-                $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
                 if (!$requestValidated['shipment']) {
                     $requestValidated['carrier']              = null;
                     $requestValidated['shipment_responsible'] = null;
@@ -276,8 +275,11 @@ class ProjectsController extends Controller
                 if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
                     $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
                 }
+
                 $requestValidated['cookie_duration'] = 60;
-                $projectUpdate                       = $project->update($requestValidated);
+                $requestValidated['status']          = 1;
+
+                $projectUpdate = $project->update($requestValidated);
                 if ($projectUpdate) {
                     try {
                         $projectPhoto = $request->file('photo');
@@ -321,6 +323,7 @@ class ProjectsController extends Controller
                                                                       ['project', $project->id],
                                                                   ])->first();
 
+                    $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
                     if ($userProject->company != $requestValidated['company']) {
                         $userProject->update(['company' => $requestValidated['company']]);
                     }

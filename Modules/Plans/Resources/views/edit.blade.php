@@ -1,5 +1,6 @@
-<form id="edit_plan" method="post" action="/plans" enctype="multipart/form-data">
+<form id="form-update-plan" method="PUT" action="/plans" enctype="multipart/form-data">
     @csrf
+    @method('PUT')
     <input type="hidden" value="{{Hashids::encode($plan->id)}}" name="id">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
@@ -33,12 +34,11 @@
                 <div id="products">
                     @if(count($productPlans) > 0)
                         @foreach($productPlans as $key => $productPlan)
-                            <div id="produtos_div_{{ $key + 1 }}" class="row">
+                            <div id="produtos_div_1" class="row">
                                 <div class="form-group col-xl-8">
                                     <label>Produtos do plano:</label>
                                     {{--<select id="product_{{ $key + 1 }}" name="product_{{ $key + 1 }}" class="form-control">--}}
-                                    <select id="product_{{ $key + 1 }}" name="products[]" class="form-control">
-                                        <option value="">Selecione</option>
+                                    <select id="product_1" name="products[]" class="form-control">
                                         @foreach($products as $product)
                                             <option value="{{ $product['id'] }}" {!! ($product['id'] == $productPlan['product']) ? 'selected' : '' !!}>{{ $product['name'] }}</option>
                                         @endforeach
@@ -56,20 +56,22 @@
                         @endforeach
                     @else
                         <div id="produtos_div_1" class="row">
-                            <div class="form-group col-xl-10">
+                            <div class="form-group col-xl-8">
                                 <label>Produtos do plano:</label>
                                 {{--<select id="product_1" name="product_1" class="form-control">--}}
                                 <select id="product_1" name="products[]" class="form-control">
-                                    <option value="" selected>Selecione</option>
                                     @foreach($products as $product)
                                         <option value="{{ $product['id'] }}">{{ $product['name'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-xl-2">
+                            <div class="form-group col-xl-3">
                                 <label>Quantidade:</label>
                                 {{--<input class="form-control products_amount" id='product_amount_1' type="text" name="product_amount_1" data-mask='0#' placeholder="quantidade">--}}
                                 <input class="form-control products_amount" id='product_amount_1' type="text" name="product_amounts[]" data-mask='0#' placeholder="quantidade">
+                            </div>
+                            <div class='col-xl-1 mt-30'>
+                                <button class='btn btn-sm btn-outline btn-danger btnDelete'><i class='icon wb-trash' aria-hidden='true'></i></button></button>
                             </div>
                         </div>
                     @endif
