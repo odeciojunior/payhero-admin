@@ -168,7 +168,25 @@ $(function () {
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
-                            $("#value").mask('#.###,#0', {reverse: true});
+                            if ($("#type").val() == 1) {
+                                $("#value").mask('#.###,#0', {reverse: true});
+
+                            } else {
+                                $('#value').mask('##0,00%', {reverse: true});
+
+                            }
+
+
+                            $("#type").on('change', function () {
+                                if ($("#type").val() == 1) {
+                                    $("#value").mask('#.###,#0', {reverse: true});
+
+                                } else {
+                                    $('#value').mask('##0,00%', {reverse: true});
+
+                                }
+                            });
+
 
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
