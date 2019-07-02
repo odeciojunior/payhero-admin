@@ -77,8 +77,10 @@ class DiscountCouponsController extends Controller
         try {
 
             $requestData            = $request->validated();
-            $requestData["project"] = Hashids::decode($requestData['project'])[0];
-            $discountCouponSaved    = $this->getDiscountCoupons()->create($requestData);
+            $requestData["project"] = current(Hashids::decode($requestData['project']));
+            $requestData['value']   = preg_replace("/[^0-9]/", "", $requestData['value']);
+
+            $discountCouponSaved = $this->getDiscountCoupons()->create($requestData);
             if ($discountCouponSaved) {
                 return response()->json('Cupom criado com Sucesso', 200);
             }
@@ -146,19 +148,15 @@ class DiscountCouponsController extends Controller
     {
         try {
             $requestValidated = $request->validated();
-            $couponId         = Hashids::decode($id)[0];
+            $couponId         = current(Hashids::decode($id));
             $coupon           = $this->getDiscountCoupons()->find($couponId);
-            $couponUpdated    = $coupon->update($requestValidated);
+
+            $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
+
+            $couponUpdated = $coupon->update($requestValidated);
             if ($couponUpdated) {
                 return response()->json('Sucesso', 200);
             }
-            //            $data          = $request->input('coupomData');
-            //            $coupomId      = Hashids::decode($data['id'])[0];
-            //            $coupom        = $this->getDiscountCoupons()->find($coupomId);
-            //            $coupomUpdated = $coupom->update($data);
-            //            if ($coupomUpdated) {
-            //                return response()->json('Sucesso');
-            //            }
 
             return response()->json('Erro');
         } catch (Exception $e) {

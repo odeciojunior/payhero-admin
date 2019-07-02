@@ -8,7 +8,6 @@ class CreateProductRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
-     *
      * @return array
      */
     public function rules()
@@ -19,6 +18,7 @@ class CreateProductRequest extends FormRequest
             'format'        => 'nullable',
             'category'      => 'nullable',
             'cost'          => 'nullable',
+            'price'         => 'required',
             'height'        => 'nullable',
             'width'         => 'nullable',
             'weight'        => 'nullable',
@@ -32,7 +32,6 @@ class CreateProductRequest extends FormRequest
 
     /**
      * Determine if the user is authorized to make this request.
-     *
      * @return bool
      */
     public function authorize()
@@ -42,7 +41,6 @@ class CreateProductRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
      * @return array
      */
     public function messages()
@@ -52,5 +50,4 @@ class CreateProductRequest extends FormRequest
             'description.required' => 'A descrição do produto é obrigatória',
         ];
     }
-
 }

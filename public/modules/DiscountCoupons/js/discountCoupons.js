@@ -27,6 +27,24 @@ $(function () {
                 $("#btn-modal").text('Salvar');
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
+                if ($("#tipo_cupom").val() == 1) {
+                    $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true});
+
+                } else {
+                    $('#valor_cupom_cadastrar').mask('##0,00%', {reverse: true});
+
+                }
+
+
+                $("#tipo_cupom").on('change', function () {
+                    if ($("#tipo_cupom").val() == 1) {
+                        $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true});
+
+                    } else {
+                        $('#valor_cupom_cadastrar').mask('##0,00%', {reverse: true});
+
+                    }
+                });
 
                 $(".btn-save").unbind('click');
                 $(".btn-save").on('click', function () {
@@ -109,6 +127,7 @@ $(function () {
                     var coupon = $(this).attr('coupon');
                     $("#modal-title").html('Detalhes do Cupom <br><hr>');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+
                     var data = {couponId: coupon};
                     $("#btn-modal").hide();
                     $.ajax({
@@ -132,7 +151,9 @@ $(function () {
                     var coupon = $(this).attr('coupon');
                     $("#modal-title").html("Editar Cupom<br><hr>");
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+
                     var data = {couponId: coupon};
+
                     $.ajax({
                         method: "GET",
                         url: "/couponsdiscounts/" + coupon + "/edit",
@@ -147,6 +168,25 @@ $(function () {
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
+                            if ($("#type").val() == 1) {
+                                $("#value").mask('#.###,#0', {reverse: true});
+
+                            } else {
+                                $('#value').mask('##0,00%', {reverse: true});
+
+                            }
+
+
+                            $("#type").on('change', function () {
+                                if ($("#type").val() == 1) {
+                                    $("#value").mask('#.###,#0', {reverse: true});
+
+                                } else {
+                                    $('#value').mask('##0,00%', {reverse: true});
+
+                                }
+                            });
+
 
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {

@@ -42,7 +42,25 @@ class Product extends Model
     /**
      * @var array
      */
-    protected $fillable = ['category', 'user', 'name', 'description', 'guarantee', 'format', 'cost', 'photo', 'height', 'width', 'weight', 'shopify','digital_product_url', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'category',
+        'user',
+        'name',
+        'description',
+        'guarantee',
+        'format',
+        'cost',
+        'photo',
+        'height',
+        'width',
+        'weight',
+        'shopify',
+        'digital_product_url',
+        'price',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

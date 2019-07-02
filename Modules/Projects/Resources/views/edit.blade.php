@@ -127,7 +127,7 @@
             <div class='col-lg-4 row'>
                 <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
                     <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
-                    <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height: 200px; max-width: 300px;'>
+                    <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='width:200px;'>
                     <input type='hidden' name='logo_x1'><input type='hidden' name='logo_y1'>
                     <input type='hidden' name='logo_w'><input type='hidden' name='logo_h'>
                     <p class='info mt-5' style='font-size: 10px;'>
@@ -139,9 +139,9 @@
                     Selecione o tamanho da imagem
                     <div class='form-group'>
                         <select name='ratioImage' id='ratioImage'>
-                            <option value='1:1' selected>1:1</option>
-                            <option value='4:3'> 4:3</option>
-                            <option value='25:9'> 25:9</option>
+                            <option value='1:1' selected>Quadrado</option>
+                            <option value='1:2'>Retangulo (1:2)</option>
+                            <option value='1:3'> Retangulo (1:3)</option>
                         </select>
                     </div>
                 </div>
