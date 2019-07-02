@@ -13,7 +13,8 @@ class CompanyCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'country'          => 'required|string|max:255|in:"usa","brazil"',
+            //            'country'          => 'required|string|max:255,|in:"usa","brazil"',
+            'country'          => 'required|string|max:255',
             'fantasy_name'     => 'required|string|max:255',
             'company_document' => 'required|string|max:255',
         ];

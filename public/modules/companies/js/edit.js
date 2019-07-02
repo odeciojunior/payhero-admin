@@ -1,4 +1,16 @@
 $(document).ready(function () {
+
+    var options = {
+        onKeyPress: function (identificatioNumber, e, field, options) {
+            var masks = ['000.000.000-000', '00.000.000/0000-00'];
+            var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
+            $('#cnpj').mask(mask, options);
+        }
+    };
+
+    //mascara cnpj
+    $('#cnpj').mask('000.000.000-000', options);
+
     $("#company_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('company_update_form'));
