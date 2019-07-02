@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
+use Modules\Shipping\Http\Requests\ShippingUpdateConfigResource;
 use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
 use Modules\Shipping\Transformers\ShippingResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -88,6 +89,7 @@ class ShippingController extends Controller
             if ($shippingValidated) {
                 $shippingValidated['project'] = current(Hashids::decode($shippingValidated['project']));
                 if ($shippingValidated['pre_selected']) {
+
                     $shippings = $this->getShipping()->where([
                                                                  'project'      => $shippingValidated['project'],
                                                                  'pre_selected' => 1,
@@ -243,10 +245,10 @@ class ShippingController extends Controller
                         if ($shippingPreSelected != null) {
                             $shipUpdateSelected = $shippingPreSelected->update(['pre_selected' => 1]);
                         }
-//                        if (!$shipUpdateSelected) {
-//
-//                            return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
-//                        }
+                        //                        if (!$shipUpdateSelected) {
+                        //
+                        //                            return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
+                        //                        }
                     }
 
                     if ($shipping->delete()) {
@@ -259,6 +261,37 @@ class ShippingController extends Controller
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar excluir frete (ShippingController - destroy)');
+            report($e);
+        }
+    }
+
+    /**
+     * @param ShippingUpdateConfigResource $request
+     * @param $projectId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateConfig(ShippingUpdateConfigResource $request, $projectId)
+    {
+        try {
+            $requestValidated = $request->validated();
+            if ($projectId && $requestValidated) {
+                $project = $this->getProject()->find(current(Hashids::decode($projectId)));
+                if ($project) {
+                    if (!$requestValidated['shipment']) {
+                        $requestValidated['carrier']              = null;
+                        $requestValidated['shipment_responsible'] = null;
+                    }
+
+                    $projectUpdate = $project->update($requestValidated);
+                    if ($projectUpdate) {
+                        return response()->json(['message' => 'Configurações frete atualizados com sucesso'], 200);
+                    }
+                }
+            }
+
+            return response()->json(['message' => 'Erro ao tentar atualizar dados'], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar atualiza configurações de frete ShippingController - updateConfig ');
             report($e);
         }
     }

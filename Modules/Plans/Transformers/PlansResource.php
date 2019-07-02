@@ -2,7 +2,6 @@
 
 namespace Modules\Plans\Transformers;
 
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
 class PlansResource extends Resource
@@ -11,12 +10,12 @@ class PlansResource extends Resource
     {
 
         return [
-            'id'          => Hashids::encode($this->id),
+            'id'          => $this->id_code,
             'name'        => $this->name,
             'description' => $this->description,
-            'code'        => Hashids::encode($this->id),
+            'code'        => 'https://checkout.' . $this->projectId->domains[0]->name . '/' . $this->code ?? $this->code,
             'price'       => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
-            'status'      => $this->status,
+            'status'      => isset($this->projectId->domains[0]->name) ? 1 : 0,
         ];
     }
 }

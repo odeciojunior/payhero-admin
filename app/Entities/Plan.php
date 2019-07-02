@@ -95,7 +95,7 @@ class Plan extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function project()
+    public function projectId()
     {
         return $this->belongsTo('App\Entities\Project', 'project');
     }

@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule) {
 
+        date_default_timezone_set('America/Sao_Paulo');
+
         $schedule->command('send:sms')->dailyAt('10:00');
         $schedule->command('verify:transfers')->dailyAt('03:00');
     }

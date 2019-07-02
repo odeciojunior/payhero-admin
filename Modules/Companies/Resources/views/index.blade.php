@@ -4,7 +4,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <h1 class="page-title">Empresas</h1>
             <div class="page-header-actions">
                 <a class="btn btn-primary float-right" href="{{route('companies.create')}}">
@@ -12,18 +12,18 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container-fluid">
-            <div class="panel pt-30 p-30">
+        <div class="page-content container">
+            <div class="card shadow">
                 <div class="page-invoice-table table-responsive">
-                    <table id="companies_table" class="table text-right  table-hover" style="width:100%;">
-                        <thead style="text-align:center">
+                    <table id="companies_table" class="table table-striped" style="width:100%;">
+                        <thead>
                             <tr>
-                                <th style='vertical-align: middle' class="table-title"><b>Nome fantasia</b></th>
-                                <th style='vertical-align: middle' class="table-title"><b>Documento</b></th>
-                                <th style='vertical-align: middle' class="table-title"><b>Status</b></th>
-                                <th style='vertical-align: middle' class="table-title" style="width: 160px">
+                                <td class="table-title"><b>Nome fantasia</b></td>
+                                <td class="table-title"><b>Documento</b></td>
+                                <td class="table-title"><b>Status</b></td>
+                                <td class="table-title" style="width: 130px">
                                     <b>Opções</b>
-                                </th>
+                                </td>
                             </tr>
                         </thead>
                         <tbody id="companies_table_data">

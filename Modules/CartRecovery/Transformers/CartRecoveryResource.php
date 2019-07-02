@@ -41,7 +41,7 @@ class CartRecoveryResource extends Resource
         }
         $value = substr_replace($value, '.',strlen($value) - 2, 0 );
 
-        $domain = Domain::where('project',$this->project)->first();
+        $domain = Domain::where('project_id',$this->project)->first();
         $link = "https://checkout.".$domain['name']."/recovery/".$this->id_log_session;
 
         return [

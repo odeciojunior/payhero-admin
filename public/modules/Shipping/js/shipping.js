@@ -47,6 +47,7 @@ $(document).ready(function () {
                 $("#modal-add-body").html(response);
                 changeType();
 
+
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
 
@@ -266,5 +267,38 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#shippement").on('change', function () {
+        if ($(this).val() == 0) {
+            $("#div-carrier").hide();
+            $("#div-shipment-responsible").hide();
+        } else {
+            $("#div-carrier").show();
+            $("#div-shipment-responsible").show();
+        }
+    });
+
+    $("#bt-add-shipping-config").unbind('click');
+    $("#bt-add-shipping-config").on('click', function (event) {
+        event.preventDefault();
+        var formData = new FormData(document.getElementById('form-config-shipping'));
+
+        $.ajax({
+            method: "POST",
+            url: "/shipping/config/" + projectId,
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: formData,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+            }, error: function () {
+                //
+            }, success: function () {
+                alertCustom('success', 'Configuração atualizadas com sucesso');
+                atualizarFrete();
+            }
+        });
+    });
 
 });

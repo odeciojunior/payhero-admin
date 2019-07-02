@@ -11,7 +11,7 @@
             <thead style='text-align:center;'>
                 <tr>
                     <th style='vertical-align: middle;' class='table-title text-center'><b>Nome</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Descrição</b></th>
+                    {{--                    <th style='vertical-align: middle;' class='table-title text-center'><b>Descrição</b></th>--}}
                     <th style='vertical-align: middle;' class='table-title text-center'><b>Código</b></th>
                     <th style='vertical-align: middle;' class='table-title text-center'><b>Preço</b></th>
                     <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
