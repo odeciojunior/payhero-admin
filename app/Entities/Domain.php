@@ -55,4 +55,12 @@ class Domain extends Model
     {
         return $this->belongsTo('App\Entities\Project');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function records()
+    {
+        return $this->hasMany('App\Entities\DomainRecord');
+    }
 }

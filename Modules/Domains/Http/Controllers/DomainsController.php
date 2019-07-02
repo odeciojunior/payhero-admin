@@ -3,6 +3,7 @@
 namespace Modules\Domains\Http\Controllers;
 
 use App\Entities\Company;
+use App\Entities\DomainRecord;
 use Exception;
 use App\Entities\Domain;
 use App\Entities\Project;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Domains\Http\Requests\DomainCreateRequest;
+use Modules\Domains\Http\Requests\DomainDestroyRecordRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
 use Modules\Domains\Http\Requests\DomainIndexRequest;
 use Modules\Domains\Http\Requests\DomainStoreRequest;
@@ -48,6 +50,10 @@ class DomainsController extends Controller
      * @var CloudFlareService
      */
     private $cloudFlareService;
+    /**
+     * @var $domainRecordModel
+     */
+    private $domainRecordModel;
 
     /**
      * @return Domain|\Illuminate\Contracts\Foundation\Application|mixed
@@ -59,6 +65,18 @@ class DomainsController extends Controller
         }
 
         return $this->domainModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDomainRecordModel()
+    {
+        if (!$this->domainRecordModel) {
+            $this->domainRecordModel = app(DomainRecord::class);
+        }
+
+        return $this->domainRecordModel;
     }
 
     /**
@@ -142,29 +160,31 @@ class DomainsController extends Controller
 
                 $project = $this->getProjectModel()->find($projectId);
 
-                if ($project->shopify_id == null) {
-                    $newDomain = $this->getCloudFlareService()
-                                      ->integrationWebsite($requestData['name'], $requestData['domain_ip']);
+                $domainCreated = $this->getDomainModel()->create([
+                                                                     'project_id' => $projectId,
+                                                                     'name'       => $requestData['name'],
+                                                                     'domain_ip'  => $requestData['domain_ip'],
+                                                                     'status'     => $this->getDomainModel()
+                                                                                          ->getEnum('status', 'pending'),
+                                                                 ]);
+
+                if ($domainCreated) {
+                    if ($project->shopify_id == null) {
+                        $newDomain = $this->getCloudFlareService()
+                                          ->integrationWebsite($domainCreated->id, $requestData['name'], $requestData['domain_ip']);
+                    } else {
+                        $newDomain                = $this->getCloudFlareService()
+                                                         ->integrationShopify($domainCreated->id, $requestData['name']);
+                        $requestData['domain_ip'] = 'Domínio Shopify';
+                    }
+
+                    if ($newDomain) {
+                        return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
+                    } else {
+                        //problema ao cadastrar dominio
+                        return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                    }
                 } else {
-                    $newDomain                = $this->getCloudFlareService()
-                                                     ->integrationShopify($requestData['name']);
-                    $requestData['domain_ip'] = 'Domínio Shopify';
-                }
-
-                if ($newDomain) {
-                    $domainCreated = $this->getDomainModel()->create([
-                                                                         'project_id' => $projectId,
-                                                                         'name'       => $requestData['name'],
-                                                                         'domain_ip'  => $requestData['domain_ip'],
-                                                                         'status'     => $this->getDomainModel()
-                                                                                              ->getEnum('status', 'pending'),
-                                                                     ]);
-
-                    //Domain::create($requestData);
-
-                    return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
-                } else {
-                    //problema ao cadastrar dominio
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                 }
             } else {
@@ -187,42 +207,31 @@ class DomainsController extends Controller
     public function edit($id)
     {
         try {
-            $domain    = $this->getDomainModel()->with(['project'])->find(current(Hashids::decode($id)));
+            $domain    = $this->getDomainModel()->with(['project', 'records'])->find(current(Hashids::decode($id)));
             $companies = $this->getCompanyModel()->all();
-            //$project   = $this->getProjectModel()->find($domain->project_id);
 
-            $records = $this->getCloudFlareService()->getRecords($domain->name);
+            $registers = [];
+            foreach ($domain->records as $record) {
 
-            $registros = [];
-            foreach ($records as $record) {
+                $subdomain = explode('.', $record->name);
 
-                $novo_registro['id']   = $record->id;
-                $novo_registro['tipo'] = $record->type;
+                $newRegister = [
+                    'id'          => Hashids::encode($record->id),
+                    'type'        => $record->type,
+                    //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
+                    'name'        => $record->name,
+                    'content'     => ($record->content == $this->getCloudFlareService()::checkoutIp) ? "Servidores CloudFox" : $record->content,
+                    'system_flag' => $record->system_flag,
 
-                if ($record->name == $domain['name']) {
-                    $novo_registro['nome'] = $record->name;
-                } else {
-                    $subdomain             = explode('.', $record->name);
-                    $novo_registro['nome'] = $subdomain[0];
-                }
-                if ($record->content == "104.248.122.89")
-                    $novo_registro['valor'] = "Servidores CloudFox";
-                else
-                    $novo_registro['valor'] = $record->content;
+                ];
 
-                if ($novo_registro['nome'] == 'checkout' || $novo_registro['nome'] == 'sac' || $novo_registro['nome'] == 'affiliate' || $novo_registro['nome'] == 'www' || $novo_registro['nome'] == $domain['name']) {
-                    $novo_registro['deletar'] = false;
-                } else {
-                    $novo_registro['deletar'] = true;
-                }
-
-                $registros[] = $novo_registro;
+                $registers[] = $newRegister;
             }
             if ($domain) {
                 return view('domains::edit', [
                     'domain'    => $domain,
                     'companies' => $companies,
-                    'registers' => $registros,
+                    'registers' => $registers,
                     'project'   => $domain->project,
                 ]);
             }
@@ -239,30 +248,44 @@ class DomainsController extends Controller
      */
     public function update(Request $request)
     {
+        try {
+            $requestData = $request->all();
+            $recordsJson = json_decode($requestData['data']);
 
-        $requestData = $request->all();
+            $domain = $this->getDomainModel()->find(current(Hashids::decode($requestData['domain'])));
 
-        $domain = Domain::find($requestData['id']);
-
-        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        $adapter = new Guzzle($key);
-        $dns     = new DNS($adapter);
-        $zones   = new Zones($adapter);
-        $zoneID  = $zones->getZoneID($domain['name']);
-
-        for ($x = 1; $x < 10; $x++) {
-
-            if (isset($requestData['tipo_registro_' . $x])) {
-
-                try {
-                    $dns->addRecord($zoneID, $requestData['tipo_registro_' . $x], $requestData['nome_registro_' . $x], $requestData['valor_registro_' . $x], 0, true);
-                } catch (Exception $e) {
-                    return response()->json('Não foi possível adicionar o novo registro DNS, verifique os dados informados !');
+            $this->getCloudFlareService()->setZone($domain->name);
+            foreach ($recordsJson as $records) {
+                foreach ($records as $record) {
+                    if (!$this->getDomainRecordModel()
+                              ->where('type', current($record[0]))
+                              ->where('name', current($record[1]))
+                              ->where('content', current($record[2]))
+                              ->exists()) {
+                        //nao existe a record
+                        $this->getCloudFlareService()
+                             ->addRecord(current($record[0]), current($record[1]), current($record[2]));
+                        $newRecord = $this->getDomainRecordModel()->create([
+                                                                               'domain_id'   => $domain->id,
+                                                                               'type'        => current($record[0]),
+                                                                               'name'        => current($record[1]),
+                                                                               'content'     => current($record[2]),
+                                                                               'system_flag' => 0,
+                                                                           ]);
+                    } else {
+                        //dominio já cadastrado
+                        return response()->json(['message' => 'Este dominio já esta cadastrado'], 400);
+                    }
                 }
             }
-        }
 
-        return response()->json('sucesso');
+            return response()->json(['message' => "Dominio atualizado com sucesso"], 200);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar salvar dominio personalisado DomainsController - update');
+            report($e);
+
+            return response()->json(['message' => 'Erro ao atualizar dominios'], 400);
+        }
     }
 
     /**
@@ -276,11 +299,15 @@ class DomainsController extends Controller
 
             $domainId = current(Hashids::decode($requestData['id']));
 
-            $domain = $this->getDomainModel()->find($domainId);
+            $domain = $this->getDomainModel()->with('records')->find($domainId);
 
             if ($this->getCloudFlareService()->deleteZone($domain->name)) {
                 //zona deletada
-                $domainDeleted = $domain->delete();
+                $this->getSendgridService()->deleteLinkBrand($domain->name);
+                $this->getSendgridService()->deleteZone($domain->name);
+
+                $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
+                $domainDeleted  = $domain->delete();
 
                 if ($domainDeleted) {
                     return response()->json(['message' => 'Domínio removido com sucesso'], 200);
@@ -357,31 +384,33 @@ class DomainsController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Cloudflare\API\Endpoints\EndpointException
      */
-    public function removerRegistroDns(Request $request)
+    public function destroyRecord(DomainDestroyRecordRequest $request)
     {
-
-        return response()->json('Ocorreu algum erro ao remover o registro DNS');
-        /*
-        $requestData = $request->all();
-
-        $domain = Domain::find($requestData['id_domain']);
-
-        $key     = new APIKey('lorran_neverlost@hotmail.com', 'e8e1c0c37c306089f4791e8899846546f5f1d');
-        $adapter = new Guzzle($key);
-        $dns     = new DNS($adapter);
-        $zones   = new Zones($adapter);
-        $zoneID  = $zones->getZoneID($domain['name']);
-
         try {
-            $dns->deleteRecord($zoneID, $requestData['id_registro']);
-        } catch (\Exception $e) {
-            return response()->json('Ocorreu algum erro ao remover o registro DNS');
+            $requestData = $request->validated();
+
+            $recordId = current(Hashids::decode($requestData['id_record']));
+            $record   = $this->getDomainRecordModel()->with('domain')->find($recordId);
+
+            $this->getCloudFlareService()->setZone($record->domain->name);
+            if ($this->getCloudFlareService()->deleteRecord($record->name.'.'.$record->domain->name)) {
+                //zona deletada
+
+                $recordsDeleted = $this->getDomainRecordModel()->where('id', $record->id)->delete();
+
+                if ($recordsDeleted) {
+                    return response()->json(['message' => 'Dns removido com sucesso'], 200);
+                } else {
+                    return response()->json(['message' => 'Não foi possível deletar o dns!'], 400);
+                }
+            } else {
+                //erro ao deletar zona
+                return response()->json(['message' => 'Não foi possível deletar o dns!'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('DomainsController destroyRecord - erro ao deletar dns');
+            report($e);
         }
-
-        return response()->json('sucesso');
-
-        */
     }
 }
