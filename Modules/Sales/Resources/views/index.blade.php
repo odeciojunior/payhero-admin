@@ -44,67 +44,68 @@
             </div>
           </div>  --}}
             <div class="fixhalf"></div>
-            <form action='{{route('sales.getcsvsales')}}' method='POST'>
-                @csrf
-                <div id="" class="card shadow p-20">
-                    <div class="row align-items-baseline">
-                        <div class="col-3">
-                            <label for="projeto">Projeto</label>
-                            <select id="projeto" class="form-control select-pad">
-                                <option value="">Todos projetos</option>
-                                @foreach($projetos as $projeto)
-                                    <option value="{!! $projeto['id'] !!}">{!! $projeto['nome'] !!}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="forma">Forma de pagamento</label>
-                            <select id="forma" class="form-control select-pad">
-                                <option value="">Boleto e cartão de crédito</option>
-                                <option value="credit card">Cartão de crédito</option>
-                                <option value="boleto">Boleto</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="status">Status</label>
-                            <select id="status" class="form-control select-pad">
-                                <option value="">Todos status</option>
-                                <option value="1">Aprovado</option>
-                                <option value="2">Aguardando pagamento</option>
-                                <option value="4">Estornada</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="comprador">Nome do cliente</label>
-                            <input id="comprador" class="input-pad" placeholder="cliente">
-                        </div>
-                    </div>
-                    <div class="row mt-15">
-                        <div class="col-3">
-                            <label for="data_inicial">Data inicial</label>
-                            <input id="data_inicial" class="form-control input-pad" type="date">
-                        </div>
-                        <div class="col-3">
-                            <label for="data_final">Data final</label>
-                            <input id="data_final" class="form-control input-pad" type="date">
-                        </div>
-                        <div class="col-4">
-                            <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">
-                                <i class="icon wb-check" aria-hidden="true"></i>Aplicar
-                            </button>
-                            <div class="col-4 float-right">
-                                <button id="bt_get_csv" class="btn btn-info" style="margin-top: 30px">
-                                    <i class="icon wb-check" aria-hidden="true"></i>Exportar
-                                </button>
+            @if($sales_amount > 0)
+                <form action='{{route('sales.getcsvsales')}}' method='POST'>
+                    @csrf
+                    <div id="" class="card shadow p-20">
+                        <div class="row align-items-baseline">
+                            <div class="col-3">
+                                <label for="projeto">Projeto</label>
+                                <select id="projeto" class="form-control select-pad">
+                                    <option value="">Todos projetos</option>
+                                    @foreach($projetos as $projeto)
+                                        <option value="{!! $projeto['id'] !!}">{!! $projeto['nome'] !!}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="forma">Forma de pagamento</label>
+                                <select id="forma" class="form-control select-pad">
+                                    <option value="">Boleto e cartão de crédito</option>
+                                    <option value="credit card">Cartão de crédito</option>
+                                    <option value="boleto">Boleto</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="status">Status</label>
+                                <select id="status" class="form-control select-pad">
+                                    <option value="">Todos status</option>
+                                    <option value="1">Aprovado</option>
+                                    <option value="2">Aguardando pagamento</option>
+                                    <option value="4">Estornada</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="comprador">Nome do cliente</label>
+                                <input id="comprador" class="input-pad" placeholder="cliente">
                             </div>
                         </div>
-                        <div class="col-2">
+                        <div class="row mt-15">
+                            <div class="col-3">
+                                <label for="data_inicial">Data inicial</label>
+                                <input id="data_inicial" class="form-control input-pad" type="date">
+                            </div>
+                            <div class="col-3">
+                                <label for="data_final">Data final</label>
+                                <input id="data_final" class="form-control input-pad" type="date">
+                            </div>
+                            <div class="col-4">
+                                <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">
+                                    <i class="icon wb-check" aria-hidden="true"></i>Aplicar
+                                </button>
+                                <div class="col-4 float-right">
+                                    <button id="bt_get_csv" class="btn btn-info" style="margin-top: 30px">
+                                        <i class="icon wb-check" aria-hidden="true"></i>Exportar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
-            <div class="fixhalf"></div>
-            @if($sales_amount > 0)
+                </form>
+                <div class="fixhalf"></div>
+
                 <div class="card shadow" style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
                         <table id="tabela_vendas" class="table-vendas table table-striped" style="width:100%;">
@@ -148,6 +149,9 @@
                     <!-- End Modal -->
                 </div>
 
+                <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                    {{-- js carrega... --}}
+                </ul>
             @else
                 @push('css')
                     <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
@@ -161,9 +165,7 @@
                 </div>
 
             @endif
-            <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
-                {{-- js carrega... --}}
-            </ul>
+
         </div>
     </div>
 
