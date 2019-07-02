@@ -267,11 +267,6 @@ class ProjectsController extends Controller
             if ($requestValidated) {
                 $project = $this->getProject()->where('id', Hashids::decode($id))->first();
 
-                if (!$requestValidated['shipment']) {
-                    $requestValidated['carrier']              = null;
-                    $requestValidated['shipment_responsible'] = null;
-                }
-
                 if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
                     $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
                 }
@@ -285,7 +280,6 @@ class ProjectsController extends Controller
                         $projectPhoto = $request->file('photo');
                         if ($projectPhoto != null) {
                             $this->getDigitalOceanFileService()->deleteFile($project->photo);
-
                             $img = Image::make($projectPhoto->getPathname());
                             $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
                             $img->resize(200, 200);
@@ -300,6 +294,7 @@ class ProjectsController extends Controller
 
                         $projectLogo = $request->file('logo');
                         if ($projectLogo != null) {
+
                             $this->getDigitalOceanFileService()->deleteFile($project->logo);
                             $img = Image::make($projectLogo->getPathname());
                             $img->crop($requestValidated['logo_w'], $requestValidated['logo_h'], $requestValidated['logo_x1'], $requestValidated['logo_y1']);

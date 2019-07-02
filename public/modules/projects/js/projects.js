@@ -10,7 +10,9 @@ $(function () {
 
     ///// UDPATE CONFIGURAÇÃO Tela Project
     function updateConfiguracoes() {
+
         $.ajax({
+
             method: "GET",
             url: "/projects/" + projectId + '/edit',
             headers: {
@@ -18,6 +20,11 @@ $(function () {
             }, error: function () {
                 alertCustom('error', 'Ocorreu algum error');
             }, success: function (data) {
+                /* var imgLogo = document.getElementById("image-logo-email");
+                 if (imgLogo != null) {
+                     $("#image-logo-email").css('width', imgLogo.naturalWidth);
+                     $("#image-logo-email").css('height', imgLogo.naturalHeight);
+                 }*/
                 var verifyJuros = true;
 
                 /* verifica quantidade parcelas com a quantidade parcelas sem juros */
@@ -126,7 +133,7 @@ $(function () {
                 $('#ratioImage').unbind('change');
                 $("#ratioImage").on('change', function () {
                     ratio = $('#ratioImage option:selected').val();
-                    $("#photoProject").imgAreaSelect({remove: true});
+                    $("#image-logo-email").imgAreaSelect({remove: true});
                     updateConfiguracoes();
                     imgNatural(ratio);
                 });
@@ -147,23 +154,44 @@ $(function () {
                 function imgNatural() {
                     let img = document.getElementById("image-logo-email");
                     let x1, x2, y1, y2;
-
-                    if (img.naturalWidth > img.naturalHeight) {
-                        y1 = Math.floor(img.naturalHeight / 100 * 10);
-                        y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                        x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
-                        x2 = x1 + (y2 - y1);
-                    } else {
-                        if (img.naturalWidth < img.naturalHeight) {
-                            x1 = Math.floor(img.naturalWidth / 100 * 10);
-                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                            y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
-                            y2 = y1 + (x2 - x1);
-                        } else {
-                            x1 = Math.floor(img.naturalWidth / 100 * 10);
-                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                    if (ratio === '1:1') {
+                        if (img.naturalWidth > img.naturalHeight) {
                             y1 = Math.floor(img.naturalHeight / 100 * 10);
                             y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                            x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                            x2 = x1 + (y2 - y1);
+                        } else {
+                            if (img.naturalWidth < img.naturalHeight) {
+                                x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                                y2 = y1 + (x2 - x1);
+                            } else {
+                                x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                            }
+                        }
+                    } else if (ratio === '1:2') {
+                        if (img.naturalWidth > img.naturalHeight) {
+                            y1 = Math.floor(img.naturalHeight / 100 * 10);
+                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                            x1 = Math.floor(img.naturalWidth / 2) - Math.floor(y2 - y1);
+                            if (x1 < 0) {
+                                x1 = 2;
+                            }
+                            x2 = x1 + ((y2 - y1) * 2);
+                            if (x2 > img.naturalWidth) {
+                                x2 = img.naturalWidth - 2;
+                                y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
+                                y2 = y1 + Math.floor((x2 - x1) / 2);
+                            }
+                        } else {
+                            x1 = 2;
+                            x2 = img.naturalWidth - 2;
+                            y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
+                            y2 = y1 + Math.floor((x2 - x1) / 2);
                         }
                     }
 
@@ -175,6 +203,7 @@ $(function () {
                         x1: x1, y1: y1, x2: x2, y2: y2,
                         aspectRatio: ratio,
                         handles: true,
+                        show: true,
                         imageHeight: this.naturalHeight,
                         imageWidth: this.naturalWidth,
                         onSelectEnd: function (img, selection) {
@@ -208,9 +237,9 @@ $(function () {
                             },
                             data: formData,
                             error: function (response) {
-                                if (response.status === 422) {
-                                    for (error in response.errors) {
-                                        alertCustom('error', String(response.errors[error]));
+                                if (response.status === '422') {
+                                    for (error in response.responseJSON.errors) {
+                                        alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 }
                             }, success: function (response) {
@@ -218,7 +247,7 @@ $(function () {
                                     alertCustom('success', 'Projeto autalizado com sucesso');
 
                                 } else {
-                                    alertCustom('error', 'Erro ao tentar atualizar Projeto');
+                                    alert('aki');
                                 }
 
                                 $("#image-logo-email").imgAreaSelect({remove: true});
