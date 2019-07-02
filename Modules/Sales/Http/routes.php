@@ -11,6 +11,11 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sales', 'namespace' 
         'uses' => 'SalesController@getSales',
     ]);
 
+    Route::post('/getcsvsales', [
+        'as' => 'sales.getcsvsales',
+        'uses' => 'SalesController@getCsvSales',
+    ]);
+
     Route::post('/venda/detalhe',[
         'as' => 'sales.detail',
         'uses' => 'SalesController@getSaleDetail'
