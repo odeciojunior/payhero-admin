@@ -127,13 +127,26 @@ $(document).ready(function () {
 
     $("#bt_get_csv").on("click", function () {
         $('<input>').attr({
+            id: 'export-sales',
             type: 'hidden',
             name: 'type',
-            value: ''
+            value: 'csv'
         }).appendTo('form');
 
         $('#filter_form').submit();
-        //csvSalesExport();
+        $('export-sales').remove();
+    });
+
+    $("#bt_get_xls").on("click", function () {
+        $('<input>').attr({
+            id: 'export-sales',
+            type: 'hidden',
+            name: 'type',
+            value: 'xls'
+        }).appendTo('form');
+
+        $('#filter_form').submit();
+        $('export-sales').remove();
     });
 
     function downloadFile(data, fileName, type = "text/plain") {
@@ -190,7 +203,7 @@ $(document).ready(function () {
         $("#pagination").append(primeira_pagina);
 
         //if (response.meta.current_page == '1') {
-           // $("#primeira_pagina").attr('disabled', true);
+        // $("#primeira_pagina").attr('disabled', true);
         //}
 
         $('#primeira_pagina').on("click", function () {
