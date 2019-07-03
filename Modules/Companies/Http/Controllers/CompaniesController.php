@@ -234,7 +234,7 @@ class CompaniesController extends Controller
                 $company->delete();
             } else {
                 //empresa nao exsite
-                return response()->json(['message' => 'Empresa não emcontrada para remoção'], 422);
+                return response()->json(['message' => 'Empresa não encontrada para remoção'], 422);
             }
 
             return response()->json(['message' => 'Empresa removida com sucesso'], 200);

@@ -126,7 +126,7 @@ $(document).ready(function () {
             data: {
                 name: $('#firstname').val() + ' ' + $('#lastname').val(),
                 email: $('#email').val(),
-                celphone: $('#phone').val(),
+                cellphone: $('#phone').val(),
                 password: $('#password').val(),
                 parameter: $('#parameter').val()
             },

@@ -48,7 +48,7 @@
       </div>  --}}
 
       <div class="fixhalf"></div>
-      
+
       @if($sales_amount > 0)
       <form action='{{route('sales.getcsvsales')}}' method='POST'>
                     @csrf
@@ -157,8 +157,8 @@
                     <p class="sm-text text-muted"> Pagamento via Cartão Visa em 02/07/2019 às 22:32 <br> IP do Cliente: 24.202.302.11  </p>
                     <div class="status d-inline">
                       <img style="width: 50px;" src="{!! asset('modules/global/assets/img/cartoes/visa.png') !!}">
-                      <span class="badge badge-success mr-5"> Pago </span> 
-                    </div> 
+                      <span class="badge badge-success mr-5"> Pago </span>
+                    </div>
 
                 </div>
 
@@ -178,25 +178,25 @@
                         </div>
 
                         <div class="col-lg-4">
-                          <h4 class="table-title"> Nome Produto </h4>                        
+                          <h4 class="table-title"> Nome Produto </h4>
                         </div>
 
                         <div class="col-lg-2 text-right">
-                          <p class="sm-text text-muted"> 1x </p>                        
+                          <p class="sm-text text-muted"> 1x </p>
                         </div>
 
                         <div class="col-lg-4 text-right">
-                          <p class="sm-text text-muted"> R$360,00 </p>                         
+                          <p class="sm-text text-muted"> R$360,00 </p>
                         </div>
-                    
+
                     </div>
 
                     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
                         <div class="col-lg-6">
-                          <h4 class="table-title"> Total </h4>  
+                          <h4 class="table-title"> Total </h4>
                         </div>
                         <div class="col-lg-6 text-right">
-                          <h4 class="table-title"> R$360,00 </h4>  
+                          <h4 class="table-title"> R$360,00 </h4>
                         </div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@
                       <h4> Dados Pessoais </h4>
 
                       <span class="table-title gray"> Nome: Amanda Garcia </span> <br>
-                      <span class="table-title gray "> Telefone: 48 984040924 <img src="{!! asset('modules/global/assets/img/whatsapplogo.png') !!}" width="25px"> </span> <br> 
+                      <span class="table-title gray "> Telefone: 48 984040924 <img src="{!! asset('modules/global/assets/img/whatsapplogo.png') !!}" width="25px"> </span> <br>
                       <span class="table-title gray"> E-mail: amandaga@gmail.com </span> <br>
                       <span class="table-title gray"> CPF: 01929229 </span>
 
@@ -225,12 +225,12 @@
                       <span class="table-title gray"> Endereço:	Rua Emílio Baldin, 04 </span> <br>
                       <span class="table-title gray"> CEP: 9190700 </span> <br>
                       <span class="table-title gray"> Cidade: Porto Alegre/RS </span>
-                    
+
                     </div>
 
                     <!-- DETALHES  -->
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                          
+
                           <h4> Dados Gerais </h4>
                           <span class="table-title gray"> IP: 20.293.202.92  </span> <br>
                           <span class="table-title gray "> Dispositivo: Mobile </span> <br>
@@ -238,7 +238,7 @@
                           <h4> Conversão </h4>
                           <span class="table-title gray"> SRC: giovani  </span> <br>
                           <span class="table-title gray"> UTM Source: remarketing  </span> <br>
-                          <span class="table-title gray"> UTM Medium: facebook-click </span> <br> 
+                          <span class="table-title gray"> UTM Medium: facebook-click </span> <br>
                           <span class="table-title gray"> UTM Campaign: ad091</span> <br>
                           <span class="table-title gray"> UTM Term: - </span> <br>
                           <span class="table-title gray"> UTM Content: advertorial </span>
@@ -246,7 +246,7 @@
                     </div>
                 </div>
 
-              
+
               </div>
 
                 <div class="clearfix"></div>
@@ -267,7 +267,7 @@
             </div>
           </div>
           <!-- End Modal -->
-     
+
     </div>
 
       @else
@@ -284,13 +284,13 @@
 
       @endif
 
-    
+
     <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
               {{-- js carrega... --}}
           </ul>
 
         </div>
-        
+
   </div>
 
 @push('scripts')

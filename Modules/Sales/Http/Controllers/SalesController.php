@@ -31,11 +31,13 @@ class SalesController extends Controller
         $projects     = [];
 
         foreach ($userProjects as $userProject) {
-            $project    = Project::find($userProject['project']);
-            $projects[] = [
-                'id'   => $project['id'],
-                'nome' => $project['name'],
-            ];
+            $project = Project::find($userProject['project']);
+            if ($project['id'] != null) {
+                $projects[] = [
+                    'id'   => $project['id'],
+                    'nome' => $project['name'],
+                ];
+            }
         }
 
         return view('sales::index', [
@@ -273,10 +275,10 @@ class SalesController extends Controller
             //$xlsx = new SaleReportExport($saleData, $header, 16);
             //$z    = Excel::store($xlsx, 'x.xlsx');
 
-//            return response()->json([
-//                                        'message' => 'Domínio cadastrado com sucesso',
-//                                        'data'    => $xlsx,
-//                                    ], 200);
+            //            return response()->json([
+            //                                        'message' => 'Domínio cadastrado com sucesso',
+            //                                        'data'    => $xlsx,
+            //                                    ], 200);
 
             //$x=sys_get_temp_dir();
 
