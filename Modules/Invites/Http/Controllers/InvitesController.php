@@ -35,13 +35,12 @@ class InvitesController extends Controller
      * @var SiteInvitationRequest
      */
     private $siteInvitationRequest;
-
     /**
      * @var HubsmartInvitationRequest
      */
     private $hubsmartInvitationRequest;
 
-    /**   
+    /**
      * InvitesController constructor.
      * @param Invitation $invitation
      * @param Company $company
@@ -66,20 +65,11 @@ class InvitesController extends Controller
     {
         $invites = $this->invitation->where('invite', auth()->user()->id)->get();
 
-        foreach ($invites as $invite) {
-
-            if ($invite->status == 'Enviado') {
-                $invite->status = "<span class='badge badge-info'>Enviado</span>";
-            } else {
-                $invite->status = "<span class='badge badge-success'>" . $invite->status . "</span>";
-            }
-        }
-
-        $companies = $this->company->where('user_id',\Auth::user()->id)->get();
+        $companies = $this->company->where('user_id', \Auth::user()->id)->get();
 
         return view('invites::index', [
-            'invites' => $invites,
-            'companies' => $companies
+            'invites'   => $invites,
+            'companies' => $companies,
         ]);
     }
 
@@ -92,13 +82,13 @@ class InvitesController extends Controller
         try {
             $requestData = $request->validated();
 
-            $requestData['invite'] = auth()->user()->id;
-            $requestData['status'] = "Convite enviado";
+            $requestData['invite']    = auth()->user()->id;
+            $requestData['status']    = $this->invitation->getEnum('status', 'pending');
             $requestData['parameter'] = $requestData['company'];
-            $requestData['company'] = current(Hashids::decode($requestData['company']));
+            $requestData['company']   = current(Hashids::decode($requestData['company']));
 
-            $invite = $this->invitation->where('email_invited',$requestData['email_invited'])->first();
-            if($invite){
+            $invite = $this->invitation->where('email_invited', $requestData['email_invited'])->first();
+            if ($invite) {
                 $invite->delete();
             }
 
