@@ -1,27 +1,37 @@
 <!-- Page -->
-<div class='row'>
-    <div style='width:100%'>
-        <div class='form-group'>
-            <a id='add-shipping' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white; margin-right:10px;'>
-                <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Frete
-            </a>
-            <a id='config-shipping' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content-shipping' style='color:white;'>
-                <i class='icon wb-user-add' aria-hidden='true'></i>Configurações Frete
-            </a>
+
+<div class='row no-gutters mb-10'>
+    <div class="top-holder text-right mb-5" style="width: 100%;">
+        <div class="d-flex align-items-center justify-content-end">
+
+            <div id="config-shipping" class="btn-holder d-flex align-items-center pointer mr-10"   data-toggle="modal" data-target="#modal-content-shipping">
+                <a class="pointer"> <i class="material-icons"> settings</i> </a>
+                <span class="link-button-dependent gray ml-10"> Configurar frete </span>
+            </div>    
+
+
+            <div id="add-shipping" class="btn-holder  d-flex align-items-center pointer"  data-toggle="modal" data-target="#modal-content">
+                <span class="link-button-dependent red"> Adicionar SMS </span>
+                <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
+            </div>    
+         
         </div>
     </div>
 </div>
-<div class='panel pt-10 p-10' style='min-height: 300px'>
+
+
+<div class="card shadow">
+    <div style='min-height: 300px'>
     <div class='page-invoice-table table-responsive'>
-        <table id='tabela-fretes' class='table text-right table-fretes table-hover' style='width:100%'>
-            <thead style='text-align:center;'>
+        <table id='tabela-fretes' class='table text-left table-fretes table-striped' style='width:100%'>
+            <thead>
                 <tr>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Tipo</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Descrição</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Valor</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Informação</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Pré Selecionado</b></th>
+                    <td class='table-title'>Tipo</td>
+                    <td class='table-title'>Descrição</td>
+                    <td class='table-title'>Valor</td>
+                    <td class='table-title'>Informação</td>
+                    <td class='table-title'>Status</td>
+                    <td class='table-title'>Pré-Selecionado</td>
                 </tr>
             </thead>
             <tbody id='dados-tabela-frete'>
@@ -29,7 +39,10 @@
             </tbody>
         </table>
     </div>
+    </div>
+
 </div>
+
 <!-- Modal -->
 <div class='modal fade modal-3d-flip-vertical example-modal-lg' id='modal-content-shipping' tabindex='-1' role='dialog' aria-labelledby='TituloModal' aria-hidden='true'>
     <div class='modal-dialog modal-simple'>

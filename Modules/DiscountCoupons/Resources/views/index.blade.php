@@ -1,20 +1,24 @@
-<div class='row'>
-    <div style='width:100%'>
-        <a id='add-coupon' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
-            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Cupom
-        </a>
+<div class='row no-gutters mb-10'>
+    <div class="top-holder text-right mb-5" style="width: 100%;">
+        <div id="add-coupon" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">
+            <span class="link-button-dependent red"> Adicionar Cupom </span>
+            <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
+        </div>
     </div>
 </div>
-<div class='panel pt-10 p-10' style='min-height: 300px'>
+
+<div class="card shadow">
+
+    <div style='min-height: 300px'>
     <div class='page-invoice-table table-responsive'>
-        <table id='table-coupon' class='table text-right table-pixels table-hover' style='width:100%'>
-            <thead style='text-align:center;'>
+        <table id='tabela-coupon' class='table text-left table-coupon table-striped' style='width:100%'>
+            <thead>
                 <tr>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Nome</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Tipo</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Valor</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Código</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
+                    <td class='table-title'>Nome</td>
+                    <td class='table-title'>Tipo</td>
+                    <td class='table-title'>Valor</td>
+                    <td class='table-title'>Código</td>
+                    <td class='table-title'>Status</td>
                 </tr>
             </thead>
             <tbody id='data-table-coupon'>
@@ -22,4 +26,6 @@
             </tbody>
         </table>
     </div>
+    </div>
+
 </div>
