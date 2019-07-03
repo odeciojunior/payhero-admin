@@ -20,7 +20,7 @@
         </div>
         <div class="page-content container">
             <input type='hidden' id='project-id' value='{{Hashids::encode($project->id)}}'/>
-            <div class="mb-30">
+            <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
                         <li class="nav-item" role="presentation">
@@ -73,43 +73,60 @@
                     </ul>
                 </div>
             </div>
-            <div class="panel pt-10 p-10" data-plugin="matchHeight">
-                <div class="col-xl-12">
-                    <div class="tab-content pt-20">
-                        <div class="tab-content pt-20">
+            <div class="shadow" data-plugin="matchHeight">
+                    <div class="tab-content">
+                        <div class="tab-content">
                             <!-- Painel de informações gerais -->
                             <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-lg-3 col-xl-3">
-                                        <img src="{{ $project->photo }}" alt="Imagem não encontrada" style="height: 200px; width: 200px"/>
+                                
+                                <div class="card">
+                                <div class="row no-gutters">
+                                    <div class="col-md-3">
+                                        <img src="{{ $project->photo }}" class="card-img" alt="">
                                     </div>
-                                    <div class="col-lg-9 col-xl-9">
-                                        <table class="table table-bordered table-hover table-striped">
-                                            <tbody>
-                                                <tr>
-                                                    <td><b>Nome</b></td>
-                                                    <td>{{ $project->name }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Descrição</b></td>
-                                                    <td>{{ $project->description }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Visibilidade</b></td>
-                                                    <td>{{ ($project->visibility == 'public') ? 'Projeto público' : 'Projeto privado' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Status</b></td>
-                                                    <td>{{ $project->status == 1 ? 'Ativo' : 'Inativo' }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="col-md-9 pl-10">
+                                        <div class="card-body">
+
+                                            <div class="row justify-content-between align-items-baseline">
+                                                <div class="col-md-6">
+                                                    <h4 class="title-pad">{{ $project->name }}</h4>
+                                                    <p class="card-text sm"> Criado em 14/06/2019 </p>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="d-flex">
+                                                        <div class="p-2 d-flex flex-column">
+                                                            <span class="details-text">Visibilidade</span>
+                                                            <p class="card-text sm"> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>
+
+                                                        </div>
+
+                                                        <div class="p-2 d-flex flex-column">
+                                                            <span class="details-text">Status</span>
+                                                            <p class="card-text sm"> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <h5 class="sm-title mt-30"> <strong> Descrição </strong> </h5>
+                                            <p class="card-text sm">
+                                                {{ $project->description }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
+
+
                             <!-- Painel de Dominios -->
                             <div id="tab_domains" class="tab-pane" role="tabpanel">
-                                @include('domains::index')
+                                    @include('domains::index')
                             </div>
                             <!-- Painel de Pixels -->
                             <div class="tab-pane" id="tab_pixels-panel" role="tabpanel">
@@ -182,7 +199,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
         @push('scripts')

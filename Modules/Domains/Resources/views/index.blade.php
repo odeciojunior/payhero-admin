@@ -1,20 +1,24 @@
 <!-- Page -->
-<div class='row'>
-    <div style='width:100%'>
-        <a id='add-domain' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
-            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Domínio
-        </a>
+<div class='row no-gutters mb-10'>
+    <div class="top-holder text-right mb-5" style="width: 100%;">
+        <div id="add-domain" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">
+            <span class="link-button-dependent red"> Adicionar domínio </span>
+            <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
+        </div>
     </div>
 </div>
-<div class='panel pt-10 p-10' style='min-height: 300px'>
+
+<div class="card shadow">
+
+    <div style='min-height: 300px'>
     <div class='page-invoice-table table-responsive'>
-        <table id='tabela-dominios' class='table text-right table-dominios table-hover' style='width:100%'>
-            <thead style='text-align:center;'>
+        <table id='tabela-dominios' class='table text-left table-dominios table-striped' style='width:100%'>
+            <thead>
                 <tr>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Nome</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Ip do domínio</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Opções</b></th>
+                    <td class='table-title'>Nome</td>
+                    <td class='table-title'>Ip do domínio</td>
+                    <td class='table-title'>Status</td>
+                    <td class='table-title'>Opções</td>
                 </tr>
             </thead>
             <tbody id='domain-table-body'>
@@ -22,7 +26,10 @@
             </tbody>
         </table>
     </div>
- 
+    </div>
+
+</div>
+
     <!-- Modal detalhes do domínio -->
     <div class='modal fade example-modal-lg modal-3d-flip-vertical' id='modal-detalhes-dominio' aria-hidden='true' aria-labelledby='exampleModalTitle' role='dialog' tabindex='-1'>
         <div class='modal-dialog modal-simple'>
@@ -49,4 +56,3 @@
         </div>
     </div>
     <!-- End Modal -->
-</div>
