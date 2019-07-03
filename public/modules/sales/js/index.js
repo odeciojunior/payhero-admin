@@ -125,9 +125,16 @@ $(document).ready(function () {
         });
     }
 
-    // $("#bt_get_csv").on("click", function () {
-    //     csvSalesExport();
-    // });
+    $("#bt_get_csv").on("click", function () {
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'type',
+            value: ''
+        }).appendTo('form');
+
+        $('#filter_form').submit();
+        //csvSalesExport();
+    });
 
     function downloadFile(data, fileName, type = "text/plain") {
         // Create an invisible A element
