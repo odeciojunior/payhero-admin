@@ -137,12 +137,12 @@ $(document).ready(function () {
         $('export-sales').remove();
     });
 
-    $("#bt_get_csv").on("click", function () {
+    $("#bt_get_xls").on("click", function () {
         $('<input>').attr({
             id: 'export-sales',
             type: 'hidden',
             name: 'type',
-            value: 'csv'
+            value: 'xls'
         }).appendTo('form');
 
         $('#filter_form').submit();
