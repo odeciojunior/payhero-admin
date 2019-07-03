@@ -46,10 +46,11 @@ class Invitation extends Model
         'updated_at',
         'deleted_at',
     ];
-
     private $enum = [
         'status' => [
-            1 => 'sent_invite',
+            1 => 'accepted',
+            2 => 'pending',
+            3 => 'expired',
         ],
     ];
 

@@ -18,20 +18,19 @@
                         @csrf
                         @method('POST')
                         <div class='row'>
-                            <div class='col-md-6'>
+                            <div class='col-md-4 mt-30'>
                                 <input name='photo-main' type='file' class='form-control' id='project-photo' style="display:none">
-                                <div style="margin: 20px 0 0 30px;">
-                                    <label for='preview-image-project'>Selecione a foto do projeto</label>
-                                    <img id="preview-image-project" alt='Selecione a foto do projeto' src="{{asset('modules/global/assets/img/projeto.png')}}" style="max-height: 300px; max-width: 300px;">
-                                    <br>
-                                    <a href="#" id="preview-image-project" class="btn btn-primary mt-15">
-                                        <i class="icon fa-cloud-upload" aria-hidden="true"></i> Upload
-                                    </a>
-                                </div>
+                                <label for='preview-image-project'>Selecione a foto do projeto</label>
+                                <br>
+                                <img id="preview-image-project" alt='Selecione a foto do projeto' src="{{asset('modules/global/assets/img/projeto.png')}}" style="max-height: 300px; max-width: 300px; cursor:pointer;">
+                                <br>
+                                <a href="#" id="preview-image-project" class="btn btn-primary mt-15">
+                                    <i class="icon fa-cloud-upload" aria-hidden="true"></i> Upload
+                                </a>
                                 <input type='hidden' name='photo_x1'/> <input type='hidden' name='photo_y1'/>
                                 <input type='hidden' name='photo_w'/> <input type='hidden' name='photo_h'/>
                             </div>
-                            <div class='col-md-6'>
+                            <div class='col-md-8'>
                                 <div class='form-group col-xl-12' style="margin-top: 30px">
                                     <label for='name'>Nome</label>
                                     <input name='name' type='text' class='form-controll' id='name' placeholder='Nome do projeto' required>
