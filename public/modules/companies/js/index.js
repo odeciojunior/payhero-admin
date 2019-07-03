@@ -27,44 +27,37 @@ $(document).ready(function () {
 
                     $("#companies_table_data").append(dados);
 
-                    $(".delete-company").unbind('click');
-                    $(".delete-company").on('click', function (event) {
+                    var companyId = value.id_code;
+
+                    $("#modal_excluir_titulo").html("Remover empresa?");
+
+                    $("#bt_excluir").unbind('click');
+                    $("#bt_excluir").on("click", function (event) {
+
                         event.preventDefault();
-                        var companyId = $(this).attr('data-company');
+                        $("#fechar_modal_excluir").click();
 
-                        $("#modal_excluir_titulo").html("Remover empresa?");
-
-                        $("#bt_excluir").unbind('click');
-                        $("#bt_excluir").on("click", function (event) {
-                            event.preventDefault();
-                            $("#fechar_modal_excluir").click();
-
-                            $.ajax({
-                                method: "DELETE",
-                                url: "/companies/" + companyId,
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                error: function () {
-                                    if (response.status == '422') {
-                                        for (error in response.responseJSON.errors) {
-                                            alertCustom('error', String(response.responseJSON.errors[error]));
-                                        }
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/companies/" + companyId,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function () {
+                                if (response.status == '422') {
+                                    for (error in response.responseJSON.errors) {
+                                        alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
-                                },
-                                success: function (data) {
-                                    alertCustom("success", data.message);
-                                    atualizar(page);
                                 }
+                            },
+                            success: function (data) {
+                                alertCustom("success", data.message);
+                                atualizar(page);
+                            }
 
-                            })
+                        })
 
-                        });
-                    })
-
-
-
-
+                    });
 
                 });
 

@@ -85,4 +85,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Entities\ProductsPlan', 'product');
     }
+
+    public function plans()
+    {
+        return $this->belongsToMany('App\Entities\Plan');
+    }
 }

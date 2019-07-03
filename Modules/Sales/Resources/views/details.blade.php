@@ -1,210 +1,154 @@
-<div class="page-content container-fluid">
-    <div class="panel pt-10 p-10" data-plugin="matchHeight">
-
-        <div class="nav-tabs-horizontal" data-plugin="tabs" style="height:100%">
-            <ul class="nav nav-tabs-line" role="tablist" style="color: #ee535e">
-                <li class="nav-item" role="presentation"><a class="nav-link active" data-toggle="tab" href="#sales_tab"
-                    aria-controls="sales_tab" role="tab">Venda</a></li>
-                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#client_tab"
-                    aria-controls="client_tab" role="tab">Cliente</a></li>
-                <li class="nav-item" role="presentation"><a class="nav-link" data-toggle="tab" href="#products_tab"
-                    aria-controls="products_tab" role="tab">Produtos</a></li>
-            </ul>
-            <div class="tab-content pt-20">
-                <div class="tab-pane active" id="sales_tab" role="tabpanel" style="min-width: 300px">
-                    <table class="table-hover" style="width: 100%">
-                        <tbody>
-                            <tr style="height: 40px">
-                                <td style="width: 40%" class="text-right">TRANSAÇÃO:</td>
-                                <td style="width:20px">
-                                <td class="text-left">{!! "#".$sale['id'] !!}</td>
-                            </tr>
-                            <tr style="height: 40px">
-                                <td style="width: 40%" class="text-right">FORMA DE PAGAMENTO:</td>
-                                <td style="width:20px">
-                                @if($sale['payment_method'] == '2')
-                                    <td class="text-left">Boleto</td>
-                                @else
-                                    <td class="text-left">Cartão de crédito</td>
-                                @endif 
-                            </tr>
-                            <tr style="height: 40px">
-                                <td style="width: 40%" class="text-right">DATA:</td>
-                                <td style="width:20px">
-                                <td class="text-left">{!! $sale['start_date'] !!}</td>
-                            </tr>
-                            <tr style="height: 40px">
-                                <td style="width: 40%" class="text-right">STATUS:</td>
-                                <td style="width:20px">
-                                @if($sale['gateway_status'] == 'paid' || $sale['gateway_status'] == 'CO')
-                                    <td class="text-left">Aprovada</td>
-                                @elseif($sale['gateway_status'] == 'refused')
-                                    <td class="text-left">Rejeitada</td>
-                                @elseif($sale['gateway_status'] == 'waiting_payment' || $sale['gateway_status'] == 'PE')
-                                    <td class="text-left">Aguardando pagamento</td>
-                                @else
-                                    <td class="text-left">{!! $sale['gateway_status'] !!}</td>
-                                @endif
-                            </tr>
-                            @if($sale['payment_method'] == '2')
-                                <tr style="height: 60px">
-                                    <td colspan='3' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES DO BOLETO</b></td>
-                                </tr>
-                                <tr style="height: 40px">
-                                    <td style="width: 40%" class="text-right">Link do boleto:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $sale['boleto_link'] !!}</td>
-                                </tr>
-                                <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">Linha digitável:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $sale['boleto_digitable_line'] !!}</td>
-                                </tr>
-                            @endif
-                            @if($checkout != null)
-                                <tr style="height: 60px">
-                                    <td colspan='3' class='text-center' style="margin: 15px 0 15px 0"><b>INFORMAÇÕES ADICIONAIS</b></td>
-                                </tr>
-                                <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">SRC:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $checkout['src'] !!}</td>
-                                </tr>    
-                                <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">UTM source:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $checkout['utm_source'] !!}</td>
-                                </tr>
-                                <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">UTM medium:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $checkout['utm_medium'] !!}</td>
-                                </tr>
-                                <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">UTM campaign:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $checkout['utm_campaign'] !!}</td>
-                                </tr>
-                                <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">UTM term:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $checkout['utm_term'] !!}</td>
-                                </tr>
-                                <tr style="height: 40px; margin-top:10px">
-                                    <td style="width: 40%" class="text-right">UTM content:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $checkout['utm_content'] !!}</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
-                <div class="tab-pane" id="client_tab" role="tabpanel">
-                    <table class="table-hover" style="width: 100%">
-                        <tbody>
-                            <tr style="height: 30px">
-                                <td style="width: 40%" class="text-right">Nome:</td>
-                                <td style="width:20px">
-                                <td class="text-left">{!! $client['name'] !!}</td>
-                            </tr>
-                            <tr style="height: 30px">
-                                <td style="width: 40%" class="text-right">CPF:</td>
-                                <td style="width:20px">
-                                <td class="text-left">{!! $client['document'] !!}</td>
-                            </tr> 
-                            <tr style="height: 30px">
-                                <td style="width: 40%" class="text-right">Email:</td>
-                                <td style="width:20px">
-                                <td class="text-left">{!! $client['email'] !!}</td>
-                            </tr>
-                            <tr style="height: 30px">
-                                <td style="width: 40%" class="text-right">Telefone:</td>
-                                <td style="width:20px">
-                                <td class="text-left">
-                                    {!! $client['telephone'] !!}
-                                    <a href="https://api.whatsapp.com/send?phone=55{!! preg_replace("/[^0-9]/", "", $client['telephone']); !!}" target="_blank">
-                                        <img style="height:25px" src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/whatsapp-default.jpg">
-                                    </a>
-                                </td>
-                            </tr>
-                            @if($delivery)
-                                <tr style="height: 30px">
-                                    <td colspan='3' class='text-center' style="margin: 15px 0 15px 0">INFORMAÇÕES DA ENTREGA</td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td style="width: 40%" class="text-right">Valor do frete:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $sale['shipment_value'] !!}</td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td style="width: 40%" class="text-right">Rua:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $delivery['street'] !!}</td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td style="width: 40%" class="text-right">Número:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $delivery['number'] !!}</td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td style="width: 40%" class="text-right">Complemento:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $delivery['complement'] !!}</td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td style="width: 40%" class="text-right">Bairro:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $delivery['neighboorhod'] !!}</td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td style="width: 40%" class="text-right">Cidade:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $delivery['city'] !!}</td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td style="width: 40%" class="text-right">Estado:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $delivery['state'] !!}</td>
-                                </tr>
-                                <tr style="height: 30px">    
-                                    <td style="width: 40%" class="text-right">CEP:</td>
-                                    <td style="width:20px">
-                                    <td class="text-left">{!! $delivery['zip_code'] !!}</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
-                <div class="tab-pane" id="products_tab" role="tabpanel">
-                    <table class="table-hover" style="width: 100%">
-                        <thead>
-                            <th class="text-left">Produto</th>
-                            <th class="text-left">Quantidade</th>
-                        </thead>
-                        <tbody style="margin-top:15px">
-                            @foreach($plans as $plan)
-                                <tr style="height: 30px">
-                                    <td class="text-left">{!! $plan['name'] !!}</td>
-                                    <td class="text-left">{!! $plan['amount'] !!}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+<div class="transition-details">
+    <h3> Transação #{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}} </h3>
+    <p class="sm-text text-muted">
+        Pagamento via {{$sale->payment_method == 2 ? 'Boleto' : 'Cartão ' . $sale->flag  }} em {{ $sale->start_date}} às {{$sale->hours}}
+    </p>
+    <div class="status d-inline">
+        <img style="width: 50px;" src="{{$sale->flag_image}}">
+        @if($sale->status == 1)
+            <span class='badge badge-success'>Aprovada</span></td>
+        @elseif($sale->status == 2)
+            <span class='badge badge-pendente'>Pendente</span>
+        @elseif($sale->status == 3)
+            <span class='badge badge-danger'>Recusada</span>
+        @elseif($sale->status == 4)
+            <span class='badge badge-secondary'>Estornada</span>
+        @else
+            <span class='badge badge-primary'>{{$sale->status}}</span>
+        @endif
     </div>
 </div>
-
+<div class="clearfix"></div>
+<div class="card shadow pr-20 pl-20 p-10">
+    <div class="row">
+        <div class="col-lg-6"><p class="table-title"> Produto </p></div>
+        <div class="col-lg-2 text-right"><p class="text-muted"> Qtde </p></div>
+        <div class="col-lg-4 text-right"><p class="text-muted"> Valor </p></div>
+    </div>
+    <div class="row align-items-baseline justify-content-between mb-15">
+        @foreach($plans as $plan)
+            <div class="col-lg-2">
+                <img src="{!! asset('modules/global/assets/img/produto.png') !!}" width="50px;" style="border-radius:6px;">
+            </div>
+            <div class="col-lg-4">
+                <h4 class="table-title"> {{$plan['name']}} </h4>
+            </div>
+            <div class="col-lg-2 text-right">
+                <p class="sm-text text-muted"> {{$plan['amount']}}x </p>
+            </div>
+            <div class="col-lg-4 text-right">
+                <p class="sm-text text-muted"> R${{$plan['value']}} </p>
+            </div>
+        @endforeach
+    </div>
+    <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
+        <div class="col-lg-6">
+            <h4 class="table-title"> SubTotal </h4>
+        </div>
+        <div class="col-lg-6 text-right">
+            <h4 class="table-title subTotal"> R$ {{$subTotal}} </h4>
+        </div>
+        <div class="col-lg-6">
+            <h4 class="table-title"> Frete </h4>
+        </div>
+        <div class="col-lg-6 text-right">
+            <h4 class="table-title"> R$ {{$shipment_value}} </h4>
+        </div>
+        <div class="col-lg-6">
+            <h4 class="table-title"> Desconto</h4>
+        </div>
+        <div class="col-lg-6 text-right">
+            <h4 class="table-title"> R$ {{$discount}} </h4>
+        </div>
+        <div class="col-lg-6">
+            <h4 class="table-title"> Total </h4>
+        </div>
+        <div class="col-lg-6 text-right">
+            <h4 class="table-title"> R$ {{$total}} </h4>
+        </div>
+        {{--<div class='row' style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
+            <div class="col-lg-6">
+                <h4 class="table-title"> Conversão: </h4>
+            </div>
+            <div class="col-lg-6 text-right">
+                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="table-title"> Taxas </h4>
+            </div>
+            <div class="col-lg-6 text-right">
+                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="table-title"> Comissão </h4>
+            </div>
+            <div class="col-lg-6 text-right">
+                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="table-title"> Total </h4>
+            </div>
+            <div class="col-lg-6 text-right">
+                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+            </div>
+        </div>--}}
+    </div>
+</div>
+<div class="nav-tabs-horizontal">
+    <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" style="width:50%;">Cliente</a>
+        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" style="width:50%;">Detalhes</a>
+    </div>
+</div>
+<div class="tab-content p-10" id="nav-tabContent">
+    <!-- CLIENTE -->
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <h4> Dados Pessoais </h4>
+        <span class="table-title gray"> Nome: {{$client->name}}</span>
+        <br>
+        <span class='table-title gray'>Telefone: {{$client->telephone}}</span>
+        <a href="{{$whatsapp_link}}" target='_blank'>
+            <img src="{!! asset('modules/global/assets/img/whatsapplogo.png') !!}" width="25px">
+        </a>
+        <br>
+        <span class="table-title gray"> E-mail: {{$client->email}}</span>
+        <br>
+        <span class="table-title gray"> CPF: {{$client->document}}</span>
+        <h4> Entrega </h4>
+        <span class="table-title gray"> Endereço: {{$delivery->street}}, {{$delivery->number}}</span>
+        <br>
+        <span class="table-title gray"> CEP: {{$delivery->zip_code}}</span>
+        <br>
+        <span class="table-title gray"> Cidade: {{$delivery->city}}/{{$delivery->state}}</span>
+    </div>
+    <!-- DETALHES  -->
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <h4> Dados Gerais </h4>
+        <span class="table-title gray"> IP: {{$checkout->ip ?? ''}}</span>
+        <br>
+        <span class="table-title gray "> Dispositivo: - </span>
+        <br>
+        <h4> Conversão </h4>
+        <span class="table-title gray"> SRC: {{$checkout->src ?? ''}}  </span>
+        <br>
+        <span class="table-title gray"> UTM Source: {{$checkout->source ?? ''}}  </span>
+        <br>
+        <span class="table-title gray"> UTM Medium: {{$checkout->utm_medium ?? ''}} </span>
+        <br>
+        <span class="table-title gray"> UTM Campaign: {{$checkout->utm_campaign ?? ''}}</span>
+        <br>
+        <span class="table-title gray"> UTM Term: {{$checkout->utm_term ?? ''}} </span>
+        <br>
+        <span class="table-title gray"> UTM Content: {{$checkout->utm_content ?? ''}}</span>
+    </div>
+</div>
 <script>
-
-    $(document).ready(function(){
+    $(document).ready(function () {
 
         $("#sales_tab").css("min-width", $(window).width() / 2);
-        
-        $("#client_tab").css("min-width",$("#sales_tab").width());
-        $("#products_tab").css("min-width",$("#sales_tab").width());
-    });
 
+        $("#client_tab").css("min-width", $("#sales_tab").width());
+        $("#products_tab").css("min-width", $("#sales_tab").width());
+    });
 </script>
 

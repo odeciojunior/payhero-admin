@@ -1,19 +1,23 @@
-<div class='row'>
-    <div style='width:100%'>
-        <a id='add-pixel' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
-            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Pixel
-        </a>
+<div class='row no-gutters mb-10'>
+    <div class="top-holder text-right mb-5" style="width: 100%;">
+        <div id="add-pixel" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">
+            <span class="link-button-dependent red"> Adicionar Pixel </span>
+            <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
+        </div>
     </div>
 </div>
-<div class='panel pt-10 p-10' style='min-height: 300px'>
+
+<div class="card shadow">
+
+    <div style='min-height: 300px'>
     <div class='page-invoice-table table-responsive'>
-        <table id='table-pixel' class='table text-right table-pixels table-hover' style='width:100%'>
-            <thead style='text-align:center;'>
+        <table  id='table-pixel' class='table text-left table-pixels table-striped' style='width:100%'>
+            <thead>
                 <tr>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Nome</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Código</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Plataforma</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
+                    <td class='table-title'>Nome</td>
+                    <td class='table-title'>Código</td>
+                    <td class='table-title'>Plataforma</td>
+                    <td class='table-title'>Status</td>
                 </tr>
             </thead>
             <tbody id='data-table-pixel'>
@@ -21,7 +25,10 @@
             </tbody>
         </table>
     </div>
+    </div>
+
 </div>
+
 {{--<table id="tabela_pixels" class="table-bordered table-hover w-full" style="margin-top: 80px">--}}
     {{--<a id="adicionar_pixel" class="btn btn-primary float-right" data-toggle='modal' data-target='#modal_add' style="color: white">--}}
         {{--<i class='icon wb-user-add' aria-hidden='true'></i> Adicionar pixel--}}

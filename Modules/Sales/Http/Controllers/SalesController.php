@@ -15,15 +15,98 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sales\Exports\Reports\SaleReportExport;
-use function MongoDB\BSON\toJSON;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Modules\Sales\Transformers\SalesResource;
 
 class SalesController extends Controller
 {
+    private $saleModel;
+    private $plansSalesModel;
+    private $clientModel;
+    private $deliveryModel;
+    private $checkoutModel;
+    private $planModel;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getSaleModel()
+    {
+        if (!$this->saleModel) {
+            $this->saleModel = app(Sale::class);
+        }
+
+        return $this->saleModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getPlansSales()
+    {
+        if (!$this->plansSalesModel) {
+            $this->plansSalesModel = app(PlanSale::class);
+        }
+
+        return $this->plansSalesModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getClient()
+    {
+        if (!$this->clientModel) {
+            $this->clientModel = app(Client::class);
+        }
+
+        return $this->clientModel;
+    }
+
+    /**
+     *
+     */
+    private function getDelivery()
+    {
+        if (!$this->deliveryModel) {
+            $this->deliveryModel = app(Delivery::class);
+        }
+
+        return $this->deliveryModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getCheckout()
+    {
+        if (!$this->checkoutModel) {
+            $this->checkoutModel = app(Checkout::class);
+        }
+
+        return $this->checkoutModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getPlan()
+    {
+        if (!$this->planModel) {
+            $this->planModel = app(Plan::class);
+        }
+
+        return $this->planModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
 
@@ -48,36 +131,71 @@ class SalesController extends Controller
 
     public function getSaleDetail(Request $request)
     {
+        try {
+            $requestData = $request->all();
+            if ($requestData['sale_id']) {
+                $sale = $this->getSaleModel()->find(current(Hashids::decode($requestData['sale_id'])));
 
-        $requestData = $request->all();
-        $sale        = Sale::find(current(Hashids::decode($requestData['sale_id'])));
+                $sale['hours']      = (new Carbon($sale['start_date']))->format('H:m:s');
+                $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
 
-        $plansSales = PlanSale::where('sale', $sale->id)->get()->toArray();
-        $plans      = [];
+                if ($sale->flag == 'visa') {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/visa.png');
+                } else if ($sale->flag == 'mastercard') {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/master.png');
+                } else if ($sale->payment_method == 2) {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/boleto.png');
+                } else {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/generico.png');
+                }
 
-        foreach ($plansSales as $key => $planSale) {
-            $plans[$key]['name']   = Plan::find($planSale['plan'])['name'];
-            $plans[$key]['amount'] = $planSale['amount'];
+                $client              = $this->getClient()->find($sale->client);
+                $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
+
+                $plansSales = $this->getPlansSales()->where('sale', $sale->id)->get()->toArray();
+                $plans      = [];
+
+                $total = 0;
+                foreach ($plansSales as $key => $planSale) {
+                    $plans[$key]['name']   = $this->getPlan()->find($planSale['plan'])->name;
+                    $plans[$key]['amount'] = $planSale['amount'];
+                    $plans[$key]['value']  = $planSale['plan_value'];
+                    $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
+                }
+                $discount = '0,00';
+                $subTotal = $total;
+                $total    += preg_replace("/[^0-9]/", "", $sale->shipment_value);
+                if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
+                    $total    -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                    $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                } else {
+                    $discount = '0,00';
+                }
+
+                $delivery             = $this->getDelivery()->find($sale['delivery']);
+                $checkout             = $this->getCheckout()->find($sale['checkout']);
+                $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
+
+                $details = view('sales::details', [
+                    'sale'           => $sale,
+                    'plans'          => $plans,
+                    'client'         => $client,
+                    'delivery'       => $delivery,
+                    'checkout'       => $checkout,
+                    'total'          => number_format(intval($total) / 100, 2, ',', '.'),
+                    'subTotal'       => number_format(intval($subTotal) / 100, 2, ',', '.'),
+                    'discount'       => number_format(intval($discount) / 100, 2, ',', '.'),
+                    'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
+                    'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone),
+                    //                    'comissao'      =>  ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0 )
+                ]);
+
+                return response()->json($details->render());
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao mostrar detalhes da venda  SalesController - details');
+            report($e);
         }
-
-        $client   = Client::find($sale->client);
-        $delivery = Delivery::find($sale->delivery);
-
-        $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y H:i:s');
-
-        $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
-
-        $checkout = Checkout::find($sale['checkout']);
-
-        $details = view('sales::details', [
-            'sale'     => $sale,
-            'plans'    => $plans,
-            'client'   => $client,
-            'delivery' => $delivery,
-            'checkout' => $checkout,
-        ]);
-
-        return response()->json($details->render());
     }
 
     public function refundSale(Request $request)
@@ -135,40 +253,43 @@ class SalesController extends Controller
 
         try {
 
+            $dataRequest = $request->all();
+            $dataRequest = array_filter($dataRequest);
+
             //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
-            $sales = Sale::where('owner', \Auth::user()->id);
+            $sales = $this->getSaleModel()
+                          ->where('owner', auth()->user()->id);
+            //->where('status', '!=', '3');
 
-            $sales = $sales->where('status', '!=', '3');
-
-            if ($request->projeto != '') {
-                $plans    = Plan::where('project', $request->projeto)->pluck('id');
+            if (!empty($dataRequest['select_project'])) {
+                $plans    = Plan::where('project', $dataRequest['select_project'])->pluck('id');
                 $salePlan = PlanSale::whereIn('plan', $plans)->pluck('sale');
                 $sales->whereIn('id', $salePlan);
             }
 
-            if ($request->comprador != '') {
-                $clientes = Client::where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
+            if (!empty($dataRequest['client'])) {
+                $clientes = Client::where('name', 'LIKE', '%' . $dataRequest['client'] . '%')->pluck('id');
                 $sales->whereIn('client', $clientes);
             }
 
-            if ($request->forma != '') {
-                $sales->where('payment_form', $request->forma);
+            if (!empty($dataRequest['select_payment_method'])) {
+                $sales->where('payment_form', $dataRequest['select_payment_method']);
             }
 
-            if ($request->status != '') {
-                $sales->where('status', $request->status);
+            if (!empty($dataRequest['sale_status'])) {
+                $sales->where('status', $dataRequest['sale_status']);
             }
 
-            if ($request->data_inicial != '' && $request->data_final != '') {
-                $sales->whereBetween('start_date', [$request->data_inicial, date('Y-m-d', strtotime($request->data_final . ' + 1 day'))]);
-            } else {
-                if ($request->data_inicial != '') {
-                    $sales->whereDate('start_date', '>=', $request->data_inicial);
-                }
+            if (!empty($dataRequest['start_date'])) {
+                $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['start_date'] . ' 00:00:00')
+                                       ->toDateTimeString();
+                $sales->where('start_date', '>=', $startDateTime ?? null);
+            }
 
-                if ($request->data_final != '') {
-                    $sales->whereDate('end_date', '<', date('Y-m-d', strtotime($request->data_final . ' + 1 day')));
-                }
+            if (!empty($dataRequest['end_date'])) {
+                $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['end_date'] . " 23:59:59")
+                                     ->toDateTimeString();
+                $sales->where('start_date', '<=', $endDateTime ?? null);
             }
 
             $sales->with(['clientModel', 'projectModel', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'

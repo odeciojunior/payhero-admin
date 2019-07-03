@@ -93,9 +93,9 @@ $(document).ready(function () {
                 $.each(response.data, function (index, value) {
                     dados = '';
                     dados += '<tr>';
-                    dados += '<td class="text-center" style="vertical-align: middle;">' + value.domain + '</td>';
-                    dados += '<td class="text-center" style="vertical-align: middle;">' + value.ip_domain + '</td>';
-                    dados += '<td class="text-center">';
+                    dados += '<td style="vertical-align: middle;">' + value.domain + '</td>';
+                    dados += '<td style="vertical-align: middle;">' + value.ip_domain + '</td>';
+                    dados += '<td>';
                     if (value.status === 3) {
                         dados += '<span class="badge badge-success">' + value.status_translated + '</span>';
                     } else {
@@ -104,9 +104,9 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-domain'  domain='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger details-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger edit-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger delete-domain'  domain='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     dados += '</tr>';
                     $("#domain-table-body").append(dados);
