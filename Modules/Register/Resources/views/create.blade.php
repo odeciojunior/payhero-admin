@@ -69,7 +69,7 @@
                                 <div class="input-holder d-flex flex-column">
                                     <label for="phone">Celular</label>
                                     <p class='sm-tex text-danger' id='phoneError' style='display:none;'>O campo celular é obrigatório</p>
-                                    <input type="text" name="phone" id="phone" required>
+                                    <input type="text" name="cellphone" id="phone" required>
                                 </div>
                             </div>
                         </div>

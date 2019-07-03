@@ -15,6 +15,12 @@ return [
             "approved"  => "Aprovado",
             "refused"   => "Recusado",
         ],
+        "status"                   => [
+            "pending"   => "Pendente",
+            "analyzing" => "Em análise",
+            "approved"  => "Aprovado",
+            "refused"   => "Recusado",
+        ],
     ],
 
 ];

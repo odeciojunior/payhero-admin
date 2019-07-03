@@ -1,16 +1,16 @@
-$(document).ready( function(){
+$(document).ready(function () {
 
     atualizar();
 
-    function atualizar(link = null){
+    function atualizar(link = null) {
 
         $('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
 
-        if(link == null){
+        if (link == null) {
             link = '/recoverycart/getabandonatedcarts';
         }
-        else{
-            link = '/recoverycart/getabandonatedcarts'+ link;
+        else {
+            link = '/recoverycart/getabandonatedcarts' + link;
         }
 
         $.ajax({
@@ -19,55 +19,55 @@ $(document).ready( function(){
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function(){
+            error: function () {
                 //
             },
-            success: function(response){
+            success: function (response) {
 
                 $('#table_data').html('');
 
-                $.each(response.data, function(index, value){
+                $.each(response.data, function (index, value) {
 
                     dados = '';
                     dados += '<tr>';
-                    dados += "<td>"+value.date+"</td>";
-                    dados += "<td>"+value.client+"</td>";
-                    dados += "<td>"+value.email_status+"</td>";
-                    dados += "<td>"+value.sms_status+"</td>";
-                    if(value.recovery_status == 'Recuperado'){
-                        dados += "<td><span class='badge badge-success'>"+value.recovery_status+"</span></td>";
+                    dados += "<td>" + value.date + "</td>";
+                    dados += "<td>" + value.client + "</td>";
+                    dados += "<td>" + value.email_status + "</td>";
+                    dados += "<td>" + value.sms_status + "</td>";
+                    if (value.recovery_status == 'Recuperado') {
+                        dados += "<td><span class='badge badge-success'>" + value.recovery_status + "</span></td>";
                     }
-                    else{
-                        dados += "<td><span class='badge badge-danger'>"+value.recovery_status+"</span></td>";
+                    else {
+                        dados += "<td><span class='badge badge-danger'>" + value.recovery_status + "</span></td>";
                     }
-                    dados += "<td>"+value.value+"</td>";
+                    dados += "<td>" + value.value + "</td>";
                     // dados += "<td>"+value.link+"</td>";
-                    dados += "<td><a href='"+ value.whatsapp_link +"', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
-                    dados += "<td> <a role='button' class='copy_link' link='"+value.link+"'><i class='material-icons gradient'>file_copy</i></a></td>";
-                    dados += "<td><a  role='button' class='detalhes_venda' venda='"+value.id+"' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+                    dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
+                    dados += "<td> <a role='button' class='copy_link' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
+                    dados += "<td><a  role='button' class='detalhes_venda' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
                     dados += '</tr>';
                     $("#table_data").append(dados);
 
-                    $(".copy_link").on("click", function(){
+                    $(".copy_link").on("click", function () {
                         var temp = $("<input>");
                         $("body").append(temp);
                         temp.val($(this).attr('link')).select();
                         document.execCommand("copy");
                         temp.remove();
-                        alertCustom('success','Link copiado!');
+                        alertCustom('success', 'Link copiado!');
                     });
 
                 });
-                if(response.data == ''){
-                    $('#table_data').html("<tr><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
+                if (response.data == '') {
+                    $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
                 }
                 pagination(response);
 
-                var id_venda = ''; 
+                var id_venda = '';
 
                 $('.detalhes_venda').unbind('click');
 
-                $('.detalhes_venda').on('click', function() {
+                $('.detalhes_venda').on('click', function () {
 
                     var venda = $(this).attr('venda');
 
@@ -75,7 +75,7 @@ $(document).ready( function(){
 
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { sale_id : venda };
+                    var data = {sale_id: venda};
 
                     $.ajax({
                         method: "POST",
@@ -84,10 +84,10 @@ $(document).ready( function(){
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function(){
+                        error: function () {
                             //
                         },
-                        success: function(response){
+                        success: function (response) {
                             $('#modal_venda_body').html(response);
                         }
                     });
@@ -95,7 +95,7 @@ $(document).ready( function(){
 
                 $('.estornar_venda').unbind('click');
 
-                $('.estornar_venda').on('click', function() {
+                $('.estornar_venda').on('click', function () {
 
                     id_venda = $(this).attr('venda');
 
@@ -108,70 +108,70 @@ $(document).ready( function(){
         });
     }
 
-    function pagination(response){
+    function pagination(response) {
 
         $("#pagination").html("");
 
-        var primeira_pagina = "<button id='primeira_pagina' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>1</button>";
+        var primeira_pagina = "<button id='primeira_pagina' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
-        if(response.meta.current_page == '1'){
-            $("#primeira_pagina").attr('disabled',true);
+        if (response.meta.current_page == '1') {
+            $("#primeira_pagina").attr('disabled', true);
         }
 
-        $('#primeira_pagina').on("click", function(){
+        $('#primeira_pagina').on("click", function () {
             atualizar('?page=1');
         });
 
-        for(x=3;x>0;x--){
+        for (x = 3; x > 0; x--) {
 
-            if(response.meta.current_page - x <= 1){
+            if (response.meta.current_page - x <= 1) {
                 continue;
             }
 
-            $("#pagination").append("<button id='pagina_"+( response.meta.current_page - x )+"' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page - x)+"</button>");
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + (response.meta.current_page - x) + "</button>");
 
-            $('#pagina_'+( response.meta.current_page - x )).on("click", function(){
-                atualizar('?page='+$(this).html());
+            $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
+                atualizar('?page=' + $(this).html());
             });
 
         }
 
-        if(response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page){
-        var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page)+"</button>";
+        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+            var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + (response.meta.current_page) + "</button>";
 
-        $("#pagination").append(pagina_atual);
+            $("#pagination").append(pagina_atual);
 
-        $("#pagina_atual").attr('disabled',true);
+            $("#pagina_atual").attr('disabled', true);
         }
 
-        for(x=1;x<4;x++){
+        for (x = 1; x < 4; x++) {
 
-        if(response.meta.current_page + x >= response.meta.last_page){
-            continue;
+            if (response.meta.current_page + x >= response.meta.last_page) {
+                continue;
+            }
+
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + (response.meta.current_page + x) + "</button>");
+
+            $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
+                atualizar('?page=' + $(this).html());
+            });
+
         }
 
-        $("#pagination").append("<button id='pagina_"+( response.meta.current_page + x )+"' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+(response.meta.current_page + x)+"</button>");
+        if (response.meta.last_page != '1') {
+            var ultima_pagina = "<button id='ultima_pagina' class='btn' style='background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + response.meta.last_page + "</button>";
 
-        $('#pagina_'+( response.meta.current_page + x )).on("click", function(){
-            atualizar('?page='+$(this).html());
-        });
+            $("#pagination").append(ultima_pagina);
 
-        }
+            if (response.meta.current_page == response.meta.last_page) {
+                $("#ultima_pagina").attr('disabled', true);
+            }
 
-        if(response.meta.last_page != '1'){
-        var ultima_pagina = "<button id='ultima_pagina' class='btn' style='background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>"+response.meta.last_page+"</button>";
-
-        $("#pagination").append(ultima_pagina);
-
-        if(response.meta.current_page == response.meta.last_page){
-            $("#ultima_pagina").attr('disabled',true);
-        }
-
-        $('#ultima_pagina').on("click", function(){
-            atualizar('?page='+response.meta.last_page);
-        });
+            $('#ultima_pagina').on("click", function () {
+                atualizar('?page=' + response.meta.last_page);
+            });
         }
 
     }
