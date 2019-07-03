@@ -19,12 +19,10 @@ class ProductsController extends Controller
      * @var Product
      */
     private $productModel;
-
     /**
      * @var Category
      */
     private $categoryModel;
-
     /**
      * @var DigitalOceanFileService
      */
@@ -36,7 +34,7 @@ class ProductsController extends Controller
      */
     function __construct(Product $product, Category $category)
     {
-        $this->productModel = $product;
+        $this->productModel  = $product;
         $this->categoryModel = $category;
     }
 
@@ -76,14 +74,14 @@ class ProductsController extends Controller
         }
     }
 
-    /** 
+    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
         try {
-            return view('products::create',[
-                'categories' => $this->categoryModel->all()
+            return view('products::create', [
+                'categories' => $this->categoryModel->all(),
             ]);
         } catch (Exception $e) {
             Log::warning('Erro ao tenta acessar pagina de cadastro de produto (ProductsController - create)');
@@ -101,6 +99,8 @@ class ProductsController extends Controller
             $data            = $request->validated();
             $data['shopify'] = '0';
             $data['user']    = auth()->user()->id;
+            $data['price']   = preg_replace("/[^0-9]/", "", $data['price']);
+            $data['cost']    = preg_replace("/[^0-9]/", "", $data['cost']);
             $product         = $this->productModel->create($data);
 
             $productPhoto = $request->file('product_photo');
@@ -117,9 +117,8 @@ class ProductsController extends Controller
                                              ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
 
                     $product->update([
-                                      'photo' => $digitalOceanPath,
-                                  ]);
-
+                                         'photo' => $digitalOceanPath,
+                                     ]);
                 } catch (Exception $e) {
                     Log::warning('ProductController - store - Erro ao enviar foto do product');
                     report($e);
@@ -144,9 +143,8 @@ class ProductsController extends Controller
 
             return view('products::edit', [
                 'product'    => $product,
-                'categories' => $this->categoryModel->all()                
+                'categories' => $this->categoryModel->all(),
             ]);
-
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de editar produto (ProductsController - edit)');
             report($e);
@@ -162,6 +160,13 @@ class ProductsController extends Controller
         try {
             $data    = $request->all();
             $product = $this->productModel->findOrFail(Hashids::decode($id))->first();
+            if (isset($data['price'])) {
+                $data['price'] = preg_replace("/[^0-9]/", "", $data['price']);
+            }
+
+            if (isset($data['cost'])) {
+                $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
+            }
             $product->update($data);
 
             $productPhoto = $request->file('product_photo');
@@ -180,9 +185,8 @@ class ProductsController extends Controller
                                              ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
 
                     $product->update([
-                        'photo' => $digitalOceanPath,
-                    ]);
-
+                                         'photo' => $digitalOceanPath,
+                                     ]);
                 } catch (Exception $e) {
                     Log::warning('ProfileController - update - Erro ao enviar foto do profile');
                     report($e);
@@ -215,7 +219,6 @@ class ProductsController extends Controller
             report($e);
         }
     }
-
 }
 
 

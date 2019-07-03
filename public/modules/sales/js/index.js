@@ -10,7 +10,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#bt_filtro").on("click", function () {
+    $("#bt_filtro").on("click", function (event) {
+        event.preventDefault();
         atualizar();
     });
 
@@ -120,6 +121,55 @@ $(document).ready(function () {
 
                 });
 
+            }
+        });
+    }
+
+    // $("#bt_get_csv").on("click", function () {
+    //     csvSalesExport();
+    // });
+
+    function downloadFile(data, fileName, type = "text/plain") {
+        // Create an invisible A element
+        const a = document.createElement("a");
+        a.style.display = "none";
+        document.body.appendChild(a);
+
+        // Set the HREF to a Blob representation of the data to be downloaded
+        a.href = window.URL.createObjectURL(
+            new Blob([data], {type})
+        );
+
+        // Use download attribute to set set desired file name
+        a.setAttribute("download", fileName);
+
+        // Trigger the download by simulating click
+        a.click();
+
+        // Cleanup
+        window.URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
+    }
+
+    function csvSalesExport(link = null) {
+
+        if (link == null) {
+            link = '/sales/getcsvsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+        } else {
+            link = '/sales/getcsvsales' + link + '&projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+        }
+
+        $.ajax({
+            method: "GET",
+            url: link,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function (response) {
+                console.log(response);
+            },
+            success: function (response) {
+                downloadFile(response, 'export.xlsx')
             }
         });
     }

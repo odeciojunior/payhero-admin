@@ -88,7 +88,7 @@ $(document).ready(function () {
             data: {
                 country: $('#country').val(),
                 fantasy_name: ($('#country').val() == 'brasil') ? $('#brasil_fantasy_name').val() : $('#eua_fantasy_name').val(),
-                cnpj: ($('#country').val() == 'brasil') ? $('#brasil_company_document').val() : $('#eua_company_document').val(),
+                company_document: ($('#country').val() == 'brasil') ? $('#brasil_company_document').val() : $('#eua_company_document').val(),
                 zip_code: ($('#country').val() == 'brasil') ? $('#brasil_zip_code').val() : $('#eua_zip_code').val(),
                 state: ($('#country').val() == 'brasil') ? $('#brasil_state').val() : $('#eua_state').val(),
                 city: ($('#country').val() == 'brasil') ? $('#brasil_city').val() : $('#eua_city').val(),
@@ -100,7 +100,7 @@ $(document).ready(function () {
                 alertCustom('error','Ocorreu algum erro');
             },
             success: function (response) {
-                $("#company_id").val(response.data.id);
+                // $("#company_id").val(response.data.id);
                 alertCustom('success','Empresa cadastrada com sucesso');
                 $(".div2").hide();
                 $(".div3").show();
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/register/",
+            url: "/register",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

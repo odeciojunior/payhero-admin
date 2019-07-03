@@ -15,12 +15,12 @@
             <tr style='height: 40%;'>
                 <th style='width:40%;' class='text-center'>Tipo</th>
                 <td style='width: 20px'></td>
-                <td class='text-left'>{{$coupon->type}}</td>
+                <td class='text-left'>{{$coupon->type == 1 ? 'Valor':'Porcentagem'}}</td>
             </tr>
             <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Valor</th>
+                <th style='width:40%;' class='text-center '>Valor</th>
                 <td style='width: 20px'></td>
-                <td class='text-left'>{{$coupon->value}}</td>
+                <td class='text-left value-coupon'>{{$coupon->value}}</td>
             </tr>
             <tr style='height: 40%;'>
                 <th style='width:40%;' class='text-center'>Status</th>

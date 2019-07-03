@@ -105,10 +105,10 @@
                                                 <label for="complement">Complement</label>
                                                 <input name="complement" value="{!! $company->complement !!}" type="text" class="form-control" id="complement">
                                             </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="country">Country</label>
-                                                <input name="country" value="{!! $company->country !!}" type="text" class="form-control" id="country">
-                                            </div>
+                                            {{--<div class="form-group col-xl-6">--}}
+                                                {{--<label for="country">Country</label>--}}
+                                                {{--<input name="country" value="{!! $company->country !!}" type="text" class="form-control" id="country">--}}
+                                            {{--</div>--}}
                                         </div>
                                         <div class="form-group" style="margin-top: 30px">
                                             <input id="update_profile" type="submit" class="form-control btn btn-success" value="Save" style="width: 30%">
@@ -127,7 +127,7 @@
                                         <div class="row">
                                             <div class="form-group col-xl-6">
                                                 <label>Routing Number</label>
-                                                <input id="routing_number" name="bank" type="text" class="form-control" placeholder="Routing Number">
+                                                <input id="routing_number" name="bank" type="text" value="{!! $company->bank !!}" class="form-control" placeholder="Routing Number">
                                             </div>
                                             <div class="form-group col-xl-6">
                                                 <label>Bank</label>
@@ -137,7 +137,7 @@
                                         <div class="row">
                                             <div class="form-group col-12">
                                                 <label>Account number</label>
-                                                <input name="account" type="text" class="form-control" placeholder="Account number">
+                                                <input name="account_digit" type="text" value="{!! $company->account_digit !!}" class="form-control" placeholder="Account number">
                                             </div>
                                         </div>
                                         <div class="form-group" style="margin-top: 30px">

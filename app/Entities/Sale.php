@@ -91,7 +91,7 @@ class Sale extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function client()
+    public function clientModel()
     {
         return $this->belongsTo('App\Entities\Client', 'client');
     }
@@ -117,7 +117,7 @@ class Sale extends Model
      */
     public function plansSales()
     {
-        return $this->hasMany('App\Entities\PlansSale', 'sale');
+        return $this->hasMany('App\Entities\PlanSale', 'sale');
     }
 
     /**
@@ -131,8 +131,24 @@ class Sale extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function project()
+    public function projectModel()
     {
         return $this->belongsTo('App\Entities\Project', 'project');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function shippingModel()
+    {
+        return $this->hasOne('App\Entities\Shipping', 'shipping');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function checkoutModel()
+    {
+        return $this->hasOne('App\Entities\Checkout', 'checkout');
     }
 }

@@ -67,7 +67,7 @@
                                             </div>
                                             <div class="form-group col-xl-6">
                                                 <label for="cnpj">CNPJ</label>
-                                                <input name="cnpj" value="{!! $company->company_document !!}" type="text" class="form-control" id="cnpj">
+                                                <input name="company_document" value="{!! $company->company_document !!}" type="text" class="form-control" id="cnpj">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -105,10 +105,10 @@
                                                 <label for="complement">Complemento</label>
                                                 <input name="complement" value="{!! $company->complement !!}" type="text" class="form-control" id="complement">
                                             </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="country">País</label>
-                                                <input name="country" value="{!! $company->country !!}" type="text" class="form-control" id="country">
-                                            </div>
+                                            {{--<div class="form-group col-xl-6">--}}
+                                                {{--<label for="country">País</label>--}}
+                                                {{--<input name="country" value="{!! $company->country !!}" type="text" class="form-control" id="country">--}}
+                                            {{--</div>--}}
                                         </div>
                                         <div class="form-group" style="margin-top: 30px">
                                             <input id="update_profile" type="submit" class="form-control btn btn-success" value="Atualizar" style="width: 30%">
