@@ -31,9 +31,9 @@
                         </tbody>
                     </table>
                 </div>
-                <ul id="pagination" class="pagination-sm m-30" style="margin-top:10px;position:relative;float:right">
+                <!-- <ul id="pagination" class="pagination-sm m-30" style="margin-top:10px;position:relative;float:right">
                     {{-- js carrega... --}}
-                </ul>
+                </ul> -->
                 <!-- Modal com detalhes do usuário -->
                 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                     <div class="modal-dialog modal-simple">

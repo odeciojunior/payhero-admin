@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="page-content container-fluid">
-            <div class="panel pt-30 p-30" data-plugin="matchHeight">
+            <div class="card shadown p-30" data-plugin="matchHeight">
                 <div class="col-xl-12">
                     <div class="example-wrap">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">

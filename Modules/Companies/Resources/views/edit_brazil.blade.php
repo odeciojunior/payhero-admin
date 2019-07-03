@@ -6,7 +6,7 @@
 @section('content')
     <!-- Page -->
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <h1 class="page-title">Editar empresa</h1>
             <div class="page-header-actions">
                 <a class="btn btn-primary float-right" href="{{route('companies.index')}}">
@@ -14,8 +14,8 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container-fluid">
-            <div class="panel pt-30 p-30" data-plugin="matchHeight">
+        <div class="page-content container">
+            <div class="card shadow p-30" data-plugin="matchHeight">
                 <div class="col-xl-12">
                     <div class="example-wrap">
                         <div class="nav-tabs-horizontal" data-plugin="tabs">

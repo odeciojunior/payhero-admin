@@ -109,7 +109,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-9">
                                         <label for="company"> Valor a transferir </label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
