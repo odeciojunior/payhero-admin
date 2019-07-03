@@ -8,7 +8,6 @@ class RegisterRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
-     *
      * @return array
      */
     public function rules()
@@ -16,7 +15,7 @@ class RegisterRequest extends FormRequest
         return [
             'email'     => 'required|unique:users|max:200',
             'name'      => 'required',
-            'celphone'  => 'required',
+            'cellphone' => 'required',
             'password'  => 'required',
             'parameter' => 'nullable',
         ];
@@ -24,7 +23,6 @@ class RegisterRequest extends FormRequest
 
     /**
      * Determine if the user is authorized to make this request.
-     *
      * @return bool
      */
     public function authorize()
@@ -34,7 +32,6 @@ class RegisterRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
      * @return array
      */
     public function messages()
@@ -43,9 +40,8 @@ class RegisterRequest extends FormRequest
             'email.required'     => 'Precisamos do seu email para continuar',
             'email.unique'       => 'Email informado ja esta sendo utilizado',
             'name.required'      => 'Precisamos do seu nome para continuar',
-            'celphone.required'  => 'Precisamos do seu celular para continuar',
+            'cellphone.required' => 'Precisamos do seu celular para continuar',
             'password.required'  => 'Password inválido',
         ];
     }
-
 }

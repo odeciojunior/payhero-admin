@@ -50,11 +50,13 @@ class SalesController extends Controller
         $projects     = [];
 
         foreach ($userProjects as $userProject) {
-            $project    = Project::find($userProject['project']);
-            $projects[] = [
-                'id'   => $project['id'],
-                'nome' => $project['name'],
-            ];
+            $project = Project::find($userProject['project']);
+            if ($project['id'] != null) {
+                $projects[] = [
+                    'id'   => $project['id'],
+                    'nome' => $project['name'],
+                ];
+            }
         }
 
         return view('sales::index', [
