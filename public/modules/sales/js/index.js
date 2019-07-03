@@ -125,9 +125,29 @@ $(document).ready(function () {
         });
     }
 
-    // $("#bt_get_csv").on("click", function () {
-    //     csvSalesExport();
-    // });
+    $("#bt_get_csv").on("click", function () {
+        $('<input>').attr({
+            id: 'export-sales',
+            type: 'hidden',
+            name: 'type',
+            value: 'csv'
+        }).appendTo('form');
+
+        $('#filter_form').submit();
+        $('export-sales').remove();
+    });
+
+    $("#bt_get_xls").on("click", function () {
+        $('<input>').attr({
+            id: 'export-sales',
+            type: 'hidden',
+            name: 'type',
+            value: 'xls'
+        }).appendTo('form');
+
+        $('#filter_form').submit();
+        $('export-sales').remove();
+    });
 
     function downloadFile(data, fileName, type = "text/plain") {
         // Create an invisible A element
@@ -182,9 +202,9 @@ $(document).ready(function () {
 
         $("#pagination").append(primeira_pagina);
 
-        if (response.meta.current_page == '1') {
-            $("#primeira_pagina").attr('disabled', true);
-        }
+        //if (response.meta.current_page == '1') {
+        // $("#primeira_pagina").attr('disabled', true);
+        //}
 
         $('#primeira_pagina').on("click", function () {
             atualizar('?page=1');
@@ -196,7 +216,7 @@ $(document).ready(function () {
                 continue;
             }
 
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>" + (response.meta.current_page - x) + "</button>");
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn' style='margin-right:5px;background-image:none; background: transparent; color:#888; font-weight:700;'>" + (response.meta.current_page - x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
@@ -205,11 +225,10 @@ $(document).ready(function () {
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to bottom, rgb(170, 170, 170), rgb(170, 170, 170)), linear-gradient(54deg, #e6774c, rgb(249, 34, 120)); border-radius: 40px;color:white'>" + (response.meta.current_page) + "</button>";
 
             $("#pagination").append(pagina_atual);
 
-            $("#pagina_atual").attr('disabled', true);
         }
 
         for (x = 1; x < 4; x++) {
@@ -218,7 +237,7 @@ $(document).ready(function () {
                 continue;
             }
 
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>" + (response.meta.current_page + x) + "</button>");
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn' style='margin-right:5px;background-image:none; background: transparent; color:#888;  font-weight:700;'>" + (response.meta.current_page + x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
@@ -227,7 +246,7 @@ $(document).ready(function () {
         }
 
         if (response.meta.last_page != '1') {
-            var ultima_pagina = "<button id='ultima_pagina' class='btn' style='background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>" + response.meta.last_page + "</button>";
+            var ultima_pagina = "<button id='ultima_pagina' class='btn' style='margin-right:5px;background-image:none; background: transparent; color:#888;  font-weight:700;'>" + response.meta.last_page + "</button>";
 
             $("#pagination").append(ultima_pagina);
 

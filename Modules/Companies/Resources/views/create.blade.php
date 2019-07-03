@@ -4,7 +4,7 @@
 
     <!-- Page -->
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <h1 class="page-title">Cadastrar nova empresa</h1>
             <div class="page-header-actions">
                 <a class="btn btn-primary float-right" href="{{route('companies.index')}}">
@@ -12,7 +12,7 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container-fluid">
+        <div class="page-content container">
             <form id='create_form' method="post" action="{{route('companies.store')}}">
                 @csrf
                 @method('POST')

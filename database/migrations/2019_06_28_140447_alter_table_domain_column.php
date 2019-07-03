@@ -18,7 +18,7 @@ class AlterTableDomainColumn extends Migration
 
         Schema::table('domains', function(Blueprint $table) {
             $table->renameColumn('project', 'project_id');
-            $table->integer('status')->defaul(1)->change();
+            $table->integer('status')->default(1)->change();
         });
 
         $sql = 'UPDATE domains SET status = 3';

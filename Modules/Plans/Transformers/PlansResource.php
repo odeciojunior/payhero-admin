@@ -13,7 +13,7 @@ class PlansResource extends Resource
             'id'          => $this->id_code,
             'name'        => $this->name,
             'description' => $this->description,
-            'code'        => 'https://checkout.' . $this->projectId->domains[0]->name . '/' . $this->code ?? $this->code,
+            'code'        => isset($this->projectId->domains[0]->name) ? 'https://checkout.' . $this->projectId->domains[0]->name . '/' . $this->code : 'Dominio não configurado',
             'price'       => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status'      => isset($this->projectId->domains[0]->name) ? 1 : 0,
         ];

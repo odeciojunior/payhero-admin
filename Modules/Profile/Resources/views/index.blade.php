@@ -47,21 +47,21 @@
                                             <div class="row">
                                                 <div class="form-group col-xl-6">
                                                     <label for="name">Nome Completo</label>
-                                                    <input name="name" value="{!! $user->name !!}" type="text" class="form-control input-pad" id="name">
+                                                    <input name="name" value="{!! $user->name !!}" type="text" class="input-pad" id="name">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="email">Email</label>
-                                                    <input name="email" value="{!! $user->email !!}" type="text" class="form-control input-pad" id="email">
+                                                    <input name="email" value="{!! $user->email !!}" type="text" class="input-pad" id="email">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="cpf">Documento</label>
-                                                    <input name="document" value="{!! $user->document !!}" type="text" class="form-control input-pad" id="document">
+                                                    <input name="document" value="{!! $user->document !!}" type="text" class="input-pad" id="document">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="celular">Celular</label>
-                                                    <input name="cellphone" value="{!! $user->cellphone !!}" type="text" data-mask="(00) 00000-0000" class="form-control input-pad" id="cellphone">
+                                                    <input name="cellphone" value="{!! $user->cellphone !!}" type="text" data-mask="(00) 00000-0000" class="input-pad" id="cellphone">
                                                 </div>
-                                                <div class="form-group col-xl-12">
+                                                <div class="form-group col-xl-4">
                                                     <label for="date_birth">Data de nascimento</label>
                                                     <input name="date_birth" value="{!! $user->date_birth !!}" type="date" class="form-control input-pad" id="date_birth">
                                                 </div>
@@ -94,33 +94,33 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="{!! $user->zip_code !!}" type="text" data-mask="00000-000" class="form-control input-pad" id="zip_code">
+                                            <input name="zip_code" value="{!! $user->zip_code !!}" type="text" data-mask="00000-000" class="input-pad" id="zip_code">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-6">
                                             <label for="street">Rua</label>
-                                            <input name="street" value="{!! $user->street !!}" type="text" class="form-control input-pad" id="street">
+                                            <input name="street" value="{!! $user->street !!}" type="text" class="input-pad" id="street">
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Número</label>
-                                            <input name="number" value="{!! $user->number !!}" type="text" data-mask="0#" class="form-control input-pad" id="number">
+                                            <input name="number" value="{!! $user->number !!}" type="text" data-mask="0#" class="input-pad" id="number">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="{!! $user->neighborhood !!}" type="text" class="form-control input-pad" id="neighborhood">
+                                            <input name="neighborhood" value="{!! $user->neighborhood !!}" type="text" class="input-pad" id="neighborhood">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="{!! $user->complement !!}" type="text" class="form-control input-pad" id="complement">
+                                            <input name="complement" value="{!! $user->complement !!}" type="text" class="input-pad" id="complement">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="{!! $user->city !!}" type="text" class="form-control input-pad" id="city">
+                                            <input name="city" value="{!! $user->city !!}" type="text" class="input-pad" id="city">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="{!! $user->state !!}" type="text" class="form-control input-pad" id="state">
+                                            <input name="state" value="{!! $user->state !!}" type="text" class="input-pad" id="state">
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">                                                    
                                             <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10"> 
@@ -149,7 +149,7 @@
                                                 <div class="dz-message needsclick">
                                                     Arraste ou clique para fazer upload.<br/>
                                                 </div>
-                                                <input id="document_type" name="document_type" value="" type="hidden" class="form-control input-pad">
+                                                <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
                                             </form>                                                        
                                         </div>
                                     </div>
