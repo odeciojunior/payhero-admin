@@ -2,7 +2,9 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Entities\Company;
 use App\Entities\Shipping;
+use App\Entities\Transaction;
 use Carbon\Carbon;
 use App\Entities\Plan;
 use App\Entities\Sale;
@@ -15,15 +17,32 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sales\Exports\Reports\SaleReportExport;
-use function MongoDB\BSON\toJSON;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Modules\Sales\Transformers\SalesResource;
 
 class SalesController extends Controller
 {
+    /**
+     * @var Sale
+     */
+    private $saleModel;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    public function getSaleModel()
+    {
+        if (!$this->saleModel) {
+            $this->saleModel = app(Sale::class);
+        }
+
+        return $this->saleModel;
+    }
+
     public function index()
     {
 
@@ -133,40 +152,43 @@ class SalesController extends Controller
 
         try {
 
+            $dataRequest = $request->all();
+            $dataRequest = array_filter($dataRequest);
+
             //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
-            $sales = Sale::where('owner', \Auth::user()->id);
+            $sales = $this->getSaleModel()
+                          ->where('owner', auth()->user()->id);
+            //->where('status', '!=', '3');
 
-            $sales = $sales->where('status', '!=', '3');
-
-            if ($request->projeto != '') {
-                $plans    = Plan::where('project', $request->projeto)->pluck('id');
+            if (!empty($dataRequest['select_project'])) {
+                $plans    = Plan::where('project', $dataRequest['select_project'])->pluck('id');
                 $salePlan = PlanSale::whereIn('plan', $plans)->pluck('sale');
                 $sales->whereIn('id', $salePlan);
             }
 
-            if ($request->comprador != '') {
-                $clientes = Client::where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
+            if (!empty($dataRequest['client'])) {
+                $clientes = Client::where('name', 'LIKE', '%' . $dataRequest['client'] . '%')->pluck('id');
                 $sales->whereIn('client', $clientes);
             }
 
-            if ($request->forma != '') {
-                $sales->where('payment_form', $request->forma);
+            if (!empty($dataRequest['select_payment_method'])) {
+                $sales->where('payment_form', $dataRequest['select_payment_method']);
             }
 
-            if ($request->status != '') {
-                $sales->where('status', $request->status);
+            if (!empty($dataRequest['sale_status'])) {
+                $sales->where('status', $dataRequest['sale_status']);
             }
 
-            if ($request->data_inicial != '' && $request->data_final != '') {
-                $sales->whereBetween('start_date', [$request->data_inicial, date('Y-m-d', strtotime($request->data_final . ' + 1 day'))]);
-            } else {
-                if ($request->data_inicial != '') {
-                    $sales->whereDate('start_date', '>=', $request->data_inicial);
-                }
+            if (!empty($dataRequest['start_date'])) {
+                $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['start_date'] . ' 00:00:00')
+                                       ->toDateTimeString();
+                $sales->where('start_date', '>=', $startDateTime ?? null);
+            }
 
-                if ($request->data_final != '') {
-                    $sales->whereDate('end_date', '<', date('Y-m-d', strtotime($request->data_final . ' + 1 day')));
-                }
+            if (!empty($dataRequest['end_date'])) {
+                $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['end_date'] . " 23:59:59")
+                                     ->toDateTimeString();
+                $sales->where('start_date', '<=', $endDateTime ?? null);
             }
 
             $sales->with(['clientModel', 'projectModel', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
@@ -186,9 +208,9 @@ class SalesController extends Controller
                 'Link do Boleto',
                 'Linha Digitavel do Boleto',
                 'Data de Vencimento do Boleto',
-                'Data Inicial do Pagamento',
-                'Data Final do Pagamento',
-                'Data da Criação da  Venda',
+                'Data Inicial da Venda',
+                'Data de Finalização da Venda',
+                'Data da Criação da Venda',
                 'Status',
                 'Gateway Status',
                 'Iof',
@@ -196,7 +218,8 @@ class SalesController extends Controller
                 'Frete',
                 'Valor do Frete',
                 'Cotação do dolar',
-                'Valor Total Venda',
+                'Valor Pago pelo Cliente',
+                'Valor da Venda',
                 'Nome do Cliente',
                 'Telefone do Cliente',
                 'Email do Cliente',
@@ -220,6 +243,18 @@ class SalesController extends Controller
             ];
             $saleData = collect();
             foreach ($salesResult as $sale) {
+
+                $userCompanies = Company::where('user_id', auth()->user()->id)->pluck('id');
+
+                $transaction = Transaction::where('sale', $sale->id)->whereIn('company', $userCompanies)->first();
+
+                if ($transaction) {
+                    $value = $transaction->value;
+                } else {
+                    $value = '000';
+                }
+                $value = ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0);
+
                 $checkout  = Checkout::find($sale->checkout);
                 $shipping  = Shipping::find($sale->shipping);
                 $saleArray = [
@@ -247,6 +282,7 @@ class SalesController extends Controller
                     'shipping_value'        => $shipping->value ?? '',
                     'dolar_quotation'       => $sale->dolar_quotation ?? '',
                     'total_paid'            => $sale->total_paid_value ?? '',
+                    'sale_paid'             => $value ?? '',
                     'client_name'           => $sale->clientModel->name ?? '',
                     'client_telephone'      => $sale->clientModel->telephone ?? '',
                     'client_email'          => $sale->clientModel->email ?? '',
@@ -273,18 +309,24 @@ class SalesController extends Controller
             //$xlsx = new SaleReportExport($saleData, $header, 16);
             //$z    = Excel::store($xlsx, 'x.xlsx');
 
-//            return response()->json([
-//                                        'message' => 'Domínio cadastrado com sucesso',
-//                                        'data'    => $xlsx,
-//                                    ], 200);
+            //            return response()->json([
+            //                                        'message' => 'Domínio cadastrado com sucesso',
+            //                                        'data'    => $xlsx,
+            //                                    ], 200);
 
             //$x=sys_get_temp_dir();
-
-            return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.xlsx');
+            if (!empty($dataRequest['type']) && $dataRequest['type'] == 'csv') {
+                return Excel::download(new SaleReportExport($saleData, $header, 16), 'relatorio_vendas_' . Carbon::now()
+                                                                                                                 ->format('dmYH') . '.csv');
+            } else {
+                return Excel::download(new SaleReportExport($saleData, $header, 16), 'relatorio_vendas_' . Carbon::now()
+                                                                                                                 ->format('dmYH') . '.xlsx');
+            }
+            //return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.xlsx');
         } catch (Exception $e) {
             report($e);
 
-            return redirect()->back()->with('error', 'Erro ao tentar gerar o arquivo Excel . ');
+            return redirect()->back()->with('error', 'Erro ao tentar gerar o relatório . ');
         }
     }
 }
