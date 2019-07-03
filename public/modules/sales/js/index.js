@@ -85,7 +85,6 @@ $(document).ready(function () {
                 $('.detalhes_venda').unbind('click');
 
                 $('.detalhes_venda').on('click', function () {
-
                     var venda = $(this).attr('venda');
 
                     $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
@@ -105,7 +104,10 @@ $(document).ready(function () {
                             //
                         },
                         success: function (response) {
-                            $('#modal_venda_body').html(response);
+                            $('.subTotal').mask('#.###,#0', {reverse: true});
+
+                            $('.modal-body').html(response);
+
                         }
                     });
                 });

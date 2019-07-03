@@ -171,4 +171,9 @@ class Plan extends Model
     {
         return $this->hasMany('App\Entities\ZenviaSm', 'plan');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany('App\Entities\Product');
+    }
 }

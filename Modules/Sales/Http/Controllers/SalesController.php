@@ -2,9 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use App\Entities\Company;
 use App\Entities\Shipping;
-use App\Entities\Transaction;
 use Carbon\Carbon;
 use App\Entities\Plan;
 use App\Entities\Sale;
@@ -18,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Vinkla\Hashids\Facades\Hashids;
@@ -26,15 +25,17 @@ use Modules\Sales\Transformers\SalesResource;
 
 class SalesController extends Controller
 {
-    /**
-     * @var Sale
-     */
     private $saleModel;
+    private $plansSalesModel;
+    private $clientModel;
+    private $deliveryModel;
+    private $checkoutModel;
+    private $planModel;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
      */
-    public function getSaleModel()
+    private function getSaleModel()
     {
         if (!$this->saleModel) {
             $this->saleModel = app(Sale::class);
@@ -43,6 +44,69 @@ class SalesController extends Controller
         return $this->saleModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getPlansSales()
+    {
+        if (!$this->plansSalesModel) {
+            $this->plansSalesModel = app(PlanSale::class);
+        }
+
+        return $this->plansSalesModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getClient()
+    {
+        if (!$this->clientModel) {
+            $this->clientModel = app(Client::class);
+        }
+
+        return $this->clientModel;
+    }
+
+    /**
+     *
+     */
+    private function getDelivery()
+    {
+        if (!$this->deliveryModel) {
+            $this->deliveryModel = app(Delivery::class);
+        }
+
+        return $this->deliveryModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getCheckout()
+    {
+        if (!$this->checkoutModel) {
+            $this->checkoutModel = app(Checkout::class);
+        }
+
+        return $this->checkoutModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getPlan()
+    {
+        if (!$this->planModel) {
+            $this->planModel = app(Plan::class);
+        }
+
+        return $this->planModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
 
@@ -67,36 +131,71 @@ class SalesController extends Controller
 
     public function getSaleDetail(Request $request)
     {
+        try {
+            $requestData = $request->all();
+            if ($requestData['sale_id']) {
+                $sale = $this->getSaleModel()->find(current(Hashids::decode($requestData['sale_id'])));
 
-        $requestData = $request->all();
-        $sale        = Sale::find(current(Hashids::decode($requestData['sale_id'])));
+                $sale['hours']      = (new Carbon($sale['start_date']))->format('H:m:s');
+                $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
 
-        $plansSales = PlanSale::where('sale', $sale->id)->get()->toArray();
-        $plans      = [];
+                if ($sale->flag == 'visa') {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/visa.png');
+                } else if ($sale->flag == 'mastercard') {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/master.png');
+                } else if ($sale->payment_method == 2) {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/boleto.png');
+                } else {
+                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/generico.png');
+                }
 
-        foreach ($plansSales as $key => $planSale) {
-            $plans[$key]['name']   = Plan::find($planSale['plan'])['name'];
-            $plans[$key]['amount'] = $planSale['amount'];
+                $client              = $this->getClient()->find($sale->client);
+                $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
+
+                $plansSales = $this->getPlansSales()->where('sale', $sale->id)->get()->toArray();
+                $plans      = [];
+
+                $total = 0;
+                foreach ($plansSales as $key => $planSale) {
+                    $plans[$key]['name']   = $this->getPlan()->find($planSale['plan'])->name;
+                    $plans[$key]['amount'] = $planSale['amount'];
+                    $plans[$key]['value']  = $planSale['plan_value'];
+                    $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
+                }
+                $discount = '0,00';
+                $subTotal = $total;
+                $total    += preg_replace("/[^0-9]/", "", $sale->shipment_value);
+                if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
+                    $total    -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                    $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
+                } else {
+                    $discount = '0,00';
+                }
+
+                $delivery             = $this->getDelivery()->find($sale['delivery']);
+                $checkout             = $this->getCheckout()->find($sale['checkout']);
+                $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
+
+                $details = view('sales::details', [
+                    'sale'           => $sale,
+                    'plans'          => $plans,
+                    'client'         => $client,
+                    'delivery'       => $delivery,
+                    'checkout'       => $checkout,
+                    'total'          => number_format(intval($total) / 100, 2, ',', '.'),
+                    'subTotal'       => number_format(intval($subTotal) / 100, 2, ',', '.'),
+                    'discount'       => number_format(intval($discount) / 100, 2, ',', '.'),
+                    'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
+                    'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone),
+                    //                    'comissao'      =>  ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0 )
+                ]);
+
+                return response()->json($details->render());
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao mostrar detalhes da venda  SalesController - details');
+            report($e);
         }
-
-        $client   = Client::find($sale->client);
-        $delivery = Delivery::find($sale->delivery);
-
-        $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y H:i:s');
-
-        $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
-
-        $checkout = Checkout::find($sale['checkout']);
-
-        $details = view('sales::details', [
-            'sale'     => $sale,
-            'plans'    => $plans,
-            'client'   => $client,
-            'delivery' => $delivery,
-            'checkout' => $checkout,
-        ]);
-
-        return response()->json($details->render());
     }
 
     public function refundSale(Request $request)
@@ -210,9 +309,9 @@ class SalesController extends Controller
                 'Link do Boleto',
                 'Linha Digitavel do Boleto',
                 'Data de Vencimento do Boleto',
-                'Data Inicial da Venda',
-                'Data de Finalização da Venda',
-                'Data da Criação da Venda',
+                'Data Inicial do Pagamento',
+                'Data Final do Pagamento',
+                'Data da Criação da  Venda',
                 'Status',
                 'Gateway Status',
                 'Iof',
@@ -220,8 +319,7 @@ class SalesController extends Controller
                 'Frete',
                 'Valor do Frete',
                 'Cotação do dolar',
-                'Valor Pago pelo Cliente',
-                'Valor da Venda',
+                'Valor Total Venda',
                 'Nome do Cliente',
                 'Telefone do Cliente',
                 'Email do Cliente',
@@ -245,18 +343,6 @@ class SalesController extends Controller
             ];
             $saleData = collect();
             foreach ($salesResult as $sale) {
-
-                $userCompanies = Company::where('user_id', auth()->user()->id)->pluck('id');
-
-                $transaction = Transaction::where('sale', $sale->id)->whereIn('company', $userCompanies)->first();
-
-                if ($transaction) {
-                    $value = $transaction->value;
-                } else {
-                    $value = '000';
-                }
-                $value = ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0);
-
                 $checkout  = Checkout::find($sale->checkout);
                 $shipping  = Shipping::find($sale->shipping);
                 $saleArray = [
@@ -284,7 +370,6 @@ class SalesController extends Controller
                     'shipping_value'        => $shipping->value ?? '',
                     'dolar_quotation'       => $sale->dolar_quotation ?? '',
                     'total_paid'            => $sale->total_paid_value ?? '',
-                    'sale_paid'             => $value ?? '',
                     'client_name'           => $sale->clientModel->name ?? '',
                     'client_telephone'      => $sale->clientModel->telephone ?? '',
                     'client_email'          => $sale->clientModel->email ?? '',
@@ -317,18 +402,12 @@ class SalesController extends Controller
             //                                    ], 200);
 
             //$x=sys_get_temp_dir();
-            if (!empty($dataRequest['type']) && $dataRequest['type'] == 'csv') {
-                return Excel::download(new SaleReportExport($saleData, $header, 16), 'relatorio_vendas_' . Carbon::now()
-                                                                                                                 ->format('dmYH') . '.csv');
-            } else {
-                return Excel::download(new SaleReportExport($saleData, $header, 16), 'relatorio_vendas_' . Carbon::now()
-                                                                                                                 ->format('dmYH') . '.xlsx');
-            }
-            //return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.xlsx');
+
+            return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.xlsx');
         } catch (Exception $e) {
             report($e);
 
-            return redirect()->back()->with('error', 'Erro ao tentar gerar o relatório . ');
+            return redirect()->back()->with('error', 'Erro ao tentar gerar o arquivo Excel . ');
         }
     }
 }
