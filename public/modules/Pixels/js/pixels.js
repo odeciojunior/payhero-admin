@@ -88,10 +88,10 @@ $(function () {
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr>';
-                    data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.code + '</td>';
-                    data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.platform + '</td>';
-                    data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    data += '<td class="shipping-id" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="shipping-type" style="vertical-align: middle;">' + value.code + '</td>';
+                    data += '<td class="shipping-value" style="vertical-align: middle;">' + value.platform + '</td>';
+                    data += '<td class="shipping-status" style="vertical-align: middle;">';
                     if (value.status == 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
                     } else {
@@ -99,9 +99,9 @@ $(function () {
                     }
                     data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-pixel'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger details-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger edit-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger delete-pixel'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
                     data += '</tr>';
                     $("#data-table-pixel").append(data);
                 });
@@ -172,7 +172,7 @@ $(function () {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
                                     data: {
-                                        name: $("#name").val(),
+                                        name: $("#name_pixel").val(),
                                         code: $("#code").val(),
                                         platform: $("#platform").val(),
                                         status: $("#status").val(),
@@ -234,6 +234,5 @@ $(function () {
             }
         });
     }
-
 
 });

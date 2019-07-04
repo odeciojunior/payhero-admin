@@ -148,12 +148,14 @@ class DiscountCouponsController extends Controller
     {
         try {
             $requestValidated = $request->validated();
-            $couponId         = current(Hashids::decode($id));
-            $coupon           = $this->getDiscountCoupons()->find($couponId);
 
+            $couponId = current(Hashids::decode($id));
+            $coupon   = $this->getDiscountCoupons()->find($couponId);
+            unset($requestValidated['project']);
             $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
 
             $couponUpdated = $coupon->update($requestValidated);
+
             if ($couponUpdated) {
                 return response()->json('Sucesso', 200);
             }
@@ -161,6 +163,7 @@ class DiscountCouponsController extends Controller
             return response()->json('Erro');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar atualizar cupom de desconto  (DescountCouponController - update)');
+            dd($e);
             report($e);
         }
     }
