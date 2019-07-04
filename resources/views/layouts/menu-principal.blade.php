@@ -201,11 +201,11 @@
               <span class="site-menu-title">Carrinhos abandonados</span>
             </a>
           </li>
-          <li class="site-menu-item">
-            <a href="#" style="pointer-events: none;cursor: default;">
-              <span class="site-menu-title">Central de reembolso</span>
-            </a>
-          </li>
+          {{--<li class="site-menu-item">--}}
+            {{--<a href="#" style="pointer-events: none;cursor: default;">--}}
+              {{--<span class="site-menu-title">Central de reembolso</span>--}}
+            {{--</a>--}}
+          {{--</li>--}}
         </ul>
       </li>
       <li class="site-menu-item has-sub">

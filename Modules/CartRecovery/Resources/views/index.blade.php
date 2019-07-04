@@ -13,8 +13,8 @@
         </div>
         <div class="page-content container">
             <div id="" class="card shadow p-20">
-                <div class="row align-items-baseline">
-                    <div class="col-3">
+                <div class="row">
+                    <div class="col-4">
                         <label for="projeto">Projeto</label>
                         <select name='select_project' id="project" class="form-control select-pad">
                             <option value="">Todos projetos</option>
@@ -23,10 +23,10 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-3">
-                        <label for="comprador">Nome do cliente</label>
-                        <input name='client' id="client" class="input-pad" placeholder="cliente">
-                    </div>
+                    {{--<div class="col-3">--}}
+                        {{--<label for="comprador">Nome do cliente</label>--}}
+                        {{--<input name='client' id="client" class="input-pad" placeholder="cliente">--}}
+                    {{--</div>--}}
                     <div class="col-3">
                         <label for="data_inicial">Data inicial</label>
                         <input name='start_date' id="start_date" class="form-control input-pad" type="date">
@@ -35,14 +35,19 @@
                         <label for="data_final">Data final</label>
                         <input name='end_date' id="end_date" class="form-control input-pad" type="date">
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col text-right">
-                        <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">
+                    <div class="col-1 mt-30 text-right">
+                        <button id="bt_filtro" class="btn btn-primary">
                             <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                         </button>
                     </div>
                 </div>
+                {{--<div class="row">--}}
+                    {{--<div class="col text-right">--}}
+                        {{--<button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">--}}
+                            {{--<i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
+                        {{--</button>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
             </div>
             <div class="card shadow" style="min-height: 300px">
                 <table class="table table-striped">
