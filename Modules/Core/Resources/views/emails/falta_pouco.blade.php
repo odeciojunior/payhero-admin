@@ -115,7 +115,6 @@
                 </td>
             </tr>
 
-
         </table>
 
         <table width="600px" bgcolor="white" style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;" class="container" align="center" cellpadding="0" cellspacing="0">
@@ -128,7 +127,7 @@
             <tr class="dark-grey pad-bottom">
                 <td width="100%">
                     <p>
-                        <strong>Oi //nome. </strong><br>
+                        <strong>Olá {!! $name !!}. </strong><br>
                         Se você está ansioso para testar nossa plataforma, saiba que está chegando a hora de experimentar <strong> nossa revolução!</strong>
                         <br><br>
 
