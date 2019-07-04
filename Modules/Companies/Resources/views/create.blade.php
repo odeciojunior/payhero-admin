@@ -16,10 +16,10 @@
             <form id='create_form' method="post" action="{{route('companies.store')}}">
                 @csrf
                 @method('POST')
-                <div class="panel pt-30 p-30" data-plugin="matchHeight">
+                <div class="card shadow p-30" data-plugin="matchHeight">
                     <div class="form-group col-3">
                         <label for="country">País da empresa</label>
-                        <select id="country" name='country' class="form-control">
+                        <select id="country" name='country' class="form-control select-pad">
                             <option value="usa">United States</option>
                             <option value="brazil">Brasil</option>
                         </select>

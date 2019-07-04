@@ -112,13 +112,13 @@ $(document).ready(function () {
 
         $("#pagination").html("");
 
-        var primeira_pagina = "<button id='primeira_pagina' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>1</button>";
+        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);
 
-        if (response.meta.current_page == '1') {
-            $("#primeira_pagina").attr('disabled', true);
-        }
+        //if (response.meta.current_page == '1') {
+        // $("#primeira_pagina").attr('disabled', true);
+        //}
 
         $('#primeira_pagina').on("click", function () {
             atualizar('?page=1');
@@ -130,7 +130,7 @@ $(document).ready(function () {
                 continue;
             }
 
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + (response.meta.current_page - x) + "</button>");
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn active'>" + (response.meta.current_page - x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
@@ -139,11 +139,10 @@ $(document).ready(function () {
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual'  class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
 
             $("#pagination").append(pagina_atual);
 
-            $("#pagina_atual").attr('disabled', true);
         }
 
         for (x = 1; x < 4; x++) {
@@ -152,7 +151,7 @@ $(document).ready(function () {
                 continue;
             }
 
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn' style='margin-right:5px;background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + (response.meta.current_page + x) + "</button>");
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
@@ -161,7 +160,7 @@ $(document).ready(function () {
         }
 
         if (response.meta.last_page != '1') {
-            var ultima_pagina = "<button id='ultima_pagina' class='btn' style='background-image: linear-gradient(to right, #E6774C, #F92278);border-radius: 40px;color:white'>" + response.meta.last_page + "</button>";
+            var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
             $("#pagination").append(ultima_pagina);
 

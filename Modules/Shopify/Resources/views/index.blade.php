@@ -44,34 +44,39 @@
 
         <!-- Modal add integração -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" id="conteudo_modal_add">
+                <div class="modal-dialog modal-lg d-flex justify-content-center">
+                    <div class="modal-content w-450" id="conteudo_modal_add">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
-                            <h4 class="modal-title" style="width: 100%; text-align:center">Adicionar nova integração com Shopify</h4>
+                            <h4 class="modal-title" style="font-weight: 700;">Adicionar nova integração com Shopify</h4>
                         </div>
-                        <div class="modal-body" style="padding: 30px">
+                        <div class="pt-10 pr-20 pl-20">
                             <form id='form_add_integracao' method="post" action="#">
                                 @csrf
                                 <div style="width:100%">
                                     <div class="row">
                                         <div class="col-12">
                                             <label for="token">Token</label>
-                                            <input type="text" class="form-control" name="token" id="token" placeholder="Digite seu token">
+                                            <input type="text" class="input-pad" name="token" id="token" placeholder="Digite seu token">
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top:30px">
-                                        <div class="col-12">
+                                        <div class="input-group col-12">
                                             <label for="url_store">URL da sua loja no Shopify</label>
-                                            <input type="text" class="form-control" name="url_store" id="url_store" placeholder="Digite a URL da sua loja">
+                                            <div class="d-flex input-group">
+                                                <input type="text" class="input-pad col-7 addon" name="url_store" id="url_store" placeholder="Digite a URL da sua loja">
+                                                <span class="input-group-addon input-pad col-lg-5">.myshopify.com</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </div>  
+
+                                    
                                     <div class="row" style="margin-top:30px">
                                         <div class="col-12">
                                             <label for="company">Selecione sua empresa</label>
-                                            <select class="form-control" id="company" name="company">
+                                            <select class="select-pad" id="company" name="company">
                                                 @foreach($companies as $company)
                                                     <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
                                                 @endforeach
@@ -82,11 +87,14 @@
                                         <div class="form-group col-12">
                                             <label for="selecionar_foto">Foto do projeto</label>
                                             <br>
-                                            <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto">
+                                            <a role="button" id="selecionar_foto" id="preview-image-project" class="btn btn-primary mt-10 white">
+                                                <i class="material-icons"> cloud_upload </i> Upload
+                                            </a>
+                                            <!-- <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto"> -->
                                             <input name="foto_projeto" type="file" class="form-control" id="foto" style="display:none">
                                             <div style="margin: 20px 0 0 30px;">
-                                                <img id="previewimage" alt="Selecione a foto do projeto" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
-                                            </div>
+                                                <img id="previewimage" alt="Selecione a foto do projeto" accept="image/*" onerror="this.src='{{asset('modules/global/assets/img/projeto.png')}}';" style="max-height: 250px; max-width: 350px;"/>
+                                            </div>                                           
                                             <input type="hidden" name="foto_x1"/> <input type="hidden" name="foto_y1"/>
                                             <input type="hidden" name="foto_w"/> <input type="hidden" name="foto_h"/>
                                         </div>

@@ -6,9 +6,10 @@
     <div class="page">
         <div class="page-header container">
             <h1 class="page-title">Empresas</h1>
-            <div class="page-header-actions">
-                <a class="btn btn-primary float-right" href="{{route('companies.create')}}">
-                    <i class='icon wb-user-add' aria-hidden='true'></i> Cadastrar empresa
+            <div class="page-header-actions d-flex">
+                <a  href="{{route('companies.create')}}" class="stretched-link d-flex align-items-center justify-content-end pointer" >
+                    <span class="link-button-dependent red"> Cadastrar empresa </span>
+                    <a role="button" class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
                 </a>
             </div>
         </div>

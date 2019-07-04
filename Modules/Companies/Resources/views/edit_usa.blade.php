@@ -6,7 +6,7 @@
 @section('content')
     <!-- Page -->
     <div class="page">
-        <div class="page-header">
+        <div class="page-header container">
             <h1 class="page-title">Edit Company</h1>
             <div class="page-header-actions">
                 <a class="btn btn-primary float-right" href="{{route('companies.index')}}">
@@ -14,11 +14,11 @@
                 </a>
             </div>
         </div>
-        <div class="page-content container-fluid">
-            <div class="card shadown p-30" data-plugin="matchHeight">
-                <div class="col-xl-12">
+
+        <div class="page-content container">
+            <div class="card shadow" data-plugin="matchHeight">
                     <div class="example-wrap">
-                        <div class="nav-tabs-horizontal" data-plugin="tabs">
+                        <div class="nav-tabs-horizontal nav-tabs-line pt-15" data-plugin="tabs">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item" role="presentation" id='nav_users'>
                                     <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Company
@@ -34,169 +34,189 @@
                                     </a>
                                 </li>
                             </ul>
-                            <div class="tab-content pt-20">
+                        </div>
+
+                            <div class="tab-content pt-10 pr-30 pl-30">
                                 <div class="tab-pane active" id="tab_user" role="tabpanel">
                                     <form method="POST" action="{!! route('companies.update', ['id' => $company->id_code]) !!}" enctype="multipart/form-data" id='company_update_form'>
                                         @csrf
                                         @method('PUT')
-                                        <div class="row">
-                                            <div class="panel-heading col-10">
-                                                <h3 class="panel-title">Basic information</h3>
+
+                                        <h3 class="mb-15 mt-10">Basic information</h3>
+
+                                            <div class="row">
+                                                <div class="form-group col-xl-4">
+                                                    <label for="fantasy_name">Fantasy Name</label>
+                                                    <input name="fantasy_name" value="{!! $company->fantasy_name !!}" type="text" class="input-pad" id="fantasy_name">
+                                                </div>
+
+                                                <div class="form-group col-xl-4">
+                                                    <label for="company_document">Company Document</label>
+                                                    <input name="company_document" value="{!! $company->company_document !!}" type="text" class="input-pad" id="company_document">
+                                                </div>
+
+                                                <div class="form-group col-xl-4">
+                                                    <label for="business_website">Site</label>
+                                                    <input name="business_website" value="{!! $company->business_website !!}" type="text" class="input-pad" id="business_website">
+                                                </div>
+                                                
+
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="business_website">Site</label>
-                                                <input name="business_website" value="{!! $company->business_website !!}" type="text" class="form-control" id="business_website">
+
+                                            <div class="row">
+                                                
+                                                <div class="form-group col-xl-4">
+                                                    <label for="support_email">E-mail</label>
+                                                    <input name="support_email" value="{!! $company->support_email !!}" type="text" class="input-pad" id="support_email">
+                                                </div>
+                                            
+                                                <div class="form-group col-xl-4">
+                                                    <label for="support_telephone">Telephone</label>
+                                                    <input name="support_telephone" value="{!! $company->support_telephone !!}" type="text" class="input-pad" id="support_telephone">
+                                                </div>
+
                                             </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="support_email">E-mail</label>
-                                                <input name="support_email" value="{!! $company->support_email !!}" type="text" class="form-control" id="support_email">
+
+                                            <h3 class="mb-15">Aditional information</h3>
+
+                                            <div class="row">
+
+                                                <div class="form-group col-xl-2">
+                                                    <label for="zip_code">Zipcode</label>
+                                                    <input name="zip_code" value="{!! $company->zip_code !!}" type="text" class="input-pad" id="zip_code">
+                                                </div>
+
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="support_telephone">Telephone</label>
-                                                <input name="support_telephone" value="{!! $company->support_telephone !!}" type="text" class="form-control" id="support_telephone">
+
+                                            <div class="row">
+                                                <div class="form-group col-xl-5">
+                                                    <label for="street">Street</label>
+                                                    <input name="street" value="{!! $company->street !!}" type="text" class="input-pad" id="street">
+                                                </div>
+
+                                                
+                                                <div class="form-group col-xl-2">
+                                                    <label for="number">Number</label>
+                                                    <input name="number" value="{!! $company->number !!}" type="text" class="input-pad" id="number">
+                                                </div>
+
+                                                <div class="form-group col-xl-5">
+                                                    <label for="neighborhood">Neighborhood</label>
+                                                    <input name="neighborhood" value="{!! $company->neighborhood !!}" type="text" class="input-pad" id="neighborhood">
+                                                </div>
+
+                                                <div class="form-group col-xl-4">
+                                                    <label for="complement">Complement</label>
+                                                    <input name="complement" value="{!! $company->complement !!}" type="text" class="input-pad" id="complement">
+                                                </div>
+
+                                                <div class="form-group col-xl-4">
+                                                    <label for="state">State</label>
+                                                    <input name="state" value="{!! $company->state !!}" type="text" class="input-pad" id="state">
+                                                </div>
+                                                <div class="form-group col-xl-4">
+                                                    <label for="city">City</label>
+                                                    <input name="city" value="{!! $company->city !!}" type="text" class="input-pad" id="city">
+                                                </div>
+                                                       
+                                                {{--<div class="form-group col-xl-6">--}}
+                                                    {{--<label for="country">Country</label>--}}
+                                                    {{--<input name="country" value="{!! $company->country !!}" type="text" class="input-pad" id="country">--}}
+                                                {{--</div>--}}
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="fantasy_name">Fantasy Name</label>
-                                                <input name="fantasy_name" value="{!! $company->fantasy_name !!}" type="text" class="form-control" id="fantasy_name">
+
+                                            <div class="form-group text-right">
+                                                <input id="update_profile" type="submit" class="btn btn-success" value="Update" style="width: auto;">
                                             </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="company_document">Company Document</label>
-                                                <input name="company_document" value="{!! $company->company_document !!}" type="text" class="form-control" id="company_document">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="zip_code">Zipcode</label>
-                                                <input name="zip_code" value="{!! $company->zip_code !!}" type="text" class="form-control" id="zip_code">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="state">State</label>
-                                                <input name="state" value="{!! $company->state !!}" type="text" class="form-control" id="state">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="city">City</label>
-                                                <input name="city" value="{!! $company->city !!}" type="text" class="form-control" id="city">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="neighborhood">Neighborhood</label>
-                                                <input name="neighborhood" value="{!! $company->neighborhood !!}" type="text" class="form-control" id="neighborhood">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="street">Street</label>
-                                                <input name="street" value="{!! $company->street !!}" type="text" class="form-control" id="street">
-                                            </div>
-                                            <div class="form-group col-xl-6">
-                                                <label for="number">Number</label>
-                                                <input name="number" value="{!! $company->number !!}" type="text" class="form-control" id="number">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
-                                                <label for="complement">Complement</label>
-                                                <input name="complement" value="{!! $company->complement !!}" type="text" class="form-control" id="complement">
-                                            </div>
-                                            {{--<div class="form-group col-xl-6">--}}
-                                                {{--<label for="country">Country</label>--}}
-                                                {{--<input name="country" value="{!! $company->country !!}" type="text" class="form-control" id="country">--}}
-                                            {{--</div>--}}
-                                        </div>
-                                        <div class="form-group" style="margin-top: 30px">
-                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Save" style="width: 30%">
-                                        </div>
                                     </form>
                                 </div>
+
                                 <div class="tab-pane" id="tab_bank_data" role="tabpanel">
                                     <form method="POST" action="{!! route('companies.update', ['id' => $company->id_code]) !!}" enctype="multipart/form-data" id='company_bank_update_form'>
                                         @csrf
                                         @method('PUT')
+                                            <h3 class="mb-15 mt-10">Bank Account</h3>
                                         <div class="row">
-                                            <div class="panel-heading col-10">
-                                                <h3 class="panel-title">Bank account</h3>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-xl-6">
+                                            <div class="form-group col-xl-4">
                                                 <label>Routing Number</label>
-                                                <input id="routing_number" name="bank" type="text" value="{!! $company->bank !!}" class="form-control" placeholder="Routing Number">
+                                                <input id="routing_number" name="bank" type="text" value="{!! $company->bank !!}" class="input-pad" placeholder="Routing Number">
                                             </div>
-                                            <div class="form-group col-xl-6">
+                                            <div class="form-group col-xl-4">
                                                 <label>Bank</label>
-                                                <input id="bank" type="text" name="bank_name" class="form-control" placeholder="Bank" disabled>
+                                                <input id="bank" type="text" name="bank_name" class="input-pad" placeholder="Bank" disabled>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-12">
+                                            <div class="form-group col-xl-4">
                                                 <label>Account number</label>
-                                                <input name="account_digit" type="text" value="{!! $company->account_digit !!}" class="form-control" placeholder="Account number">
+                                                <input name="account_digit" type="text" value="{!! $company->account_digit !!}" class="input-pad" placeholder="Account number">
                                             </div>
                                         </div>
-                                        <div class="form-group" style="margin-top: 30px">
-                                            <input id="update_profile" type="submit" class="form-control btn btn-success" value="Save" style="width: 30%">
+
+                                        <div class="form-group text-right">
+                                            <input id="update_profile" type="submit" class="btn btn-success" value="Save Account" style="width: auto;">
                                         </div>
                                     </form>
                                 </div>
+
                                 <div class="tab-pane" id="tab_documentos" role="tabpanel">
-                                    Send a bank statement, proof of residence and the company's contract<br>
-                                    <div id="dropzone">
-                                        <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                            @csrf
-                                            <div class="dz-message needsclick">
-                                                Drag the files here or click to select.<br/>
+
+                                <h3 class="mb-15 mt-10">Documents</h3>
+
+                                    <div class="row mt-15">
+                                        <div class="col-lg-6">
+                                            <p class="mb-10"> Send a bank statement, proof of residence and the company's contract</p>
+                                            <div id="dropzone drop-empresas">
+                                                <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                                    @csrf
+                                                    <div class="dz-message needsclick">
+                                                        Drag the files here or click to select.<br/>
+                                                    </div>
+                                                    <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="input-pad">
+                                                    <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
+                                                </form>
                                             </div>
-                                            <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="form-control">
-                                            <input id="document_type" name="document_type" value="" type="hidden" class="form-control">
-                                        </form>
-                                    </div>
-                                    <div class="row">
-                                        <div class="panel-heading col-10">
-                                            <h3 class="panel-title">Uploaded Documents</h3>
                                         </div>
-                                        <table class="table table-hover table-striped table-bordered mt-2">
-                                            <tbody>
-                                                <tr class="text-center">
-                                                    <td>
-                                                        Bank statement
-                                                    </td>
-                                                    <td id='td_bank_status'>
-                                                        {!! $company->bank_document_translate !!}
-                                                    </td>
-                                                </tr>
-                                                <tr class='text-center'>
-                                                    <td>
-                                                        Proof of address
-                                                    </td>
-                                                    <td id='td_address_status'>
-                                                        {!! $company->address_document_translate !!}
-                                                    </td>
-                                                </tr>
-                                                <tr class='text-center'>
-                                                    <td>
-                                                        Company Contract
-                                                    </td>
-                                                    <td id='td_contract_status'>
-                                                        {!! $company->contract_document_translate !!}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+
+                                        <div class="col-lg-6">
+                                            <table class="table table-striped ">
+                                                <tbody>
+                                                    <tr class="text-center">
+                                                        <td>
+                                                            Bank statement
+                                                        </td>
+                                                        <td id='td_bank_status'>
+                                                            {!! $company->bank_document_translate !!}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class='text-center'>
+                                                        <td>
+                                                            Proof of address
+                                                        </td>
+                                                        <td id='td_address_status'>
+                                                            {!! $company->address_document_translate !!}
+                                                        </td>
+                                                    </tr>
+                                                    <tr class='text-center'>
+                                                        <td>
+                                                            Company Contract
+                                                        </td>
+                                                        <td id='td_contract_status'>
+                                                            {!! $company->contract_document_translate !!}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
                                     </div>
+                                </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
+
     </div>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>

@@ -1,3 +1,7 @@
+a, a:hover {
+    text-decoration: none;
+}
+
 input, select, textarea{
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -485,7 +489,7 @@ font-size: 10px;
 }
 
 .badge-pendente {
-    background: orangered;
+    background: rgb(255, 157, 0);
 }
 
 .badge-aprovado {
@@ -646,4 +650,40 @@ font-size: 10px;
     align-items: center;
     justify-content: center;
     align-content: center;
+}
+
+.nav-btn {
+    margin-right:5px;
+    background: transparent; 
+    color:#888;  
+    border-radius: 40px;
+    border-color: transparent;
+    font-weight:700;
+}
+
+.nav-btn.active {
+
+    background-image: linear-gradient(to right, #e6774c, #f92278) !important;
+    border-radius: 40px;
+    color:white !important;
+
+}
+
+.w-450 {
+    width: 450px;
+}
+
+.input-pad.addon {
+
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+}
+
+.input-group-addon.input-pad {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0px;
+    background: #f3f3f3;
+    text-align: center;
 }

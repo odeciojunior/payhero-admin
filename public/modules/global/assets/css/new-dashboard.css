@@ -76,3 +76,21 @@ body { font-family: 'Muli', sans-serif !important;}
   .card-bottom.orangered {
     background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
   }
+
+  
+
+  .drop-empresas {
+    min-height: 140px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    background: white;
+    padding: 20px 20px;
+  }
+
+  .drop-empresas.dz-message {
+    text-align: center;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+  }
