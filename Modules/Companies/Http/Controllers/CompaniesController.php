@@ -203,7 +203,7 @@ class CompaniesController extends Controller
 
             $company = $this->getCompanyModel()
                             ->find(current(Hashids::decode($encodedId)));
-            if ($company->company_document != $requestData['company_document']) {
+            if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
                 $company->bank_document_status = $this->getCompanyModel()->getEnum('bank_document_status', 'pending');
             }
             $requestData = array_filter($requestData);

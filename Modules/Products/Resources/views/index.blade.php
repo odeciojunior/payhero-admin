@@ -34,7 +34,7 @@
             <div class="row">
                 @foreach($products as $product)
                     <div class="col-xl-3 col-md-6">
-                        <div class="card shadow">
+                        <div class="card shadow" style='cursor:pointer;'>
                             <img class="card-img-top product-image" src="{!! $product->photo !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/semimagem.png') !!}';" data-link="/products/{{Hashids::encode($product->id)}}/edit" alt="Imagem não encontrada">
                             <div class="card-body">
                                 <div class="row align-items-end justify-content-between">
