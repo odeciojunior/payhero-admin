@@ -199,13 +199,13 @@ class ProfileController extends Controller
 
             if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'personal_document')) {
                 $user->update([
-                                  'personal_document_status' => $user->getEnum('personal_document_status', 'pending'),
+                                  'personal_document_status' => $user->getEnum('personal_document_status', 'analyzing'),
                               ]);
             }
 
             if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'address_document')) {
                 $user->update([
-                                  'address_document_status' => $user->getEnum('address_document_status', 'pending'),
+                                  'address_document_status' => $user->getEnum('address_document_status', 'analyzing'),
                               ]);
             }
 

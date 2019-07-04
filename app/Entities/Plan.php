@@ -174,6 +174,6 @@ class Plan extends Model
 
     public function products()
     {
-        return $this->belongsToMany('App\Entities\Product');
+        return $this->belongsToMany('App\Entities\Product', 'products_plans', 'plan', 'product');
     }
 }

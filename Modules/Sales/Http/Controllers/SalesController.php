@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Entities\Product;
 use App\Entities\Shipping;
 use Carbon\Carbon;
 use App\Entities\Plan;
@@ -31,6 +32,8 @@ class SalesController extends Controller
     private $deliveryModel;
     private $checkoutModel;
     private $planModel;
+    private $productModel;
+    private $userProjectModel;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -69,7 +72,7 @@ class SalesController extends Controller
     }
 
     /**
-     *
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
      */
     private function getDelivery()
     {
@@ -105,30 +108,63 @@ class SalesController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getProduct()
+    {
+        if (!$this->productModel) {
+            $this->productModel = app(Product::class);
+        }
+
+        return $this->productModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getUserProjectModel()
+    {
+        if (!$this->userProjectModel) {
+            $this->userProjectModel = app(UserProject::class);
+        }
+
+        return $this->userProjectModel;
+    }
+
+    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
+        try {
+            $userProjects = $this->getUserProjectModel()->with('projectId')->where('user', auth()->user()->id)->get();
 
-        $userProjects = UserProject::where('user', \Auth::user()->id)->get()->toArray();
-        $projects     = [];
+            $projects = [];
 
-        foreach ($userProjects as $userProject) {
-            $project = Project::find($userProject['project']);
-            if ($project['id'] != null) {
-                $projects[] = [
-                    'id'   => $project['id'],
-                    'nome' => $project['name'],
-                ];
+            foreach ($userProjects as $userProject) {
+                if ($userProject->projectId != null) {
+                    $projects[] = [
+                        'id'   => $userProject->projectId->id,
+                        'nome' => $userProject->projectId->name,
+                    ];
+                }
             }
-        }
 
-        return view('sales::index', [
-            'projetos'     => $projects,
-            'sales_amount' => Sale::where('owner', auth()->user()->id)->get()->count(),
-        ]);
+            return view('sales::index', [
+                'projetos'     => $projects,
+                'sales_amount' => $this->getSaleModel()->where('owner', auth()->user()->id)->get()->count(),
+            ]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar vendas SalesController - index');
+            report($e);
+        }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function getSaleDetail(Request $request)
     {
         try {
@@ -152,16 +188,20 @@ class SalesController extends Controller
                 $client              = $this->getClient()->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
-                $plansSales = $this->getPlansSales()->where('sale', $sale->id)->get()->toArray();
-                $plans      = [];
+                $plansSales = $this->getPlansSales()->with(['plan.products'])->where('sale', $sale->id)
+                                   ->get();
 
+                $plans = [];
                 $total = 0;
+
                 foreach ($plansSales as $key => $planSale) {
                     $plans[$key]['name']   = $this->getPlan()->find($planSale['plan'])->name;
                     $plans[$key]['amount'] = $planSale['amount'];
                     $plans[$key]['value']  = $planSale['plan_value'];
+                    $plans[$key]['photo']  = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
                     $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
                 }
+
                 $discount = '0,00';
                 $subTotal = $total;
                 $total    += preg_replace("/[^0-9]/", "", $sale->shipment_value);
@@ -204,10 +244,12 @@ class SalesController extends Controller
         return response()->json('sucesso');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function getSales(Request $request)
     {
-
-        //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
         $sales = Sale::where('owner', \Auth::user()->id);
 
         $sales = $sales->where('status', '!=', '3');
@@ -224,9 +266,8 @@ class SalesController extends Controller
         }
 
         if ($request->forma != '') {
-            $sales->where('payment_form', $request->forma);
+            $sales->where('payment_method', $request->forma);
         }
-
         if ($request->status != '') {
             $sales->where('status', $request->status);
         }

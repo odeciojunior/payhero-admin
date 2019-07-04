@@ -19,7 +19,7 @@
                         <li class="nav-item" role="presentation" id='nav_users'>
                             <a class="nav-link active" data-toggle="tab" href="#tab_user" aria-controls="tab_user" role="tab">Meus dados
                             </a>
-                        </li> 
+                        </li>
                         <li class="nav-item" role="presentation" id="nav_documents">
                             <a class="nav-link" data-toggle="tab" href="#tab_documentos" aria-controls="tab_documentos" role="tab">
                                 Documentos
@@ -35,13 +35,11 @@
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <h5 class="title-pad"> Dados Pessoais </h5>
-                                            <p class="sub-pad"> Precisamos saber um pouco sobre você  </p>
+                                            <p class="sub-pad"> Precisamos saber um pouco sobre você </p>
                                         </div>
                                         <div class="col">
-                                            
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-lg-8">
                                             <div class="row">
@@ -67,14 +65,13 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col-lg-4">
                                             <div class="form-group col-6">
                                                 <label for="select_profile_photo">Foto de perfil</label>
                                                 <br>
                                                 <input name="profile_photo" type="file" class="form-control input-pad" id="profile_photo" style="display:none">
                                                 <div style="margin: 20px 0 0 30px;">
-                                                    <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/assets/img/user-default.png') !!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px;"/>
+                                                    <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/assets/img/user-default.png') !!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
                                                 </div>
                                                 <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>
@@ -122,14 +119,13 @@
                                             <label for="state">Estado</label>
                                             <input name="state" value="{!! $user->state !!}" type="text" class="input-pad" id="state">
                                         </div>
-                                        <div class="col-lg-12 text-right" style="margin-top: 30px">                                                    
-                                            <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10"> 
-                                                <i class="icon fa-lock" aria-hidden="true"></i> 
-                                                Alterar senha 
+                                        <div class="col-lg-12 text-right" style="margin-top: 30px">
+                                            <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10">
+                                                <i class="icon fa-lock" aria-hidden="true"></i> Alterar senha
                                             </a>
                                             <button id="update_profile" type="submit" class="btn btn-success">Atualizar Dados</button>
                                         </div>
-                                    </div>                                        
+                                    </div>
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="tab_documentos" role="tabpanel">
@@ -150,7 +146,7 @@
                                                     Arraste ou clique para fazer upload.<br/>
                                                 </div>
                                                 <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
-                                            </form>                                                        
+                                            </form>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -164,19 +160,23 @@
                                             <tbody class="custom-t-body">
                                                 <tr>
                                                     <td>Identidade</td>
-                                                    <td  id="td_personal_status"><span class="badge badge-pendente">{!! $user->personal_document_translate !!}</span>
+                                                    <td id="td_personal_status">
+                                                        <span class="badge badge-pendente">{!! $user->personal_document_translate !!}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Residência</td>
-                                                    <td id="td_address_status"><span class="badge badge-pendente"> {!! $user->address_document_translate !!}</span>
+                                                    <td id="td_address_status">
+                                                        <span class="badge badge-pendente"> {!! $user->address_document_translate !!}</span>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="col-lg-12  mt-10">
-                                        <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto) <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos. </small>
+                                        <small class="text-muted" style="line-height: 1.5;"> Doc. de Identidade aceitos: RG ou CNH (oficial e com foto)
+                                            <br> Comp. de Residência aceitos: conta de energia, água ou de serviços públicos.
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -209,10 +209,10 @@
         </div>
     </div>
 
-@push('scripts')
-    <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
-    <script src="{{asset('/modules/profile/js/profile.js')}}"></script>
-@endpush
+    @push('scripts')
+        <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
+        <script src="{{asset('/modules/profile/js/profile.js')}}"></script>
+    @endpush
 
 @endsection
 
