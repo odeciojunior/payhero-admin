@@ -102,13 +102,12 @@ class PostBackPagarmeController extends Controller {
                         Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$sale['id']);
                         report($e);
                     }
-
                 }
 
             }
             else{
                 foreach($transactions as $transaction){
-                    Transaction::find($transaction['id'])->update('status',$requestData['transaction']['status']);
+                    Transaction::find($transaction['id'])->update(['status' => $requestData['transaction']['status']]);
                 }
             }
         }
