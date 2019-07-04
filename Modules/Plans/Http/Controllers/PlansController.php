@@ -106,8 +106,7 @@ class PlansController extends Controller
 
             $requestData['price'] = $this->getValue($requestData['price']);
 
-            $requestData['code'] = '312asd';
-            $plan                = $this->getPlan()->create($requestData);
+            $plan = $this->getPlan()->create($requestData);
             $plan->update(['code' => $plan->id_code]);
             if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
                 foreach ($requestData['products'] as $keyProduct => $product) {
@@ -148,16 +147,6 @@ class PlansController extends Controller
                     $this->getProductPlan()->find($productPlan['id'])->delete();
                 }
             }
-
-            //            $productAmount = 1;
-            //            while (isset($requestData['product_' . $productAmount]) && $requestData['product_' . $productAmount] != '') {
-            //
-            //                $this->getProductPlan()->create([
-            //                                                    'product' => $requestData['product_' . $productAmount],
-            //                                                    'plan'    => $plan->id,
-            //                                                    'amount'  => $requestData['product_amount_' . $productAmount++],
-            //                                                ]);;
-            //            }
             if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
                 foreach ($requestData['products'] as $keyProduct => $product) {
                     foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
@@ -202,12 +191,23 @@ class PlansController extends Controller
         return response()->json('sucesso');
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         try {
+            $projectId = current(Hashids::decode($request->input('project')));
+
             if (isset($id)) {
                 $planId = Hashids::decode($id)[0];
-                $plan   = $this->getPlan()->with(['productsPlans.getProduct'])->find($planId);
+                //                $plan   = $this->getPlan()->with(['products', 'projectId.domains' => function($query) use ($projectId) {
+                //                    $query->where([['project_id', $projectId], ['status', 3]])
+                //                          ->first();
+                //                },])->find($planId);
+                $plan = $this->getPlan()->with([
+                                                   'products', 'projectId.domains' => function($query) use ($projectId) {
+                        $query->where([['project_id', $projectId], ['status', 3]])
+                              ->first();
+                    },
+                                               ])->find($planId);
 
                 return view('plans::details', ['plan' => $plan]);
             }
