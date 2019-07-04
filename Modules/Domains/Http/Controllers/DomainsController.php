@@ -15,6 +15,7 @@ use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\User;
 use Illuminate\Routing\Controller;
 use Cloudflare\API\Endpoints\Zones;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\FoxUtils;
@@ -151,6 +152,7 @@ class DomainsController extends Controller
     public function store(DomainStoreRequest $request)
     {
         try {
+            DB::beginTransaction();
             $requestData = $request->validated();
 
             $projectId = $requestData['project_id'] ?? null;
@@ -179,20 +181,29 @@ class DomainsController extends Controller
                     }
 
                     if ($newDomain) {
+                        DB::commit();
+
                         return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
                     } else {
                         //problema ao cadastrar dominio
+                        DB::rollBack();
+
                         return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                     }
                 } else {
+                    DB::rollBack();
+
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                 }
             } else {
                 //nao veio projectid
 
+                DB::rollBack();
+
                 return response()->json(['message' => 'Projeto não encontrado.'], 400);
             }
         } catch (Exception $e) {
+            DB::rollBack();
             Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
             report($e);
 
@@ -249,6 +260,8 @@ class DomainsController extends Controller
     public function update(Request $request)
     {
         try {
+            DB::beginTransaction();
+
             $requestData = $request->all();
             $recordsJson = json_decode($requestData['data']);
 
@@ -274,13 +287,19 @@ class DomainsController extends Controller
                                                                            ]);
                     } else {
                         //dominio já cadastrado
+                        DB::rollBack();
+
                         return response()->json(['message' => 'Este dominio já esta cadastrado'], 400);
                     }
                 }
             }
 
+            DB::commit();
+
             return response()->json(['message' => "Dominio atualizado com sucesso"], 200);
         } catch (Exception $e) {
+            DB::rollBack();
+
             Log::warning('Erro ao tentar salvar dominio personalisado DomainsController - update');
             report($e);
 
@@ -333,15 +352,9 @@ class DomainsController extends Controller
     {
         $domain = $this->getDomainModel()->where('id', Hashids::decode($domainId))->first();
 
-        $key     = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
-        $adapter = new Guzzle($key);
-        $user    = new User($adapter);
-        $dns     = new DNS($adapter);
-        $zones   = new Zones($adapter);
-
         $view = view('domains::show', [
             'domain' => $domain,
-            'zones'  => $zones->listZones()->result,
+            'zones'  => $this->getCloudFlareService()->getZones(),
         ]);
 
         return response()->json($view->render());
@@ -394,7 +407,7 @@ class DomainsController extends Controller
             $record   = $this->getDomainRecordModel()->with('domain')->find($recordId);
 
             $this->getCloudFlareService()->setZone($record->domain->name);
-            if ($this->getCloudFlareService()->deleteRecord($record->name.'.'.$record->domain->name)) {
+            if ($this->getCloudFlareService()->deleteRecord($record->name . '.' . $record->domain->name)) {
                 //zona deletada
 
                 $recordsDeleted = $this->getDomainRecordModel()->where('id', $record->id)->delete();

@@ -1,302 +1,228 @@
 <?php
 
-namespace Modules\Shopify\Http\Controllers;
+namespace Modules\Core\Services;
 
-use Exception;
-use Modules\Core\Services\DigitalOceanFileService;
 use PHPHtmlParser\Dom;
-use App\Entities\Plan;
-use App\Entities\Company;
-use App\Entities\Product;
-use App\Entities\Project;
-use Slince\Shopify\Client;
-use PHPHtmlParser\Dom\Tag;
-use Illuminate\Http\Request;
-use App\Entities\ProductPlan;
-use App\Entities\UserProject;
-use Illuminate\Http\Response;
-use Cloudflare\API\Auth\APIKey;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
-use Cloudflare\API\Endpoints\DNS;
-use Illuminate\Routing\Controller;
-use Cloudflare\API\Adapter\Guzzle;
 use PHPHtmlParser\Selector\Parser;
-use Cloudflare\API\Endpoints\Zones;
-use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
-use App\Entities\ShopifyIntegration;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
+use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
-use Modules\Core\Helpers\CaminhoArquivosHelper;
 
-class ShopifyController extends Controller
+class ShopifyService
 {
+    const templateKeyName     = 'sections/cart-template.liquid';
+    const templateAjaxKeyName = 'snippets/ajax-cart-template.liquid';
     /**
-     * @var DigitalOceanFileService
+     * @var string
      */
-    private $digitalOceanFileService;
+    private $cacheDir;
+    /**
+     * @var PublicAppCredential
+     */
+    private $credential;
+    /**
+     * @var Client
+     */
+    private $client;
+    private $theme;
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * ShopifyService constructor.
+     * @param $urlStore
+     * @param $token
      */
-    private function getDigitalOceanFileService()
+    public function __construct(string $urlStore, string $token)
     {
-        if (!$this->digitalOceanFileService) {
-            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
+        if ($this->cacheDir) {
+            $cache = './tmp';
+        } else {
+            $cache = $this->cacheDir;
         }
 
-        return $this->digitalOceanFileService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index()
-    {
-        $companies = Company::where('user_id', \Auth::user()->id)->get()->toArray();
-
-        $shopifyIntegrations = ShopifyIntegration::where('user', \Auth::user()->id)->get()->toArray();
-
-        $projects = [];
-
-        foreach ($shopifyIntegrations as $shopifyIntegration) {
-
-            $project = Project::find($shopifyIntegration['project']);
-
-            if ($project) {
-                $projects[] = $project;
-            }
-        }
-
-        return view('shopify::index', [
-            'companies' => $companies,
-            'projects'  => $projects,
+        $this->credential = new PublicAppCredential($token);
+        $this->client     = new Client($this->credential, $urlStore, [
+            'metaCacheDir' => $cache // Metadata cache dir, required
         ]);
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param $cacheDir
+     * @return $this
      */
-    public function adicionarIntegracao(Request $request)
+    public function cacheDir(string $cacheDir)
     {
-        try {
-            $dados = $request->all();
+        $this->cacheDir = $cacheDir;
 
-            $shopifyIntegration = ShopifyIntegration::where('token', $dados['token'])->first();
+        return $this;
+    }
 
-            if ($shopifyIntegration != null) {
-                return response()->json('Projeto já integrado');
-            }
+    /**
+     * @param string $role
+     * @return $this
+     */
+    public function themeByRole(string $role)
+    {
+        $this->theme = $this->getThemeByRole($role);
 
-            try {
-                $credential = new PublicAppCredential($dados['token']);
+        return $this;
+    }
 
-                $client = new Client($credential, $dados['url_store'] . '.myshopify.com', [
-                    'metaCacheDir' => './tmp' // Metadata cache dir, required
-                ]);
-            } catch (\Exception $e) {
-                return response()->json('Dados do shopify inválidos, revise os dados informados');
-            }
+    /**
+     * @param string $role
+     * @return $this
+     */
+    public function themeById(string $role)
+    {
+        $this->theme = $this->getThemeIdByRole($role);
 
-            try {
-                $project = Project::create([
-                                               'name'                  => $client->getShopManager()->get()->getName(),
-                                               'status'                => '1',
-                                               'visibility'            => 'private',
-                                               'percentage_affiliates' => '0',
-                                               'description'           => $client->getShopManager()->get()->getName(),
-                                               'invoice_description'   => $client->getShopManager()->get()->getName(),
-                                               'url_page'              => 'https://' . $client->getShopManager()->get()
-                                                                                              ->getDomain(),
-                                               'automatic_affiliation' => false,
-                                               'shopify_id'            => $client->getShopManager()->get()->getId(),
-                                           ]);
-            } catch (\Exception $e) {
-                return response()->json('Dados do shopify inválidos, revise os dados informados');
-            }
+        return $this;
+    }
 
-            $themes = $client->getThemeManager()->findAll([]);
+    /**
+     * @param $themeId
+     * @return $this
+     */
+    public function setThemeById($themeId)
+    {
+        $this->theme = $this->getThemeById($themeId);
 
-            foreach ($themes as $theme) {
-                if ($theme->getRole() == 'main')
-                    break;
-            }
+        return $this;
+    }
 
-            $htmlCart      = "";
-            $templateFiles = $client->getAssetManager()->findAll($theme->getId());
-            foreach ($templateFiles as $file) {
-                if ($file->getKey() == "sections/cart-template.liquid") {
-                    $htmlCart = $client->getAssetManager()->find($theme->getId(), "sections/cart-template.liquid");
-                    $asset    = $client->getAssetManager()->update($theme->getId(), [
-                        "key"   => "sections/cart-template.liquid",
-                        "value" => $this->getCartTemplate($htmlCart->getValue()),
-                    ]);
-                    break;
-                } else if ($file->getKey() == "snippets/ajax-cart-template.liquid") {
-                    $htmlCart = $client->getAssetManager()->find($theme->getId(), "snippets/ajax-cart-template.liquid");
-                    $asset    = $client->getAssetManager()->update($theme->getId(), [
-                        "key"   => "snippets/ajax-cart-template.liquid",
-                        "value" => $this->getCartTemplateAjax($htmlCart->getValue()),
-                    ]);
-                    break;
-                }
-            }
+    /**
+     * @param $role
+     * @return $this
+     */
+    public function setThemeByRole($role)
+    {
+        $this->theme = $this->getThemeByRole($role);
 
-            $photo = $request->file('photo');
+        return $this;
+    }
 
-            if ($photo != null) {
-                $photoName = 'projeto_' . $project->id . '_.' . $photo->getClientOriginalExtension();
+    /**
+     * @return \Slince\Shopify\Theme\Theme[]
+     */
+    public function getAllThemes()
+    {
+        return $this->client->getThemeManager()->findAll([]);
+    }
 
-                try {
-                    $img = Image::make($photo->getPathname());
-                    $img->crop($dados['photo_w'], $dados['photo_h'], $dados['photo_x1'], $dados['photo_y1']);
-                    $img->resize(200, 200);
-                    $img->save($photo->getPathname());
+    /**
+     * @param string $role
+     * @return mixed
+     */
+    public function getThemeIdByRole(string $role)
+    {
+        $theme = $this->getThemeByRole($role);
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
+        return $theme->id;
+    }
 
-                    $project->update([
-                                         'photo' => $digitalOceanPath,
-                                     ]);
-                } catch (\Exception $e) {
-                    // não cadastra imagem
-                }
-            }
+    /**
+     * @param string $role
+     * @return \Slince\Shopify\Theme\Theme|null
+     */
+    public function getThemeByRole(string $role)
+    {
+        $themes = $this->getAllThemes();
 
-            UserProject::create([
-                                    'user'                 => \Auth::user()->id,
-                                    'project'              => $project->id,
-                                    'company'              => $dados['company'],
-                                    'type'                 => 'producer',
-                                    'shipment_responsible' => true,
-                                    'permissao_acesso'     => true,
-                                    'permissao_editar'     => true,
-                                    'status'               => 'active',
-                                ]);
+        foreach ($themes as $theme) {
+            if ($theme->getRole() == $role)
+                return $theme;
+        }
 
-            $products = $client->getProductManager()->findAll([]);
+        return null; //throwl
+    }
 
-            foreach ($products as $shopifyProduct) {
+    /**
+     * @param string $themeId
+     * @return \Slince\Shopify\Theme\Theme|null
+     */
+    public function getThemeById(string $themeId)
+    {
+        $themes = $this->getAllThemes();
 
-                foreach ($shopifyProduct->getVariants() as $variant) {
+        foreach ($themes as $theme) {
+            if ($theme->id == $themeId)
+                return $theme;
+        }
 
-                    $description = '';
+        return null; //throwl
+    }
 
-                    try {
-                        $description = $variant->getOption1();
-                        if ($description == 'Default Title') {
-                            $description = '';
-                        }
-                        if ($variant->getOption2() != '') {
-                            $description .= ' - ' . $$variant->getOption2();
-                        }
-                        if ($variant->getOption3() != '') {
-                            $description .= ' - ' . $$variant->getOption3();
-                        }
-                    } catch (\Exception $e) {
-                        //
-                    }
-
-                    $product = Product::create([
-                                                   'user'        => \Auth::user()->id,
-                                                   'name'        => substr($shopifyProduct->getTitle(), 0, 100),
-                                                   'description' => $description,
-                                                   'guarantee'   => '0',
-                                                   'format'      => 1,
-                                                   'category'    => '11',
-                                                   'cost'        => '',
-                                                   'shopify'     => true,
-                                                   'price'       => '',
-                                               ]);
-
-                    $newCode = false;
-
-                    while ($newCode == false) {
-
-                        $code = $this->randString(3) . rand(100, 999);
-
-                        $plan = Plan::where('code', $code)->first();
-
-                        if ($plan == null) {
-                            $newCode = true;
-                        }
-                    }
-
-                    $plan = Plan::create([
-                                             'shopify_id'         => $shopifyProduct->getId(),
-                                             'shopify_variant_id' => $variant->getId(),
-                                             'project'            => $project->id,
-                                             'name'               => substr($shopifyProduct->getTitle(), 0, 100),
-                                             'description'        => $description,
-                                             'code'               => $code,
-                                             'price'              => $variant->getPrice(),
-                                             'status'             => '1',
-                                         ]);
-
-                    if (count($shopifyProduct->getVariants()) > 1) {
-                        foreach ($shopifyProduct->getImages() as $image) {
-
-                            foreach ($image->getVariantIds() as $variantId) {
-                                if ($variantId == $variant->getId()) {
-
-                                    if ($image->getSrc() != '') {
-                                        $product->update([
-                                                             'photo' => $image->getSrc(),
-                                                         ]);
-                                    } else {
-
-                                        $product->update([
-                                                             'photo' => $shopifyProduct->getImage()->getSrc(),
-                                                         ]);
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-
-                        $product->update([
-                                             'photo' => $shopifyProduct->getImage()->getSrc(),
-                                         ]);
-                    }
-
-                    ProductPlan::create([
-                                            'product' => $product->id,
-                                            'plan'    => $plan->id,
-                                            'amount'  => '1',
-                                        ]);
-                }
-            }
-
-            $client->getWebhookManager()->create([
-                                                     "topic"   => "products/create",
-                                                     "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
-                                                     "format"  => "json",
-                                                 ]);
-
-            $client->getWebhookManager()->create([
-                                                     "topic"   => "products/update",
-                                                     "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
-                                                     "format"  => "json",
-                                                 ]);
-
-            ShopifyIntegration::create([
-                                           'token'     => $dados['token'],
-                                           'url_store' => $dados['url_store'],
-                                           'user'      => \Auth::user()->id,
-                                           'project'   => $project->id,
-                                       ]);
-
-            return response()->json('Sucesso');
-        } catch (\Exception $e) {
-            return false;
+    /**
+     * @return \Slince\Shopify\Manager\Asset\Asset[]|null
+     */
+    public function getAllTemplates()
+    {
+        if (!empty($this->theme->id)) {
+            return $this->client->getAssetManager()->findAll($this->theme);
+        } else {
+            return null; //throwl
         }
     }
 
+    /**
+     * @param string $templateKeyName
+     * @return string|null
+     */
+    public function getTemplateHtml(string $templateKeyName)
+    {
+        if (!empty($this->theme)) {
+            $templateFiles = $this->client->getAssetManager()->findAll($this->theme->getId());
+            foreach ($templateFiles as $file) {
+                if ($file->getKey() == $templateKeyName) {
+                    $htmlCart = $this->client->getAssetManager()
+                                             ->find($this->theme->getId(), $templateKeyName);
+
+                    return $htmlCart->getValue();
+                }
+            }
+
+            return null;
+        } else {
+            return null; //throwl
+        }
+    }
+
+    /**
+     * @param string $templateKeyName
+     * @param string $value
+     * @return bool
+     */
+    public function updateTemplateHtml(string $templateKeyName, string $value, $ajax = false)
+    {
+        if (!empty($this->theme)) {
+            if ($ajax) {
+                $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
+                    "key"   => $templateKeyName,
+                    "value" => $this->getCartTemplateAjax($value),
+                ]);
+            } else {
+                $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
+                    "key"   => $templateKeyName,
+                    "value" => $this->getCartTemplate($value),
+                ]);
+            }
+
+            if ($asset) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; //throwl
+        }
+    }
+
+    /**
+     * @param $htmlCart
+     * @return mixed|string
+     * @throws \PHPHtmlParser\Exceptions\CircularException
+     */
     public function getCartTemplateAjax($htmlCart)
     {
         $dom = new Dom;
@@ -471,6 +397,11 @@ class ShopifyController extends Controller
         }
     }
 
+    /**
+     * @param $htmlCart
+     * @return mixed|string
+     * @throws \PHPHtmlParser\Exceptions\CircularException
+     */
     public function getCartTemplate($htmlCart)
     {
         $dom = new Dom;
@@ -630,20 +561,4 @@ class ShopifyController extends Controller
             //thown parse error
         }
     }
-
-    function randString($size)
-    {
-
-        $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        $return = "";
-
-        for ($count = 0; $size > $count; $count++) {
-
-            $return .= $basic[rand(0, strlen($basic) - 1)];
-        }
-
-        return $return;
-    }
 }
-

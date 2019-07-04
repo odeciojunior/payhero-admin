@@ -84,6 +84,13 @@ $(document).ajaxSuccess(function(event, jqXHR, ajaxOptions, data) {
     $(".loading").css("visibility", "hidden");
 })
 
+function loading(elementId)
+{
+    $(elementId).html('');
+    $(elementId).append('<div class="loading"></div>');
+
+}
+
 
 
 
