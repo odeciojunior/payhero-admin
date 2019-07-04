@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt_BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,600,700,800" rel="stylesheet">
-
-</head>
-
 <style>
     body {
         font-family: 'Muli', Arial, Helvetica, sans-serif;
@@ -73,7 +61,7 @@
     }
 
     @media (min-width:300px) and (max-width: 1024px) {
-        * {
+        *{
             font-size: 1.45rem;
         }
 
@@ -87,7 +75,7 @@
 
         .logo {
             width: 200px;
-            }
+        }
 
         #btn {
             font-size: 1.3rem;
@@ -96,21 +84,19 @@
     }
 </style>
 
-
-<body bgcolor="#f6f6f6" style="font-family: 'Muli', sans-serif; background-color: #f6f6f6;">
+<div bgcolor="#f6f6f6" style="font-family: 'Muli', sans-serif; background-color: #f6f6f6;">
 
     <table class="container" align="center" cellpadding="0" cellspacing="0">
 
         <table align="center" style="padding: 20px 5px;">
             <tr  align="center">
                 <td align="center">
-                    <img src="{!! asset('modules/global/assets/img/logoCloudfox.png') !!}" width="80px;" class="logo">
+                    <img src="{!! asset('modules/global/assets/img/logo.png') !!}" width="80px;" class="logo">
                 </td>
             </tr>
         </table>
 
-        <table width="600px" bgcolor="white" style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;"
-            class="container" align="center" cellpadding="0" cellspacing="0">
+        <table width="600px" bgcolor="white" style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;" class="container" align="center" cellpadding="0" cellspacing="0">
             <tr>
                 <td width="100%" align="center" style="padding-top: 20px;">
                     <img src="{!! asset('modules/global/assets/img/falta-pouco.png') !!}">
@@ -132,29 +118,25 @@
 
         </table>
 
-        <table width="600px" class="container whitebg" align="center" cellpadding="0" cellspacing="0">
+        <table width="600px" bgcolor="white" style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;" class="container" align="center" cellpadding="0" cellspacing="0">
             <tr>
                 <td bgcolor="#ededed" colspan="3" style="width: 100%; height:2px;"> </td>
             </tr>
         </table>
 
-        <table width="600px" class="container pad-padrao whitebg" align="center"
-            cellpadding="0" cellspacing="0">
+        <table width="600px" bgcolor="white" style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;" class="container" align="center" cellpadding="0" cellspacing="0">
             <tr class="dark-grey pad-bottom">
                 <td width="100%">
-                    <p> 
+                    <p>
+                        <strong>Oi //nome. </strong><br>
+                        Se você está ansioso para testar nossa plataforma, saiba que está chegando a hora de experimentar <strong> nossa revolução!</strong>
+                        <br><br>
 
-                            <strong>Oi //nome. </strong><br>
-                            Se você está ansioso para testar nossa plataforma, saiba que está chegando a hora de experimentar <strong> nossa revolução!</strong>
-                            <br><br>
-
-                            Nossa equipe de desenvolvedores e designers estão trabalhando a todo vapor para que a primeira versão (beta), seja entregue a você em poucos dias!
-                            
-                            <br><br> Você já sabe, a plataforma é feita para você, e estamos ansiosos para saber o que você acha dela! <br>
-                            Até já!
-
+                        Nossa equipe de desenvolvedores e designers estão trabalhando a todo vapor para que a primeira versão (beta), seja entregue a você em poucos dias!
+                        
+                        <br><br> Você já sabe, a plataforma é feita para você, e estamos ansiosos para saber o que você acha dela! <br>
+                        Até já!
                     </p>
-
                 </td>
             </tr>
 
@@ -168,21 +150,17 @@
             </tr>
         </table>
 
-
-
         <table align="center" width="600px" style="padding: 0px 80px; ">
             <tr>
                 <td height="70">
                     <p style="color: #757575;font-size: 0.7rem;margin: 0;text-align:center;line-height: 20px;" class="small">
                         Esse é um e-mail automático. Não responda esse e-mail. Caso queira contatar nosso suporte,
-                        envie um e-mail para help@cloudfox.net.</p>
+                        envie um e-mail para help@cloudfox.net.
+                    </p>
                 </td>
             </tr>
         </table>
 
     </table>
+</div>
 
-
-</body>
-
-</html>

@@ -27,7 +27,7 @@ class TesteController extends Controller
         $inviteEmail = view('core::emails.falta_pouco');
 
         $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("noreply@cludfox.net", "Cloudfox");
+        $email->setFrom("noreply@cloudfox.net", "Cloudfox");
 
         $email->addTo('julioleichtweis@gmail.com', 'Julio');
         $email->setSubject("Falta pouco");
