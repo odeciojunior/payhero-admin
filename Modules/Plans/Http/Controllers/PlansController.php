@@ -99,11 +99,6 @@ class PlansController extends Controller
             $requestData['project'] = current(Hashids::decode($requestData['project']));
             $requestData['status']  = 1;
 
-            $userProject = $this->getUserProject()->where([
-                                                              ['project', $requestData['project']],
-                                                              ['type', 'producer'],
-                                                          ])->first();
-
             $requestData['price'] = $this->getValue($requestData['price']);
 
             $plan = $this->getPlan()->create($requestData);
