@@ -8,8 +8,11 @@ use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\User;
 use Cloudflare\API\Endpoints\Zones;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use GuzzleHttp\Client;
+use PHPHtmlParser\Dom;
 
 /**
  * Class CloudFlareService
@@ -391,6 +394,48 @@ class CloudFlareService
 
             return true;
         } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param $url
+     * @param $meta
+     * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function checkHtmlMetadata($url, $metaName, $metaContent)
+    {
+        try {
+            $client = new Client([
+                                     'base_uri' => $url,
+                                     //'headers'  => $headers,
+                                     'Accept'   => 'application/json',
+                                 ]);
+
+            $response = $client->request('get', '/');
+
+            if ($response->getStatusCode() == Response::HTTP_OK) {
+                $data = $response->getBody()->getContents();
+                $dom  = new Dom;
+                $dom->load($data);
+                $metas = $dom->find('meta');
+
+                foreach ($metas as $meta) {
+                    if (($meta->getAttribute('name') == $metaName) &&
+                        ($meta->getAttribute('content') == $metaContent)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao checar dominio');
+            report($e);
+
             return false;
         }
     }

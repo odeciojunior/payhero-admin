@@ -19,10 +19,14 @@ use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Modules\Core\Services\DigitalOceanFileService;
 
-class TesteController extends Controller {
+class TesteController extends Controller
+{
+    public function index()
+    {
+        $cf = new CloudFlareService();
 
+        dd($cf->checkHtmlMetadata('https://checkout.issoeincrivel.org', 'checkout-cloudfox', '1'));
 
-    public function index() {
 
         $sg = new SendgridService();
         dd($sg->getLinkBrand('cloudteste.tk'));
@@ -32,40 +36,40 @@ class TesteController extends Controller {
 
         dd($sg->teste());
 
-
         $cf = new CloudFlareService();
-        dd( $this->checkDNS('cloudteste.tk'));
+        dd($this->checkDNS('cloudteste.tk'));
         //dd($cf->addZone('cloudteste.tk'));
         //dd($cf->getZones());
 
         //dd(Hashids::encode(2));
 
-        dd($cf->zone('cloudteste.tk')->addRecord('A','cloudteste.tk', '1.1.1.1'));
+        dd($cf->zone('cloudteste.tk')->addRecord('A', 'cloudteste.tk', '1.1.1.1'));
 
         dd($cf->zone('cloudteste.tk')->getRecords());
 
-        dd( $this->checkDNS('gmail.com.br'));
+        dd($this->checkDNS('gmail.com.br'));
     }
 
-    protected function checkDNS($host) {
+    protected function checkDNS($host)
+    {
 
         $variant = INTL_IDNA_VARIANT_2003;
-        if ( defined('INTL_IDNA_VARIANT_UTS46') ) {
+        if (defined('INTL_IDNA_VARIANT_UTS46')) {
             $variant = INTL_IDNA_VARIANT_UTS46;
         }
         $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
 
-        $Aresult = true;
+        $Aresult  = true;
         $MXresult = checkdnsrr($host, 'MX');
 
         if (!$MXresult) {
             $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
-            $Aresult = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
+            $Aresult                             = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
             if (!$Aresult) {
                 $this->error = new NoDNSRecord();
             }
         }
+
         return $MXresult || $Aresult;
     }
-
 }

@@ -36,7 +36,7 @@ class Checkout extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
     protected $keyType = 'integer';
@@ -49,7 +49,7 @@ class Checkout extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function project()
+    public function projectModel()
     {
         return $this->belongsTo('App\Entities\Project', 'project');
     }

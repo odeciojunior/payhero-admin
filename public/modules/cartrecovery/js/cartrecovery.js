@@ -2,15 +2,20 @@ $(document).ready(function () {
 
     atualizar();
 
+    $("#bt_filtro").on("click", function (event) {
+        console.log('oi');
+        event.preventDefault();
+        atualizar();
+    });
     function atualizar(link = null) {
 
         $('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
 
         if (link == null) {
-            link = '/recoverycart/getabandonatedcarts';
+            link = '/recoverycart/getabandonatedcarts?' + 'project=' + $("#project").val() + '&client=' + $("#client").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
         }
         else {
-            link = '/recoverycart/getabandonatedcarts' + link;
+            link = '/recoverycart/getabandonatedcarts' + link + 'project=' + $("#project").val() + '&client=' + $("#client").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
         }
 
         $.ajax({
@@ -31,6 +36,7 @@ $(document).ready(function () {
                     dados = '';
                     dados += '<tr>';
                     dados += "<td>" + value.date + "</td>";
+                    dados += "<td>" + value.project + "</td>";
                     dados += "<td>" + value.client + "</td>";
                     dados += "<td>" + value.email_status + "</td>";
                     dados += "<td>" + value.sms_status + "</td>";
@@ -43,8 +49,8 @@ $(document).ready(function () {
                     dados += "<td>" + value.value + "</td>";
                     // dados += "<td>"+value.link+"</td>";
                     dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
-                    dados += "<td> <a role='button' class='copy_link' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
-                    dados += "<td><a  role='button' class='detalhes_venda' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+                    dados += "<td> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
+                    dados += "<td><a  role='button' class='detalhes_venda' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
                     dados += '</tr>';
                     $("#table_data").append(dados);
 
