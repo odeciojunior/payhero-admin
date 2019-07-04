@@ -1,7 +1,9 @@
 <div class='page-content container-fluid'>
     <div class='panel' data-plugin='matchHeight'>
         <div style='width: 100%;'>
-            <form id='form-add-shipping'>
+            <form id='form-update-shipping' method="PUT" action="/shippings" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
                 <div class='row'>
                     <div class='form-group col-12'>
                         <label for='type'>Tipo</label>

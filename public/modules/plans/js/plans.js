@@ -142,7 +142,7 @@ $(function () {
                     var plan = $(this).attr('plan');
                     $("#modal-title").html('Detalhes do Plano <br><hr>');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
-                    var data = {planId: plan};
+                    var data = {planId: plan, project: projectId};
                     $("#btn-modal").hide();
                     $.ajax({
                         method: "GET",
@@ -224,7 +224,7 @@ $(function () {
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data:formData,
+                                    data: formData,
                                     processData: false,
                                     contentType: false,
                                     cache: false,

@@ -35,7 +35,6 @@ $(function () {
 
                 }
 
-
                 $("#tipo_cupom").on('change', function () {
                     if ($("#tipo_cupom").val() == 1) {
                         $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true});
@@ -95,11 +94,11 @@ $(function () {
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr>';
-                    data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.type + '</td>';
-                    data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.value + '</td>';
-                    data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">' + value.code + '</td>';
-                    data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    data += '<td class="shipping-id" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="shipping-type" style="vertical-align: middle;">' + value.type + '</td>';
+                    data += '<td class="shipping-value" style="vertical-align: middle;">' + value.value + '</td>';
+                    data += '<td class="shipping-zip-code-origin" style="vertical-align:">' + value.code + '</td>';
+                    data += '<td class="shipping-status" style="vertical-align: middle;">';
                     if (value.status === 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
                     } else {
@@ -176,7 +175,6 @@ $(function () {
 
                             }
 
-
                             $("#type").on('change', function () {
                                 if ($("#type").val() == 1) {
                                     $("#value").mask('#.###,#0', {reverse: true});
@@ -187,24 +185,20 @@ $(function () {
                                 }
                             });
 
-
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
-
+                                var formData = new FormData(document.getElementById('form-update-coupon'));
+                                formData.append("project", projectId);
                                 $.ajax({
-                                    method: "PUT",
+                                    method: "POST",
                                     url: "/couponsdiscounts/" + coupon,
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data: {
-                                        name: $("#name").val(),
-                                        code: $("#code").val(),
-                                        type: $("#type").val(),
-                                        value: $("#value").val(),
-                                        code: $("#code").val(),
-                                        status: $("#status").val(),
-                                    },
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
                                     error: function () {
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {

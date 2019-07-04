@@ -1,5 +1,6 @@
-<form id="editar_cupom" method="post">
+<form id="form-update-coupon" method="PUT" action="/couponsdiscounts" enctype="multipart/form-data">
     @csrf
+    @method('PUT')
     <input type="hidden" value="{{Hashids::encode($coupon->id)}}" name="couponId">
     <div class="page-content container-fluid">
         <div class="panel" data-plugin="matchHeight">
@@ -7,7 +8,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="name">Nome</label>
-                        <input value="{!! $coupon->name != '' ? $coupon->name : '' !!}" name="name" type="text" class="form-control" id="name" placeholder="Nome">
+                        <input value="{!! $coupon->name != '' ? $coupon->name : '' !!}" name="name" type="text" class="form-control" id="name_coupon" placeholder="Nome">
                     </div>
                 </div>
                 <div class="row">
