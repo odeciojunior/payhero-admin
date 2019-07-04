@@ -22,37 +22,34 @@ use Modules\Core\Services\DigitalOceanFileService;
 
 class TesteController extends Controller {
 
+    public function index() {
 
-    public function index()
-    {
+        $solicitacoes = SiteInvitationRequest::all();
 
-        // $solicitacoes = SiteInvitationRequest::all();
+        foreach($solicitacoes as $solicitacao){
 
-        // foreach($solicitacoes as $solicitacao){
-        //     dump($solicitacao->name, $solicitacao->email);
-        // }
+            $inviteEmail = view('core::emails.falta_pouco',[
+                'name' => $solicitacao->name
+            ]);
 
-        $inviteEmail = view('core::emails.falta_pouco',[
-            'name' => 'julio'
-        ]);
+            $email = new \SendGrid\Mail\Mail();
+            $email->setFrom("noreply@cloudfox.net", "Cloudfox");
 
-        $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("noreply@cloudfox.net", "Cloudfox");
+            $email->addTo($solicitacao->email, $solicitacao->name);
+            $email->setSubject("Falta pouco");
+            $email->addContent(
+                "text/html", $inviteEmail->render()
+            );
 
-        $email->addTo('julioleichtweis@gmail.com', 'Julio');
-        $email->setSubject("Falta pouco");
-        $email->addContent(
-            "text/html", $inviteEmail->render()
-        );
+            $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
 
-        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+            try {
+                $response = $sendgrid->send($email);
 
-        try {
-            $response = $sendgrid->send($email);
+            } catch (Exception $e) {
+                //
+            }
 
-            dd($response);
-        } catch (Exception $e) {
-            dd($e);
         }
 
     }
