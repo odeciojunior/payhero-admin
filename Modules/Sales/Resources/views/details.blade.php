@@ -28,7 +28,7 @@
     <div class="row align-items-baseline justify-content-between mb-15">
         @foreach($plans as $plan)
             <div class="col-lg-2">
-                <img src="{!! asset('modules/global/assets/img/produto.png') !!}" width="50px;" style="border-radius:6px;">
+                <img src="{{$plan['photo'] ?? asset('modules/global/assets/img/produto.png')  }}" width="50px;" style="border-radius:6px;">
             </div>
             <div class="col-lg-4">
                 <h4 class="table-title"> {{$plan['name']}} </h4>
@@ -124,6 +124,14 @@
     <!-- DETALHES  -->
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         <h4> Dados Gerais </h4>
+        @if($sale->payment_method == 2)
+            <span class="table-title gray"> Link: {{$sale->boleto_link ?? ''}}</span>
+            <br>
+            <span class="table-title gray"> Linha Digitável: {{$sale->boleto_digitable_line ?? ''}}</span>
+            <br>
+            <span class="table-title gray"> Vencimento: {{  with(new \Carbon\Carbon($sale->boleto_due_date))->format('d/m/Y ')?? ''}}</span>
+            <br>
+        @endif
         <span class="table-title gray"> IP: {{$checkout->ip ?? ''}}</span>
         <br>
         <span class="table-title gray "> Dispositivo: - </span>

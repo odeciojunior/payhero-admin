@@ -52,6 +52,12 @@ $(document).ready(function () {
                             dados += "<td><img src='/modules/global/assets/img/cartoes/master.png' style='width: 60px'></td>";
                         } else if (value.brand == 'visa') {
                             dados += "<td><img src='/modules/global/assets/img/cartoes/visa.png' style='width: 60px'></td>";
+                        } else if (value.brand == 'hipercard') {
+                            dados += "<td><img src='/modules/global/assets/img/cartoes/hiper.png' style='width: 60px'></td>";
+                        } else if (value.brand == 'amex') {
+                            dados += "<td><img src='/modules/global/assets/img/cartoes/amex.png' style='width: 60px'></td>";
+                        } else if (value.brand == 'diners') {
+                            dados += "<td><img src='/modules/global/assets/img/cartoes/diners.png' style='width: 60px'></td>";
                         } else {
                             dados += "<td><img src='/modules/global/assets/img/cartoes/generico.png' style='width: 60px'></td>";
                         }

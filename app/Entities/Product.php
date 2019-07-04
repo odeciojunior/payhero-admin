@@ -88,6 +88,6 @@ class Product extends Model
 
     public function plans()
     {
-        return $this->belongsToMany('App\Entities\Plan');
+        return $this->belongsToMany('App\Entities\Plan', 'products_plans', 'product', 'plan');
     }
 }
