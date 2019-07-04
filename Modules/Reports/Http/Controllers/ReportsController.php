@@ -203,7 +203,6 @@ class ReportsController extends Controller
             dd($e);
             Log::warning('Erro ao buscar dados - ReportsController - index');
             report($e);
-
             return redirect()->back();
         }
     }
@@ -283,4 +282,5 @@ class ReportsController extends Controller
             ];
         }
     }
+
 }

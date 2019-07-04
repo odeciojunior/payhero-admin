@@ -63,8 +63,8 @@
                                 <label for="forma">Forma de pagamento</label>
                                 <select name='select_payment_method' id="forma" class="form-control select-pad">
                                     <option value="">Boleto e cartão de crédito</option>
-                                    <option value="credit card">Cartão de crédito</option>
-                                    <option value="boleto">Boleto</option>
+                                    <option value="1">Cartão de crédito</option>
+                                    <option value="2">Boleto</option>
                                 </select>
                             </div>
                             <div class="col-3">
@@ -140,21 +140,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-body">
-
                                 </div>
                                 <div class="clearfix"></div>
-                                <!-- <div class="modal-header">
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                  </button>
-                                  <h4 id="modal_venda_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                                </div>
-                                <div id="modal_venda_body" class="modal-body">
-
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                </div>  -->
                             </div>
                         </div>
                     </div>
@@ -166,7 +153,7 @@
                     <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
                 @endpush
 
-                <div class="content-error d-flex text-center">
+                <div class=" content-error d-flex text-center">
                     <img src="{!! asset('modules/global/assets/img/emptyvendas.svg') !!}" width="250px">
                     <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
                     <p class="desc gray">Comece agora mesmo a vender os produtos do seu projeto! </p>
