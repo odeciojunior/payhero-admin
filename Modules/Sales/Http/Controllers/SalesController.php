@@ -2,8 +2,10 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Entities\Company;
 use App\Entities\Product;
 use App\Entities\Shipping;
+use App\Entities\Transaction;
 use Carbon\Carbon;
 use App\Entities\Plan;
 use App\Entities\Sale;
@@ -26,14 +28,46 @@ use Modules\Sales\Transformers\SalesResource;
 
 class SalesController extends Controller
 {
+    /**
+     * @var Sale
+     */
     private $saleModel;
+    /**
+     * @var PlanSale
+     */
     private $plansSalesModel;
+    /**
+     * @var Client
+     */
     private $clientModel;
+    /**
+     * @var Delivery
+     */
     private $deliveryModel;
+    /**
+     * @var Checkout
+     */
     private $checkoutModel;
+    /**
+     * @var Plan
+     */
     private $planModel;
+    /**
+     * @var Product
+     */
     private $productModel;
+    /**
+     * @var UserProject
+     */
     private $userProjectModel;
+    /**
+     * @var Company
+     */
+    private $companyModel;
+    /**
+     * @var Transaction
+     */
+    private $transaction;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -117,6 +151,30 @@ class SalesController extends Controller
         }
 
         return $this->productModel;
+    }
+
+    /**
+     * @return Company|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getCompany()
+    {
+        if (!$this->companyModel) {
+            $this->companyModel = app(Company::class);
+        }
+
+        return $this->companyModel;
+    }
+
+    /**
+     * @return Transaction|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getTransaction()
+    {
+        if (!$this->transaction) {
+            $this->transaction = app(Transaction::class);
+        }
+
+        return $this->transaction;
     }
 
     /**
@@ -216,6 +274,16 @@ class SalesController extends Controller
                 $checkout             = $this->getCheckout()->find($sale['checkout']);
                 $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
+                $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id');
+                $transaction   = $this->getTransaction()->where('sale', $sale->id)->whereIn('company', $userCompanies)
+                                      ->first();
+
+                if ($transaction) {
+                    $value = $transaction->value;
+                } else {
+                    $value = '000';
+                }
+
                 $details = view('sales::details', [
                     'sale'           => $sale,
                     'plans'          => $plans,
@@ -227,7 +295,7 @@ class SalesController extends Controller
                     'discount'       => number_format(intval($discount) / 100, 2, ',', '.'),
                     'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
                     'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone),
-                    //                    'comissao'      =>  ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0 )
+                    'comission'      => ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
                 ]);
 
                 return response()->json($details->render());
@@ -238,6 +306,10 @@ class SalesController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function refundSale(Request $request)
     {
 
@@ -250,43 +322,51 @@ class SalesController extends Controller
      */
     public function getSales(Request $request)
     {
-        $sales = Sale::where('owner', \Auth::user()->id);
+        try {
+            $sales = $this->getSaleModel()->where([['owner', auth()->user()->id], ['status', '!=', 3]]);
 
-        $sales = $sales->where('status', '!=', '3');
+            //        $sales = $sales->where('status', '!=', '3');
 
-        if ($request->projeto != '') {
-            $plans    = Plan::where('project', $request->projeto)->pluck('id');
-            $salePlan = PlanSale::whereIn('plan', $plans)->pluck('sale');
-            $sales->whereIn('id', $salePlan);
-        }
-
-        if ($request->comprador != '') {
-            $clientes = Client::where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
-            $sales->whereIn('client', $clientes);
-        }
-
-        if ($request->forma != '') {
-            $sales->where('payment_method', $request->forma);
-        }
-        if ($request->status != '') {
-            $sales->where('status', $request->status);
-        }
-
-        if ($request->data_inicial != '' && $request->data_final != '') {
-            $sales->whereBetween('start_date', [$request->data_inicial, date('Y-m-d', strtotime($request->data_final . ' + 1 day'))]);
-        } else {
-            if ($request->data_inicial != '') {
-                $sales->whereDate('start_date', '>=', $request->data_inicial);
+            if ($request->projeto != '') {
+                $plans    = $this->getPlan()->where('project', $request->projeto)->pluck('id');
+                $salePlan = $this->getPlansSales()->whereIn('plan', $plans)->pluck('sale');
+                $sales->whereIn('id', $salePlan);
             }
 
-            if ($request->data_final != '') {
-                $sales->whereDate('end_date', '<', date('Y-m-d', strtotime($request->data_final . ' + 1 day')));
+            if ($request->comprador != '') {
+                $clientes = $this->getClient()->where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
+                $sales->whereIn('client', $clientes);
             }
+
+            if ($request->forma != '') {
+                $sales->where('payment_method', $request->forma);
+            }
+            if ($request->status != '') {
+                $sales->where('status', $request->status);
+            }
+
+            if ($request->data_inicial != '' && $request->data_final != '') {
+                $sales->whereBetween('start_date', [$request->data_inicial, date('Y-m-d', strtotime($request->data_final . ' + 1 day'))]);
+            } else {
+                if ($request->data_inicial != '') {
+                    $sales->whereDate('start_date', '>=', $request->data_inicial);
+                }
+
+                if ($request->data_final != '') {
+                    $sales->whereDate('end_date', '<', date('Y-m-d', strtotime($request->data_final . ' + 1 day')));
+                }
+            }
+
+            $sales->orderBy('id', 'DESC');
+
+            /* $client = $this->getClient()->find($sales->client);
+             dd($client)*/
+
+            return SalesResource::collection($sales->paginate(10));
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar vendas SalesController - getSales');
+            report($e);
         }
-
-        $sales->orderBy('id', 'DESC');
-
-        return SalesResource::collection($sales->paginate(10));
     }
 
     public function getCsvSales(Request $request)

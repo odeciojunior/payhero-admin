@@ -66,32 +66,60 @@
         <div class="col-lg-6 text-right">
             <h4 class="table-title"> R$ {{$total}} </h4>
         </div>
+    </div>
+    <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
+        <div class='col-lg-6'>
+            <h4 class='table-title'>Conversão Moedas: </h4>
+        </div>
+        <div class='col-lg-6 text-right'>
+            @if(isset($sale->dolar_quotation))
+                <h4 class='table-title'>(US$ {{$sale->dolar_quotation}})</h4>
+            @endif
+        </div>
+        <div class='col-lg-6'>
+            <h4 class='table-title'>Taxas: </h4>
+        </div>
+        <div class='col-lg-6 text-right'>
+            <h4 class='table-title'>(6,5% + {{isset($sale->dolar_quotation) ? 'US$ 0,25' : 'R$ 1,00'   }})</h4>
+        </div>
+        <div class='col-lg-6'>
+            <h4 class='table-title'>Comissão: </h4>
+        </div>
+        <div class='col-lg-6 text-right'>
+            <h4 class='table-title'>{{$comission?? ''}}</h4>
+        </div>
+        <div class='col-lg-6'>
+            <h4 class='table-title'>Total: </h4>
+        </div>
+        <div class='col-lg-6 text-right'>
+            <h4 class='table-title'></h4>
+        </div>
         {{--<div class='row' style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
-            <div class="col-lg-6">
-                <h4 class="table-title"> Conversão: </h4>
-            </div>
-            <div class="col-lg-6 text-right">
-                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-            </div>
-            <div class="col-lg-6">
-                <h4 class="table-title"> Taxas </h4>
-            </div>
-            <div class="col-lg-6 text-right">
-                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-            </div>
-            <div class="col-lg-6">
-                <h4 class="table-title"> Comissão </h4>
-            </div>
-            <div class="col-lg-6 text-right">
-                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-            </div>
-            <div class="col-lg-6">
-                <h4 class="table-title"> Total </h4>
-            </div>
-            <div class="col-lg-6 text-right">
-                <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-            </div>
-        </div>--}}
+                <div class="col-lg-6">
+                    <h4 class="table-title"> Conversão: </h4>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+                </div>
+                <div class="col-lg-6">
+                    <h4 class="table-title"> Taxas </h4>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+                </div>
+                <div class="col-lg-6">
+                    <h4 class="table-title"> Comissão </h4>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+                </div>
+                <div class="col-lg-6">
+                    <h4 class="table-title"> Total </h4>
+                </div>
+                <div class="col-lg-6 text-right">
+                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
+                </div>
+            </div>--}}
     </div>
 </div>
 <div class="nav-tabs-horizontal">
@@ -124,6 +152,12 @@
     <!-- DETALHES  -->
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         <h4> Dados Gerais </h4>
+        @if($sale->payment_method == 1)
+            <span class="table-title gray"> Bandeira: {{$sale->flag ?? ''}}</span>
+            <br>
+            <span class="table-title gray"> Quantidade de parcelas: {{$sale->installments_amount ?? ''}}</span>
+            <br>
+        @endif
         @if($sale->payment_method == 2)
             <span class="table-title gray"> Link: {{$sale->boleto_link ?? ''}}</span>
             <br>
