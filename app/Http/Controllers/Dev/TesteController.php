@@ -23,53 +23,27 @@ class TesteController extends Controller
 {
     public function index()
     {
-        $cf = new CloudFlareService();
 
-        dd($cf->checkHtmlMetadata('https://checkout.issoeincrivel.org', 'checkout-cloudfox', '1'));
+        $inviteEmail = view('core::emails.falta_pouco');
 
+        $email = new \SendGrid\Mail\Mail();
+        $email->setFrom("noreply@cludfox.net", "Cloudfox");
 
-        $sg = new SendgridService();
-        dd($sg->getLinkBrand('cloudteste.tk'));
-        //$sg->addZone('cloudteste.tk', true);
-        //dd($sg->deleteZone('cloudteste.tk'));
-        //$sg->setZone('cloudteste.tk');
+        $email->addTo('julioleichtweis@gmail.com', 'Julio');
+        $email->setSubject("Falta pouco");
+        $email->addContent(
+            "text/html", $inviteEmail->render()
+        );
 
-        dd($sg->teste());
+        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
 
-        $cf = new CloudFlareService();
-        dd($this->checkDNS('cloudteste.tk'));
-        //dd($cf->addZone('cloudteste.tk'));
-        //dd($cf->getZones());
+        try {
+            $response = $sendgrid->send($email);
 
-        //dd(Hashids::encode(2));
-
-        dd($cf->zone('cloudteste.tk')->addRecord('A', 'cloudteste.tk', '1.1.1.1'));
-
-        dd($cf->zone('cloudteste.tk')->getRecords());
-
-        dd($this->checkDNS('gmail.com.br'));
-    }
-
-    protected function checkDNS($host)
-    {
-
-        $variant = INTL_IDNA_VARIANT_2003;
-        if (defined('INTL_IDNA_VARIANT_UTS46')) {
-            $variant = INTL_IDNA_VARIANT_UTS46;
-        }
-        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
-
-        $Aresult  = true;
-        $MXresult = checkdnsrr($host, 'MX');
-
-        if (!$MXresult) {
-            $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
-            $Aresult                             = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
-            if (!$Aresult) {
-                $this->error = new NoDNSRecord();
-            }
+            dd($response);
+        } catch (Exception $e) {
+            dd($e);
         }
 
-        return $MXresult || $Aresult;
     }
 }
