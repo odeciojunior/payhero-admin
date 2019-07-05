@@ -56,11 +56,11 @@
             <div class="row">
                 <div class="form-group col-xl-6 col-lg-6">
                     <label for="url_page">URL da página principal</label>
-                    <input name="url_page" value="{{$project->url_page}}" type="url" class="input-pad" id="url-page" placeholder="URL da página">
+                    <input name="url_page" value="{{$project->url_page}}" type="text" class="input-pad" id="url-page" placeholder="URL da página">
                 </div>
                 <div class="form-group col-xl-6 col-lg-6">
                     <label for="contact">Email de Contato (checkout)</label>
-                    <input name="contact" value="{{$project->contact}}" type="email" class="input-pad" id="contact" placeholder="Contato">
+                    <input name="contact" value="{{$project->contact}}" type="text" class="input-pad" id="contact" placeholder="Contato">
                 </div>
             </div>
             {{--<h4>Configuração Frete</h4>
@@ -84,7 +84,7 @@
                         <option value='owner' {{$project->shipment_responsible == 'owner'?'selected':''}}>Proprietário</option>
                         <option value='partners' {{$project->shipment_responsible == 'partners'? 'selected':''}}>Proprietário + parceiros</option>
                     </select>
-                </div>
+                </div> 
             </div>--}}
         </div>
         <div class='mt-30 mb-15'>
@@ -100,7 +100,7 @@
                     <input name='url_redirect' value='{{$project->url_redirect}}' type='text' class='input-pad' id='url_redirection' placeholder='Página pós compra'>
                 </div>
                 <div class='form-group col-4 col-xs-12'>
-                    <label for='company'>Empresas</label>
+                    <label for='company'>Empresa responsável</label>
                     <select id='companies' name='company' class="form-control select-pad">
                         @foreach($companies as $company)
                             <option value='{{$company->id_code}}' {{$company->id_code == Hashids::encode($project->usersProjects[0]->company)? 'selected' : ''}}>{{$company->fantasy_name}}</option>

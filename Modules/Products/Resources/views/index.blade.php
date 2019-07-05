@@ -58,28 +58,6 @@
 
             {{$products->links()}}
 
-            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_excluir" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-simple">
-                    <div class="modal-content">
-                        <form id="form-delete-product" method="POST" action="/products/{{Hashids::encode($product->id)}}">
-                            @method('DELETE') @csrf
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                <h4 id="model-delete-title" class="modal-title" style="width: 100%; text-align:center">Excluir o produto {{$product->name}} ?</h4>
-                            </div>
-                            <div id="modal-delete-body" class="modal-body">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                <button type="submit" class="btn btn-success">Confirmar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
         @else
             @push('css')
                 <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">

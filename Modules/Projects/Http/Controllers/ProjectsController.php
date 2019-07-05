@@ -148,7 +148,7 @@ class ProjectsController extends Controller
                                                            'name'                       => $requestValidated['name'],
                                                            'description'                => $requestValidated['description'],
                                                            'installments_amount'        => 12,
-                                                           'installments_interest_free' => 12,
+                                                           'installments_interest_free' => 1,
                                                            'visibility'                 => 'private',
                                                        ]);
 
