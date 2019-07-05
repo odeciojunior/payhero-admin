@@ -27,20 +27,20 @@ $(function () {
                 $("#btn-modal").text('Salvar');
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
-                if ($("#tipo_cupom").val() == 1) {
-                    $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true});
+                if ($("#type").val() == 1) {
+                    $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
 
                 } else {
-                    $('#valor_cupom_cadastrar').mask('##0,00%', {reverse: true});
+                    $('#valor_cupom_cadastrar').mask('00%', {reverse: true});
 
                 }
 
-                $("#tipo_cupom").on('change', function () {
-                    if ($("#tipo_cupom").val() == 1) {
-                        $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true});
+                $("#type").on('change', function () {
+                    if ($("#type").val() == 1) {
+                        $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
 
                     } else {
-                        $('#valor_cupom_cadastrar').mask('##0,00%', {reverse: true});
+                        $('#valor_cupom_cadastrar').mask('00%', {reverse: true});
 
                     }
                 });
@@ -168,19 +168,19 @@ $(function () {
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
                             if ($("#type").val() == 1) {
-                                $("#value").mask('#.###,#0', {reverse: true});
+                                $("#value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
 
                             } else {
-                                $('#value').mask('##0,00%', {reverse: true});
+                                $('#value').mask('00%', {reverse: true});
 
                             }
 
                             $("#type").on('change', function () {
                                 if ($("#type").val() == 1) {
-                                    $("#value").mask('#.###,#0', {reverse: true});
+                                    $("#value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
 
                                 } else {
-                                    $('#value').mask('##0,00%', {reverse: true});
+                                    $('#value').mask('00%', {reverse: true});
 
                                 }
                             });

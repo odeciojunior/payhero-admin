@@ -24,6 +24,7 @@ $(function () {
                 $("#btn-modal").text('Salvar');
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
+                $('.products_amount').mask('0#');
 
                 $(document).on('click', '.btnDelete', function (event) {
                     event.preventDefault();
@@ -54,6 +55,8 @@ $(function () {
                     div_produtos = nova_div;
 
                     $('#products').append('<div class="">' + nova_div.html() + '</div>');
+                    $('.products_amount').mask('0#');
+
 
                 });
 
@@ -181,6 +184,7 @@ $(function () {
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
+                            $('.products_amount').mask('0#');
 
                             $(document).on('click', '.btnDelete', function (event) {
                                 event.preventDefault();
@@ -211,6 +215,7 @@ $(function () {
                                 div_produtos = nova_div;
 
                                 $('#products').append('<div class="row">' + nova_div.html() + '</div>');
+                                $('.products_amount').mask('0#');
 
                             });
 
