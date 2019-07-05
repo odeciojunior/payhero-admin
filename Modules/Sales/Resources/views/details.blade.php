@@ -21,44 +21,44 @@
 <div class="clearfix"></div>
 <div class="card shadow pr-20 pl-20 p-10">
     <div class="row">
-        <div class="col-lg-6"><p class="table-title"> Produto </p></div>
+        <div class="col-lg-7"><p class="table-title"> Produto </p></div>
         <div class="col-lg-2 text-right"><p class="text-muted"> Qtde </p></div>
-        <div class="col-lg-4 text-right"><p class="text-muted"> Valor </p></div>
+        <div class="col-lg-3 text-right"><p class="text-muted"> Valor </p></div>
     </div>
     <div class="row align-items-baseline justify-content-between mb-15">
         @foreach($plans as $plan)
             <div class="col-lg-2">
                 <img src="{{$plan['photo'] ?? asset('modules/global/assets/img/produto.png')  }}" width="50px;" style="border-radius:6px;">
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-5">
                 <h4 class="table-title"> {{$plan['name']}} </h4>
             </div>
             <div class="col-lg-2 text-right">
                 <p class="sm-text text-muted"> {{$plan['amount']}}x </p>
             </div>
-            <div class="col-lg-4 text-right">
+            <div class="col-lg-3 text-right">
                 <p class="sm-text text-muted"> R${{$plan['value']}} </p>
             </div>
         @endforeach
     </div>
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
-        <div class="col-lg-6">
-            <h4 class="table-title"> SubTotal </h4>
+        <div class="col-lg-6 align-items-center">
+            <span class="text-muted ft-12"> Subtotal </span>
         </div>
         <div class="col-lg-6 text-right">
-            <h4 class="table-title subTotal"> R$ {{$subTotal}} </h4>
+            <span class="text-muted ft-12 subTotal"> R$ {{$subTotal}} </span>
         </div>
         <div class="col-lg-6">
-            <h4 class="table-title"> Frete </h4>
+            <span class="text-muted ft-12"> Frete </span>
         </div>
         <div class="col-lg-6 text-right">
-            <h4 class="table-title"> R$ {{$shipment_value}} </h4>
+            <span class="text-muted ft-12"> R$ {{$shipment_value}} </span>
         </div>
         <div class="col-lg-6">
-            <h4 class="table-title"> Desconto</h4>
+            <span class="text-muted ft-12"> Desconto</span>
         </div>
         <div class="col-lg-6 text-right">
-            <h4 class="table-title"> R$ {{$discount}} </h4>
+            <span class="text-muted ft-12"> R$ {{$discount}} </span>
         </div>
         <div class="col-lg-6">
             <h4 class="table-title"> Total </h4>
@@ -70,23 +70,25 @@
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
         @if(isset($sale->dolar_quotation))
             <div class='col-8'>
-                <h4 class='table-title'>Cambio (1 $ = R$ {{$sale->dolar_quotation}}): </h4>
+                <span class='text-muted ft-12'>Câmbio (1 $ = R$ {{$sale->dolar_quotation}}): </span>
             </div>
             <div class='col-4 text-right'>
-                <h4 class='table-title'>(US$ {{$taxa}})</h4>
+                <span class='text-muted ft-12'>US$ {{$taxa}}</span>
             </div>
         @endif
+        
+        <div class='col-lg-8'>
+            <span class='text-muted ft-12'>Taxas (6,5% + {{isset($sale->dolar_quotation) ? 'US$ 0,25' : 'R$ 1,00'   }}): </span>
+        </div>
+        <div class='col-lg-4 text-right'>
+            <span class='text-muted ft-12'>{{$taxaReal ?? ''}}</span>
+        </div>
+
         <div class='col-lg-6'>
             <h4 class='table-title'>Comissão: </h4>
         </div>
         <div class='col-lg-6 text-right'>
             <h4 class='table-title'>{{$comission?? ''}}</h4>
-        </div>
-        <div class='col-lg-8'>
-            <h4 class='table-title'>Taxas (6,5% + {{isset($sale->dolar_quotation) ? 'US$ 0,25' : 'R$ 1,00'   }}): </h4>
-        </div>
-        <div class='col-lg-4 text-right'>
-            <h4 class='table-title'>{{$taxaReal ?? ''}}</h4>
         </div>
     </div>
 </div>
@@ -127,9 +129,9 @@
             <br>
         @endif
         @if($sale->payment_method == 2)
-            <span class="table-title gray"> Link: {{$sale->boleto_link ?? ''}}</span>
+            <span class="table-title gray"> <a href="{{$sale->boleto_link ?? ''}}" class="gradient"> Link para o boleto </a></span>
             <br>
-            <span class="table-title gray"> Linha Digitável: {{$sale->boleto_digitable_line ?? ''}}</span>
+            <span class="table-title gray"> Linha Digitável:<br> {{$sale->boleto_digitable_line ?? ''}}</span>
             <br>
             <span class="table-title gray"> Vencimento: {{  with(new \Carbon\Carbon($sale->boleto_due_date))->format('d/m/Y ')?? ''}}</span>
             <br>
