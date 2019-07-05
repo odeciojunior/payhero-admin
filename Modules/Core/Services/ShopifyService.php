@@ -9,6 +9,7 @@ use PHPHtmlParser\Selector\Parser;
 use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
+use Exception;
 
 class ShopifyService
 {
@@ -199,12 +200,12 @@ class ShopifyService
             if ($ajax) {
                 $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
                     "key"   => $templateKeyName,
-                    "value" => $this->getCartTemplateAjax($value),
+                    "value" => $this->updateCartTemplateAjax($value),
                 ]);
             } else {
                 $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
                     "key"   => $templateKeyName,
-                    "value" => $this->getCartTemplate($value),
+                    "value" => $this->updateCartTemplate($value),
                 ]);
             }
 
@@ -223,7 +224,7 @@ class ShopifyService
      * @return mixed|string
      * @throws \PHPHtmlParser\Exceptions\CircularException
      */
-    public function getCartTemplateAjax($htmlCart)
+    public function updateCartTemplateAjax($htmlCart)
     {
         $dom = new Dom;
 
@@ -402,7 +403,7 @@ class ShopifyService
      * @return mixed|string
      * @throws \PHPHtmlParser\Exceptions\CircularException
      */
-    public function getCartTemplate($htmlCart)
+    public function updateCartTemplate($htmlCart)
     {
         $dom = new Dom;
         $dom->load($htmlCart);
@@ -559,6 +560,127 @@ class ShopifyService
             return $html;
         } else {
             //thown parse error
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopName()
+    {
+        if (!empty($this->client)) {
+            return $this->client->getShopManager()
+                                ->get()
+                                ->getName();
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopUrl()
+    {
+        if (!empty($this->client)) {
+            return 'https://' . $this->client->getShopManager()
+                                             ->get()
+                                             ->getDomain();
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopDomain()
+    {
+        if (!empty($this->client)) {
+            return $this->client->getShopManager()
+                                ->get()
+                                ->getDomain();
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getShopId()
+    {
+        if (!empty($this->client)) {
+            return $this->client->getShopManager()
+                                ->get()
+                                ->getId();
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * @return array|\Slince\Shopify\Manager\Product\Product[]
+     */
+    public function getShopProducts()
+    {
+        if (!empty($this->client)) {
+            return $this->client->getProductManager()
+                                ->findAll([]);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return \Slince\Shopify\Manager\Webhook\Webhook|null
+     */
+    public function createShopWebhook($data = [])
+    {
+        if (!empty($this->client)) {
+            return $this->client->getWebhookManager()->create($data);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param null $webhookId
+     * @return array|\Slince\Shopify\Manager\Webhook\Webhook|\Slince\Shopify\Manager\Webhook\Webhook[]
+     */
+    public function getShopWebhook($webhookId = null)
+    {
+        if (!empty($this->client)) {
+            if ($webhookId) {
+                return $this->client->getWebhookManager()->find($webhookId);
+            } else {
+                return $this->client->getWebhookManager()->findAll();
+            }
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @param null $webhookId
+     * @return array|bool|\Slince\Shopify\Manager\Webhook\Webhook[]
+     */
+    public function deleteShopWebhook($webhookId = null)
+    {
+        if (!empty($this->client)) {
+            if ($webhookId) {
+                return $this->client->getWebhookManager()->remove($webhookId);
+            } else {
+                $webhooks = $this->getShopWebhook();
+                foreach ($webhooks as $webhook) {
+                    $this->client->getWebhookManager()->remove($webhook->getId());
+                }
+
+                return $this->client->getWebhookManager()->findAll();
+            }
+        } else {
+            return [];
         }
     }
 }

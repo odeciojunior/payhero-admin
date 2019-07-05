@@ -119,7 +119,7 @@ $(function () {
                     $("#data-table-coupon").append(data);
                 });
                 if (response.data == '') {
-                    $("#data-table-coupon").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='5' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-coupon").unbind('click');
                 $(".details-coupon").on('click', function () {

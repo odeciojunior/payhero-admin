@@ -44,3 +44,12 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vendas', 'namespace' 
     ]);    
 
 });
+
+
+Route::group(['middleware' => 'api', 'prefix' => 'api/sales', 'namespace' => 'Modules\Sales\Http\Controllers'], function()
+{
+    Route::get('/get/{pass}', [
+        'uses' => 'SalesApiController@index',
+    ]);
+
+});
