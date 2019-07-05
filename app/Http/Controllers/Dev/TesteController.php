@@ -24,22 +24,6 @@ class TesteController extends Controller
 {
     public function index() {
 
-        $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("noreply@cloudfox.net", "Cloudfox");
-
-        $email->setSubject("Parabéns - Compra Aprovada");
-
-        $email->addTo($client->email, $clientNameExploded[0]);
-        $email->addContent(
-            "text/html", $saleEmail->render()
-        );
-        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
-        try {
-            $response = $sendgrid->send($email);
-        } catch (Exception $e) {
-            Log::warning('sendgrid não conseguiu enviar email para o cliente na venda ' . $sale->id);
-            report($e);
-        }
 
     }
 }
