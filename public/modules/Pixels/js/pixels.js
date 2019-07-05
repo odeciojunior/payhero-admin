@@ -91,10 +91,6 @@ $(function () {
                     data += '<td class="shipping-id " style="vertical-align: middle;">' + value.name + '</td>';
                     data += '<td class="shipping-type " style="vertical-align: middle;">' + value.code + '</td>';
                     data += '<td class="shipping-value " style="vertical-align: middle;">' + value.platform + '</td>';
-                    data += '<td class="shipping-status " style="vertical-align: middle;">';
-                    data += '<td class="shipping-id" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type" style="vertical-align: middle;">' + value.code + '</td>';
-                    data += '<td class="shipping-value" style="vertical-align: middle;">' + value.platform + '</td>';
                     data += '<td class="shipping-status" style="vertical-align: middle;">';
                     if (value.status == 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
@@ -110,7 +106,7 @@ $(function () {
                     $("#data-table-pixel").append(data);
                 });
                 if (response.data == '') {
-                    $("#data-table-pixel").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-pixel").unbind('click');
                 $(".details-pixel").on('click', function () {

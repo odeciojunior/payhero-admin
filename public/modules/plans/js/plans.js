@@ -110,7 +110,7 @@ $(function () {
                     data = '';
                     data += '<tr>';
                     data += '<td class="shipping-id " style="vertical-align: middle;">' + value.name + '</td>';
-                    // data += '<td class="shipping-type " style="vertical-align: middle;">' + value.description + '</td>';
+                    data += '<td class="shipping-type " style="vertical-align: middle;">' + value.description + '</td>';
                     data += '<td class="shipping-value " style="vertical-align: middle;">' + value.code + '</td>';
                     data += '<td class="shipping-zip-code-origin " style="vertical-align:">' + value.price + '</td>';
                     data += '<td class="shipping-status " style="vertical-align: middle;">';
@@ -135,7 +135,7 @@ $(function () {
                 });
 
                 if (response.data == '') {
-                    $("#data-table-plan").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {
