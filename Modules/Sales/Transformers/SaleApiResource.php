@@ -90,6 +90,9 @@ class SaleApiResource extends Resource
             case '4':
                 $statusValue = 'canceled';
                 break;
+            default:
+                $statusValue = 'canceled';
+                break;
         }
 
         return [
