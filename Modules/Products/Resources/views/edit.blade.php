@@ -102,11 +102,11 @@
                                                 <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" value="{!! $product->price !!}" autocomplete="off">
                                             </div>
                                             <div id="div_next_step" class="form-group col-lg-12 d-flex justify-content-between mt-10">
-                                                <a class="btn btn-danger d-flex delete-product white" role="button" data-placement='top' data-toggle='tooltip' title='Excluir' product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}" data-original-title="Excluir">
-                                                    <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
+                                                <a class="btn btn-danger d-flex delete-product white" product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}" data-toggle="modal" data-target="#modal-delete">
+                                                    <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto 
                                                 </a>
                                                 <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
-                                                </button>
+                                                </button> 
                                             </div>
                                             <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
                                                 <button id="save_digital_product" type="submit" class="btn btn-success">Salvar</button>
@@ -132,8 +132,8 @@
                                                 <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 135cm" value="{!! $product->width !!}" data-mask="0#">
                                             </div>
                                             <div class="form-group col-lg-4">
-                                                <label for="height">Peso (g)</label>
-                                                <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 950g" value="{!! $product->weight !!}" data-mask="0#">
+                                                <label for="weight">Peso (g)</label>
+                                                <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" value="{!! $product->weight !!}" data-mask="0#">
                                             </div>
                                             <div class="form-group col-lg-6">
                                                 <label for="shipping">Transportadora:</label>
@@ -159,7 +159,33 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
             </form>
+
+            <!-- modal excluir -->
+            <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-simple">
+                    <div class="modal-content">
+                        <form id="form-delete-product" method="POST" action="/products/{{Hashids::encode($product->id)}}">
+                            @method('DELETE') @csrf
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <h4 id="model-delete-title" class="modal-title" style="width: 100%; text-align:center">Excluir o produto {{$product->name}} ?</h4>
+                            </div>
+                            <div id="modal-delete-body" class="modal-body">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                <button type="submit" class="btn btn-success">Confirmar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 

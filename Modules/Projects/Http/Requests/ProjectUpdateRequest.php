@@ -4,8 +4,8 @@ namespace Modules\Projects\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProjectUpdateRequest extends FormRequest
-{
+class ProjectUpdateRequest extends FormRequest {
+
     /**
      * Get the validation rules that apply to the request.
      * @return array
@@ -17,17 +17,17 @@ class ProjectUpdateRequest extends FormRequest
             "photo_y1"                   => "nullable",
             "photo_w"                    => "nullable",
             "photo_h"                    => "nullable",
-            "name"                       => "required",
+            "name"                       => "nullable",
             "description"                => "nullable",
-            "visibility"                 => "required",
+            "visibility"                 => "nullable",
             "url_page"                   => "nullable",
-            "contact"                    => "required",
+            "contact"                    => "nullable",
             "invoice_description"        => "nullable",
             "url_redirect"               => "nullable",
-            "company"                    => "required",
-            "installments_amount"        => "required",
-            "installments_interest_free" => "required",
-            "boleto"                     => "required",
+            "company"                    => "nullable",
+            "installments_amount"        => "nullable",
+            "installments_interest_free" => "nullable",
+            "boleto"                     => "nullable",
             "logo_x1"                    => "nullable",
             "logo_y1"                    => "nullable",
             "logo_w"                     => "nullable",
