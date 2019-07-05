@@ -11,7 +11,7 @@
 
 
             <div id="add-shipping" class="btn-holder  d-flex align-items-center pointer"  data-toggle="modal" data-target="#modal-content">
-                <span class="link-button-dependent red"> Adicionar SMS </span>
+                <span class="link-button-dependent red"> Adicionar Frete </span>
                 <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
             </div>    
          

@@ -1,11 +1,11 @@
-<div class='row no-gutters mb-10'>
-    <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div id="add-sms" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">
-            <span class="link-button-dependent red"> Adicionar SMS </span>
-            <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
-        </div>
-    </div>
-</div>
+{{--<div class='row no-gutters mb-10' >--}}
+    {{--<div class="top-holder text-right mb-5" style="width: 100%;">--}}
+        {{--<div id="add-sms" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">--}}
+            {{--<span class="link-button-dependent red"> Adicionar SMS </span>--}}
+            {{--<a class="ml-10 rounded-add pointer btn"> <i class="icon wb-plus" aria-hidden="true"></i> </a>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+{{--</div>--}}
 
 <div class="card shadow">
 

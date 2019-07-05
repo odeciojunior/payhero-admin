@@ -45,6 +45,8 @@ $(document).ready(function () {
                 $("#btn-modal").text('Salvar');
                 $("#btn-modal").show();
                 $("#modal-add-body").html(response);
+                $('#shipping-zip-code-origin').mask('00000-000');
+
                 changeType();
 
                 $(".btn-save").unbind();
@@ -134,7 +136,7 @@ $(document).ready(function () {
                 });
 
                 if (response.data == '') {
-                    $("#dados-tabela-frete").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='6' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".detalhes-frete").unbind('click');
                 $(".detalhes-frete").on('click', function () {
@@ -187,6 +189,8 @@ $(document).ready(function () {
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
+                            $('#shipping-zip-code-origin').mask('00000-000');
+
                             changeType();
                             $('#shipping-value').mask('#.###,#0', {reverse: true});
 
