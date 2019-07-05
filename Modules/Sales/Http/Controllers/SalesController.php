@@ -332,8 +332,6 @@ class SalesController extends Controller
         try {
             $sales = $this->getSaleModel()->where([['owner', auth()->user()->id], ['status', '!=', 3]]);
 
-            //        $sales = $sales->where('status', '!=', '3');
-
             if ($request->projeto != '') {
                 $plans    = $this->getPlan()->where('project', $request->projeto)->pluck('id');
                 $salePlan = $this->getPlansSales()->whereIn('plan', $plans)->pluck('sale');
@@ -364,10 +362,7 @@ class SalesController extends Controller
                 }
             }
 
-            $sales->orderBy('id', 'DESC');
-
-            /* $client = $this->getClient()->find($sales->client);
-             dd($client)*/
+            $sales->orderBy('id', 'DESC'); 
 
             return SalesResource::collection($sales->paginate(10));
         } catch (Exception $e) {
@@ -380,7 +375,6 @@ class SalesController extends Controller
     {
 
         try {
-
             $dataRequest = $request->all();
             $dataRequest = array_filter($dataRequest);
 

@@ -23,10 +23,6 @@
                             @endforeach
                         </select>
                     </div>
-                    {{--<div class="col-3">--}}
-                        {{--<label for="comprador">Nome do cliente</label>--}}
-                        {{--<input name='client' id="client" class="input-pad" placeholder="cliente">--}}
-                    {{--</div>--}}
                     <div class="col-3">
                         <label for="data_inicial">Data inicial</label>
                         <input name='start_date' id="start_date" class="form-control input-pad" type="date">
@@ -41,13 +37,6 @@
                         </button>
                     </div>
                 </div>
-                {{--<div class="row">--}}
-                    {{--<div class="col text-right">--}}
-                        {{--<button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">--}}
-                            {{--<i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
-                        {{--</button>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
             </div>
             <div class="card shadow" style="min-height: 300px">
                 <table class="table table-striped">
