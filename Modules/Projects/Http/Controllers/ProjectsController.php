@@ -148,7 +148,7 @@ class ProjectsController extends Controller
                                                            'name'                       => $requestValidated['name'],
                                                            'description'                => $requestValidated['description'],
                                                            'installments_amount'        => 12,
-                                                           'installments_interest_free' => 1,
+                                                           'installments_interest_free' => 12,
                                                            'visibility'                 => 'private',
                                                        ]);
 
@@ -281,18 +281,15 @@ class ProjectsController extends Controller
                         if ($projectPhoto != null) {
                             $this->getDigitalOceanFileService()->deleteFile($project->photo);
                             $img = Image::make($projectPhoto->getPathname());
-
-                            $img->resize(null, 200, function ($constraint) {
-                                $constraint->aspectRatio();
-                            });
-
+                            $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                            $img->resize(300, 300);
                             $img->save($projectPhoto->getPathname());
 
                             $digitalOceanPath = $this->getDigitalOceanFileService()
                                                      ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
                             $project->update([
-                                'photo' => $digitalOceanPath,
-                            ]);
+                                                 'photo' => $digitalOceanPath,
+                                             ]);
                         }
 
                         $projectLogo = $request->file('logo');
@@ -300,8 +297,11 @@ class ProjectsController extends Controller
 
                             $this->getDigitalOceanFileService()->deleteFile($project->logo);
                             $img = Image::make($projectLogo->getPathname());
-                            $img->crop($requestValidated['logo_w'], $requestValidated['logo_h'], $requestValidated['logo_x1'], $requestValidated['logo_y1']);
-                            $img->resize(200, 200);
+
+                            $img->resize(null, 300, function ($constraint) {
+                                $constraint->aspectRatio();
+                            });
+
                             $img->save($projectLogo->getPathname());
 
                             $digitalOceanPathLogo = $this->getDigitalOceanFileService()
