@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="form-group col-xl-6">
                         <label for="type">Tipo</label>
-                        <select name="type" class="form-control" id="tipo_cupom" required>
+                        <select name="type" class="form-control" id="type" required>
                             <option value="0">Porcentagem</option>
                             <option value="1">Valor</option>
                         </select>

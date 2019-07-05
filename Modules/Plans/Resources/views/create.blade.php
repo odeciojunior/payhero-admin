@@ -55,7 +55,7 @@
                         <div class='col-xl-3'>
                             <div class="form-group">
                                 <label>Quantidade:</label>
-                                <input class="form-control products_amount" type="text" name="product_amounts[]" placeholder="quantidade" data-mask='0#' value="1">
+                                <input class="form-control products_amount" type="text" name="product_amounts[]" placeholder="quantidade" data-mask="0#" value="1">
                             </div>
                         </div>
                         <div class='col-xl-1 mt-30'>
