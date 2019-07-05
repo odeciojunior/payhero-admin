@@ -142,7 +142,7 @@
                                         <div class="row">
                                             <div class="form-group col-xl-4">
                                                 <label for="bank">Banco</label>
-                                                <select id="bank" name="bank" class="select-pad">
+                                                <select id="bank" name="bank" class="form-control select-pad">
                                                     <option value="">Selecione</option>
                                                     @foreach($banks as $bank)
                                                         <option value="{!! $bank['code'] !!}" {!! $company->bank == $bank['code'] ? 'selected' : '' !!}>{!! $bank['code'] . ' - ' .$bank['name'] !!}</option>
@@ -177,57 +177,63 @@
 
                                 <div class="tab-pane" id="tab_documentos" role="tabpanel">
 
-                                <h3 class="mb-15 mt-10">Comprovantes</h3>
-
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h5 class="title-pad"> Comprovantes </h5>
+                                        <p class="sub-pad"> Para fazer movimentações externas, precisamos de documentos da sua empresa. </p>
+                                    </div>
+                                    <div class="col">
+                                    </div>
+                                </div>
 
                                 <div class="row mt-15">
-                                        <div class="col-lg-6">
-                                            <p class="mb-10">   Envie um extrato bancário, um comprovante de residência e o contrato social da empresa</p>
-                                            <div id="dropzone drop-empresas">
-                                                <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                                    @csrf
-                                                    <div class="dz-message needsclick">
-                                                        Arraste os arquivos aqui ou click para selecionar.<br/>
-                                                    </div>
-                                                    <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="input-pad">
-                                                    <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
-                                                </form>
-                                            </div>
+                                    <div class="col-lg-6">
+                                        <div id="dropzone">
+                                            <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                                @csrf
+                                                <div class="dz-message needsclick">
+                                                Arraste os arquivos ou clique para selecionar<br/>
+                                                </div>
+                                                <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
+                                            </form>
                                         </div>
-
-                                        <div class="col-lg-6">
-                                            <table class="table table-striped ">
-                                                <tbody>
-                                                    <tr class="text-center">
-                                                        <td>
-                                                            Extrato bancário
-                                                        </td>
-                                                        <td id='td_bank_status'>
-                                                            {!! $company->bank_document_translate !!}
-                                                        </td>
-                                                    </tr>
-                                                    <tr class='text-center'>
-                                                        <td>
-                                                            Comprovante de Residência
-                                                        </td>
-                                                        <td id='td_address_status'>
-                                                            {!! $company->address_document_translate !!}
-                                                        </td>
-                                                    </tr>
-                                                    <tr class='text-center'>
-                                                        <td>
-                                                            Contrato social
-                                                        </td>
-                                                        <td id='td_contract_status'>
-                                                            {!! $company->contract_document_translate !!}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
                                     </div>
 
+                                    <div class="col-lg-6">
+                                        <table class="table table-striped">
+                                            <tbody class="custom-t-body">
+                                                <tr>
+                                                    <td>Extrato Bancário</td>
+                                                    <td id="td_personal_status">
+                                                        <span class="badge badge-pendente"> {!! $company->bank_document_translate !!} </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> Comprovante Residência </td>
+                                                    <td id="td_address_status">
+                                                        <span class="badge badge-pendente"> {!! $company->address_document_translate !!}</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Contrato Social</td>
+                                                    <td id="td_address_status">
+                                                        <span class="badge badge-pendente">  {!! $company->contract_document_translate !!} </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <div class="col-lg-12  mt-10">
+                                        <small class="text-muted" style="line-height: 1.5;"> 
+                                            Conta Bancária: extrato válido do banco. <br>
+                                            Residência: luz, água ou outros; <br>
+                                            Contrato Social: provando que você é dono ou sócio da empresa;
+                                        </small>
+                                    </div>
+                                </div>
                                    
                                 </div>
                             </div>

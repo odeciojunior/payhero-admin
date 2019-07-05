@@ -93,7 +93,7 @@ $(function () {
 
     });
     function atualizarPlan() {
-        $("#data-table-plan").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        $("#data-table-plan").html("<tr class=''><td colspan='11'Carregando...></td></tr>");
         $.ajax({
             method: "GET",
             url: '/plans',
@@ -109,11 +109,11 @@ $(function () {
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr>';
-                    data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
-                    // data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.description + '</td>';
-                    data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.code + '</td>';
-                    data += '<td class="shipping-zip-code-origin text-center" style="vertical-align:">' + value.price + '</td>';
-                    data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    data += '<td class="shipping-id " style="vertical-align: middle;">' + value.name + '</td>';
+                    // data += '<td class="shipping-type " style="vertical-align: middle;">' + value.description + '</td>';
+                    data += '<td class="shipping-value " style="vertical-align: middle;">' + value.code + '</td>';
+                    data += '<td class="shipping-zip-code-origin " style="vertical-align:">' + value.price + '</td>';
+                    data += '<td class="shipping-status " style="vertical-align: middle;">';
                     if (value.status === 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
                     } else {
@@ -122,20 +122,20 @@ $(function () {
 
                     data += '</td>';
 
-                    data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                    data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
 
                     data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-plan'  plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger details-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger edit-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger delete-plan'  plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     data += '</tr>';
                     $("#data-table-plan").append(data);
                 });
 
                 if (response.data == '') {
-                    $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-plan").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {

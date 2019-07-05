@@ -131,51 +131,66 @@
                             </form>
                         </div>
                         <div class="tab-pane" id="tab_documentos" role="tabpanel">
-                            <h3 class="mb-15 mt-10">Documents</h3>
-                            <div class="row mt-15">
-                                <div class="col-lg-6">
-                                    <p class="mb-10"> Send a bank statement, proof of residence and the company's contract</p>
-                                    <div id="dropzone drop-empresas">
-                                        <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                            @csrf
-                                            <div class="dz-message needsclick">
-                                                Drag the files here or click to select.<br/>
-                                            </div>
-                                            <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="input-pad">
-                                            <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
-                                        </form>
+
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h5 class="title-pad"> Documents </h5>
+                                        <p class="sub-pad"> To make moviments in your account, we need some proof. </p>
+                                    </div>
+                                    <div class="col">
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <table class="table table-striped ">
-                                        <tbody>
-                                            <tr class="text-center">
-                                                <td>
-                                                    Bank statement
-                                                </td>
-                                                <td id='td_bank_status'>
-                                                    {!! $company->bank_document_translate !!}
-                                                </td>
-                                            </tr>
-                                            <tr class='text-center'>
-                                                <td>
-                                                    Proof of address
-                                                </td>
-                                                <td id='td_address_status'>
-                                                    {!! $company->address_document_translate !!}
-                                                </td>
-                                            </tr>
-                                            <tr class='text-center'>
-                                                <td>
-                                                    Company Contract
-                                                </td>
-                                                <td id='td_contract_status'>
-                                                    {!! $company->contract_document_translate !!}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+
+                                <div class="row mt-15">
+                                    <div class="col-lg-6">
+                                        <div id="dropzone">
+                                            <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                                @csrf
+                                                <div class="dz-message needsclick">
+                                                Drag the files here or click to select.<br/>
+                                                </div>
+                                                <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <table class="table table-striped">
+                                            <tbody class="custom-t-body">
+                                                <tr>
+                                                    <td>Bank</td>
+                                                    <td id="td_personal_status">
+                                                        <span class="badge badge-pendente"> {!! $company->bank_document_translate !!} </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Residence</td>
+                                                    <td id="td_address_status">
+                                                        <span class="badge badge-pendente"> {!! $company->address_document_translate !!}</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Company Contract</td>
+                                                    <td id="td_address_status">
+                                                        <span class="badge badge-pendente">  {!! $company->contract_document_translate !!} </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <div class="col-lg-12  mt-10">
+                                        <small class="text-muted" style="line-height: 1.5;"> 
+                                            Bank Account: valid bank statement <br>
+                                            Residence: electricity, water or utilities; <br>
+                                            Company Contract: proving that you are the owner / partner
+                                        </small>
+                                    </div>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>

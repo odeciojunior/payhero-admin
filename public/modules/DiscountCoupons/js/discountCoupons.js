@@ -107,19 +107,19 @@ $(function () {
 
                     data += '</td>';
 
-                    data += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                    data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
 
                     data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-coupon'  coupon='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger details-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger edit-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger delete-coupon'  coupon='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     data += '</tr>';
                     $("#data-table-coupon").append(data);
                 });
                 if (response.data == '') {
-                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-coupon").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-coupon").unbind('click');
                 $(".details-coupon").on('click', function () {

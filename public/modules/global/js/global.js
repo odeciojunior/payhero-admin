@@ -15,6 +15,7 @@ $(document).ready(function(){
     else if(current_url.includes('sales') || current_url.includes('recoverycart')){
         $("#sales_img").attr('src','/modules/global/assets/img/icon-red/vendas-d.svg');
         $("#sales_img").parent().parent().addClass('menu-active');
+        $("#sales-link").addClass('menu-active');
         $("#sales_img").css('height','28px').css('width','28px').css('margin-left','-5px');
     }
     else if(current_url.includes('projects')){
