@@ -7,15 +7,16 @@ $(document).ready(function () {
         event.preventDefault();
         atualizar();
     });
+
     function atualizar(link = null) {
 
         $('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
 
         if (link == null) {
-            link = '/recoverycart/getabandonatedcarts?' + 'project=' + $("#project").val() + '&client=' + $("#client").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
+            link = '/recoverycart/getabandonatedcarts?project=' + $("#project").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
         }
         else {
-            link = '/recoverycart/getabandonatedcarts' + link + 'project=' + $("#project").val() + '&client=' + $("#client").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
+            link = '/recoverycart/getabandonatedcarts' + link + '&project=' + $("#project").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
         }
 
         $.ajax({
@@ -47,7 +48,6 @@ $(document).ready(function () {
                         dados += "<td><span class='badge badge-danger'>" + value.recovery_status + "</span></td>";
                     }
                     dados += "<td>" + value.value + "</td>";
-                    // dados += "<td>"+value.link+"</td>";
                     dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
                     dados += "<td> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
                     dados += "<td><a  role='button' class='detalhes_venda' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
@@ -122,9 +122,11 @@ $(document).ready(function () {
 
         $("#pagination").append(primeira_pagina);
 
-        //if (response.meta.current_page == '1') {
-        // $("#primeira_pagina").attr('disabled', true);
-        //}
+        if (response.meta.current_page == '1') {
+            $("#primeira_pagina").attr('disabled', true);
+            $("#primeira_pagina").addClass('nav-btn');
+            $("#primeira_pagina").addClass('active');
+        }
 
         $('#primeira_pagina').on("click", function () {
             atualizar('?page=1');
@@ -136,7 +138,7 @@ $(document).ready(function () {
                 continue;
             }
 
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn active'>" + (response.meta.current_page - x) + "</button>");
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
@@ -145,10 +147,9 @@ $(document).ready(function () {
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual'  class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' disabled class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
 
             $("#pagination").append(pagina_atual);
-
         }
 
         for (x = 1; x < 4; x++) {
