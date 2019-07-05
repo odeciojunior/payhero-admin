@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Sale $sale
  * @property Transfer[] $transfers
  */
-class Transactions extends Model
+class Transaction extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
