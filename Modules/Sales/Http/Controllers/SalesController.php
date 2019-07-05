@@ -271,11 +271,6 @@ class SalesController extends Controller
                     $discount = '0,00';
                 }
 
-                $taxa = '000';
-                if ($sale->dolar_quotation != 0) {
-                    $taxa = intval($total / $sale->dolar_quotation);
-                }
-
                 $delivery             = $this->getDelivery()->find($sale['delivery']);
                 $checkout             = $this->getCheckout()->find($sale['checkout']);
                 $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
@@ -289,6 +284,19 @@ class SalesController extends Controller
                 } else {
                     $value = '000';
                 }
+                $comission = ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0);
+
+                $taxa     = 0;
+                $taxaReal = 0;
+                if ($sale->dolar_quotation != 0) {
+                    $taxa = intval($total / $sale->dolar_quotation);
+                    //                    $taxaReal = intval($taxa) - intval($value);
+                    $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
+                } else {
+                    $taxaReal = (intval($total / 100) * 6.5) + 100;
+                    $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
+                    //                    dd($taxaReal);
+                }
 
                 $details = view('sales::details', [
                     'sale'           => $sale,
@@ -301,8 +309,9 @@ class SalesController extends Controller
                     'discount'       => number_format(intval($discount) / 100, 2, ',', '.'),
                     'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
                     'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone),
-                    'comission'      => ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
+                    'comission'      => $comission,
                     'taxa'           => number_format($taxa / 100, 2, ',', '.'),
+                    'taxaReal'       => $taxaReal,
                 ]);
 
                 return response()->json($details->render());
@@ -362,7 +371,7 @@ class SalesController extends Controller
                 }
             }
 
-            $sales->orderBy('id', 'DESC'); 
+            $sales->orderBy('id', 'DESC');
 
             return SalesResource::collection($sales->paginate(10));
         } catch (Exception $e) {

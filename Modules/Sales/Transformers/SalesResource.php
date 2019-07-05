@@ -16,6 +16,7 @@ class SalesResource extends Resource
 {
     public function toArray($request)
     {
+//        dd($request->all());
         $client = Client::find($this->client);
 
         $plansSale = PlanSale::where('sale', $this->id)->get()->toArray();

@@ -77,18 +77,17 @@
             </div>
         @endif
         <div class='col-lg-6'>
-            <h4 class='table-title'>Taxas: </h4>
-        </div>
-        <div class='col-lg-6 text-right'>
-            <h4 class='table-title'>(6,5% + {{isset($sale->dolar_quotation) ? 'US$ 0,25' : 'R$ 1,00'   }})</h4>
-        </div>
-        <div class='col-lg-6'>
             <h4 class='table-title'>Comissão: </h4>
         </div>
         <div class='col-lg-6 text-right'>
             <h4 class='table-title'>{{$comission?? ''}}</h4>
         </div>
-
+        <div class='col-lg-8'>
+            <h4 class='table-title'>Taxas (6,5% + {{isset($sale->dolar_quotation) ? 'US$ 0,25' : 'R$ 1,00'   }}): </h4>
+        </div>
+        <div class='col-lg-4 text-right'>
+            <h4 class='table-title'>{{$taxaReal ?? ''}}</h4>
+        </div>
     </div>
 </div>
 <div class="nav-tabs-horizontal">
