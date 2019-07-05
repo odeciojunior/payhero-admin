@@ -1,7 +1,8 @@
 <div class='page-content container-fluid'>
     <div class='panel' data-plugin='matchHeight'>
         <div style='width: 100%;'>
-            <form id='form-add-shipping'>
+            <form id='form-add-shipping' method="post" action="/shippings">
+                @csrf
                 <div class='row'>
                     <div class='form-group col-12'>
                         <label for='type'>Tipo</label>

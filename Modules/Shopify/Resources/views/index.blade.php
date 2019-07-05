@@ -91,12 +91,12 @@
                                                 <i class="material-icons"> cloud_upload </i> Upload
                                             </a>
                                             <!-- <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto"> -->
-                                            <input name="foto_projeto" type="file" class="form-control" id="foto" style="display:none">
+                                            <input name="photo" type="file" class="form-control" id="foto" style="display:none">
                                             <div style="margin: 20px 0 0 30px;">
                                                 <img id="previewimage" alt="Selecione a foto do projeto" accept="image/*" onerror="this.src='{{asset('modules/global/assets/img/projeto.png')}}';" style="max-height: 250px; max-width: 350px;"/>
                                             </div>                                           
-                                            <input type="hidden" name="foto_x1"/> <input type="hidden" name="foto_y1"/>
-                                            <input type="hidden" name="foto_w"/> <input type="hidden" name="foto_h"/>
+                                            <input type="hidden" name="photo_x1"/> <input type="hidden" name="photo_y1"/>
+                                            <input type="hidden" name="photo_w"/> <input type="hidden" name="photo_h"/>
                                         </div>
                                     </div>
                                 </div>

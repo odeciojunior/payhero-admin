@@ -92,6 +92,10 @@ $(function () {
                     data += '<td class="shipping-type " style="vertical-align: middle;">' + value.code + '</td>';
                     data += '<td class="shipping-value " style="vertical-align: middle;">' + value.platform + '</td>';
                     data += '<td class="shipping-status " style="vertical-align: middle;">';
+                    data += '<td class="shipping-id" style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="shipping-type" style="vertical-align: middle;">' + value.code + '</td>';
+                    data += '<td class="shipping-value" style="vertical-align: middle;">' + value.platform + '</td>';
+                    data += '<td class="shipping-status" style="vertical-align: middle;">';
                     if (value.status == 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
                     } else {
@@ -172,7 +176,7 @@ $(function () {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
                                     data: {
-                                        name: $("#name").val(),
+                                        name: $("#name_pixel").val(),
                                         code: $("#code").val(),
                                         platform: $("#platform").val(),
                                         status: $("#status").val(),
@@ -234,6 +238,5 @@ $(function () {
             }
         });
     }
-
 
 });

@@ -47,26 +47,20 @@ $(document).ready(function () {
                 $("#modal-add-body").html(response);
                 changeType();
 
-
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
-
+                    var formData = new FormData(document.getElementById('form-add-shipping'));
+                    formData.append("project", projectId);
                     $.ajax({
                         method: "POST",
-                        url: "/shippings/",
+                        url: "/shippings",
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: {
-                            type: $("#shipping-type").val(),
-                            name: $("#shipping-name").val(),
-                            information: $("#shipping-information").val(),
-                            value: $("#shipping-value").val(),
-                            zip_code_origin: $("#shipping-zip-code-origin").val(),
-                            status: $("#shipping-status").val(),
-                            pre_selected: $("#shipping-pre-selected").val(),
-                            project: projectId,
-                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
                         error: function (response) {
                             if (response.status === 422) {
                                 for (error in response.errors) {
@@ -198,22 +192,18 @@ $(document).ready(function () {
 
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
-
+                                var formData = new FormData(document.getElementById('form-update-shipping'));
+                                formData.append("project", projectId);
                                 $.ajax({
-                                    method: "PUT",
+                                    method: "POST",
                                     url: "/shippings/" + frete,
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data: {
-                                        type: $("#shipping-type").val(),
-                                        name: $("#shipping-name").val(),
-                                        information: $("#shipping-information").val(),
-                                        value: $("#shipping-value").val(),
-                                        zip_code_origin: $("#shipping-zip-code-origin").val(),
-                                        status: $("#shipping-status").val(),
-                                        pre_selected: $("#shipping-pre-selected").val(),
-                                    },
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    cache: false,
                                     error: function () {
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {

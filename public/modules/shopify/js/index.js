@@ -35,10 +35,10 @@ $(document).ready( function(){
                     }
                 }
 
-                $('input[name="foto_x1"]').val(x1);
-                $('input[name="foto_y1"]').val(y1);
-                $('input[name="foto_w"]').val(x2 - x1);
-                $('input[name="foto_h"]').val(y2 - y1);
+                $('input[name="photo_x1"]').val(x1);
+                $('input[name="photo_y1"]').val(y1);
+                $('input[name="photo_w"]').val(x2 - x1);
+                $('input[name="photo_h"]').val(y2 - y1);
 
                 $('#previewimage').imgAreaSelect({
                     x1: x1, y1: y1, x2: x2, y2: y2,
@@ -47,10 +47,10 @@ $(document).ready( function(){
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
                     onSelectEnd: function (img, selection) {
-                        $('input[name="foto_x1"]').val(selection.x1);
-                        $('input[name="foto_y1"]').val(selection.y1);
-                        $('input[name="foto_w"]').val(selection.width);
-                        $('input[name="foto_h"]').val(selection.height);
+                        $('input[name="photo_x1"]').val(selection.x1);
+                        $('input[name="photo_y1"]').val(selection.y1);
+                        $('input[name="photo_w"]').val(selection.width);
+                        $('input[name="photo_h"]').val(selection.height);
                     },
                     parent: $('#conteudo_modal_add')
                 });

@@ -13,7 +13,7 @@ class DiscountCouponsResource extends Resource
         return [
             'id'     => Hashids::encode($this->id),
             'name'   => $this->name,
-            'type'   => $this->type,
+            'type'   => $this->type == 0 ? 'Porcentagem' : 'Valor',
             'value'  => $this->value,
             'code'   => $this->code,
             'status' => $this->status,
