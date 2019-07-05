@@ -105,15 +105,15 @@ $(document).ready(function () {
                 $.each(response.data, function (index, value) {
                     dados = '';
                     dados += '<tr>';
-                    dados += '<td class="shipping-id text-center" style="vertical-align: middle; display: none;">' + value.shipping_id + '</td>';
-                    dados += '<td class="shipping-type text-center" style="vertical-align: middle; display: none;">' + value.type + '</td>';
-                    dados += '<td class="shipping-value text-center" style="vertical-align: middle; display: none;">' + value.value + '</td>';
-                    dados += '<td class="shipping-zip-code-origin text-center" style="vertical-align: middle; display: none;">' + value.zip_code_origin + '</td>';
-                    dados += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.type + '</td>';
-                    dados += '<td class="shipping-name text-center" style="vertical-align: middle;">' + value.name + '</td>';
-                    dados += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.value + '</td>';
-                    dados += '<td class="shipping-information text-center" style="vertical-align: middle;">' + value.information + '</td>';
-                    dados += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    dados += '<td class="shipping-id " style="vertical-align: middle; display: none;">' + value.shipping_id + '</td>';
+                    dados += '<td class="shipping-type " style="vertical-align: middle; display: none;">' + value.type + '</td>';
+                    dados += '<td class="shipping-value " style="vertical-align: middle; display: none;">' + value.value + '</td>';
+                    dados += '<td class="shipping-zip-code-origin " style="vertical-align: middle; display: none;">' + value.zip_code_origin + '</td>';
+                    dados += '<td class="shipping-id " style="vertical-align: middle;">' + value.type + '</td>';
+                    dados += '<td class="shipping-name " style="vertical-align: middle;">' + value.name + '</td>';
+                    dados += '<td class="shipping-type " style="vertical-align: middle;">' + value.value + '</td>';
+                    dados += '<td class="shipping-information " style="vertical-align: middle;">' + value.information + '</td>';
+                    dados += '<td class="shipping-status " style="vertical-align: middle;">';
                     if (value.status === 1) {
                         dados += '<span class="badge badge-success">Ativo</span>';
                     } else {
@@ -122,7 +122,7 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                    dados += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
                     if (value.pre_selected === 1) {
                         dados += '<span class="badge badge-success">Sim</span>';
                     } else {
@@ -131,16 +131,16 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger excluir-frete'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger excluir-frete'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
 
                     dados += '</tr>';
                     $("#dados-tabela-frete").append(dados);
                 });
 
                 if (response.data == '') {
-                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#dados-tabela-frete").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".detalhes-frete").unbind('click');
                 $(".detalhes-frete").on('click', function () {

@@ -111,7 +111,7 @@
             <div class='row'>
                 <div class='form-group col-4 col-xs-12'>
                     <label for='quantity-installment_amount'>Quantidade de parcelas (cartão de crédito)</label>
-                    <select class='installment_amount' name='installments_amount' class='form-control select-pad'>
+                    <select class='installment_amount form-control select-pad' name='installments_amount' class='form-control select-pad'>
                         @for($x=1;$x <= 12; $x++)
                             <option value='{{$x}}' {{$project->installments_amount == $x ? 'selected' : ''}}>{{$x}}</option>
                         @endfor

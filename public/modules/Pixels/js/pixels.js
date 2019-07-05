@@ -88,10 +88,10 @@ $(function () {
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr>';
-                    data += '<td class="shipping-id text-center" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type text-center" style="vertical-align: middle;">' + value.code + '</td>';
-                    data += '<td class="shipping-value text-center" style="vertical-align: middle;">' + value.platform + '</td>';
-                    data += '<td class="shipping-status text-center" style="vertical-align: middle;">';
+                    data += '<td class="shipping-id " style="vertical-align: middle;">' + value.name + '</td>';
+                    data += '<td class="shipping-type " style="vertical-align: middle;">' + value.code + '</td>';
+                    data += '<td class="shipping-value " style="vertical-align: middle;">' + value.platform + '</td>';
+                    data += '<td class="shipping-status " style="vertical-align: middle;">';
                     if (value.status == 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
                     } else {
@@ -99,14 +99,14 @@ $(function () {
                     }
                     data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger details-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger edit-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class='text-center'><button class='btn btn-sm btn-outline btn-danger delete-pixel'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger details-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger edit-pixel'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
+                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger delete-pixel'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
                     data += '</tr>';
                     $("#data-table-pixel").append(data);
                 });
                 if (response.data == '') {
-                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-pixel").html("<tr class=''><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-pixel").unbind('click');
                 $(".details-pixel").on('click', function () {

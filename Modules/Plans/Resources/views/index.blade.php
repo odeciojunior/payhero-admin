@@ -1,25 +1,32 @@
-<div class='row'>
-    <div style='width:100%'>
-        <a id='add-plan' class='btn btn-primary float-right' data-toggle='modal' data-target='#modal-content' style='color:white;'>
-            <i class='icon wb-user-add' aria-hidden='true'></i>Adicionar Plano
-        </a>
+<div class='row no-gutters mb-10'>
+    <div class="top-holder text-right mb-5" style="width: 100%;">
+        <div id="add-plan" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">
+            <span class="link-button-dependent red"> Adicionar Plano </span>
+            <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
+        </div>
     </div>
 </div>
-<div class='panel pt-10 p-10' style='min-height: 300px'>
+
+
+<div class="card shadow">
+    <div style='min-height: 300px'>
     <div class='page-invoice-table table-responsive'>
-        <table id='table-pixel' class='table text-right table-pixels table-hover' style='width:100%'>
-            <thead style='text-align:center;'>
+        <table id='table-pixel' class='table text-left table-pixels table-striped' style='width:100%'>
+            <thead>
                 <tr>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Nome</b></th>
-                    {{--                    <th style='vertical-align: middle;' class='table-title text-center'><b>Descrição</b></th>--}}
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Código</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Preço</b></th>
-                    <th style='vertical-align: middle;' class='table-title text-center'><b>Status</b></th>
+                    <td class='table-title'>Nome</td>
+                    <!--<td class='table-title'>Descrição</td>-->
+                    <td class='table-title'>Código</td>
+                    <td class='table-title'>Preço</td>
+                    <td class='table-title'>Status</td>
                 </tr>
             </thead>
-            <tbody id='data-table-plan'>
+            <tbody id='dados-tabela-plan'>
                 {{-- js carregando dados --}}
             </tbody>
         </table>
     </div>
+    </div>
+
 </div>
+
