@@ -13,8 +13,7 @@ $(document).ready(function () {
 
         if (link == null) {
             link = '/recoverycart/getabandonatedcarts?' + 'project=' + $("#project").val() + '&client=' + $("#client").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
-        }
-        else {
+        } else {
             link = '/recoverycart/getabandonatedcarts' + link + 'project=' + $("#project").val() + '&client=' + $("#client").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
         }
 
@@ -42,15 +41,14 @@ $(document).ready(function () {
                     dados += "<td>" + value.sms_status + "</td>";
                     if (value.recovery_status == 'Recuperado') {
                         dados += "<td><span class='badge badge-success'>" + value.recovery_status + "</span></td>";
-                    }
-                    else {
+                    } else {
                         dados += "<td><span class='badge badge-danger'>" + value.recovery_status + "</span></td>";
                     }
                     dados += "<td>" + value.value + "</td>";
                     // dados += "<td>"+value.link+"</td>";
                     dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
                     dados += "<td> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
-                    dados += "<td><a  role='button' class='detalhes_venda' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+                    dados += "<td><a  role='button' class='details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
                     dados += '</tr>';
                     $("#table_data").append(dados);
 
@@ -71,22 +69,22 @@ $(document).ready(function () {
 
                 var id_venda = '';
 
-                $('.detalhes_venda').unbind('click');
+                $('.details-cart-recovery').unbind('click');
 
-                $('.detalhes_venda').on('click', function () {
+                $('.details-cart-recovery').on('click', function () {
 
                     var venda = $(this).attr('venda');
 
-                    $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
+                    $('#modal-title').html('Detalhes Carrinho Abandonado' + '<br><hr>');
 
-                    $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                    $('.modal-body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
                     var data = {sale_id: venda};
 
                     $.ajax({
                         method: "POST",
-                        url: '/sales/venda/detalhe',
-                        data: data,
+                        url: '/recoverycart/details',
+                        data: {checkout: venda},
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -94,7 +92,7 @@ $(document).ready(function () {
                             //
                         },
                         success: function (response) {
-                            $('#modal_venda_body').html(response);
+                            $('.modal-body').html(response);
                         }
                     });
                 });

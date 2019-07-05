@@ -24,8 +24,8 @@
                         </select>
                     </div>
                     {{--<div class="col-3">--}}
-                        {{--<label for="comprador">Nome do cliente</label>--}}
-                        {{--<input name='client' id="client" class="input-pad" placeholder="cliente">--}}
+                    {{--<label for="comprador">Nome do cliente</label>--}}
+                    {{--<input name='client' id="client" class="input-pad" placeholder="cliente">--}}
                     {{--</div>--}}
                     <div class="col-3">
                         <label for="data_inicial">Data inicial</label>
@@ -42,11 +42,11 @@
                     </div>
                 </div>
                 {{--<div class="row">--}}
-                    {{--<div class="col text-right">--}}
-                        {{--<button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">--}}
-                            {{--<i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
-                        {{--</button>--}}
-                    {{--</div>--}}
+                {{--<div class="col text-right">--}}
+                {{--<button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">--}}
+                {{--<i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
+                {{--</button>--}}
+                {{--</div>--}}
                 {{--</div>--}}
             </div>
             <div class="card shadow" style="min-height: 300px">
@@ -75,7 +75,7 @@
                             <div class="header-modal">
                                 <div class="row justify-content-between align-items-center" style="width: 100%;">
                                     <div class="col-lg-2"> &nbsp;</div>
-                                    <div class="col-lg-8 text-center"><h4> Detalhes da venda </h4></div>
+                                    <div class="col-lg-8 text-center"><h4 id='modal-title'> Detalhes da venda </h4></div>
                                     <div class="col-lg-2 text-right">
                                         <a role="button" data-dismiss="modal">
                                             <i class="material-icons pointer">close</i></a>
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                             <div class="modal-body">
-                                <div class="transition-details">
+                                {{--<div class="transition-details">
                                     <h3> Transação #1234 </h3>
                                     <p class="sm-text text-muted"> Pagamento via Cartão Visa em 02/07/2019 às 22:32
                                         <br> IP do Cliente: 24.202.302.11 </p>
@@ -166,21 +166,9 @@
                                         <br>
                                         <span class="table-title gray"> UTM Content: advertorial </span>
                                     </div>
-                                </div>
+                                </div>--}}
                             </div>
                             <div class="clearfix"></div>
-                            <!-- <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                              </button>
-                              <h4 id="modal_venda_titulo" class="modal-title" style="width: 100%; text-align:center"></h4>
-                            </div>
-                            <div id="modal_venda_body" class="modal-body">
-
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                            </div>  -->
                         </div>
                     </div>
                 </div>
