@@ -281,8 +281,7 @@ class ProjectsController extends Controller
                         if ($projectPhoto != null) {
                             $this->getDigitalOceanFileService()->deleteFile($project->photo);
                             $img = Image::make($projectPhoto->getPathname());
-                            $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
-                            $img->resize(200, 200);
+//                            $img->resize(300, 300);
                             $img->save($projectPhoto->getPathname());
 
                             $digitalOceanPath = $this->getDigitalOceanFileService()

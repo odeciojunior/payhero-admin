@@ -140,23 +140,13 @@
             <div class='col-lg-4 row'>
                 <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
                     <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
-                    <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='width:200px;'>
-                    <input type='hidden' name='logo_x1'><input type='hidden' name='logo_y1'>
-                    <input type='hidden' name='logo_w'><input type='hidden' name='logo_h'>
+                    <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height:300px;max-width:300px;'>
+                    <input type='hidden' name='logo_h'>
+                    <input type='hidden' name='logo_w'>
                     <p class='info mt-5' style='font-size: 10px;'>
                         <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
-                        <br> Dimensões ideais: 300 x 300 pixels.
+                        <br> Dimensões ideais: largura ou altura de no máximo 300 x 300 pixels.
                     </p>
-                </div>
-                <div class='container-image' style='display:none;'>
-                    Selecione o tamanho da imagem
-                    <div class='form-group'>
-                        <select name='ratioImage' id='ratioImage'>
-                            <option value='1:1' selected>Quadrado</option>
-                            <option value='1:2'>Retangulo (1:2)</option>
-                            <option value='1:3'> Retangulo (1:3)</option>
-                        </select>
-                    </div>
                 </div>
             </div>
             <div class="mt-30">
