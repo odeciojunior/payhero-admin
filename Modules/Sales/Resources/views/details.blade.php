@@ -68,14 +68,14 @@
         </div>
     </div>
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
-        <div class='col-lg-6'>
-            <h4 class='table-title'>Conversão Moedas: </h4>
-        </div>
-        <div class='col-lg-6 text-right'>
-            @if(isset($sale->dolar_quotation))
-                <h4 class='table-title'>(US$ {{$sale->dolar_quotation}})</h4>
-            @endif
-        </div>
+        @if(isset($sale->dolar_quotation))
+            <div class='col-8'>
+                <h4 class='table-title'>Cambio (1 $ = R$ {{$sale->dolar_quotation}}): </h4>
+            </div>
+            <div class='col-4 text-right'>
+                <h4 class='table-title'>(US$ {{$taxa}})</h4>
+            </div>
+        @endif
         <div class='col-lg-6'>
             <h4 class='table-title'>Taxas: </h4>
         </div>
@@ -88,38 +88,7 @@
         <div class='col-lg-6 text-right'>
             <h4 class='table-title'>{{$comission?? ''}}</h4>
         </div>
-        <div class='col-lg-6'>
-            <h4 class='table-title'>Total: </h4>
-        </div>
-        <div class='col-lg-6 text-right'>
-            <h4 class='table-title'></h4>
-        </div>
-        {{--<div class='row' style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
-                <div class="col-lg-6">
-                    <h4 class="table-title"> Conversão: </h4>
-                </div>
-                <div class="col-lg-6 text-right">
-                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-                </div>
-                <div class="col-lg-6">
-                    <h4 class="table-title"> Taxas </h4>
-                </div>
-                <div class="col-lg-6 text-right">
-                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-                </div>
-                <div class="col-lg-6">
-                    <h4 class="table-title"> Comissão </h4>
-                </div>
-                <div class="col-lg-6 text-right">
-                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-                </div>
-                <div class="col-lg-6">
-                    <h4 class="table-title"> Total </h4>
-                </div>
-                <div class="col-lg-6 text-right">
-                    <h4 class="table-title"> R$ {{$sale->total_paid_value}} </h4>
-                </div>
-            </div>--}}
+
     </div>
 </div>
 <div class="nav-tabs-horizontal">

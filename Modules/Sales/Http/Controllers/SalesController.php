@@ -262,12 +262,18 @@ class SalesController extends Controller
 
                 $discount = '0,00';
                 $subTotal = $total;
-                $total    += preg_replace("/[^0-9]/", "", $sale->shipment_value);
+
+                $total += preg_replace("/[^0-9]/", "", $sale->shipment_value);
                 if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
                     $total    -= preg_replace("/[^0-9]/", "", $sale->shopify_discount);
                     $discount = preg_replace("/[^0-9]/", "", $sale->shopify_discount);
                 } else {
                     $discount = '0,00';
+                }
+
+                $taxa = '000';
+                if ($sale->dolar_quotation != 0) {
+                    $taxa = intval($total / $sale->dolar_quotation);
                 }
 
                 $delivery             = $this->getDelivery()->find($sale['delivery']);
@@ -296,6 +302,7 @@ class SalesController extends Controller
                     'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
                     'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone),
                     'comission'      => ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
+                    'taxa'           => number_format($taxa / 100, 2, ',', '.'),
                 ]);
 
                 return response()->json($details->render());
