@@ -140,7 +140,7 @@
             <div class='col-lg-4 row'>
                 <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
                     <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
-                    <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height:300px;'>
+                    <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height:300px;max-width:300px;'>
                     <input type='hidden' name='logo_h'>
                     <input type='hidden' name='logo_w'>
                     <p class='info mt-5' style='font-size: 10px;'>

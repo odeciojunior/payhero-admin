@@ -142,15 +142,16 @@ $(function () {
                 $("#photo-logo-email").on('change', function () {
                     $(".container-image").css('display', 'block');
                     let imageReader = new FileReader();
-                    let img = document.getElementById("image-logo-email");
                     imageReader.readAsDataURL(document.getElementById("photo-logo-email").files[0]);
                     imageReader.onload = function (ofREvent) {
                         photoLogo.attr('src', ofREvent.target.result).fadeIn();
                         photoLogo.on('load', function () {
+                            let img = document.getElementById("image-logo-email");
+                            $('input[name="logo_h"]').val(img.clientWidth);
+                            $('input[name="logo_w"]').val(img.clientHeight);
                         });
                     }
-                    $('input[name="logo_h"]').val(img.naturalHeight);
-                    $('input[name="logo_w"]').val(img.naturalWidth);
+
 
                 });
 
