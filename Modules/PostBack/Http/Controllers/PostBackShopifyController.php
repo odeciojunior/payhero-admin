@@ -17,7 +17,6 @@ class PostBackShopifyController extends Controller
     public function postBackListener(Request $request)
     {
         $dados = $request->all();
-        Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
 
         $project = Project::find(Hashids::decode($request->project_id)[0]);
 
@@ -26,7 +25,8 @@ class PostBackShopifyController extends Controller
 
             return 'error';
         } else {
-            Log::write('info', 'retorno do shopify, projeto = ' . $project->id);
+            Log::write('info', 'retorno do shopify (webhook products) referente ao projeto ' . $project->id);
+            Log::write('info', 'dados : ' . print_r($dados, true) );
         }
 
         foreach ($dados['variants'] as $variant) {
@@ -96,22 +96,33 @@ class PostBackShopifyController extends Controller
                         foreach ($image['variant_ids'] as $variantId) {
                             if ($variantId == $variant['id']) {
 
-                                if ($image['src'] != '') {
-                                    $product->update([
-                                                         'photo' => $image->getSrc(),
-                                                     ]);
-                                } else {
-                                    $product->update([
-                                                         'photo' => $dados['image']['src'],
-                                                     ]);
+                                try{
+                                    if ($image['src'] != '') {
+                                        $product->update([
+                                                            'photo' => $image->getSrc(),
+                                                        ]);
+                                    } else {
+                                        $product->update([
+                                                            'photo' => $dados['image']['src'],
+                                                        ]);
+                                    }
+                                } catch (\Exception $e) {
+                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify');
+                                    report($e);
                                 }
                             }
                         }
                     }
                 } else {
-                    $product->update([
-                                         'photo' => $dados['image']['src'],
-                                     ]);
+                    try{
+                        $product->update([
+                                            'photo' => $dados['image']['src'],
+                                        ]);
+                    }
+                    catch (\Exception $e) {
+                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify');
+                        report($e);
+                    }
                 }
 
                 ProductPlan::create([
