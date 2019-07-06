@@ -99,7 +99,7 @@ class PostBackShopifyController extends Controller
                                 try{
                                     if ($image['src'] != '') {
                                         $product->update([
-                                                            'photo' => $image->getSrc(),
+                                                            'photo' => $image['src'],
                                                         ]);
                                     } else {
                                         $product->update([
