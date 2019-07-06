@@ -85,8 +85,6 @@ class PostBackShopifyController extends Controller
                                          'description'                => $description,
                                          'price'                      => $variant['price'],
                                          'status'                     => '1',
-                                         'installments_amount'        => '12',
-                                         'installments_interest_free' => '1',
                                      ]);
                 $plan->update([
                     'code' => Hashids::encode($plan->id)
