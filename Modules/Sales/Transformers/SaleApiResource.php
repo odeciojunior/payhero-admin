@@ -45,13 +45,15 @@ class SaleApiResource extends Resource
         $client = Client::find($this->client);
 
         $plansSale = PlanSale::where('sale', $this->id)->get()->toArray();
-        $product   = '';
+        $products  = [];
         $project   = '';
         foreach ($plansSale as $planSale) {
             $plano   = Plan::find($planSale['plan']);
-            $product = $plano['name'];
-            $project = Project::find($plano['project']);
-            $project = $project['name'];
+            $product = [];
+            $product['name'] = $plano['name'];
+            $product['amount'] = $planSale['amount'];
+            $product['price'] = $planSale['plan_value'];
+            $products[] = $product;
         }
 
         if (count($plansSale) > 1) {
@@ -79,16 +81,16 @@ class SaleApiResource extends Resource
         $statusValue = '';
         switch ($this->status) {
             case '1':
-                $statusValue = 'completed';
+                $statusValue = 'aprovado';
                 break;
             case '2':
-                $statusValue = 'canceled';
+                $statusValue = 'pendente';
                 break;
             case '3':
-                $statusValue = 'canceled';
+                $statusValue = 'nao aprovado';
                 break;
             case '4':
-                $statusValue = 'canceled';
+                $statusValue = 'estornado';
                 break;
             default:
                 $statusValue = 'canceled';
@@ -100,7 +102,7 @@ class SaleApiResource extends Resource
             //'id'           => Hashids::connection('main')->encode($this->id),
             'id'           => $this->id,
             'project'      => $project,
-            'product'      => $product,
+            'products'     => $products,
             'client'       => $client['name'],
             'email'        => $client['email'],
             'doc'          => $client['document'],
