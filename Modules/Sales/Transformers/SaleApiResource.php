@@ -8,6 +8,7 @@ use App\Entities\Company;
 use App\Entities\Plan;
 use App\Entities\PlanSale;
 use App\Entities\Project;
+use App\Entities\Shipping;
 use App\Entities\Transaction;
 use App\Entities\User;
 use Carbon\Carbon;
@@ -98,8 +99,10 @@ class SaleApiResource extends Resource
                 break;
         }
 
+        $shipping = Shipping::find($this->shipping);
+
         return [
-            'sale_code'    => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
+            'sale_code'        => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
             //'id'           => Hashids::connection('main')->encode($this->id),
             'id'           => $this->id,
             'project'      => $project,
@@ -113,6 +116,7 @@ class SaleApiResource extends Resource
             'end_date'     => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
             'total_paid'   => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
             'brand'        => $this->flag,
+            'shipping'     => $shipping->value,
             'src'          => $checkout->src,
             'utm_source'   => $checkout->utm_source,
             'utm_medium'   => $checkout->utm_medium,
