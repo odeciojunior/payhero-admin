@@ -75,6 +75,7 @@ class PostBackShopifyController extends Controller
                                                'format'      => 1,
                                                'category'    => 11,
                                                'cost'        => '',
+                                               'shopify'     => '1'
                                            ]);
 
                 $plan = Plan::create([
