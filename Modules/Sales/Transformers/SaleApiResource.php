@@ -40,7 +40,7 @@ class SaleApiResource extends Resource
      */
     public function toArray($request)
     {
-        $userZmDeals = $this->getUserModel()->where('email', 'zmdeals@mail.com')->first();
+        $userZmDeals = $this->getUserModel()->where('email', 'fernandomuniz1337@gmail.com')->first();
 
         $client = Client::find($this->client);
 
