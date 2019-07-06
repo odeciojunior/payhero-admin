@@ -18,7 +18,6 @@ class PostBackShopifyController extends Controller
     {
         $dados = $request->all();
         Log::write('info', 'retorno do shopify ' . print_r($dados, true) );
-        // return 'success';
 
         $project = Project::find(Hashids::decode($request->project_id)[0]);
 
@@ -50,7 +49,7 @@ class PostBackShopifyController extends Controller
                     $description .= ' - ' . $$variant['option3'];
                 }
             } catch (\Exception $e) {
-                report($e);
+                //report($e);
             }
 
             if ($plan) {
@@ -58,6 +57,7 @@ class PostBackShopifyController extends Controller
                                   'name'        => substr($dados['title'], 0, 100),
                                   'price'       => $variant['price'],
                                   'description' => $description,
+                                  'code'        => Hashids::encode($plan->id),
                               ]);
             } else {
                 $userProject = UserProject::where([
@@ -77,30 +77,21 @@ class PostBackShopifyController extends Controller
                                                'cost'        => '',
                                            ]);
 
-                $newCode = false;
-
-                while ($newCode == false) {
-                    $code = $this->randString(3) . rand(100, 999);
-                    $plan = Plan::where('code', $code)->first();
-                    if ($plan == null) {
-                        $newCode = true;
-                    }
-                }
-
                 $plan = Plan::create([
                                          'shopify_id'                 => $dados['id'],
                                          'shopify_variant_id'         => $variant['id'],
-                                         'company'                    => $userProject->company,
                                          'project'                    => $project['id'],
                                          'name'                       => substr($dados['title'], 0, 100),
                                          'description'                => $description,
-                                         'code'                       => $code,
                                          'price'                      => $variant['price'],
                                          'status'                     => '1',
                                          'carrier'                    => '2',
                                          'installments_amount'        => '12',
                                          'installments_interest_free' => '1',
                                      ]);
+                $plan->update([
+                    'code' => Hashids::encode($plan->id)
+                ]);
 
                 if (count($dados['variants']) > 1) {
                     foreach ($dados['images'] as $image) {
@@ -112,14 +103,7 @@ class PostBackShopifyController extends Controller
                                     $product->update([
                                                          'photo' => $image->getSrc(),
                                                      ]);
-
-                                    $plan->update([
-                                                      'photo' => $image->getSrc(),
-                                                  ]);
                                 } else {
-                                    $plan->update([
-                                                      'photo' => $dados['image']['src'],
-                                                  ]);
                                     $product->update([
                                                          'photo' => $dados['image']['src'],
                                                      ]);
@@ -128,10 +112,6 @@ class PostBackShopifyController extends Controller
                         }
                     }
                 } else {
-                    $plan->update([
-                                      'photo' => $dados['image']['src'],
-                                  ]);
-
                     $product->update([
                                          'photo' => $dados['image']['src'],
                                      ]);
@@ -147,21 +127,5 @@ class PostBackShopifyController extends Controller
 
         return 'success';
     }
-
-    function randString($size)
-    {
-
-        $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        $randCode = "";
-
-        for ($count = 0; $size > $count; $count++) {
-
-            $randCode .= $basic[rand(0, strlen($basic) - 1)];
-        }
-
-        return $randCode;
-    }
-
 
 }
