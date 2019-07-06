@@ -53,6 +53,7 @@ class SaleApiResource extends Resource
             $product['name'] = $plano['name'];
             $product['amount'] = $planSale['amount'];
             $product['price'] = $planSale['plan_value'];
+            $product['description'] = $plano['description'];
             $products[] = $product;
         }
 
