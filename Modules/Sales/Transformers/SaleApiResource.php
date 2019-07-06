@@ -117,6 +117,7 @@ class SaleApiResource extends Resource
             'total_paid'   => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
             'brand'        => $this->flag,
             'shipping'     => $shipping->value,
+            'dolar_quotation' => $this->dolar_quotation,
             'src'          => $checkout->src,
             'utm_source'   => $checkout->utm_source,
             'utm_medium'   => $checkout->utm_medium,
