@@ -111,7 +111,7 @@ class SalesApiController extends Controller
             $requestData = $data;
             if ($data == 'M9NBQY3P') {
 
-                $userZmDeals = $this->getUserModel()->where('email', 'zmdeals@mail.com')->first();
+                $userZmDeals = $this->getUserModel()->where('email', 'fernandomuniz1337@gmail.com')->first();
 
                 $sales = $this->getSaleModel()->where([
                                                           ['owner', $userZmDeals->id],
