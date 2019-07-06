@@ -8,6 +8,7 @@ use App\Entities\Company;
 use App\Entities\Plan;
 use App\Entities\PlanSale;
 use App\Entities\Project;
+use App\Entities\Shipping;
 use App\Entities\Transaction;
 use App\Entities\User;
 use Carbon\Carbon;
@@ -95,27 +96,31 @@ class SaleApiResource extends Resource
                 break;
         }
 
+        $shipping = Shipping::find($this->shipping);
+
         return [
-            'sale_code'    => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
+            'sale_code'        => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
             //'id'           => Hashids::connection('main')->encode($this->id),
-            'id'           => $this->id,
-            'project'      => $project,
-            'product'      => $product,
-            'client'       => $client['name'],
-            'email'        => $client['email'],
-            'doc'          => $client['document'],
-            'payment_type' => ($this->payment_method == 2) ? 'billet' : 'credit_card',
-            'status'       => $statusValue,
-            'data_compra'  => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
-            'end_date'     => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
-            'total_paid'   => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
-            'brand'        => $this->flag,
-            'src'          => $checkout->src,
-            'utm_source'   => $checkout->utm_source,
-            'utm_medium'   => $checkout->utm_medium,
-            'utm_campaign' => $checkout->utm_campaign,
-            'utm_term'     => $checkout->utm_term,
-            'utm_content'  => $checkout->utm_content,
+            'id'               => $this->id,
+            'project'          => $project,
+            'product'          => $product,
+            'client'           => $client['name'],
+            'email'            => $client['email'],
+            'doc'              => $client['document'],
+            'payment_type'     => ($this->payment_method == 2) ? 'billet' : 'credit_card',
+            'status'           => $statusValue,
+            'data_compra'      => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
+            'end_date'         => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
+            'total_paid'       => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
+            'brand'            => $this->flag,
+            'dollar_quotation' => $this->dolar_quotation,
+            'shipping'         => $shipping->value,
+            'src'              => $checkout->src,
+            'utm_source'       => $checkout->utm_source,
+            'utm_medium'       => $checkout->utm_medium,
+            'utm_campaign'     => $checkout->utm_campaign,
+            'utm_term'         => $checkout->utm_term,
+            'utm_content'      => $checkout->utm_content,
         ];
     }
 }
