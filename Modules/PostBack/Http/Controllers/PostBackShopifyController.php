@@ -85,7 +85,6 @@ class PostBackShopifyController extends Controller
                                          'description'                => $description,
                                          'price'                      => $variant['price'],
                                          'status'                     => '1',
-                                         'carrier'                    => '2',
                                          'installments_amount'        => '12',
                                          'installments_interest_free' => '1',
                                      ]);
