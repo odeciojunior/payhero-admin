@@ -58,11 +58,13 @@ $(document).ready(function () {
                             dados += "<td><img src='/modules/global/assets/img/cartoes/amex.png' style='width: 60px'></td>";
                         } else if (value.brand == 'diners') {
                             dados += "<td><img src='/modules/global/assets/img/cartoes/diners.png' style='width: 60px'></td>";
+                        } else if (value.brand == 'elo') {
+                            dados += "<td><img src='/modules/global/assets/img/cartoes/elo.png' style='width: 60px'></td>";
                         } else {
                             dados += "<td><img src='/modules/global/assets/img/cartoes/generico.png' style='width: 60px'></td>";
                         }
                     }
-
+ 
                     if (value.status == '1') {
                         dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
                     } else if (value.status == '3') {
