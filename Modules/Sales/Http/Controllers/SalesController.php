@@ -339,7 +339,7 @@ class SalesController extends Controller
     public function getSales(Request $request)
     {
         try {
-            $sales = $this->getSaleModel()->where([['owner', auth()->user()->id], ['status', '!=', 3]]);
+            $sales = $this->getSaleModel()->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status','!=',10]]);
 
             if ($request->projeto != '') {
                 $plans    = $this->getPlan()->where('project', $request->projeto)->pluck('id');
