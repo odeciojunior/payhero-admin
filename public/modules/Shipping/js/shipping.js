@@ -14,8 +14,12 @@ $(document).ready(function () {
             var selected = $("#shipping-type").val();
             if (selected === 'static') {
                 $("#value-shipping-row").css('display', 'block');
+                $("#zip-code-origin-shipping-row").css('display', 'none');
+
             } else {
                 $("#value-shipping-row").css('display', 'none');
+                $("#zip-code-origin-shipping-row").css('display', 'block');
+
             }
 
             //mask money
