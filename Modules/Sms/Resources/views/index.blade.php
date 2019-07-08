@@ -15,9 +15,8 @@
             <thead>
                 <tr>
                     <td class='table-title'>Evento</td>
-                    {{--<td class='table-title'>Tempo</td>--}}
-                    {{--<td class='table-title'>Período</td>--}}
-                    <td class='table-title'>Mensagem</td>
+                    <td class='table-title'>Tempo</td>
+                    <td class='table-title'>Período</td>
                     <td class='table-title'>Status</td>
                 </tr>
             </thead>

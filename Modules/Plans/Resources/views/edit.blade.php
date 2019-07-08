@@ -34,7 +34,7 @@
                 <div id="products">
                     @if(count($productPlans) > 0)
                         @foreach($productPlans as $key => $productPlan)
-                            <div id="products_div_1" class="row">
+                            <div id="produtos_div_1" class="row">
                                 <div class="form-group col-xl-8">
                                     <label>Produtos do plano:</label>
                                     {{--<select id="product_{{ $key + 1 }}" name="product_{{ $key + 1 }}" class="form-control">--}}
@@ -55,7 +55,7 @@
                             </div>
                         @endforeach
                     @else
-                        <div id="products_div_1" class="row">
+                        <div id="produtos_div_1" class="row">
                             <div class="form-group col-xl-8">
                                 <label>Produtos do plano:</label>
                                 {{--<select id="product_1" name="product_1" class="form-control">--}}

@@ -41,7 +41,7 @@
                 </div>  --}}
 
                 <div id="products">
-                    <div id="products_div_1" class="row">
+                    <div id="produtos_div_1" class="row">
                         <div class='col-xl-8'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>
