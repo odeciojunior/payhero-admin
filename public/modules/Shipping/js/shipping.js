@@ -68,9 +68,9 @@ $(document).ready(function () {
                         contentType: false,
                         cache: false,
                         error: function (response) {
-                            if (response.status === 422) {
-                                for (error in response.errors) {
-                                    alertCustom('error', String(response.errors[error]));
+                            if (response.status == '422') {
+                                for (error in response.responseJSON.errors) {
+                                    alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
                             }
                         },
@@ -195,6 +195,15 @@ $(document).ready(function () {
                             $("#modal-add-body").html(response);
                             $('#shipping-zip-code-origin').mask('00000-000');
 
+                            if ($("#shipping-type").val() == 'static') {
+                                $("#value-shipping-row").css('display', 'block');
+                                $("#zip-code-origin-shipping-row").css('display', 'none');
+
+                            } else {
+                                $("#value-shipping-row").css('display', 'none');
+                                $("#zip-code-origin-shipping-row").css('display', 'block');
+
+                            }
                             changeType();
                             $('#shipping-value').mask('#.###,#0', {reverse: true});
 
@@ -212,7 +221,7 @@ $(document).ready(function () {
                                     processData: false,
                                     contentType: false,
                                     cache: false,
-                                    error: function () {
+                                    error: function (response) {
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));

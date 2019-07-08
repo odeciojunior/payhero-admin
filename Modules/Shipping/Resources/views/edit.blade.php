@@ -16,7 +16,7 @@
                 </div>
                 <div class='row'>
                     <div class='form-group col-12'>
-                        <label for='name'>Descrição</label>
+                        <label for='name'>Descrição no Checkout</label>
                         <input name='name' type='text' id='shipping-name' class='form-control' value='{{$shipping->name}}' placeholder='PAC'>
                     </div>
                 </div>

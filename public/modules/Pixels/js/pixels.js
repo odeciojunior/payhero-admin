@@ -60,7 +60,11 @@ $(function () {
                         error: function (data) {
                             $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
-                            alertCustom('error', 'Ocorreu algum erro');
+                            if (data.status == '422') {
+                                for (error in data.responseJSON.errors) {
+                                    alertCustom('error', String(data.responseJSON.errors[error]));
+                                }
+                            }
                         }, success: function () {
                             $(".loading").css("visibility", "hidden");
                             alertCustom("success", "Pixel Adicionado!");
@@ -182,7 +186,7 @@ $(function () {
                                         purchase_card: $("#purchase_card").val(),
 
                                     },
-                                    error: function () {
+                                    error: function (response) {
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));

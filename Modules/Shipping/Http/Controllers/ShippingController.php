@@ -82,10 +82,10 @@ class ShippingController extends Controller
      * @param ShippingStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ShippingStoreRequest $request)
     {
         try {
-            $shippingValidated = $request->all();
+            $shippingValidated = $request->validated();
             if ($shippingValidated) {
                 $shippingValidated['project'] = current(Hashids::decode($shippingValidated['project']));
                 if ($shippingValidated['pre_selected']) {

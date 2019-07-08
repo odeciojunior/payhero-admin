@@ -13,11 +13,12 @@ class ShippingStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'project'         => 'required',
             "type"            => "required|string",
             "name"            => "required|string",
             "information"     => "required|string",
             "value"           => "nullable|string",
-            "zip_code_origin" => "required|string",
+            "zip_code_origin" => "nullable|string",
             "status"          => "required",
             "pre_selected"    => "required",
             'project'         => 'required',

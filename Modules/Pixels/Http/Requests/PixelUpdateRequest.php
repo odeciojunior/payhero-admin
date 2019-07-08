@@ -25,6 +25,14 @@ class PixelUpdateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'name.required'     => 'O campo Nome é obrigatório',
+            'code.required'     => 'O campo Código é obrigatório',
+            'platform.required' => 'O campo Plataforma é obrigatório',
+        ];
+    }
     /**
      * Determine if the user is authorized to make this request.
      * @return bool

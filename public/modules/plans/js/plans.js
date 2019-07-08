@@ -232,7 +232,7 @@ $(function () {
                                     processData: false,
                                     contentType: false,
                                     cache: false,
-                                    error: function () {
+                                    error: function (response) {
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));

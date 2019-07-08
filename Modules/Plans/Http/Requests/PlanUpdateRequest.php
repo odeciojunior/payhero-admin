@@ -22,6 +22,17 @@ class PlanUpdateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'name.required'            => 'O campo Nome é obrigatório',
+            'price.required'           => 'O campo Preço é obrigatório',
+            'description.required'     => 'O campo Descrição é obrigatório',
+            'products.required'        => 'O campo Produtos de origem é obrigatório',
+            'product_amounts.required' => 'O campo Quantidade é obrigatório',
+        ];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      * @return bool

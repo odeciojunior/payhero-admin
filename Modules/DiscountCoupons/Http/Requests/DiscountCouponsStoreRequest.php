@@ -22,6 +22,16 @@ class DiscountCouponsStoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'name.required'  => 'O campo Nome é obrigatório',
+            'type.required'  => 'O campo Tipo é obrigatório',
+            'value.required' => 'O campo Valor é obrigatório',
+            'code.required'  => 'O campo Código de origem é obrigatório',
+        ];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      * @return bool
