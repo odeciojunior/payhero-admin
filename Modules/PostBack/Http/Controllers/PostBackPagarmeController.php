@@ -29,12 +29,11 @@ class PostBackPagarmeController extends Controller {
         $requestData = $request->all();
 
         PostbackLog::create([
-            'origin' => 1,
-            'data'   => json_encode($requestData)
+            'origin'      => 1,
+            'data'        => json_encode($requestData),
+            'description' => 'pagarme'
         ]);
 
-        Log::write('info', 'retorno do pagar.me : '. print_r($requestData, true));
- 
         if(isset($requestData['event']) && $requestData['event'] = 'transaction_status_changed'){
 
             $sale = Sale::find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
@@ -44,7 +43,6 @@ class PostBackPagarmeController extends Controller {
                 return 'sucesso';
             }
 
-            Log::write('info', 'alterando dados da venda : '. $sale['id']);
 
             if($requestData['transaction']['status'] == $sale['gateway_status']){
                 return 'sucesso';

@@ -31,8 +31,9 @@ class PostBackEbanxController extends Controller {
         $requestData = $request->all();
 
         PostbackLog::create([
-            'origin' => 1,
-            'data'   => json_encode($requestData)
+            'origin'      => 1,
+            'data'        => json_encode($requestData),
+            'description' => 'ebanx'
         ]);
 
         Config::set([

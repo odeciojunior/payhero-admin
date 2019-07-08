@@ -20,9 +20,9 @@ class PostbackLog extends Model
      */
     protected $keyType = 'integer';
 
-    /** 
+    /**
      * @var array
      */
-    protected $fillable = ['origin', 'data', 'created_at', 'updated_at'];
+    protected $fillable = ['origin', 'data', 'description', 'created_at', 'updated_at'];
 
 }

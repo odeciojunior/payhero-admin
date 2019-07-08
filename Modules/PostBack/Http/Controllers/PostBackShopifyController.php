@@ -20,8 +20,9 @@ class PostBackShopifyController extends Controller
         $requestData = $request->all();
 
         PostbackLog::create([
-            'origin' => 1,
-            'data'   => json_encode($requestData)
+            'origin'      => 1,
+            'data'        => json_encode($requestData),
+            'description' => 'shopify'
         ]);
 
         $project = Project::find(Hashids::decode($request->project_id)[0]);
