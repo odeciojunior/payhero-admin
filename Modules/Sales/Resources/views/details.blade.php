@@ -4,7 +4,7 @@
         Pagamento via {{$sale->payment_method == 2 ? 'Boleto' : 'Cartão ' . $sale->flag  }} em {{ $sale->start_date}} às {{$sale->hours}}
     </p>
     <div class="status d-inline">
-        <img style="width: 50px;" src="{{$sale->flag_image}}">
+        <img style="width: 50px;" src="{{asset('/modules/global/assets/img/cartoes/'. $sale->flag. '.png')}}">
         @if($sale->status == 1)
             <span class='badge badge-success'>Aprovada</span></td>
         @elseif($sale->status == 2)
@@ -54,6 +54,14 @@
         <div class="col-lg-6 text-right">
             <span class="text-muted ft-12"> R$ {{$shipment_value}} </span>
         </div>
+        @if(isset($sale->dolar_quotation))
+            <div class="col-lg-6">
+                <span class="text-muted ft-12"> IOF </span>
+            </div>
+            <div class="col-lg-6 text-right">
+                <span class="text-muted ft-12"> R$ {{$sale->iof}} </span>
+            </div>
+        @endif
         <div class="col-lg-6">
             <span class="text-muted ft-12"> Desconto</span>
         </div>
@@ -76,14 +84,12 @@
                 <span class='text-muted ft-12'>US$ {{$taxa}}</span>
             </div>
         @endif
-        
         <div class='col-lg-8'>
-            <span class='text-muted ft-12'>Taxas (6,5% + {{isset($sale->dolar_quotation) ? 'US$ 0,25' : 'R$ 1,00'   }}): </span>
+            <span class='text-muted ft-12'>Taxas ({{$transaction->percentage_rate}}% + {{$transaction->transaction_rate}}): </span>
         </div>
         <div class='col-lg-4 text-right'>
             <span class='text-muted ft-12'>{{$taxaReal ?? ''}}</span>
         </div>
-
         <div class='col-lg-6'>
             <h4 class='table-title'>Comissão: </h4>
         </div>

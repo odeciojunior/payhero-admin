@@ -186,6 +186,8 @@ class CartRecoveryController extends Controller
                     }
                 }
 
+
+
                 $domain = $this->getDomainModel()->where([['status', 3], ['project_id', $checkout->project]])->first();
                 $link   = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
 
