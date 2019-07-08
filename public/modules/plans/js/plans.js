@@ -33,28 +33,28 @@ $(function () {
 
                 //product
                 $('#price').mask('#.###,#0', {reverse: true});
-                var qtd_produtos = '1';
+                var qtd_products = '1';
 
-                var div_produtos = $('#produtos_div_' + qtd_produtos).parent().clone();
+                var div_products = $('#products_div_' + qtd_products).parent().clone();
 
                 $('#add_product_plan').on('click', function () {
 
-                    qtd_produtos++;
+                    qtd_products++;
 
-                    var nova_div = div_produtos.clone();
-                    var opt = nova_div.find('option:selected');
+                    var new_div = div_products.clone();
+                    var opt = new_div.find('option:selected');
                     opt.remove();
-                    var select = nova_div.find('select');
-                    var input = nova_div.find('.products_amount');
+                    var select = new_div.find('select');
+                    var input = new_div.find('.products_amount');
 
                     // select.attr('id', 'product_' + qtd_produtos);
                     // select.attr('name', 'product_' + qtd_produtos);
                     // input.attr('name', 'products_amount_' + qtd_produtos);
                     input.addClass('products_amount');
 
-                    div_produtos = nova_div;
+                    div_products = new_div;
 
-                    $('#products').append('<div class="">' + nova_div.html() + '</div>');
+                    $('#products').append('<div class="">' + new_div.html() + '</div>');
                     $('.products_amount').mask('0#');
 
 
@@ -193,28 +193,28 @@ $(function () {
 
                             //product
                             $('#plan-price').mask('#.###,#0', {reverse: true});
-                            var qtd_produtos = '1';
+                            var qtd_products = '1';
 
-                            var div_produtos = $('#produtos_div_1').clone();
+                            var div_products = $('#products_div_1').clone();
 
                             $('#add_product_plan').on('click', function () {
 
-                                qtd_produtos++;
+                                qtd_products++;
 
-                                var nova_div = div_produtos.clone();
-                                var opt = nova_div.find('option:selected');
+                                var new_div = div_products.clone();
+                                var opt = new_div.find('option:selected');
                                 opt.remove();
-                                var select = nova_div.find('select');
-                                var input = nova_div.find('.products_amount');
+                                var select = new_div.find('select');
+                                var input = new_div.find('.products_amount');
 
                                 // select.attr('id', 'product_' + qtd_produtos);
                                 // select.attr('name', 'product_' + qtd_produtos);
                                 // input.attr('name', 'products_amount_' + qtd_produtos);
                                 input.addClass('products_amount');
 
-                                div_produtos = nova_div;
+                                div_products = new_div;
 
-                                $('#products').append('<div class="row">' + nova_div.html() + '</div>');
+                                $('#products').append('<div class="row">' + new_div.html() + '</div>');
                                 $('.products_amount').mask('0#');
 
                             });

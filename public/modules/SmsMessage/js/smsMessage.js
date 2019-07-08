@@ -76,8 +76,8 @@ $(function () {
                 data = '';
                 data += '<tr>';
                 data += '<td class="shipping-id " style="vertical-align: middle;">Boleto gerado</td>';
-                data += '<td class="shipping-type " style="vertical-align: middle;">0</td>';
-                data += '<td class="shipping-value " style="vertical-align: middle;">minutos</td>';
+                // data += '<td class="shipping-type " style="vertical-align: middle;">0</td>';
+                // data += '<td class="shipping-value " style="vertical-align: middle;">minutos</td>';
                 data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, não esqueça de pagar seu boleto para enviarmos seu pedido! {url_boleto}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
@@ -96,8 +96,8 @@ $(function () {
                 data += '';
                 data += '<tr>';
                 data += '<td class="shipping-id " style="vertical-align: middle;">Boleto vencendo</td>';
-                data += '<td class="shipping-type " style="vertical-align: middle;">0</td>';
-                data += '<td class="shipping-value " style="vertical-align: middle;">minutos</td>';
+                // data += '<td class="shipping-type " style="vertical-align: middle;">0</td>';
+                // data += '<td class="shipping-value " style="vertical-align: middle;">minutos</td>';
                 data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! {url_boleto}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
