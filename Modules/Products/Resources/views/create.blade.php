@@ -143,7 +143,7 @@
                                             <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
                                         </div>
                                         <div class="form-group col-lg-12 text-right">
-                                            <button type="submit" class="btn btn-success">Salvar</button>
+                                            <button type="submit" class="btn btn-success btnSave">Salvar</button>
                                         </div>
                                     </div>
                                 </div>

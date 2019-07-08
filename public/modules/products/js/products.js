@@ -40,7 +40,7 @@ $(document).ready(function () {
 
                 $('#previewimage').imgAreaSelect({
                     x1: x1, y1: y1, x2: x2, y2: y2,
-                    aspectRatio: '1:1', 
+                    aspectRatio: '1:1',
                     handles: true,
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
@@ -62,17 +62,17 @@ $(document).ready(function () {
 
     $('.money').mask('#.###,#0', {reverse: true});
 
-    $("#shipping").on("change", function(){
+    $("#shipping").on("change", function () {
 
-        if($(this).val() == 'proprio'){
+        if ($(this).val() == 'proprio') {
             $("#div_carrier_id").hide();
         }
-        else{
+        else {
             $("#div_carrier_id").show();
         }
     });
 
-    $('input[type=radio][name=format]').change(function() {
+    $('input[type=radio][name=format]').change(function () {
         if (this.value == '1') {
             $("#nav-logistic-tab").show();
             $("#div_next_step").show();
@@ -87,9 +87,15 @@ $(document).ready(function () {
         }
     });
 
-    $("#next_step").on("click", function(){
+    $("#next_step").on("click", function () {
         $("#nav-logistic-tab").click();
         $("#previewimage").imgAreaSelect({remove: true});
+    });
+    $(".btnSave").on("click", function () {
+        var name = $('#name').val();
+        if (name == '') {
+            alertCustom("error", "O campo Nome é obrigatório");
+        }
     });
 
 });

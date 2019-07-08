@@ -151,7 +151,7 @@
                                                 <label for="id_shipping">ID na Transportadora:</label>
                                                 <input type="text" class="input-pad" id="carrier_id" placeholder="ID do seu produto na transportadora" data-mask="0#">
                                             </div>
-                                            <div class="form-group col-lg-12 text-right">
+                                            <div class="form-group col-lg-12 text-right btnSave">
                                                 <button type="submit" class="btn btn-success">Atualizar</button>
                                             </div>
                                         </div>
