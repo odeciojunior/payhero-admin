@@ -34,7 +34,7 @@ class PostBackShopifyController extends Controller
 
         foreach($requestData['variants'] as $variant) {
 
-            $plan = Plan::where([
+            $plan = Plan::with('products')->where([
                                     ['shopify_variant_id', $variant['id']],
                                     ['project', $project->id],
                                 ])->first();
@@ -57,11 +57,49 @@ class PostBackShopifyController extends Controller
 
             if ($plan) {
                 $plan->update([
-                                  'name'        => substr($requestData['title'], 0, 100),
-                                  'price'       => $variant['price'],
-                                  'description' => $description,
-                                  'code'        => Hashids::encode($plan->id),
-                              ]);
+                                'name'        => substr($requestData['title'], 0, 100),
+                                'price'       => $variant['price'],
+                                'description' => $description,
+                                'code'        => Hashids::encode($plan->id),
+                            ]);
+
+                $product = $plan->getRelation('products')[0];
+
+                if (count($requestData['variants']) > 1) {
+                    foreach ($requestData['images'] as $image) {
+
+                        foreach ($image['variant_ids'] as $variantId) {
+                            if ($variantId == $variant['id']) {
+
+                                try{
+                                    if ($image['src'] != '') {
+                                        $product->update([
+                                                            'photo' => $image['src'],
+                                                        ]);
+                                    } else {
+                                        $product->update([
+                                                            'photo' => $requestData['image']['src'],
+                                                        ]);
+                                    }
+                                } catch (\Exception $e) {
+                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
+                                    report($e);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    try{
+                        $product->update([
+                                            'photo' => $requestData['image']['src'],
+                                        ]);
+                    }
+                    catch (\Exception $e) {
+                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
+                        report($e);
+                    }
+                }
+
             } else {
                 $userProject = UserProject::where([
                                                       ['project', $project['id']],
@@ -111,7 +149,7 @@ class PostBackShopifyController extends Controller
                                                         ]);
                                     }
                                 } catch (\Exception $e) {
-                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify');
+                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
                                     report($e);
                                 }
                             }
@@ -124,7 +162,7 @@ class PostBackShopifyController extends Controller
                                         ]);
                     }
                     catch (\Exception $e) {
-                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify');
+                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
                         report($e);
                     }
                 }
