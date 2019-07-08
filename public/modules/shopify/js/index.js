@@ -1,7 +1,7 @@
-$(document).ready( function(){
+$(document).ready(function () {
 
     var p = $("#previewimage");
-    $("#foto").on("change", function(){
+    $("#foto").on("change", function () {
 
         var imageReader = new FileReader();
         imageReader.readAsDataURL(document.getElementById("foto").files[0]);
@@ -9,7 +9,7 @@ $(document).ready( function(){
         imageReader.onload = function (oFREvent) {
             p.attr('src', oFREvent.target.result).fadeIn();
 
-            p.on('load', function(){
+            p.on('load', function () {
 
                 var img = document.getElementById('previewimage');
                 var x1, x2, y1, y2;
@@ -19,15 +19,14 @@ $(document).ready( function(){
                     y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
                     x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
                     x2 = x1 + (y2 - y1);
-                }
-                else {
+                } else {
                     if (img.naturalWidth < img.naturalHeight) {
-                        x1 = Math.floor(img.naturalWidth / 100 * 10);;
+                        x1 = Math.floor(img.naturalWidth / 100 * 10);
+                        ;
                         x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
                         y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
                         y2 = y1 + (x2 - x1);
-                    }
-                    else {
+                    } else {
                         x1 = Math.floor(img.naturalWidth / 100 * 10);
                         x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
                         y1 = Math.floor(img.naturalHeight / 100 * 10);
@@ -59,14 +58,14 @@ $(document).ready( function(){
 
     });
 
-    $("#selecionar_foto").on("click", function(){
+    $("#selecionar_foto").on("click", function () {
         $("#foto").click();
     });
 
-    $("#bt_adicionar_integracao").on("click", function(){
+    $("#bt_adicionar_integracao").on("click", function () {
 
-        if($('#token').val() == '' || $('#url_store').val() == '' || $('#foto_projeto').val() == '' || $('#company').val() == ''){
-            alertPersonalizado('error','Dados informados inválidos');
+        if ($('#token').val() == '' || $('#url_store').val() == '' || $('#foto_projeto').val() == '' || $('#company').val() == '') {
+            alertPersonalizado('error', 'Dados informados inválidos');
             return false;
         }
         $('.loading').css("visibility", "visible");
@@ -83,27 +82,23 @@ $(document).ready( function(){
             contentType: false,
             cache: false,
             data: form_data,
-            error: function(){
+            error: function (response) {
                 $('.loading').css("visibility", "hidden");
-                alertPersonalizado('error','Ocorreu algum erro');
-                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+                alertPersonalizado('error', response.message);//'Ocorreu algum erro'
+                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
             },
-            success: function(data){
+            success: function (response) {
                 $('.loading').css("visibility", "hidden");
-                if(data == 'Sucesso'){
-                  alertPersonalizado('success','Integração adicionada!');
-                  window.location.reload(true); 
-                }
-                else{
-                  alertPersonalizado('error',data);
-                }
-                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove:true});
+                alertPersonalizado('success', response.message);
+                window.location.reload(true);
+
+                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
             },
         });
 
     });
 
-    function alertPersonalizado(tipo, mensagem){
+    function alertPersonalizado(tipo, mensagem) {
 
         swal({
             position: 'bottom',
@@ -114,6 +109,5 @@ $(document).ready( function(){
             timer: 6000
         });
     }
-
 
 });

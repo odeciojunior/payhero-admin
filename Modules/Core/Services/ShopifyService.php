@@ -27,6 +27,9 @@ class ShopifyService
      * @var Client
      */
     private $client;
+    /**
+     * @var
+     */
     private $theme;
 
     /**
@@ -36,7 +39,7 @@ class ShopifyService
      */
     public function __construct(string $urlStore, string $token)
     {
-        if ($this->cacheDir) {
+        if (!$this->cacheDir) {
             $cache = './tmp';
         } else {
             $cache = $this->cacheDir;
@@ -94,13 +97,17 @@ class ShopifyService
 
     /**
      * @param $role
-     * @return $this
+     * @return bool
      */
     public function setThemeByRole($role)
     {
         $this->theme = $this->getThemeByRole($role);
 
-        return $this;
+        if ($this->theme) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -627,6 +634,20 @@ class ShopifyService
         if (!empty($this->client)) {
             return $this->client->getProductManager()
                                 ->findAll([]);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @param $shopifyItemId
+     * @return array|\Slince\Shopify\Manager\InventoryItem\InventoryItem
+     */
+    public function getShopInventoryItem($shopifyItemId)
+    {
+        if (!empty($this->client)) {
+            return $this->client->getInventoryItemManager()
+                                ->find($shopifyItemId);
         } else {
             return [];
         }

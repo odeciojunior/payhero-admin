@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\User;
+use Modules\Core\Services\ShopifyService;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
@@ -22,8 +23,19 @@ use Modules\Core\Services\DigitalOceanFileService;
 
 class TesteController extends Controller
 {
-    public function index() {
+    public function index()
+    {
+        //$dns = new Dns('goldskin24k.com');
 
+        //dd($dns->getRecords('MX'));
 
+        //dd(dns_get_record("goldskin24k.com", DNS_ANY, $authns, $addtl));
+        /*
+        $x = new ShopifyService('gercastore.myshopify.com', 'bb78f036e257b07b8cc535a54e82d777');
+        $x->deleteShopWebhook();
+
+        $z = $x->getShopWebhook();
+        dd($z);
+        */
     }
 }
