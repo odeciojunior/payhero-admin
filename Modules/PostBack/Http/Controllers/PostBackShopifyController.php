@@ -6,6 +6,7 @@ use App\Entities\Plan;
 use App\Entities\Product;
 use App\Entities\Project;
 use Illuminate\Http\Request;
+use App\Entities\PostbackLog;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
@@ -16,20 +17,21 @@ class PostBackShopifyController extends Controller
 {
     public function postBackListener(Request $request)
     {
-        $dados = $request->all();
+        $requestData = $request->all();
+
+        PostbackLog::create([
+            'origin' => 1,
+            'data'   => json_encode($requestData)
+        ]);
 
         $project = Project::find(Hashids::decode($request->project_id)[0]);
 
         if (!$project) {
-            Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
-
+            Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
             return 'error';
-        } else {
-            Log::write('info', 'retorno do shopify (webhook products) referente ao projeto ' . $project->id);
-            Log::write('info', 'dados : ' . print_r($dados, true) );
         }
 
-        foreach ($dados['variants'] as $variant) {
+        foreach($requestData['variants'] as $variant) {
 
             $plan = Plan::where([
                                     ['shopify_variant_id', $variant['id']],
@@ -54,7 +56,7 @@ class PostBackShopifyController extends Controller
 
             if ($plan) {
                 $plan->update([
-                                  'name'        => substr($dados['title'], 0, 100),
+                                  'name'        => substr($requestData['title'], 0, 100),
                                   'price'       => $variant['price'],
                                   'description' => $description,
                                   'code'        => Hashids::encode($plan->id),
@@ -67,7 +69,7 @@ class PostBackShopifyController extends Controller
 
                 $product = Product::create([
                                                'user'        => $userProject->user,
-                                               'name'        => substr($dados['title'], 0, 100),
+                                               'name'        => substr($requestData['title'], 0, 100),
                                                'description' => $description,
                                                'guarantee'   => '0',
                                                'available'   => true,
@@ -79,10 +81,10 @@ class PostBackShopifyController extends Controller
                                            ]);
 
                 $plan = Plan::create([
-                                         'shopify_id'                 => $dados['id'],
+                                         'shopify_id'                 => $requestData['id'],
                                          'shopify_variant_id'         => $variant['id'],
                                          'project'                    => $project['id'],
-                                         'name'                       => substr($dados['title'], 0, 100),
+                                         'name'                       => substr($requestData['title'], 0, 100),
                                          'description'                => $description,
                                          'price'                      => $variant['price'],
                                          'status'                     => '1',
@@ -91,8 +93,8 @@ class PostBackShopifyController extends Controller
                     'code' => Hashids::encode($plan->id)
                 ]);
 
-                if (count($dados['variants']) > 1) {
-                    foreach ($dados['images'] as $image) {
+                if (count($requestData['variants']) > 1) {
+                    foreach ($requestData['images'] as $image) {
 
                         foreach ($image['variant_ids'] as $variantId) {
                             if ($variantId == $variant['id']) {
@@ -104,7 +106,7 @@ class PostBackShopifyController extends Controller
                                                         ]);
                                     } else {
                                         $product->update([
-                                                            'photo' => $dados['image']['src'],
+                                                            'photo' => $requestData['image']['src'],
                                                         ]);
                                     }
                                 } catch (\Exception $e) {
@@ -117,7 +119,7 @@ class PostBackShopifyController extends Controller
                 } else {
                     try{
                         $product->update([
-                                            'photo' => $dados['image']['src'],
+                                            'photo' => $requestData['image']['src'],
                                         ]);
                     }
                     catch (\Exception $e) {

@@ -10,6 +10,7 @@ use App\Entities\Company;
 use App\Entities\PlanSale;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
+use App\Entities\PostbackLog;
 use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Modules\Core\HotZapp\HotZapp;
@@ -26,6 +27,11 @@ class PostBackPagarmeController extends Controller {
     public function postBackListener(Request $request) {
 
         $requestData = $request->all();
+
+        PostbackLog::create([
+            'origin' => 1,
+            'data'   => json_encode($requestData)
+        ]);
 
         Log::write('info', 'retorno do pagar.me : '. print_r($requestData, true));
  
