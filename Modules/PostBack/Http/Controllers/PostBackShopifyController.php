@@ -6,6 +6,7 @@ use App\Entities\Plan;
 use App\Entities\Product;
 use App\Entities\Project;
 use Illuminate\Http\Request;
+use App\Entities\PostbackLog;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
@@ -16,22 +17,24 @@ class PostBackShopifyController extends Controller
 {
     public function postBackListener(Request $request)
     {
-        $dados = $request->all();
+        $requestData = $request->all();
+
+        PostbackLog::create([
+            'origin'      => 3,
+            'data'        => json_encode($requestData),
+            'description' => 'shopify'
+        ]);
 
         $project = Project::find(Hashids::decode($request->project_id)[0]);
 
         if (!$project) {
-            Log::write('info', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
-
+            Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
             return 'error';
-        } else {
-            Log::write('info', 'retorno do shopify (webhook products) referente ao projeto ' . $project->id);
-            Log::write('info', 'dados : ' . print_r($dados, true) );
         }
 
-        foreach ($dados['variants'] as $variant) {
+        foreach($requestData['variants'] as $variant) {
 
-            $plan = Plan::where([
+            $plan = Plan::with('products')->where([
                                     ['shopify_variant_id', $variant['id']],
                                     ['project', $project->id],
                                 ])->first();
@@ -54,45 +57,16 @@ class PostBackShopifyController extends Controller
 
             if ($plan) {
                 $plan->update([
-                                  'name'        => substr($dados['title'], 0, 100),
-                                  'price'       => $variant['price'],
-                                  'description' => $description,
-                                  'code'        => Hashids::encode($plan->id),
-                              ]);
-            } else {
-                $userProject = UserProject::where([
-                                                      ['project', $project['id']],
-                                                      ['type', 'producer'],
-                                                  ])->first();
+                                'name'        => substr($requestData['title'], 0, 100),
+                                'price'       => $variant['price'],
+                                'description' => $description,
+                                'code'        => Hashids::encode($plan->id),
+                            ]);
 
-                $product = Product::create([
-                                               'user'        => $userProject->user,
-                                               'name'        => substr($dados['title'], 0, 100),
-                                               'description' => $description,
-                                               'guarantee'   => '0',
-                                               'available'   => true,
-                                               'amount'      => '0',
-                                               'format'      => 1,
-                                               'category'    => 11,
-                                               'cost'        => '',
-                                               'shopify'     => '1'
-                                           ]);
+                $product = $plan->getRelation('products')[0];
 
-                $plan = Plan::create([
-                                         'shopify_id'                 => $dados['id'],
-                                         'shopify_variant_id'         => $variant['id'],
-                                         'project'                    => $project['id'],
-                                         'name'                       => substr($dados['title'], 0, 100),
-                                         'description'                => $description,
-                                         'price'                      => $variant['price'],
-                                         'status'                     => '1',
-                                     ]);
-                $plan->update([
-                    'code' => Hashids::encode($plan->id)
-                ]);
-
-                if (count($dados['variants']) > 1) {
-                    foreach ($dados['images'] as $image) {
+                if (count($requestData['variants']) > 1) {
+                    foreach ($requestData['images'] as $image) {
 
                         foreach ($image['variant_ids'] as $variantId) {
                             if ($variantId == $variant['id']) {
@@ -104,11 +78,11 @@ class PostBackShopifyController extends Controller
                                                         ]);
                                     } else {
                                         $product->update([
-                                                            'photo' => $dados['image']['src'],
+                                                            'photo' => $requestData['image']['src'],
                                                         ]);
                                     }
                                 } catch (\Exception $e) {
-                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify');
+                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
                                     report($e);
                                 }
                             }
@@ -117,11 +91,78 @@ class PostBackShopifyController extends Controller
                 } else {
                     try{
                         $product->update([
-                                            'photo' => $dados['image']['src'],
+                                            'photo' => $requestData['image']['src'],
                                         ]);
                     }
                     catch (\Exception $e) {
-                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify');
+                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
+                        report($e);
+                    }
+                }
+
+            } else {
+                $userProject = UserProject::where([
+                                                      ['project', $project['id']],
+                                                      ['type', 'producer'],
+                                                  ])->first();
+
+                $product = Product::create([
+                                               'user'        => $userProject->user,
+                                               'name'        => substr($requestData['title'], 0, 100),
+                                               'description' => $description,
+                                               'guarantee'   => '0',
+                                               'available'   => true,
+                                               'amount'      => '0',
+                                               'format'      => 1,
+                                               'category'    => 11,
+                                               'cost'        => '',
+                                               'shopify'     => '1'
+                                           ]);
+
+                $plan = Plan::create([
+                                         'shopify_id'                 => $requestData['id'],
+                                         'shopify_variant_id'         => $variant['id'],
+                                         'project'                    => $project['id'],
+                                         'name'                       => substr($requestData['title'], 0, 100),
+                                         'description'                => $description,
+                                         'price'                      => $variant['price'],
+                                         'status'                     => '1',
+                                     ]);
+                $plan->update([
+                    'code' => Hashids::encode($plan->id)
+                ]);
+
+                if (count($requestData['variants']) > 1) {
+                    foreach ($requestData['images'] as $image) {
+
+                        foreach ($image['variant_ids'] as $variantId) {
+                            if ($variantId == $variant['id']) {
+
+                                try{
+                                    if ($image['src'] != '') {
+                                        $product->update([
+                                                            'photo' => $image['src'],
+                                                        ]);
+                                    } else {
+                                        $product->update([
+                                                            'photo' => $requestData['image']['src'],
+                                                        ]);
+                                    }
+                                } catch (\Exception $e) {
+                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
+                                    report($e);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    try{
+                        $product->update([
+                                            'photo' => $requestData['image']['src'],
+                                        ]);
+                    }
+                    catch (\Exception $e) {
+                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
                         report($e);
                     }
                 }

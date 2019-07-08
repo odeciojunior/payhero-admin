@@ -228,20 +228,15 @@ class SalesController extends Controller
         try {
             $requestData = $request->all();
             if ($requestData['sale_id']) {
-                $sale = $this->getSaleModel()->find(current(Hashids::decode($requestData['sale_id'])));
+                $sale = $this->getSaleModel()->with([
+                                                        'transactions' => function($query) {
+                                                            $query->where('company', '!=', null)->first();
+                                                        },
+                                                    ])->find(current(Hashids::decode($requestData['sale_id'])));
 
                 $sale['hours']      = (new Carbon($sale['start_date']))->format('H:m:s');
                 $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
-
-                if ($sale->flag == 'visa') {
-                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/visa.png');
-                } else if ($sale->flag == 'mastercard') {
-                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/master.png');
-                } else if ($sale->payment_method == 2) {
-                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/boleto.png');
-                } else {
-                    $sale['flag_image'] = asset('modules/global/assets/img/cartoes/generico.png');
-                }
+                $sale['flag']       = isset($sale->flag) ? $sale->flag : 'boleto';
 
                 $client              = $this->getClient()->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
@@ -284,20 +279,19 @@ class SalesController extends Controller
                 } else {
                     $value = '000';
                 }
-                $comission = ($sale->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0);
+                $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0);
 
                 $taxa     = 0;
                 $taxaReal = 0;
-                if ($sale->dolar_quotation != 0) {
-                    $taxa = intval($total / $sale->dolar_quotation);
-                    //                    $taxaReal = intval($taxa) - intval($value);
-                    $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-                } else {
-                    $taxaReal = (intval($total / 100) * 6.5) + 100;
-                    $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
-                    //                    dd($taxaReal);
-                }
 
+                if ($sale->dolar_quotation != 0) {
+                    $taxa     = intval($total / $sale->dolar_quotation);
+                    $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
+                    $total += preg_replace('/[^0-9]/', '', $sale->iof);
+                } else {
+                    $taxaReal = (intval($total / 100) * $transaction->percentage_rate) + 100;
+                    $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
+                }
                 $details = view('sales::details', [
                     'sale'           => $sale,
                     'plans'          => $plans,
@@ -312,6 +306,7 @@ class SalesController extends Controller
                     'comission'      => $comission,
                     'taxa'           => number_format($taxa / 100, 2, ',', '.'),
                     'taxaReal'       => $taxaReal,
+                    'transaction'    => $transaction,
                 ]);
 
                 return response()->json($details->render());
@@ -339,7 +334,17 @@ class SalesController extends Controller
     public function getSales(Request $request)
     {
         try {
-            $sales = $this->getSaleModel()->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status','!=',10]]);
+
+            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+
+            $sales = $this->getSaleModel()
+                          ->with([
+                                     'clientModel', 'plansSales', 'plansSales.plan', 'plansSales.plan.products', 'plansSales.plan.projectId',
+                                     'transactions' => function($query) use ($userCompanies) {
+                                         $query->whereIn('company', $userCompanies);
+                                     },
+                                 ])
+                          ->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status', '!=', 10]]);
 
             if ($request->projeto != '') {
                 $plans    = $this->getPlan()->where('project', $request->projeto)->pluck('id');
@@ -348,8 +353,8 @@ class SalesController extends Controller
             }
 
             if ($request->comprador != '') {
-                $clientes = $this->getClient()->where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
-                $sales->whereIn('client', $clientes);
+                $customers = $this->getClient()->where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
+                $sales->whereIn('client', $customers);
             }
 
             if ($request->forma != '') {
@@ -371,9 +376,7 @@ class SalesController extends Controller
                 }
             }
 
-            $sales->orderBy('id', 'DESC');
-
-            return SalesResource::collection($sales->paginate(10));
+            return SalesResource::collection($sales->orderBy('id', 'DESC')->paginate(10));
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);

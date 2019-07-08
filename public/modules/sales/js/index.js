@@ -44,27 +44,7 @@ $(document).ready(function () {
                     dados += "<td>" + value.project + "</td>";
                     dados += "<td>" + value.product + "</td>";
                     dados += "<td>" + value.client + "</td>";
-
-                    if (value.method == '2') {
-                        dados += "<td><img src='/modules/global/assets/img/cartoes/boleto.png' style='width: 60px'></td>";
-                    } else {
-                        if (value.brand == 'mastercard') {
-                            dados += "<td><img src='/modules/global/assets/img/cartoes/master.png' style='width: 60px'></td>";
-                        } else if (value.brand == 'visa') {
-                            dados += "<td><img src='/modules/global/assets/img/cartoes/visa.png' style='width: 60px'></td>";
-                        } else if (value.brand == 'hipercard') {
-                            dados += "<td><img src='/modules/global/assets/img/cartoes/hiper.png' style='width: 60px'></td>";
-                        } else if (value.brand == 'amex') {
-                            dados += "<td><img src='/modules/global/assets/img/cartoes/amex.png' style='width: 60px'></td>";
-                        } else if (value.brand == 'diners') {
-                            dados += "<td><img src='/modules/global/assets/img/cartoes/diners.png' style='width: 60px'></td>";
-                        } else if (value.brand == 'elo') {
-                            dados += "<td><img src='/modules/global/assets/img/cartoes/elo.png' style='width: 60px'></td>";
-                        } else {
-                            dados += "<td><img src='/modules/global/assets/img/cartoes/generico.png' style='width: 60px'></td>";
-                        }
-                    }
- 
+                    dados += `<td><img src='/modules/global/assets/img/cartoes/${value.brand}.png'  style='width: 60px'></td>`;
                     if (value.status == '1') {
                         dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
                     } else if (value.status == '3') {
@@ -76,7 +56,6 @@ $(document).ready(function () {
                     } else {
                         dados += "<td><span class='badge badge-primary'>" + value.status + "</span></td>";
                     }
-
                     dados += "<td>" + value.start_date + "</td>";
                     dados += "<td>" + value.end_date + "</td>";
                     dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";

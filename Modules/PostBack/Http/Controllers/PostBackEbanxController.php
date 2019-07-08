@@ -11,6 +11,7 @@ use App\Entities\Company;
 use App\Entities\PlanSale;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
+use App\Entities\PostbackLog;
 use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Modules\Core\HotZapp\HotZapp;
@@ -25,9 +26,15 @@ class PostBackEbanxController extends Controller {
 
     public function postBackListener(Request $request){
 
+        date_default_timezone_set('America/Sao_Paulo');
+
         $requestData = $request->all();
 
-        Log::write('info', 'Notificação do Ebanx : '. print_r($requestData, true));
+        PostbackLog::create([
+            'origin'      => 1,
+            'data'        => json_encode($requestData),
+            'description' => 'ebanx'
+        ]);
 
         Config::set([
             'integrationKey' => 'live_ik_mTLNBPdU-RmtpVW6FTF0Ug',

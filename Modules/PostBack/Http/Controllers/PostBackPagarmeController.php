@@ -10,6 +10,7 @@ use App\Entities\Company;
 use App\Entities\PlanSale;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
+use App\Entities\PostbackLog;
 use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Modules\Core\HotZapp\HotZapp;
@@ -27,8 +28,12 @@ class PostBackPagarmeController extends Controller {
 
         $requestData = $request->all();
 
-        Log::write('info', 'retorno do pagar.me : '. print_r($requestData, true));
- 
+        PostbackLog::create([
+            'origin'      => 2,
+            'data'        => json_encode($requestData),
+            'description' => 'pagarme'
+        ]);
+
         if(isset($requestData['event']) && $requestData['event'] = 'transaction_status_changed'){
 
             $sale = Sale::find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
@@ -38,7 +43,6 @@ class PostBackPagarmeController extends Controller {
                 return 'sucesso';
             }
 
-            Log::write('info', 'alterando dados da venda : '. $sale['id']);
 
             if($requestData['transaction']['status'] == $sale['gateway_status']){
                 return 'sucesso';
