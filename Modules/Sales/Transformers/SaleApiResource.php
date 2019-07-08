@@ -51,6 +51,7 @@ class SaleApiResource extends Resource
         foreach ($plansSale as $planSale) {
             $plano   = Plan::find($planSale['plan']);
             $product = [];
+            $product['sku'] = $plano['id'];
             $product['name'] = $plano['name'];
             $product['amount'] = $planSale['amount'];
             $product['price'] = $planSale['plan_value'];

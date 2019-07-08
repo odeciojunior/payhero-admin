@@ -101,14 +101,7 @@ class SalesApiController extends Controller
      */
     public function index($data)
     {
-        //1 - aprovado
-        //2 - pendente
-        //3 - cancelado
-        //4 - chargeback
-        //10 - systemerror
-
         try {
-            $requestData = $data;
             if ($data == 'M9NBQY3P') {
 
                 $userZmDeals = $this->getUserModel()->where('email', 'fernandomuniz1337@gmail.com')->first();
@@ -127,9 +120,6 @@ class SalesApiController extends Controller
                 $sales->whereIn('id', $salePlan);
 
                 $sales->orderBy('id', 'DESC');
-
-                /* $client = $this->getClient()->find($sales->client);
-                 dd($client)*/
 
                 return SaleApiResource::collection($sales->get());
             } else {
