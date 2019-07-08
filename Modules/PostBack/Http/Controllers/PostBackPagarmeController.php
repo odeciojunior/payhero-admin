@@ -29,7 +29,7 @@ class PostBackPagarmeController extends Controller {
         $requestData = $request->all();
 
         PostbackLog::create([
-            'origin'      => 1,
+            'origin'      => 2,
             'data'        => json_encode($requestData),
             'description' => 'pagarme'
         ]);

@@ -20,7 +20,7 @@ class PostBackShopifyController extends Controller
         $requestData = $request->all();
 
         PostbackLog::create([
-            'origin'      => 1,
+            'origin'      => 3,
             'data'        => json_encode($requestData),
             'description' => 'shopify'
         ]);
