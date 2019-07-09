@@ -236,7 +236,13 @@ class SalesController extends Controller
 
                 $sale['hours']      = (new Carbon($sale['start_date']))->format('H:m:s');
                 $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
-                $sale['flag']       = isset($sale->flag) ? $sale->flag : 'boleto';
+                if ($sale->flag) {
+                    $sale['flag'] = $sale->flag;
+                } else if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
+                    $sale['flag'] = 'generico';
+                } else {
+                    $sale['flag'] = 'boleto';
+                }
 
                 $client              = $this->getClient()->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
@@ -287,7 +293,7 @@ class SalesController extends Controller
                 if ($sale->dolar_quotation != 0) {
                     $taxa     = intval($total / $sale->dolar_quotation);
                     $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
-                    $total += preg_replace('/[^0-9]/', '', $sale->iof);
+                    $total    += preg_replace('/[^0-9]/', '', $sale->iof);
                 } else {
                     $taxaReal = (intval($total / 100) * $transaction->percentage_rate) + 100;
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
