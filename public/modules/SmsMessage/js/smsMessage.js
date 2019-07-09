@@ -92,9 +92,9 @@ $(function () {
 
                 data += '</td>';
 
-                data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger details-sms' disabled  data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger edit-sms' disabled data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger delete-sms' disabled  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
 
                 data += '</tr>';
                 data += '';
@@ -112,9 +112,10 @@ $(function () {
 
                 data += '</td>';
 
-                data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger details-sms' disabled  data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger edit-sms' disabled data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger delete-sms' disabled data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
 
                 data += '</tr>';
                 $("#data-table-sms").append(data);

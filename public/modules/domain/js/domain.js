@@ -14,7 +14,7 @@ $(document).ready(function () {
 
     $("#add-domain").on('click', function () {
 
-        $("#modal-title").html('Cadastrar domínio');
+        $("#modal-title").html('Novo domínio');
 
         $.ajax({
             method: "GET",
@@ -30,8 +30,6 @@ $(document).ready(function () {
             success: function (response) {
 
                 $("#btn-modal").addClass('btn-save');
-                $("#btn-modal").text('Salvar');
-                $("#btn-modal").show();
 
                 $("#modal-add-body").html(response);
 
@@ -121,7 +119,7 @@ $(document).ready(function () {
 
                     var dominio = $(this).attr('domain');
 
-                    $("#modal-title").html('Detalhes do dominio <br><hr>');
+                    $("#modal-title").html('Detalhes do dominio');
                     var data = {dominioId: dominio};
 
                     $("#btn-modal").hide();
@@ -144,7 +142,7 @@ $(document).ready(function () {
                 $(".edit-domain").on("click", function () {
                     $("#modal-add-body").html("");
                     var dominio = $(this).attr('domain');
-                    $("#modal-title").html("Editar Domínio<br><hr>");
+                    $("#modal-title").html("Editar Domínio");
                     // $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
                     var data = {dominio: dominio};
                     $.ajax({
@@ -294,7 +292,7 @@ $(document).ready(function () {
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on("click", function () {
                         $("#fechar_modal_excluir").click();
-
+''
                         $.ajax({
                             method: "DELETE",
                             url: "/domains/" + dominio,

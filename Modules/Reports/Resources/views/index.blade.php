@@ -30,19 +30,20 @@
 
     <div class="page">
         <div class="page-header container">
-            @if($userProjects->count() > 0)
                 <div class="row">
                     <div class="col-12">
                         <h1 class="page-title">Relatórios</h1>
                         <span type="hidden" class="error-data"></span>
                     </div>
                 </div>
+        </div>
+
+        @if($userProjects->count() > 0)
                 <div class="page-content container">
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-3">
                             <div class="">
-                                <label for="project">Selecione o projeto:</label>
-                                <select id='project' class="form-control">
+                                <select id='project' class="form-control select-pad">
                                     @foreach($projects as $project)
                                         <option value='{{$project->id_code}}'>{{$project->name}}</option>
                                     @endforeach
@@ -52,17 +53,15 @@
                         <div class="col-9 align-items-baseline">
                             <div class="row justify-content-end align-items-center">
                                 <div class="input-group-prepend">
-                                    <div class="input-group-text px-1 px-md-2">
-                                        <svg class="icon-filtro" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                            <path d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z"></path>
-                                        </svg>
+                                    <div class="input-group-text px-1 px-md-2" style="background-color: none; border: none; margin-right: 10px;">
+                                        <i class="material-icons gradient"> calendar_today </i>
                                     </div>
-                                    <input id="date-filter" type="text" name="daterange" class="form-control pull-right" value="">
+                                    <input id="date-filter" type="text" name="daterange" class="form-control pull-right select-pad" value="">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="nav-tabs-line">
+                    <div class="nav-tabs-line mt-10">
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-vendas-tab" data-toggle="tab" href="#nav-vendas"
                                role="tab" aria-controls="nav-vendas" aria-selected="true">Vendas
@@ -406,7 +405,8 @@
                         </div>--}}
                     </div>
                 </div>
-            @else
+        @else
+
                 @push('css')
                     <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
                 @endpush

@@ -1,29 +1,28 @@
-<div class='page-content container-fluid'>
-    <table class='table-hover' style='width: 100%'>
+    <table class='table' style='width: 100%'>
         <tbody>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Tipo</th>
+            <tr >
+                <td  class="table-title">Tipo</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$shipping->type == 'static'? 'Estatico': $shipping->type == 'pac'? 'PAC - Caculado automaticamente' : 'SEDEX - Caculado automaticamente'}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Descrição</th>
+            <tr >
+                <td  class="table-title">Descrição</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$shipping->name}}</td>
                 <br>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>valor</th>
+            <tr >
+                <td  class="table-title">Valor</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$shipping->value == null? ' Calculado automaticamente' : $shipping->value}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Informação</th>
+            <tr >
+                <td  class="table-title">Informação</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$shipping->information}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Status</th>
+            <tr >
+                <td  class="table-title">Status</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>
                     @if($shipping->status == 1)
@@ -33,8 +32,8 @@
                     @endif
                 </td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Pré Selecionado</th>
+            <tr >
+                <td  class="table-title">Pré Selecionado</th>
                 <td style='width: 20px'></td>
                 <td class='text-left'>
                     @if($shipping->pre_selected == 1)

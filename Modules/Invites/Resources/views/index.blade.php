@@ -34,7 +34,7 @@
                                             @if($invites['status'] == $invites->getEnum('status', 'accepted'))
                                                 <span class='badge badge-success'>Aceito</span>
                                             @elseif($invites['status'] == $invites->getEnum('status','pending'))
-                                                <span class='badge badge-primary'>Pendente</span>
+                                                <span class='badge badge-pendente'>Pendente</span>
                                             @endif
                                         </td>
                                         <td class="text-center" style="vertical-align: middle">{!! $invites['register_date'] != '' ? $invites['register_date'] : 'Pendente' !!}</td>

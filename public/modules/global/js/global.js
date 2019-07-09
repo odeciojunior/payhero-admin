@@ -21,11 +21,13 @@ $(document).ready(function(){
     else if(current_url.includes('projects')){
         $("#projects_img").attr('src','/modules/global/assets/img/icon-red/projetos-d.svg');
         $("#projects_img").parent().parent().addClass('menu-active');
+        $("#projects-link").addClass('menu-active');
         $("#projects_img").css('height','28px').css('width','28px').css('margin-left','-5px');
     }
     else if(current_url.includes('products')){
         $("#products_img").attr('src','/modules/global/assets/img/icon-red/produtos-d.svg');
         $("#products_img").parent().parent().addClass('menu-active');
+        $("#products-link").addClass('menu-active');
         $("#products_img").css('height','28px').css('width','28px').css('margin-left','-5px');
     }
     else if(current_url.includes('atendimento')){

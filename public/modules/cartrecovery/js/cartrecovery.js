@@ -145,7 +145,7 @@ $(document).ready(function () {
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' disabled class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
 
             $("#pagination").append(pagina_atual);
         }
