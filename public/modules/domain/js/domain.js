@@ -104,9 +104,9 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger details-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger edit-domain'  domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle'><button class='btn btn-sm btn-outline btn-danger delete-domain'  domain='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle'><a role='button' class='details-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                    dados += "<td style='vertical-align: middle'><a role='button' class='edit-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>edit</i> </a></td>";
+                    dados += "<td style='vertical-align: middle'><a role='button' class='delete-domain pointer' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>delete_outline</i> </a></td>";
 
                     dados += '</tr>';
                     $("#domain-table-body").append(dados);

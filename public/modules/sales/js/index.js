@@ -192,7 +192,6 @@ $(document).ready(function () {
         $("#pagination").append(primeira_pagina);
 
         if (response.meta.current_page == '1') {
-            $("#primeira_pagina").attr('disabled', true);
             $("#primeira_pagina").addClass('nav-btn');
             $("#primeira_pagina").addClass('active');
         }
