@@ -16,6 +16,13 @@ class SalesResource extends Resource
 {
     public function toArray($request)
     {
+        if ($this->flag) {
+            $this->flag = $this->flag;
+        } else if ((!$this->flag || empty($this->flag)) && $this->payment_method == 1) {
+            $this->flag = 'generico';
+        } else {
+            $this->flag = 'boleto';
+        }
 
         return [
             'sale_code'  => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
