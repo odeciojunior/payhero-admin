@@ -5,39 +5,69 @@ namespace Modules\PostBack\Http\Controllers;
 use App\Entities\Plan;
 use App\Entities\Product;
 use App\Entities\Project;
+use App\Entities\ShopifyIntegration;
 use Illuminate\Http\Request;
 use App\Entities\PostbackLog;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\ShopifyService;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class PostBackShopifyController
+ * @package Modules\PostBack\Http\Controllers
+ */
 class PostBackShopifyController extends Controller
 {
+    /**
+     * @var ShopifyService
+     */
+    private $shopifyService;
+
+    /**
+     * @param string|null $urlStore
+     * @param string|null $token
+     * @return ShopifyService
+     */
+    private function getShopifyService(string $urlStore = null, string $token = null)
+    {
+        if (!$this->shopifyService) {
+            $this->shopifyService = new ShopifyService($urlStore, $token);
+        }
+
+        return $this->shopifyService;
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|string
+     */
     public function postBackListener(Request $request)
     {
         $requestData = $request->all();
 
         PostbackLog::create([
-            'origin'      => 3,
-            'data'        => json_encode($requestData),
-            'description' => 'shopify'
-        ]);
+                                'origin'      => 3,
+                                'data'        => json_encode($requestData),
+                                'description' => 'shopify',
+                            ]);
 
         $project = Project::find(Hashids::decode($request->project_id)[0]);
 
         if (!$project) {
             Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
+
             return 'error';
         }
 
-        foreach($requestData['variants'] as $variant) {
+        foreach ($requestData['variants'] as $variant) {
 
             $plan = Plan::with('products')->where([
-                                    ['shopify_variant_id', $variant['id']],
-                                    ['project', $project->id],
-                                ])->first();
+                                                      ['shopify_variant_id', $variant['id']],
+                                                      ['project', $project->id],
+                                                  ])->first();
 
             $description = '';
             try {
@@ -57,13 +87,27 @@ class PostBackShopifyController extends Controller
 
             if ($plan) {
                 $plan->update([
-                                'name'        => substr($requestData['title'], 0, 100),
-                                'price'       => $variant['price'],
-                                'description' => $description,
-                                'code'        => Hashids::encode($plan->id),
-                            ]);
+                                  'name'        => substr($requestData['title'], 0, 100),
+                                  'price'       => $variant['price'],
+                                  'description' => $description,
+                                  'code'        => Hashids::encode($plan->id),
+                              ]);
 
                 $product = $plan->getRelation('products')[0];
+
+                try {
+
+                    $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
+
+                    $shopify = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                }
+
+                $product->update([
+                                     'cost' => $shopify->getShopInventoryItem($variant["inventory_item_id"])
+                                                       ->getCost(),
+                                 ]);
 
                 if (count($requestData['variants']) > 1) {
                     foreach ($requestData['images'] as $image) {
@@ -71,15 +115,15 @@ class PostBackShopifyController extends Controller
                         foreach ($image['variant_ids'] as $variantId) {
                             if ($variantId == $variant['id']) {
 
-                                try{
+                                try {
                                     if ($image['src'] != '') {
                                         $product->update([
-                                                            'photo' => $image['src'],
-                                                        ]);
+                                                             'photo' => $image['src'],
+                                                         ]);
                                     } else {
                                         $product->update([
-                                                            'photo' => $requestData['image']['src'],
-                                                        ]);
+                                                             'photo' => $requestData['image']['src'],
+                                                         ]);
                                     }
                                 } catch (\Exception $e) {
                                     Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
@@ -89,17 +133,15 @@ class PostBackShopifyController extends Controller
                         }
                     }
                 } else {
-                    try{
+                    try {
                         $product->update([
-                                            'photo' => $requestData['image']['src'],
-                                        ]);
-                    }
-                    catch (\Exception $e) {
+                                             'photo' => $requestData['image']['src'],
+                                         ]);
+                    } catch (\Exception $e) {
                         Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
                         report($e);
                     }
                 }
-
             } else {
                 $userProject = UserProject::where([
                                                       ['project', $project['id']],
@@ -116,21 +158,21 @@ class PostBackShopifyController extends Controller
                                                'format'      => 1,
                                                'category'    => 11,
                                                'cost'        => '',
-                                               'shopify'     => '1'
+                                               'shopify'     => '1',
                                            ]);
 
                 $plan = Plan::create([
-                                         'shopify_id'                 => $requestData['id'],
-                                         'shopify_variant_id'         => $variant['id'],
-                                         'project'                    => $project['id'],
-                                         'name'                       => substr($requestData['title'], 0, 100),
-                                         'description'                => $description,
-                                         'price'                      => $variant['price'],
-                                         'status'                     => '1',
+                                         'shopify_id'         => $requestData['id'],
+                                         'shopify_variant_id' => $variant['id'],
+                                         'project'            => $project['id'],
+                                         'name'               => substr($requestData['title'], 0, 100),
+                                         'description'        => $description,
+                                         'price'              => $variant['price'],
+                                         'status'             => '1',
                                      ]);
                 $plan->update([
-                    'code' => Hashids::encode($plan->id)
-                ]);
+                                  'code' => Hashids::encode($plan->id),
+                              ]);
 
                 if (count($requestData['variants']) > 1) {
                     foreach ($requestData['images'] as $image) {
@@ -138,15 +180,15 @@ class PostBackShopifyController extends Controller
                         foreach ($image['variant_ids'] as $variantId) {
                             if ($variantId == $variant['id']) {
 
-                                try{
+                                try {
                                     if ($image['src'] != '') {
                                         $product->update([
-                                                            'photo' => $image['src'],
-                                                        ]);
+                                                             'photo' => $image['src'],
+                                                         ]);
                                     } else {
                                         $product->update([
-                                                            'photo' => $requestData['image']['src'],
-                                                        ]);
+                                                             'photo' => $requestData['image']['src'],
+                                                         ]);
                                     }
                                 } catch (\Exception $e) {
                                     Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
@@ -156,12 +198,11 @@ class PostBackShopifyController extends Controller
                         }
                     }
                 } else {
-                    try{
+                    try {
                         $product->update([
-                                            'photo' => $requestData['image']['src'],
-                                        ]);
-                    }
-                    catch (\Exception $e) {
+                                             'photo' => $requestData['image']['src'],
+                                         ]);
+                    } catch (\Exception $e) {
                         Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
                         report($e);
                     }
@@ -175,7 +216,7 @@ class PostBackShopifyController extends Controller
             }
         }
 
-        return 'success';
+        //return 'success';
+        return response()->json(['message' => 'success'], 200);
     }
-
 }

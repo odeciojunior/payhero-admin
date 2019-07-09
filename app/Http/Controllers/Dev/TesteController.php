@@ -25,17 +25,20 @@ class TesteController extends Controller
 {
     public function index()
     {
+        $x = new ShopifyService('gercastore.myshopify.com', 'bb78f036e257b07b8cc535a54e82d777');
+        //$x->deleteShopWebhook();
+
+        $z = $x->getShopWebhook();
+        dd($z);
+
+
         //$dns = new Dns('goldskin24k.com');
 
         //dd($dns->getRecords('MX'));
 
         //dd(dns_get_record("goldskin24k.com", DNS_ANY, $authns, $addtl));
         /*
-        $x = new ShopifyService('gercastore.myshopify.com', 'bb78f036e257b07b8cc535a54e82d777');
-        $x->deleteShopWebhook();
 
-        $z = $x->getShopWebhook();
-        dd($z);
         */
     }
 }
