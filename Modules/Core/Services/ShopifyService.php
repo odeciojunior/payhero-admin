@@ -239,6 +239,80 @@ class ShopifyService
     }
 
     /**
+     * @param string $templateKeyName
+     * @param string $value
+     * @param bool $ajax
+     * @return bool
+     * @throws \PHPHtmlParser\Exceptions\CircularException
+     */
+    public function insertUtmTracking(string $templateKeyName, string $value)
+    {
+        if (!empty($this->theme)) {
+
+            $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
+                "key"   => $templateKeyName,
+                "value" => $this->updateThemeTemplate($value),
+            ]);
+
+            if ($asset) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; //throwl
+        }
+    }
+
+    /**
+     * @param $html
+     * @return string
+     * @throws \PHPHtmlParser\Exceptions\CircularException
+     */
+    public function updateThemeTemplate($html)
+    {
+        $dom = new Dom;
+
+        $dom->setOptions([
+                             'removeScripts' => false,
+                         ]);
+
+        $dom->load($html);
+
+        $body = $dom->find('body');
+        $body = $body[0];
+
+        $divFoxScriptUtm = new HtmlNode('div');
+
+        $divFoxScriptUtm->setAttribute('id', 'foxScriptUtm');
+
+        $script = new HtmlNode('script');
+        $script->addChild(new TextNode("var url_string = window.location.href;
+var url = new URL(url_string);
+var src = url.searchParams.get('src');
+var utm_source = url.searchParams.get('utm_source');
+var utm_medium = url.searchParams.get('utm_medium');
+var utm_campaign = url.searchParams.get('utm_campaign');
+var utm_term = url.searchParams.get('utm_term');
+var utm_content = url.searchParams.get('utm_content');
+
+if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campaign != null) || (utm_term != null) || (utm_content != null) )
+{
+	var cookieName = '_landing_page';
+	var cookieValue = 'src='+src+'|'+'utm_source='+utm_source+'|'+'utm_medium='+utm_medium+'|'+'utm_campaign='+utm_campaign+'|'+'utm_term='+utm_term+'|'+'utm_content='+utm_content;
+	var myDate = new Date();
+	myDate.setMonth(myDate.getMonth() + 12);
+	
+	document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate; 
+}"));
+
+        $divFoxScriptUtm->addChild($script);
+        $body->addChild($divFoxScriptUtm);
+
+        return $dom->root->outerHtml();
+    }
+
+    /**
      * @param $htmlCart
      * @return mixed|string
      * @throws \PHPHtmlParser\Exceptions\CircularException
