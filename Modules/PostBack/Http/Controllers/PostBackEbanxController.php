@@ -63,7 +63,7 @@ class PostBackEbanxController extends Controller {
                 'gateway_status' => $response->payment->status,
             ]);
 
-            $transactions = Transaction::where('sale',$sale->id)->get()->toArray();
+            $transactions = Transaction::where('sale',$sale->id)->get();
 
             if($response->payment->status == 'CA'){
  
@@ -72,7 +72,7 @@ class PostBackEbanxController extends Controller {
                 ]);
 
                 foreach($transactions as $transaction){
-                    Transaction::find($transaction['id'])->update('status','cancelada');
+                    $transaction->update('status','canceled');
                 }
             }
 
@@ -86,13 +86,11 @@ class PostBackEbanxController extends Controller {
                     'status'         => '1'
                 ]);
 
-                foreach($transactions as $t){
+                foreach($transactions as $transaction){
 
-                    $transaction = Transaction::find($t['id']);
+                    if($transaction->company != null){
 
-                    if($transaction['company'] != null){
-
-                        $company = Company::find($transaction['company']);
+                        $company = Company::find($transaction->company);
 
                         $user = User::find($company['user_id']);
 
@@ -124,7 +122,7 @@ class PostBackEbanxController extends Controller {
                             'metaCacheDir' => './tmp'
                         ]);
 
-                        $transaction = $client->getTransactionManager()->create($sale['shopify_order'],[
+                        $client->getTransactionManager()->create($sale['shopify_order'],[
                             "kind"      => "capture",
                         ]);
 
