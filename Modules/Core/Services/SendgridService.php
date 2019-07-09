@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Services;
 
+use Illuminate\View\View;
+use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 use SendGrid;
 
 /**
@@ -271,6 +273,28 @@ class SendgridService
             }
         } else {
             return false;
+        }
+    }
+
+    public function sendEmail(View $view, $subject, $fromEmail, $fromName, $toEmail, $toName)
+    {
+        try {
+            $email = new \SendGrid\Mail\Mail();
+            $email->setFrom($fromEmail, $fromName);
+            $email->setSubject($subject);
+            $email->addTo($toEmail, $toName);
+            $email->addContent(
+                "text/html", $view->render()
+            );
+            $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+            try {
+                $response = $sendgrid->send($email);
+            } catch (Exception $e) {
+                return false;
+                echo 'Caught exception: ' . $e->getMessage() . "\n";
+            }
+        } catch (Exception $e) {
+            report($e);
         }
     }
 }

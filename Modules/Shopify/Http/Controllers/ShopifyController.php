@@ -4,6 +4,7 @@ namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\ShopifyService;
 use PHPHtmlParser\Dom;
 use App\Entities\Plan;
 use App\Entities\Company;
@@ -38,6 +39,34 @@ class ShopifyController extends Controller
      * @var DigitalOceanFileService
      */
     private $digitalOceanFileService;
+    /**
+     * @var ShopifyService
+     */
+    private $shopifyService;
+    /**
+     * @var Project
+     */
+    private $projectModel;
+    /**
+     * @var ShopifyIntegration
+     */
+    private $shopifyIntegrationModel;
+    /**
+     * @var UserProject
+     */
+    private $userProjectModel;
+    /**
+     * @var Product
+     */
+    private $productModel;
+    /**
+     * @var Plan
+     */
+    private $planModel;
+    /**
+     * @var ProductPlan
+     */
+    private $productPlanModel;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -49,6 +78,90 @@ class ShopifyController extends Controller
         }
 
         return $this->digitalOceanFileService;
+    }
+
+    /**
+     * @return ShopifyIntegration|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getShopifyIntegrationModel()
+    {
+        if (!$this->shopifyIntegrationModel) {
+            $this->shopifyIntegrationModel = app(ShopifyIntegration::class);
+        }
+
+        return $this->shopifyIntegrationModel;
+    }
+
+    /**
+     * @return Project|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getProjectModel()
+    {
+        if (!$this->projectModel) {
+            $this->projectModel = app(Project::class);
+        }
+
+        return $this->projectModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getPlanModel()
+    {
+        if (!$this->planModel) {
+            $this->planModel = app(Plan::class);
+        }
+
+        return $this->planModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getProductPlanModel()
+    {
+        if (!$this->productPlanModel) {
+            $this->productPlanModel = app(ProductPlan::class);
+        }
+
+        return $this->productPlanModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getProductModel()
+    {
+        if (!$this->productModel) {
+            $this->productModel = app(Product::class);
+        }
+
+        return $this->productModel;
+    }
+
+    /**
+     * @return UserProject|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getUserProjectModel()
+    {
+        if (!$this->userProjectModel) {
+            $this->userProjectModel = app(UserProject::class);
+        }
+
+        return $this->userProjectModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
+     */
+    private function getShopifyService(string $urlStore = null, string $token = null)
+    {
+        if (!$this->shopifyService) {
+            $this->shopifyService = new ShopifyService($urlStore, $token);
+        }
+
+        return $this->shopifyService;
     }
 
     /**
@@ -86,548 +199,211 @@ class ShopifyController extends Controller
         try {
             $dados = $request->all();
 
-            $shopifyIntegration = ShopifyIntegration::where('token', $dados['token'])->first();
+            $shopifyIntegration = $this->getShopifyIntegrationModel()
+                                       ->where('token', $dados['token'])
+                                       ->first();
 
-            if ($shopifyIntegration != null) {
-                return response()->json('Projeto já integrado');
-            }
-
-            try {
-                $credential = new PublicAppCredential($dados['token']);
-
-                $client = new Client($credential, $dados['url_store'] . '.myshopify.com', [
-                    'metaCacheDir' => './tmp' // Metadata cache dir, required
-                ]);
-            } catch (\Exception $e) {
-                return response()->json('Dados do shopify inválidos, revise os dados informados');
-            }
-
-            try {
-                $project = Project::create([
-                                               'name'                  => $client->getShopManager()->get()->getName(),
-                                               'status'                => '1',
-                                               'visibility'            => 'private',
-                                               'percentage_affiliates' => '0',
-                                               'description'           => $client->getShopManager()->get()->getName(),
-                                               'invoice_description'   => $client->getShopManager()->get()->getName(),
-                                               'url_page'              => 'https://' . $client->getShopManager()->get()
-                                                                                              ->getDomain(),
-                                               'automatic_affiliation' => false,
-                                               'shopify_id'            => $client->getShopManager()->get()->getId(),
-                                           ]);
-            } catch (\Exception $e) {
-                return response()->json('Dados do shopify inválidos, revise os dados informados');
-            }
-
-            $themes = $client->getThemeManager()->findAll([]);
-
-            foreach ($themes as $theme) {
-                if ($theme->getRole() == 'main')
-                    break;
-            }
-
-            $htmlCart      = "";
-            $templateFiles = $client->getAssetManager()->findAll($theme->getId());
-            foreach ($templateFiles as $file) {
-                if ($file->getKey() == "sections/cart-template.liquid") {
-                    $htmlCart = $client->getAssetManager()->find($theme->getId(), "sections/cart-template.liquid");
-                    $asset    = $client->getAssetManager()->update($theme->getId(), [
-                        "key"   => "sections/cart-template.liquid",
-                        "value" => $this->getCartTemplate($htmlCart->getValue()),
-                    ]);
-                    break;
-                } else if ($file->getKey() == "snippets/ajax-cart-template.liquid") {
-                    $htmlCart = $client->getAssetManager()->find($theme->getId(), "snippets/ajax-cart-template.liquid");
-                    $asset    = $client->getAssetManager()->update($theme->getId(), [
-                        "key"   => "snippets/ajax-cart-template.liquid",
-                        "value" => $this->getCartTemplateAjax($htmlCart->getValue()),
-                    ]);
-                    break;
-                }
-            }
-
-            $photo = $request->file('photo');
-
-            if ($photo != null) {
-                $photoName = 'projeto_' . $project->id . '_.' . $photo->getClientOriginalExtension();
+            if (!$shopifyIntegration) {
 
                 try {
-                    $img = Image::make($photo->getPathname());
-                    $img->crop($dados['photo_w'], $dados['photo_h'], $dados['photo_x1'], $dados['photo_y1']);
-                    $img->resize(200, 200);
-                    $img->save($photo->getPathname());
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
-
-                    $project->update([
-                                         'photo' => $digitalOceanPath,
-                                     ]);
+                    $shopify = $this->getShopifyService($dados['url_store'] . '.myshopify.com', $dados['token']);
                 } catch (\Exception $e) {
-                    // não cadastra imagem
+                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
-            }
 
-            UserProject::create([
-                                    'user'                 => \Auth::user()->id,
-                                    'project'              => $project->id,
-                                    'company'              => $dados['company'],
-                                    'type'                 => 'producer',
-                                    'shipment_responsible' => true,
-                                    'permissao_acesso'     => true,
-                                    'permissao_editar'     => true,
-                                    'status'               => 'active',
-                                ]);
+                try {
 
-            $products = $client->getProductManager()->findAll([]);
+                    $project = $this->getProjectModel()->create([
+                                                                    'name'                  => $shopify->getShopName(),
+                                                                    'status'                => $this->getProjectModel()
+                                                                                                    ->getEnum('status', 'approved'),
+                                                                    'visibility'            => 'private',
+                                                                    'percentage_affiliates' => '0',
+                                                                    'description'           => $shopify->getShopName(),
+                                                                    'invoice_description'   => $shopify->getShopName(),
+                                                                    'url_page'              => 'https://' . $shopify->getShopDomain(),
+                                                                    'automatic_affiliation' => false,
+                                                                    'shopify_id'            => $shopify->getShopId(),
+                                                                ]);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                }
 
-            foreach ($products as $shopifyProduct) {
+                $shopify->setThemeByRole('main');
+                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
-                foreach ($shopifyProduct->getVariants() as $variant) {
+                if ($htmlCart) {
+                    //template normal
+                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
+                } else {
+                    //template ajax
+                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, true);
+                }
 
-                    $description = '';
+                $photo = $request->file('photo');
+
+                if ($photo) {
 
                     try {
-                        $description = $variant->getOption1();
-                        if ($description == 'Default Title') {
-                            $description = '';
-                        }
-                        if ($variant->getOption2() != '') {
-                            $description .= ' - ' . $$variant->getOption2();
-                        }
-                        if ($variant->getOption3() != '') {
-                            $description .= ' - ' . $$variant->getOption3();
-                        }
-                    } catch (\Exception $e) {
-                        //
-                    }
+                        $img = Image::make($photo->getPathname());
+                        $img->crop($dados['photo_w'], $dados['photo_h'], $dados['photo_x1'], $dados['photo_y1']);
+                        $img->resize(200, 200);
+                        $img->save($photo->getPathname());
 
-                    $product = Product::create([
-                                                   'user'        => \Auth::user()->id,
-                                                   'name'        => substr($shopifyProduct->getTitle(), 0, 100),
-                                                   'description' => $description,
-                                                   'guarantee'   => '0',
-                                                   'format'      => 1,
-                                                   'category'    => '11',
-                                                   'cost'        => '',
-                                                   'shopify'     => true,
-                                                   'price'       => '',
-                                               ]);
+                        $digitalOceanPath = $this->getDigitalOceanFileService()
+                                                 ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
 
-                    $newCode = false;
-
-                    while ($newCode == false) {
-
-                        $code = $this->randString(3) . rand(100, 999);
-
-                        $plan = Plan::where('code', $code)->first();
-
-                        if ($plan == null) {
-                            $newCode = true;
-                        }
-                    }
-
-                    $plan = Plan::create([
-                                             'shopify_id'         => $shopifyProduct->getId(),
-                                             'shopify_variant_id' => $variant->getId(),
-                                             'project'            => $project->id,
-                                             'name'               => substr($shopifyProduct->getTitle(), 0, 100),
-                                             'description'        => $description,
-                                             'code'               => $code,
-                                             'price'              => $variant->getPrice(),
-                                             'status'             => '1',
+                        $project->update([
+                                             'photo' => $digitalOceanPath,
                                          ]);
+                    } catch (\Exception $e) {
+                        // não cadastra imagem
+                    }
+                }
 
-                    if (count($shopifyProduct->getVariants()) > 1) {
-                        foreach ($shopifyProduct->getImages() as $image) {
+                $this->getUserProjectModel()->create([
+                                                         'user'                 => auth()->user()->id,
+                                                         'project'              => $project->id,
+                                                         'company'              => $dados['company'],
+                                                         'type'                 => 'producer',
+                                                         'shipment_responsible' => true,
+                                                         'permissao_acesso'     => true,
+                                                         'permissao_editar'     => true,
+                                                         'status'               => 'active',
+                                                     ]);
 
-                            foreach ($image->getVariantIds() as $variantId) {
-                                if ($variantId == $variant->getId()) {
+                $products = $shopify->getShopProducts();
 
-                                    if ($image->getSrc() != '') {
-                                        $product->update([
-                                                             'photo' => $image->getSrc(),
-                                                         ]);
-                                    } else {
+                foreach ($products as $shopifyProduct) {
 
-                                        $product->update([
-                                                             'photo' => $shopifyProduct->getImage()->getSrc(),
-                                                         ]);
+                    foreach ($shopifyProduct->getVariants() as $variant) {
+
+                        $description = '';
+
+                        try {
+                            $description = $variant->getOption1();
+                            if ($description == 'Default Title') {
+                                $description = '';
+                            }
+                            if ($variant->getOption2() != '') {
+                                $description .= ' - ' . $variant->getOption2();
+                            }
+                            if ($variant->getOption3() != '') {
+                                $description .= ' - ' . $variant->getOption3();
+                            }
+                        } catch (\Exception $e) {
+                            //
+                        }
+
+                        $product = $this->getProductModel()->create([
+                                                                        'user'        => auth()->user()->id,
+                                                                        'name'        => substr($shopifyProduct->getTitle(), 0, 100),
+                                                                        'description' => $description,
+                                                                        'guarantee'   => '0',
+                                                                        'format'      => 1,
+                                                                        'category'    => '11',
+                                                                        'cost'        => $shopify->getShopInventoryItem($variant->getInventoryItemId())
+                                                                                                 ->getCost(),
+                                                                        'shopify'     => true,
+                                                                        'price'       => '',
+                                                                    ]);
+
+                        $newCode = false;
+
+                        while ($newCode == false) {
+
+                            $code = $this->randString(3) . rand(100, 999);
+
+                            $plan = $this->getPlanModel()->where('code', $code)->first();
+
+                            if ($plan == null) {
+                                $newCode = true;
+                            }
+                        }
+
+                        $plan = $this->getPlanModel()->create([
+                                                                  'shopify_id'         => $shopifyProduct->getId(),
+                                                                  'shopify_variant_id' => $variant->getId(),
+                                                                  'project'            => $project->id,
+                                                                  'name'               => substr($shopifyProduct->getTitle(), 0, 100),
+                                                                  'description'        => $description,
+                                                                  'code'               => $code,
+                                                                  'price'              => $variant->getPrice(),
+                                                                  'status'             => '1',
+                                                              ]);
+
+                        if (count($shopifyProduct->getVariants()) > 1) {
+                            foreach ($shopifyProduct->getImages() as $image) {
+
+                                foreach ($image->getVariantIds() as $variantId) {
+                                    if ($variantId == $variant->getId()) {
+
+                                        if ($image->getSrc() != '') {
+                                            $product->update([
+                                                                 'photo' => $image->getSrc(),
+                                                             ]);
+                                        } else {
+
+                                            $product->update([
+                                                                 'photo' => $shopifyProduct->getImage()->getSrc(),
+                                                             ]);
+                                        }
                                     }
                                 }
                             }
-                        }
-                    } else {
+                        } else {
 
-                        $product->update([
-                                             'photo' => $shopifyProduct->getImage()->getSrc(),
-                                         ]);
+                            $product->update([
+                                                 'photo' => $shopifyProduct->getImage()->getSrc(),
+                                             ]);
+                        }
+
+                        $this->getProductPlanModel()->create([
+                                                                 'product' => $product->id,
+                                                                 'plan'    => $plan->id,
+                                                                 'amount'  => '1',
+                                                             ]);
                     }
-
-                    ProductPlan::create([
-                                            'product' => $product->id,
-                                            'plan'    => $plan->id,
-                                            'amount'  => '1',
-                                        ]);
                 }
+
+                //                $shopify->createShopWebhook([
+                //                                                "topic"   => "products/create",
+                //                                                "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
+                //                                                "format"  => "json",
+                //                                            ]);
+                //
+                //                $shopify->createShopWebhook([
+                //                                                "topic"   => "products/update",
+                //                                                "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
+                //                                                "format"  => "json",
+                //                                            ]);
+
+                $shopify->createShopWebhook([
+                                                "topic"   => "products/create",
+                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
+                                                "format"  => "json",
+                                            ]);
+
+                $shopify->createShopWebhook([
+                                                "topic"   => "products/update",
+                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
+                                                "format"  => "json",
+                                            ]);
+
+                $this->getShopifyIntegrationModel()->create([
+                                                                'token'     => $dados['token'],
+                                                                'url_store' => $dados['url_store'] . '.myshopify.com',
+                                                                'user'      => auth()->user()->id,
+                                                                'project'   => $project->id,
+                                                            ]);
+
+                return response()->json(['message' => 'Integração adicionada!'], 200);
+            } else {
+                return response()->json(['message' => 'Projeto já integrado'], 400);
             }
-
-            $client->getWebhookManager()->create([
-                                                     "topic"   => "products/create",
-                                                     "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
-                                                     "format"  => "json",
-                                                 ]);
-
-            $client->getWebhookManager()->create([
-                                                     "topic"   => "products/update",
-                                                     "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
-                                                     "format"  => "json",
-                                                 ]);
-
-            ShopifyIntegration::create([
-                                           'token'     => $dados['token'],
-                                           'url_store' => $dados['url_store'],
-                                           'user'      => \Auth::user()->id,
-                                           'project'   => $project->id,
-                                       ]);
-
-            return response()->json('Sucesso');
         } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    public function getCartTemplateAjax($htmlCart)
-    {
-        $dom = new Dom;
-
-        $dom->setOptions([
-                             'removeScripts' => false,
-                         ]);
-
-        $dom->load($htmlCart);
-
-        $forms = $dom->find('script[id=cartTemplate]');
-        $x     = $forms->innerHtml();
-
-        //$dom2 = new Dom2;
-        $dom->load($x);
-
-        $forms = $dom->find('form');
-        foreach ($forms as $form) {
-            $data = explode(' ', $form->getAttribute('class'));
-            if (in_array('cart', $data) || in_array('cart-form', $data)) {
-                $cartForm = $form;
-                break;
-            }
-        }
-
-        if ($cartForm) {
-            //if ($cartForm->getAttribute('id') != 'cart_form') {
-
-            //div Foxdata
-            $divFoxData = new Selector('#foxData', new Parser());
-            $divs       = $divFoxData->find($cartForm);
-            foreach ($divs as $div) {
-                $parent = $div->getParent();
-                $parent->removeChild($div->id());
-            }
-
-            //div FoxScript
-            $divFoxScript = new Selector('#foxScript', new Parser());
-            $divs         = $divFoxScript->find($cartForm);
-            foreach ($divs as $div) {
-                $parent = $div->getParent();
-                $parent->removeChild($div->id());
-            }
-
-            //update button
-            $inputUpdate   = new Selector('input[name=update]', new Parser());
-            $inputsUpdates = $inputUpdate->find($cartForm);
-            foreach ($inputsUpdates as $item) {
-                $parent = $item->getParent();
-                $parent->removeChild($item->id());
-            }
-
-            //update button
-            $inputUpdate   = new Selector('button[name=update]', new Parser());
-            $inputsUpdates = $inputUpdate->find($cartForm);
-            foreach ($inputsUpdates as $item) {
-                $parent = $item->getParent();
-                $parent->removeChild($item->id());
-            }
-            /*
-                        //disable quantity button
-                        $quantityButton   = new Selector('.cart__qty-input', new Parser());
-                        $quantityButtons = $quantityButton->find($cartForm);
-                        foreach ($quantityButtons as $item) {
-                            $parent = $item->getParent();
-                            $item->setAttribute('disabled', 'true');
-                        }
-
-                        */
-
-            $buttons = new Selector('[name=checkout]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $button->removeAttribute('name');
-            }
-
-            $buttons = new Selector('[name=goto_pp]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('[name=goto_gc]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.amazon-payments-pay-button', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.google-wallet-button-holder', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.additional-checkout-button', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $cartForm->setAttribute('action', 'https://checkout.{{ shop.domain }}/');
-            $cartForm->setAttribute('id', 'cart_form');
-            $cartForm->setAttribute('data-fox', 'cart_form');
-
-            $divFoxScript = new HtmlNode('div');
-
-            $divFoxScript->setAttribute('id', 'foxScript');
-            $script = new HtmlNode('script');
-            $script->setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js');
-            $divFoxScript->addChild($script);
-            $script = new HtmlNode('script');
-
-            $script->addChild(new TextNode("$(document).ready(function (){
-
-                    $(document).on('change', \"input.booster-quantity, input[name^='updates['], input[id^='updates_'], input[id^='Updates_']\", function(e) {
-                        e.preventDefault();
-                         $('[data-fox=cart_form]').attr('action', '/cart');
-                        $('[data-fox=cart_form]').submit();
-                      });
-                    
-                    $('[data-fox=cart_form]').submit(function(){
-                        var discount=0;
-                        $( '[data-integration-price-saved=1]' ).each(function( key, value ) {
-                            if(parseInt(value.innerText.replace(/[^0-9]/g,'')) > discount)
-                            {
-                                discount = parseInt(value.innerText.replace(/[^0-9]/g,''))
-                            }
-                        });
-                        $('#cart_form').append(\"<input type='hidden' name='value_discount' value='\"+discount+\"'>\");
-                    });
-
-                  });"));
-
-            $divFoxScript->addChild($script);
-
-            $cartForm->addChild($divFoxScript);
-
-            $foxData = "
-                    <div id='foxData'>
-                    <input type='hidden' data-fox='1' name='product_id_{{ forloop.index }}' value='{{ item.id }}'>
-                    <input type='hidden' data-fox='2' name='variant_id_{{ forloop.index }}' value='{{ item.variant_id }}'>
-                    <input type='hidden' data-fox='3' name='product_price_{{ forloop.index }}' value='{{ item.price }}'>
-                    <input type='hidden' data-fox='4' name='product_image_{{ forloop.index }}' value='{{ item.image }}'>
-                    <input type='hidden' data-fox='5' name='product_amount_{{ forloop.index }}' value='{{ item.quantity }}'>
-                  </div>";
-
-            $html = $dom->root->outerHtml();
-            preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
-            foreach ($tokens[0] as $key => $item) {
-                if ((stripos($item[0], 'for ') !== false) &&
-                    (stripos($item[0], ' in cart.items') !== false)) {
-                    $html = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
-                }
-            }
-
-            //}
-
-            return $html;
-        } else {
-            //thown parse error
-        }
-    }
-
-    public function getCartTemplate($htmlCart)
-    {
-        $dom = new Dom;
-        $dom->load($htmlCart);
-
-        $forms = $dom->find('form');
-        foreach ($forms as $form) {
-            $data = explode(' ', $form->getAttribute('class'));
-            if (in_array('cart', $data)) {
-                $cartForm = $form;
-                break;
-            }
-        }
-
-        if ($cartForm) {
-
-            //div Foxdata
-            $divFoxData = new Selector('#foxData', new Parser());
-            $divs       = $divFoxData->find($cartForm);
-            foreach ($divs as $div) {
-                $parent = $div->getParent();
-                $parent->removeChild($div->id());
-            }
-
-            //div FoxScript
-            $divFoxScript = new Selector('#foxScript', new Parser());
-            $divs         = $divFoxScript->find($cartForm);
-            foreach ($divs as $div) {
-                $parent = $div->getParent();
-                $parent->removeChild($div->id());
-            }
-
-            //update button
-            $inputUpdate   = new Selector('input[name=update]', new Parser());
-            $inputsUpdates = $inputUpdate->find($cartForm);
-            foreach ($inputsUpdates as $item) {
-                $parent = $item->getParent();
-                $parent->removeChild($item->id());
-            }
-
-            //update button
-            $inputUpdate   = new Selector('button[name=update]', new Parser());
-            $inputsUpdates = $inputUpdate->find($cartForm);
-            foreach ($inputsUpdates as $item) {
-                $parent = $item->getParent();
-                $parent->removeChild($item->id());
-            }
-            /*
-                        //disable quantity button
-                        $quantityButton   = new Selector('.cart__qty-input', new Parser());
-                        $quantityButtons = $quantityButton->find($cartForm);
-                        foreach ($quantityButtons as $item) {
-                            $parent = $item->getParent();
-                            $item->setAttribute('disabled', 'true');
-                        }
-
-                        */
-
-            $buttons = new Selector('[name=checkout]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $button->removeAttribute('name');
-            }
-
-            $buttons = new Selector('[name=goto_pp]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('[name=goto_gc]', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.amazon-payments-pay-button', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.google-wallet-button-holder', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $buttons = new Selector('.additional-checkout-button', new Parser());
-            $buttons = $buttons->find($cartForm);
-            foreach ($buttons as $button) {
-                $parent = $button->getParent();
-                $parent->removeChild($button->id());
-            }
-
-            $cartForm->setAttribute('action', 'https://checkout.{{ shop.domain }}/');
-            $cartForm->setAttribute('id', 'cart_form');
-            $cartForm->setAttribute('data-fox', 'cart_form');
-
-            $divFoxScript = new HtmlNode('div');
-
-            $divFoxScript->setAttribute('id', 'foxScript');
-            $script = new HtmlNode('script');
-            $script->setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js');
-            $divFoxScript->addChild($script);
-            $script = new HtmlNode('script');
-
-            $script->addChild(new TextNode("$(document).ready(function (){
-
-                    $(document).on('change', \"input.booster-quantity, input[name^='updates['], input[id^='updates_'], input[id^='Updates_']\", function(e) {
-                        e.preventDefault();
-                         $('[data-fox=cart_form]').attr('action', '/cart');
-                        $('[data-fox=cart_form]').submit();
-                      });
-                    
-                    $('[data-fox=cart_form]').submit(function(){
-                        var discount=0;
-                        $( '[data-integration-price-saved=1]' ).each(function( key, value ) {
-                            if(parseInt(value.innerText.replace(/[^0-9]/g,'')) > discount)
-                            {
-                                discount = parseInt(value.innerText.replace(/[^0-9]/g,''))
-                            }
-                        });
-                        $('#cart_form').append(\"<input type='hidden' name='value_discount' value='\"+discount+\"'>\");
-                    });
-
-                  });"));
-
-            $divFoxScript->addChild($script);
-
-            $cartForm->addChild($divFoxScript);
-
-            $foxData = "
-                    <div id='foxData'>
-                    <input type='hidden' data-fox='1' name='product_id_{{ forloop.index }}' value='{{ item.id }}'>
-                    <input type='hidden' data-fox='2' name='variant_id_{{ forloop.index }}' value='{{ item.variant_id }}'>
-                    <input type='hidden' data-fox='3' name='product_price_{{ forloop.index }}' value='{{ item.price }}'>
-                    <input type='hidden' data-fox='4' name='product_image_{{ forloop.index }}' value='{{ item.image }}'>
-                    <input type='hidden' data-fox='5' name='product_amount_{{ forloop.index }}' value='{{ item.quantity }}'>
-                  </div>";
-
-            $html = $dom->root->outerHtml();
-            preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
-            foreach ($tokens[0] as $key => $item) {
-                if ((stripos($item[0], 'for ') !== false) &&
-                    (stripos($item[0], ' in cart.items') !== false)) {
-                    $html = substr_replace($html, $foxData, $item[1] + strlen($item[0]), 0);
-                }
-            }
-
-            return $html;
-        } else {
-            //thown parse error
+            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
         }
     }
 

@@ -40,13 +40,9 @@
                     </button>
                     <h4 id='modal-dominio-titulo' class='modal-title' style='width:100%; text-align:center;'></h4>
                 </div>
-                <div id='modal-dominio-body' class='modal-body'>
-                    <div class='row'>
-                        <div class='form-group col-12'>
+                <div class='modal-body pr-30 pl-30' id='modal-dominio-body'>
                             <label for='information'>Descrição</label>
                             <input name='information' class='form-control' id='information' placeholder='descricao'>
-                        </div>
-                    </div>
                 </div>
                 <div class='modal-footer'>
                     <button type='button' id='btn-save-updated' class='btn btn-success' data-dismiss='modal'>Salvar</button>

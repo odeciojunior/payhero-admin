@@ -1,5 +1,5 @@
 <div class='col-xl-12 col-lg-12'>
-    <table class='table table-bordered table-hover table-striped'>
+    <table class='table table-striped'>
         <thead>
         </thead>
         <tbody>

@@ -1,12 +1,8 @@
 <form id="form-add-domain" method="post">
     @csrf
-    <div class="page-content container-fluid">
-        <div class="panel" data-plugin="matchHeight">
-            <div style="width:100%">
-                <div class="row">
-                    <div class="form-group col-12">
+                    <div class="form-group">
                         <label for="name">Domínio</label>
-                        <input name="name" type="text" class="form-control" id="name" placeholder="Domínio">
+                        <input name="name" type="text" class="input-pad" id="name" placeholder="Domínio">
                     </div>
                 </div>
                 @if($project->shopify_id == '')
@@ -17,9 +13,6 @@
                         </div>
                     </div>
                 @endif
-            </div>
-        </div>
-    </div>
 </form>
 
 

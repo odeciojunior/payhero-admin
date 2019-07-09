@@ -713,3 +713,41 @@ font-size: 10px;
     visibility: hidden;
     
 }
+
+.btn-primary, .btn-primary:focus, .btn-primary:active {
+    background: none;
+    border-color: none;
+    border: none;
+    outline: none;
+    font-weight: 700;
+    background-image: linear-gradient(77deg, #e6774c, rgb(249, 34, 120)); 
+}
+
+.btn-success, .btn-success:focus, .btn-success:active {
+    background: none;
+    border-color: none;
+    border: none;
+    outline: none;
+    font-weight: 700;
+    background-image: linear-gradient(82deg, rgba(48, 210, 74, 1), rgb(10, 166, 71));
+}
+
+.btn-simple, .btn-simple:focus, .btn-simple:active {
+    background: none;
+    border-color: none;
+    background-color: none;
+    border: none;
+    outline: none;
+    font-weight: 700;
+    color: #555;
+}
+
+
+.btn-secundary, .btn-blue, .btn-secundary:focus, .btn-blue:focus, .btn-secundary:active, .btn-blue:active {
+    background: none;
+    border-color: none;
+    border: none;
+    outline: none;
+    font-weight: 700;
+    background-image: linear-gradient(to right, rgb(88, 73, 226), rgb(81, 196, 236));
+}

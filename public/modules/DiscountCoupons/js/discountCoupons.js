@@ -115,9 +115,9 @@ $(function () {
 
                     data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger details-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger edit-coupon'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    data += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger delete-coupon'  coupon='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle'><a role='button' class='details-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                    dados += "<td style='vertical-align: middle'><a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>edit</i> </a></td>";
+                    dados += "<td style='vertical-align: middle'><a role='button' class='delete-coupon pointer' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>delete_outline</i> </a></td>";
 
                     data += '</tr>';
                     $("#data-table-coupon").append(data);

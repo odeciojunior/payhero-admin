@@ -86,6 +86,14 @@ class Project extends Model
         'updated_at',
         'deleted_at',
     ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'status' => [
+            1 => 'approved',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
