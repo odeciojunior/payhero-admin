@@ -191,10 +191,12 @@ class CartRecoveryController extends Controller
                 $domain = $this->getDomainModel()->where([['status', 3], ['project_id', $checkout->project]])->first();
                 $link   = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
 
+                $whatsAppMsg = 'Olá '.$log->name;
+
                 $details = view('cartrecovery::details', [
                     'checkout'      => $checkout,
                     'log'           => $log,
-                    'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone),
+                    'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone).'&text='.$whatsAppMsg,
                     'status'        => $status,
                     'hours'         => $log['hours'],
                     'date'          => $log['date'],
