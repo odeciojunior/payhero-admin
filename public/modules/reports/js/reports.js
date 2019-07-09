@@ -1,8 +1,8 @@
 $(function () {
-    var startDate = moment().subtract('days', 29).format('YYYY-MM-DD');
+    var startDate = moment().subtract(6, 'days').format('YYYY-MM-DD');
     var endDate = moment().format('YYYY-MM-DD');
     $('input[name="daterange"]').daterangepicker({
-        startDate: moment().subtract('days', 29),
+        startDate: moment().subtract(6, 'days'),
         endDate: moment(),
         opens: 'left',
         maxDate: moment().endOf("day"),
@@ -54,7 +54,6 @@ $(function () {
     }, function (start, end) {
         startDate = start.format('YYYY-MM-DD');
         endDate = end.format('YYYY-MM-DD');
-        console.log(startDate, endDate);
         updateReports();
 
     });/* function (start, end, label) {
@@ -79,7 +78,7 @@ $(function () {
 
     function updateReports() {
         var date_range = $('#date_range_requests').val();
-        console.log(date_range);
+        console.log(endDate, startDate);
         $.ajax({
             url: '/reports/getValues/' + $("#project").val(),
             type: 'GET',
@@ -118,23 +117,23 @@ $(function () {
         var scoreChart=function(id, labelList, series1List, series2List) {
             var scoreChart=new Chartist.Line("#"+id, {
                 labels: labelList, series: [series1List, series2List]
-            }, 
+            },
             {
                 lineSmooth:Chartist.Interpolation.simple( {
                     divisor: 2
-                }), 
-                fullWidth:!0, 
+                }),
+                fullWidth:!0,
                 chartPadding: {
-                    right: 25
-                }, 
+                    right: 30
+                },
                 series: {
                     "credit-card-data": {
                         showArea: !0
-                    }, 
+                    },
                     "boleto-data": {
                         showArea: !0
                     }
-                }, 
+                },
                 axisX: {
                     showGrid: !1
                 },
@@ -142,9 +141,9 @@ $(function () {
                     labelInterpolationFnc:function(value) {
                         return chartData.currency + value;
                         return value/1e3+"K"
-                    }, 
+                    },
                     scaleMinSpace:40
-                }, 
+                },
                 plugins:[
                     Chartist.plugins.tooltip({
                         position: 'bottom'
@@ -160,13 +159,13 @@ $(function () {
                 }, "", !0));
                 return filter.elem("feGaussianBlur", {
                     in: "SourceAlpha", stdDeviation: "8", result: "offsetBlur"
-                }), 
+                }),
                 filter.elem("feOffset", {
                     dx: "0", dy: "10"
-                }), 
+                }),
                 filter.elem("feBlend", {
                     in: "SourceGraphic", mode: "multiply"
-                }), 
+                }),
                 defs
             }
             ).on("draw", function(data) {
@@ -175,7 +174,7 @@ $(function () {
                 }
                 ):"point"===data.type&&new Chartist.Svg(data.element._node.parentNode).elem("line", {
                     x1: data.x, y1: data.y, x2: data.x+.01, y2: data.y, class: "ct-point-content"
-                }), 
+                }),
                 "line"!==data.type&&"area"!=data.type||data.element.animate( {
                     d: {
                         begin: 1e3*data.index, dur: 1e3, from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(), to: data.path.clone().stringify(), easing: Chartist.Svg.Easing.easeOutQuint
@@ -183,10 +182,10 @@ $(function () {
                 })
             })
         },
-        labelList= chartData.label_list, 
+        labelList= chartData.label_list,
         creditCardSalesData= {
             name: "Cartão de crédito", data: chartData.boleto_data
-        }, 
+        },
         boletoSalesData= {
             name: "Boleto", data: chartData.credit_card_data
         };
