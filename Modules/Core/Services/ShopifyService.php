@@ -130,6 +130,18 @@ class ShopifyService
     }
 
     /**
+     * @return mixed
+     */
+    public function getThemeName()
+    {
+        if ($this->theme) {
+            return $this->theme->getName();
+        } else {
+            return ''; //throwl
+        }
+    }
+
+    /**
      * @param string $role
      * @return \Slince\Shopify\Theme\Theme|null
      */

@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,10 +19,33 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ShopifyIntegration extends Model
 {
+    use FoxModelTrait;
     /**
      * @var array
      */
-    protected $fillable = ['user', 'project', 'token', 'url_store', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'user',
+        'project',
+        'token',
+        'url_store',
+        'theme_type',
+        'theme_name',
+        'theme_file',
+        'theme_html',
+        'layout_theme_html',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'theme_type' => [
+            1 => 'basic_theme',
+            2 => 'ajax_theme',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

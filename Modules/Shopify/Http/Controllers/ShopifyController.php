@@ -214,31 +214,56 @@ class ShopifyController extends Controller
 
                 try {
 
-                    $project = $this->getProjectModel()->create([
-                                                                    'name'                  => $shopify->getShopName(),
-                                                                    'status'                => $this->getProjectModel()
-                                                                                                    ->getEnum('status', 'approved'),
-                                                                    'visibility'            => 'private',
-                                                                    'percentage_affiliates' => '0',
-                                                                    'description'           => $shopify->getShopName(),
-                                                                    'invoice_description'   => $shopify->getShopName(),
-                                                                    'url_page'              => 'https://' . $shopify->getShopDomain(),
-                                                                    'automatic_affiliation' => false,
-                                                                    'shopify_id'            => $shopify->getShopId(),
-                                                                ]);
+                    $shopifyName = $shopify->getShopName();
+                    $project     = $this->getProjectModel()->create([
+                                                                        'name'                  => $shopifyName,
+                                                                        'status'                => $this->getProjectModel()
+                                                                                                        ->getEnum('status', 'approved'),
+                                                                        'visibility'            => 'private',
+                                                                        'percentage_affiliates' => '0',
+                                                                        'description'           => $shopifyName,
+                                                                        'invoice_description'   => $shopifyName,
+                                                                        'url_page'              => 'https://' . $shopify->getShopDomain(),
+                                                                        'automatic_affiliation' => false,
+                                                                        'shopify_id'            => $shopify->getShopId(),
+                                                                    ]);
                 } catch (\Exception $e) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
+
+                $shopifyIntegration = $this->getShopifyIntegrationModel()->create([
+                                                                                      'token'     => $dados['token'],
+                                                                                      'url_store' => $dados['url_store'] . '.myshopify.com',
+                                                                                      'user'      => auth()->user()->id,
+                                                                                      'project'   => $project->id,
+                                                                                  ]);
 
                 $shopify->setThemeByRole('main');
                 $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
                 if ($htmlCart) {
                     //template normal
+
+                    $shopifyIntegration->update([
+                                                    'theme_type' => $this->getShopifyIntegrationModel()
+                                                                         ->getEnum('theme_type', 'basic_theme'),
+                                                    'theme_name' => $shopify->getThemeName(),
+                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                    'theme_html' => $htmlCart,
+                                                ]);
+
                     $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
                 } else {
                     //template ajax
-                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, true);
+                    $shopifyIntegration->update([
+                                                    'theme_type' => $this->getShopifyIntegrationModel()
+                                                                         ->getEnum('theme_type', 'ajax_theme'),
+                                                    'theme_name' => $shopify->getThemeName(),
+                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                    'theme_html' => $htmlCart,
+                                                ]);
+
+                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
                 }
 
                 $photo = $request->file('photo');
@@ -390,13 +415,6 @@ class ShopifyController extends Controller
                                                 "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
                                                 "format"  => "json",
                                             ]);
-
-                $this->getShopifyIntegrationModel()->create([
-                                                                'token'     => $dados['token'],
-                                                                'url_store' => $dados['url_store'] . '.myshopify.com',
-                                                                'user'      => auth()->user()->id,
-                                                                'project'   => $project->id,
-                                                            ]);
 
                 return response()->json(['message' => 'Integração adicionada!'], 200);
             } else {
