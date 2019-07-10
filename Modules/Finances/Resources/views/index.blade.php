@@ -1,5 +1,9 @@
 @extends("layouts.master")
 
+@push('css')
+    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+@endpush
+
 @section('content')
 
     <div class="page">
@@ -23,8 +27,9 @@
                             </div>
                         </div>
                     </nav>
-                    <div class="p-30 pt-20">
+                    <div class="p-30 pt-20"> 
                         <div class="tab-content" id="nav-tabContent">
+
                             <!-- TRANSFERENCIAS -->
                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                 <div class="row justify-content-start align-items-baseline">
@@ -170,6 +175,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- EXTRATO -->
                             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                 <div class="row justify-content-between">
@@ -251,15 +257,7 @@
                                                     <th scope="col">Valor</th>
                                                 </tr>
                                             </thead>
-                                            <tbody class="custom-t-body">
-                                                <tr>
-                                                    <td colspan="3" class="text-center"> Nenhuma movimentação financeira encontrada</td>
-                                                </tr>
-                                                {{--  <tr>
-                                                    <td> Saque para conta</td>
-                                                    <td>5/06/2019</td>
-                                                    <td class="money-td saida"><span class="currency">R$</span>02.500,00</td>
-                                                </tr>  --}}
+                                            <tbody id="table-transfers-body" class="custom-t-body">
                                             </tbody>
                                         </table>
                                     </div>
@@ -269,10 +267,6 @@
                     </div>
                 </div>
             @else
-                @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
-                @endpush
-
                 <div class="content-error d-flex text-center">
                     <img src="{!! asset('modules/global/assets/img/emptyempresas.svg') !!}" width="250px">
                     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
@@ -285,6 +279,7 @@
 
     @push('scripts')
         <script src="{!! asset('modules/finances/js/index.js') !!}"></script>
+        <script src="{!! asset('modules/transfers/js/index.js') !!}"></script>
     @endpush
 
 @endsection
