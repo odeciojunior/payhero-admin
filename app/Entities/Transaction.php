@@ -29,15 +29,29 @@ class Transaction extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
-    protected $fillable = ['sale', 'company', 'value', 'type', 'status', 'release_date', 'created_at', 'updated_at', 'antecipation_date', 'antecipable_value', 'antecipable_tax', 'currency', 'percentage_rate', 'transaction_rate', 'percentage_antecipable'];
+    protected $fillable = [
+        'sale',
+        'company',
+        'value',
+        'type',
+        'status',
+        'release_date',
+        'created_at',
+        'updated_at',
+        'antecipation_date',
+        'antecipable_value',
+        'antecipable_tax',
+        'currency',
+        'percentage_rate',
+        'transaction_rate',
+        'percentage_antecipable',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
