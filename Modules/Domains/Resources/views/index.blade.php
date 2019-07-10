@@ -15,10 +15,10 @@
         <table id='tabela-dominios' class='table text-left table-dominios table-striped' style='width:100%'>
             <thead>
                 <tr>
-                    <td class='table-title'>Nome</td>
-                    <td class='table-title'>Ip do domínio</td>
-                    <td class='table-title'>Status</td>
-                    <td class='table-title'>Opções</td>
+                    <td class='table-title' width='400px'>Nome</td>
+                    <td class='table-title' width='400px'>Ip do domínio</td>
+                    <td class='table-title' width='400px'>Status</td>
+                    <td class='table-title' width='200px'>Opções</td>
                 </tr>
             </thead>
             <tbody id='domain-table-body'>

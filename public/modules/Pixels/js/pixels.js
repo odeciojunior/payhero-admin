@@ -92,10 +92,10 @@ $(function () {
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr class="shipping-id">';
-                    data += '<td class="shipping-id" style="min-width:120px;">' + value.name + '</td>';
-                    data += '<td class="shipping-type" style="min-width:120px;">' + value.code + '</td>';
-                    data += '<td class="shipping-value" style="min-width:120px;">' + value.platform + '</td>';
-                    data += '<td class="shipping-status" style="min-width:100px;">';
+                    data += '<td class="shipping-id" width="70%" style="width:120px;">' + value.name + '</td>';
+                    data += '<td class="shipping-type" width="70%" style="width:120px;">' + value.code + '</td>';
+                    data += '<td class="shipping-value"  width="70% "style="width:120px;">' + value.platform + '</td>';
+                    data += '<td class="shipping-status" width="70%" style="width:100px;">';
                     if (value.status == 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
                     } else {

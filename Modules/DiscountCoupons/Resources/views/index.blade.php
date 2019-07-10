@@ -12,12 +12,12 @@
             <table id='tabela-coupon' class='table text-left table-coupon table-striped' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title' style="min-width:120px;">Nome</td>
-                        <td class='table-title' style="min-width:120px;">Tipo</td>
-                        <td class='table-title' style="min-width:120px;">Valor</td>
-                        <td class='table-title' style="min-width:120px;">Código</td>
-                        <td class='table-title' style="min-width:120px;">Status</td>
-                        <td class='table-title text-center'>Opções</td>
+                        <td class='table-title'  width='300px'>Nome</td>
+                        <td class='table-title'  width='300px'>Tipo</td>
+                        <td class='table-title'  width='300px'>Valor</td>
+                        <td class='table-title'  width='300px'>Código</td>
+                        <td class='table-title'  width='200px'>Status</td>
+                        <td class='table-title text-center'  width='200px'>Opções</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-coupon'>
