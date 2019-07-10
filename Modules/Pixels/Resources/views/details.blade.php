@@ -1,29 +1,29 @@
-<div class='page-content container-fluid'>
-    <table class='table-hover' style='width: 100%'>
+
+    <table class='table table-striped' style='width: 100%'>
         <tbody>
-            {{--<tr style='height: 40%;'>--}}
-            {{--<th style='width:40%;' class='text-center'>Tipo</th>--}}
+            {{--<tr>--}}
+            {{--<td class="table-title">Tipo</td>--}}
             {{--<td style='width: 20px'></td>--}}
             {{--<td class='text-left'>{{$pixel->type == 'static'? 'Estatico': $shipping->type == 'pac'? 'PAC - Caculado automaticamente' : 'SEDEX - Caculado automaticamente'}}</td>--}}
             {{--</tr>--}}
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Descrição</th>
+            <tr>
+                <td class="table-title">Descrição</td>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$pixel->name}}</td>
                 <br>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Code</th>
+            <tr>
+                <td class="table-title">Code</td>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$pixel->code}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Plataforma</th>
+            <tr>
+                <td class="table-title">Plataforma</td>
                 <td style='width: 20px'></td>
                 <td class='text-left'>{{$pixel->platform}}</td>
             </tr>
-            <tr style='height: 40%;'>
-                <th style='width:40%;' class='text-center'>Status</th>
+            <tr>
+                <td class="table-title">Status</td>
                 <td style='width: 20px'></td>
                 <td class='text-left'>
                     @if($pixel->status == 1)
@@ -33,14 +33,14 @@
                     @endif
                 </td>
             </tr>
-            {{--<tr style='height: 40%;'>--}}
-            {{--<th style='width:40%;' class='text-center'>Informação</th>--}}
+            {{--<tr>--}}
+            {{--<td class="table-title">Informação</td>--}}
             {{--<td style='width: 20px'></td>--}}
             {{--<td class='text-left'>{{$shipping->information}}</td>--}}
             {{--</tr>--}}
 
-            {{--<tr style='height: 40%;'>--}}
-            {{--<th style='width:40%;' class='text-center'>Pré Selecionado</th>--}}
+            {{--<tr>--}}
+            {{--<td class="table-title">Pré Selecionado</td>--}}
             {{--<td style='width: 20px'></td>--}}
             {{--<td class='text-left'>--}}
             {{--@if($shipping->pre_selected == 1)--}}
@@ -52,4 +52,4 @@
             {{--</tr>--}}
         </tbody>
     </table>
-</div>
+

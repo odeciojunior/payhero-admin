@@ -1,6 +1,4 @@
-<div class='container-fluid'>
-    <div class='panel' data-plugin='matchHeight'>
-        <div style='width: 100%;'>
+
             <form id='form-register-pixel' method="post" action="/pixels">
                 @csrf
                 <div class="container-fluid">
@@ -91,6 +89,3 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-</div>

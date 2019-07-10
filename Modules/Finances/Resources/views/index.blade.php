@@ -111,7 +111,7 @@
                                             <div class="col-lg-6 mb-3">
                                                 <div class="input-holder">
                                                     <label for="company"> Empresa</label>
-                                                    <select class="form-control" id="transfers_company_select">
+                                                    <select class="form-control select-pad" id="transfers_company_select">
                                                         @foreach($companies as $company)
                                                             <option value="{!! Hashids::encode($company['id']) !!}">{!! $company['fantasy_name'] !!}</option>
                                                         @endforeach
@@ -122,16 +122,17 @@
                                                 <label for="company"> Valor a transferir</label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon1"><span class="currency">R$</span></span>
+                                                        <span class="input-group-text" id="basic-addon1 custom-addon" style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
                                                     </div>
-                                                    <input type="text" class="form-control" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
+                                                    <input type="text" class="form-control input-pad" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1" id="custom-input-addon">
                                                     <button class="btn btn-success btn-sacar ml-3">
                                                         <svg class="mr-2" style="fill: white; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                                                            <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/>
+                                                            <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                         </svg>
                                                         Sacar dinheiro
                                                     </button>
                                                 </div>
+                                               
                                                 <small class="text-muted">Cada saque acarreta uma taxa de
                                                     <span class="currency">R$</span>
                                                     03,80*
@@ -203,7 +204,7 @@
                                             <div class="col-3">
                                                 <div class="input-holder">
                                                     <label for="company"> Empresa</label>
-                                                    <select class="form-control" id="extract_company_select">
+                                                    <select class="form-control select-pad" id="extract_company_select">
                                                         @foreach($companies as $company)
                                                             <option value="{!! Hashids::encode($company['id']) !!}"> {!! $company['fantasy_name'] !!}</option>
                                                         @endforeach

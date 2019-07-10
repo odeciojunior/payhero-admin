@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     $("#add-shipping").on('click', function () {
 
-        $("#modal-title").html('Cadastrar frete <br><hr>');
+        $("#modal-title").html('Cadastrar frete');
         $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
 
         $.ajax({
@@ -68,9 +68,9 @@ $(document).ready(function () {
                         contentType: false,
                         cache: false,
                         error: function (response) {
-                            if (response.status == '422') {
-                                for (error in response.responseJSON.errors) {
-                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                            if (response.status === 422) {
+                                for (error in response.errors) {
+                                    alertCustom('error', String(response.errors[error]));
                                 }
                             }
                         },
@@ -131,9 +131,10 @@ $(document).ready(function () {
 
                     dados += '</td>';
 
-                    dados += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-eye' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal' type='button'><i class='icon wb-pencil' aria-hidden='true'></i></button></td>";
-                    dados += "<td style='vertical-align: middle' class=''><button class='btn btn-sm btn-outline btn-danger excluir-frete'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete' type='button'><i class='icon wb-trash' aria-hidden='true'></i></button></td>";
+                    dados += "<td style='vertical-align: middle' class=''><a role='button' class='pointer detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                    dados += "<td style='vertical-align: middle' class=''><a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                    dados += "<td style='vertical-align: middle' class=''><a role='button' class='pointer excluir-frete'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a></td>";
+
                     dados += '</tr>';
                     $("#dados-tabela-frete").append(dados);
                 });
@@ -146,7 +147,7 @@ $(document).ready(function () {
 
                     var frete = $(this).attr('frete');
 
-                    $("#modal-title").html('Detalhes do frete <br><hr>');
+                    $("#modal-title").html('Detalhes do frete');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
                     var data = {freteId: frete};
 
@@ -173,7 +174,7 @@ $(document).ready(function () {
                     $("#modal-add-body").html("");
                     var frete = $(this).attr('frete');
 
-                    $("#modal-title").html("Editar Frete<br><hr>");
+                    $("#modal-title").html("Editar Frete");
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
                     var data = {frete: frete};
@@ -194,15 +195,6 @@ $(document).ready(function () {
                             $("#modal-add-body").html(response);
                             $('#shipping-zip-code-origin').mask('00000-000');
 
-                            if ($("#shipping-type").val() == 'static') {
-                                $("#value-shipping-row").css('display', 'block');
-                                $("#zip-code-origin-shipping-row").css('display', 'none');
-
-                            } else {
-                                $("#value-shipping-row").css('display', 'none');
-                                $("#zip-code-origin-shipping-row").css('display', 'block');
-
-                            }
                             changeType();
                             $('#shipping-value').mask('#.###,#0', {reverse: true});
 
@@ -220,7 +212,7 @@ $(document).ready(function () {
                                     processData: false,
                                     contentType: false,
                                     cache: false,
-                                    error: function (response) {
+                                    error: function () {
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));

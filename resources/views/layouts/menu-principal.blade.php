@@ -210,13 +210,13 @@
         </ul>
       </li>
       <li class="site-menu-item has-sub">
-        <a  href="/projects">
+        <a  href="/projects" id="projects-link" >
         <i class="material-icons">style</i>
             <span class="site-menu-title">Projetos</span>
         </a>
       </li>
       <li class="site-menu-item has-sub">
-          <a href="{{ route('products.index') }}">
+          <a href="{{ route('products.index') }}" id="products-link">
           <i class="material-icons">laptop</i>
             <span class="site-menu-title">Produtos</span>
         </a>

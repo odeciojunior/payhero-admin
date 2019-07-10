@@ -266,6 +266,16 @@ class ShopifyController extends Controller
                     $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
                 }
 
+                //inserir o javascript para o trackeamento (src, utm)
+                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                if ($htmlBody) {
+                    //template do layout
+                    $shopifyIntegration->update([
+                                                    'layout_theme_html' => $htmlBody,
+                                                ]);
+                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                }
+
                 $photo = $request->file('photo');
 
                 if ($photo) {

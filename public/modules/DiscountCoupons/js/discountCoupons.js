@@ -7,7 +7,7 @@ $(function () {
     atualizarCoupon();
 
     $("#add-coupon").on('click', function () {
-        $("#modal-title").html('Adicionar Cupom <br><hr class="my-0">');
+        $("#modal-title").html('Novo cupom');
         $("#modal_add_size").addClass('modal_simples');
         $("#modal_add_size").removeClass('modal-lg');
 
@@ -128,7 +128,7 @@ $(function () {
                 $(".details-coupon").unbind('click');
                 $(".details-coupon").on('click', function () {
                     var coupon = $(this).attr('coupon');
-                    $("#modal-title").html('Detalhes do Cupom <br><hr>');
+                    $("#modal-title").html('Detalhes do Cupom');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
 
                     var data = {couponId: coupon};
@@ -152,7 +152,7 @@ $(function () {
                 $(".edit-coupon").on('click', function () {
                     $("#modal-add-body").html("");
                     var coupon = $(this).attr('coupon');
-                    $("#modal-title").html("Editar Cupom<br><hr>");
+                    $("#modal-title").html("Editar Cupom");
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
                     var data = {couponId: coupon};

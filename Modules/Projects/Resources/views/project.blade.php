@@ -150,43 +150,50 @@
                     </div>
 
                     <!-- Modal padrão para adicionar Adicionar e Editar -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" aria-hidden="true" aria-labelledby="exampleModalTitle"
-                            role="dialog" tabindex="-1">
-                        <div id="modal_add_size" class="modal-dialog modal-simple">
-                            <div class="modal-content" id="conteudo_modal_add">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content"role="dialog" tabindex="-1">
+                        <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
+                            <div class="modal-content p-10" id="conteudo_modal_add">
+
+                                <div class="modal-header simple-border-bottom mb-10">
+                                    <h4 class="modal-title" id="modal-title"></h4>
+                                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
                                 </div>
-                                <h4 id="modal-title" class="modal-title" style="width: 100%; text-align:center"></h4>
-                                <div class="row">
-                                    <div id="modal-add-body" class="form-group col-12">
-                                    </div>
+
+                                <div id="modal-add-body" class="modal-body">
                                 </div>
+
                                 <div class="modal-footer">
-                                    <button id="btn-modal" type="button" class="btn btn-success" data-dismiss="modal"></button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                    <button id="btn-modal" type="button" class="btn btn-success" data-dismiss="modal"> <i class="material-icons btn-fix"> save </i> Salvar </button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+
                     <!-- Modal padrão para excluir -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                        <div class="modal-dialog modal-simple">
+                        <div class="modal-dialog  modal-dialog-centered  modal-simple">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                    <h4 id="modal_excluir_titulo" class="modal-title" style="width: 100%; text-align:center">Excluir ?</h4>
+                                <div class="modal-header text-center">
+                                    
+                                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                                        <i class="material-icons md-16">close</i>
+                                    </a>
                                 </div>
-                                <div id="modal_excluir_body" class="modal-body">
+                                <div id="modal_excluir_body" class="modal-body text-center p-20">
+
+                                    <div class="d-flex justify-content-center">
+                                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                                    </div>
+                                    <h3 class="black"> Você tem certeza? </h3>
+                                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                    <button id="bt_excluir" type="button" class="btn btn-success">Confirmar</button>
+                                <div class="modal-footer d-flex align-items-center justify-content-center">
+                                    <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                                    <button id="bt_excluir" type="button" class="btn btn-danger" style="width: 20%;" >Excluir</button>
                                 </div>
                             </div>
                         </div>
