@@ -25,11 +25,12 @@ class CartRecoveryService
         $dateStart->modify('-2 hours');
         $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
         $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
-        //                                        dd($formatted_dateStart,$formatted_dateEnd);
+//                                                dd($formatted_dateStart,$formatted_dateEnd);
 
         $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                                   ->with('projectModel')
                                   ->get();
+//        dd($abandonedCarts);
         //        $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart']])
         //                                  ->get();
 

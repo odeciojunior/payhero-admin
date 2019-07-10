@@ -111,33 +111,32 @@ $(function () {
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr>';
-                    data += '<td class="shipping-id " style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type " style="vertical-align: middle;">' + value.description + '</td>';
-                    data += '<td class="shipping-value " style="vertical-align: middle;">' + value.code + '</td>';
-                    data += '<td class="shipping-zip-code-origin " style="vertical-align:">' + value.price + '</td>';
-                    data += '<td class="shipping-status " style="vertical-align: middle;">';
+                    data += '<td class="shipping-id " style="">' + value.name + '</td>';
+                    data += '<td class="shipping-type " style="">' + value.description + '</td>';
+                    data += '<td class="shipping-value " style="">' + value.code + '</td>';
+                    data += '<td class="shipping-zip-code-origin " style="">' + value.price + '</td>';
+                    data += '<td class="shipping-status">';
                     if (value.status === 1) {
-                        data += '<span class="badge badge-success">Ativo</span>';
+                        data += '<span class="badge badge-success mr-10">Ativo</span>';
                     } else {
                         data += '<span class="badge badge-danger">Desativado</span>';
                     }
 
                     data += '</td>';
 
-                    data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
 
-                    data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'>" +
+                    data += "<td style='min-width:200px;'>" +
                         "<a class='pointer details-plan mr-30' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>remove_red_eye</i></a>" +
                         "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a>"+
                         "<a class='pointer delete-plan ml-30' plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a>"
                         "</td>";
-                    // data += "<td style='vertical-align: middle' class=''><a class='pointer details-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>remove_red_eye</i></a></td>";
-                    // data += "<td style='vertical-align: middle' class=''><a class='pointer edit-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a></td>";
-                    // data += "<td style='vertical-align: middle' class=''><a class='pointer delete-plan'  plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a></td>";
+                    // data += "<td class='text-center'><a class='pointer details-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>remove_red_eye</i></a></td>";
+                    // data += "<td class='text-center'><a class='pointer edit-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a></td>";
+                    // data += "<td class='text-center'><a class='pointer delete-plan'  plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a></td>";
 
                     data += '</tr>';
+
                     $("#data-table-plan").append(data);
                 });
 
