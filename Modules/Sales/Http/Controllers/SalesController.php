@@ -247,7 +247,7 @@ class SalesController extends Controller
                 $client              = $this->getClient()->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
-                $plansSales = $this->getPlansSales()->with(['plan.products'])->where('sale', $sale->id)
+                $plansSales = $this->getPlansSales()->with('plan' ,'plan.products')->where('sale', $sale->id)
                                    ->get();
 
                 $plans = [];
@@ -256,9 +256,9 @@ class SalesController extends Controller
                 foreach ($plansSales as $key => $planSale) {
                     $plans[$key]['name']   = $this->getPlan()->find($planSale['plan'])->name;
                     $plans[$key]['amount'] = $planSale['amount'];
-                    $plans[$key]['value']  = $planSale['plan_value'];
-                    $plans[$key]['photo']  = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
-                    $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
+                    $plans[$key]['value'] = $planSale['plan_value'];
+                    $plans[$key]['photo'] = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
+                    $total                += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
                 }
 
                 $discount = '0,00';
@@ -298,8 +298,8 @@ class SalesController extends Controller
                     $taxaReal = (intval($total / 100) * $transaction->percentage_rate) + 100;
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
-                $whatsAppMsg = 'Olá '.$client->name;
-                $details = view('sales::details', [
+                $whatsAppMsg = 'Olá ' . $client->name;
+                $details     = view('sales::details', [
                     'sale'           => $sale,
                     'plans'          => $plans,
                     'client'         => $client,
@@ -309,7 +309,7 @@ class SalesController extends Controller
                     'subTotal'       => number_format(intval($subTotal) / 100, 2, ',', '.'),
                     'discount'       => number_format(intval($discount) / 100, 2, ',', '.'),
                     'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone).'&text='.$whatsAppMsg,
+                    'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg,
                     'comission'      => $comission,
                     'taxa'           => number_format($taxa / 100, 2, ',', '.'),
                     'taxaReal'       => $taxaReal,
