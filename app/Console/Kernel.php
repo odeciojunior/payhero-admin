@@ -27,7 +27,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('send:sms')->dailyAt('10:00');
         $schedule->command('verify:transfers')->dailyAt('03:00');
-        $schedule->command('verify:abandonedcarts')->hourly();
+        //$schedule->command('verify:abandonedcarts')->hourly();
+
+        $schedule->command('verify:pendingdomains')->hourly();
     }
 
     /**
