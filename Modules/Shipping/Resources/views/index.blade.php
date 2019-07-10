@@ -26,13 +26,13 @@
         <table id='tabela-fretes' class='table text-left table-fretes table-striped' style='width:100%'>
             <thead>
                 <tr>
-                    <td class='table-title'>Tipo</td>
-                    <td class='table-title'>Descrição</td>
-                    <td class='table-title'>Valor</td>
-                    <td class='table-title'>Informação</td>
-                    <td class='table-title'>Status</td>
-                    <td class='table-title'>Pré-Selecionado</td>
-                    <td class='table-title text-center'>Opções</td>
+                    <td class='table-title' width='300px'>Tipo</td>
+                    <td class='table-title' width='300px'>Descrição</td>
+                    <td class='table-title' width='300px'>Valor</td>
+                    <td class='table-title' width='300px'>Informação</td>
+                    <td class='table-title' width='300px'>Status</td>
+                    <td class='table-title' width='200px'>Pré-Selecionado</td>
+                    <td class='table-title text-center' width='200px'>Opções</td>
                 </tr>
             </thead>
             <tbody id='dados-tabela-frete'>

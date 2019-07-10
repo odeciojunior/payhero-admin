@@ -98,13 +98,13 @@ $(function () {
                 $.each(response.data, function (index, value) {
                     data = '';
                     data += '<tr>';
-                    data += '<td class="shipping-id" style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type" style="vertical-align: middle;">' + value.type + '</td>';
-                    data += '<td class="shipping-value" style="vertical-align: middle;">' + value.value + '</td>';
-                    data += '<td class="shipping-zip-code-origin" style="vertical-align:">' + value.code + '</td>';
+                    data += '<td class="shipping-id">' + value.name + '</td>';
+                    data += '<td class="shipping-type">' + value.type + '</td>';
+                    data += '<td class="shipping-value">' + value.value + '</td>';
+                    data += '<td class="shipping-zip-code-origin">' + value.code + '</td>';
                     data += '<td class="shipping-status" style="vertical-align: middle;">';
                     if (value.status === 1) {
-                        data += '<span class="badge badge-success">Ativo</span>';
+                        data += '<span class="badge badge-success mr-10">Ativo</span>';
                     } else {
                         data += '<span class="badge badge-danger">Desativado</span>';
                     }
@@ -115,13 +115,15 @@ $(function () {
                     //
                     // data += '</td>';
 
-                    data += "<td style='vertical-align: middle' class='text-center'>" +
+                    data += "<td style='min-width:200px;'>" +
                         "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
                         "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"+
                         "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
                         "</td>";
-                    // data += "<td style='vertical-align: middle'><a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a></td>";
-                    // data += "<td style='vertical-align: middle'><a role='button' class='delete-coupon pointer' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+
+                    // data += "<td class='text-center'><a role='button' class='details-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                    // data += "<td class='text-center'><a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a></td>";
+                    // data += "<td class='text-center'><a role='button' class='delete-coupon pointer' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a></td>";
 
                     data += '</tr>';
                     $("#data-table-coupon").append(data);
