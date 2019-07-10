@@ -58,7 +58,7 @@ class DomainResource extends Resource
             $activated = null;
             $responseValidateDomain = null;
             $responseValidateLink = null;
-
+/*
             $activated = $this->getCloudFlareService()->activationCheck($this->name);
 
             $linkBrandResponse = $this->getSendgridService()->getLinkBrand($this->name);
@@ -74,7 +74,7 @@ class DomainResource extends Resource
                                   'status' => $this->resource->getEnum('status', 'approved'),
                               ]);
             }
-
+*/
             if ($this->getCloudFlareService()->checkHtmlMetadata('https://checkout.' . $this->name, 'checkout-cloudfox', '1')) {
                 $this->update([
                                   'status' => $this->resource->getEnum('status', 'approved'),
