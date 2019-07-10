@@ -32,6 +32,7 @@
                     <td class='table-title'>Informação</td>
                     <td class='table-title'>Status</td>
                     <td class='table-title'>Pré-Selecionado</td>
+                    <td class='table-title text-center'>Opções</td>
                 </tr>
             </thead>
             <tbody id='dados-tabela-frete'>

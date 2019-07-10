@@ -111,19 +111,23 @@ $(function () {
 
                     data += '</td>';
 
-                    data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                    // data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                    //
+                    // data += '</td>';
 
-                    data += '</td>';
-
-                    dados += "<td style='vertical-align: middle'><a role='button' class='details-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
-                    dados += "<td style='vertical-align: middle'><a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>edit</i> </a></td>";
-                    dados += "<td style='vertical-align: middle'><a role='button' class='delete-coupon pointer' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>delete_outline</i> </a></td>";
+                    data += "<td style='vertical-align: middle' class='text-center'>" +
+                        "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
+                        "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"+
+                        "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
+                        "</td>";
+                    // data += "<td style='vertical-align: middle'><a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a></td>";
+                    // data += "<td style='vertical-align: middle'><a role='button' class='delete-coupon pointer' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a></td>";
 
                     data += '</tr>';
                     $("#data-table-coupon").append(data);
                 });
                 if (response.data == '') {
-                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='5' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-coupon").unbind('click');
                 $(".details-coupon").on('click', function () {

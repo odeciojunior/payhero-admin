@@ -12,7 +12,7 @@
 
                     <div class="form-group col-xl-6 col-lg-6">
                         <label for="price">Preço</label>
-                        <input name="price" type="text" class="form-control" id="price" required>
+                        <input name="price" type="text" class="form-control" id="price" placeholder="99,99" required>
                     </div>
                 </div>
 

@@ -91,11 +91,11 @@ $(function () {
                 $("#data-table-pixel").html('');
                 $.each(response.data, function (index, value) {
                     data = '';
-                    data += '<tr>';
-                    data += '<td class="shipping-id " style="vertical-align: middle;">' + value.name + '</td>';
-                    data += '<td class="shipping-type " style="vertical-align: middle;">' + value.code + '</td>';
-                    data += '<td class="shipping-value " style="vertical-align: middle;">' + value.platform + '</td>';
-                    data += '<td class="shipping-status" style="vertical-align: middle;">';
+                    data += '<tr class="shipping-id">';
+                    data += '<td class="shipping-id" style="min-width:120px;">' + value.name + '</td>';
+                    data += '<td class="shipping-type" style="min-width:120px;">' + value.code + '</td>';
+                    data += '<td class="shipping-value" style="min-width:120px;">' + value.platform + '</td>';
+                    data += '<td class="shipping-status" style="min-width:100px;">';
                     if (value.status == 1) {
                         data += '<span class="badge badge-success">Ativo</span>';
                     } else {
@@ -103,46 +103,51 @@ $(function () {
                     }
                     data += '</td>';
 
-                    $(document).ready(function () {
+                    // $(document).ready(function () {
+                    //
+                    //     var projectId = $("#project-id").val();
+                    //
+                    //     $("#tab-fretes").on('click', function () {
+                    //         $("#previewimage").imgAreaSelect({remove: true});
+                    //         atualizarFrete();
+                    //     });
+                    //     atualizarFrete();
+                    //
+                    //     function changeType() {
+                    //         $("#shipping-type").change(function () {
+                    //             // altera campo value dependendo do tipo do frete
+                    //             var selected = $("#shipping-type").val();
+                    //             if (selected === 'static') {
+                    //                 $("#value-shipping-row").css('display', 'block');
+                    //                 $("#zip-code-origin-shipping-row").css('display', 'none');
+                    //
+                    //             } else {
+                    //                 $("#value-shipping-row").css('display', 'none');
+                    //                 $("#zip-code-origin-shipping-row").css('display', 'block');
+                    //
+                    //             }
+                    //
+                    //             //mask money
+                    //             $('#shipping-value').mask('#.###,#0', {reverse: true});
+                    //         });
+                    //     }
+                    //
+                    // });
 
-    var projectId = $("#project-id").val();
+                    data += "<td style='min-width:200px;'>" +
+                        "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
+                        "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a>" +
+                        "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>"
+                    "</td>";
 
-    $("#tab-fretes").on('click', function () {
-        $("#previewimage").imgAreaSelect({remove: true});
-        atualizarFrete();
-    });
-    atualizarFrete();
-
-    function changeType() {
-        $("#shipping-type").change(function () {
-            // altera campo value dependendo do tipo do frete
-            var selected = $("#shipping-type").val();
-            if (selected === 'static') {
-                $("#value-shipping-row").css('display', 'block');
-                $("#zip-code-origin-shipping-row").css('display', 'none');
-
-            } else {
-                $("#value-shipping-row").css('display', 'none');
-                $("#zip-code-origin-shipping-row").css('display', 'block');
-
-            }
-
-            //mask money
-            $('#shipping-value').mask('#.###,#0', {reverse: true});
-        });
-    }
-
-});
-
-
-                    data += "<td style='vertical-align: middle' class=''><a role='button' class='details-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
-                    data += "<td style='vertical-align: middle' class=''><a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a></td>";
-                    data += "<td style='vertical-align: middle' class=''><a role='button' class='delete-pixel pointer'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+                    // data += "<td style='vertical-align: middle' class=''><a role='button' class='details-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                    // data += "<td style='vertical-align: middle' class=''><a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a></td>";
+                    // data += "<td style='vertical-align: middle' class=''><a role='button' class='delete-pixel pointer'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a></td>";
                     data += '</tr>';
                     $("#data-table-pixel").append(data);
                 });
                 if (response.data == '') {
-                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-pixel").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
                 }
                 $(".details-pixel").unbind('click');
                 $(".details-pixel").on('click', function () {

@@ -17,6 +17,8 @@
                         <td class='table-title'>Código</td>
                         <td class='table-title'>Preço</td>
                         <td class='table-title'>Status</td>
+                        <td class='table-title'></td>
+                        <td class='table-title text-center'>Opções</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-plan'>
