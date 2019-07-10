@@ -85,7 +85,7 @@ class DomainResource extends Resource
         return [
             'id'                => Hashids::encode($this->id),
             'domain'            => $this->name,
-            'ip_domain'         => $this->domain_ip,
+            'ip_domain'         => ($this->project->shopify_id == null) ? $this->domain_ip : 'Shopify',
             'status'            => $this->status,
             'status_translated' => $this->getEnum('status', $this->status, true),
         ];
