@@ -215,29 +215,11 @@
                                                 <label></label>
                                                 <div class="d-flex align-items-center justify-content-around">
                                                     <div class="p-2">
-                                                        <div class="btn-group" data-toggle="buttons" role="group"
-                                                             style="margin-top: 2px;">
-                                                            <label class="btn btn-outline-primary fix-m active">
-                                                                <input type="radio" name="radio-filtro"
-                                                                       value="semana" checked> Semana
-                                                            </label>
-                                                            <label class="btn btn-outline-primary fix-m">
-                                                                <input type="radio" name="radio-filtro"
-                                                                       value="mes"> Mês
-                                                            </label>
-                                                            <label class="btn btn-outline-primary fix-m">
-                                                                <input type="radio" name="radio-filtro"
-                                                                       value="ano"> Ano
-                                                            </label>
-                                                        </div>
                                                     </div>
                                                     <div class="p-2 d-flex">
                                                         <a id="personalizado" class="text-filtros">
-                                                            <svg class="icon-filtro"
-                                                                 xmlns="http://www.w3.org/2000/svg"
-                                                                 viewBox="0 0 24 24">
-                                                                <path
-                                                                        d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z"/>
+                                                            <svg class="icon-filtro" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                                <path d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z"/>
                                                             </svg>
                                                             Personalizado
                                                         </a>
@@ -250,7 +232,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 mt-3">
-                                        <table class="table">
+                                        <table class="table table-striped table-condensed">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Razão</th>
@@ -261,6 +243,9 @@
                                             <tbody id="table-transfers-body" class="custom-t-body">
                                             </tbody>
                                         </table>
+                                        <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                                            {{-- js carrega... --}}
+                                        </ul>                                
                                     </div>
                                 </div>
                             </div>
