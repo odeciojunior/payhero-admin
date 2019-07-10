@@ -49,14 +49,16 @@ class SaleApiResource extends Resource
         $products  = [];
         $project   = '';
         foreach ($plansSale as $planSale) {
-            $plano   = Plan::find($planSale['plan']);
-            $product = [];
-            $product['sku'] = $plano['id'];
-            $product['name'] = $plano['name'];
-            $product['amount'] = $planSale['amount'];
-            $product['price'] = $planSale['plan_value'];
+            $plano                  = Plan::with(['products'])->find($planSale['plan']);
+            $cost                   = current($plano->products)[0]->cost ?? 0;
+            $product                = [];
+            $product['sku']         = $plano['id'];
+            $product['name']        = $plano['name'];
+            $product['amount']      = $planSale['amount'];
+            $product['price']       = $planSale['plan_value'];
             $product['description'] = $plano['description'];
-            $products[] = $product;
+            $product['cost']        = $cost;
+            $products[]             = $product;
         }
 
         if (count($plansSale) > 1) {
@@ -103,28 +105,28 @@ class SaleApiResource extends Resource
         $shipping = Shipping::find($this->shipping);
 
         return [
-            'sale_code'        => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
+            'sale_code'       => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
             //'id'           => Hashids::connection('main')->encode($this->id),
-            'id'           => $this->id,
-            'project'      => $project,
-            'products'     => $products,
-            'client'       => $client['name'],
-            'email'        => $client['email'],
-            'doc'          => $client['document'],
-            'payment_type' => ($this->payment_method == 2) ? 'billet' : 'credit_card',
-            'status'       => $statusValue,
-            'data_compra'  => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
-            'end_date'     => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
-            'total_paid'   => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
-            'brand'        => $this->flag,
-            'shipping'     => $shipping->value,
+            'id'              => $this->id,
+            'project'         => $project,
+            'products'        => $products,
+            'client'          => $client['name'],
+            'email'           => $client['email'],
+            'doc'             => $client['document'],
+            'payment_type'    => ($this->payment_method == 2) ? 'billet' : 'credit_card',
+            'status'          => $statusValue,
+            'data_compra'     => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
+            'end_date'        => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
+            'total_paid'      => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0),
+            'brand'           => $this->flag,
+            'shipping'        => $shipping->value,
             'dolar_quotation' => $this->dolar_quotation,
-            'src'          => $checkout->src,
-            'utm_source'   => $checkout->utm_source,
-            'utm_medium'   => $checkout->utm_medium,
-            'utm_campaign' => $checkout->utm_campaign,
-            'utm_term'     => $checkout->utm_term,
-            'utm_content'  => $checkout->utm_content,
+            'src'             => $checkout->src,
+            'utm_source'      => $checkout->utm_source,
+            'utm_medium'      => $checkout->utm_medium,
+            'utm_campaign'    => $checkout->utm_campaign,
+            'utm_term'        => $checkout->utm_term,
+            'utm_content'     => $checkout->utm_content,
         ];
     }
 }
