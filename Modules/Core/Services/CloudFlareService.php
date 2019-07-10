@@ -155,8 +155,8 @@ class CloudFlareService
 
             return false;
         } catch (Exception $e) {
-            Log::warning('Erro ao remover dominio (dominio inexistente)');
-            report($e);
+            // Log::warning('Erro ao remover dominio (dominio inexistente)');
+            // report($e);
 
             return false;
         }
@@ -498,8 +498,8 @@ class CloudFlareService
                 return false;
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao checar dominio');
-            report($e);
+            // Log::warning('Erro ao checar dominio');
+            // report($e);
 
             return false;
         }
