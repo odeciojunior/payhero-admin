@@ -106,9 +106,14 @@ class PostBackShopifyController extends Controller
 
                 $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
 
+                $imgSrc = '';
+                if($image != null){
+                    $imgSrc = $image->getSrc();
+                }
+
                 $product->update([
                     'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
-                    'photo' => $image ? $image->getSrc() : ''
+                    'photo' => $imgSrc
                 ]);
 
             } else {
@@ -155,9 +160,14 @@ class PostBackShopifyController extends Controller
 
                 $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
 
+                $imgSrc = '';
+                if($image != null){
+                    $imgSrc = $image->getSrc();
+                }
+
                 $product->update([
                     'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
-                    'photo' => $image ? $image->getSrc() : ''
+                    'photo' => $imgSrc
                 ]);
 
                 ProductPlan::create([
