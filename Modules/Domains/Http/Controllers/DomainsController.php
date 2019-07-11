@@ -182,7 +182,7 @@ class DomainsController extends Controller
 
                 $project = $this->getProjectModel()->find($projectId);
 
-                if ($project->shopify_id) {
+                if (!empty($project->shopify_id)) {
                     //projeto shopify
                     $domainIp = $this->getCloudFlareService()::shopifyIp;
                 } else {
@@ -199,9 +199,25 @@ class DomainsController extends Controller
                                                                  ]);
 
                 if ($domainCreated) {
-                    DB::commit();
+                    if ($project->shopify_id == null) {
+                        $newDomain = $this->getCloudFlareService()
+                                          ->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
+                    } else {
+                        $newDomain                = $this->getCloudFlareService()
+                                                         ->integrationShopify($domainCreated->id, $requestData['name']);
+                        $requestData['domain_ip'] = 'Domínio Shopify';
+                    }
 
-                    return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
+                    if ($newDomain) {
+                        DB::commit();
+
+                        return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
+                    } else {
+                        //problema ao cadastrar dominio
+                        DB::rollBack();
+
+                        return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                    }
                 } else {
                     DB::rollBack();
 
@@ -379,7 +395,7 @@ class DomainsController extends Controller
 
         $data = (object) [
             'name'      => $domain->name,
-            'domain_ip' => ($domain->project->shopify_id == null) ? $domain->domain_ip : 'Shopify',
+            'domain_ip' => (empty($domain->project->shopify_id)) ? $domain->domain_ip : 'Shopify',
         ];
 
         $view = view('domains::show', [

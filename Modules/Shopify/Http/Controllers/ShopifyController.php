@@ -238,43 +238,43 @@ class ShopifyController extends Controller
                                                                                       'project'   => $project->id,
                                                                                   ]);
 
-                $shopify->setThemeByRole('main');
-                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
-
-                if ($htmlCart) {
-                    //template normal
-
-                    $shopifyIntegration->update([
-                                                    'theme_type' => $this->getShopifyIntegrationModel()
-                                                                         ->getEnum('theme_type', 'basic_theme'),
-                                                    'theme_name' => $shopify->getThemeName(),
-                                                    'theme_file' => 'sections/cart-template.liquid',
-                                                    'theme_html' => $htmlCart,
-                                                ]);
-
-                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
-                } else {
-                    //template ajax
-                    $shopifyIntegration->update([
-                                                    'theme_type' => $this->getShopifyIntegrationModel()
-                                                                         ->getEnum('theme_type', 'ajax_theme'),
-                                                    'theme_name' => $shopify->getThemeName(),
-                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
-                                                    'theme_html' => $htmlCart,
-                                                ]);
-
-                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
-                }
-
-                //inserir o javascript para o trackeamento (src, utm)
-                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
-                if ($htmlBody) {
-                    //template do layout
-                    $shopifyIntegration->update([
-                                                    'layout_theme_html' => $htmlBody,
-                                                ]);
-                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
-                }
+//                $shopify->setThemeByRole('main');
+//                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+//
+//                if ($htmlCart) {
+//                    //template normal
+//
+//                    $shopifyIntegration->update([
+//                                                    'theme_type' => $this->getShopifyIntegrationModel()
+//                                                                         ->getEnum('theme_type', 'basic_theme'),
+//                                                    'theme_name' => $shopify->getThemeName(),
+//                                                    'theme_file' => 'sections/cart-template.liquid',
+//                                                    'theme_html' => $htmlCart,
+//                                                ]);
+//
+//                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
+//                } else {
+//                    //template ajax
+//                    $shopifyIntegration->update([
+//                                                    'theme_type' => $this->getShopifyIntegrationModel()
+//                                                                         ->getEnum('theme_type', 'ajax_theme'),
+//                                                    'theme_name' => $shopify->getThemeName(),
+//                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+//                                                    'theme_html' => $htmlCart,
+//                                                ]);
+//
+//                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
+//                }
+//
+//                //inserir o javascript para o trackeamento (src, utm)
+//                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+//                if ($htmlBody) {
+//                    //template do layout
+//                    $shopifyIntegration->update([
+//                                                    'layout_theme_html' => $htmlBody,
+//                                                ]);
+//                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+//                }
 
                 $photo = $request->file('photo');
 
@@ -402,29 +402,29 @@ class ShopifyController extends Controller
                     }
                 }
 
-                //                $shopify->createShopWebhook([
-                //                                                "topic"   => "products/create",
-                //                                                "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
-                //                                                "format"  => "json",
-                //                                            ]);
-                //
-                //                $shopify->createShopWebhook([
-                //                                                "topic"   => "products/update",
-                //                                                "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
-                //                                                "format"  => "json",
-                //                                            ]);
-
                 $shopify->createShopWebhook([
                                                 "topic"   => "products/create",
-                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
+                                                "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
                                                 "format"  => "json",
                                             ]);
 
                 $shopify->createShopWebhook([
                                                 "topic"   => "products/update",
-                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
+                                                "address" => "https://app.cloudfox.net/postback/shopify/" . Hashids::encode($project['id']),
                                                 "format"  => "json",
                                             ]);
+
+//                $shopify->createShopWebhook([
+//                                                "topic"   => "products/create",
+//                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
+//                                                "format"  => "json",
+//                                            ]);
+//
+//                $shopify->createShopWebhook([
+//                                                "topic"   => "products/update",
+//                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
+//                                                "format"  => "json",
+//                                            ]);
 
                 return response()->json(['message' => 'Integração adicionada!'], 200);
             } else {
