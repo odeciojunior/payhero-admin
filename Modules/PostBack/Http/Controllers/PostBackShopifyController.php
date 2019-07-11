@@ -110,6 +110,9 @@ class PostBackShopifyController extends Controller
                 if($image != null){
                     $imgSrc = $image->getSrc();
                 }
+                else{
+                    Log::warning('erro ao registrar imagem : ' . print_r($variant, true) . ' - - ' . print_r($image, true));
+                }
 
                 $product->update([
                     'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
