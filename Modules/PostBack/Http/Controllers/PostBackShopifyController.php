@@ -115,7 +115,7 @@ class PostBackShopifyController extends Controller
                         $imgSrc = $shopifyProduct->getImage()->getSrc();
                     }
                     catch(\Exception $e){
-                        //
+                        Log::write(print_r($shopifyProduct, true));
                     }
                 }
 
@@ -177,7 +177,7 @@ class PostBackShopifyController extends Controller
                         $imgSrc = $shopifyProduct->getImage()->getSrc();
                     }
                     catch(\Exception $e){
-                        //
+                        Log::write(print_r($shopifyProduct, true));
                     }
                 }
 
