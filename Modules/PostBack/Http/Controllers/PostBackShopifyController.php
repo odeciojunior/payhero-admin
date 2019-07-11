@@ -123,8 +123,12 @@ class PostBackShopifyController extends Controller
                     $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
                 }
                 else {
-                    $product = $shopifyService->getProduct('3933947920466');
-                    dd($product->getImage()->getSrc());
+                    try{
+                        $imgSrc = $requestData['image']['src'];
+                    }
+                    catch(\Exception $e){
+                        //
+                    }
                 }
 
                 $product->update([
@@ -180,9 +184,8 @@ class PostBackShopifyController extends Controller
                     $imgSrc = $image->getSrc();
                 }
                 else{
-                    $shopifyProduct = $shopifyService->getProduct($requestData['id']);
                     try{
-                        $imgSrc = $shopifyProduct->getImage()->getSrc();
+                        $imgSrc = $requestData['image']['src'];
                     }
                     catch(\Exception $e){
                         Log::write(print_r($shopifyProduct, true));
