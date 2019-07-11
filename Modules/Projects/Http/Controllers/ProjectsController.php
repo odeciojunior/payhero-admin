@@ -455,6 +455,7 @@ class ProjectsController extends Controller
                     }
                 }
 
+                /*
                 if ($project->photo != null) {
                     $this->getDigitalOceanFileService()->deleteFile($project->photo);
                 }
@@ -462,6 +463,7 @@ class ProjectsController extends Controller
                 if ($project->logo != null) {
                     $this->getDigitalOceanFileService()->deleteFile($project->logo);
                 }
+                */
             } catch (Exception $e) {
                 Log::warning('ProjectController - destroy - Erro ao deletar foto e logo do project');
                 report($e);
