@@ -15,6 +15,7 @@ use Intervention\Image\Facades\Image;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\ShopifyService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Vinkla\Hashids\Facades\Hashids;
@@ -53,6 +54,10 @@ class ProjectsController extends Controller
      * @var $domainRecordModel
      */
     private $domainRecordModel;
+    /**
+     * @var ShopifyService
+     */
+    private $shopifyService;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -64,6 +69,18 @@ class ProjectsController extends Controller
         }
 
         return $this->projectModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
+     */
+    private function getShopifyService(string $urlStore = null, string $token = null)
+    {
+        if (!$this->shopifyService) {
+            $this->shopifyService = new ShopifyService($urlStore, $token);
+        }
+
+        return $this->shopifyService;
     }
 
     /**
@@ -398,7 +415,7 @@ class ProjectsController extends Controller
             $idProject = current(Hashids::decode($id));
 
             $project = $this->getProject()
-                            ->with(['domains', 'plans', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                            ->with(['domains', 'shopifyIntegrations', 'plans', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
                             ->where('id', $idProject)->first();
 
             $deletedDependecis = $this->deleteDependences($project);
@@ -415,12 +432,23 @@ class ProjectsController extends Controller
                         $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
                         $domainDeleted  = $domain->delete();
 
-                        if(!empty($project->shopify_id))
-                        {
+                        if (!empty($project->shopify_id)) {
                             //se for shopify, voltar as integraçoes ao html padrao
+                            try {
 
+                                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                    $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                    $shopify->setThemeByRole('main');
+                                    $shopify->updateTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                    $shopify->updateTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                    $shopifyIntegration->delete();
+                                }
+                            } catch (\Exception $e) {
+                                //throwl
+
+                            }
                         }
-
                     } else {
                         //erro ao deletar zona
                         //log error?
