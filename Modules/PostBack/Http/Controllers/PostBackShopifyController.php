@@ -108,7 +108,7 @@ class PostBackShopifyController extends Controller
 
                 $product->update([
                     'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
-                    'photo' => $image->getSrc()
+                    'photo' => $image ? $image->getSrc() : ''
                 ]);
 
             } else {
@@ -157,7 +157,7 @@ class PostBackShopifyController extends Controller
 
                 $product->update([
                     'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
-                    'photo' => $image->getSrc()
+                    'photo' => $image ? $image->getSrc() : ''
                 ]);
 
                 ProductPlan::create([
