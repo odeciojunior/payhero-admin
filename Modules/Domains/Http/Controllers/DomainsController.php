@@ -145,7 +145,6 @@ class DomainsController extends Controller
             if (isset($dataRequest["project"])) {
                 $projectId = current(Hashids::decode($dataRequest["project"]));
 
-
                 $domains = $this->getDomainModel()->with(['project'])->where('project_id', $projectId)->get();
 
                 $project = $this->getProjectModel()->with('domains')->find($projectId);
@@ -200,30 +199,15 @@ class DomainsController extends Controller
                                                                  ]);
 
                 if ($domainCreated) {
-                    if ($project->shopify_id == null) {
-                        $newDomain = $this->getCloudFlareService()
-                                          ->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
-                    } else {
-                        $newDomain                = $this->getCloudFlareService()
-                                                         ->integrationShopify($domainCreated->id, $requestData['name']);
-                        $requestData['domain_ip'] = 'Domínio Shopify';
-                    }
+                    DB::commit();
 
-                    if ($newDomain) {
-                        DB::commit();
-
-                        return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
-                    } else {
-                        //problema ao cadastrar dominio
-                        DB::rollBack();
-
-                        return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
-                    }
+                    return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
                 } else {
                     DB::rollBack();
 
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                 }
+
             } else {
                 //nao veio projectid
 
@@ -255,8 +239,7 @@ class DomainsController extends Controller
 
                 $subdomain = explode('.', $record->name);
 
-                switch($record->content)
-                {
+                switch ($record->content) {
                     CASE $this->getCloudFlareService()::shopifyIp:
                         $content = "Servidores Shopify";
                         break;

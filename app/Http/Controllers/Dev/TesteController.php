@@ -23,6 +23,39 @@ use Modules\Core\Services\DigitalOceanFileService;
 
 class TesteController extends Controller
 {
+    /**
+     * @var CloudFlareService
+     */
+    private $cloudFlareService;
+    /**
+     * @var SendgridService
+     */
+    private $sendgridService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
+     */
+    private function getCloudFlareService()
+    {
+        if (!$this->cloudFlareService) {
+            $this->cloudFlareService = app(CloudFlareService::class);
+        }
+
+        return $this->cloudFlareService;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     */
+    private function getSendgridService()
+    {
+        if (!$this->sendgridService) {
+            $this->sendgridService = app(SendgridService::class);
+        }
+
+        return $this->sendgridService;
+    }
+
     public function index()
     {
         $shopifyService = new ShopifyService('issoeincrivel.myshopify.com','cfaa3e8a7aeb7f31e8a5b3b7006645a5');

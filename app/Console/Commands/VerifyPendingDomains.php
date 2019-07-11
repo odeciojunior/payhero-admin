@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Entities\Domain;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\SendgridService;
 
@@ -19,8 +22,6 @@ class VerifyPendingDomains extends Command
      * @var string
      */
     protected $description = 'Verifica se os domínios pendentes ficaram ativos';
-
-
     /**
      * @var Domain
      */
@@ -33,7 +34,6 @@ class VerifyPendingDomains extends Command
      * @var SendgridService
      */
     private $sendgridService;
-
 
     /**
      * Create a new command instance.
@@ -79,41 +79,63 @@ class VerifyPendingDomains extends Command
 
         return $this->sendgridService;
     }
+
     /**
      * Execute the console command.
      * @return mixed
      */
     public function handle()
     {
-        $domains = $this->getDomainModel()->where('status', '!=', $this->getDomainModel()->getEnum('status', 'approved'))->get();
-        foreach ($domains as $domain) {
+        try {
+            $domains = $this->getDomainModel()
+                            ->with(['project'])
+                            ->where('status', '!=', $this->getDomainModel()->getEnum('status', 'approved'))
+                            ->get();
 
-            $activated              = null;
-            $responseValidateDomain = null;
-            $responseValidateLink   = null;
+            foreach ($domains as $domain) {
 
-            $activated = $this->getCloudFlareService()->activationCheck($domain->name);
+                $activated              = null;
+                $responseValidateDomain = null;
+                $responseValidateLink   = null;
 
-            $linkBrandResponse = $this->getSendgridService()->getLinkBrand($domain->name);
-            $sendgridResponse  = $this->getSendgridService()->getZone($domain->name);
+                $activated = $this->getCloudFlareService()->activationCheck($domain->name);
 
-            if (!empty($linkBrandResponse) && !empty($sendgridResponse)) {
-                $responseValidateDomain = $this->getSendgridService()->validateDomain($sendgridResponse->id);
-                $responseValidateLink   = $this->getSendgridService()->validateBrandLink($linkBrandResponse->id);
+                $linkBrandResponse = $this->getSendgridService()->getLinkBrand($domain->name);
+                $sendgridResponse  = $this->getSendgridService()->getZone($domain->name);
+
+                if (!empty($linkBrandResponse) && !empty($sendgridResponse)) {
+                    $responseValidateDomain = $this->getSendgridService()->validateDomain($sendgridResponse->id);
+                    $responseValidateLink   = $this->getSendgridService()->validateBrandLink($linkBrandResponse->id);
+                }
+
+                if ($activated && $responseValidateDomain && $responseValidateLink) {
+                    $domain->update([
+                                        'status' => $this->getDomainModel()->getEnum('status', 'approved'),
+                                    ]);
+                }
+
+                if ($this->getCloudFlareService()
+                         ->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
+
+                    if ($domain->project->shopify_id == null) {
+                        $newDomain = $this->getCloudFlareService()
+                                          ->integrationWebsite($domain->id, $domain->name, $domain->domain_ip);
+                    } else {
+                        $newDomain = $this->getCloudFlareService()
+                                          ->integrationShopify($domain->id, $domain->name);
+                    }
+
+                    if ($newDomain) {
+                        //integracao no shopify funcionou? aprova o dominio
+                        $domain->update([
+                                            'status' => $this->getDomainModel()->getEnum('status', 'approved'),
+                                        ]);
+                    }
+                }
             }
-
-            if ($activated && $responseValidateDomain && $responseValidateLink) {
-                $domain->update([
-                                  'status' => $this->getDomainModel()->getEnum('status', 'approved'),
-                              ]);
-            }
-
-            if ($this->getCloudFlareService()
-                     ->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
-                $domain->update([
-                                  'status' => $this->getDomainModel()->getEnum('status', 'approved'),
-                              ]);
-            }
+        } catch (Exception $e) {
+            Log::warning('Erro no command VerifyPendingDomains - ');
+            report($e);
         }
     }
 }
