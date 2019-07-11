@@ -63,17 +63,17 @@ class TesteController extends Controller
 
         $x = new ShopifyService('toda-bolsa.myshopify.com', '985c9fc4999e55f988a9dfd388fe6890');
 
-        $x->createShopWebhook([
-                                        "topic"   => "products/create",
-                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
-                                        "format"  => "json",
-                                    ]);
-
-        $x->createShopWebhook([
-                                        "topic"   => "products/update",
-                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
-                                        "format"  => "json",
-                                    ]);
+//        $x->createShopWebhook([
+//                                        "topic"   => "products/create",
+//                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
+//                                        "format"  => "json",
+//                                    ]);
+//
+//        $x->createShopWebhook([
+//                                        "topic"   => "products/update",
+//                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
+//                                        "format"  => "json",
+//                                    ]);
 
         //$x->setThemeByRole('main');
         //$html = $x->getTemplateHtml('layout/theme.liquid');
