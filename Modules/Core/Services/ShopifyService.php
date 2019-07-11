@@ -790,4 +790,35 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
             return [];
         }
     }
+
+    /**
+     * @param null $variantId
+     * @return Slince\Shopify\Manager\ProductVariant\Variant|null
+     */
+    public function getProductVariant($variantId = null)
+    {
+        if (!empty($this->client)) {
+            if ($variantId) {
+                return $this->client->getProductVariantManager()->find($variantId);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param null $imageId
+     * @return Slince\Shopify\Manager\ProductImage\Image|null
+     */
+    public function getImage($productId = null, $imageId = null)
+    {
+        if (!empty($this->client)) {
+            if ($productId && $imageId) {
+                return $this->client->getProductImageManager()->find($productId, $imageId);
+            }
+        } else {
+            return null;
+        }
+    }
+
 }

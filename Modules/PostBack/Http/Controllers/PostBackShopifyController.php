@@ -5,15 +5,15 @@ namespace Modules\PostBack\Http\Controllers;
 use App\Entities\Plan;
 use App\Entities\Product;
 use App\Entities\Project;
-use App\Entities\ShopifyIntegration;
 use Illuminate\Http\Request;
 use App\Entities\PostbackLog;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\ShopifyService;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Entities\ShopifyIntegration;
+use Modules\Core\Services\ShopifyService;
 
 /**
  * Class PostBackShopifyController
@@ -96,7 +96,6 @@ class PostBackShopifyController extends Controller
                 $product = $plan->getRelation('products')[0];
 
                 try {
-
                     $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
 
                     $shopify = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
@@ -104,44 +103,15 @@ class PostBackShopifyController extends Controller
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
 
+                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
+
+                $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+
                 $product->update([
-                                     'cost' => $shopify->getShopInventoryItem($variant["inventory_item_id"])
-                                                       ->getCost(),
-                                 ]);
+                    'cost'  => $shopify->getShopInventoryItem($variant["inventory_item_id"])->getCost(),
+                    'photo' => $image->getSrc()
+                ]);
 
-                if (count($requestData['variants']) > 1) {
-                    foreach ($requestData['images'] as $image) {
-
-                        foreach ($image['variant_ids'] as $variantId) {
-                            if ($variantId == $variant['id']) {
-
-                                try {
-                                    if ($image['src'] != '') {
-                                        $product->update([
-                                                             'photo' => $image['src'],
-                                                         ]);
-                                    } else {
-                                        $product->update([
-                                                             'photo' => $requestData['image']['src'],
-                                                         ]);
-                                    }
-                                } catch (\Exception $e) {
-                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
-                                    report($e);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    try {
-                        $product->update([
-                                             'photo' => $requestData['image']['src'],
-                                         ]);
-                    } catch (\Exception $e) {
-                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
-                        report($e);
-                    }
-                }
             } else {
                 $userProject = UserProject::where([
                                                       ['project', $project['id']],
@@ -174,39 +144,14 @@ class PostBackShopifyController extends Controller
                                   'code' => Hashids::encode($plan->id),
                               ]);
 
-                if (count($requestData['variants']) > 1) {
-                    foreach ($requestData['images'] as $image) {
+                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
 
-                        foreach ($image['variant_ids'] as $variantId) {
-                            if ($variantId == $variant['id']) {
+                $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
 
-                                try {
-                                    if ($image['src'] != '') {
-                                        $product->update([
-                                                             'photo' => $image['src'],
-                                                         ]);
-                                    } else {
-                                        $product->update([
-                                                             'photo' => $requestData['image']['src'],
-                                                         ]);
-                                    }
-                                } catch (\Exception $e) {
-                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
-                                    report($e);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    try {
-                        $product->update([
-                                             'photo' => $requestData['image']['src'],
-                                         ]);
-                    } catch (\Exception $e) {
-                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
-                        report($e);
-                    }
-                }
+                $product->update([
+                    'cost'  => $shopify->getShopInventoryItem($variant["inventory_item_id"])->getCost(),
+                    'photo' => $image->getSrc()
+                ]);
 
                 ProductPlan::create([
                                         'product' => $product->id,
@@ -216,7 +161,6 @@ class PostBackShopifyController extends Controller
             }
         }
 
-        //return 'success';
         return response()->json(['message' => 'success'], 200);
     }
 }

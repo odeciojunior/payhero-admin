@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\User;
-use Modules\Core\Services\ShopifyService;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Controller;
 use PHPHtmlParser\Selector\Selector;
 use App\Entities\SiteInvitationRequest;
 use Illuminate\Support\Facades\Storage;
+use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
@@ -25,20 +25,12 @@ class TesteController extends Controller
 {
     public function index()
     {
-        $x = new ShopifyService('gercastore.myshopify.com', 'bb78f036e257b07b8cc535a54e82d777');
-        //$x->deleteShopWebhook();
+        $shopifyService = new ShopifyService('issoeincrivel.myshopify.com','cfaa3e8a7aeb7f31e8a5b3b7006645a5');
 
-        $z = $x->getShopWebhook();
-        dd($z);
+        $variant = $shopifyService->getProductVariant('8076898140205');
 
+        $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
 
-        //$dns = new Dns('goldskin24k.com');
-
-        //dd($dns->getRecords('MX'));
-
-        //dd(dns_get_record("goldskin24k.com", DNS_ANY, $authns, $addtl));
-        /*
-
-        */
+        dd($image->getSrc());
     }
 }
