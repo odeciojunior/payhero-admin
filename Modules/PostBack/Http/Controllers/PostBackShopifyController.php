@@ -146,7 +146,6 @@ class PostBackShopifyController extends Controller
 
                 try {
                     $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
-
                     $shopify = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
                 } catch (\Exception $e) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
