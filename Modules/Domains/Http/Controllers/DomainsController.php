@@ -396,8 +396,8 @@ class DomainsController extends Controller
                                 $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                                 $shopify->setThemeByRole('main');
-                                $shopify->updateTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                $shopify->updateTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
                                 $shopifyIntegration->delete();
                             }
                         } catch (\Exception $e) {
