@@ -110,9 +110,9 @@ class PostBackShopifyController extends Controller
                     $imgSrc = $image->getSrc();
                 }
                 else{
-                    $product = $shopify->getProduct($plan->shopify_id);
+                    $shopifyProduct = $shopify->getProduct($plan->shopify_id);
                     try{
-                        $imgSrc = $product->getImage()->getSrc();
+                        $imgSrc = $shopifyProduct->getImage()->getSrc();
                     }
                     catch(\Exception $e){
                         //
@@ -172,9 +172,9 @@ class PostBackShopifyController extends Controller
                     $imgSrc = $image->getSrc();
                 }
                 else{
-                    $product = $shopify->getProduct($plan->shopify_id);
+                    $shopifyProduct = $shopify->getProduct($plan->shopify_id);
                     try{
-                        $imgSrc = $product->getImage()->getSrc();
+                        $imgSrc = $shopifyProduct->getImage()->getSrc();
                     }
                     catch(\Exception $e){
                         //
