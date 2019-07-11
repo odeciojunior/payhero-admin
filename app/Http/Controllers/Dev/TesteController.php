@@ -66,7 +66,7 @@ class TesteController extends Controller
             $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
         }
         else {
-            $product = $shopifyService->getProduct('3933911810130');
+            $product = $shopifyService->getProduct('3933947920466');
             dd($product->getImage()->getSrc());
         }
 

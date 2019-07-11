@@ -97,20 +97,20 @@ class PostBackShopifyController extends Controller
                 try {
                     $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
 
-                    $shopify = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
+                    $shopifyService = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
                 } catch (\Exception $e) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
 
-                $variant = $shopify->getProductVariant($plan->shopify_variant_id);
+                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
 
                 $imgSrc = '';
                 if($variant->getImageId()){
-                    $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
+                    $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
                     $imgSrc = $image->getSrc();
                 }
                 else{
-                    $shopifyProduct = $shopify->getProduct($plan->shopify_id);
+                    $shopifyProduct = $shopifyService->getProduct($plan->shopify_id);
                     try{
                         $imgSrc = $shopifyProduct->getImage()->getSrc();
                     }
@@ -119,8 +119,16 @@ class PostBackShopifyController extends Controller
                     }
                 }
 
+                if($variant->getImageId()){
+                    $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+                }
+                else {
+                    $product = $shopifyService->getProduct('3933947920466');
+                    dd($product->getImage()->getSrc());
+                }
+
                 $product->update([
-                    'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
+                    'cost'  => $shopifyService->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                     'photo' => $imgSrc
                 ]);
 
@@ -159,20 +167,20 @@ class PostBackShopifyController extends Controller
 
                 try {
                     $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
-                    $shopify = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
+                    $shopifyService = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
                 } catch (\Exception $e) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
 
-                $variant = $shopify->getProductVariant($plan->shopify_variant_id);
+                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
 
                 $imgSrc = '';
                 if($variant->getImageId()){
-                    $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
+                    $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
                     $imgSrc = $image->getSrc();
                 }
                 else{
-                    $shopifyProduct = $shopify->getProduct($plan->shopify_id);
+                    $shopifyProduct = $shopifyService->getProduct($requestData['id']);
                     try{
                         $imgSrc = $shopifyProduct->getImage()->getSrc();
                     }
