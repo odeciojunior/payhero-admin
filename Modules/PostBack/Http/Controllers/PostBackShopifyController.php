@@ -193,7 +193,7 @@ class PostBackShopifyController extends Controller
                 }
 
                 $product->update([
-                    'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
+                    'cost'  => $shopifyService->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                     'photo' => $imgSrc
                 ]);
 
