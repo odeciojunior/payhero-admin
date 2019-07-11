@@ -104,14 +104,19 @@ class PostBackShopifyController extends Controller
 
                 $variant = $shopify->getProductVariant($plan->shopify_variant_id);
 
-                $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
-
                 $imgSrc = '';
-                if($image != null){
+                if($variant->getImageId()){
+                    $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
                     $imgSrc = $image->getSrc();
                 }
                 else{
-                    Log::warning('erro ao registrar imagem : ' . print_r($variant, true) . ' - - ' . print_r($image, true));
+                    $product = $shopify->getProduct($plan->shopify_id);
+                    try{
+                        $imgSrc = $product->getImage()->getSrc();
+                    }
+                    catch(\Exception $e){
+                        //
+                    }
                 }
 
                 $product->update([
@@ -161,14 +166,19 @@ class PostBackShopifyController extends Controller
 
                 $variant = $shopify->getProductVariant($plan->shopify_variant_id);
 
-                $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
-
                 $imgSrc = '';
-                if($image != null){
+                if($variant->getImageId()){
+                    $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
                     $imgSrc = $image->getSrc();
                 }
                 else{
-                    Log::warning('erro ao registrar imagem : ' . print_r($variant, true) . ' - - ' . print_r($image, true));
+                    $product = $shopify->getProduct($plan->shopify_id);
+                    try{
+                        $imgSrc = $product->getImage()->getSrc();
+                    }
+                    catch(\Exception $e){
+                        //
+                    }
                 }
 
                 $product->update([

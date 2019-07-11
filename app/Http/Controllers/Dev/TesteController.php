@@ -58,12 +58,17 @@ class TesteController extends Controller
 
     public function index()
     {
-        $shopifyService = new ShopifyService('issoeincrivel.myshopify.com','cfaa3e8a7aeb7f31e8a5b3b7006645a5');
+        $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
 
-        $variant = $shopifyService->getProductVariant('8076898140205');
+        $variant = $shopifyService->getProductVariant('29438910693458');
+ 
+        if($variant->getImageId()){
+            $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+        }
+        else {
+            $product = $shopifyService->getProduct('3933911810130');
+            dd($product->getImage()->getSrc());
+        }
 
-        $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
-
-        dd($image->getSrc());
     }
 }
