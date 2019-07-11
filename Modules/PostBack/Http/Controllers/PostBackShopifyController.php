@@ -103,9 +103,9 @@ class PostBackShopifyController extends Controller
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
 
-                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
+                $variant = $shopify->getProductVariant($plan->shopify_variant_id);
 
-                $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+                $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
 
                 $product->update([
                     'cost'  => $shopify->getShopInventoryItem($variant["inventory_item_id"])->getCost(),
@@ -140,13 +140,22 @@ class PostBackShopifyController extends Controller
                                          'price'              => $variant['price'],
                                          'status'             => '1',
                                      ]);
+
                 $plan->update([
                                   'code' => Hashids::encode($plan->id),
                               ]);
 
-                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
+                try {
+                    $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
 
-                $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+                    $shopify = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                }
+
+                $variant = $shopify->getProductVariant($plan->shopify_variant_id);
+
+                $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
 
                 $product->update([
                     'cost'  => $shopify->getShopInventoryItem($variant["inventory_item_id"])->getCost(),
