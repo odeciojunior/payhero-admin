@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\ShopifyService;
 use Modules\Domains\Http\Requests\DomainCreateRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRecordRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
@@ -61,6 +62,10 @@ class DomainsController extends Controller
      * @var SendgridService
      */
     private $sendgridService;
+    /**
+     * @var ShopifyService
+     */
+    private $shopifyService;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
@@ -132,6 +137,18 @@ class DomainsController extends Controller
         }
 
         return $this->cloudFlareService;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
+     */
+    private function getShopifyService(string $urlStore = null, string $token = null)
+    {
+        if (!$this->shopifyService) {
+            $this->shopifyService = new ShopifyService($urlStore, $token);
+        }
+
+        return $this->shopifyService;
     }
 
     /**
@@ -223,7 +240,6 @@ class DomainsController extends Controller
 
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                 }
-
             } else {
                 //nao veio projectid
 
@@ -359,7 +375,8 @@ class DomainsController extends Controller
 
             $domainId = current(Hashids::decode($requestData['id']));
 
-            $domain = $this->getDomainModel()->with('records')->find($domainId);
+            $domain = $this->getDomainModel()->with('records', 'project', 'project.shopifyIntegrations')
+                           ->find($domainId);
 
             if ($this->getCloudFlareService()->deleteZone($domain->name)) {
                 //zona deletada
@@ -370,6 +387,25 @@ class DomainsController extends Controller
                 $domainDeleted  = $domain->delete();
 
                 if ($domainDeleted) {
+
+                    if (!empty($domain->project->shopify_id)) {
+                        //se for shopify, voltar as integraçoes ao html padrao
+                        try {
+
+                            foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setThemeByRole('main');
+                                $shopify->updateTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                $shopify->updateTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                $shopifyIntegration->delete();
+                            }
+                        } catch (\Exception $e) {
+                            //throwl
+
+                        }
+                    }
+
                     return response()->json(['message' => 'Domínio removido com sucesso'], 200);
                 } else {
                     return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
