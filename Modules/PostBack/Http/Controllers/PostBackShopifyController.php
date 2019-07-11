@@ -58,7 +58,6 @@ class PostBackShopifyController extends Controller
 
         if (!$project) {
             Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
-
             return 'error';
         }
 
@@ -108,7 +107,7 @@ class PostBackShopifyController extends Controller
                 $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
 
                 $product->update([
-                    'cost'  => $shopify->getShopInventoryItem($variant["inventory_item_id"])->getCost(),
+                    'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                     'photo' => $image->getSrc()
                 ]);
 
@@ -158,7 +157,7 @@ class PostBackShopifyController extends Controller
                 $image = $shopify->getImage($variant->getProductId(),$variant->getImageId());
 
                 $product->update([
-                    'cost'  => $shopify->getShopInventoryItem($variant["inventory_item_id"])->getCost(),
+                    'cost'  => $shopify->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
                     'photo' => $image->getSrc()
                 ]);
 
