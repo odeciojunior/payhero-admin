@@ -40,7 +40,7 @@ class ShopifyService
     public function __construct(string $urlStore, string $token)
     {
         if (!$this->cacheDir) {
-            $cache = './tmp';
+            $cache = './public/tmp';
         } else {
             $cache = $this->cacheDir;
         }
