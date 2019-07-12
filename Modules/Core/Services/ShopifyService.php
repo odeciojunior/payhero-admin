@@ -213,6 +213,30 @@ class ShopifyService
      * @param string $value
      * @return bool
      */
+    public function setTemplateHtml(string $templateKeyName, string $value)
+    {
+        if (!empty($this->theme)) {
+
+            $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
+                "key"   => $templateKeyName,
+                "value" => $value,
+            ]);
+
+            if ($asset) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; //throwl
+        }
+    }
+
+    /**
+     * @param string $templateKeyName
+     * @param string $value
+     * @return bool
+     */
     public function updateTemplateHtml(string $templateKeyName, string $value, $ajax = false)
     {
         if (!empty($this->theme)) {

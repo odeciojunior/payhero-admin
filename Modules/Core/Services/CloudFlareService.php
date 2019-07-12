@@ -264,7 +264,6 @@ class CloudFlareService
             //dominio criado
 
             $this->setZone($newZone->name);
-
             $this->addRecord("A", $newZone->name, $ipAddress);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'   => $domainModelId,
@@ -373,7 +372,7 @@ class CloudFlareService
 
             $this->setZone($newZone->name);
 
-            $this->addRecord("A", $newZone->name, self::shopifyIp);
+            $this->addRecord("A", $newZone->name, self::shopifyIp, 0, false);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'   => $domainModelId,
                                                       'type'        => 'A',

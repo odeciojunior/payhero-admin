@@ -23,14 +23,66 @@ use Modules\Core\Services\DigitalOceanFileService;
 
 class TesteController extends Controller
 {
+    /**
+     * @var CloudFlareService
+     */
+    private $cloudFlareService;
+    /**
+     * @var SendgridService
+     */
+    private $sendgridService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
+     */
+    private function getCloudFlareService()
+    {
+        if (!$this->cloudFlareService) {
+            $this->cloudFlareService = app(CloudFlareService::class);
+        }
+
+        return $this->cloudFlareService;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     */
+    private function getSendgridService()
+    {
+        if (!$this->sendgridService) {
+            $this->sendgridService = app(SendgridService::class);
+        }
+
+        return $this->sendgridService;
+    }
+
     public function index()
     {
-        $x = new ShopifyService('gercastore.myshopify.com', 'bb78f036e257b07b8cc535a54e82d777');
+
+        // $activated = $this->getCloudFlareService()->activationCheck('amparolista.com.br');
+
+        $x = new ShopifyService('toda-bolsa.myshopify.com', '985c9fc4999e55f988a9dfd388fe6890');
+
+//        $x->createShopWebhook([
+//                                        "topic"   => "products/create",
+//                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
+//                                        "format"  => "json",
+//                                    ]);
+//
+//        $x->createShopWebhook([
+//                                        "topic"   => "products/update",
+//                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
+//                                        "format"  => "json",
+//                                    ]);
+
+        //$x->setThemeByRole('main');
+        //$html = $x->getTemplateHtml('layout/theme.liquid');
+
+        //$x->insertUtmTracking('layout/theme.liquid', $html);
         //$x->deleteShopWebhook();
 
         $z = $x->getShopWebhook();
         dd($z);
-
 
         //$dns = new Dns('goldskin24k.com');
 

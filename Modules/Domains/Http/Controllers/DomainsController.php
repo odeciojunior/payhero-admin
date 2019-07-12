@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\ShopifyService;
 use Modules\Domains\Http\Requests\DomainCreateRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRecordRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
@@ -61,6 +62,10 @@ class DomainsController extends Controller
      * @var SendgridService
      */
     private $sendgridService;
+    /**
+     * @var ShopifyService
+     */
+    private $shopifyService;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
@@ -135,6 +140,18 @@ class DomainsController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
+     */
+    private function getShopifyService(string $urlStore = null, string $token = null)
+    {
+        if (!$this->shopifyService) {
+            $this->shopifyService = new ShopifyService($urlStore, $token);
+        }
+
+        return $this->shopifyService;
+    }
+
+    /**
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -144,7 +161,6 @@ class DomainsController extends Controller
             $dataRequest = $request->all();
             if (isset($dataRequest["project"])) {
                 $projectId = current(Hashids::decode($dataRequest["project"]));
-
 
                 $domains = $this->getDomainModel()->with(['project'])->where('project_id', $projectId)->get();
 
@@ -183,7 +199,7 @@ class DomainsController extends Controller
 
                 $project = $this->getProjectModel()->find($projectId);
 
-                if ($project->shopify_id) {
+                if (!empty($project->shopify_id)) {
                     //projeto shopify
                     $domainIp = $this->getCloudFlareService()::shopifyIp;
                 } else {
@@ -255,8 +271,7 @@ class DomainsController extends Controller
 
                 $subdomain = explode('.', $record->name);
 
-                switch($record->content)
-                {
+                switch ($record->content) {
                     CASE $this->getCloudFlareService()::shopifyIp:
                         $content = "Servidores Shopify";
                         break;
@@ -360,7 +375,8 @@ class DomainsController extends Controller
 
             $domainId = current(Hashids::decode($requestData['id']));
 
-            $domain = $this->getDomainModel()->with('records')->find($domainId);
+            $domain = $this->getDomainModel()->with('records', 'project', 'project.shopifyIntegrations')
+                           ->find($domainId);
 
             if ($this->getCloudFlareService()->deleteZone($domain->name)) {
                 //zona deletada
@@ -371,6 +387,25 @@ class DomainsController extends Controller
                 $domainDeleted  = $domain->delete();
 
                 if ($domainDeleted) {
+
+                    if (!empty($domain->project->shopify_id)) {
+                        //se for shopify, voltar as integraçoes ao html padrao
+                        try {
+
+                            foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setThemeByRole('main');
+                                $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                $shopifyIntegration->delete();
+                            }
+                        } catch (\Exception $e) {
+                            //throwl
+
+                        }
+                    }
+
                     return response()->json(['message' => 'Domínio removido com sucesso'], 200);
                 } else {
                     return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
@@ -396,7 +431,7 @@ class DomainsController extends Controller
 
         $data = (object) [
             'name'      => $domain->name,
-            'domain_ip' => ($domain->project->shopify_id == null) ? $domain->domain_ip : 'Shopify',
+            'domain_ip' => (empty($domain->project->shopify_id)) ? $domain->domain_ip : 'Shopify',
         ];
 
         $view = view('domains::show', [
