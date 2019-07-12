@@ -88,12 +88,12 @@
                                             </div>
                                             <div class="col-lg-2">
                                                 <h6 class="label-price relatorios"> Aguardando Pagamento </h6>
-                                                <h4 class="number green" id='qtd-aproved'>0<i class="fas fa-check"></i>
+                                                <h4 class="number blue-800" id='qtd-pending'>0<i class="fas fa-check"></i>
                                                 </h4>
                                             </div>
                                             <div class="col-lg-2">
                                                 <h6 class="label-price relatorios"> Canceladas </h6>
-                                                <h4 class="number green" id='qtd-aproved'>0<i class="fas fa-check"></i>
+                                                <h4 class="number red" id='qtd-canceled'>0<i class="fas fa-check"></i>
                                                 </h4>
                                             </div>
                                             <div class="col-lg-2">
@@ -159,7 +159,7 @@
                                                             Desktop
                                                         </div>
                                                         <div class="col-lg-6">
-                                                            <span class="money-td green">{{--R$500,00--}}Em Breve</span>
+                                                            <span class="money-td green" id='percent-desktop'>0</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -171,7 +171,7 @@
                                                             Mobile
                                                         </div>
                                                         <div class="col-lg-6">
-                                                            <span class="money-td green">{{--R$1.200,00--}}Em Breve</span>
+                                                            <span class="money-td green" id='percent-mobile'>0</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -193,12 +193,12 @@
                                                         <div class="col-lg-4">
                                                             Cartão
                                                         </div>
-                                                        <div class="col-lg-4">
-                                                            {{--0%--}} Em Breve
+                                                        <div class="col-lg-4" id='percent-credit-card-convert'>
+                                                            0
                                                         </div>
-                                                        <div class="col-lg-4">
-                                                            <span class="money-td green">{{--R$500,00--}}Em Breve</span>
-                                                        </div>
+                                                        {{--<div class="col-lg-4">
+                                                            <span class="money-td green">--}}{{--R$500,00--}}{{--Em Breve</span>
+                                                        </div>--}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -208,12 +208,12 @@
                                                         <div class="col-lg-4">
                                                             Boleto
                                                         </div>
-                                                        <div class="col-lg-4">
-                                                            {{-- 30%--}}Em Breve
+                                                        <div class="col-lg-4" id='percent-boleto-convert'>
+                                                            0
                                                         </div>
-                                                        <div class="col-lg-4">
-                                                            <span class="money-td green">{{--R$1.200,00--}}Em Breve</span>
-                                                        </div>
+                                                        {{-- <div class="col-lg-4">
+                                                             <span class="money-td green" id='boleto-value'>0</span>
+                                                         </div>--}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -272,8 +272,21 @@
                                 <div class="card shadow">
                                     <div class="card-header">
                                         <h4> Origem </h4>
+                                        <select class="browser-default custom-select" id='origem'>
+                                            <option selected value="src">SRC</option>
+                                            <option value="utm_source">UTM Source</option>
+                                            <option value="utm_medium">UTM Medium</option>
+                                            <option value="utm_campaign">UTM Campaign</option>
+                                            <option value="utm_term">UTM Term</option>
+                                            <option value="utm_content">UTM Content</option>
+                                        </select>
                                     </div>
-                                    <div class="data-holder empty-400"></div>
+                                    <div class="data-holder empty-400">
+                                        <table>
+                                            <tbody id='dados_tabela'>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

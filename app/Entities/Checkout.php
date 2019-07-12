@@ -36,15 +36,37 @@ class Checkout extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     *
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
-    protected $fillable = ['project', 'id_log_session', 'status', 'ip', 'city', 'state', 'state_name', 'zip_code', 'country', 'parameter', 'currency', 'lat', 'lon', 'created_at', 'updated_at', 'deleted_at', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'src'];
+    protected $fillable = [
+        'project',
+        'id_log_session',
+        'status',
+        'ip',
+        'city',
+        'state',
+        'state_name',
+        'zip_code',
+        'country',
+        'parameter',
+        'currency',
+        'lat',
+        'lon',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_term',
+        'utm_content',
+        'src',
+        'is_mobile',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
