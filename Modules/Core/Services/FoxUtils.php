@@ -29,4 +29,41 @@ class FoxUtils
 
         return $MXresult || $Aresult;
     }
+
+    public static function validateEmail($email)
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $emailExploded = explode('@', $email);
+            $variant       = INTL_IDNA_VARIANT_2003;
+            if (defined('INTL_IDNA_VARIANT_UTS46')) {
+                $variant = INTL_IDNA_VARIANT_UTS46;
+            }
+            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), '.') . '.';
+
+            $checkdnsrr = checkdnsrr($host, 'MX');
+            if ($checkdnsrr) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public static function prepareCellPhoneNumber($phoneNumber)
+    {
+        $number = preg_replace("/[^0-9]/", "", $phoneNumber);
+
+        if (strlen($number) == 11) {
+            return $number;
+        } else if (strlen($number) == 10) {
+            $subNumber = substr($number, 2, 1);
+            if ($subNumber != 2 && $subNumber != 3 && $subNumber != 4 && $subNumber != 5) {
+                $number = substr_replace($number, '9', 3, 0);
+
+                return $number;
+            }
+        }
+
+        return '';
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Services\CartRecoveryService;
 
-class SendEmailCartRecovery extends Command
+class VerifyAbandonedCarts extends Command
 {
     /**
      * The name and signature of the console command.

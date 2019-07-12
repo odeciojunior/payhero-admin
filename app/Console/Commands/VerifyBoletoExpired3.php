@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Sms\SmsScheduling;
+use Modules\Core\Services\BoletoService;
 
-class SendSms extends Command
+class VerifyBoletoExpired3 extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'send:sms';
+    protected $signature = 'verify:boletoexpired3';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Envio de sms';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -38,10 +38,7 @@ class SendSms extends Command
      */
     public function handle()
     {
-        SmsScheduling::verifyBoletosExpiring(); 
-
-        SmsScheduling::verifyBoletosExpired();
+        $boletoService = new BoletoService();
+        $boletoService->verifyBoletoExpired3();
     }
-
-    
 }
