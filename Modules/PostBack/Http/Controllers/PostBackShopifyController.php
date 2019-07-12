@@ -55,9 +55,10 @@ class PostBackShopifyController extends Controller
                             ]);
 
         $project = Project::find(Hashids::decode($request->project_id)[0]);
+        Log::warning(Hashids::decode($request->project_id)[0]);
 
         if (!$project) {
-            Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
+            Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
             return 'error';
         }
 
@@ -178,7 +179,7 @@ class PostBackShopifyController extends Controller
                 }
 
                 $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
-
+ 
                 $imgSrc = '';
                 if($variant->getImageId()){
                     $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());

@@ -177,7 +177,6 @@
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
                             <div class="modal-content">
                                 <div class="modal-header text-center">
-                                    
                                     <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
                                         <i class="material-icons md-16">close</i>
                                     </a>
