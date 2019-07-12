@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\User;
-use Modules\Core\Services\ShopifyService;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Controller;
 use PHPHtmlParser\Selector\Selector;
 use App\Entities\SiteInvitationRequest;
 use Illuminate\Support\Facades\Storage;
+use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
@@ -58,39 +58,17 @@ class TesteController extends Controller
 
     public function index()
     {
+        $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
 
-        // $activated = $this->getCloudFlareService()->activationCheck('amparolista.com.br');
+        $variant = $shopifyService->getProductVariant('29438910693458');
+ 
+        if($variant->getImageId()){
+            $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+        }
+        else {
+            $product = $shopifyService->getProduct('3933947920466');
+            dd($product->getImage()->getSrc());
+        }
 
-        $x = new ShopifyService('toda-bolsa.myshopify.com', '985c9fc4999e55f988a9dfd388fe6890');
-
-//        $x->createShopWebhook([
-//                                        "topic"   => "products/create",
-//                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
-//                                        "format"  => "json",
-//                                    ]);
-//
-//        $x->createShopWebhook([
-//                                        "topic"   => "products/update",
-//                                        "address" => "https://app.cloudfox.net/postback/shopify/nyOeXZKMagAQap9",
-//                                        "format"  => "json",
-//                                    ]);
-
-        //$x->setThemeByRole('main');
-        //$html = $x->getTemplateHtml('layout/theme.liquid');
-
-        //$x->insertUtmTracking('layout/theme.liquid', $html);
-        //$x->deleteShopWebhook();
-
-        $z = $x->getShopWebhook();
-        dd($z);
-
-        //$dns = new Dns('goldskin24k.com');
-
-        //dd($dns->getRecords('MX'));
-
-        //dd(dns_get_record("goldskin24k.com", DNS_ANY, $authns, $addtl));
-        /*
-
-        */
     }
 }
