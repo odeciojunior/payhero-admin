@@ -1,65 +1,111 @@
-@extends('layouts.app')
+@extends('layouts.auth')
+
+@section('title', '- Login')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('password.request') }}" aria-label="{{ __('Reset Password') }}">
-                        @csrf
+    <div class="container d-flex justify-content-center">
+        <div class="content-holder">
+            <div class="page-content d-flex flex-column justify-content-center">
 
-                        <input type="hidden" name="token" value="{{ $token }}">
+                <div class="logobar text-center">
+                    <img src="{{ asset('modules/global/adminremark/assets/images/logo-oficial.svg') }}" alt="CloudFox">
+                </div>
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                <div class="clearfix"></div>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
+                <div class="panel">
 
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
+                    <div id="panel-login">
+                        <h3 class="text-center"> Change your password </h3>
+                        <form autocomplete="off" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+                            @csrf
+                            <div class="input-holder">
+                                <input type="password" placeholder="{{ __('New password') }}" class="{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
                             </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                            <div class="input-holder">
+                                <input type="password" placeholder="{{ __('Re-type new password') }}" class="{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                @if ($errors->has('password'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
                             </div>
+
+
+
+                            <div class="clearfix"></div>
+
+                            <button type="submit" value="Entrar com e-mail" class="btn btn-primary orange"> Change </button>
+
+                            <div class="btnfix"></div>
+                        </form>
+
+                    </div>
+
+                    <div id="panel-recover" style="display:none;">
+                        <h3 class="text-center"> Recover your password </h3>
+
+                        <form>
+                            <div class="input-holder">
+                                <input type="email" name="email" class="{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('E-Mail') }}" required autofocus>
+                                </span>
+                            </div>
+                        </form>
+
+                        <div class="password-alert text-center">
+                            We will send a recover link to your e-mail address.
                         </div>
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Reset Password') }}
-                                </button>
-                            </div>
+                        <div class="clearfix"></div>
+
+                        <button type="submit" value="Entrar com e-mail" class="btn btn-primary orange"> Send recover link </button>
+                        <div class="btnfix"></div>
+
+                        <div class="text-left">
+                            <a id="backLogin" role="button" class="sm-text d-flex align-items-center">  <i class="material-icons md-18">keyboard_arrow_left</i> Back to Login </a>
                         </div>
-                    </form>
+
+                    </div>
                 </div>
+                <div class="hr"></div>
+
+                <div class="d-flex justify-content-center align-items-center">
+                    <a class="linkfooter" target="_blank" href="https://cloudfox.net/terms" style="font-size: 11px"> Terms & Conditions </a>
+                    <div class="oval"></div>
+                    <a class="linkfooter" href="#" style="font-size: 11px"> Support </a>
+                </div>
+
+                <div class="clearfix"></div>
+
             </div>
+
+
         </div>
     </div>
-</div>
+
+
+    <script>
+        $(document).ready(function(){
+            $("#forgotClick").click(function(){
+                $("#panel-login").slideUp( "800" ).delay( "250" ).fadeOut( "800" ).hide();
+                $("#panel-recover").slideDown( "800" ).delay( "250" ).fadeIn( "800" ).show();
+            });
+
+            $("#backLogin").click(function(){
+                $("#panel-recover").slideUp( "800" ).delay( "250" ).fadeOut( "800" ).hide();
+                $("#panel-login").slideDown( "800" ).delay( "250" ).fadeIn( "800" ).show();
+            });
+        });
+
+    </script>
+
 @endsection
+
+
