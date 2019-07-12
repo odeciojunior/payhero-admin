@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('verify:boletowaitingpayment')->dailyAt('12:00');
 
         //carrinhos abandonados
-//        $schedule->command('verify:abandonedcarts')->dailyAt('12:00');
+//        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
 
     }
 

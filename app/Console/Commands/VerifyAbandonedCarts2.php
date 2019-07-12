@@ -3,27 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Sms\SmsScheduling;
+use Modules\Core\Services\CartRecoveryService;
 
-class SendSms extends Command
+class VerifyAbandonedCarts2 extends Command
 {
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
-    protected $signature = 'send:sms';
-
+    protected $signature = 'verify:abandonedcarts2';
     /**
      * The console command description.
-     *
      * @var string
      */
-    protected $description = 'Envio de sms';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
-     *
      * @return void
      */
     public function __construct()
@@ -33,15 +29,11 @@ class SendSms extends Command
 
     /**
      * Execute the console command.
-     *
      * @return mixed
      */
     public function handle()
     {
-        SmsScheduling::verifyBoletosExpiring(); 
-
-        SmsScheduling::verifyBoletosExpired();
+        $cartRecoveryService = new CartRecoveryService();
+        $cartRecoveryService->verifyAbandonedCarts2();
     }
-
-    
 }

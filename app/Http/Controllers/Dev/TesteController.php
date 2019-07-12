@@ -60,15 +60,21 @@ class TesteController extends Controller
     {
         $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
 
-        $variant = $shopifyService->getProductVariant('29438910693458');
- 
-        if($variant->getImageId()){
-            $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
-        }
-        else {
-            $product = $shopifyService->getProduct('3933947920466');
-            dd($product->getImage()->getSrc());
-        }
+        $shopifyService->deleteShopWebhook();
+
+        $shopifyService->createShopWebhook([
+                                               "topic"   => "products/create",
+                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
+                                               "format"  => "json",
+                                           ]);
+
+        $shopifyService->createShopWebhook([
+                                               "topic"   => "products/update",
+                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
+                                               "format"  => "json",
+                                           ]);
+
+        dd($shopifyService->getShopWebhook());
 
     }
 }

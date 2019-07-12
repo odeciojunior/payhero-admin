@@ -3,23 +3,27 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Services\CartRecoveryService;
+use Modules\Core\Services\BoletoService;
 
-class SendEmailCartRecovery extends Command
+class VerifyBoletoWaitingPayment extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
-    protected $signature = 'verify:abandonedcarts';
+    protected $signature = 'verify:boletowaitingpayment';
+
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Command description';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -29,11 +33,12 @@ class SendEmailCartRecovery extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
     {
-        $cartRecoveryService = new CartRecoveryService();
-        $cartRecoveryService->verifyAbandonedCarts();
+        $boletoSerivce = new BoletoService();
+        $boletoSerivce->verifyBoletoWaitingPayment();
     }
 }

@@ -26,9 +26,14 @@ class BoletoService
             $sendEmail   = new SendgridService();
             $clientName  = $boleto->clientModel->name;
             $clientEmail = $boleto->clientModel->email;
-            $totalValue  = $boleto[0]->total_paid_value;
-            $view        = view('core::emails.boleto', compact('totalValue','clientName'));
-            $sendEmail->sendEmail($view, 'Verifiquei aqui está pendente o pagamento', 'noreply@cloudfox.app', 'cloudfox', '', '');
+
+            $emailValidated = FoxUtils::validateEmail($clientEmail);
+
+            if ($emailValidated) {
+                $totalValue = $boleto->total_paid_value;
+                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
+                $sendEmail->sendEmail($view, 'Verifiquei aqui está pendente o pagamento', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            }
         }
     }
 
@@ -41,12 +46,15 @@ class BoletoService
                               ->get();
 
         foreach ($boletoDueToday as $boleto) {
-            $sendEmail   = new SendgridService();
-            $clientName  = $boleto->clientModel->name;
-            $clientEmail = $boleto->clientModel->email;
-            $totalValue  = $boleto->total_paid_value;
-            $view        = view('core::emails.boleto', compact('totalValue','clientName'));
-            $sendEmail->sendEmail($view, 'Hoje vence o seu boleto', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            $sendEmail      = new SendgridService();
+            $clientName     = $boleto->clientModel->name;
+            $clientEmail    = $boleto->clientModel->email;
+            $emailValidated = FoxUtils::validateEmail($clientEmail);
+            if ($emailValidated) {
+                $totalValue = $boleto->total_paid_value;
+                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
+                $sendEmail->sendEmail($view, 'Hoje vence o seu boleto', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            }
         }
     }
 
@@ -56,12 +64,15 @@ class BoletoService
         $boletoWaitionPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
                                     ->with('clientModel')->get();
         foreach ($boletoWaitionPayment as $boleto) {
-            $sendEmail   = new SendgridService();
-            $clientName  = $boleto->clientModel->name;
-            $clientEmail = $boleto->clientModel->email;
-            $totalValue  = $boleto->total_paid_value;
-            $view        = view('core::emails.boleto', compact('totalValue','clientName'));
-            $sendEmail->sendEmail($view, 'Já separamos seu pedido', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            $sendEmail      = new SendgridService();
+            $clientName     = $boleto->clientModel->name;
+            $clientEmail    = $boleto->clientModel->email;
+            $emailValidated = FoxUtils::validateEmail($clientEmail);
+            if ($emailValidated) {
+                $totalValue = $boleto->total_paid_value;
+                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
+                $sendEmail->sendEmail($view, 'Já separamos seu pedido', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            }
         }
     }
 
@@ -71,12 +82,15 @@ class BoletoService
         $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
                              ->with('clientModel')->get();
         foreach ($boletoExpired as $boleto) {
-            $sendEmail   = new SendgridService();
-            $clientName  = $boleto->clientModel->name;
-            $clientEmail = $boleto->clientModel->email;
-            $totalValue  = $boleto->total_paid_value;
-            $view        = view('core::emails.boleto', compact('totalValue','clientName'));
-            $sendEmail->sendEmail($view, 'Vamos ter que liberar sua mercadoria', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            $sendEmail      = new SendgridService();
+            $clientName     = $boleto->clientModel->name;
+            $clientEmail    = $boleto->clientModel->email;
+            $emailValidated = FoxUtils::validateEmail($clientEmail);
+            if ($emailValidated) {
+                $totalValue = $boleto->total_paid_value;
+                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
+                $sendEmail->sendEmail($view, 'Vamos ter que liberar sua mercadoria', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            }
         }
     }
 
@@ -86,12 +100,22 @@ class BoletoService
         $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
                              ->with('clientModel')->get();
         foreach ($boletoExpired as $boleto) {
-            $sendEmail   = new SendgridService();
-            $clientName  = $boleto->clientModel->name;
-            $clientEmail = $boleto->clientModel->email;
-            $totalValue  = $boleto->total_paid_value;
-            $view        = view('core::emails.boleto', compact('totalValue','clientName'));
-            $sendEmail->sendEmail($view, 'Promoção relâmpago por 24h', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            $sendEmail       = new SendgridService();
+            $clientName      = $boleto->clientModel->name;
+            $clientEmail     = $boleto->clientModel->email;
+            $clientTelephone = $boleto->clientModel->telephone;
+
+            $emailValidated     = FoxUtils::validateEmail($clientEmail);
+            $telephoneValidated = FoxUtils::prepareCellPhoneNumber($clientTelephone);
+            if ($telephoneValidated != '') {
+                $zenviaSms = new ZenviaSmsService();
+                $zenviaSms->sendSms('Promoção relâmpago por 24h', $clientTelephone);
+            }
+            if ($emailValidated) {
+                $totalValue = $boleto->total_paid_value;
+                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
+                $sendEmail->sendEmail($view, 'Promoção relâmpago por 24h', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            }
         }
     }
 
@@ -101,12 +125,15 @@ class BoletoService
         $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
                              ->with('clientModel')->get();
         foreach ($boletoExpired as $boleto) {
-            $sendEmail   = new SendgridService();
-            $clientName  = $boleto->clientModel->name;
-            $clientEmail = $boleto->clientModel->email;
-            $totalValue  = $boleto->total_paid_value;
-            $view        = view('core::emails.boleto', compact('totalValue','clientName'));
-            $sendEmail->sendEmail($view, 'Últimas horas para acabar', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            $sendEmail      = new SendgridService();
+            $clientName     = $boleto->clientModel->name;
+            $clientEmail    = $boleto->clientModel->email;
+            $emailValidated = FoxUtils::validateEmail($clientEmail);
+            if ($emailValidated) {
+                $totalValue = $boleto->total_paid_value;
+                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
+                $sendEmail->sendEmail($view, 'Últimas horas para acabar', 'noreply@cloudfox.app', 'cloudfox', '', '');
+            }
         }
     }
 }

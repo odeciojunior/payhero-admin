@@ -47,77 +47,19 @@
                 <div class="list-group">
                   <div data-role="container" style="width: 100%; height: auto;">
                     <div data-role="content" style="width: 100% height: auto;">
-                      @if(count(\Auth::user()->unreadNotifications) > 0)
+                      @if(count(\Auth::user()->unreadNotifications) > 0) 
                         @foreach(\Auth::user()->unreadNotifications as $notification)
-                          @if($notification->type == 'Modules\Checkout\Notifications\VendaNotificacao')
-                            <a class="list-group-item dropdown-item" href="/relatorios/vendas" role="menuitem">
-                              <div class="media">
-                                <div class="pr-10">
-                                  <i class="icon wb-shopping-cart bg-green-600 green icon-circle" sty aria-hidden="true"></i>
-                                </div>
-                                <div class="media-body">
-                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
-                                      {!! $notification->data['qtd'] > 1 ? 'novas vendas' : 'nova venda' !!}
-                                  </h6>
-                                  <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
-                                </div>
-                              </div>
-                            </a>
-                          @elseif($notification['type'] == 'Modules\Notifications\Notifications\NewAffiliationRequest')
-                            <a class="list-group-item dropdown-item" href="/afiliados/meusafiliados" role="menuitem">
-                              <div class="media">
-                                <div class="pr-10">
-                                  <i class="icon wb-users bg-green-600 green icon-circle" sty aria-hidden="true"></i>
-                                </div>
-                                <div class="media-body">
-                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
-                                      {!! $notification->data['qtd'] > 1 ? 'novas solicitações de afiliação' : 'nova solicitação de afiliação' !!}
-                                  </h6>
-                                  <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
-                                </div>
-                              </div>
-                            </a>
-                          @elseif($notification['type'] == 'Modules\Notifications\Notifications\NewAffiliation')
-                            <a class="list-group-item dropdown-item" href="/afiliados/meusafiliados" role="menuitem">
-                              <div class="media">
-                                <div class="pr-10">
-                                  <i class="icon wb-users bg-green-600 green icon-circle" sty aria-hidden="true"></i>
-                                </div>
-                                <div class="media-body">
-                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
-                                      {!! $notification->data['qtd'] > 1 ? 'novas afiliações' : 'nova afiliação' !!}
-                                  </h6>
-                                  <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
-                                </div>
-                              </div>
-                            </a>
-                          @elseif($notification['type'] == 'Modules\Notifications\Notifications\ApprovedAffiliation')
-                            <a class="list-group-item dropdown-item" href="/afiliados/minhasafiliacoes" role="menuitem">
-                              <div class="media">
-                                <div class="pr-10">
-                                  <i class="icon wb-users bg-green-600 green icon-circle" sty aria-hidden="true"></i>
-                                </div>
-                                <div class="media-body">
-                                  <h6 class="media-heading">{!! $notification->data['qtd'] !!}
-                                      {!! $notification->data['qtd'] > 1 ? 'novas afiliações aprovadas' : 'nova afiliação aprovada' !!}
-                                  </h6>
-                                  <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{!! date('d/m/Y H:m:s', strtotime($notification->updated_at)) !!}</time>
-                                </div>
-                              </div>
-                            </a>
-                          @endif
+                          @include('notifications::' . str_replace("Modules\\Checkout\\Notifications\\","",$notification->type), ['notification' => $notification])
                         @endforeach
                       @else
-
-
                         <div class="media d-flex align-items-center p-20">
-                            <div class="pr-10">
-                              <i class="material-icons">check</i>
-                            </div>
-                            <div class="d-flex align-items-center">
-                              <span class="">Nenhuma nova notificação</span>
-                            </div>
+                          <div class="pr-10">
+                            <i class="material-icons">check</i>
                           </div>
+                          <div class="d-flex align-items-center">
+                            <span class="">Nenhuma nova notificação</span>
+                          </div>
+                        </div>
                       @endif
                     </div>
                   </div>

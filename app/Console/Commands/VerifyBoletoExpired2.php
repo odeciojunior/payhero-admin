@@ -5,21 +5,25 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Modules\Core\Services\BoletoService;
 
-class SendEmailBoletoExpired extends Command
+class VerifyBoletoExpired2 extends Command
 {
     /**
      * The name and signature of the console command.
+     *
      * @var string
      */
-    protected $signature = 'verify:boletoexpired';
+    protected $signature = 'verify:boletoexpired2';
+
     /**
      * The console command description.
+     *
      * @var string
      */
     protected $description = 'Command description';
 
     /**
      * Create a new command instance.
+     *
      * @return void
      */
     public function __construct()
@@ -29,11 +33,12 @@ class SendEmailBoletoExpired extends Command
 
     /**
      * Execute the console command.
+     *
      * @return mixed
      */
     public function handle()
     {
-        $boletoService = new BoletoService();
-        $boletoService->verifyBoletosExpired();
+        $boletoService= new BoletoService();
+        $boletoService->verifyBoletoExpired2();
     }
 }

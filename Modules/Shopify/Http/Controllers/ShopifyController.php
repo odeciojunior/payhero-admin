@@ -238,44 +238,6 @@ class ShopifyController extends Controller
                                                                                       'project'   => $project->id,
                                                                                   ]);
 
-//                $shopify->setThemeByRole('main');
-//                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
-//
-//                if ($htmlCart) {
-//                    //template normal
-//
-//                    $shopifyIntegration->update([
-//                                                    'theme_type' => $this->getShopifyIntegrationModel()
-//                                                                         ->getEnum('theme_type', 'basic_theme'),
-//                                                    'theme_name' => $shopify->getThemeName(),
-//                                                    'theme_file' => 'sections/cart-template.liquid',
-//                                                    'theme_html' => $htmlCart,
-//                                                ]);
-//
-//                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
-//                } else {
-//                    //template ajax
-//                    $shopifyIntegration->update([
-//                                                    'theme_type' => $this->getShopifyIntegrationModel()
-//                                                                         ->getEnum('theme_type', 'ajax_theme'),
-//                                                    'theme_name' => $shopify->getThemeName(),
-//                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
-//                                                    'theme_html' => $htmlCart,
-//                                                ]);
-//
-//                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
-//                }
-//
-//                //inserir o javascript para o trackeamento (src, utm)
-//                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
-//                if ($htmlBody) {
-//                    //template do layout
-//                    $shopifyIntegration->update([
-//                                                    'layout_theme_html' => $htmlBody,
-//                                                ]);
-//                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
-//                }
-
                 $photo = $request->file('photo');
 
                 if ($photo) {
@@ -285,7 +247,7 @@ class ShopifyController extends Controller
                         $img->crop($dados['photo_w'], $dados['photo_h'], $dados['photo_x1'], $dados['photo_y1']);
                         $img->resize(200, 200);
                         $img->save($photo->getPathname());
-
+ 
                         $digitalOceanPath = $this->getDigitalOceanFileService()
                                                  ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
 
@@ -344,42 +306,33 @@ class ShopifyController extends Controller
                                                                         'price'       => '',
                                                                     ]);
 
-                        $newCode = false;
-
-                        while ($newCode == false) {
-
-                            $code = $this->randString(3) . rand(100, 999);
-
-                            $plan = $this->getPlanModel()->where('code', $code)->first();
-
-                            if ($plan == null) {
-                                $newCode = true;
-                            }
-                        }
-
                         $plan = $this->getPlanModel()->create([
                                                                   'shopify_id'         => $shopifyProduct->getId(),
                                                                   'shopify_variant_id' => $variant->getId(),
                                                                   'project'            => $project->id,
                                                                   'name'               => substr($shopifyProduct->getTitle(), 0, 100),
                                                                   'description'        => $description,
-                                                                  'code'               => $code,
+                                                                  'code'               => '',
                                                                   'price'              => $variant->getPrice(),
                                                                   'status'             => '1',
                                                               ]);
 
+                        $plan->update([
+                            'code' => Hashids::encode($plan->id)
+                        ]);
+
                         if (count($shopifyProduct->getVariants()) > 1) {
                             foreach ($shopifyProduct->getImages() as $image) {
-
+ 
                                 foreach ($image->getVariantIds() as $variantId) {
                                     if ($variantId == $variant->getId()) {
 
-                                        if ($image->getSrc() != '') {
+                                        if ($image->getSrc() != '') { 
                                             $product->update([
                                                                  'photo' => $image->getSrc(),
                                                              ]);
-                                        } else {
-
+                                        } else { 
+ 
                                             $product->update([
                                                                  'photo' => $shopifyProduct->getImage()->getSrc(),
                                                              ]);
@@ -414,18 +367,6 @@ class ShopifyController extends Controller
                                                 "format"  => "json",
                                             ]);
 
-//                $shopify->createShopWebhook([
-//                                                "topic"   => "products/create",
-//                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
-//                                                "format"  => "json",
-//                                            ]);
-//
-//                $shopify->createShopWebhook([
-//                                                "topic"   => "products/update",
-//                                                "address" => "https://51584a25.ngrok.io/postback/shopify/" . Hashids::encode($project['id']),
-//                                                "format"  => "json",
-//                                            ]);
-
                 return response()->json(['message' => 'Integração adicionada!'], 200);
             } else {
                 return response()->json(['message' => 'Projeto já integrado'], 400);
@@ -435,19 +376,5 @@ class ShopifyController extends Controller
         }
     }
 
-    function randString($size)
-    {
-
-        $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        $return = "";
-
-        for ($count = 0; $size > $count; $count++) {
-
-            $return .= $basic[rand(0, strlen($basic) - 1)];
-        }
-
-        return $return;
-    }
 }
 
