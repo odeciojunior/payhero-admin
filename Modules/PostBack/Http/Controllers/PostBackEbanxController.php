@@ -72,7 +72,9 @@ class PostBackEbanxController extends Controller {
                 ]);
 
                 foreach($transactions as $transaction){
-                    $transaction->update('status','canceled');
+                    $transaction->update([
+                        'status' => 'canceled'
+                    ]);
                 }
             }
 
@@ -137,7 +139,7 @@ class PostBackEbanxController extends Controller {
 
         }
 
-        return 'success';
+        return response()->json(['message' => 'success'], 200);
     }
 
 }

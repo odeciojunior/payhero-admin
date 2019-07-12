@@ -17,6 +17,7 @@ class DomainCreateRequest extends FormRequest
 
                 return [
                     'project_id' => 'required|string|max:255',
+                    'domain_ip'  => 'nullable',
                 ];
 
                 break;

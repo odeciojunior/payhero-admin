@@ -111,7 +111,7 @@ class PostBackPagarmeController extends Controller {
                 }
             }
         }
-        return 'sucesso';
+        return response()->json(['message' => 'success'], 200);
     }
 
 }
