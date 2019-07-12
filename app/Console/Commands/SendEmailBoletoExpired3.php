@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Modules\Core\Services\BoletoService;
 
 class SendEmailBoletoExpired3 extends Command
 {
@@ -11,7 +12,7 @@ class SendEmailBoletoExpired3 extends Command
      *
      * @var string
      */
-    protected $signature = 'verify:boletoexpired2';
+    protected $signature = 'verify:boletoexpired3';
 
     /**
      * The console command description.
@@ -37,6 +38,7 @@ class SendEmailBoletoExpired3 extends Command
      */
     public function handle()
     {
-        //
+        $boletoService = new BoletoService();
+        $boletoService->verifyBoletoExpired3();
     }
 }
