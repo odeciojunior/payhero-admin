@@ -17,7 +17,7 @@ class SalesByOriginResource extends Resource
         return [
             'origin'       => $this->origin,
             'sales_amount' => $this->sales_amount,
-            'balance'      => $this->value,
+            'balance'      => number_format(intval($this->value) / 100, 2, ',', '.'),
         ];
     }
 }

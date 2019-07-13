@@ -70,6 +70,8 @@ $(function () {
 
     });
 
+    var current_currency = '';
+
     function updateReports() {
         var date_range = $('#date_range_requests').val();
         $.ajax({
@@ -87,6 +89,7 @@ $(function () {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
             success: function (response) {
+                current_currency = response.currency;
                 $("#revenue-generated").html(response.currency + ' ' + response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
                 $("#qtd-boletos").html(response.contBoleto);
@@ -142,7 +145,7 @@ $(function () {
                         table_data += '<tr>';
                         table_data += '<td>' + data.origin + "</td>";
                         table_data += '<td>' + data.sales_amount + "</td>";
-                        table_data += '<td>' + data.balance + "</td>";
+                        table_data += '<td>' + current_currency + ' ' + data.balance + "</td>";
                         table_data += '</tr>';
                     });
 
@@ -263,6 +266,7 @@ $(function () {
         if (response.meta.current_page == '1') {
             $("#primeira_pagina").addClass('nav-btn');
             $("#primeira_pagina").addClass('active');
+            $("#primeira_pagina").attr('disabled', 'true');
         }
 
         $('#primeira_pagina').on("click", function () {
@@ -310,6 +314,8 @@ $(function () {
 
             if (response.meta.current_page == response.meta.last_page) {
                 $("#ultima_pagina").attr('disabled', true);
+                $("#ultima_pagina").addClass('active');
+                $("#ultima_pagina").attr('disabled', 'true');
             }
 
             $('#ultima_pagina').on("click", function () {
