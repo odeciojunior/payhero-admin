@@ -5,15 +5,15 @@ namespace Modules\PostBack\Http\Controllers;
 use App\Entities\Plan;
 use App\Entities\Product;
 use App\Entities\Project;
-use App\Entities\ShopifyIntegration;
 use Illuminate\Http\Request;
 use App\Entities\PostbackLog;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\ShopifyService;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Entities\ShopifyIntegration;
+use Modules\Core\Services\ShopifyService;
 
 /**
  * Class PostBackShopifyController
@@ -58,7 +58,6 @@ class PostBackShopifyController extends Controller
 
         if (!$project) {
             Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $project->id);
-
             return 'error';
         }
 
@@ -96,52 +95,48 @@ class PostBackShopifyController extends Controller
                 $product = $plan->getRelation('products')[0];
 
                 try {
-
                     $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
 
-                    $shopify = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
+                    $shopifyService = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
                 } catch (\Exception $e) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
 
-                $product->update([
-                                     'cost' => $shopify->getShopInventoryItem($variant["inventory_item_id"])
-                                                       ->getCost(),
-                                 ]);
+                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
 
-                if (count($requestData['variants']) > 1) {
-                    foreach ($requestData['images'] as $image) {
-
-                        foreach ($image['variant_ids'] as $variantId) {
-                            if ($variantId == $variant['id']) {
-
-                                try {
-                                    if ($image['src'] != '') {
-                                        $product->update([
-                                                             'photo' => $image['src'],
-                                                         ]);
-                                    } else {
-                                        $product->update([
-                                                             'photo' => $requestData['image']['src'],
-                                                         ]);
-                                    }
-                                } catch (\Exception $e) {
-                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
-                                    report($e);
-                                }
-                            }
-                        }
+                $imgSrc = '';
+                if($variant->getImageId()){
+                    $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+                    $imgSrc = $image->getSrc();
+                }
+                else{
+                    $shopifyProduct = $shopifyService->getProduct($plan->shopify_id);
+                    try{
+                        $imgSrc = $shopifyProduct->getImage()->getSrc();
                     }
-                } else {
-                    try {
-                        $product->update([
-                                             'photo' => $requestData['image']['src'],
-                                         ]);
-                    } catch (\Exception $e) {
-                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao atualizar');
-                        report($e);
+                    catch(\Exception $e){
+                        Log::write(print_r($shopifyProduct, true));
                     }
                 }
+
+                if($variant->getImageId()){
+                    $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+                }
+                else {
+                    try{
+                        $imgSrc = $requestData['image']['src'];
+                    }
+                    catch(\Exception $e){
+                        //
+                    }
+                }
+
+                $product->update([
+                    'cost'  => $shopifyService->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
+                    'photo' => $imgSrc,
+                    'name'        => substr($requestData['title'], 0, 100),
+                ]);
+
             } else {
                 $userProject = UserProject::where([
                                                       ['project', $project['id']],
@@ -170,43 +165,38 @@ class PostBackShopifyController extends Controller
                                          'price'              => $variant['price'],
                                          'status'             => '1',
                                      ]);
+
                 $plan->update([
                                   'code' => Hashids::encode($plan->id),
                               ]);
 
-                if (count($requestData['variants']) > 1) {
-                    foreach ($requestData['images'] as $image) {
+                try {
+                    $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
+                    $shopifyService = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                }
 
-                        foreach ($image['variant_ids'] as $variantId) {
-                            if ($variantId == $variant['id']) {
+                $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
 
-                                try {
-                                    if ($image['src'] != '') {
-                                        $product->update([
-                                                             'photo' => $image['src'],
-                                                         ]);
-                                    } else {
-                                        $product->update([
-                                                             'photo' => $requestData['image']['src'],
-                                                         ]);
-                                    }
-                                } catch (\Exception $e) {
-                                    Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
-                                    report($e);
-                                }
-                            }
-                        }
+                $imgSrc = '';
+                if($variant->getImageId()){
+                    $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+                    $imgSrc = $image->getSrc();
+                }
+                else{
+                    try{
+                        $imgSrc = $requestData['image']['src'];
                     }
-                } else {
-                    try {
-                        $product->update([
-                                             'photo' => $requestData['image']['src'],
-                                         ]);
-                    } catch (\Exception $e) {
-                        Log::warning('erro ao adicionar imagem ao produto no webhook do shopify ao cadastrar');
-                        report($e);
+                    catch(\Exception $e){
+                        Log::write(print_r($shopifyProduct, true));
                     }
                 }
+
+                $product->update([
+                    'cost'  => $shopifyService->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
+                    'photo' => $imgSrc
+                ]);
 
                 ProductPlan::create([
                                         'product' => $product->id,
@@ -216,7 +206,6 @@ class PostBackShopifyController extends Controller
             }
         }
 
-        //return 'success';
         return response()->json(['message' => 'success'], 200);
     }
 }

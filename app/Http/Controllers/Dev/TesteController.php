@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\User;
-use Modules\Core\Services\ShopifyService;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Controller;
 use PHPHtmlParser\Selector\Selector;
 use App\Entities\SiteInvitationRequest;
 use Illuminate\Support\Facades\Storage;
+use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
@@ -23,22 +23,52 @@ use Modules\Core\Services\DigitalOceanFileService;
 
 class TesteController extends Controller
 {
+    /**
+     * @var CloudFlareService
+     */
+    private $cloudFlareService;
+    /**
+     * @var SendgridService
+     */
+    private $sendgridService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
+     */
+    private function getCloudFlareService()
+    {
+        if (!$this->cloudFlareService) {
+            $this->cloudFlareService = app(CloudFlareService::class);
+        }
+
+        return $this->cloudFlareService;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     */
+    private function getSendgridService()
+    {
+        if (!$this->sendgridService) {
+            $this->sendgridService = app(SendgridService::class);
+        }
+
+        return $this->sendgridService;
+    }
+
     public function index()
     {
-        $x = new ShopifyService('gercastore.myshopify.com', 'bb78f036e257b07b8cc535a54e82d777');
-        //$x->deleteShopWebhook();
+        $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
 
-        $z = $x->getShopWebhook();
-        dd($z);
+        $variant = $shopifyService->getProductVariant('29438910693458');
+ 
+        if($variant->getImageId()){
+            $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
+        }
+        else {
+            $product = $shopifyService->getProduct('3933947920466');
+            dd($product->getImage()->getSrc());
+        }
 
-
-        //$dns = new Dns('goldskin24k.com');
-
-        //dd($dns->getRecords('MX'));
-
-        //dd(dns_get_record("goldskin24k.com", DNS_ANY, $authns, $addtl));
-        /*
-
-        */
     }
 }

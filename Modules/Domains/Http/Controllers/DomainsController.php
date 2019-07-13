@@ -19,11 +19,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SendgridService;
 use Modules\Domains\Http\Requests\DomainCreateRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRecordRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
 use Modules\Domains\Http\Requests\DomainIndexRequest;
 use Modules\Domains\Http\Requests\DomainStoreRequest;
+use Ramsey\Uuid\Generator\DefaultTimeGenerator;
 use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Core\Helpers\AutorizacaoHelper;
@@ -55,6 +57,22 @@ class DomainsController extends Controller
      * @var $domainRecordModel
      */
     private $domainRecordModel;
+    /**
+     * @var SendgridService
+     */
+    private $sendgridService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     */
+    private function getSendgridService()
+    {
+        if (!$this->sendgridService) {
+            $this->sendgridService = app(SendgridService::class);
+        }
+
+        return $this->sendgridService;
+    }
 
     /**
      * @return Domain|\Illuminate\Contracts\Foundation\Application|mixed
@@ -127,9 +145,11 @@ class DomainsController extends Controller
             if (isset($dataRequest["project"])) {
                 $projectId = current(Hashids::decode($dataRequest["project"]));
 
+                $domains = $this->getDomainModel()->with(['project'])->where('project_id', $projectId)->get();
+
                 $project = $this->getProjectModel()->with('domains')->find($projectId);
 
-                return DomainResource::collection($project->domains);
+                return DomainResource::collection($domains);
             } else {
                 return response()->json([
                                             'message' => 'Erro ao listar dados de domínios',
@@ -162,39 +182,32 @@ class DomainsController extends Controller
 
                 $project = $this->getProjectModel()->find($projectId);
 
+                if ($project->shopify_id) {
+                    //projeto shopify
+                    $domainIp = $this->getCloudFlareService()::shopifyIp;
+                } else {
+                    //projeto web
+                    $domainIp = $requestData['domain_ip'];
+                }
+
                 $domainCreated = $this->getDomainModel()->create([
                                                                      'project_id' => $projectId,
                                                                      'name'       => $requestData['name'],
-                                                                     'domain_ip'  => $requestData['domain_ip'],
+                                                                     'domain_ip'  => $domainIp,
                                                                      'status'     => $this->getDomainModel()
                                                                                           ->getEnum('status', 'pending'),
                                                                  ]);
 
                 if ($domainCreated) {
-                    if ($project->shopify_id == null) {
-                        $newDomain = $this->getCloudFlareService()
-                                          ->integrationWebsite($domainCreated->id, $requestData['name'], $requestData['domain_ip']);
-                    } else {
-                        $newDomain                = $this->getCloudFlareService()
-                                                         ->integrationShopify($domainCreated->id, $requestData['name']);
-                        $requestData['domain_ip'] = 'Domínio Shopify';
-                    }
+                    DB::commit();
 
-                    if ($newDomain) {
-                        DB::commit();
-
-                        return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
-                    } else {
-                        //problema ao cadastrar dominio
-                        DB::rollBack();
-
-                        return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
-                    }
+                    return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
                 } else {
                     DB::rollBack();
 
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                 }
+
             } else {
                 //nao veio projectid
 
@@ -226,12 +239,24 @@ class DomainsController extends Controller
 
                 $subdomain = explode('.', $record->name);
 
+                switch ($record->content) {
+                    CASE $this->getCloudFlareService()::shopifyIp:
+                        $content = "Servidores Shopify";
+                        break;
+                    CASE $this->getCloudFlareService()::checkoutIp:
+                        $content = "Servidores CloudFox";
+                        break;
+                    default:
+                        $content = $record->content;
+                        break;
+                }
+
                 $newRegister = [
                     'id'          => Hashids::encode($record->id),
                     'type'        => $record->type,
                     //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
                     'name'        => $record->name,
-                    'content'     => ($record->content == $this->getCloudFlareService()::checkoutIp) ? "Servidores CloudFox" : $record->content,
+                    'content'     => $content,
                     'system_flag' => $record->system_flag,
 
                 ];
@@ -350,10 +375,15 @@ class DomainsController extends Controller
      */
     public function show($domainId)
     {
-        $domain = $this->getDomainModel()->where('id', Hashids::decode($domainId))->first();
+        $domain = $this->getDomainModel()->with(['project'])->where('id', Hashids::decode($domainId))->first();
+
+        $data = (object) [
+            'name'      => $domain->name,
+            'domain_ip' => ($domain->project->shopify_id == null) ? $domain->domain_ip : 'Shopify',
+        ];
 
         $view = view('domains::show', [
-            'domain' => $domain,
+            'domain' => $data,
             'zones'  => $this->getCloudFlareService()->getZones(),
         ]);
 

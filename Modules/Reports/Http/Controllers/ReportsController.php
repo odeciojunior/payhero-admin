@@ -11,6 +11,8 @@ use App\Entities\Project;
 use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -231,6 +233,10 @@ class ReportsController extends Controller
             $diffInDays = $endDate->diffInDays($startDate);
             if ($diffInDays <= 20) {
                 $data = $this->getByDays($date, $projectId, $currency, $diffInDays);
+            } else if ($diffInDays > 20 && $diffInDays <= 40) {
+                $data = $this->getByTwentyDays($date, $projectId, $currency, $diffInDays);
+            } else if ($diffInDays > 40 && $diffInDays <= 60) {
+                $data = $this->getByFortyDays($date, $projectId, $currency, $diffInDays);
             }
 
             return $data;
@@ -242,6 +248,145 @@ class ReportsController extends Controller
                 'boleto_data'      => [0, 0],
                 'currency'         => $currency,
             ];
+        }
+    }
+
+    private function getByFortyDays($date, $projectId, $currency, $diffInDays)
+    {
+        try {
+            date_default_timezone_set('America/Sao_Paulo');
+
+            $labelList    = [];
+            $start        = $diffInDays;
+            $dataFormated = new DateTime($date['startDate']);
+            $dataFormated = $dataFormated->modify('+2 day');
+
+            while ($start >= 0) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->modify('+3 day');
+                $start        -= 3;
+            }
+
+            $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
+            $userCompanies   = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+
+            $orders = $this->getSales()
+                           ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                           ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                               $join->on('transaction.sale', '=', 'sales.id');
+                               $join->whereIn('transaction.company', $userCompanies);
+                           })
+                           ->where('sales.owner', auth()->user()->id)
+                           ->where('sales.project', $projectId)
+                           ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                           ->groupBy('date', 'sales.payment_method')
+                           ->get()->toArray();
+
+            $creditCardData = [];
+            $boletoData     = [];
+            foreach ($labelList as $label) {
+                $creditCardValue = 0;
+                $boletoValue     = 0;
+                foreach ($orders as $order) {
+                    $cont = 3;
+                    if ($cont >= 3) {
+                        if ((Carbon::parse($order['date'])
+                                   ->subDays(2)->format('d/m') == $label) || (Carbon::parse($order['date'])
+                                                                                    ->subDays(1)
+                                                                                    ->format('d/m') == $label) || (Carbon::parse($order['date'])
+                                                                                                                         ->format('d/m') == $label)) {
+
+                            if ($order['payment_method'] == '1') {
+                                $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            } else {
+                                $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            }
+                            $cont--;
+                        }
+                    }
+                }
+                array_push($creditCardData, substr(intval($creditCardValue), 0, -2));
+                array_push($boletoData, substr(intval($boletoValue), 0, -2));
+            }
+            // 01-07
+            // 03-07
+
+            return [
+                'label_list'       => $labelList,
+                'credit_card_data' => $creditCardData,
+                'boleto_data'      => $boletoData,
+                'currency'         => $currency,
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados ReportsController - getByFortyDays');
+            report($e);
+        }
+    }
+
+    private function getByTwentyDays($date, $projectId, $currency, $diffInDays)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        try {
+            $labelList    = [];
+            $start        = $diffInDays;
+            $dataFormated = new DateTime($date['startDate']);
+            $dataFormated = $dataFormated->modify('+1 day');
+
+            while ($start >= 0) {
+                array_push($labelList, $dataFormated->format('d/m'));
+                $dataFormated = $dataFormated->modify('+2 day');
+                $start        -= 2;
+            }
+
+            $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
+
+            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+
+            $orders = $this->getSales()
+                           ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
+                           ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                               $join->on('transaction.sale', '=', 'sales.id');
+                               $join->whereIn('transaction.company', $userCompanies);
+                           })
+                           ->where('sales.owner', auth()->user()->id)
+                           ->where('sales.project', $projectId)
+                           ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
+                           ->groupBy('date', 'sales.payment_method')
+                           ->get()->toArray();
+
+            $creditCardData = [];
+            $boletoData     = [];
+            foreach ($labelList as $label) {
+                $creditCardValue = 0;
+                $boletoValue     = 0;
+                foreach ($orders as $order) {
+                    if ((Carbon::parse($order['date'])
+                               ->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])
+                                                                                ->format('d/m') == $label)) {
+
+                        if ($order['payment_method'] == '1') {
+                            $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                        } else {
+                            $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                        }
+                    }
+                }
+                array_push($creditCardData, substr(intval($creditCardValue), 0, -2));
+                array_push($boletoData, substr(intval($boletoValue), 0, -2));
+            }
+
+            return [
+                'label_list'       => $labelList,
+                'credit_card_data' => $creditCardData,
+                'boleto_data'      => $boletoData,
+                'currency'         => $currency,
+            ];
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar dados');
+            report($e);
+            // b = 1200
+            // c = 200
         }
     }
 
@@ -311,6 +456,8 @@ class ReportsController extends Controller
 
     private function getByDays($data, $projectId, $currency, $diffInDays)
     {
+        date_default_timezone_set('America/Sao_Paulo');
+
         try {
 
             $labelList    = [];
@@ -345,7 +492,6 @@ class ReportsController extends Controller
                 $boletoValue     = 0;
                 foreach ($orders as $order) {
                     if (Carbon::parse($order['date'])->format('d-m') == $label) {
-                        //                        dd(Carbon::parse($order['date'])->format('d-m'), $label);
                         if ($order['payment_method'] == '1') {
                             $creditCardValue = substr(intval($order['value']), 0, -2);
                         } else {

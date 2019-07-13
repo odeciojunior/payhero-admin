@@ -4,6 +4,7 @@ namespace Modules\Core\Sms;
 
 use Carbon\Carbon;
 use App\Entities\Plan;
+use App\Entities\Sale;
 use App\Entities\PlanSale;
 use App\Entities\ZenviaSms;
 use App\Entities\SmsMessage;
@@ -14,12 +15,12 @@ class SmsScheduling {
     public static function verifyBoletosExpiring(){
 
         $boletos = Sale::whereDate('boleto_due_date', '=', Carbon::today()->toDateString())
-                        ->where('gateway_status','waiting_payment')
-                        ->get()->toArray();
+                        ->where('status','2')
+                        ->get();
 
         foreach($boletos as $boleto){
 
-            $planSale = PlanSale::where('sale',$boleto['id'])->first();
+            $planSale = PlanSale::where('sale',$boleto->id)->first();
 
             $smsService = ZenviaSms::where([
                 ['plan', $planSale['plan']],
@@ -38,7 +39,7 @@ class SmsScheduling {
                 ->first();
             }
 
-            ServicoSmsHelper::enviarSms($smsService,Sale::find($boleto['id']));
+            ServicoSmsHelper::enviarSms($smsService,$boleto);
         }
 
     }
