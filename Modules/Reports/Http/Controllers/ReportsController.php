@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Reports\Transformers\SalesByOriginResource;
 
 class ReportsController extends Controller
 {
@@ -286,32 +287,29 @@ class ReportsController extends Controller
     /**
      * @param Request $request
      */
-    public function getUtm(Request $request)
+    public function getSalesByOrigin(Request $request)
     {
-        /*if ($request->input('project')) {
-            $projectId = current(Hashids::decode($request->input('project')));
+        $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
-            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+        $orders = $this->getSales()
+            ->select(\DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin . ' as origin'))
+            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                $join->on('transaction.sale', '=', 'sales.id');
+                $join->whereIn('transaction.company', $userCompanies);
+            })
+            ->leftJoin('checkouts as checkout', function($join) {
+                $join->on('checkout.id', '=', 'sales.checkout');
+            })
+            ->where('sales.project', current(Hashids::decode($request->project_id)))
+            ->where('sales.status', '1')
+            ->whereBetween('start_date', [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))])
+            ->whereNotIn('checkout.' . $request->origin, ['','null'])
+            ->whereNotNull('checkout.' . $request->origin)
+            ->groupBy('checkout.'.$request->origin)
+            ->orderBy('sales_amount', 'DESC');
 
-            if (isset($projectId)) {
-                $sales = $this->getSales()
-                              ->select('sales.', 'checkout.' . $request->input('utm'))
-                              ->select(\DB::raw("SUM(transaction.value) as value, sales.payment_method, checkouts.{$request->input('utm')}"))
-                              ->leftjoin('transactions as transaction', function($join) use ($userCompanies) {
-                                  $join->on('transaction.sale', '=', 'sales.id');
-                                  $join->whereIn('transaction.company', $userCompanies);
-                              })
-                              ->leftjoin('checkouts as checkout', function($join) {
-                                  $join->on('sales.checkout', '=', 'checkout.id');
-                                  $join->on('checkout.}');
-                              })
-                              ->where('sales.owner', auth()->user()->id)
-                              ->where('sales.project', $projectId)
-                    ->groupBy('')
-            }
+        return SalesByOriginResource::collection($orders->paginate(6));
 
-            $sales = $this->getSales()->where('owner', auth()->user()->id);
-        }*/
     }
 
     /**

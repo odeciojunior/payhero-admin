@@ -65,9 +65,9 @@
                         <a class="nav-item nav-link active" id="nav-vendas-tab" data-toggle="tab" href="#nav-vendas"
                            role="tab" aria-controls="nav-vendas" aria-selected="true">Vendas
                         </a>
-                        <a class="nav-item nav-link" id="nav-visitas-tab" data-toggle="tab" href="#nav-visitas"
+                        <!--a class="nav-item nav-link" id="nav-visitas-tab" data-toggle="tab" href="#nav-visitas"
                            role="tab" aria-controls="nav-visitas" aria-selected="false">Visitas
-                        </a>
+                        </a-->
                     </div>
                 </div>
                 <div class="tab-content gutter_top mt-15 gutter_bottom mb-30" id="nav-tabContent">
@@ -231,7 +231,7 @@
                                             <div class="col-lg-12 ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-4">
+                                                        <div class="col-lg-3">
                                                             Cartão
                                                         </div>
                                                         <div class="col-lg-4" id='percent-credit-card'>
@@ -240,7 +240,7 @@
                                                         {{--<div class="col-lg-2" id='percent-credit-total'>
                                                             16%
                                                         </div>--}}
-                                                        <div class="col-lg-4">
+                                                        <div class="col-lg-5">
                                                             <span class="money-td green" id='credit-card-value'></span>
                                                         </div>
                                                     </div>
@@ -249,16 +249,16 @@
                                             <div class="col-lg-12 ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-4">
+                                                        <div class="col-lg-3">
                                                             Boleto
-                                                        </div>
+                                                        </div> 
                                                         <div class="col-lg-4" id='percent-values-boleto'>
                                                             0
                                                         </div>
                                                         {{-- <div class="col-lg-2" id='percent-boleto-total'>
                                                                 16%
                                                             </div>--}}
-                                                        <div class="col-lg-4">
+                                                        <div class="col-lg-5">
                                                             <span class="money-td green" id='boleto-value'></span>
                                                         </div>
                                                     </div>
@@ -271,21 +271,45 @@
                             <div class="col-lg-12 gutter_top ">
                                 <div class="card shadow">
                                     <div class="card-header">
-                                        <h4> Origem </h4>
-                                        <select class="browser-default custom-select" id='origem'>
-                                            <option selected value="src">SRC</option>
-                                            <option value="utm_source">UTM Source</option>
-                                            <option value="utm_medium">UTM Medium</option>
-                                            <option value="utm_campaign">UTM Campaign</option>
-                                            <option value="utm_term">UTM Term</option>
-                                            <option value="utm_content">UTM Content</option>
-                                        </select>
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <h4> Origens </h4>
+                                            </div>  
+                                            <div class="col-4">
+                                                <select class="form-control float-right" id='origin'>
+                                                    <option selected value="src">SRC</option>
+                                                    <option value="utm_source">UTM Source</option>
+                                                    <option value="utm_medium">UTM Medium</option>
+                                                    <option value="utm_campaign">UTM Campaign</option>
+                                                    <option value="utm_term">UTM Term</option>
+                                                    <option value="utm_content">UTM Content</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="data-holder empty-400">
-                                        <table>
-                                            <tbody id='dados_tabela'>
-                                            </tbody>
-                                        </table>
+                                    <div class="data-holder">
+                                        <div class="row" style="width:100%">
+                                            <div class="col-12">
+                                                <table class="table-vendas table table-striped" style="width:90%;margin: auto; margin-top:15px">
+                                                    <thead>
+                                                        <th class="table-title">Origem</th>
+                                                        <th class="table-title">Qtd vendas</th>
+                                                        <th class="table-title">Receita</th>
+                                                    </thead>
+                                                    <tbody id="origins-table">
+                                                        {{-- js carrega... --}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-11">
+                                            <ul id="pagination" class="pagination-sm float-right" style="margin-top:10px; margin-left: 5%">
+                                                {{-- js carrega... --}}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -452,7 +476,7 @@
             <div class="content-error d-flex text-center">
                 <img src="{!! asset('modules/global/assets/img/emptyprojetos.svg') !!}" width="250px">
                 <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
-                <p class="desc gray">Que tal criar um primeiro projeto para começar a vender? </p>
+                <p class="desc gray">Que tal criar seu primeiro projeto para começar a vender? </p>
                 <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>
             </div>
         @endif

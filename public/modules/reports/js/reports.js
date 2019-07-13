@@ -56,17 +56,7 @@ $(function () {
         endDate = end.format('YYYY-MM-DD');
         updateReports();
 
-    });/* function (start, end, label) {
-        endDate = end.format('YYYY-MM-DD');
-        startDate = start.format('YYYY-MM-DD');
-        // console.log(endDate, startDate);
-        updateReports();
-    */
-
-    /*$('#date_range_requests').on('change', function (e) {
-        e.preventDefault();
-        updateReports();
-    });*/
+    });
 
     $("#project").on('change', function () {
         $('#project').val($(this).val());
@@ -74,9 +64,9 @@ $(function () {
 
     });
 
-    $("#origem").on('change', function () {
-        $('#origem').val($(this).val());
-        updateUtm();
+    $("#origin").on('change', function () {
+        $('#origin').val($(this).val());
+        updateSalesByOrigin();
 
     });
 
@@ -114,20 +104,25 @@ $(function () {
                 $("#percent-mobile").html(response.conversaoMobile + ' %');
 
                 updateGraph(response.chartData);
+                updateSalesByOrigin();
             }
         });
     }
 
-    function updateUtm() {
+
+    function updateSalesByOrigin(link = null) {
+
+        $('#origins-table').html("<td colspan='3' class='text-center'> Carregando... </div>");
+
+        if (link == null) {
+            link = '/reports/getsalesbyorigin?' + 'project_id=' + $("#project").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
+        } else {
+            link = '/reports/getsalesbyorigin' + link + '&project_id=' + $("#project").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
+        }
+
         $.ajax({
-            url: '/reports/getUtm/' + $("#project").val(),
+            url: link,
             type: 'GET',
-            data: {
-                project: $("#project").val(),
-                endDate: endDate,
-                startDate: startDate,
-                utm: $('#origem').val(),
-            },
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -135,29 +130,32 @@ $(function () {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
             success: function (response) {
-                $("#dados_tabela").html('');
-
-                $.each(response.data, function (index, value) {
-                    dados = '';
-                    dados += '<tr>';
-                    dados += '<td>' + value.name + '</td>';
-                    dados += '<td>' + value.cont_aproved + '</td>';
-                    dados += '<td>' + value.cont_boleto + '</td>';
-                    dados += '<td>' + value.cont_canceled + '</td>';
-                    dados += '<td>' + value.value_total + '</td>';
-                    dados += '</tr>';
-                    $("#dados_tabela").append(dados);
-                });
 
                 if (response.data == '') {
-                    $('#dados_tabela').html("<tr><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    $('#origins-table').html("<td colspan='3' class='text-center'> Nenhuma venda encontrada</div>");
+                    $("#pagination").html("");
+                }
+                else{
+                    var table_data = '';
+
+                    $.each(response.data, function (index, data) {
+                        table_data += '<tr>';
+                        table_data += '<td>' + data.origin + "</td>";
+                        table_data += '<td>' + data.sales_amount + "</td>";
+                        table_data += '<td>' + data.balance + "</td>";
+                        table_data += '</tr>';
+                    });
+
+                    $('#origins-table').html("");
+                    $("#origins-table").append(table_data);
+                    
+                    pagination(response);
                 }
             }
         })
     }
 
     updateReports();
-    updateUtm();
 
     function updateGraph(chartData) {
 
@@ -249,4 +247,76 @@ $(function () {
         })
 
     }
+
+    function pagination(response) {
+
+        $("#pagination").html("");
+
+        if (response.meta.last_page == '1') {
+            return true;
+        }
+
+        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+
+        $("#pagination").append(primeira_pagina);
+
+        if (response.meta.current_page == '1') {
+            $("#primeira_pagina").addClass('nav-btn');
+            $("#primeira_pagina").addClass('active');
+        }
+
+        $('#primeira_pagina').on("click", function () {
+            updateSalesByOrigin('?page=1');
+        });
+
+        for (x = 3; x > 0; x--) {
+
+            if (response.meta.current_page - x <= 1) {
+                continue;
+            }
+
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+
+            $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
+                updateSalesByOrigin('?page=' + $(this).html());
+            });
+
+        }
+
+        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+
+            $("#pagination").append(pagina_atual);
+        }
+
+        for (x = 1; x < 4; x++) {
+
+            if (response.meta.current_page + x >= response.meta.last_page) {
+                continue;
+            }
+
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+            $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
+                updateSalesByOrigin('?page=' + $(this).html());
+            });
+
+        }
+
+        if (response.meta.last_page != '1') {
+            var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+            $("#pagination").append(ultima_pagina);
+
+            if (response.meta.current_page == response.meta.last_page) {
+                $("#ultima_pagina").attr('disabled', true);
+            }
+
+            $('#ultima_pagina').on("click", function () {
+                updateSalesByOrigin('?page=' + response.meta.last_page);
+            });
+        }
+
+    }
+
 });

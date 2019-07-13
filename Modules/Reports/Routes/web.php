@@ -15,7 +15,7 @@ Route::middleware(['web', 'auth'])->prefix('reports')->group(function() {
     Route::get('/', 'ReportsController@index')->name('reports.index');
 
     Route::get('/getValues/{project_id}', 'ReportsController@getValues')->name('reports.values');
-    Route::get('/getUtm/{project_id}', 'ReportsController@getUtm')->name('reports.utm');
+    Route::get('/getsalesbyorigin', 'ReportsController@getSalesByOrigin')->name('reports.salesbyorigin');
 });
 
 
