@@ -10,51 +10,40 @@ namespace Modules\Core\Services;
 
 use App\Entities\Sale;
 use App\Entities\ZenviaSms;
+use Zenvia\Model\Sms;
+use Zenvia\Model\SmsFacade;
 
 class ZenviaSmsService
 {
-    public function sendSms(ZenviaSms $smsService, Sale $sale)
+    private $zenviaSms;
+    private $smsFacade;
+
+    public function __construct()
+    {
+        $this->smsFacade = new SmsFacade('healthlab.corp', 'hLQNVb7VQk');
+        $this->zenviaSms = new Sms();
+    }
+
+    public function sendSms($sms, $to)
     {
         try {
-            $smsFacade = new SmsFacade(getenv('ZENVIA_CREDENTIAL'), getenv('ZENVIA_TOKEN'));
-            $sms       = new Sms();
-            //            $sms->setTo('55' . preg_replace("/[^0-9]/", "", $client['telephone']));
-            //            $sms->setMsg($message);
-            $idSms = uniqid();
-            $sms->setId($idSms);
-            $sms->setCallbackOption(Sms::CALLBACK_NONE);
-
+            $this->zenviaSms->setTo('55' . preg_replace("/[^0-9]/", "", $to));
+            $this->zenviaSms->setMsg($sms);
+            $smsId = uniqid();
+            $this->zenviaSms->setId($smsId);
+            $this->zenviaSms->setCallbackOption(Sms::CALLBACK_NONE);
             try {
-                $response = $smsFacade->send($sms);
-
-                //                SmsMessage::create([
-                //                                       'id_zenvia' => $idSms,
-                //                                       'to'        => '55' . preg_replace("/[^0-9]/", "", $client['telephone']),
-                //                                       'message'   => $message,
-                //                                       'date'      => $schedule,
-                //                                       'status'    => $response->getStatusDescription(),
-                //                                       'plan'      => $plan['id'],
-                //                                       'event'     => $smsService->event,
-                //                                       'type'      => 'Sent',
-                //                                   ]);
-
-                return true;
-            } catch (\Exception $ex) {
-
-                //                MensagemSms::create([
-                //                                        'id_zenvia' => $idSms,
-                //                                        'to'        => '55' . preg_replace("/[^0-9]/", "", $client['telephone']),
-                //                                        'message'   => $message,
-                //                                        'date'      => $schedule,
-                //                                        'status'    => 'Erro',
-                //                                        'plan'      => $planSale->plano,
-                //                                        'event'     => $smsService->event,
-                //                                        'type'      => 'Sent',
-                //                                    ]);
+                $response = $this->smsFacade->send($this->zenviaSms);
+                if ($response) {
+                    return true;
+                }
 
                 return false;
+            } catch (\Exception $ex) {
+                return false;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
+            Log::warning('erro ao enviar sms para carrinho abandonado');
             report($e);
         }
     }

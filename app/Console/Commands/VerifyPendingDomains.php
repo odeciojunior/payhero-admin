@@ -3,12 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Entities\Domain;
+use App\Entities\ShopifyIntegration;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\ShopifyService;
 
 class VerifyPendingDomains extends Command
 {
@@ -34,6 +36,14 @@ class VerifyPendingDomains extends Command
      * @var SendgridService
      */
     private $sendgridService;
+    /**
+     * @var ShopifyIntegration
+     */
+    private $shopifyIntegrationModel;
+    /**
+     * @var ShopifyService
+     */
+    private $shopifyService;
 
     /**
      * Create a new command instance.
@@ -42,6 +52,30 @@ class VerifyPendingDomains extends Command
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
+     */
+    private function getShopifyService(string $urlStore = null, string $token = null)
+    {
+        if (!$this->shopifyService) {
+            $this->shopifyService = new ShopifyService($urlStore, $token);
+        }
+
+        return $this->shopifyService;
+    }
+
+    /**
+     * @return ShopifyIntegration|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getShopifyIntegrationModel()
+    {
+        if (!$this->shopifyIntegrationModel) {
+            $this->shopifyIntegrationModel = app(ShopifyIntegration::class);
+        }
+
+        return $this->shopifyIntegrationModel;
     }
 
     /**
@@ -88,7 +122,7 @@ class VerifyPendingDomains extends Command
     {
         try {
             $domains = $this->getDomainModel()
-                            ->with(['project'])
+                            ->with(['project', 'project.shopifyIntegrations'])
                             ->where('status', '!=', $this->getDomainModel()->getEnum('status', 'approved'))
                             ->get();
 
@@ -117,20 +151,64 @@ class VerifyPendingDomains extends Command
                 if ($this->getCloudFlareService()
                          ->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
 
-                    if ($domain->project->shopify_id == null) {
-                        $newDomain = $this->getCloudFlareService()
-                                          ->integrationWebsite($domain->id, $domain->name, $domain->domain_ip);
-                    } else {
-                        $newDomain = $this->getCloudFlareService()
-                                          ->integrationShopify($domain->id, $domain->name);
+                    if (!empty($domain->project->shopify_id)) {
+                        //dominio shopify, fazer as alteracoes nos templates
+                        foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+
+                            try {
+
+                                $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setThemeByRole('main');
+                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                if ($htmlCart) {
+                                    //template normal
+
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $this->getShopifyIntegrationModel()
+                                                                                         ->getEnum('theme_type', 'basic_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
+                                } else {
+                                    //template ajax
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $this->getShopifyIntegrationModel()
+                                                                                         ->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
+                                }
+
+                                //inserir o javascript para o trackeamento (src, utm)
+                                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                if ($htmlBody) {
+                                    //template do layout
+                                    $shopifyIntegration->update([
+                                                                    'layout_theme_html' => $htmlBody,
+                                                                ]);
+
+                                    //TODO validar para nao inserir duas vezes
+                                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                }
+                            } catch (\Exception $e) {
+                                //throwl
+
+                            }
+                        }
                     }
 
-                    if ($newDomain) {
-                        //integracao no shopify funcionou? aprova o dominio
-                        $domain->update([
-                                            'status' => $this->getDomainModel()->getEnum('status', 'approved'),
-                                        ]);
-                    }
+                    //integracao no shopify funcionou? aprova o dominio
+                    $domain->update([
+                                        'status' => $this->getDomainModel()->getEnum('status', 'approved'),
+                                    ]);
                 }
             }
         } catch (Exception $e) {

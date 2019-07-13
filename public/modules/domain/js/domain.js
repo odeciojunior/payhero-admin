@@ -10,9 +10,11 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
         updateDomains();
     });
+
     updateDomains();
 
-    $("#add-domain").on('click', function () {
+    $("#add-domain").on('click', function (e) {
+        e.preventDefault();
 
         $("#modal-title").html('Novo domínio');
 
@@ -25,13 +27,16 @@ $(document).ready(function () {
             },
             error: function (response) {
                 alertCustom('error', String(response.message));
-                //$("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
 
                 $("#btn-modal").addClass('btn-save');
 
                 $("#modal-add-body").html(response);
+
+                $('form').submit(function(evt){
+                    evt.preventDefault();
+                });
 
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {

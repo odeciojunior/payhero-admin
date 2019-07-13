@@ -40,7 +40,7 @@ class ShopifyService
     public function __construct(string $urlStore, string $token)
     {
         if (!$this->cacheDir) {
-            $cache = './tmp';
+            $cache = './public/tmp';
         } else {
             $cache = $this->cacheDir;
         }
@@ -205,6 +205,30 @@ class ShopifyService
             return null;
         } else {
             return null; //throwl
+        }
+    }
+
+    /**
+     * @param string $templateKeyName
+     * @param string $value
+     * @return bool
+     */
+    public function setTemplateHtml(string $templateKeyName, string $value)
+    {
+        if (!empty($this->theme)) {
+
+            $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
+                "key"   => $templateKeyName,
+                "value" => $value,
+            ]);
+
+            if ($asset) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; //throwl
         }
     }
 

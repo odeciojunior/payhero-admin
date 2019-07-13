@@ -3,6 +3,7 @@
 namespace Modules\Projects\Http\Controllers;
 
 use App\Entities\Carrier;
+use App\Entities\DomainRecord;
 use App\Entities\ExtraMaterial;
 use App\Entities\Project;
 use App\Entities\UserProject;
@@ -11,7 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
+use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\ShopifyService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Vinkla\Hashids\Facades\Hashids;
@@ -38,6 +42,22 @@ class ProjectsController extends Controller
      * @var DigitalOceanFileService
      */
     private $digitalOceanFileService;
+    /**
+     * @var SendgridService
+     */
+    private $sendgridService;
+    /**
+     * @var CloudFlareService
+     */
+    private $cloudFlareService;
+    /**
+     * @var $domainRecordModel
+     */
+    private $domainRecordModel;
+    /**
+     * @var ShopifyService
+     */
+    private $shopifyService;
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -49,6 +69,54 @@ class ProjectsController extends Controller
         }
 
         return $this->projectModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
+     */
+    private function getShopifyService(string $urlStore = null, string $token = null)
+    {
+        if (!$this->shopifyService) {
+            $this->shopifyService = new ShopifyService($urlStore, $token);
+        }
+
+        return $this->shopifyService;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private function getDomainRecordModel()
+    {
+        if (!$this->domainRecordModel) {
+            $this->domainRecordModel = app(DomainRecord::class);
+        }
+
+        return $this->domainRecordModel;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     */
+    private function getSendgridService()
+    {
+        if (!$this->sendgridService) {
+            $this->sendgridService = app(SendgridService::class);
+        }
+
+        return $this->sendgridService;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
+     */
+    private function getCloudFlareService()
+    {
+        if (!$this->cloudFlareService) {
+            $this->cloudFlareService = app(CloudFlareService::class);
+        }
+
+        return $this->cloudFlareService;
     }
 
     /**
@@ -298,7 +366,7 @@ class ProjectsController extends Controller
                             $this->getDigitalOceanFileService()->deleteFile($project->logo);
                             $img = Image::make($projectLogo->getPathname());
 
-                            $img->resize(null, 300, function ($constraint) {
+                            $img->resize(null, 300, function($constraint) {
                                 $constraint->aspectRatio();
                             });
 
@@ -346,13 +414,48 @@ class ProjectsController extends Controller
         try {
             $idProject = current(Hashids::decode($id));
 
-            $project = $this->getProject()->with(['plans', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+            $project = $this->getProject()
+                            ->with(['domains', 'shopifyIntegrations', 'plans', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
                             ->where('id', $idProject)->first();
 
             $deletedDependecis = $this->deleteDependences($project);
 
             try {
 
+                foreach ($project->domains as $domain) {
+
+                    if ($this->getCloudFlareService()->deleteZone($domain->name)) {
+                        //zona deletada
+                        $this->getSendgridService()->deleteLinkBrand($domain->name);
+                        $this->getSendgridService()->deleteZone($domain->name);
+
+                        $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
+                        $domainDeleted  = $domain->delete();
+
+                        if (!empty($project->shopify_id)) {
+                            //se for shopify, voltar as integraçoes ao html padrao
+                            try {
+
+                                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                    $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                    $shopify->setThemeByRole('main');
+                                    $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                    $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                    $shopifyIntegration->delete();
+                                }
+                            } catch (\Exception $e) {
+                                //throwl
+
+                            }
+                        }
+                    } else {
+                        //erro ao deletar zona
+                        //log error?
+                    }
+                }
+
+                /*
                 if ($project->photo != null) {
                     $this->getDigitalOceanFileService()->deleteFile($project->photo);
                 }
@@ -360,6 +463,7 @@ class ProjectsController extends Controller
                 if ($project->logo != null) {
                     $this->getDigitalOceanFileService()->deleteFile($project->logo);
                 }
+                */
             } catch (Exception $e) {
                 Log::warning('ProjectController - destroy - Erro ao deletar foto e logo do project');
                 report($e);
