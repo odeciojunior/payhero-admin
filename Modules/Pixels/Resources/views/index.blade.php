@@ -14,10 +14,11 @@
         <table  id='table-pixel' class='table text-left table-pixels table-striped' style='width:100%'>
             <thead>
                 <tr>
-                    <td class='table-title'>Nome</td>
-                    <td class='table-title'>Código</td>
-                    <td class='table-title'>Plataforma</td>
-                    <td class='table-title'>Status</td>
+                    <td class='table-title' width='300px'>Nome</td>
+                    <td class='table-title' width='300px'>Código</td>
+                    <td class='table-title' width='300px'>Plataforma</td>
+                    <td class='table-title' width='200px'>Status</td>
+                    <td class='table-title text-center' width='200px'>Opções</td>
                 </tr>
             </thead>
             <tbody id='data-table-pixel'>

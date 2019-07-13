@@ -155,8 +155,8 @@ class CloudFlareService
 
             return false;
         } catch (Exception $e) {
-            Log::warning('Erro ao remover dominio (dominio inexistente)');
-            report($e);
+            // Log::warning('Erro ao remover dominio (dominio inexistente)');
+            // report($e);
 
             return false;
         }
@@ -264,7 +264,6 @@ class CloudFlareService
             //dominio criado
 
             $this->setZone($newZone->name);
-
             $this->addRecord("A", $newZone->name, $ipAddress);
             $this->getDomainRecordModel()->create([
                                                       'domain_id'   => $domainModelId,
@@ -349,16 +348,6 @@ class CloudFlareService
                                                       ]);
             }
 
-            //            sleep(5);
-            //            $responseValidateDomain = $this->getSendgridService()->validateDomain($sendgridResponse->id);
-            //            $responseValidateLink   = $this->getSendgridService()->validateBrandLink($linkBrandResponse->id);
-            //
-            //            if ($responseValidateDomain && $responseValidateLink) {
-            //                return true;
-            //            } else {
-            //                return false;
-            //            }
-
             return true;
         } else {
             return false;
@@ -373,6 +362,7 @@ class CloudFlareService
     public function integrationShopify(int $domainModelId, $domain)
     {
         $this->deleteZone($domain);
+        $this->getDomainRecordModel()->where('domain_id', $domainModelId)->delete();
 
         //criar o dominio
         $newZone = $this->addZone($domain);
@@ -382,15 +372,89 @@ class CloudFlareService
 
             $this->setZone($newZone->name);
 
-            $this->addRecord("A", $newZone->name, self::shopifyIp);
+            $this->addRecord("A", $newZone->name, self::shopifyIp, 0, false);
+            $this->getDomainRecordModel()->create([
+                                                      'domain_id'   => $domainModelId,
+                                                      'type'        => 'A',
+                                                      'name'        => $newZone->name,
+                                                      'content'     => self::shopifyIp,
+                                                      'system_flag' => 1,
+                                                  ]);
 
             $this->addRecord("CNAME", 'www', 'shops.myshopify.com');
+            $this->getDomainRecordModel()->create([
+                                                      'domain_id'   => $domainModelId,
+                                                      'type'        => 'CNAME',
+                                                      'name'        => 'www',
+                                                      'content'     => 'shops.myshopify.com',
+                                                      'system_flag' => 1,
+                                                  ]);
 
             $this->addRecord("A", 'checkout', self::checkoutIp);
+            $this->getDomainRecordModel()->create([
+                                                      'domain_id'   => $domainModelId,
+                                                      'type'        => 'A',
+                                                      'name'        => 'checkout',
+                                                      'content'     => self::checkoutIp,
+                                                      'system_flag' => 1,
+                                                  ]);
 
             $this->addRecord("A", 'sac', self::sacIp);
+            $this->getDomainRecordModel()->create([
+                                                      'domain_id'   => $domainModelId,
+                                                      'type'        => 'A',
+                                                      'name'        => 'sac',
+                                                      'content'     => self::sacIp,
+                                                      'system_flag' => 1,
+                                                  ]);
 
             $this->addRecord("A", 'affiliate', self::affiliateIp);
+            $this->getDomainRecordModel()->create([
+                                                      'domain_id'   => $domainModelId,
+                                                      'type'        => 'A',
+                                                      'name'        => 'affiliate',
+                                                      'content'     => self::affiliateIp,
+                                                      'system_flag' => 1,
+                                                  ]);
+
+            $this->getSendgridService()->deleteZone($newZone->name);
+            $sendgridResponse = $this->getSendgridService()->addZone($newZone->name);
+
+            foreach ($sendgridResponse->dns as $responseDns) {
+                if ($responseDns->type == 'mx') {
+                    $this->addRecord('MX', $responseDns->host, $responseDns->data, 0, false, '1');
+                    $this->getDomainRecordModel()->create([
+                                                              'domain_id'   => $domainModelId,
+                                                              'type'        => 'MX',
+                                                              'name'        => $responseDns->host,
+                                                              'content'     => $responseDns->data,
+                                                              'system_flag' => 1,
+                                                          ]);
+                } else {
+                    $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
+                    $this->getDomainRecordModel()->create([
+                                                              'domain_id'   => $domainModelId,
+                                                              'type'        => strtoupper($responseDns->type),
+                                                              'name'        => $responseDns->host,
+                                                              'content'     => $responseDns->data,
+                                                              'system_flag' => 1,
+                                                          ]);
+                }
+            }
+
+            $this->getSendgridService()->deleteLinkBrand($newZone->name);
+            $linkBrandResponse = $this->getSendgridService()->createLinkBrand($newZone->name);
+
+            foreach ($linkBrandResponse->dns as $responseDns) {
+                $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
+                $this->getDomainRecordModel()->create([
+                                                          'domain_id'   => $domainModelId,
+                                                          'type'        => strtoupper($responseDns->type),
+                                                          'name'        => $responseDns->host,
+                                                          'content'     => $responseDns->data,
+                                                          'system_flag' => 1,
+                                                      ]);
+            }
 
             return true;
         } else {
@@ -433,8 +497,8 @@ class CloudFlareService
                 return false;
             }
         } catch (Exception $e) {
-            Log::warning('Erro ao checar dominio');
-            report($e);
+            // Log::warning('Erro ao checar dominio');
+            // report($e);
 
             return false;
         }

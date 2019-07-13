@@ -10,9 +10,11 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
         updateDomains();
     });
+
     updateDomains();
 
-    $("#add-domain").on('click', function () {
+    $("#add-domain").on('click', function (e) {
+        e.preventDefault();
 
         $("#modal-title").html('Novo domínio');
 
@@ -25,13 +27,16 @@ $(document).ready(function () {
             },
             error: function (response) {
                 alertCustom('error', String(response.message));
-                //$("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
 
                 $("#btn-modal").addClass('btn-save');
 
                 $("#modal-add-body").html(response);
+
+                $('form').submit(function(evt){
+                    evt.preventDefault();
+                });
 
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
@@ -101,10 +106,14 @@ $(document).ready(function () {
                     }
 
                     dados += '</td>';
-
-                    dados += "<td style='vertical-align: middle'><a role='button' class='details-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
-                    dados += "<td style='vertical-align: middle'><a role='button' class='edit-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>edit</i> </a></td>";
-                    dados += "<td style='vertical-align: middle'><a role='button' class='delete-domain pointer' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>delete_outline</i> </a></td>";
+                    dados += "<td style='min-width:200px;'>" +
+                        "<a role='button' class='details-domain pointer mr-30' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
+                        "<a role='button' class='edit-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"+
+                        "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
+                    "</td>";
+                    // dados += "<td style='vertical-align: middle'><a role='button' class='details-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                    // dados += "<td style='vertical-align: middle'><a role='button' class='edit-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>edit</i> </a></td>";
+                    // dados += "<td style='vertical-align: middle'><a role='button' class='delete-domain pointer' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>delete_outline</i> </a></td>";
 
                     dados += '</tr>';
                     $("#domain-table-body").append(dados);

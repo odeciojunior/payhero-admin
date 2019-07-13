@@ -199,6 +199,9 @@ class Project extends Model
         return $this->hasMany('App\Entities\ShopifyIntegration', 'project');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function shippings()
     {
         return $this->hasMany('App\Entities\Shipping', 'project');

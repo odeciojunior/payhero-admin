@@ -40,7 +40,7 @@ class ShopifyService
     public function __construct(string $urlStore, string $token)
     {
         if (!$this->cacheDir) {
-            $cache = './tmp';
+            $cache = './public/tmp';
         } else {
             $cache = $this->cacheDir;
         }
@@ -205,6 +205,30 @@ class ShopifyService
             return null;
         } else {
             return null; //throwl
+        }
+    }
+
+    /**
+     * @param string $templateKeyName
+     * @param string $value
+     * @return bool
+     */
+    public function setTemplateHtml(string $templateKeyName, string $value)
+    {
+        if (!empty($this->theme)) {
+
+            $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
+                "key"   => $templateKeyName,
+                "value" => $value,
+            ]);
+
+            if ($asset) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; //throwl
         }
     }
 
@@ -790,4 +814,52 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
             return [];
         }
     }
+
+    /**
+     * @param null $variantId
+     * @return Slince\Shopify\Manager\ProductVariant\Variant|null
+     */
+    public function getProductVariant($variantId = null)
+    {
+        if (!empty($this->client)) {
+            if ($variantId) {
+                return $this->client->getProductVariantManager()->find($variantId);
+            }
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * @param null $productId
+     * @return Slince\Shopify\Manager\Product\Product|null
+     */
+    public function getProduct($productId = null)
+    {
+        if (!empty($this->client)) {
+            if ($productId) {
+                return $this->client->getProductManager()->find($productId);
+            }
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * @param null $imageId
+     * @return Slince\Shopify\Manager\ProductImage\Image|null
+     */
+    public function getImage($productId = null, $imageId = null)
+    {
+        if (!empty($this->client)) {
+            if ($productId && $imageId) {
+                return $this->client->getProductImageManager()->find($productId, $imageId);
+            }
+        } else {
+            return null;
+        }
+    }
+
 }

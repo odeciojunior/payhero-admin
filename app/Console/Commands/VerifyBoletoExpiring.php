@@ -3,15 +3,17 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Services\CartRecoveryService;
+use Modules\Core\Services\BoletoExpireService;
+use Modules\Core\Services\BoletoExpiringService;
+use Modules\Core\Services\BoletoService;
 
-class SendEmailCartRecovery extends Command
+class VerifyBoletoExpiring extends Command
 {
     /**
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'verify:abandonedcarts';
+    protected $signature = 'verify:boletoexpiring';
     /**
      * The console command description.
      * @var string
@@ -33,7 +35,7 @@ class SendEmailCartRecovery extends Command
      */
     public function handle()
     {
-        $cartRecoveryService = new CartRecoveryService();
-        $cartRecoveryService->verifyAbandonedCarts();
+        $boletoService = new BoletoService();
+        $boletoService->verifyBoletosExpiring();
     }
 }
