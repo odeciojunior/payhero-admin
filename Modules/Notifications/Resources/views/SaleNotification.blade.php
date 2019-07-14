@@ -1,4 +1,4 @@
-<a class="list-group-item dropdown-item" href="/relatorios/vendas" role="menuitem">
+<a class="list-group-item dropdown-item" href="/sales" role="menuitem">
     <div class="media">
         <div class="pr-10">
             <i class="icon wb-shopping-cart bg-green-600 green icon-circle" sty aria-hidden="true"></i>

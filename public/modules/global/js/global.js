@@ -61,6 +61,8 @@ $(document).ready(function(){
         $("#invitations_img").css('height','28px').css('width','28px').css('margin-left','-5px');
     }
 
+    $(".mm-panels").css('scrollbar-width','none');
+
 });
 
 function alertCustom(type, message){
@@ -93,7 +95,5 @@ function loading(elementId)
     $(elementId).append('<div class="loading"></div>');
 
 }
-
-
 
 

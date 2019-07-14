@@ -107,12 +107,8 @@
     </div>
 </nav>
 
- 
-<!--div class="menu-footer">
-      <div class="menu-footer-content"> CloudFox LLC <br> <a href="#"> Termos e Condições </a>  </div>
-</div-->
-
 <div class="site-menubar">
+
     <ul class="site-menu" style="margin-top:10px">
       <li class="site-menu-item has-sub">
         <a href="{{ route('dashboard') }}">
@@ -141,14 +137,9 @@
           </li>
           <li class="site-menu-item">
             <a href="{!! route('cartrecovery') !!}">
-              <span class="site-menu-title">Carrinhos abandonados</span>
+              <span class="site-menu-title">Recuperação</span>
             </a>
           </li>
-          {{--<li class="site-menu-item">--}}
-            {{--<a href="#" style="pointer-events: none;cursor: default;">--}}
-              {{--<span class="site-menu-title">Central de reembolso</span>--}}
-            {{--</a>--}}
-          {{--</li>--}}
         </ul>
       </li>
       <li class="site-menu-item has-sub">
@@ -212,17 +203,24 @@
             <span class="site-menu-title">Convites</span>
         </a>
       </li>
-
-      {{--  <li class="site-menu-item has-sub">
-        <a class=" lh-10" href="#">
-        <img src="">
-            <span class="site-menu-title footer-nav-link">Suporte</span>
-        </a>
-      </li>  --}}
-
     </ul>
-
 </div>
+
+<!--div class="site-menubar-footer">
+      <div class="menu-footer-content hide-menu fold-hide"> CloudFox LLC <br> <a href="#"> Termos e Condições </a>  </div>
+
+    <a href="javascript: void(0);" data-placement="center" data-toggle="tooltip" data-original-title="Settings">
+      <span class="icon wb-settings" aria-hidden="true"></span>
+      <div class="menu-footer-content hide-menu "> CloudFox LLC <br> <a href="#"> Termos e Condições </a>  </div>
+    </a>
+    <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">
+      <span class="icon wb-eye-close" aria-hidden="true"></span>
+    </a>
+    <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Logout">
+      <span class="icon wb-power" aria-hidden="true"></span>
+    </a>
+
+</div--> 
 
 </div>
 

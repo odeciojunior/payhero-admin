@@ -24,21 +24,21 @@
                                 <td>Data expiração</td>
                             </thead>
                             <tbody>
-                                @foreach($invites as $key => $invites)
+                                @foreach($invites as $key => $invite)
                                     <tr>
                                         <td class="text-left">
                                             <button class="btn btn-floating btn-primary btn-sm" disabled>{!! $key + 1!!}</button>
                                         </td>
-                                        <td class="text-center" style="vertical-align: middle">{!! $invites['email_invited'] !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $invite->email_invited !!}</td>
                                         <td class="text-center" style="vertical-align: middle">
-                                            @if($invites['status'] == $invites->getEnum('status', 'accepted'))
+                                            @if($invite->status == $invite->getEnum('status', 'accepted'))
                                                 <span class='badge badge-success'>Aceito</span>
-                                            @elseif($invites['status'] == $invites->getEnum('status','pending'))
-                                                <span class='badge badge-pendente'>Pendente</span>
+                                            @elseif($invite->status == $invite->getEnum('status','pending'))
+                                                <span class='badge badge-primary'>Pendente</span>
                                             @endif
                                         </td>
-                                        <td class="text-center" style="vertical-align: middle">{!! $invites['register_date'] != '' ? $invites['register_date'] : 'Pendente' !!}</td>
-                                        <td class="text-center" style="vertical-align: middle">{!! $invites['expiration_date'] != '' ? $invites['expiration_date'] : 'Pendente' !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $invite->register_date != '' ? date('d/m/Y', strtotime($invite->register_date)) : 'Pendente' !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $invite->expiration_date != '' ? date('d/m/Y', strtotime($invite->expiration_date)) : 'Pendente' !!}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

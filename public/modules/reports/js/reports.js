@@ -207,10 +207,10 @@ $(function () {
                                 x: 0, y: "-10%", id: "shadow" + id
                             }, "", !0));
                         return filter.elem("feGaussianBlur", {
-                            in: "SourceAlpha", stdDeviation: "80", result: "offsetBlur"
+                            in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
                         }),
                             filter.elem("feOffset", {
-                                dx: "0", dy: "80"
+                                dx: "0", dy: "800"
                             }),
                             filter.elem("feBlend", {
                                 in: "SourceGraphic", mode: "multiply"
