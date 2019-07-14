@@ -248,8 +248,14 @@ class ReportsController extends Controller
                 $convercaoCreditCard = number_format((intval($contCreditCardAproved) * 100) / intval($contCreditCard), 2, ',', ' . ');
             }
 
-            $conversaoMobile  = number_format((intval($contMobile) * 100) / intval($contSales), 2, ',', ' . ');
-            $conversaoDesktop = number_format((intval($contDesktop) * 100) / intval($contSales), 2, ',', ' . ');
+            if($contSales > 0){
+                $conversaoMobile  = number_format((intval($contMobile) * 100) / intval($contSales), 2, ',', ' . ');
+                $conversaoDesktop = number_format((intval($contDesktop) * 100) / intval($contSales), 2, ',', ' . ');
+            }
+            else {
+                $conversaoMobile  = "0.00";
+                $conversaoDesktop = "0.00";
+            }
             if ($userProject->companyId->country == 'usa') {
                 $currency = '$';
             } else {
@@ -277,6 +283,7 @@ class ReportsController extends Controller
                                         'conversaoDesktop'       => $conversaoDesktop,
                                     ]);
         } catch (Exception $e) {
+            dd($e);
             Log::warning('Erro ao buscar dados - ReportsController - index');
             report($e);
 

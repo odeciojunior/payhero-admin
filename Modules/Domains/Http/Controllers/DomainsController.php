@@ -8,29 +8,18 @@ use Exception;
 use App\Entities\Domain;
 use App\Entities\Project;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Cloudflare\API\Auth\APIKey;
-use Cloudflare\API\Endpoints\DNS;
-use Cloudflare\API\Adapter\Guzzle;
-use Cloudflare\API\Endpoints\User;
 use Illuminate\Routing\Controller;
-use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\FoxUtils;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Domains\Http\Requests\DomainCreateRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRecordRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
-use Modules\Domains\Http\Requests\DomainIndexRequest;
 use Modules\Domains\Http\Requests\DomainStoreRequest;
-use Ramsey\Uuid\Generator\DefaultTimeGenerator;
 use Vinkla\Hashids\Facades\Hashids;
-use Yajra\DataTables\Facades\DataTables;
-use Modules\Core\Helpers\AutorizacaoHelper;
-use Modules\Dominios\Transformers\DomainResource;
+use Modules\Domains\Transformers\DomainResource;
 
 /**
  * Class DomainsController
@@ -231,11 +220,13 @@ class DomainsController extends Controller
                         return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
                     } else {
                         //problema ao cadastrar dominio
+                        dd($newDomain);
                         DB::rollBack();
 
                         return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                     }
                 } else {
+                    dd($domainCreated);
                     DB::rollBack();
 
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);

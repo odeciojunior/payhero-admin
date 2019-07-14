@@ -1,10 +1,7 @@
 <?php
 
-namespace Modules\Dominios\Transformers;
+namespace Modules\Domains\Transformers;
 
-use Cloudflare\API\Auth\APIKey;
-use Cloudflare\API\Adapter\Guzzle;
-use Cloudflare\API\Endpoints\Zones;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;

@@ -4,28 +4,9 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="https://getbootstrapadmin.com/remark/global/vendor/chartist/chartist.min.css?v4.0.2">
-        <link rel="stylesheet" href="https://getbootstrapadmin.com/remark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.min.css?v4.0.2">
-        <style>
-            .ct-legend {
-                position: relative;
-                width: 100%;
-                z-index: 10;
-                margin: 0 0 20px 0;
-                list-style: none;
-                text-align: center;
-            }
-            .ct-legend li {
-                display: inline;
-                margin: 40px;
-            }
-            .ct-legend .ct-series-0 {
-                color: #00FF7F;
-            }
-            .ct-legend .ct-series-1 {
-                color: #1E90FF;
-            }
-        </style>
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist.min.css') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/chartist-plugin-tooltip.min.css') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/reports/css/reports.css') !!}">
     @endpush
 
     <div class="page">
@@ -485,12 +466,12 @@
 @endsection
 
 @push('scripts')
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script type="text/javascript" src="https://getbootstrapadmin.com/remark/global/vendor/chartist/chartist.min.js?v4.0.2"></script>
-    <script type="text/javascript" src="https://getbootstrapadmin.com/remark/global/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js?v4.0.2"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chartist-plugin-legend/0.6.2/chartist-plugin-legend.min.js"></script>
+    <!--script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script-->
+    <script type='text/javascript' src='{{asset('modules/reports/js/moment.min.js')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/global/js/daterangepicker.min.js')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
+    <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/reports.js')}}'></script>
 @endpush
 

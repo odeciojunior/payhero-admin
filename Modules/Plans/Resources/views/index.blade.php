@@ -14,7 +14,7 @@
                     <tr>
                         <td class='table-title' width='300px'>Nome</td>
                         <td class='table-title' width='300px'>Descrição</td>
-                        <td class='table-title' width='300px'>Código</td>
+                        <td class='table-title' width='300px'>Link</td>
                         <td class='table-title' width='300px'>Preço</td>
                         <td class='table-title' width='300px'>Status</td>
                         <td class='table-title text-center' width='200px'>Opções</td>
