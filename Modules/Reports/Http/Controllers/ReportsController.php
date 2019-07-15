@@ -14,6 +14,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use JMS\Serializer\Tests\Fixtures\Discriminator\Car;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
@@ -132,7 +133,7 @@ class ReportsController extends Controller
                               ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
                               ->leftJoin('transactions as transaction', function($join) use ($userProject) {
                                   $join->where('transaction.company', $userProject->company);
-                                  $join->where('transaction.status', 'paid');
+                                  $join->whereIn('transaction.status', ['paid', 'transfered']);
                                   $join->on('transaction.sale', '=', 'sales.id');
                               })
                               ->leftJoin('checkouts as checkout', function($join) {
@@ -248,11 +249,10 @@ class ReportsController extends Controller
                 $convercaoCreditCard = number_format((intval($contCreditCardAproved) * 100) / intval($contCreditCard), 2, ',', ' . ');
             }
 
-            if($contSales > 0){
+            if ($contSales > 0) {
                 $conversaoMobile  = number_format((intval($contMobile) * 100) / intval($contSales), 2, ',', ' . ');
                 $conversaoDesktop = number_format((intval($contDesktop) * 100) / intval($contSales), 2, ',', ' . ');
-            }
-            else {
+            } else {
                 $conversaoMobile  = "0.00";
                 $conversaoDesktop = "0.00";
             }
@@ -293,30 +293,30 @@ class ReportsController extends Controller
 
     /**
      * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function getSalesByOrigin(Request $request)
     {
         $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
         $orders = $this->getSales()
-            ->select(\DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.'.$request->origin . ' as origin'))
-            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                $join->on('transaction.sale', '=', 'sales.id');
-                $join->whereIn('transaction.company', $userCompanies);
-            })
-            ->leftJoin('checkouts as checkout', function($join) {
-                $join->on('checkout.id', '=', 'sales.checkout');
-            })
-            ->where('sales.project', current(Hashids::decode($request->project_id)))
-            ->where('sales.status', '1')
-            ->whereBetween('start_date', [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))])
-            ->whereNotIn('checkout.' . $request->origin, ['','null'])
-            ->whereNotNull('checkout.' . $request->origin)
-            ->groupBy('checkout.'.$request->origin)
-            ->orderBy('sales_amount', 'DESC');
+                       ->select(\DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.' . $request->origin . ' as origin'))
+                       ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
+                           $join->on('transaction.sale', '=', 'sales.id');
+                           $join->whereIn('transaction.company', $userCompanies);
+                       })
+                       ->leftJoin('checkouts as checkout', function($join) {
+                           $join->on('checkout.id', '=', 'sales.checkout');
+                       })
+                       ->where('sales.project', current(Hashids::decode($request->project_id)))
+                       ->where('sales.status', 1)
+                       ->whereBetween('start_date', [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))])
+                       ->whereNotIn('checkout.' . $request->origin, ['', 'null'])
+                       ->whereNotNull('checkout.' . $request->origin)
+                       ->groupBy('checkout.' . $request->origin)
+                       ->orderBy('sales_amount', 'DESC');
 
         return SalesByOriginResource::collection($orders->paginate(6));
-
     }
 
     /**
@@ -658,14 +658,16 @@ class ReportsController extends Controller
         try {
             $labelList    = [];
             $start        = $diffInDays;
-            $dataFormated = new DateTime($date['startDate']);
-            $dataFormated = $dataFormated->modify('+6 day');
+            $dataFormated = Carbon::parse($date['startDate'])->addDays(6);
+            $endDate      = Carbon::parse($date['endDate']);
 
-            while ($start >= 0) {
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d/m'));
-                $dataFormated = $dataFormated->modify('+7 day');
-                $start        -= 7;
-                if ($dataFormated == $date['endDate']) {
+                $dataFormated = $dataFormated->addDays(7);
+                if ($dataFormated->diffInDays($endDate) < 7) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
                     break;
                 }
             }
@@ -691,14 +693,14 @@ class ReportsController extends Controller
                 $creditCardValue = 0;
                 $boletoValue     = 0;
                 foreach ($orders as $order) {
-                    if ((Carbon::parse($order['date'])
-                               ->subDays(1)->format('d/m') == $label) || (Carbon::parse($order['date'])
-                                                                                ->format('d/m') == $label)) {
+                    for ($x = 1; $x <= 6; $x++) {
+                        if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
 
-                        if ($order['payment_method'] == 1) {
-                            $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
-                        } else {
-                            $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            if ($order['payment_method'] == 1) {
+                                $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            } else {
+                                $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            }
                         }
                     }
                 }
@@ -732,7 +734,7 @@ class ReportsController extends Controller
             $dataFormated = Carbon::parse($date['startDate']);
             $endDate      = Carbon::parse($date['endDate']);
 
-            while ($dataFormated->format('m/y') <= $endDate->format('m/y')) {
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('m/y'));
                 $dataFormated = $dataFormated->addMonths(1);
             }
