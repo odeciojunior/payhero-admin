@@ -38,7 +38,7 @@ class CartRecoveryService
             $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
             if ($telephoneValidated != '') {
                 $zenviaSms = new ZenviaSmsService();
-                $zenviaSms->sendSms('Carrinho abandonado', $log['telephone']);
+                $zenviaSms->sendSms('Carrinho abandonado', $telephoneValidated);
             }
             if ($emailValidated) {
                 $sendEmail = new SendgridService();
@@ -55,8 +55,26 @@ class CartRecoveryService
     {
         $date = Carbon::now()->subDay('1')->toDateString();
 
-        $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', $date]])
+        $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                                   ->with('projectModel')
                                   ->get();
+
+        foreach ($abandonedCarts as $abandonedCart) {
+            $log = Log::where('id_log_session', $abandonedCart->id_log_session)
+                      ->orderBy('created_at', 'desc')
+                      ->first();
+
+            $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
+            if ($telephoneValidated != '') {
+                $zenviaSms = new ZenviaSmsService();
+                $zenviaSms->sendSms('Carrinho abandonado ontem', $telephoneValidated);
+            }
+            $sendEmail = new SendgridService();
+            $domain    = Domain::where('project_id', $abandonedCart->projectModel->id)->first();
+
+            $link = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
+            $view = view('core::emails.abandonedcart', compact('link'));
+            $sendEmail->sendEmail($view, $link, 'noreply@cloudfox.app', 'cloudfox', $log['email'], $log['name']);
+        }
     }
 }

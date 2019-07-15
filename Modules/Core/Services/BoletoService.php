@@ -42,18 +42,37 @@ class BoletoService
         $dateNow = Carbon::now()->toDateString();
 
         $boletoDueToday = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $dateNow]])
-                              ->with('clientModel')
+                              ->with('clientModel', 'plansSales.plan.products')
                               ->get();
-
         foreach ($boletoDueToday as $boleto) {
-            $sendEmail      = new SendgridService();
-            $clientName     = $boleto->clientModel->name;
-            $clientEmail    = $boleto->clientModel->email;
+            $sendEmail   = new SendgridService();
+            $clientName  = $boleto->clientModel->name;
+            $clientEmail = $boleto->clientModel->email;
+            $products    = [];
+            foreach ($boleto->plansSales as $plansSale) {
+                //                dd($plansSale->getRelation('plan')->products[0]);
+                foreach ($plansSale->getRelation('plan')->products as $product) {
+                    $productArray               = [];
+                    $productArray["photo"]      = $product->photo;
+                    $productArray["name"]       = $product->name;
+                    $productArray["name"]       = $product->name;
+                    $productArray["amount"]     = $plansSale->amount;
+                    $productArray["plan_value"] = $plansSale->plan_value;
+                    $products[]                 = $productArray;
+                }
+            }
+            $data = [
+                "name"                  => $clientName,
+                "boleto_link"           => $boleto['boleto_link'],
+                "boleto_digitable_line" => $boleto['boleto_digitable_line'],
+                "boleto_due_date"       => $boleto['boleto_due_date'],
+                "total_paid_value"      => $boleto['total_paid_value'],
+            ];
+            dd($products);
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
-                $totalValue = $boleto->total_paid_value;
-                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
-                $sendEmail->sendEmail($view, 'Hoje vence o seu boleto', 'noreply@cloudfox.app', 'cloudfox', '', '');
+                //                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
+                $sendEmail->sendEmail('Hoje vence o seu boleto', 'noreply@cloudfox.app', 'cloudfox', 'luanmaia65@hotmail.com', 'Luan', 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data, $products);
             }
         }
     }
@@ -109,7 +128,7 @@ class BoletoService
             $telephoneValidated = FoxUtils::prepareCellPhoneNumber($clientTelephone);
             if ($telephoneValidated != '') {
                 $zenviaSms = new ZenviaSmsService();
-                $zenviaSms->sendSms('Promoção relâmpago por 24h', $clientTelephone);
+                $zenviaSms->sendSms('Promoção relâmpago por 24h', $telephoneValidated);
             }
             if ($emailValidated) {
                 $totalValue = $boleto->total_paid_value;
