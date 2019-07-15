@@ -294,6 +294,129 @@
                                     </div>
                                 </div>
                             </div>
+                           {{-- <div class="col-lg-4 gutter_top">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <h4> Itens </h4>
+                                    </div>
+                                    <div class="custom-table min-250">
+                                        <div class="row">
+                                            <div class="col-lg-12 ">
+                                                <div class="data-holder b-bottom">
+                                                    <div class="row wrap justify-content-between">
+                                                        <div class="col-lg-6">
+                                                            Desktop
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="money-td green" id='percent-desktop'>0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 ">
+                                                <div class="data-holder b-bottom">
+                                                    <div class="row wrap justify-content-between">
+                                                        <div class="col-lg-6">
+                                                            Mobile
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <span class="money-td green" id='percent-mobile'>0</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 gutter_top">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <h4> Ticket Médio </h4>
+                                    </div>
+                                    <div class="custom-table min-250">
+                                        <div class="row">
+                                            <div class="col-lg-12 ">
+                                                <div class="data-holder b-bottom">
+                                                    <div class="row wrap justify-content-between">
+                                                        <div class="col-lg-4">
+                                                            Cartão
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <span class="" id='qtd-cartao-convert'>0</span>
+                                                        </div>
+                                                        <div class="col-lg-4" id='percent-credit-card-convert'>
+                                                            0
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 ">
+                                                <div class="data-holder b-bottom">
+                                                    <div class="row wrap justify-content-between">
+                                                        <div class="col-lg-4">
+                                                            Boleto
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <span class="" id='qtd-boleto-convert'>0</span>
+                                                        </div>
+                                                        <div class="col-lg-4" id='percent-boleto-convert'>
+                                                            0
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 gutter_top">
+                                <div class="card shadow">
+                                    <div class="card-header">
+                                        <h4> Meios de Pagamento </h4>
+                                    </div>
+                                    <div class="custom-table">
+                                        <div class="row">
+                                            <div class="col-lg-12 ">
+                                                <div class="data-holder b-bottom">
+                                                    <div class="row wrap justify-content-between">
+                                                        <div class="col-lg-3">
+                                                            Cartão
+                                                        </div>
+                                                        <div class="col-lg-4" id='percent-credit-card'>
+                                                            0
+                                                        </div>
+                                                        --}}{{--<div class="col-lg-2" id='percent-credit-total'>
+                                                            16%
+                                                        </div>--}}{{--
+                                                        <div class="col-lg-5">
+                                                            <span class="money-td green" id='credit-card-value'></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 ">
+                                                <div class="data-holder b-bottom">
+                                                    <div class="row wrap justify-content-between">
+                                                        <div class="col-lg-3">
+                                                            Boleto
+                                                        </div>
+                                                        <div class="col-lg-4" id='percent-values-boleto'>
+                                                            0
+                                                        </div>
+                                                        --}}{{-- <div class="col-lg-2" id='percent-boleto-total'>
+                                                                16%
+                                                            </div>--}}{{--
+                                                        <div class="col-lg-5">
+                                                            <span class="money-td green" id='boleto-value'></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>--}}
                         </div>
                     </div>
                     <!-- VISITAS -->

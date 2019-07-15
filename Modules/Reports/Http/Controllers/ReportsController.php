@@ -95,14 +95,20 @@ class ReportsController extends Controller
             $user         = auth()->user();
             $userProjects = $this->getUserProjects()->with(['projectId'])->where('user', $user->id)->get();
 
-            $projects = [];
-            foreach ($userProjects as $userProject) {
-                if (isset($userProject->projectId)) {
-                    $projects [] = $userProject->projectId;
+            if (isset($userProjects) && $userProjects->count() > 0) {
+                $projects = [];
+                foreach ($userProjects as $userProject) {
+                    if (isset($userProject->projectId)) {
+                        $projects [] = $userProject->projectId;
+                    }
+                }
+
+                if (isset($projects) && count($projects) > 0) {
+                    return view('reports::index', compact('projects', 'userProjects'));
                 }
             }
 
-            return view('reports::index', compact('projects', 'userProjects'));
+            return redirect()->back()->with('error', 'Voce não tem nenhum empresa cadastrada');
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados - ReportsController - index');
             report($e);
@@ -153,16 +159,102 @@ class ReportsController extends Controller
                     }
                 }
 
-                $sales     = $sales->get();
+                $sales = $sales->get();
+
+                $countSalesAproved = $this->getSales()
+                                          ->select(\DB::raw('count(*) as count, client'))
+                                          ->where('sales.owner', auth()->user()->id)
+                                          ->where('sales.project', $projectId)
+                                          ->where('sales.status', 1);
+                if ($dataSearch['startDate'] != '' && $dataSearch['endDate'] != '') {
+                    $countSalesAproved->whereBetween('sales.start_date', [$dataSearch['startDate'], date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day'))]);
+                } else {
+                    if ($request->$dataSearch['startDate'] != '') {
+                        $countSalesAproved->whereDate('sales.start_date', '>=', $dataSearch['startDate']);
+                    }
+
+                    if ($request->data_final != '') {
+                        $countSalesAproved->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day')));
+                    }
+                }
+                $countSalesAproved = count($countSalesAproved->groupBy('client')->get());
+
+                $countSalesPending = $this->getSales()
+                                          ->select(\DB::raw('count(*) as count, client'))
+                                          ->where('sales.owner', auth()->user()->id)
+                                          ->where('sales.project', $projectId)
+                                          ->where('sales.status', 2);
+                if ($dataSearch['startDate'] != '' && $dataSearch['endDate'] != '') {
+                    $countSalesPending->whereBetween('sales.start_date', [$dataSearch['startDate'], date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day'))]);
+                } else {
+                    if ($request->$dataSearch['startDate'] != '') {
+                        $countSalesPending->whereDate('sales.start_date', '>=', $dataSearch['startDate']);
+                    }
+
+                    if ($request->data_final != '') {
+                        $countSalesPending->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day')));
+                    }
+                }
+                $countSalesPending = count($countSalesPending->groupBy('client')->get());
+
+                $countSalesRecused = $this->getSales()
+                                          ->select(\DB::raw('count(*) as count, client'))
+                                          ->where('sales.owner', auth()->user()->id)
+                                          ->where('sales.project', $projectId)
+                                          ->where('sales.status', 3);
+                if ($dataSearch['startDate'] != '' && $dataSearch['endDate'] != '') {
+                    $countSalesRecused->whereBetween('sales.start_date', [$dataSearch['startDate'], date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day'))]);
+                } else {
+                    if ($request->$dataSearch['startDate'] != '') {
+                        $countSalesRecused->whereDate('sales.start_date', '>=', $dataSearch['startDate']);
+                    }
+
+                    if ($request->data_final != '') {
+                        $countSalesRecused->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day')));
+                    }
+                }
+                $countSalesRecused = count($countSalesRecused->groupBy('client')->get());
+
+                $countSalesChargeBack = $this->getSales()
+                                             ->select(\DB::raw('count(*) as count, client'))
+                                             ->where('sales.owner', auth()->user()->id)
+                                             ->where('sales.project', $projectId)
+                                             ->where('sales.status', 4);
+                if ($dataSearch['startDate'] != '' && $dataSearch['endDate'] != '') {
+                    $countSalesChargeBack->whereBetween('sales.start_date', [$dataSearch['startDate'], date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day'))]);
+                } else {
+                    if ($request->$dataSearch['startDate'] != '') {
+                        $countSalesChargeBack->whereDate('sales.start_date', '>=', $dataSearch['startDate']);
+                    }
+
+                    if ($request->data_final != '') {
+                        $countSalesChargeBack->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day')));
+                    }
+                }
+                $countSalesChargeBack = count($countSalesChargeBack->groupBy('client')->get());
+
+                $countSalesCanceled = $this->getSales()
+                                           ->select(\DB::raw('count(*) as count, client'))
+                                           ->where('sales.owner', auth()->user()->id)
+                                           ->where('sales.project', $projectId)
+                                           ->where('sales.status', 5);
+                if ($dataSearch['startDate'] != '' && $dataSearch['endDate'] != '') {
+                    $countSalesCanceled->whereBetween('sales.start_date', [$dataSearch['startDate'], date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day'))]);
+                } else {
+                    if ($request->$dataSearch['startDate'] != '') {
+                        $countSalesCanceled->whereDate('sales.start_date', '>=', $dataSearch['startDate']);
+                    }
+
+                    if ($request->data_final != '') {
+                        $countSalesCanceled->whereDate('sales.end_date', '<', date('Y-m-d', strtotime($dataSearch['endDate'] . ' + 1 day')));
+                    }
+                }
+                $countSalesCanceled = count($countSalesCanceled->groupBy('client')->get());
+
                 $contSales = $sales->count();
 
                 $contCreditCard    = 0;
                 $contBoleto        = 0;
-                $contRecused       = 0;
-                $contAproved       = 0;
-                $contChargeBack    = 0;
-                $contPending       = 0;
-                $contCanceled      = 0;
                 $contDesktop       = 0;
                 $contBoletoAproved = 0;
                 $contMobile        = 0;
@@ -204,23 +296,6 @@ class ReportsController extends Controller
                         // vendas aprovadas
                         if ($sale->status == 1) {
                             $totalPaidValueAproved += $sale->value;
-                            $contAproved++;
-                        }
-                        // vendas recusadas
-                        if ($sale->status == 3) {
-                            $contRecused++;
-                        }
-                        // vendas pendente
-                        if ($sale->status == 2) {
-                            $contPending++;
-                        }
-                        // vendas chargeback
-                        if ($sale->status == 4) {
-                            $contChargeBack++;
-                        }
-                        // vendas chargeback
-                        if ($sale->status == 5 || !$sale->status) {
-                            $contCanceled++;
                         }
 
                         if ($sale->is_mobile) {
@@ -265,12 +340,12 @@ class ReportsController extends Controller
 
             return response()->json([
                                         'totalPaidValueAproved'  => number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved)) / 100, 2, ',', '.'),
-                                        'contAproved'            => $contAproved,
+                                        'contAproved'            => $countSalesAproved,
                                         'contBoleto'             => $contBoleto,
-                                        'contRecused'            => $contRecused,
-                                        'contChargeBack'         => $contChargeBack,
-                                        'contPending'            => $contPending,
-                                        'contCanceled'           => $contCanceled,
+                                        'contRecused'            => $countSalesRecused,
+                                        'contChargeBack'         => $countSalesChargeBack,
+                                        'contPending'            => $countSalesPending,
+                                        'contCanceled'           => $countSalesCanceled,
                                         'totalPercentCartao'     => $totalPercentPaidCredit,
                                         'totalPercentPaidBoleto' => $totalPercentPaidBoleto,
                                         'totalValueBoleto'       => number_format(intval(preg_replace("/[^0-9]/", "", $totalValueBoleto)) / 100, 2, ',', '.'),
@@ -281,7 +356,7 @@ class ReportsController extends Controller
                                         'convercaoCreditCard'    => $convercaoCreditCard,
                                         'conversaoMobile'        => $conversaoMobile,
                                         'conversaoDesktop'       => $conversaoDesktop,
-                                        'cartaoConvert'          => $contCreditCardAproved . '/' . $contCreditCard,
+                                        'cartaoConvert'          => $contCreditCardAproved . '/' . ($contCreditCard - $countSalesRecused),
                                         'boletoConvert'          => $contBoletoAproved . '/' . $contBoleto,
                                     ]);
         } catch (Exception $e) {
