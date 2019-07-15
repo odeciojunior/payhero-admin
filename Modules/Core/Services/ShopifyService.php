@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Services;
 
+use Illuminate\Support\Facades\Log;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
@@ -39,16 +40,21 @@ class ShopifyService
      */
     public function __construct(string $urlStore, string $token)
     {
-        if (!$this->cacheDir) {
-            $cache = './public/tmp';
-        } else {
-            $cache = $this->cacheDir;
-        }
+        try {
+            if (!$this->cacheDir) {
+                $cache = './public/tmp';
+            } else {
+                $cache = $this->cacheDir;
+            }
 
-        $this->credential = new PublicAppCredential($token);
-        $this->client     = new Client($this->credential, $urlStore, [
-            'metaCacheDir' => $cache // Metadata cache dir, required
-        ]);
+            $this->credential = new PublicAppCredential($token);
+            $this->client     = new Client($this->credential, $urlStore, [
+                'metaCacheDir' => $cache // Metadata cache dir, required
+            ]);
+        } catch (Exception $e) {
+            Log::warning('__construct - Erro ao criar servico do shopify');
+            report($e);
+        }
     }
 
     /**
@@ -830,7 +836,6 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
         }
     }
 
-
     /**
      * @param null $productId
      * @return Slince\Shopify\Manager\Product\Product|null
@@ -846,7 +851,6 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
         }
     }
 
-
     /**
      * @param null $imageId
      * @return Slince\Shopify\Manager\ProductImage\Image|null
@@ -861,5 +865,4 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
             return null;
         }
     }
-
 }
