@@ -27,6 +27,28 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
+                                @if( isset($errors) && count($errors) > 0 )
+                                    <span class="invalid-feedback" role="alert">
+                                        @foreach( $errors->all() as $error )
+                                            <strong>{{ $error}}</strong><br>
+                                        @endforeach
+                                    </span>
+                                @endif
+                                @if(session()->has('error'))
+                                    <span class="invalid-feedback" role="alert">
+                                        {{session('error') }}
+                                    </span>
+                                @endif
+                                @if(session()->has('warning'))
+                                    <span class="invalid-feedback" role="alert">
+                                        {{session('warning') }}
+                                    </span>
+                                @endif
+                                @if(session()->has('success'))
+                                    <span class="invalid-feedback" role="alert">
+                                        {{session('success') }}
+                                    </span>
+                                @endif
                             </div>
                             <div class="input-holder">
                                 <input type="password" placeholder="{{ __('Re-type new password') }}" class="{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password_confirmation" required>
