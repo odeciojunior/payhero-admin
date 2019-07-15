@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
 
     /**
      * Define the application's command schedule.
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -32,15 +32,16 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:pendingdomains')->hourly();
 
         //boletos
-//        $schedule->command('verify:boletoexpired')->dailyAt('12:00');
-//        $schedule->command('verify:boletoexpired2')->dailyAt('12:00');
-//        $schedule->command('verify:boletoexpired3')->dailyAt('12:00');
-//        $schedule->command('verify:boletoexpired4')->dailyAt('12:00');
-//        $schedule->command('verify:boletoexpiring')->dailyAt('12:00');
-//        $schedule->command('verify:boletowaitingpayment')->dailyAt('12:00');
+        //        $schedule->command('verify:boletoexpired')->dailyAt('12:00');
+        //        $schedule->command('verify:boletoexpired2')->dailyAt('12:00');
+        //        $schedule->command('verify:boletoexpired3')->dailyAt('12:00');
+        //        $schedule->command('verify:boletoexpired4')->dailyAt('12:00');
+        //        $schedule->command('verify:boletoexpiring')->dailyAt('12:00');
+        //        $schedule->command('verify:boletowaitingpayment')->dailyAt('12:00');
 
         //carrinhos abandonados
-//        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
+        //        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
+        //        $schedule->command('verify:abandonedcarts2')->everyFifteenMinutes();
 
     }
 
