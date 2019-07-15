@@ -285,7 +285,6 @@ class ReportsController extends Controller
                                         'boletoConvert'          => $contBoletoAproved . '/' . $contBoleto,
                                     ]);
         } catch (Exception $e) {
-            dd($e);
             Log::warning('Erro ao buscar dados - ReportsController - index');
             report($e);
 
@@ -337,15 +336,15 @@ class ReportsController extends Controller
             $endDate    = Carbon::createFromFormat('Y-m-d', $date['endDate'], 'America/Sao_Paulo');
             $diffInDays = $endDate->diffInDays($startDate);
             if ($diffInDays <= 20) {
-                return $this->getByDays($date, $projectId, $currency, $diffInDays);
+                return $this->getByDays($date, $projectId, $currency);
             } else if ($diffInDays > 20 && $diffInDays <= 40) {
-                return $this->getByTwentyDays($date, $projectId, $currency, $diffInDays);
+                return $this->getByTwentyDays($date, $projectId, $currency);
             } else if ($diffInDays > 40 && $diffInDays <= 60) {
-                return $this->getByFortyDays($date, $projectId, $currency, $diffInDays);
+                return $this->getByFortyDays($date, $projectId, $currency);
             } else if ($diffInDays > 60 && $diffInDays <= 140) {
-                return $this->getByWeek($date, $projectId, $currency, $diffInDays);
+                return $this->getByWeek($date, $projectId, $currency);
             } else if ($diffInDays > 140) {
-                return $this->getByMonth($date, $projectId, $currency, $diffInDays);
+                return $this->getByMonth($date, $projectId, $currency);
             } else {
 
                 return [
@@ -436,17 +435,16 @@ class ReportsController extends Controller
      * @param $diffInDays
      * @return array
      */
-    private function getByDays($data, $projectId, $currency, $diffInDays)
+    private function getByDays($data, $projectId, $currency)
     {
         try {
 
             $labelList    = [];
-            $start        = $diffInDays;
-            $dataFormated = new DateTime($data['startDate']);
-            while ($start >= 0) {
+            $dataFormated = Carbon::parse($data['startDate']);
+            $endDate      = Carbon::parse($data['endDate']);
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d-m'));
-                $dataFormated = $dataFormated->modify('+1 day');
-                $start--;
+                $dataFormated = $dataFormated->addDays(1);
             }
             $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
 
@@ -503,21 +501,22 @@ class ReportsController extends Controller
      * @param $diffInDays
      * @return array
      */
-    private function getByTwentyDays($date, $projectId, $currency, $diffInDays)
+    private function getByTwentyDays($date, $projectId, $currency)
     {
         try {
             $labelList    = [];
-            $start        = $diffInDays;
-            $dataFormated = new DateTime($date['startDate']);
-            $dataFormated = $dataFormated->modify('+1 day');
+            $dataFormated = Carbon::parse($date['startDate'])->addDays(1);
+            $endDate      = Carbon::parse($date['endDate']);
 
-            while ($start >= 0) {
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d/m'));
-                $dataFormated = $dataFormated->modify('+2 day');
-                $start        -= 2;
-                /*if ($dataFormated == $date['endDate']) {
+                $dataFormated = $dataFormated->addDays(2);
+                if ($dataFormated->diffInDays($endDate) < 2 && $dataFormated->diffInDays($endDate) > 0) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
                     break;
-                }*/
+                }
             }
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
@@ -575,7 +574,7 @@ class ReportsController extends Controller
      * @param $diffInDays
      * @return array
      */
-    private function getByFortyDays($date, $projectId, $currency, $diffInDays)
+    private function getByFortyDays($date, $projectId, $currency)
     {
         try {
             $labelList    = [];
@@ -650,11 +649,10 @@ class ReportsController extends Controller
      * @param $diffInDays
      * @return array
      */
-    private function getByWeek($date, $projectId, $currency, $diffInDays)
+    private function getByWeek($date, $projectId, $currency)
     {
         try {
             $labelList    = [];
-            $start        = $diffInDays;
             $dataFormated = Carbon::parse($date['startDate'])->addDays(6);
             $endDate      = Carbon::parse($date['endDate']);
 
@@ -724,7 +722,7 @@ class ReportsController extends Controller
      * @param $diffInDays
      * @return array
      */
-    private function getByMonth($date, $projectId, $currency, $diffInDays)
+    private function getByMonth($date, $projectId, $currency)
     {
         try {
             $labelList    = [];
