@@ -63,29 +63,6 @@
                     <input name="contact" value="{{$project->contact}}" type="text" class="input-pad" id="contact" placeholder="Contato">
                 </div>
             </div>
-            {{--<h4>Configuração Frete</h4>
-            <div class='row'>
-                <div class='form-group col-xl-6 col-lg-6'>
-                    <label for='shipping_project'>Possui Frete</label>
-                    <select name='shipment' class='form-control select-pad' id='shippement'>
-                        <option value='1' {{$project->shippement == '1' ? 'selected': ''}}>Sim</option>
-                        <option value='0' {{$project->shippement == '0' ? 'selected': ''}}>Não</option>
-                    </select>
-                </div>
-                <div id='div-carrier' class='form-group col-xl-6 col-lg-6' style='{{$project->frete? 'display:block;' : ''}}'>
-                    <label for='carrier-transport'>Transportadora</label>
-                    <select name='carrier' type='text' class='form-control select-pad' id='carrier-transport' required>
-                        <option value='2' selected>Despacho próprio</option>
-                    </select>
-                </div>
-                <div id='div-shipment-responsible' class='form-group col-xl-6 col-lg-6' style='{{$project->frete? 'display:block;' : ''}}'>
-                    <label for='shipment_responsible'>Responsável pelo frete</label>
-                    <select name='shipment_responsible' type='text' class='form-control select-pad' id='shipment_responsible'>
-                        <option value='owner' {{$project->shipment_responsible == 'owner'?'selected':''}}>Proprietário</option>
-                        <option value='partners' {{$project->shipment_responsible == 'partners'? 'selected':''}}>Proprietário + parceiros</option>
-                    </select>
-                </div> 
-            </div>--}}
         </div>
         <div class='mt-30 mb-15'>
                 <h3>Configurações Básicas</h3>

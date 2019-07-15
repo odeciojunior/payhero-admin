@@ -219,7 +219,6 @@ class ProjectsController extends Controller
                                                            'installments_interest_free' => 1,
                                                            'visibility'                 => 'private',
                                                            'automatic_affiliation'      => 0,
-                                                           'shipment'                   => 1,
                                                            'boleto'                     => 1
                                                        ]);
 
