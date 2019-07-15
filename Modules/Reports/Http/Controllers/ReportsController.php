@@ -164,7 +164,6 @@ class ReportsController extends Controller
                 $contPending       = 0;
                 $contCanceled      = 0;
                 $contDesktop       = 0;
-                $contMobile        = 0;
                 $contBoletoAproved = 0;
                 $contMobile        = 0;
 
@@ -179,7 +178,8 @@ class ReportsController extends Controller
 
                 $totalValueBoleto     = '000';
                 $totalValueCreditCard = '000';
-                $l                    = [];
+
+                //qtdItens, ticket medio,
 
                 if (count($sales) > 0) {
                     foreach ($sales as $sale) {
@@ -281,6 +281,8 @@ class ReportsController extends Controller
                                         'convercaoCreditCard'    => $convercaoCreditCard,
                                         'conversaoMobile'        => $conversaoMobile,
                                         'conversaoDesktop'       => $conversaoDesktop,
+                                        'cartaoConvert'          => $contCreditCardAproved . '/' . $contCreditCard,
+                                        'boletoConvert'          => $contBoletoAproved . '/' . $contBoleto,
                                     ]);
         } catch (Exception $e) {
             dd($e);
@@ -577,15 +579,16 @@ class ReportsController extends Controller
     {
         try {
             $labelList    = [];
-            $start        = $diffInDays;
-            $dataFormated = new DateTime($date['startDate']);
-            $dataFormated = $dataFormated->modify('+2 day');
+            $dataFormated = Carbon::parse($date['startDate'])->addDays(2);
+            $endDate      = Carbon::parse($date['endDate']);
 
-            while ($start >= 0) {
+            while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d/m'));
-                $dataFormated = $dataFormated->modify('+3 day');
-                $start        -= 3;
-                if ($dataFormated == $date['endDate']) {
+                $dataFormated = $dataFormated->addDays(3);
+                if ($dataFormated->diffInDays($endDate) < 3) {
+                    array_push($labelList, $dataFormated->format('d/m'));
+                    $dataFormated = $dataFormated->addDays($dataFormated->diffInDays($endDate));
+                    array_push($labelList, $dataFormated->format('d/m'));
                     break;
                 }
             }
@@ -612,17 +615,14 @@ class ReportsController extends Controller
                 $boletoValue     = 0;
 
                 foreach ($orders as $order) {
+                    for ($x = 1; $x <= 3; $x++) {
+                        if ((Carbon::parse($order['date'])->addDays($x)->format('d/m') == $label)) {
 
-                    if (((Carbon::parse($order['date'])->subDays(2)->format('d/m') == $label) ||
-                            (Carbon::parse($order['date'])->subDays(1)->format('d/m') == $label) ||
-                            (Carbon::parse($order['date'])->format('d/m') == $label)) &&
-                        (Carbon::parse($order['date'])->format('d/m') <= $label)
-                    ) {
-
-                        if ($order['payment_method'] == '1') {
-                            $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
-                        } else {
-                            $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            if ($order['payment_method'] == '1') {
+                                $creditCardValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            } else {
+                                $boletoValue += intval(preg_replace("/[^0-9]/", "", $order['value']));
+                            }
                         }
                     }
                 }
@@ -630,9 +630,6 @@ class ReportsController extends Controller
                 array_push($creditCardData, substr(intval($creditCardValue), 0, -2));
                 array_push($boletoData, substr(intval($boletoValue), 0, -2));
             }
-
-            // 01-07
-            // 03-07
 
             return [
                 'label_list'       => $labelList,

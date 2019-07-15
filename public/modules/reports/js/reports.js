@@ -105,6 +105,8 @@ $(function () {
                 $("#percent-credit-card-convert").html(response.convercaoCreditCard + ' %');
                 $("#percent-desktop").html(response.conversaoDesktop + ' %');
                 $("#percent-mobile").html(response.conversaoMobile + ' %');
+                $("#qtd-cartao-convert").html(response.cartaoConvert);
+                $("#qtd-boleto-convert").html(response.boletoConvert);
 
                 updateGraph(response.chartData);
                 updateSalesByOrigin();
