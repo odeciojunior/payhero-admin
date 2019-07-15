@@ -42,7 +42,7 @@ class ShopifyService
     {
         try {
             if (!$this->cacheDir) {
-                $cache = './public/tmp';
+                $cache = '/var/tmp';
             } else {
                 $cache = $this->cacheDir;
             }
