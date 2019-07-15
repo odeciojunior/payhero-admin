@@ -14,15 +14,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $status
  * @property string $name
  * @property string $description
- * @property boolean $sms_status
  * @property string $invoice_description
  * @property string $percentage_affiliates
  * @property string $url_page
  * @property boolean $automatic_affiliation
  * @property string $shopify_id
- * @property boolean $shipment
- * @property string $shipment_value
- * @property string $shipment_responsible
  * @property string $installments_amount
  * @property string $installments_interest_free
  * @property string $cookie_duration
@@ -31,6 +27,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property string $logo
+ * @property string $url_redirect
+ * @property boolean $boleto
  * @property Carrier $carrier
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
@@ -43,6 +42,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Layout[] $layouts
  * @property Pixel[] $pixels
  * @property Plan[] $plans
+ * @property Sale[] $sales
+ * @property Shipping[] $shippings
  * @property ShopifyIntegration[] $shopifyIntegrations
  * @property UsersProject[] $usersProjects
  * @property ZenviaSm[] $zenviaSms
@@ -51,48 +52,38 @@ class Project extends Model
 {
     use FoxModelTrait;
     use SoftDeletes;
+
     /**
      * @var array
      */
     protected $dates = ['deleted_at'];
+
     /**
      * @var array
      */
     protected $fillable = [
-        'carrier',
-        'photo',
-        'visibility',
-        'status',
-        'name',
-        'description',
-        'sms_status',
-        'invoice_description',
-        'percentage_affiliates',
-        'url_page',
-        'automatic_affiliation',
-        'shopify_id',
-        'shipment',
-        'shipment_value',
-        'shipment_responsible',
-        'installments_amount',
-        'installments_interest_free',
-        'cookie_duration',
-        'url_cookies_checkout',
-        'contact',
-        'url_redirect',
-        'boleto',
+        'carrier', 
+        'photo', 
+        'visibility', 
+        'status', 
+        'name', 
+        'description', 
+        'invoice_description', 
+        'percentage_affiliates', 
+        'url_page', 
+        'automatic_affiliation', 
+        'shopify_id', 
+        'installments_amount', 
+        'installments_interest_free', 
+        'cookie_duration', 
+        'url_cookies_checkout', 
+        'contact', 
+        'created_at', 
+        'updated_at', 
         'logo',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'status' => [
-            1 => 'approved',
-        ],
+        'url_redirect', 
+        'boleto', 
+        'deleted_at'
     ];
 
     /**
@@ -194,9 +185,9 @@ class Project extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shopifyIntegrations()
+    public function sales()
     {
-        return $this->hasMany('App\Entities\ShopifyIntegration', 'project');
+        return $this->hasMany('App\Entities\Sale', 'project');
     }
 
     /**
@@ -210,6 +201,14 @@ class Project extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function shopifyIntegrations()
+    {
+        return $this->hasMany('App\Entities\ShopifyIntegration', 'project');
+    }
+ 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function usersProjects()
     {
         return $this->hasMany('App\Entities\UserProject', 'project');
@@ -220,14 +219,6 @@ class Project extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('App\Entities\ZenviaSms', 'project');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function sales()
-    {
-        return $this->hasMany('App\Entities\Sale', 'project');
+        return $this->hasMany('App\Entities\ZenviaSm', 'project');
     }
 }

@@ -174,12 +174,12 @@
                                                         <div class="col-lg-4">
                                                             Cartão
                                                         </div>
+                                                        <div class="col-lg-4">
+                                                            <span class="" id='qtd-cartao-convert'>0</span>
+                                                        </div>
                                                         <div class="col-lg-4" id='percent-credit-card-convert'>
                                                             0
                                                         </div>
-                                                        {{--<div class="col-lg-4">
-                                                            <span class="money-td green">--}}{{--R$500,00--}}{{--Em Breve</span>
-                                                        </div>--}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -189,12 +189,12 @@
                                                         <div class="col-lg-4">
                                                             Boleto
                                                         </div>
+                                                        <div class="col-lg-4">
+                                                            <span class="" id='qtd-boleto-convert'>0</span>
+                                                        </div>
                                                         <div class="col-lg-4" id='percent-boleto-convert'>
                                                             0
                                                         </div>
-                                                        {{-- <div class="col-lg-4">
-                                                             <span class="money-td green" id='boleto-value'>0</span>
-                                                         </div>--}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,7 +232,7 @@
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-3">
                                                             Boleto
-                                                        </div> 
+                                                        </div>
                                                         <div class="col-lg-4" id='percent-values-boleto'>
                                                             0
                                                         </div>
@@ -255,7 +255,7 @@
                                         <div class="row">
                                             <div class="col-8">
                                                 <h4> Origens </h4>
-                                            </div>  
+                                            </div>
                                             <div class="col-4">
                                                 <select class="form-control float-right" id='origin'>
                                                     <option selected value="src">SRC</option>
