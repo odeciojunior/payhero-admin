@@ -161,12 +161,13 @@ class BoletoService
         }
     }
 
-    public function verifyBoletoExpired2()
+    public function verifyBoleto2()
     {
-        $date          = Carbon::now()->subDay('2')->toDateString();
-        $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
-                             ->with('clientModel')->get();
-        foreach ($boletoExpired as $boleto) {
+        $date    = Carbon::now()->subDay('2')->toDateString();
+        $boletos = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
+                       ->with('clientModel','plansSales.plan.products')->get();
+        //        dd($boletos);
+        foreach ($boletos as $boleto) {
             $sendEmail          = new SendgridService();
             $clientName         = $boleto->clientModel->name;
             $clientEmail        = $boleto->clientModel->email;
@@ -215,7 +216,7 @@ class BoletoService
             }
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
-                $sendEmail->sendEmail('Vamos ter que liberar sua mercadoria', 'noreply@cloudfox.app', 'cloudfox', '', '', 'd-690a6140f72643c1af280b079d5e84c5', $data);
+                $sendEmail->sendEmail('Vamos ter que liberar sua mercadoria', 'noreply@cloudfox.app', 'cloudfox', 'luanmaia65@hotmail.com', 'Luan', 'd-690a6140f72643c1af280b079d5e84c5', $data);
             }
         }
     }
@@ -299,8 +300,7 @@ class BoletoService
             }
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
-                $totalValue = $boleto->total_paid_value;
-                $sendEmail->sendEmail('Últimas horas para acabar', 'noreply@cloudfox.app', 'cloudfox', '', '', '', $data);
+                $sendEmail->sendEmail('Últimas horas para acabar', 'noreply@cloudfox.app', 'cloudfox', '', '', 'd-0a12383664cc44538fdee997bd3456d1', $data);
             }
         }
     }
