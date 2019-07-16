@@ -276,7 +276,7 @@ class SendgridService
         }
     }
 
-    public function sendEmail($subject, $fromEmail, $fromName, $toEmail, $toName, $templateId, $data, $products)
+    public function sendEmail($subject, $fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {
             $email = new \SendGrid\Mail\Mail();
@@ -285,6 +285,7 @@ class SendgridService
             $email->addTo($toEmail, $toName);
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
+
             //            $email->addContent(
             //                "text/html", $view->render()
             //            );

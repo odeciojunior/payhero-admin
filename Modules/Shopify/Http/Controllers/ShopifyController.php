@@ -217,8 +217,7 @@ class ShopifyController extends Controller
                     $shopifyName = $shopify->getShopName();
                     $project     = $this->getProjectModel()->create([
                                                                         'name'                  => $shopifyName,
-                                                                        'status'                => $this->getProjectModel()
-                                                                                                        ->getEnum('status', 'approved'),
+                                                                        'status'                => $this->getProjectModel()->getEnum('status', 'approved'),
                                                                         'visibility'            => 'private',
                                                                         'percentage_affiliates' => '0',
                                                                         'description'           => $shopifyName,
@@ -237,27 +236,6 @@ class ShopifyController extends Controller
                                                                                       'user'      => auth()->user()->id,
                                                                                       'project'   => $project->id,
                                                                                   ]);
-
-                $photo = $request->file('photo');
-
-                if ($photo) {
-
-                    try {
-                        $img = Image::make($photo->getPathname());
-                        $img->crop($dados['photo_w'], $dados['photo_h'], $dados['photo_x1'], $dados['photo_y1']);
-                        $img->resize(200, 200);
-                        $img->save($photo->getPathname());
- 
-                        $digitalOceanPath = $this->getDigitalOceanFileService()
-                                                 ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
-
-                        $project->update([
-                                             'photo' => $digitalOceanPath,
-                                         ]);
-                    } catch (\Exception $e) {
-                        // não cadastra imagem
-                    }
-                }
 
                 $this->getUserProjectModel()->create([
                                                          'user'                 => auth()->user()->id,

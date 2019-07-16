@@ -18,9 +18,9 @@
                     <p class='info pt-5' style='font-size: 10px;'>
                         <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
                         <br> Dimensões ideais: 300 x 300 pixels.
-                    </p>
+                    </p> 
                 </div>
-            </div>
+            </div> 
             <div class='col-lg-8'>
                 <div class='row'>
                     <div class='form-group col-lg-12'>
