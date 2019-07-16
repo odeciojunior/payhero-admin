@@ -132,7 +132,7 @@ class CompaniesController extends Controller
 
             return response()->json('erro', 400);
         }
-    }
+    } 
 
     /**
      * @param Request $request

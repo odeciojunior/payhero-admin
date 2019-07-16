@@ -15,17 +15,11 @@ class ShopifyAddIntegrationRequest extends FormRequest
         return [
 
             'token'    => 'required|string|max:255',
-            'photo_x1' => 'nullable|numeric',
-            'photo_y1' => 'nullable|numeric',
-            'photo_w'  => 'nullable|numeric',
-            'photo_h'  => 'nullable|numeric',
-
-            'photo' => 'nullable|image|mimes:jpeg,jpg,png',
 
         ];
     }
 
-    /**
+    /** 
      * Determine if the user is authorized to make this request.
      * @return bool
      */

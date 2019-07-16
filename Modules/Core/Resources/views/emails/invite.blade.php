@@ -12,14 +12,14 @@
     <table style="padding: 20px 5px;text-align:center" align="center">
         <tr>
             <td style="width:100px;height:100px;text-align:center">
-                <img src="{!! asset('modules/global/assets/img/logo.png') !!}" height="80">
+                <img src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/logo.png" height="80"> 
             </td>
         </tr>
     </table>
     <table style="border-radius-top: 10px; line-height: 135%; padding: 20px 80px;background-color: white;width:600px;" align="center" cellpadding="0" cellspacing="0">
         <tr>
             <td style="padding-top: 20px;text-align:center">
-                <img src="{!! asset('modules/global/assets/img/beta-tester.png') !!}">
+                <img src="https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/beta-tester.png">
             </td>
         </tr>
         <tr>

@@ -30,7 +30,7 @@ class Domain extends Model
         'project_id',
         'name',
         'status',
-        'domain_ip',
+        'domain_ip', 
         'sendgrid_id',
         'created_at',
         'updated_at',

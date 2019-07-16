@@ -40,9 +40,9 @@
                         </div>
                     @endforeach
                 </div>
-        @endif
+            @endif
 
-        <!-- Modal add integração -->
+            <!-- Modal add integração -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                 <div class="modal-dialog modal-lg d-flex justify-content-center">
                     <div class="modal-content w-450" id="conteudo_modal_add">
@@ -58,8 +58,8 @@
                                 <div style="width:100%">
                                     <div class="row">
                                         <div class="col-12">
-                                            <label for="token">Token</label>
-                                            <input type="text" class="input-pad" name="token" id="token" placeholder="Digite seu token">
+                                            <label for="token">Token (password)</label>
+                                            <input type="text" class="input-pad" name="token" id="token" placeholder="Password da chave de integração">
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top:30px">
@@ -83,32 +83,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:30px">
-                                        <div class="form-group col-12">
-                                            <label for="selecionar_foto">Foto do projeto</label>
-                                            <br>
-                                            <a role="button" id="selecionar_foto" id="preview-image-project" class="btn btn-primary mt-10 white">
-                                                <i class="material-icons"> cloud_upload </i> Upload
-                                            </a>
-                                            <!-- <input type="button" id="selecionar_foto" class="btn btn-default" value="Selecionar foto do projeto"> -->
-                                            <input name="photo" type="file" class="form-control" id="foto" style="display:none">
-                                            <div style="margin: 20px 0 0 30px;">
-                                                <img id="previewimage" alt="Selecione a foto do projeto" accept="image/*" onerror="this.src='{{asset('modules/global/assets/img/projeto.png')}}';" style="max-height: 250px; max-width: 350px;"/>
-                                            </div>                                           
-                                            <input type="hidden" name="photo_x1"/> <input type="hidden" name="photo_y1"/>
-                                            <input type="hidden" name="photo_w"/> <input type="hidden" name="photo_h"/>
-                                        </div>
-                                    </div>
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer" style="margin-top: 30px">
                             <button id="bt_adicionar_integracao" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
             <!-- End Modal -->
         </div>
     </div>

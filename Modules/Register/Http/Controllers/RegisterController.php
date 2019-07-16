@@ -38,7 +38,6 @@ class RegisterController extends Controller
     {
         try {
             $requestData = $request->validated();
-            // $requestData = $request->all();
 
             $requestData['password']                            = bcrypt($requestData['password']);
             $requestData['percentage_rate']                     = '6.5';
@@ -75,15 +74,17 @@ class RegisterController extends Controller
 
                 $company = Company::find(current(Hashids::decode($requestData['parameter'])));
 
-                Invitation::create([
-                                   'invite'          => null,
-                                   'user_invited'    => $user->id,
-                                   'status'          => '1',
-                                   'company'         => $company->id,
-                                   'register_date'   => Carbon::now()->format('Y-m-d'),
-                                   'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                   'email_invited'   => $requestData['email'],
-                               ]);
+                if($company){
+                    Invitation::create([
+                                    'invite'          => null,
+                                    'user_invited'    => $user->id,
+                                    'status'          => '1',
+                                    'company'         => $company->id,
+                                    'register_date'   => Carbon::now()->format('Y-m-d'),
+                                    'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                                    'email_invited'   => $requestData['email'],
+                                ]);
+                }
             }
 
             return response()->json([
