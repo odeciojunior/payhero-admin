@@ -71,6 +71,11 @@ $(function () {
                             var img = document.getElementById('previewimage');
                             var x1, x2, y1, y2;
 
+                            x1 = Math.floor(img.naturalWidth / 100 * 10);
+                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                            y1 = Math.floor(img.naturalHeight / 100 * 10);
+                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+
                             $('#previewimage').imgAreaSelect({
                                 x1: x1, y1: y1, x2: x2, y2: y2,
                                 aspectRatio: '1:1',
@@ -78,7 +83,7 @@ $(function () {
                                 imageHeight: this.naturalHeight,
                                 imageWidth: this.naturalWidth,
                                 onSelectEnd: function (img, selection) {
-                                    $('#photo_x1').val(selection.x1);
+                                    $('#photo_x1').val(selection.x1); 
                                     $('#photo_y1').val(selection.y1);
                                     $('#photo_w').val(selection.width);
                                     $('#photo_h').val(selection.height);
@@ -190,7 +195,6 @@ $(function () {
                             success: function (data) {
                                 console.log(data);
                                 if (data == 'success') {
-                                    alertCustom('success', 'Projeto Removido com sucesso');
                                     window.location = "/projects";
                                 } else {
                                     alertCustom('error', "Erro ao deletar projeto");
