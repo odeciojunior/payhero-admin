@@ -227,6 +227,6 @@ class Project extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('App\Entities\ZenviaSm', 'project');
+        return $this->hasMany('App\Entities\ZenviaSms', 'project');
     }
 }

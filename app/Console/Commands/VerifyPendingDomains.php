@@ -132,7 +132,8 @@ class VerifyPendingDomains extends Command
                 $responseValidateDomain = null;
                 $responseValidateLink   = null;
 
-                $activated = $this->getCloudFlareService()->activationCheck($domain->name);
+                $activated = true;
+                //$this->getCloudFlareService()->activationCheck($domain->name);
 
                 $linkBrandResponse = $this->getSendgridService()->getLinkBrand($domain->name);
                 $sendgridResponse  = $this->getSendgridService()->getZone($domain->name);
@@ -146,16 +147,21 @@ class VerifyPendingDomains extends Command
                     $domain->update([
                                         'status' => $this->getDomainModel()->getEnum('status', 'approved'),
                                     ]);
+                                    Log::warning('domains update command aqui 1');
+                                    
                 }
 
                 if ($this->getCloudFlareService()
                          ->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
 
                     if (!empty($domain->project->shopify_id)) {
+                        Log::warning('domains update command if ...'); 
+
                         //dominio shopify, fazer as alteracoes nos templates
                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
 
                             try {
+                                Log::warning('domains update command foreach ...');
 
                                 $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
@@ -164,6 +170,7 @@ class VerifyPendingDomains extends Command
 
                                 if ($htmlCart) {
                                     //template normal
+                                    Log::warning('domains update command tema normal ...');
 
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $this->getShopifyIntegrationModel()
@@ -175,6 +182,8 @@ class VerifyPendingDomains extends Command
 
                                     $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
                                 } else {
+                                    Log::warning('domains update command tema ajax ...');
+
                                     //template ajax
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $this->getShopifyIntegrationModel()
@@ -209,6 +218,7 @@ class VerifyPendingDomains extends Command
                     $domain->update([
                                         'status' => $this->getDomainModel()->getEnum('status', 'approved'),
                                     ]);
+                                    Log::warning('domains update command final');
                 }
             }
         } catch (Exception $e) {

@@ -35,24 +35,6 @@ $(document).ready(function () {
         $("#emailError").hide();
     });
 
-    // replica texto na criação do projeto standard
-    // $("#project_name_standard").keydown(function () {
-    //     $("#name_preview_standard").text($("#project_name_standard").val());
-    // });
-
-    // $("#project_desc_standard").keydown(function () {
-    //     $("#description_preview_standard").text($("#project_desc_standard").val());
-    // });
-
-    ///// replica texto na criação do projeto standard
-    // $("#project_name_shopify").keydown(function () {
-    //     $("#name_preview_shopify").text($("#project_name_shopify").val());
-    // });
-
-    // $("#project_desc_shopify").keydown(function () {
-    //     $("#description_preview_shopify").text($("#project_desc_shopify").val());
-    // });
-
     $("#btnBrasil").on("click", function(){
         $("#country").val('brasil');
     });
@@ -258,8 +240,8 @@ $(document).ready(function () {
     });
 
     $("#btnUSA").click(function () {
-        $("#brasil-form").hide();
-        $("#eua-form").show();
+        //$("#brasil-form").hide();
+        //$("#eua-form").show();
     });
 
     function registerComplete(){

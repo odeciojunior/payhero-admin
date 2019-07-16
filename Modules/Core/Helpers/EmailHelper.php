@@ -9,7 +9,7 @@ class EmailHelper {
     public static function novaAfiliacao(){
 
         $email = new \SendGrid\Mail\Mail();
-        $email->setFrom("noreply@cloudfox.app", "Cloudfox");
+        $email->setFrom("noreply@app.cloudfox.net", "Cloudfox");
         $email->setSubject("Nova afiliação");
         $email->addTo("felixlorram@gmail.com", "julio");
         $email->addContent("text/plain", "Nova notificação");
@@ -30,7 +30,7 @@ class EmailHelper {
     public static function novaSolicitacaoAfiliacao(){
 
         $email = new \SendGrid\Mail\Mail(); 
-        $email->setFrom("noreply@cloudfox.app", "Cloudfox");
+        $email->setFrom("noreply@app.cloudfox.net", "Cloudfox");
         $email->setSubject("testando integração com sendgrid");
         $email->addTo("felixlorram@gmail.com", "julio");
         $email->addContent("text/plain", "Nova notificação");
@@ -52,7 +52,7 @@ class EmailHelper {
     public static function confirmacaoAfiliacao(){
 
         $email = new \SendGrid\Mail\Mail(); 
-        $email->setFrom("noreply@cloudfox.app", "Cloudfox");
+        $email->setFrom("noreply@app.cloudfox.net", "Cloudfox");
         $email->setSubject("testando integração com sendgrid");
         $email->addTo("felixlorram@gmail.com", "julio");
         $email->addContent("text/plain", "Nova notificação");
@@ -79,7 +79,7 @@ class EmailHelper {
             ]);
 
             $email = new \SendGrid\Mail\Mail();
-            $email->setFrom("noreply@cloudfox.app", "Cloudfox");
+            $email->setFrom("noreply@cloudfox.net", "Cloudfox");
             $email->setSubject("Convite para o CloudFox");
             $email->addTo($to, "CloudFox");
             $email->addContent(

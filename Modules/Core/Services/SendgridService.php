@@ -38,7 +38,7 @@ class SendgridService
         $requestBody = json_decode('{
                      "automatic_security": false,
                      "custom_spf" : true,
-                     "default" : true,
+                     "default" : false,
                      "domain" : "' . $domain . '"
                  }');
 
@@ -185,7 +185,7 @@ class SendgridService
     public function createLinkBrand($domain)
     {
         $request_body = json_decode('{
-                 "default": true,
+                 "default": false,
                  "domain": "' . $domain . '",
                  "subdomain": "mail"
              }');

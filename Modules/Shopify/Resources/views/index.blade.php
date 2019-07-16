@@ -58,8 +58,8 @@
                                 <div style="width:100%">
                                     <div class="row">
                                         <div class="col-12">
-                                            <label for="token">Token</label>
-                                            <input type="text" class="input-pad" name="token" id="token" placeholder="Digite seu token">
+                                            <label for="token">Token (password)</label>
+                                            <input type="text" class="input-pad" name="token" id="token" placeholder="Password da chave de integração">
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top:30px">
