@@ -84,12 +84,12 @@ $(document).ready(function () {
             data: form_data,
             error: function (response) {
                 $('.loading').css("visibility", "hidden");
-                alertPersonalizado('error', response.message);//'Ocorreu algum erro'
+                alertPersonalizado('error', response.responseJSON.message);//'Ocorreu algum erro'
                 $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
             },
             success: function (response) {
                 $('.loading').css("visibility", "hidden");
-                alertPersonalizado('success', response.message);
+                alertPersonalizado('success', response.responseJSON.message);
                 window.location.reload(true);
 
                 $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
