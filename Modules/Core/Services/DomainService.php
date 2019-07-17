@@ -200,6 +200,11 @@ class DomainService
                                         'status' => $this->getDomainModel()->getEnum('status', 'approved'),
                                     ]);
                     Log::warning('domains update command final');
+                } else {
+                    $domain->update([
+                                        'status' => $this->getDomainModel()->getEnum('status', 'pending'),
+                                    ]);
+                    Log::warning('domains update command final else');
                 }
             }
 

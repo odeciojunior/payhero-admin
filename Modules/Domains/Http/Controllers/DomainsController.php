@@ -152,7 +152,7 @@ class DomainsController extends Controller
                 $projectId = current(Hashids::decode($dataRequest["project"]));
 
                 $domains = $this->getDomainModel()->with(['project'])->where('project_id', $projectId)->get();
-                
+
                 return DomainResource::collection($domains);
             } else {
                 return response()->json([
@@ -419,6 +419,7 @@ class DomainsController extends Controller
         $domain = $this->getDomainModel()->with(['project'])->where('id', Hashids::decode($domainId))->first();
 
         $data = (object) [
+            'id_code'   => $domain->id_code,
             'name'      => $domain->name,
             'domain_ip' => (empty($domain->project->shopify_id)) ? $domain->domain_ip : 'Shopify',
         ];
@@ -496,5 +497,11 @@ class DomainsController extends Controller
             Log::warning('DomainsController destroyRecord - erro ao deletar dns');
             report($e);
         }
+    }
+
+    public function recheckDomain(Request $request)
+    {
+
+        dd($request);
     }
 }

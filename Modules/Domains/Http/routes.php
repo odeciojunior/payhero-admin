@@ -7,5 +7,8 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Domains\H
 
     Route::post("/domains/deleterecord", "DomainsController@destroyRecord")
          ->name('domain.destroy.record');
+
+    Route::post("/domains/recheck", "DomainsController@recheckDomain")
+         ->name('domain.recheck');
 });
 

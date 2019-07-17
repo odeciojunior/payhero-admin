@@ -34,7 +34,7 @@ $(document).ready(function () {
 
                 $("#modal-add-body").html(response);
 
-                $('form').submit(function(evt){
+                $('form').submit(function (evt) {
                     evt.preventDefault();
                 });
 
@@ -108,7 +108,7 @@ $(document).ready(function () {
                     dados += '</td>';
                     dados += "<td style='min-width:200px;'>" +
                         "<a role='button' class='details-domain pointer mr-30' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
-                        "<a role='button' class='edit-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"+
+                        "<a role='button' class='edit-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>" +
                         "<a role='button' class='delete-domain pointer ml-30' domain='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
                     "</td>";
                     // dados += "<td style='vertical-align: middle'><a role='button' class='details-domain pointer' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal' style='margin-right:10px' ><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
@@ -126,26 +126,51 @@ $(document).ready(function () {
                 $(".details-domain").unbind('click');
                 $(".details-domain").on('click', function () {
 
-                    var dominio = $(this).attr('domain');
+                        var dominio = $(this).attr('domain');
 
-                    $("#modal-title").html('Detalhes do dominio');
-                    var data = {dominioId: dominio};
+                        $("#modal-title").html('Detalhes do dominio');
+                        var data = {dominioId: dominio};
 
-                    $("#btn-modal").hide();
+                        $("#btn-modal").hide();
 
-                    $.ajax({
-                        method: "GET",
-                        url: "/domains/" + dominio,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
-                            //
-                        }, success: function (response) {
-                            $("#modal-add-body").html(response);
-                        }
-                    });
-                });
+                        $.ajax({
+                            method: "GET",
+                            url: "/domains/" + dominio,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function () {
+                                //
+                            }, success: function (response) {
+                                $("#modal-add-body").html(response);
+
+                                $(".refresh-domain").unbind('click');
+                                $(".refresh-domain").on('click', function () {
+                                    var domain = $(this).attr('data-domain');
+                                    alert(domain);
+                                    $.ajax({
+                                        method: "POST",
+                                        url: '/domains/recheck/',
+                                        data: {
+                                            domain: domain,
+                                            project: projectId
+                                        },
+                                        headers: {
+                                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                                        },
+                                        error: function (response) {
+                                            alert('erro');
+                                        },
+                                        success: function (response) {
+                                            alert('success');
+                                        }
+                                    });
+
+                                });
+                            }
+                        });
+                    }
+                );
 
                 $(".edit-domain").unbind('click');
                 $(".edit-domain").on("click", function () {
@@ -301,7 +326,7 @@ $(document).ready(function () {
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on("click", function () {
                         $("#fechar_modal_excluir").click();
-''
+                        ''
                         $.ajax({
                             method: "DELETE",
                             url: "/domains/" + dominio,
@@ -332,7 +357,9 @@ $(document).ready(function () {
                 })
 
             }
-        });
+        })
+        ;
     }
 
-});
+})
+;

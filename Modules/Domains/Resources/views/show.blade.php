@@ -4,7 +4,7 @@
         <tbody>
             <tr>
                 <td class="table-title"><b>Domínio:</b></td>
-                <td>{!! $domain->name !!}</td>
+                <td>{!! $domain->name !!} <a class="refresh-domain pointer mr-30" data-domain='{{$domain->id_code}}'><i class="material-icons gradient align-right" style="float:right;">refresh</i></a></td>
             </tr>
             <tr>
                 <td class="table-title"><b>IP que o domínio aponta:</b></td>
