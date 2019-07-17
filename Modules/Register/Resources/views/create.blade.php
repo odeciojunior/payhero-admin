@@ -554,6 +554,7 @@
             </div>
         </div>
     </footer>
+
     <script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
     <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
@@ -562,5 +563,8 @@
     <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
     <script src="{{ asset('modules/global/assets/js/sweetalert2.all.min.js') }}"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
-</body>
+
+  </body>
 </html>
+
+
