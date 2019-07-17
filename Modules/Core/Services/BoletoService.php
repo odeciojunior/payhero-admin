@@ -100,7 +100,7 @@ class BoletoService
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
                 //                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
-                $sendEmail->sendEmail('Hoje vence o seu boleto', 'noreply@cloudfox.app', 'cloudfox', $emailValidated, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
+                $sendEmail->sendEmail('Hoje vence o seu boleto', 'noreply@cloudfox.app', 'cloudfox', $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
             }
         }
     }
@@ -159,7 +159,7 @@ class BoletoService
             }
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
-                $sendEmail->sendEmail('Já separamos seu pedido', 'noreply@cloudfox.app', 'cloudfox', $emailValidated, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
+                $sendEmail->sendEmail('Já separamos seu pedido', 'noreply@cloudfox.app', 'cloudfox', $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
             }
         }
     }
