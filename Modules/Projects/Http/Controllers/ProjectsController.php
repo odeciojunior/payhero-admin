@@ -279,7 +279,7 @@ class ProjectsController extends Controller
                 $user      = auth()->user()->load('companies');
                 $companies = $user->companies;
 
-                $project = $this->getProject()->where('id', $idProject)->first();
+                $project = $this->getProject()->with(['usersProjects'])->where('id', $idProject)->first();
 
                 if ($project) {
 
