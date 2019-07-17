@@ -14,11 +14,11 @@ class CreateProductRequest extends FormRequest
     {
         return [
             'name'          => 'required|max:200',
-            'description'   => 'nullable|max:200',
+            'description'   => 'required|max:200',
             'format'        => 'nullable',
             'category'      => 'nullable',
             'cost'          => 'nullable',
-            'price'         => 'required',
+            'price'         => 'nullable',
             'height'        => 'nullable',
             'width'         => 'nullable',
             'weight'        => 'nullable',
