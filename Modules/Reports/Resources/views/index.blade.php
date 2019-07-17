@@ -250,45 +250,46 @@
                                 </div>
                             </div>
                             {{--                            <div class='col-lg-12 gutter_top'>--}}
-                            <div class='col-lg-8'>
-                                <div class="card shadow ">
-                                    <div class="card-header">
-                                        <h4> Mais Vendidos </h4>
-                                    </div>
-                                    <div style=' max-height: 150px; overflow-y: auto;'>
-                                        <div class=" card-body data-holder">
-                                            {{--                                            <div class="row">--}}
-                                            {{--                                            <div class="col-12">--}}
-                                            <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
-                                                {{--<thead>
-                                                    <th class="table-title">Foto</th>
-                                                    <th class="table-title">Nome</th>
-                                                    <th class="table-title">Quantidade</th>
-                                                </thead>--}}
-                                                <tbody id="origins-table-itens">
-                                                    {{-- js carrega... --}}
-                                                </tbody>
-                                            </table>
-                                            {{--                                            </div>--}}
-                                            {{--                                            </div>--}}
-                                            <br/>
+                                <div class='col-lg-8'>
+                                    <div class="card shadow ">
+                                        <div class="card-header">
+                                            <h4> Mais Vendidos </h4>
+                                        </div>
+                                        <div style=' max-height: 150px; overflow-y: auto; height: 150px;'>
+                                            <div class=" card-body data-holder">
+                                                {{--                                            <div class="row">--}}
+                                                {{--                                            <div class="col-12">--}}
+                                                <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
+                                                    {{--<thead>
+                                                        <th class="table-title">Foto</th>
+                                                        <th class="table-title">Nome</th>
+                                                        <th class="table-title">Quantidade</th>
+                                                    </thead>--}}
+                                                    <tbody id="origins-table-itens">
+                                                        {{-- js carrega... --}}
+                                                    </tbody>
+                                                </table>
+                                                {{--                                            </div>--}}
+                                                {{--                                            </div>--}}
+                                                <br/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class='col-lg-4'>
-                                <div class='card shadow'>
-                                    <div class='card-header'>
-                                        <h4>Ticket Médio</h4>
-                                    </div>
-                                    <div style='height: 150px; '>
-                                        <div class='card-body custom-table min-250'>
-                                            <div class='row'>
-                                                <div class='col-lg-12 text-center'>
-                                                    <div class='data-holder text-center'>
-                                                        <div class='row wrap justify-content-between text-center'>
-                                                            <div class='col-lg-12 text-center'>
-                                                                <span class='money-td green h3' id='ticket-medio'>0</span>
+                                <div class='col-lg-4'>
+                                    <div class='card shadow'>
+                                        <div class='card-header'>
+                                            <h4>Ticket Médio</h4>
+                                        </div>
+                                        <div style='height: 150px; '>
+                                            <div class='card-body custom-table min-250'>
+                                                <div class='row'>
+                                                    <div class='col-lg-12 text-center'>
+                                                        <div class='data-holder text-center'>
+                                                            <div class='row wrap justify-content-between text-center'>
+                                                                <div class='col-lg-12 text-center'>
+                                                                    <span class='money-td green h3' id='ticket-medio'>0</span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -297,9 +298,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            {{--                            </div>--}}
-                            <div class="col-lg-12 mt-40">
+                            <div class="col-lg-12 mt-10">
                                 <div class="card shadow">
                                     <div class="card-header">
                                         <div class="row">

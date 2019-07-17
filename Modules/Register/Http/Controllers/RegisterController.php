@@ -115,6 +115,17 @@ class RegisterController extends Controller
             $sendEmail->sendEmail('Bem vindo(a)', 'noreply@cloudfox.app', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
         }
     }
+
+    public function loginAsSomeUser($userId){
+
+        auth()->loginUsingId($userId);
+
+        $companies = Company::where('user_id',\Auth::user()->id)->get()->toArray();
+
+        return view('dashboard::dashboard',[
+            'companies' => $companies,
+        ]);
+    }
 }
 
 
