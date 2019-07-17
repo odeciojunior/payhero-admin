@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -17,24 +18,33 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProductPlan extends Model
 {
-    /**
-     * The table associated with the model.
-     * 
-     * @var string
-     */
-    protected $table = 'products_plans';
-
-    /**
-     * The "type" of the auto-incrementing ID.
-     * 
-     * @var string
-     */
-    protected $keyType = 'integer';
+    use SoftDeletes;
 
     /**
      * @var array
      */
-    protected $fillable = ['product', 'plan', 'amount', 'created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['deleted_at'];
+    /**
+     * The table associated with the model.
+     * @var string
+     */
+    protected $table = 'products_plans';
+    /**
+     * The "type" of the auto-incrementing ID.
+     * @var string
+     */
+    protected $keyType = 'integer';
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'product',
+        'plan',
+        'amount',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
