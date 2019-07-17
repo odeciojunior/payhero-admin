@@ -74,7 +74,7 @@ class CartRecoveryService
 
             $link = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
             $view = view('core::emails.abandonedcart', compact('link'));
-            $sendEmail->sendEmail($view, $link, 'noreply@cloudfox.app', 'cloudfox', $log['email'], $log['name']);
+            $sendEmail->sendEmail($view, $link, 'noreply@cloudfox.net', 'cloudfox', $log['email'], $log['name']);
         }
     }
 }
