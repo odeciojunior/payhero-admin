@@ -9,6 +9,8 @@ use App\Entities\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Register\Http\Requests\RegisterRequest;
@@ -74,16 +76,16 @@ class RegisterController extends Controller
 
                 $company = Company::find(current(Hashids::decode($requestData['parameter'])));
 
-                if($company){
+                if ($company) {
                     Invitation::create([
-                                    'invite'          => null,
-                                    'user_invited'    => $user->id,
-                                    'status'          => '1',
-                                    'company'         => $company->id,
-                                    'register_date'   => Carbon::now()->format('Y-m-d'),
-                                    'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
-                                    'email_invited'   => $requestData['email'],
-                                ]);
+                                           'invite'          => null,
+                                           'user_invited'    => $user->id,
+                                           'status'          => '1',
+                                           'company'         => $company->id,
+                                           'register_date'   => Carbon::now()->format('Y-m-d'),
+                                           'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                                           'email_invited'   => $requestData['email'],
+                                       ]);
                 }
             }
 
@@ -100,10 +102,24 @@ class RegisterController extends Controller
         }
     }
 
+    public function welcomeEmail()
+    {
+        $userEmail      = auth()->user()->email;
+        $userName       = auth()->user()->name;
+        $sendEmail      = new SendgridService();
+        $data           = [
+            "name" => $userName,
+        ];
+        $emailValidated = FoxUtils::validateEmail($userEmail);
+        if ($emailValidated) {
+            $sendEmail->sendEmail('Bem vindo(a)', 'noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
+        }
+    }
+
     public function loginAsSomeUser($userId){
 
         auth()->loginUsingId($userId);
- 
+
         $companies = Company::where('user_id',\Auth::user()->id)->get()->toArray();
 
         return view('dashboard::dashboard',[

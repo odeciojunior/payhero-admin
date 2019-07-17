@@ -2,7 +2,8 @@
 
 Route::group(['middleware' => 'web', 'prefix' => 'register', 'namespace' => 'Modules\Register\Http\Controllers'], function()
 {
-    Route::get('/', 'Modules\Register\Http\Controllers\RegisterController@index')->name('registers');
+//    Route::get('/', 'Modules\Register\Http\Controllers\RegisterController@index')->name('registers');
+    Route::get('/welcome', 'RegisterController@welcomeEmail');
     Route::get('/{parametro}', 'RegisterController@create');
 
     Route::post('/', 'RegisterController@store');

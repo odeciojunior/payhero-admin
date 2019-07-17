@@ -152,9 +152,7 @@ class DomainsController extends Controller
                 $projectId = current(Hashids::decode($dataRequest["project"]));
 
                 $domains = $this->getDomainModel()->with(['project'])->where('project_id', $projectId)->get();
-
-                $project = $this->getProjectModel()->with('domains')->find($projectId);
-
+                
                 return DomainResource::collection($domains);
             } else {
                 return response()->json([

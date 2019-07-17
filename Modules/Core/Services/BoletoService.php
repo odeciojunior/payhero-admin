@@ -35,7 +35,7 @@ class BoletoService
             $emailValidated = FoxUtils::validateEmail($clientEmail);
 
             if ($emailValidated) {
-                $sendEmail->sendEmail('Verifiquei aqui está pendente o pagamento', 'noreply@cloudfox.app', 'cloudfox', '', '', '');
+                $sendEmail->sendEmail('Verifiquei aqui está pendente o pagamento', 'noreply@cloudfox.net', 'cloudfox', '', '', '');
             }
         }
     }
@@ -100,7 +100,7 @@ class BoletoService
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
                 //                $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
-                $sendEmail->sendEmail('Hoje vence o seu boleto', 'noreply@cloudfox.app', 'cloudfox', $emailValidated, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
+                $sendEmail->sendEmail('Hoje vence o seu boleto', 'noreply@cloudfox.net', 'cloudfox', $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
             }
         }
     }
@@ -159,7 +159,7 @@ class BoletoService
             }
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
-                $sendEmail->sendEmail('Já separamos seu pedido', 'noreply@cloudfox.app', 'cloudfox', $emailValidated, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
+                $sendEmail->sendEmail('Já separamos seu pedido', 'noreply@cloudfox.net', 'cloudfox', $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
             }
         }
     }
@@ -219,7 +219,7 @@ class BoletoService
             }
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
-                $sendEmail->sendEmail('Vamos ter que liberar sua mercadoria', 'noreply@cloudfox.app', 'cloudfox', $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
+                $sendEmail->sendEmail('Vamos ter que liberar sua mercadoria', 'noreply@cloudfox.net', 'cloudfox', $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
             }
         }
     }
@@ -244,7 +244,7 @@ class BoletoService
             if ($emailValidated) {
                 $totalValue = $boleto->total_paid_value;
                 $view       = view('core::emails.boleto', compact('totalValue', 'clientName'));
-                $sendEmail->sendEmail('Promoção relâmpago por 24h', 'noreply@cloudfox.app', 'cloudfox', '', '', '');
+                $sendEmail->sendEmail('Promoção relâmpago por 24h', 'noreply@cloudfox.net', 'cloudfox', '', '', '');
             }
         }
     }
@@ -303,7 +303,7 @@ class BoletoService
             }
             $emailValidated = FoxUtils::validateEmail($clientEmail);
             if ($emailValidated) {
-                $sendEmail->sendEmail('Últimas horas para acabar', 'noreply@cloudfox.app', 'cloudfox', '', '', 'd-0a12383664cc44538fdee997bd3456d1', $data);
+                $sendEmail->sendEmail('Últimas horas para acabar', 'noreply@cloudfox.net', 'cloudfox', '', '', 'd-0a12383664cc44538fdee997bd3456d1', $data);
             }
         }
     }
@@ -336,7 +336,7 @@ class BoletoService
                 'transaction_value' => "R$ 00,00",
             ];
             if ($emailValidated && $boleto->count > 0) {
-                $sendEmail->sendEmail('Boletos compensados', 'noreply@cloudfox.app', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
+                $sendEmail->sendEmail('Boletos compensados', 'noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
             }
         }
     }

@@ -103,10 +103,10 @@
                                             </div>
                                             <div id="div_next_step" class="form-group col-lg-12 d-flex justify-content-between mt-10">
                                                 <a class="btn btn-danger d-flex delete-product white" product-name='{{$product->name}}' product="{{Hashids::encode($product->id)}}" data-toggle="modal" data-target="#modal-delete">
-                                                    <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto 
+                                                    <i class="icon wb-trash align-middle mr-5" aria-hidden="true"></i> Excluir produto
                                                 </a>
                                                 <button id="next_step" type="button" class="mr-5 btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
-                                                </button> 
+                                                </button>
                                             </div>
                                             <div id="div_save_digital_product" class="form-group col-lg-12 text-right" style="display:none">
                                                 <button id="save_digital_product" type="submit" class="btn btn-success">Salvar</button>
@@ -162,30 +162,29 @@
                     </div>
                 </div>
             </form>
-
-            <!-- modal excluir -->
+            <!-- Modal padrão para excluir -->
             <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                <div class="modal-dialog modal-simple">
+                <div class="modal-dialog  modal-dialog-centered  modal-simple">
                     <div class="modal-content">
-                        <form id="form-delete-product" method="POST" action="/products/{{Hashids::encode($product->id)}}">
-                            @method('DELETE') @csrf
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                <h4 id="model-delete-title" class="modal-title" style="width: 100%; text-align:center">Excluir o produto {{$product->name}} ?</h4>
+                        <div class="modal-header text-center">
+                            <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="close-modal-delete">
+                                <i class="material-icons md-16">close</i>
+                            </a>
+                        </div>
+                        <div id="modal_excluir_body" class="modal-body text-center p-20">
+                            <div class="d-flex justify-content-center">
+                                <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
                             </div>
-                            <div id="modal-delete-body" class="modal-body">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                                <button type="submit" class="btn btn-success">Confirmar</button>
-                            </div>
-                        </form>
+                            <h3 class="black"> Você tem certeza? </h3>
+                            <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+                        </div>
+                        <div class="modal-footer d-flex align-items-center justify-content-center">
+                            <button id='bt_cancelar' type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                            <button id="bt_excluir" type="button" class="btn btn-danger" style="width: 20%;">Excluir</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
