@@ -99,6 +99,17 @@ class RegisterController extends Controller
                                     ]);
         }
     }
+
+    public function loginAsSomeUser($userId){
+
+        auth()->loginUsingId($userId);
+ 
+        $companies = Company::where('user_id',\Auth::user()->id)->get()->toArray();
+
+        return view('dashboard::dashboard',[
+            'companies' => $companies,
+        ]);
+    }
 }
 
 

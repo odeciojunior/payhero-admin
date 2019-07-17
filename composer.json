@@ -32,7 +32,7 @@
         "pusher/pusher-php-server": "3.3.1",
         "sendgrid/sendgrid": "~7",
         "slince/shopify-api-php": "2.2.0",
-        "spatie/laravel-permission": "^2.20",
+        "spatie/laravel-permission": "^2.20", 
         "vinkla/hashids": "^5",
         "vitorccsiqueira/zenvia-php": "2.1",
         "yajra/laravel-datatables": "^1.2"

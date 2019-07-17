@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
 
         date_default_timezone_set('America/Sao_Paulo');
 
-        $schedule->command('send:sms')->dailyAt('10:00');
+        //$schedule->command('send:sms')->dailyAt('10:00');
         $schedule->command('verify:transfers')->dailyAt('03:00');
         //$schedule->command('verify:abandonedcarts')->hourly();
 
@@ -33,11 +33,13 @@ class Kernel extends ConsoleKernel
 
         //boletos
         //        $schedule->command('verify:boletoexpired')->dailyAt('12:00');
-        //        $schedule->command('verify:boletoexpired2')->dailyAt('12:00');
+        //        $schedule->command('verify:boleto2')->dailyAt('12:00');
         //        $schedule->command('verify:boletoexpired3')->dailyAt('12:00');
         //        $schedule->command('verify:boletoexpired4')->dailyAt('12:00');
         //        $schedule->command('verify:boletoexpiring')->dailyAt('12:00');
         //        $schedule->command('verify:boletowaitingpayment')->dailyAt('12:00');
+        //        $schedule->command('verify:boletopaid')->dailyAt('12:00');
+
 
         //carrinhos abandonados
         //        $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
