@@ -281,11 +281,9 @@ class SendgridService
         try {
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);
-            $email->setSubject($subject);
             $email->addTo($toEmail, $toName);
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
-
             //            $email->addContent(
             //                "text/html", $view->render()
             //            );

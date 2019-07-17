@@ -6,6 +6,7 @@ use App\Entities\Carrier;
 use App\Entities\DomainRecord;
 use App\Entities\ExtraMaterial;
 use App\Entities\Project;
+use App\Entities\ShopifyIntegration;
 use App\Entities\UserProject;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,6 +59,22 @@ class ProjectsController extends Controller
      * @var ShopifyService
      */
     private $shopifyService;
+    /**
+     * @var ShopifyIntegration
+     */
+    private $shopifyIntegrationModel;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    function getShopifyIntegration()
+    {
+        if (!$this->shopifyIntegrationModel) {
+            $this->shopifyIntegrationModel = app(ShopifyIntegration::class);
+        }
+
+        return $this->shopifyIntegrationModel;
+    }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -219,7 +236,7 @@ class ProjectsController extends Controller
                                                            'installments_interest_free' => 1,
                                                            'visibility'                 => 'private',
                                                            'automatic_affiliation'      => 0,
-                                                           'boleto'                     => 1
+                                                           'boleto'                     => 1,
                                                        ]);
 
                 if ($project) {
@@ -417,12 +434,11 @@ class ProjectsController extends Controller
             $idProject = current(Hashids::decode($id));
 
             $project = $this->getProject()
-                            ->with(['domains', 'shopifyIntegrations', 'plans', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                            ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
                             ->where('id', $idProject)->first();
-
-            $deletedDependecis = $this->deleteDependences($project);
-
-            try {
+            if ($project) {
+                //projeto encontrado
+                $deletedDependecis = $this->deleteDependences($project);
 
                 foreach ($project->domains as $domain) {
 
@@ -453,71 +469,98 @@ class ProjectsController extends Controller
                         }
                     } else {
                         //erro ao deletar zona
-                        //log error?
+                        Log::warning('ProjectController - destroy - Erro ao deletar dominio');
                     }
                 }
 
-                /*
-                if ($project->photo != null) {
-                    $this->getDigitalOceanFileService()->deleteFile($project->photo);
+                if ($deletedDependecis) {
+                    $projectDeleted = $project->delete();
+                    if ($projectDeleted) {
+                        return response()->json('success', 200);
+                    }
                 }
 
-                if ($project->logo != null) {
-                    $this->getDigitalOceanFileService()->deleteFile($project->logo);
-                }
-                */
-            } catch (Exception $e) {
-                Log::warning('ProjectController - destroy - Erro ao deletar foto e logo do project');
-                report($e);
+                return response()->json('error', 422);
+            } else {
+                //projeto nao encontrado
+                return response()->json('Nenhum projeto encontrado', 400);
             }
-
-            if ($deletedDependecis) {
-                $projectDeleted = $project->delete();
-                if ($projectDeleted) {
-                    return response()->json('success', 200);
-                }
-            }
-
-            return response()->json('error', 422);
         } catch (Exception $e) {
             Log::warning('ProjectController - delete - Erro ao deletar project');
             report($e);
+
+            return response()->json('Erro ao remover o projeto, tente novamente mais tarde', 400);
         }
     }
 
-    public function deleteDependences(Project $project)
+    public function deleteDependences($project)
     {
+        try {
+            $countSales = $this->getProject()
+                               ->has('sales')
+                               ->where('id', $project->id)
+                               ->count();
 
-        if (isset($project->plans)) {
-            foreach ($project->plans as $plan) {
-                $plan->delete();
+            if ($countSales == 0) {
+                //n tem vendas
+
+                if (!empty($project->shopify_id)) {
+                    //remover integração do shopify
+
+                    $this->getShopifyIntegration()
+                         ->where('project', $project->id)
+                         ->delete();
+
+                    if (!empty($project->plans)) {
+                        foreach ($project->plans as $plan) {
+                            foreach ($plan->productsPlans as $productsPlan) {
+                                if (!empty($productsPlan->getProduct)) {
+                                    $productsPlan->getProduct->delete();
+                                    $productsPlan->delete();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (isset($project->plans)) {
+                    foreach ($project->plans as $plan) {
+                        $plan->delete();
+                    }
+                }
+
+                if (isset($project->pixels)) {
+                    foreach ($project->pixels as $pixel) {
+                        $pixel->delete();
+                    }
+                }
+
+                if (isset($project->discountCoupons)) {
+                    foreach ($project->discountCoupons as $discountCoupon) {
+                        $discountCoupon->delete();
+                    }
+                }
+
+                if (isset($project->zenviaSms)) {
+                    foreach ($project->zenviaSms as $zenviaSms) {
+                        $zenviaSms->delete();
+                    }
+                }
+
+                if (isset($project->shippings)) {
+                    foreach ($project->shippings as $shipping) {
+                        $shipping->delete();
+                    }
+                }
+            } else {
+                //tem venda
+                return false;
             }
-        }
 
-        if (isset($project->pixels)) {
-            foreach ($project->pixels as $pixel) {
-                $pixel->delete();
-            }
+            return true;
+        } catch (Exception $e) {
+            Log::warning('deleteDependences - delete - Erro ao deletar projeto');
+            report($e);
         }
-
-        if (isset($project->discountCoupons)) {
-            foreach ($project->discountCoupons as $discountCoupon) {
-                $discountCoupon->delete();
-            }
-        }
-
-        if (isset($project->zenviaSms)) {
-            foreach ($project->zenviaSms as $zenviaSms) {
-                $zenviaSms->delete();
-            }
-        }
-
-        if (isset($project->shippings)) {
-            foreach ($project->shippings as $shipping) {
-                $shipping->delete();
-            }
-        }
-
-        return true;
     }
 }
