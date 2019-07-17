@@ -249,42 +249,47 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-8 gutter_top">
-                                <div class="card shadow">
+                            {{--                            <div class='col-lg-12 gutter_top'>--}}
+                            <div class='col-lg-8'>
+                                <div class="card shadow ">
                                     <div class="card-header">
                                         <h4> Mais Vendidos </h4>
                                     </div>
-                                    <div class="data-holder">
-                                        <div class="row" style="width:100%">
-                                            <div class="col-12">
-                                                <table class="table-vendas-itens table table-striped" style="width:90%;margin: auto; margin-top:15px">
-                                                    {{--<thead>
-                                                        <th class="table-title">Foto</th>
-                                                        <th class="table-title">Nome</th>
-                                                        <th class="table-title">Quantidade</th>
-                                                    </thead>--}}
-                                                    <tbody id="origins-table-itens">
-                                                        {{-- js carrega... --}}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                    <div style=' max-height: 150px; overflow-y: auto;'>
+                                        <div class=" card-body data-holder">
+                                            {{--                                            <div class="row">--}}
+                                            {{--                                            <div class="col-12">--}}
+                                            <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
+                                                {{--<thead>
+                                                    <th class="table-title">Foto</th>
+                                                    <th class="table-title">Nome</th>
+                                                    <th class="table-title">Quantidade</th>
+                                                </thead>--}}
+                                                <tbody id="origins-table-itens">
+                                                    {{-- js carrega... --}}
+                                                </tbody>
+                                            </table>
+                                            {{--                                            </div>--}}
+                                            {{--                                            </div>--}}
+                                            <br/>
                                         </div>
-                                        <br/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 gutter_top">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <h4> Ticket Médio </h4>
+                            <div class='col-lg-4'>
+                                <div class='card shadow'>
+                                    <div class='card-header'>
+                                        <h4>Ticket Médio</h4>
                                     </div>
-                                    <div class="custom-table min-250">
-                                        <div class="row">
-                                            <div class="col-lg-12 text-center ">
-                                                <div class="data-holder b-bottom text-center">
-                                                    <div class="row wrap justify-content-between text-center">
-                                                        <div class="col-lg-12 text-center">
-                                                            <span class="money-td green" id='ticket-medio'>0</span>
+                                    <div style='height: 150px; '>
+                                        <div class='card-body custom-table min-250'>
+                                            <div class='row'>
+                                                <div class='col-lg-12 text-center'>
+                                                    <div class='data-holder text-center'>
+                                                        <div class='row wrap justify-content-between text-center'>
+                                                            <div class='col-lg-12 text-center'>
+                                                                <span class='money-td green h3' id='ticket-medio'>0</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -293,7 +298,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12 gutter_top ">
+                            {{--                            </div>--}}
+                            <div class="col-lg-12 mt-40">
                                 <div class="card shadow">
                                     <div class="card-header">
                                         <div class="row">
@@ -313,9 +319,9 @@
                                         </div>
                                     </div>
                                     <div class="data-holder">
-                                        <div class="row" style="width:100%">
+                                        <div class="row">
                                             <div class="col-12">
-                                                <table class="table-vendas table table-striped" style="width:90%;margin: auto; margin-top:15px">
+                                                <table class="table-vendas table table-striped " style="width:100%;margin: auto; margin-top:15px">
                                                     {{--<thead>
                                                         <th class="table-title">Origem</th>
                                                         <th class="table-title">Qtd vendas</th>
@@ -338,174 +344,240 @@
                                     </div>
                                 </div>
                             </div>
+                            {{--  <div>
+                                  <div class="col-lg-4 gutter_top">
+                                      <div class="card shadow">
+                                          <div class="card-header">
+                                              <h4> Ticket Médio </h4>
+                                          </div>
+                                          <div class="custom-table min-250">
+                                              <div class="row">
+                                                  <div class="col-lg-12 text-center ">
+                                                      <div class="data-holder b-bottom text-center">
+                                                          <div class="row wrap justify-content-between text-center">
+                                                              <div class="col-lg-12 text-center">
+                                                                  <span class="money-td green display-4" id='ticket-medio'>0</span>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-lg-12 gutter_top ">
+                                      <div class="card shadow">
+                                          <div class="card-header">
+                                              <div class="row">
+                                                  <div class='col-8'>
+                                                      <h4 class='float-left'> Origens</h4>
+                                                  </div>
+                                                  <div class="col-4">
+                                                      <select class="form-control float-right" id='origin'>
+                                                          <option selected value="src">SRC</option>
+                                                          <option value="utm_source">UTM Source</option>
+                                                          <option value="utm_medium">UTM Medium</option>
+                                                          <option value="utm_campaign">UTM Campaign</option>
+                                                          <option value="utm_term">UTM Term</option>
+                                                          <option value="utm_content">UTM Content</option>
+                                                      </select>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="data-holder">
+                                              <div class="row" style="width:100%">
+                                                  <div class="col-12">
+                                                      <table class="table-vendas table table-striped" style="width:90%;margin: auto; margin-top:15px">
+                                                          --}}{{--<thead>
+                                                              <th class="table-title">Origem</th>
+                                                              <th class="table-title">Qtd vendas</th>
+                                                              <th class="table-title">Receita</th>
+                                                          </thead>--}}{{--
+                                                          <tbody id="origins-table">
+                                                              --}}{{-- js carrega... --}}{{--
+                                                          </tbody>
+                                                      </table>
+                                                  </div>
+                                              </div>
+                                              <br/>
+                                          </div>
+                                          <div class="row">
+                                              <div class="col-11">
+                                                  <ul id="pagination" class="pagination-sm float-right" style="margin-top:10px; margin-left: 5%">
+                                                      --}}{{-- js carrega... --}}{{--
+                                                  </ul>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>--}}
                         </div>
+                        <!-- VISITAS -->
+                        {{--<div class="tab-pane fade" id="nav-visitas" role="tabpanel">
+                            <div class="row justify-content-between">
+                                <div class="col-lg-12">
+                                    <div class="card shadow">
+                                        <div class="wrap">
+                                            <div class="row justify-content-between">
+                                                <div class="col-lg-12">
+                                                    <div class="grafico">
+                                                        <div class="text">
+                                                            <h1 class="text-muted"> Graph here </h1>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 gutter_top">
+                                    <div class="card shadow">
+                                        <div class="card-header">
+                                            <h4> Origens </h4>
+                                        </div>
+                                        <div class="custom-table">
+                                            <div class="row">
+                                                <div class="col-lg-12 ">
+                                                    <div class="data-holder b-bottom">
+                                                        <div class="row wrap justify-content-between">
+                                                            <div class="col-lg-6">
+                                                                origem.html
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                200
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 ">
+                                                    <div class="data-holder b-bottom">
+                                                        <div class="row wrap justify-content-between">
+                                                            <div class="col-lg-6">
+                                                                origem.html
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                200
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 gutter_top">
+                                    <div class="card shadow">
+                                        <div class="card-header">
+                                            <h4> Páginas </h4>
+                                        </div>
+                                        <div class="custom-table ">
+                                            <div class="row">
+                                                <div class="col-lg-12 ">
+                                                    <div class="data-holder b-bottom">
+                                                        <div class="row wrap justify-content-between">
+                                                            <div class="col-lg-6">
+                                                                Páginas
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                200
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 ">
+                                                    <div class="data-holder b-bottom">
+                                                        <div class="row wrap justify-content-between">
+                                                            <div class="col-lg-6">
+                                                                Checkout
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                200
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 gutter_top">
+                                    <div class="card shadow">
+                                        <div class="card-header">
+                                            <h4> Referências </h4>
+                                        </div>
+                                        <div class="custom-table empty-200">
+                                            <div class="empty-card d-flex flex-column text-center">
+                                                <h2 class="op-5"> X </h2>
+                                                <h5 class="op-5"> Não encontramos nenhuma referência </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 gutter_top">
+                                    <div class="card shadow">
+                                        <div class="card-header">
+                                            <h4> Dispositivos </h4>
+                                        </div>
+                                        <div class="custom-table">
+                                            <div class="row">
+                                                <div class="col-lg-12 ">
+                                                    <div class="data-holder b-bottom">
+                                                        <div class="row wrap justify-content-between">
+                                                            <div class="col-lg-6">
+                                                                Desktop
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                0%
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 ">
+                                                    <div class="data-holder b-bottom">
+                                                        <div class="row wrap justify-content-between">
+                                                            <div class="col-lg-6">
+                                                                Mobile
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                0%
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 ">
+                                                    <div class="data-holder b-bottom">
+                                                        <div class="row wrap justify-content-between">
+                                                            <div class="col-lg-6">
+                                                                Tablet
+                                                            </div>
+                                                            <div class="col text-right">
+                                                                0%
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>--}}
                     </div>
-                    <!-- VISITAS -->
-                    {{--<div class="tab-pane fade" id="nav-visitas" role="tabpanel">
-                        <div class="row justify-content-between">
-                            <div class="col-lg-12">
-                                <div class="card shadow">
-                                    <div class="wrap">
-                                        <div class="row justify-content-between">
-                                            <div class="col-lg-12">
-                                                <div class="grafico">
-                                                    <div class="text">
-                                                        <h1 class="text-muted"> Graph here </h1>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 gutter_top">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <h4> Origens </h4>
-                                    </div>
-                                    <div class="custom-table">
-                                        <div class="row">
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            origem.html
-                                                        </div>
-                                                        <div class="col text-right">
-                                                            200
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            origem.html
-                                                        </div>
-                                                        <div class="col text-right">
-                                                            200
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 gutter_top">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <h4> Páginas </h4>
-                                    </div>
-                                    <div class="custom-table ">
-                                        <div class="row">
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            Páginas
-                                                        </div>
-                                                        <div class="col text-right">
-                                                            200
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            Checkout
-                                                        </div>
-                                                        <div class="col text-right">
-                                                            200
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 gutter_top">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <h4> Referências </h4>
-                                    </div>
-                                    <div class="custom-table empty-200">
-                                        <div class="empty-card d-flex flex-column text-center">
-                                            <h2 class="op-5"> X </h2>
-                                            <h5 class="op-5"> Não encontramos nenhuma referência </h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 gutter_top">
-                                <div class="card shadow">
-                                    <div class="card-header">
-                                        <h4> Dispositivos </h4>
-                                    </div>
-                                    <div class="custom-table">
-                                        <div class="row">
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            Desktop
-                                                        </div>
-                                                        <div class="col text-right">
-                                                            0%
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            Mobile
-                                                        </div>
-                                                        <div class="col text-right">
-                                                            0%
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 ">
-                                                <div class="data-holder b-bottom">
-                                                    <div class="row wrap justify-content-between">
-                                                        <div class="col-lg-6">
-                                                            Tablet
-                                                        </div>
-                                                        <div class="col text-right">
-                                                            0%
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>--}}
                 </div>
-            </div>
-        @else
+                @else
 
-            @push('css')
-                <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
-            @endpush
+                    @push('css')
+                        <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                    @endpush
 
-            <div class="content-error d-flex text-center">
-                <img src="{!! asset('modules/global/assets/img/emptyprojetos.svg') !!}" width="250px">
-                <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
-                <p class="desc gray">Que tal criar seu primeiro projeto para começar a vender? </p>
-                <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>
+                    <div class="content-error d-flex text-center">
+                        <img src="{!! asset('modules/global/assets/img/emptyprojetos.svg') !!}" width="250px">
+                        <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
+                        <p class="desc gray">Que tal criar seu primeiro projeto para começar a vender? </p>
+                        <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>
+                    </div>
+                @endif
             </div>
-        @endif
-    </div>
     </div>
 @endsection
 
@@ -516,6 +588,8 @@
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-tooltip.min.js')}}'></script>
     <script type='text/javascript' src='{{asset('modules/reports/js/chartist-plugin-legend.min.js')}}'></script>
-    <script type='text/javascript' src='{{asset('modules/reports/js/reports.js')}}'></script>
+    @if(isset($userProjects) && $userProjects->count() > 0)
+        <script type='text/javascript' src='{{asset('modules/reports/js/reports.js')}}'></script>
+    @endif
 @endpush
 

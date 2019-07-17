@@ -226,9 +226,10 @@ $(document).ready(function () {
         $(".div2").hide();
         $(".div3").hide();
         $(".div4").hide();
-        $(".div5").hide();
+        $(".div5").hide(); 
         $(".div6").show();
         $(this).hide();
+        $("#btn-go").hide();
         setTimeout(registerComplete, 10000);
     });
 
