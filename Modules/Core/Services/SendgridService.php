@@ -276,7 +276,7 @@ class SendgridService
         }
     }
 
-    public function sendEmail($subject, $fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
+    public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {
             $email = new \SendGrid\Mail\Mail();
@@ -284,13 +284,8 @@ class SendgridService
             $email->addTo($toEmail, $toName);
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
-            //            $email->addContent(
-            //                "text/html", $view->render()
-            //            );
-            //            $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
             try {
                 $response = $this->sendgrid->send($email);
-                dd($response);
             } catch (Exception $e) {
                 return false;
                 echo 'Caught exception: ' . $e->getMessage() . "\n";
