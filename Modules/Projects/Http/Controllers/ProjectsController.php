@@ -480,7 +480,7 @@ class ProjectsController extends Controller
                     }
                 }
 
-                return response()->json('error', 422);
+                return response()->json('Impossível deletar, possui vendas', 400);
             } else {
                 //projeto nao encontrado
                 return response()->json('Nenhum projeto encontrado', 400);
