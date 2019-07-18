@@ -22,7 +22,7 @@ class BoletoService
     public function verifyBoletosExpired()
     {
         $date = Carbon::now()->subDay('1')->toDateString();
-
+ 
         $boletos = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
                        ->with('clientModel', 'plansSales.plan.products')
                        ->get();
