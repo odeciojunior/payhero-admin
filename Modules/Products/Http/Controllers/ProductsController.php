@@ -2,6 +2,7 @@
 
 namespace Modules\Products\Http\Controllers;
 
+use App\Entities\ProductPlan;
 use Exception;
 use App\Entities\Product;
 use App\Entities\Category;
@@ -27,15 +28,22 @@ class ProductsController extends Controller
      * @var DigitalOceanFileService
      */
     private $digitalOceanFileService;
+    /**
+     * @var ProductPlan
+     */
+    private $productsPlansModel;
 
     /**
      * ProductsController constructor.
      * @param Product $product
+     * @param Category $category
+     * @param ProductPlan $productPlan
      */
-    function __construct(Product $product, Category $category)
+    function __construct(Product $product, Category $category, ProductPlan $productPlan)
     {
-        $this->productModel  = $product;
-        $this->categoryModel = $category;
+        $this->productModel       = $product;
+        $this->categoryModel      = $category;
+        $this->productsPlansModel = $productPlan;
     }
 
     /**
@@ -140,11 +148,14 @@ class ProductsController extends Controller
     {
         try {
             $product = $this->productModel->find(Hashids::decode($id))->first();
+            if ($product) {
+                return view('products::edit', [
+                    'product'    => $product,
+                    'categories' => $this->categoryModel->all(),
+                ]);
+            }
 
-            return view('products::edit', [
-                'product'    => $product,
-                'categories' => $this->categoryModel->all(),
-            ]);
+            return redirect()->back();
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de editar produto (ProductsController - edit)');
             report($e);
@@ -209,11 +220,19 @@ class ProductsController extends Controller
         try {
             $product = $this->productModel->find(Hashids::decode($id))->first();
 
-            $this->getDigitalOceanFileService()->deleteFile($product->photo);
+            $productPlan = $this->productsPlansModel->where('product', $product->id)->count();
+            if ($productPlan == 0) {
+                $this->getDigitalOceanFileService()->deleteFile($product->photo);
+                $product->delete();
 
-            $product->delete();
+                return response()->json([
+                                            'message' => 'Produto excluido com sucesso',
+                                        ], 200);
+            }
 
-            return redirect()->route('products.index');
+            return response()->json([
+                                        'message' => 'Impossivel excluir, existem planos associados a este produto!',
+                                    ], 400);
         } catch (Exception $e) {
             Log::error('Erro ao tentar excluir produto (ProductsController - delete)');
             report($e);

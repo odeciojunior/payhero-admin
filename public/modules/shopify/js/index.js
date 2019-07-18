@@ -12,7 +12,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/apps/shopify/adicionarintegracao",
+            url: "/apps/shopify",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

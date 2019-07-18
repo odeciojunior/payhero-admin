@@ -194,7 +194,7 @@ class ShopifyController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function adicionarIntegracao(Request $request)
+    public function store(Request $request)
     {
         try {
             $dados = $request->all();
@@ -217,7 +217,8 @@ class ShopifyController extends Controller
                     $shopifyName = $shopify->getShopName();
                     $project     = $this->getProjectModel()->create([
                                                                         'name'                  => $shopifyName,
-                                                                        'status'                => $this->getProjectModel()->getEnum('status', 'approved'),
+                                                                        'status'                => $this->getProjectModel()
+                                                                                                        ->getEnum('status', 'approved'),
                                                                         'visibility'            => 'private',
                                                                         'percentage_affiliates' => '0',
                                                                         'description'           => $shopifyName,
@@ -296,21 +297,21 @@ class ShopifyController extends Controller
                                                               ]);
 
                         $plan->update([
-                            'code' => Hashids::encode($plan->id)
-                        ]);
+                                          'code' => Hashids::encode($plan->id),
+                                      ]);
 
                         if (count($shopifyProduct->getVariants()) > 1) {
                             foreach ($shopifyProduct->getImages() as $image) {
- 
+
                                 foreach ($image->getVariantIds() as $variantId) {
                                     if ($variantId == $variant->getId()) {
 
-                                        if ($image->getSrc() != '') { 
+                                        if ($image->getSrc() != '') {
                                             $product->update([
                                                                  'photo' => $image->getSrc(),
                                                              ]);
-                                        } else { 
- 
+                                        } else {
+
                                             $product->update([
                                                                  'photo' => $shopifyProduct->getImage()->getSrc(),
                                                              ]);
@@ -353,6 +354,5 @@ class ShopifyController extends Controller
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
         }
     }
-
 }
 

@@ -63,6 +63,7 @@ $(function () {
         });
 
     });
+
     function atualizarSms() {
         $("#data-table-sms").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
         $.ajax({
@@ -79,45 +80,150 @@ $(function () {
                 $("#data-table-sms").html('');
                 data = '';
                 data += '<tr>';
-                data += '<td class="shipping-id " style="vertical-align: middle;">Boleto gerado</td>';
-                // data += '<td class="shipping-type " style="vertical-align: middle;">0</td>';
-                // data += '<td class="shipping-value " style="vertical-align: middle;">minutos</td>';
+                data += '<td class= style="vertical-align: middle;">SMS</td>';
+                data += '<td class= style="vertical-align: middle;">Boleto gerado</td>';
+                data += '<td class= style="vertical-align: middle;">Imediato</td>';
                 data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, não esqueça de pagar seu boleto para enviarmos seu pedido! {url_boleto}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
                 data += '<span class="badge badge-primary">Grátis</span>';
                 data += '</td>';
-
                 data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
-
                 data += '</td>';
-
                 data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
                 data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
                 data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
-
                 data += '</tr>';
-                data += '';
+
                 data += '<tr>';
-                data += '<td class="shipping-id " style="vertical-align: middle;">Boleto vencendo</td>';
-                // data += '<td class="shipping-type " style="vertical-align: middle;">0</td>';
-                // data += '<td class="shipping-value " style="vertical-align: middle;">minutos</td>';
+                data += '<td class= style="vertical-align: middle;">SMS</td>';
+                data += '<td class= style="vertical-align: middle;">Boleto vencendo</td>';
+                data += '<td class= style="vertical-align: middle;">10:00 horas</td>';
                 data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! {url_boleto}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
                 data += '<span class="badge badge-primary">Grátis</span>';
                 data += '</td>';
-
                 data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
-
                 data += '</td>';
-
-
                 data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
                 data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
                 data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
-
                 data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">SMS</td>';
+                data += '<td class= style="vertical-align: middle;">Carrinho abandonado</td>';
+                data += '<td class= style="vertical-align: middle;">4 horas depois</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">SMS</td>';
+                data += '<td class= style="vertical-align: middle;">Carrinho abandonado</td>';
+                data += '<td class= style="vertical-align: middle;">10:00 horas próximo dia</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">Email</td>';
+                data += '<td class= style="vertical-align: middle;">Boleto gerado</td>';
+                data += '<td class= style="vertical-align: middle;">Imediato</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">Email</td>';
+                data += '<td class= style="vertical-align: middle;">Boleto gerado</td>';
+                data += '<td class= style="vertical-align: middle;">10:00 horas próximo dia</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">Email</td>';
+                data += '<td class= style="vertical-align: middle;">Boleto vencendo</td>';
+                data += '<td class= style="vertical-align: middle;">10:00 horas</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">Email</td>';
+                data += '<td class= style="vertical-align: middle;">Carrinho abandonado</td>';
+                data += '<td class= style="vertical-align: middle;">4 horas depois</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">Email</td>';
+                data += '<td class= style="vertical-align: middle;">Carrinho abandonado</td>';
+                data += '<td class= style="vertical-align: middle;">10:00 horas próximo dia</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+
                 $("#data-table-sms").append(data);
 
                 // $.each(response.data, function (index, value) {
