@@ -22,12 +22,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Shipping extends Model
 {
-    use FoxModelTrait;
-    use SoftDeletes;
+    use FoxModelTrait, SoftDeletes;
     /**
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -37,16 +36,14 @@ class Shipping extends Model
      * @var array
      */
     protected $fillable = [
-        'project',
-        'name',
         'information',
-        'value',
-        'type',
-        'zip_code_origin',
-        'status',
+        'name',
         'pre_selected',
-        'created_at',
-        'updated_at',
+        'project',
+        'status',
+        'type',
+        'value',
+        'zip_code_origin',
     ];
 
     /**
@@ -54,6 +51,14 @@ class Shipping extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Project', 'project');
+        return $this->belongsTo('App\Entities\Project', 'project');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sales()
+    {
+        return $this->hasMany('App\Entities\Sale', 'shipping');
     }
 }

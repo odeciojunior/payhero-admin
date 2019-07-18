@@ -42,7 +42,10 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     use FoxModelTrait;
-    protected $dates = ['deleted_at'];
+    /**
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -52,32 +55,34 @@ class Sale extends Model
      * @var array
      */
     protected $fillable = [
-        'owner',
         'affiliate',
-        'client',
-        'delivery',
-        'payment_form',
-        'total_paid_value',
-        'shipment_value',
-        'start_date',
-        'end_date',
-        'gateway_id',
-        'gateway_status',
-        'status',
-        'installments_amount',
-        'installments_value',
-        'flag',
-        'boleto_link',
         'boleto_digitable_line',
         'boleto_due_date',
+        'boleto_link',
+        'checkout',
+        'client',
         'cupom_code',
-        'shopify_order',
-        'ip',
+        'delivery',
         'dolar_quotation',
+        'end_date',
+        'first_confirmation',
+        'flag',
+        'gateway_id',
+        'gateway_status',
+        'installments_amount',
+        'installments_value',
+        'iof',
+        'owner',
+        'payment_form',
+        'payment_method',
         'project',
-        'created_at',
-        'deleted_at',
-        'updated_at',
+        'shipment_value',
+        'shipping',
+        'shopify_discount',
+        'shopify_order',
+        'start_date',
+        'status',
+        'total_paid_value',
     ];
 
     /**
