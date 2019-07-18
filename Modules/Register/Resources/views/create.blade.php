@@ -39,7 +39,7 @@
             <div class="wrap">
                 <form class="mt10">
                     <input type='hidden' id='parameter' value='{{$parameter}}'>
-                    <div id="login" class="div1">
+                    <div id="login" class="div1" style="display:none">
                         <h4 class="bold title-content">Confirme seus dados</h4>
                         <p class="desc"> Esses são os dados que recebemos na sua solicitação de convite. Confirme ou corrija-os.
                         </p>
@@ -506,7 +506,7 @@
                             </div>
                         </div>
                     </div> --}}
-                    <div id="success" class="div6" style="display: none">
+                    <div id="success" class="div6" style="display: block">
                         <div class="content-success">
                             <img src="{{asset('modules/global/gif/cloudfox-loading-1.gif')}}">
                             <h1 class="bold orange mt10"> Tudo pronto! </h1>
