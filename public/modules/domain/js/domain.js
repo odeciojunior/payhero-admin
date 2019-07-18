@@ -364,8 +364,7 @@ $(document).ready(function () {
                 })
 
             }
-        })
-        ;
+        });
     }
 
 })
