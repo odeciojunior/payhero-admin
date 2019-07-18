@@ -357,8 +357,7 @@ $(document).ready(function () {
                 })
 
             }
-        })
-        ;
+        });
     }
 
 })
