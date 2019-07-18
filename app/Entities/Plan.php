@@ -145,7 +145,7 @@ class Plan extends Model
      */
     public function plansSales()
     {
-        return $this->hasMany('App\Entities\PlansSale', 'plan');
+        return $this->hasMany('App\Entities\PlanSale', 'plan');
     }
 
     /**
@@ -169,7 +169,7 @@ class Plan extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('App\Entities\ZenviaSm', 'plan');
+        return $this->hasMany('App\Entities\ZenviaSms', 'plan');
     }
 
     public function products()

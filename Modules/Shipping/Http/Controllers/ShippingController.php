@@ -16,7 +16,13 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ShippingController extends Controller
 {
+    /**
+     * @var Shipping
+     */
     private $shippingModel;
+    /**
+     * @var Project
+     */
     private $projectModel;
 
     /**
