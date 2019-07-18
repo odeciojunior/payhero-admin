@@ -128,7 +128,7 @@ $(document).ready(function () {
 
                         var dominio = $(this).attr('domain');
 
-                        $("#modal-title").html('Detalhes do dominio');
+                        $("#modal-title").html('Detalhes do domínio');
                         var data = {dominioId: dominio};
 
                         $("#btn-modal").hide();
@@ -147,7 +147,6 @@ $(document).ready(function () {
                                 $(".refresh-domain").unbind('click');
                                 $(".refresh-domain").on('click', function () {
                                     var domain = $(this).attr('data-domain');
-                                    alert(domain);
                                     $.ajax({
                                         method: "POST",
                                         url: '/domains/recheck/',
@@ -159,10 +158,18 @@ $(document).ready(function () {
                                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                                         },
                                         error: function (response) {
-                                            alert('erro');
+                                            $('#modal-button-close').click();
+                                            if (response.status === 422) {
+                                                for (error in response.errors) {
+                                                    alertCustom('error', String(response.errors[error]));
+                                                }
+                                            } else {
+                                                alertCustom('error', String(response.responseJSON.message));
+                                            }
                                         },
                                         success: function (response) {
-                                            alert('success');
+                                            $('#modal-button-close').click();
+                                            alertCustom("success", response.message);
                                         }
                                     });
 

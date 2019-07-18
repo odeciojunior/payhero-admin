@@ -94,18 +94,21 @@ class DomainService
      * @param null $domainId
      * @return bool
      */
-    public function verifyPendingDomains($domainId = null)
+    public function verifyPendingDomains($domainId = null, $reCheck = false)
     {
         try {
             //verifica todos os dominios pendentes
             $domains = $this->getDomainModel()
-                            ->with(['project', 'project.shopifyIntegrations'])
-                            ->where('status', '!=', $this->getDomainModel()->getEnum('status', 'approved'));
+                            ->with(['project', 'project.shopifyIntegrations']);
+
+            if (!$reCheck) {
+                $domains->where('status', '!=', $this->getDomainModel()->getEnum('status', 'approved'));
+            }
 
             if (!empty($domainId)) {
                 $domains->where('id', $domainId);
             }
-            $domains->get();
+            $domains = $domains->get();
 
             foreach ($domains as $domain) {
 

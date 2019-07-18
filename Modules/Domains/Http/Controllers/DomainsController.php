@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\DomainService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Domains\Http\Requests\DomainCreateRequest;
@@ -55,6 +56,22 @@ class DomainsController extends Controller
      * @var ShopifyService
      */
     private $shopifyService;
+    /**
+     * @var DomainService
+     */
+    private $domainService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|DomainService
+     */
+    private function getDomainService()
+    {
+        if (!$this->domainService) {
+            $this->domainService = app(DomainService::class);
+        }
+
+        return $this->domainService;
+    }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
@@ -499,9 +516,30 @@ class DomainsController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function recheckDomain(Request $request)
     {
+        try {
+            $requestData = $request->all();
+            $domainId    = current(Hashids::decode($requestData['domain']));
+            if ($domainId) {
+                //hashid ok
+                if ($this->getDomainService()->verifyPendingDomains($domainId, true)) {
+                    return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
+                } else {
+                    return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('DomainsController recheckDomain - erro ao revalidar o domínio');
+            report($e);
 
-        dd($request);
+            return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+        }
     }
 }
