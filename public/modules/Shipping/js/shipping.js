@@ -256,11 +256,14 @@ $(document).ready(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function (response) {
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
+                                }
+                                if (response.status == '400') {
+                                    alertCustom('error', response.responseJSON.message);
                                 }
                             },
                             success: function (data) {
