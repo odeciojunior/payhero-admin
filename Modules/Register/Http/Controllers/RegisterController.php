@@ -112,7 +112,7 @@ class RegisterController extends Controller
         ];
         $emailValidated = FoxUtils::validateEmail($userEmail);
         if ($emailValidated) {
-            $sendEmail->sendEmail('Bem vindo(a)', 'noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
+            $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
         }
     }
 
