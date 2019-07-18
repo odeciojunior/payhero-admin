@@ -7,7 +7,6 @@
                 <h3>Configurações Básicas</h3>
                 <p>Preencha atentamente as informações</p>
             </div>
-
             <div class='col-lg-4'>
                 <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
                     <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
@@ -18,9 +17,9 @@
                     <p class='info pt-5' style='font-size: 10px;'>
                         <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
                         <br> Dimensões ideais: 300 x 300 pixels.
-                    </p> 
+                    </p>
                 </div>
-            </div> 
+            </div>
             <div class='col-lg-8'>
                 <div class='row'>
                     <div class='form-group col-lg-12'>
@@ -36,18 +35,17 @@
                         <select name='visibility' class='form-control select-pad' id='visibility' required>
                             <option type='hidden' disabled value='public' {{$project->visibility == 'public' ? 'selected': ''}}>Projeto público</option>
                             <option value='private' {{$project->visibility == 'private' ? 'selected': ''}}>Projeto privado</option>
-                        </select>                       
+                        </select>
                     </div>
-
                     <div class="form-group col-lg-8">
-                            <div class="d-flex align-items-baseline justify-content-start mt-35">
-                                <div class="info" style="font-size: 10px;">
-                                    <p class="ml-5">
-                                    <b> Público: </b> visível na vitrine e disponível para afiliações (em breve).
-                                    <br> <b> Privado: </b> completamente invisivel para outros usuários, afiliações somente por convite
-                                    </p>
-                                </div>
+                        <div class="d-flex align-items-baseline justify-content-start mt-35">
+                            <div class="info" style="font-size: 10px;">
+                                <p class="ml-5">
+                                    <b> Público: </b> visível na vitrine e disponível para afiliações (em breve). <br>
+                                    <b> Privado: </b> completamente invisivel para outros usuários, afiliações somente por convite
+                                </p>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,8 +63,8 @@
             </div>
         </div>
         <div class='mt-30 mb-15'>
-                <h3>Configurações Básicas</h3>
-                <p>Preencha as informações de checkout do seu produto</p>
+            <h3>Configurações Básicas</h3>
+            <p>Preencha as informações de checkout do seu produto</p>
             <div class='row'>
                 <div class='form-group col-4 col-xs-12'>
                     <label for='invoice-description'>Descrição da Fatura</label>
@@ -105,7 +103,7 @@
                 </div>
                 <div class='col-4 col-xs-12'>
                     <label for="parcelas_sem_juros">Boleto no checkout</label>
-                    <select name='boleto'  class='form-control select-pad'>
+                    <select name='boleto' class='form-control select-pad'>
                         <option value='1' {{$project->boleto == 1 ? 'selected' : ''}}>Sim</option>
                         <option value='0' {{$project->boleto == 0 ? 'selected' : ''}}>Não</option>
                     </select>
@@ -118,8 +116,7 @@
                 <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
                     <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
                     <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height:300px;max-width:300px;'>
-                    <input type='hidden' name='logo_h'>
-                    <input type='hidden' name='logo_w'>
+                    <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                     <p class='info mt-5' style='font-size: 10px;'>
                         <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
                         <br> Dimensões ideais: largura ou altura de no máximo 300 x 300 pixels.
@@ -128,10 +125,14 @@
             </div>
             <div class="mt-30">
                 <div class="form-group">
-                    <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete" style="float: left;"> <i class="material-icons gray"> delete </i> <span class="gray"> Deletar </span> </a>
+                    <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete" style="float: left;">
+                        <i class="material-icons gray"> delete </i>
+                        <span class="gray"> Deletar </span>
+                    </a>
                     <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;"> Atualizar</button>
                 </div>
             </div>
         </div>
+
     </form>
 </div>
