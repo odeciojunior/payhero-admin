@@ -87,7 +87,7 @@ class CloudFlareService
     public function __construct()
     {
         try {
-            $this->key     = new APIKey(env('CLOUDFLARE_EMAIL'), env('CLOUDFLARE_TOKEN'));
+            $this->key     = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
             $this->adapter = new Guzzle($this->key);
             $this->dns     = new DNS($this->adapter);
             $this->zones   = new Zones($this->adapter);

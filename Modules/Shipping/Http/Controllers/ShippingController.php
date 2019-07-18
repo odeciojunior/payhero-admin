@@ -230,9 +230,12 @@ class ShippingController extends Controller
     public function destroy($id)
     {
         try {
-            if (isset($id)) {
-                $shippingId = Hashids::decode($id)[0];
-                $shipping   = $this->getShipping()->find($shippingId);
+            if (isset($id) && !empty($id)) {
+                $shipping = $this->getShipping()->withCount(['sales'])->find(current(Hashids::decode($id)));
+
+                if ($shipping->sales_count > 0) {
+                    return response()->json(['message' => 'Impossivel excluir, existem vendas associados a este frete!'], 400);
+                }
 
                 if ($shipping) {
                     if ($shipping->pre_selected) {
@@ -242,13 +245,9 @@ class ShippingController extends Controller
                                                                 ['id', '!=', $shipping->id],
                                                             ])->first();
 
-                        if ($shippingPreSelected != null) {
+                        if ($shippingPreSelected) {
                             $shipUpdateSelected = $shippingPreSelected->update(['pre_selected' => 1]);
                         }
-                        //                        if (!$shipUpdateSelected) {
-                        //
-                        //                            return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
-                        //                        }
                     }
 
                     if ($shipping->delete()) {
@@ -256,9 +255,9 @@ class ShippingController extends Controller
                         return response()->json(['message' => 'Frete removido com sucesso!'], 200);
                     }
                 }
-
-                return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
             }
+
+            return response()->json(['message' => 'Erro ao tentar remover frete!'], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar excluir frete (ShippingController - destroy)');
             report($e);

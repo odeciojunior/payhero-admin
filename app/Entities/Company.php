@@ -169,6 +169,6 @@ class Company extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UsersProject', 'company');
+        return $this->hasMany('App\Entities\UserProject', 'company');
     }
 }
