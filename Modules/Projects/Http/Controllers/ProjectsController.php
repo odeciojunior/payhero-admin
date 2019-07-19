@@ -440,40 +440,40 @@ class ProjectsController extends Controller
                 //projeto encontrado
                 $deletedDependecis = $this->deleteDependences($project);
 
-                foreach ($project->domains as $domain) {
-
-                    if ($this->getCloudFlareService()->deleteZone($domain->name)) {
-                        //zona deletada
-                        $this->getSendgridService()->deleteLinkBrand($domain->name);
-                        $this->getSendgridService()->deleteZone($domain->name);
-
-                        $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
-                        $domainDeleted  = $domain->delete();
-
-                        if (!empty($project->shopify_id)) {
-                            //se for shopify, voltar as integraçoes ao html padrao
-                            try {
-
-                                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                                    $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
-                                    $shopify->setThemeByRole('main');
-                                    $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                    $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
-                                    $shopifyIntegration->delete();
-                                }
-                            } catch (\Exception $e) {
-                                //throwl
-
-                            }
-                        }
-                    } else {
-                        //erro ao deletar zona
-                        Log::warning('ProjectController - destroy - Erro ao deletar dominio');
-                    }
-                }
-
                 if ($deletedDependecis) {
+                    foreach ($project->domains as $domain) {
+
+                        if ($this->getCloudFlareService()->deleteZone($domain->name)) {
+                            //zona deletada
+                            $this->getSendgridService()->deleteLinkBrand($domain->name);
+                            $this->getSendgridService()->deleteZone($domain->name);
+
+                            $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
+                            $domainDeleted  = $domain->delete();
+
+                            if (!empty($project->shopify_id)) {
+                                //se for shopify, voltar as integraçoes ao html padrao
+                                try {
+
+                                    foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                        $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                        $shopify->setThemeByRole('main');
+                                        $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                        $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                        $shopifyIntegration->delete();
+                                    }
+                                } catch (\Exception $e) {
+                                    //throwl
+
+                                }
+                            }
+                        } else {
+                            //erro ao deletar zona
+                            Log::warning('ProjectController - destroy - Erro ao deletar dominio');
+                        }
+                    }
+
                     $projectDeleted = $project->delete();
                     if ($projectDeleted) {
                         return response()->json('success', 200);
