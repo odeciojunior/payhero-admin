@@ -434,7 +434,18 @@ class ProjectsController extends Controller
             $idProject = current(Hashids::decode($id));
 
             $project = $this->getProject()
-                            ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                            ->with([
+                                       'domains',
+                                       'shopifyIntegrations',
+                                       'plans',
+                                       'plans.productsPlans',
+                                       'plans.productsPlans.getProduct',
+                                       'pixels',
+                                       'discountCoupons',
+                                       'zenviaSms',
+                                       'shippings',
+                                       'usersProjects',
+                                   ])
                             ->where('id', $idProject)->first();
             if ($project) {
                 //projeto encontrado
@@ -523,35 +534,42 @@ class ProjectsController extends Controller
                     }
                 }
 
-                if (isset($project->plans)) {
+                if (!empty($project->plans) && $project->plans->isNotEmpty()) {
                     foreach ($project->plans as $plan) {
                         $plan->delete();
                     }
                 }
 
-                if (isset($project->pixels)) {
+                if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
                     foreach ($project->pixels as $pixel) {
                         $pixel->delete();
                     }
                 }
 
-                if (isset($project->discountCoupons)) {
+                if (!empty($project->discountCoupons) && $project->discountCoupons->isNotEmpty()) {
                     foreach ($project->discountCoupons as $discountCoupon) {
                         $discountCoupon->delete();
                     }
                 }
 
-                if (isset($project->zenviaSms)) {
+                if (!empty($project->zenviaSms) && $project->zenviaSms->isNotEmpty()) {
                     foreach ($project->zenviaSms as $zenviaSms) {
                         $zenviaSms->delete();
                     }
                 }
 
-                if (isset($project->shippings)) {
+                if (!empty($project->shippings) && $project->shippings->isNotEmpty()) {
                     foreach ($project->shippings as $shipping) {
                         $shipping->delete();
                     }
                 }
+
+                if (!empty($project->usersProjects) && $project->usersProjects->isNotEmpty()) {
+                    foreach ($project->usersProjects as $usersProject) {
+                        $usersProject->delete();
+                    }
+                }
+
             } else {
                 //tem venda
                 return false;
