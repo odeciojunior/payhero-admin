@@ -45,19 +45,19 @@
                                             <div class="row">
                                                 <div class="form-group col-xl-6">
                                                     <label for="name">Nome Completo</label>
-                                                    <input name="name" value="{!! $user->name !!}" type="text" class="input-pad" id="name">
+                                                    <input name="name" value="{!! $user->name !!}" type="text" class="input-pad" id="name" placeholder="Nome">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="email">Email</label>
-                                                    <input name="email" value="{!! $user->email !!}" type="text" class="input-pad" id="email">
+                                                    <input name="email" value="{!! $user->email !!}" type="text" class="input-pad" id="email" placeholder="Email">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="cpf">Documento</label>
-                                                    <input name="document" value="{!! $user->document !!}" type="text" class="input-pad" id="document">
+                                                    <input name="document" value="{!! $user->document !!}" type="text" class="input-pad" id="document" placeholder="Documento">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="celular">Celular</label>
-                                                    <input name="cellphone" value="{!! $user->cellphone !!}" type="text" data-mask="(00) 00000-0000" class="input-pad" id="cellphone">
+                                                    <input name="cellphone" value="{!! $user->cellphone !!}" type="text" data-mask="(00) 00000-0000" class="input-pad" id="cellphone" placeholder="Celular">
                                                 </div>
                                                 <div class="form-group col-xl-4">
                                                     <label for="date_birth">Data de nascimento</label>
@@ -91,33 +91,33 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="{!! $user->zip_code !!}" type="text" data-mask="00000-000" class="input-pad" id="zip_code">
+                                            <input name="zip_code" value="{!! $user->zip_code !!}" type="text" data-mask="00000-000" class="input-pad" id="zip_code" placeholder="digite seu CEP">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-6">
                                             <label for="street">Rua</label>
-                                            <input name="street" value="{!! $user->street !!}" type="text" class="input-pad" id="street">
+                                            <input name="street" value="{!! $user->street !!}" type="text" class="input-pad" id="street" placeholder="Rua">
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Número</label>
-                                            <input name="number" value="{!! $user->number !!}" type="text" data-mask="0#" class="input-pad" id="number">
+                                            <input name="number" value="{!! $user->number !!}" type="text" data-mask="0#" class="input-pad" id="number" placeholder="Número">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="{!! $user->neighborhood !!}" type="text" class="input-pad" id="neighborhood">
+                                            <input name="neighborhood" value="{!! $user->neighborhood !!}" type="text" class="input-pad" id="neighborhood" placeholder="Bairro">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="{!! $user->complement !!}" type="text" class="input-pad" id="complement">
+                                            <input name="complement" value="{!! $user->complement !!}" type="text" class="input-pad" id="complement" placeholder="Complemento">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="{!! $user->city !!}" type="text" class="input-pad" id="city">
+                                            <input name="city" value="{!! $user->city !!}" type="text" class="input-pad" id="city" placeholder="Cidade">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="{!! $user->state !!}" type="text" class="input-pad" id="state">
+                                            <input name="state" value="{!! $user->state !!}" type="text" class="input-pad" id="state" placeholder="Estado">
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
                                             <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10">
