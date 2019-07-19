@@ -208,6 +208,9 @@ class DomainService
                                         'status' => $this->getDomainModel()->getEnum('status', 'pending'),
                                     ]);
                     Log::warning('domains update command final else');
+                    if ($domainId) {
+                        return false;
+                    }
                 }
             }
 

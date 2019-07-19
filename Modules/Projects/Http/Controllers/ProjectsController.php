@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
@@ -63,6 +64,22 @@ class ProjectsController extends Controller
      * @var ShopifyIntegration
      */
     private $shopifyIntegrationModel;
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    function getProjetctService()
+    {
+        if (!$this->projectService) {
+            $this->projectService = app(ProjectService::class);
+        }
+
+        return $this->projectService;
+    }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -431,154 +448,28 @@ class ProjectsController extends Controller
     public function destroy($id)
     {
         try {
-            $idProject = current(Hashids::decode($id));
-
-            $project = $this->getProject()
-                            ->with([
-                                       'domains',
-                                       'shopifyIntegrations',
-                                       'plans',
-                                       'plans.productsPlans',
-                                       'plans.productsPlans.getProduct',
-                                       'pixels',
-                                       'discountCoupons',
-                                       'zenviaSms',
-                                       'shippings',
-                                       'usersProjects',
-                                   ])
-                            ->where('id', $idProject)->first();
-            if ($project) {
-                //projeto encontrado
-                $deletedDependecis = $this->deleteDependences($project);
-
-                if ($deletedDependecis) {
-                    foreach ($project->domains as $domain) {
-
-                        if ($this->getCloudFlareService()->deleteZone($domain->name)) {
-                            //zona deletada
-                            $this->getSendgridService()->deleteLinkBrand($domain->name);
-                            $this->getSendgridService()->deleteZone($domain->name);
-
-                            $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
-                            $domainDeleted  = $domain->delete();
-
-                            if (!empty($project->shopify_id)) {
-                                //se for shopify, voltar as integraçoes ao html padrao
-                                try {
-
-                                    foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                                        $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
-
-                                        $shopify->setThemeByRole('main');
-                                        $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                        $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
-                                        $shopifyIntegration->delete();
-                                    }
-                                } catch (\Exception $e) {
-                                    //throwl
-
-                                }
-                            }
-                        } else {
-                            //erro ao deletar zona
-                            Log::warning('ProjectController - destroy - Erro ao deletar dominio');
-                        }
-                    }
-
-                    $projectDeleted = $project->delete();
-                    if ($projectDeleted) {
+            $projectId = current(Hashids::decode($id));
+            if ($projectId) {
+                if (!$this->getProjetctService()->hasSales($projectId)) {
+                    //n tem venda
+                    if ($this->getProjetctService()->delete($projectId)) {
+                        //projeto removido
                         return response()->json('success', 200);
+                    } else {
+                        //erro ao remover projeto
+                        return response()->json('error', 400);
                     }
+                } else {
+                    return response()->json('Impossível remover projeto, possui vendas', 400);
                 }
-
-                return response()->json('Impossível deletar, possui vendas', 400);
             } else {
-                //projeto nao encontrado
-                return response()->json('Nenhum projeto encontrado', 400);
+                return response()->json('Projeto não encontrado', 400);
             }
         } catch (Exception $e) {
             Log::warning('ProjectController - delete - Erro ao deletar project');
             report($e);
 
             return response()->json('Erro ao remover o projeto, tente novamente mais tarde', 400);
-        }
-    }
-
-    public function deleteDependences($project)
-    {
-        try {
-            $countSales = $this->getProject()
-                               ->has('sales')
-                               ->where('id', $project->id)
-                               ->count();
-
-            if ($countSales == 0) {
-                //n tem vendas
-
-                if (!empty($project->shopify_id)) {
-                    //remover integração do shopify
-
-                    $this->getShopifyIntegration()
-                         ->where('project', $project->id)
-                         ->delete();
-
-                    if (!empty($project->plans)) {
-                        foreach ($project->plans as $plan) {
-                            foreach ($plan->productsPlans as $productsPlan) {
-                                if (!empty($productsPlan->getProduct)) {
-                                    $productsPlan->getProduct->delete();
-                                    $productsPlan->delete();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (!empty($project->plans) && $project->plans->isNotEmpty()) {
-                    foreach ($project->plans as $plan) {
-                        $plan->delete();
-                    }
-                }
-
-                if (!empty($project->pixels) && $project->pixels->isNotEmpty()) {
-                    foreach ($project->pixels as $pixel) {
-                        $pixel->delete();
-                    }
-                }
-
-                if (!empty($project->discountCoupons) && $project->discountCoupons->isNotEmpty()) {
-                    foreach ($project->discountCoupons as $discountCoupon) {
-                        $discountCoupon->delete();
-                    }
-                }
-
-                if (!empty($project->zenviaSms) && $project->zenviaSms->isNotEmpty()) {
-                    foreach ($project->zenviaSms as $zenviaSms) {
-                        $zenviaSms->delete();
-                    }
-                }
-
-                if (!empty($project->shippings) && $project->shippings->isNotEmpty()) {
-                    foreach ($project->shippings as $shipping) {
-                        $shipping->delete();
-                    }
-                }
-
-                if (!empty($project->usersProjects) && $project->usersProjects->isNotEmpty()) {
-                    foreach ($project->usersProjects as $usersProject) {
-                        $usersProject->delete();
-                    }
-                }
-
-            } else {
-                //tem venda
-                return false;
-            }
-
-            return true;
-        } catch (Exception $e) {
-            Log::warning('deleteDependences - delete - Erro ao deletar projeto');
-            report($e);
         }
     }
 }
