@@ -12,6 +12,16 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'apps/shopify', 'name
         'as'   => 'shopify.store',
     ]);
 
+    Route::post('/undointegration', [
+        'uses' => 'ShopifyController@undoIntegration',
+        'as'   => 'shopify.undointegration',
+    ]);
+
+    Route::post('/reintegration', [
+        'uses' => 'ShopifyController@reIntegration',
+        'as'   => 'shopify.reintegration',
+    ]);
+
     Route::post('/sincronizarintegracao', [
         'uses' => 'ShopifyController@sincronizarIntegracao',
         'as'   => 'shopify.sincronizarintegracao',
