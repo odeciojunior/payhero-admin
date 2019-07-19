@@ -4,6 +4,7 @@ namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\DomainService;
 use Modules\Core\Services\ShopifyService;
 use PHPHtmlParser\Dom;
 use App\Entities\Plan;
@@ -67,6 +68,22 @@ class ShopifyController extends Controller
      * @var ProductPlan
      */
     private $productPlanModel;
+    /**
+     * @var DomainService
+     */
+    private $domainService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|DomainService
+     */
+    private function getDomainService()
+    {
+        if (!$this->domainService) {
+            $this->domainService = app(DomainService::class);
+        }
+
+        return $this->domainService;
+    }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed
@@ -350,8 +367,103 @@ class ShopifyController extends Controller
             } else {
                 return response()->json(['message' => 'Projeto já integrado'], 400);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            Log::warning('ShopifyController - store - Erro ao fazer integracao');
+            report($e);
+
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function undoIntegration(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+
+            $projectId = current(Hashids::decode($requestData['project_id']));
+
+            if ($projectId) {
+                //id decriptado
+                $project = $this->getProjectModel()
+                                ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                                ->where('id', $projectId)->first();
+
+                if (!empty($project->shopify_id)) {
+                    //se for shopify, voltar as integraçoes ao html padrao
+                    try {
+
+                        foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                            $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                            $shopify->setThemeByRole('main');
+                            if (!empty($shopifyIntegration->theme_html)) {
+                                $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                            }
+                            if (!empty($shopifyIntegration->layout_theme_html)) {
+                                $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                            }
+
+                            $shopifyIntegration->update([
+                                                            'status' => $shopifyIntegration->getEnum('status', 'disabled'),
+                                                        ]);
+                        }
+
+                        return response()->json(['message' => 'Integração com o shopify desfeita'], 200);
+                    } catch (Exception $e) {
+                        //throwl
+                        return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], 400);
+                    }
+                } else {
+                    return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                }
+            } else {
+                //problema no id
+                return response()->json(['message' => 'Projeto não encontrado'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('ShopifyController - undoIntegration - Erro ao desfazer integracao');
+            report($e);
+
+            return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reIntegration(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+
+            $projectId = current(Hashids::decode($requestData['project_id']));
+
+            if ($projectId) {
+                //pega o primeiro dominio ativado
+                $domain = $this->getProjectModel()
+                               ->where('status', $this->getProjectModel()
+                                                      ->getEnum('status', 'approved'))
+                               ->first();
+
+                if ($this->getDomainService()->verifyPendingDomains($domain->id, true)) {
+                    return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
+                } else {
+                    return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                }
+            } else {
+                //problema no id
+                return response()->json(['message' => 'Projeto não encontrado'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('ShopifyController - reIntegration - Erro ao refazer integracao');
+            report($e);
+
+            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
         }
     }
 }
