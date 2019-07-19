@@ -58,6 +58,7 @@ class CartRecoveryService
 
             if ($telephoneValidated != '') {
                 $zenviaSms = new ZenviaSmsService();
+                \Illuminate\Support\Facades\Log::warning('verifyAbandonedCarts');
 
                 $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
             }
@@ -73,6 +74,8 @@ class CartRecoveryService
 
             if ($emailValidated) {
                 $sendEmail = new SendgridService();
+                \Illuminate\Support\Facades\Log::warning('verifyAbandonedCarts');
+
                 $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-538d3405815c43debcf48aa44ceab965', $data);
             }
         }
@@ -113,6 +116,7 @@ class CartRecoveryService
 
             if ($telephoneValidated != '') {
                 $zenviaSms = new ZenviaSmsService();
+                \Illuminate\Support\Facades\Log::warning('verifyAbandonedCarts2');
 
                 $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
             }
@@ -128,6 +132,7 @@ class CartRecoveryService
             $emailValidated = FoxUtils::validateEmail($log['email']);
             if ($emailValidated) {
                 $sendEmail = new SendgridService();
+                \Illuminate\Support\Facades\Log::warning('verifyAbandonedCarts2');
 
                 $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
             }
