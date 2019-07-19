@@ -8,14 +8,18 @@
                 <p>Preencha atentamente as informações</p>
             </div>
             <div class='col-lg-4'>
-                <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
+                <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
                     <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
                     <label for='photo'>Selecione uma imagem capa do projeto</label>
-                    <img id='previewimage' alt='Selecione a foto do projeto' src='{{$project->photo ?? asset('modules/global/assets/img/projeto.png')}}' style='min-width: 250px; max-width: 250px;'>
+                    <div style="width:100%" class="text-center">
+                        <img id='previewimage' alt='Selecione a foto do projeto' src='{{$project->photo ?? asset('modules/global/assets/img/projeto.png')}}' style='min-width: 250px; max-width: 250px;margin; auto'>
+                    </div>
                     <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden' name='photo_y1'>
                     <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
                     <p class='info pt-5' style='font-size: 10px;'>
-                        <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
+                        <i class='icon wb-info-circle' aria-hidden='true'></i>
+                        Usada apenas internamente no sistema
+                        <br>A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
                         <br> Dimensões ideais: 300 x 300 pixels.
                     </p>
                 </div>
@@ -67,7 +71,7 @@
             <p>Preencha as informações de checkout do seu produto</p>
             <div class='row'>
                 <div class='form-group col-4 col-xs-12'>
-                    <label for='invoice-description'>Descrição da Fatura</label>
+                    <label for='invoice-description'>Descrição da Fatura</label> 
                     <input name='invoice_description' value='{{$project->invoice_description}}' maxlength='13' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura'>
                 </div>
                 <div class='form-group col-4 col-xs-12'>
@@ -111,25 +115,39 @@
             </div>
         </div>
         <div>
-            <label for='name'>Selecione uma imagem para pagina do checkout e para emails</label>
-            <div class='col-lg-4 row'>
-                <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
-                    <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
-                    <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height:300px;max-width:300px;'>
-                    <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
-                    <p class='info mt-5' style='font-size: 10px;'>
-                        <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
-                        <br> Dimensões ideais: largura ou altura de no máximo 300 x 300 pixels.
-                    </p>
+            <label for='name'>Imagem para página do checkout e para emails</label>
+            <div class=' row'>
+                <div class="col-4">
+                    <div class='d-flex flex-column' id='div-img-project' style='position: relative;'>
+                        <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
+                        <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height:250px;max-width:250px;'>
+                        <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
+                        <p class='info mt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
+                            <br> Dimensões ideais: largura ou altura de no máximo 300 x 300 pixels.
+                        </p>
+                    </div>
                 </div>
             </div>
             <div class="mt-30">
-                <div class="form-group">
-                    <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete" style="float: left;">
-                        <i class="material-icons gray"> delete </i>
-                        <span class="gray"> Deletar </span>
-                    </a>
-                    <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;"> Atualizar</button>
+                <div class="row">
+                    <div class="col-4">
+                        <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete" style="float: left;">
+                            <i class="material-icons gray"> delete </i>
+                            <span class="gray"> Deletar projeto</span>
+                        </a>
+                    </div>
+                    <div class="col-5">
+                        @if($project->shopify_id && $project->shopifyIntegrations()->first()->status != 1)
+                            <a id="bt-change-shopify-integration" role="button" integration-status="{!! $project->shopifyIntegrations()->first()->status !!}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                <i class="material-icons gray"> sync </i>
+                                <span class="gray"> {!! $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' !!} com shopify </span>
+                            </a>
+                        @endif
+                    </div>
+                    <div class="col-3">
+                        <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;"> Atualizar</button>
+                    </div>
                 </div>
             </div>
         </div>

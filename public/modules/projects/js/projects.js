@@ -204,6 +204,36 @@ $(function () {
                     });
 
                 });
+
+                $('#bt-change-shopify-integration').on('click', function (event) {
+                    event.preventDefault();
+
+                    var integrationStatus = $(this).attr('integration-status');
+
+                    if(integrationStatus == 2){
+                        $("#modal-change-shopify-integration-title").html("Desfazer integração com shopify?");
+                        $("#modal-change-shopify-integration-text").html('Ao realizar essa operação os pagamentos não serão processados pelo checkout do CloudFox');
+                    }
+                    else if(integrationStatus == 3){
+                        $("#modal-change-shopify-integration-title").html("Integrar com shopify?");
+                        $("#modal-change-shopify-integration-text").html('Ao realizar essa operação os pagamentos serão processados pelo checkout do CloudFox');
+                    }
+
+                    $("#bt-modal-change-shopify-integration").unbind("click");
+                    $("#bt-modal-change-shopify-integration").on('click', function () {
+
+                        $("#bt-close-modal-change-shopify-integration").click();
+
+                        if(integrationStatus == 2){
+                            alertCustom('success','Integração desfeita!');
+                        }
+                        else{
+                            alertCustom('success','Projeto integrado com Shopify!');
+                        }
+                    });
+
+                });
+
             }
         });
     }

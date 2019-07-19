@@ -26,7 +26,7 @@ class SalesResource extends Resource
 
         return [
             'sale_code'  => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
-            'id'         => Hashids::connection('main')->encode($this->id),
+            'id'         => Hashids::connection('sale_id')->encode($this->id),
             'project'    => $this->getRelation('plansSales')->first()->getRelation('plan')
                                  ->getRelation('projectId')->name,
             'product'    => (count($this->getRelation('plansSales')) > 1) ? 'Carrinho' : $this->getRelation('plansSales')

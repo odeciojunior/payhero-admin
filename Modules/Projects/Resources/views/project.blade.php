@@ -181,13 +181,11 @@
                                     </a>
                                 </div>
                                 <div id="modal_excluir_body" class="modal-body text-center p-20">
-
                                     <div class="d-flex justify-content-center">
                                         <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
                                     </div>
                                     <h3 class="black"> Você tem certeza? </h3>
                                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
-
                                 </div>
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
                                     <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
@@ -197,18 +195,44 @@
                         </div>
                     </div>
 
+                    @if($project->shopify_id)
+                        <!-- Modal para fazer-desfazer integração com shopify -->
+                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                            <div class="modal-dialog  modal-dialog-centered  modal-simple">
+                                <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                            <i class="material-icons md-16">close</i>
+                                        </a>
+                                    </div>
+                                    <div class="modal-body text-center p-20">
+                                        <div class="d-flex justify-content-center">
+                                            <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
+                                        </div>
+                                        <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>
+                                        <p class="gray" id="modal-change-shopify-integration-text"> </p>
+                                    </div>
+                                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                                        <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;" >Confirmar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>
         @push('scripts')
-            <script src='{{asset('modules/partners/js/partners.js')}}'></script>
-            <script src='{{asset('modules/Shipping/js/shipping.js')}}'></script>
-            <script src='{{asset('modules/domain/js/domain.js')}}'></script>
-            <script src='{{asset('modules/SmsMessage/js/smsMessage.js')}}'></script>
-            <script src='{{asset('modules/Pixels/js/pixels.js')}}'></script>
-            <script src='{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}'></script>
-            <script src='{{asset('modules/projects/js/projects.js')}}'></script>
-            <script src='{{asset('modules/plans/js/plans.js')}}'></script>
+            <script src="{{asset('modules/partners/js/partners.js')}}"></script>
+            <script src="{{asset('modules/Shipping/js/shipping.js')}}"></script>
+            <script src="{{asset('modules/domain/js/domain.js')}}"></script>
+            <script src="{{asset('modules/SmsMessage/js/smsMessage.js')}}"></script>
+            <script src="{{asset('modules/Pixels/js/pixels.js')}}"></script>
+            <script src="{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}"></script>
+            <script src="{{asset('modules/projects/js/projects.js')}}"></script>
+            <script src="{{asset('modules/plans/js/plans.js')}}"></script>
     @endpush
 @endsection
 

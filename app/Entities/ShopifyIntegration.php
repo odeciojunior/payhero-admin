@@ -44,6 +44,7 @@ class ShopifyIntegration extends Model
         'updated_at',
         'deleted_at',
     ];
+
     /**
      * @var array
      */
