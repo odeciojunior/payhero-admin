@@ -78,39 +78,38 @@
                     <div class="tab-content">
                         <!-- Painel de informações gerais -->
                         <div class="tab-pane active" id="tab_info_geral" role="tabpanel">
-                            
                             <div class="card">
-                            <div class="row no-gutters">
-                                <div class="col-md-3">
-                                    <img src="{{ $project->photo }}" class="card-img" alt="">
-                                </div>
-                                <div class="col-md-9 pl-10">
-                                    <div class="card-body">
-                                        <div class="row justify-content-between align-items-baseline">
-                                            <div class="col-md-6">
-                                                <h4 class="title-pad">{{ $project->name }}</h4>
-                                                <p class="card-text sm"> Criado em 14/06/2019 </p>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="d-flex">
-                                                    <div class="p-2 d-flex flex-column">
-                                                        <span class="details-text">Visibilidade</span>
-                                                        <p class="card-text sm"> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>
-                                                    </div>
-                                                    <div class="p-2 d-flex flex-column">
-                                                        <span class="details-text">Status</span>
-                                                        <p class="card-text sm"> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>
+                                <div class="row no-gutters">
+                                    <div class="col-md-3">
+                                        <img src="{{ $project->photo ? $project->photo : '/modules/global/assets/img/projeto.png' }}" class="card-img" alt="">
+                                    </div>
+                                    <div class="col-md-9 pl-10">
+                                        <div class="card-body">
+                                            <div class="row justify-content-between align-items-baseline">
+                                                <div class="col-md-6">
+                                                    <h4 class="title-pad">{{ $project->name }}</h4>
+                                                    <p class="card-text sm"> Criado em 14/06/2019 </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="d-flex">
+                                                        <div class="p-2 d-flex flex-column">
+                                                            <span class="details-text">Visibilidade</span>
+                                                            <p class="card-text sm"> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>
+                                                        </div>
+                                                        <div class="p-2 d-flex flex-column">
+                                                            <span class="details-text">Status</span>
+                                                            <p class="card-text sm"> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <h5 class="sm-title mt-30"> <strong> Descrição </strong> </h5>
+                                            <p class="card-text sm">
+                                                {{ $project->description }}
+                                            </p>
                                         </div>
-                                        <h5 class="sm-title mt-30"> <strong> Descrição </strong> </h5>
-                                        <p class="card-text sm">
-                                            {{ $project->description }}
-                                        </p>
                                     </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
 
