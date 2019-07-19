@@ -306,6 +306,7 @@ class ProjectsController extends Controller
                 return redirect()->route('projects.index');
             }
         } catch (Exception $e) {
+            dd($e);
             Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');
             report($e);
         }
