@@ -118,7 +118,7 @@ class ReportsController extends Controller
                     }
                 }
 
-                if (isset($projects) && count($projects) > 0) {
+                if (!empty($projects) && count($projects) > 0) {
                     return view('reports::index', compact('projects', 'userProjects'));
                 }
             }

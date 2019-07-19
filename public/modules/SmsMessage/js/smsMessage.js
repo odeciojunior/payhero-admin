@@ -147,7 +147,7 @@ $(function () {
                 data += '<td class= style="vertical-align: middle;">Email</td>';
                 data += '<td class= style="vertical-align: middle;">Boleto gerado</td>';
                 data += '<td class= style="vertical-align: middle;">Imediato</td>';
-                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, aqui está seu boleto. Como você optou por Boleto Bancário, estamos enviando por aqui para você não se esquecer. O boleto deve ser pago até a data de vencimento para enviarmos seu(s) pedido(s)! {url_boleto}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
                 data += '<span class="badge badge-primary">Grátis</span>';
@@ -179,7 +179,7 @@ $(function () {
                 data += '<td class= style="vertical-align: middle;">Email</td>';
                 data += '<td class= style="vertical-align: middle;">Boleto vencendo</td>';
                 data += '<td class= style="vertical-align: middle;">10:00 horas</td>';
-                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, seu boleto vencerá hoje, ainda dá tempo de pagar! Não se esqueça, só enviaremos o seu pedido (que já está separado) se você efetuar o pagamento! {url_boleto}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
                 data += '<span class="badge badge-primary">Grátis</span>';
@@ -195,7 +195,7 @@ $(function () {
                 data += '<td class= style="vertical-align: middle;">Email</td>';
                 data += '<td class= style="vertical-align: middle;">Carrinho abandonado</td>';
                 data += '<td class= style="vertical-align: middle;">4 horas depois</td>';
-                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, nossos produtos estão com preços especiais e o estoque é bem limitado. Recomendamos que você finalize a compra ainda hoje para garantir a promoção e economizar dinheiro! {link_carrinho_abandonado}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
                 data += '<span class="badge badge-primary">Grátis</span>';
@@ -211,7 +211,7 @@ $(function () {
                 data += '<td class= style="vertical-align: middle;">Email</td>';
                 data += '<td class= style="vertical-align: middle;">Carrinho abandonado</td>';
                 data += '<td class= style="vertical-align: middle;">10:00 horas próximo dia</td>';
-                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, somos da loja {projeto_nome}, vimos que voce não finalizou seu pedido, aproveite o último dia da promoção! {link_carrinho_abandonado}</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, vimos que você não aproveitou a promoção de ontem. O seu pedido ainda está separado aguardando a finalização da compra, mas não podemos segurar por muito tempo! {link_carrinho_abandonado</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
                 data += '<span class="badge badge-primary">Grátis</span>';

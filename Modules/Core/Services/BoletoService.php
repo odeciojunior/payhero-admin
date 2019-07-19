@@ -90,7 +90,16 @@ class BoletoService
                 $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
                 $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
                 $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
-                $data                    = [
+
+                $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->clientModel->telephone);
+
+                if ($telephoneValidated != '') {
+                    $zenviaSms = new ZenviaSmsService();
+                    \Illuminate\Support\Facades\Log::warning('verifyBoletosExpiring');
+
+                    $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido!' . $boleto->boleto_link, $telephoneValidated);
+                }
+                $data           = [
                     "name"                  => $clientNameExploded[0],
                     "boleto_link"           => $boleto->boleto_link,
                     "boleto_digitable_line" => $boletoDigitableLine,
@@ -100,10 +109,13 @@ class BoletoService
                     "subtotal"              => strval($subTotal),
                     "iof"                   => $iof,
                     "project_logo"          => $project->logo,
+                    "project_contact"       => $project->contact,
                     "products"              => $products,
                 ];
-                $emailValidated          = FoxUtils::validateEmail($clientEmail);
+                $emailValidated = FoxUtils::validateEmail($clientEmail);
                 if ($emailValidated) {
+                    \Illuminate\Support\Facades\Log::warning('verifyBoletosExpiring');
+
                     $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
                 }
             }
@@ -162,11 +174,14 @@ class BoletoService
                     "subtotal"              => strval($subTotal),
                     "iof"                   => $iof,
                     "project_logo"          => $project->logo,
+                    "project_contact"       => $project->contact,
                     "products"              => $products,
                 ];
                 $emailValidated          = FoxUtils::validateEmail($clientEmail);
 
                 if ($emailValidated) {
+                    \Illuminate\Support\Facades\Log::warning('verifyBoletoWaitingPayment');
+
                     $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
                 }
             }
@@ -224,11 +239,13 @@ class BoletoService
                     "subtotal"              => strval($subTotal),
                     "iof"                   => $iof,
                     "project_logo"          => $project->logo,
+                    "project_contact"       => $project->contact,
                     "products"              => $products,
                 ];
                 $emailValidated          = FoxUtils::validateEmail($clientEmail);
                 if ($emailValidated) {
                     $sendEmail = new SendgridService();
+                    \Illuminate\Support\Facades\Log::warning('verifyBoleto2');
 
                     $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
                 }
@@ -346,6 +363,8 @@ class BoletoService
                 'transaction_value' => "R$ 00,00",
             ];
             if ($emailValidated && $boleto->count > 0) {
+                \Illuminate\Support\Facades\Log::warning('verifyBoletoPaid');
+
                 $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
             }
         }

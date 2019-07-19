@@ -228,12 +228,12 @@ class SalesController extends Controller
         try {
             $requestData = $request->all();
             if ($requestData['sale_id']) {
-                $sale = $this->getSaleModel()->with([
-                                                        'transactions' => function($query) {
-                                                            $query->where('company', '!=', null)->first();
-                                                        },
-                                                    ])->find(current(Hashids::decode($requestData['sale_id'])));
-
+                $sale               = $this->getSaleModel()->with([
+                                                                      'transactions' => function($query) {
+                                                                          $query->where('company', '!=', null)->first();
+                                                                      },
+                                                                  ])->find(current(Hashids::connection('sale_id')
+                                                                                          ->decode($requestData['sale_id'])));
                 $sale['hours']      = (new Carbon($sale['start_date']))->format('H:m:s');
                 $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
                 if ($sale->flag) {
@@ -247,7 +247,7 @@ class SalesController extends Controller
                 $client              = $this->getClient()->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
-                $plansSales = $this->getPlansSales()->with('plan' ,'plan.products')->where('sale', $sale->id)
+                $plansSales = $this->getPlansSales()->with('plan', 'plan.products')->where('sale', $sale->id)
                                    ->get();
 
                 $plans = [];
@@ -256,9 +256,9 @@ class SalesController extends Controller
                 foreach ($plansSales as $key => $planSale) {
                     $plans[$key]['name']   = $this->getPlan()->find($planSale['plan'])->name;
                     $plans[$key]['amount'] = $planSale['amount'];
-                    $plans[$key]['value'] = $planSale['plan_value'];
-                    $plans[$key]['photo'] = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
-                    $total                += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
+                    $plans[$key]['value']  = $planSale['plan_value'];
+                    $plans[$key]['photo']  = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
+                    $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
                 }
 
                 $discount = '0,00';
