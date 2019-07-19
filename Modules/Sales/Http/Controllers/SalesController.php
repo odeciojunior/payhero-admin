@@ -227,7 +227,7 @@ class SalesController extends Controller
     {
         try {
             $requestData = $request->all();
-            if ($requestData['sale_id']) {
+            if (!empty($requestData['sale_id'])) {
                 $sale               = $this->getSaleModel()->with([
                                                                       'transactions' => function($query) {
                                                                           $query->where('company', '!=', null)->first();
