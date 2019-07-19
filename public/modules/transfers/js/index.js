@@ -2,7 +2,7 @@ $(function () {
 
     updateTransfersTable();
 
-    $("#extract_company_select").on("change", function(){
+    $("#extract_company_select").on("change", function () {
 
         updateTransfersTable();
     });
@@ -20,7 +20,7 @@ $(function () {
         $.ajax({
             method: "GET",
             url: link,
-            data: { company: $("#extract_company_select").val() },
+            data: {company: $("#extract_company_select").val()},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -30,25 +30,56 @@ $(function () {
             success: function (response) {
                 $("#table-transfers-body").html('');
 
-                if(response.data == ''){
+                if (response.data == '') {
 
                     $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
                     $("#pagination").html("");
-                }
-                else{
+                } else {
                     data = '';
 
                     $.each(response.data, function (index, value) {
-                        data += '<tr>';
-                        data += '<td style="vertical-align: middle;">' + value.description + '</td>';
+                        data += '<tr >';
+                        data += '<td style="vertical-align: middle;">' + value.description + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' +
+                            '<span style="color:black;">'
+                            + value.transaction_id +
+                            '</span>'
+                        '</a>'
+                        '</td>';
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
-                        data += '<td style="vertical-align: middle;">' + value.value + '</td>';
+                        data += '<td style="vertical-align: middle; color:green;">' + value.value + '</td>';
+                        data += '</tr>';
+
                     });
 
                     $("#table-transfers-body").html(data);
 
                     pagination(response);
                 }
+                $('.detalhes_venda').on('click', function () {
+                    var sale = $(this).attr('sale');
+
+                    $('#modal_venda_titulo').html('Detalhes da venda ' + sale + '<br><hr>');
+                    var data = {sale_id: sale};
+
+                    $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                    $.ajax({
+                        method: "POST",
+                        url: '/sales/venda/detalhe',
+                        data: data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function () {
+                            //
+                        },
+                        success: function (response) {
+                            $('.subTotal').mask('#.###,#0', {reverse: true});
+
+                            $('.modal-body').html(response);
+
+                        }
+                    });
+                });
             }
         });
     }
@@ -121,6 +152,5 @@ $(function () {
         }
 
     }
-
 
 });
