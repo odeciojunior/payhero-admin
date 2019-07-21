@@ -177,7 +177,7 @@ class ShopifyController extends Controller
                                                     'status'               => 'active',
                                                 ]);
 
-            event(new ShopifyIntegrationEvent($project->id, $shopifyStoreService));
+            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
 
             return response()->json(['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'], 200);
 

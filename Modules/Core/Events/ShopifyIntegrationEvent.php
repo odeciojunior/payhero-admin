@@ -2,24 +2,25 @@
 
 namespace Modules\Core\Events;
 
+use App\Entities\ShopifyIntegration;
 use Illuminate\Queue\SerializesModels;
 
 class ShopifyIntegrationEvent
 {
     use SerializesModels;
 
-    public $projectId;
-    public $shopifyService;
+    public $shopifyIntegration;
+    public $userId;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($projectId, $shopifyService)
+    public function __construct(ShopifyIntegration $shopifyIntegration, $userId)
     {
-        $this->projectId      = $projectId;
-        $this->shopifyService = $shopifyService;
+        $this->shopifyIntegration = $shopifyIntegration;
+        $this->userId             = $userId;
     }
 
     /**

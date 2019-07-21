@@ -3,6 +3,7 @@
 namespace Modules\Core\Listeners;
 
 use Illuminate\Queue\InteractsWithQueue;
+use Modules\Core\Services\ShopifyService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ImportShopifyStoreListener implements ShouldQueue
@@ -15,7 +16,9 @@ class ImportShopifyStoreListener implements ShouldQueue
      */
     public function handle($event)
     {
-        $event->shopifyService->importShopifyStore($event->projectId);
+        $shopifyService = new ShopifyService($event->shopifyIntegration->url_store, $event->shopifyIntegration->token);
+
+        $shopifyService->importShopifyStore($event->shopifyIntegration->project, $event->userId);
     }
 
 }

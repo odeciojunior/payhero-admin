@@ -709,7 +709,7 @@ class ShopifyService
      * @param  integer  $projectId
      * @return void
      */
-    public function importShopifyStore($projectId)
+    public function importShopifyStore($projectId, $userId)
     {
         $storeProducts = $this->getShopProducts();
 
@@ -739,7 +739,7 @@ class ShopifyService
                 }
 
                 $product = $productModel->create([
-                                                    'user'        => auth()->user()->id,
+                                                    'user'        => $userId,
                                                     'name'        => substr($shopifyProduct->getTitle(), 0, 100),
                                                     'description' => $description,
                                                     'guarantee'   => '0',
