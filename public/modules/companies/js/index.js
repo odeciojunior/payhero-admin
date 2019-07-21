@@ -22,31 +22,41 @@ $(document).ready(function () {
                     dados += "<td>" + value.company_document + "</td>";
                     dados += "<td>" + value.document_status + "</td>";
                     dados += "<td><a href='/companies/" + value.id_code + "/edit' class='edit-company' data-company='" + value.id_code + "'  role='button'><i class='material-icons gradient'>  edit </i></a></td>";
-                    dados += "<td><a class='pointer' data-company='" + value.id_code + "' data-toggle='modal' data-target='#modal_excluir' role='button'><i class='material-icons gradient'>delete</i></a></td>";
+                    dados += "<td><a class='pointer delete-company' company='" + value.id_code + "' data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete</i></a></td>";
                     dados += "</tr>";
 
                     $("#companies_table_data").append(dados);
+                });
 
-                    var companyId = value.id_code;
+                if (response.data == '') {
+                    $('#companies_table_data').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma empresa encontrada</td></tr>");
+                }
 
-                    $("#modal_excluir_titulo").html("Remover empresa?");
+                // $("#modal_excluir_titulo").html("Remover empresa?");
 
-                    $("#bt_excluir").unbind('click');
-                    $("#bt_excluir").on("click", function (event) {
+                $(".delete-company").unbind('click');
+                $(".delete-company").on("click", function (event) {
+                    event.preventDefault();
+                    var company = $(this).attr('company');
 
-                        event.preventDefault();
-                        $("#fechar_modal_excluir").click();
+                    $("#bt-delete").unbind('click');
+                    $("#bt-delete").on('click', function () {
+                        $("#close-modal-delete").click();
 
                         $.ajax({
                             method: "DELETE",
-                            url: "/companies/" + companyId,
+                            url: "/companies/" + company,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function (response) {
                                 if (response.status == '422') {
-                                    for (error in response.responseJSON.errors) {
-                                        alertCustom('error', String(response.responseJSON.errors[error]));
+                                    if (response.responseJSON.errors) {
+                                        for (error in response.responseJSON.errors) {
+                                            alertCustom('error', String(response.responseJSON.errors[error]));
+                                        }
+                                    } else {
+                                        alertCustom('error', String(response.responseJSON.message));
                                     }
                                 }
                             },
@@ -55,17 +65,9 @@ $(document).ready(function () {
                                 atualizar(page);
                             }
 
-                        })
-
+                        });
                     });
-
                 });
-
-                if (response.data == '') {
-                    $('#companies_table_data').html("<tr class='text-center'><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma empresa encontrada</td></tr>");
-                }
-
-                //pagination(response);
             }
         });
     }

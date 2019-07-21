@@ -68,7 +68,7 @@ $(document).ready(function(){
 function alertCustom(type, message){
 
     swal({
-        position: 'bottom',
+        position: 'bottom-right',
         type: type,
         toast: 'true',
         title: message,

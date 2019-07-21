@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Exception;
 use App\Entities\Plan;
+use Illuminate\Support\Facades\Log;
 use PHPHtmlParser\Dom;
 use App\Entities\Product;
 use Slince\Shopify\Client;
@@ -43,16 +44,21 @@ class ShopifyService
      */
     public function __construct(string $urlStore, string $token)
     {
-        if (!$this->cacheDir) {
-            $cache = './public/tmp';
-        } else {
-            $cache = $this->cacheDir;
-        }
+        try {
+            if (!$this->cacheDir) {
+                $cache = '/var/tmp';
+            } else {
+                $cache = $this->cacheDir;
+            }
 
-        $this->credential = new PublicAppCredential($token);
-        $this->client     = new Client($this->credential, $urlStore, [
-            'metaCacheDir' => $cache // Metadata cache dir, required
-        ]);
+            $this->credential = new PublicAppCredential($token);
+            $this->client     = new Client($this->credential, $urlStore, [
+                'metaCacheDir' => $cache // Metadata cache dir, required
+            ]);
+        } catch (Exception $e) {
+            Log::warning('__construct - Erro ao criar servico do shopify');
+            report($e);
+        }
     }
 
     /**
@@ -64,6 +70,15 @@ class ShopifyService
         $this->cacheDir = $cacheDir;
 
         return $this;
+    }
+
+    /**
+     * @param $cacheDir
+     * @return $this
+     */
+    public function getClient()
+    {
+        return $this->client;
     }
 
     /**
@@ -688,7 +703,7 @@ class ShopifyService
 
     /**
      * Import products from some shopify store
-     * Called in the ImportShopifyStoreListener
+     * Called in ImportShopifyStoreListener class
      * Runs in background
      *
      * @param  integer  $projectId
@@ -788,9 +803,11 @@ class ShopifyService
                 $postbackUrl = "https://app.cloudfox.net/postback/shopify/";
             }
             else{
-                $postbackUrl = "";  //some ngrok tunnel...
+                $postbackUrl = "https://localhosst.com/postback/shopify/";  //some ngrok tunnel...
             }
 
+            $this->deleteShopWebhook();
+    
             $this->createShopWebhook([
                 "topic"   => "products/create",
                 "address" => $postbackUrl . Hashids::encode($projectId),
@@ -941,6 +958,7 @@ class ShopifyService
         }
     }
 
+    
     /**
      * @param null $variantId
      * @return Slince\Shopify\Manager\ProductVariant\Variant|null
@@ -971,7 +989,6 @@ class ShopifyService
         }
     }
 
-
     /**
      * @param null $imageId
      * @return Slince\Shopify\Manager\ProductImage\Image|null
@@ -986,7 +1003,6 @@ class ShopifyService
             return null;
         }
     }
-
 }
 
 

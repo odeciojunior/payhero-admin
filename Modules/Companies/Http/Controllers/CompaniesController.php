@@ -220,18 +220,25 @@ class CompaniesController extends Controller
     }
 
     /**
-     * @param $id
+     * @param $idc
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($encodedId)
     {
         try {
 
-            $company = $this->getCompanyModel()
-                            ->find(current(Hashids::decode($encodedId)));
+            $company = $this->getCompanyModel()->withCount([
+                                                               'transactions',
+                                                               'usersProjects',
+                                                           ])->find(current(Hashids::decode($encodedId)));
             if ($company) {
-                //empresa existe
-                $company->delete();
+                if ($company->transactions_count > 0) {
+                    return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], 422);
+                } else if ($company->users_projects_count > 0) {
+                    return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], 422);
+                } else {
+                    $company->delete();
+                }
             } else {
                 //empresa nao exsite
                 return response()->json(['message' => 'Empresa não encontrada para remoção'], 422);

@@ -39,10 +39,12 @@ class ShopifyIntegration extends Model
         'theme_file',
         'theme_html',
         'layout_theme_html',
+        'status',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
+
     /**
      * @var array
      */
@@ -50,6 +52,11 @@ class ShopifyIntegration extends Model
         'theme_type' => [
             1 => 'basic_theme',
             2 => 'ajax_theme',
+        ],
+        'status'     => [
+            1 => 'pending',
+            2 => 'approved',
+            3 => 'disabled',
         ],
     ];
 

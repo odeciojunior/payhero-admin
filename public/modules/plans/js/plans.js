@@ -124,13 +124,11 @@ $(function () {
 
                     data += '</td>';
 
-
-
                     data += "<td style='min-width:200px;'>" +
                         "<a class='pointer details-plan mr-30' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>remove_red_eye</i></a>" +
-                        "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a>"+
+                        "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a>" +
                         "<a class='pointer delete-plan ml-30' plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a>"
-                        "</td>";
+                    "</td>";
                     // data += "<td class='text-center'><a class='pointer details-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>remove_red_eye</i></a></td>";
                     // data += "<td class='text-center'><a class='pointer edit-plan'  plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a></td>";
                     // data += "<td class='text-center'><a class='pointer delete-plan'  plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a></td>";
@@ -269,19 +267,22 @@ $(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function (response) {
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 }
+                                if (response.status == '400') {
+                                    alertCustom('error', response.responseJSON.message);
+                                }
                             },
-                            success: function (data) {
-                                alertCustom("success", "Plano Removido com sucesso");
+                            success: function (response) {
+                                alertCustom('success', response.message);
                                 atualizarPlan();
                             }
 
-                        })
+                        });
                     });
 
                 });

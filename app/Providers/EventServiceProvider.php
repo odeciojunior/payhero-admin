@@ -13,8 +13,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
+        'Modules\Core\Events\ShopifyIntegrationEvent' => [
+            'Modules\Core\Listeners\ImportShopifyStoreListener',
         ],
     ];
 

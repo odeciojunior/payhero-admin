@@ -48,28 +48,28 @@
                                 <div class="input-holder d-flex flex-column">
                                     <label for="firstname">Nome</label>
                                     <p class='sm-tex text-danger' id='nameError' style='display:none;'>O campo nome é obrigatório</p>
-                                    <input type="text" name="firstname" id="firstname" required>
+                                    <input type="text" name="firstname" id="firstname" placeholder="Digite seu nome" required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
                                     <label for="lastname">Sobrenome</label>
                                     <p class='sm-tex text-danger' id='lastNameError' style='display:none;'>O campo sobrenome é obrigatório</p>
-                                    <input type="text" name="lastname" id="lastname" required>
+                                    <input type="text" name="lastname" id="lastname" placeholder="Digite seu sobrenome" required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
                                     <label for="email">E-mail</label>
                                     <p class='sm-tex text-danger' id='emailError' style='display:none;'>O campo email é obrigatório</p>
-                                    <input type="email" name="email" id="email" value="" required>
+                                    <input type="email" name="email" id="email" value="" placeholder="Digite seu email" required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="input-holder d-flex flex-column">
                                     <label for="phone">Celular</label>
                                     <p class='sm-tex text-danger' id='phoneError' style='display:none;'>O campo celular é obrigatório</p>
-                                    <input type="text" name="cellphone" id="phone" required>
+                                    <input type="text" name="cellphone" id="phone" placeholder="Digite seu celular" required>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                 <div class="input-holder d-flex flex-column">
                                     <label for="password">Senha</label>
                                     <p class='sm-tex text-danger' id='passwordError' style='display:none;'>O campo senha é obrigatório</p>
-                                    <input type="password" name="password" id="password" value="" required>
+                                    <input type="password" name="password" id="password" value="" placeholder="Password" required>
                                     <div class='pass-container' style='width: 199px;'></div>
                                     <div class='pass-hint'></div>
                                 </div>
@@ -150,10 +150,10 @@
                                     <label>Selecione o país de sua empresa:</label>
                                     <div class="btn-group colors select-country" data-toggle="buttons">
                                         <label id='btnBrasil' class="btn btn-outline-primary ">
-                                            <input type="radio" class="typeBrasil" name="country" value="brasil" autocomplete="off" checked='checked'> Brasil
+                                            <input type="radio" class="typeBrasil active" name="country" value="brasil" autocomplete="off" checked='checked'> Brasil
                                         </label>
                                         <label id='btnUSA' class="btn btn-outline-primary">
-                                            <input type="radio" class="typeUSA" name="country" value="usa" autocomplete="off"> United States
+                                            <input type="radio" class="typeUSA" name="country" value="usa" autocomplete="off" disabled> United States
                                         </label>
                                     </div>
                                     <input type="hidden" id="country" value="brasil">
@@ -518,7 +518,7 @@
         </div>
     </section>
     <footer>
-        <div class="container">
+        <div class="container"> 
             <div class="wrap-footer">
                 <div class="row justify-content-between align-items-center">
                     {{-- <div class="col-3">
@@ -554,6 +554,7 @@
             </div>
         </div>
     </footer>
+
     <script src="{{asset('modules/register/js/jquery-ui.min.js')}}"></script>
     <script src="{{asset('modules/register/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('modules/register/js/wow.min.js')}}"></script>
@@ -562,5 +563,8 @@
     <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
     <script src="{{ asset('modules/global/assets/js/sweetalert2.all.min.js') }}"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
-</body>
+
+  </body>
 </html>
+
+

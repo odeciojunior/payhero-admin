@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $("#progress-bar-register").css('width','33%');
+    $("#progress-bar-register").css('width', '33%');
 
     // MASCARA CNPJ/CPF
     var options = {
@@ -35,47 +35,28 @@ $(document).ready(function () {
         $("#emailError").hide();
     });
 
-    // replica texto na criação do projeto standard
-    // $("#project_name_standard").keydown(function () {
-    //     $("#name_preview_standard").text($("#project_name_standard").val());
-    // });
-
-    // $("#project_desc_standard").keydown(function () {
-    //     $("#description_preview_standard").text($("#project_desc_standard").val());
-    // });
-
-    ///// replica texto na criação do projeto standard
-    // $("#project_name_shopify").keydown(function () {
-    //     $("#name_preview_shopify").text($("#project_name_shopify").val());
-    // });
-
-    // $("#project_desc_shopify").keydown(function () {
-    //     $("#description_preview_shopify").text($("#project_desc_shopify").val());
-    // });
-
-    $("#btnBrasil").on("click", function(){
+    $("#btnBrasil").on("click", function () {
         $("#country").val('brasil');
     });
 
-    $("#btnUSA").on("click", function(){
+    $("#btnUSA").on("click", function () {
         $("#country").val('usa');
     });
 
     ///// botão prosseguir
     $("#btn-go").click(function () {
 
-        if(currentPage == 'user'){
+        if (currentPage == 'user') {
             basicDataComplete();
-        }
-        else if(currentPage == 'company'){
+        } else if (currentPage == 'company') {
             companyComplete();
         }
     });
 
-    function companyComplete(){
+    function companyComplete() {
 
-        if(!validateCompanyData()){
-            alertCustom('error','Revise os dados informados');
+        if (!validateCompanyData()) {
+            alertCustom('error', 'Revise os dados informados');
             return false;
         }
 
@@ -97,11 +78,11 @@ $(document).ready(function () {
                 number: ($('#country').val() == 'brasil') ? $('#brasil_number').val() : $('#eua_number').val(),
             },
             error: function (response) {
-                alertCustom('error','Ocorreu algum erro');
+                alertCustom('error', 'Ocorreu algum erro');
             },
             success: function (response) {
                 // $("#company_id").val(response.data.id);
-                alertCustom('success','Empresa cadastrada com sucesso');
+                alertCustom('success', 'Empresa cadastrada com sucesso');
                 $(".div2").hide();
                 $(".div3").show();
                 $("#jump").click();
@@ -110,10 +91,10 @@ $(document).ready(function () {
         });
     }
 
-    function basicDataComplete(){
+    function basicDataComplete() {
 
-        if(!validateBasicData()){
-            alertCustom('error','Revise os dados informados');
+        if (!validateBasicData()) {
+            alertCustom('error', 'Revise os dados informados');
             return false;
         }
 
@@ -130,31 +111,30 @@ $(document).ready(function () {
                 password: $('#password').val(),
                 parameter: $('#parameter').val()
             },
-            error: function ( response) {
-                if(response.status == '422'){
-                    for(error in response.responseJSON.errors){
-                        alertCustom('error',String(response.responseJSON.errors[error]));
+            error: function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 }
             },
-            success: function ( response ) {
-                if(response.success == 'true'){
+            success: function (response) {
+                if (response.success == 'true') {
                     currentPage = 'company';
                     $(".div1").hide();
                     $(".div2").show();
-                    alertCustom('success','Cadastro realizado com sucesso');
-                    $("#progress-bar-register").css('width','66%');
+                    alertCustom('success', 'Cadastro realizado com sucesso');
+                    $("#progress-bar-register").css('width', '66%');
                     $("#jump").show();
-                }
-                else{
-                    alertCustom('error','revise os dados informados');
+                } else {
+                    alertCustom('error', 'revise os dados informados');
                 }
             }
         });
 
     }
 
-    function validateCompanyData(){
+    function validateCompanyData() {
 
         $("#brasilFantasyNameError").css('display', 'none');
         $("#brasilCompanyDocumentError").css('display', 'none');
@@ -163,22 +143,21 @@ $(document).ready(function () {
 
         var isDataValid = true;
 
-        if($('#country').val() == 'brasil'){
-            if($("#brasil_fantasy_name").val().length < 3) {
+        if ($('#country').val() == 'brasil') {
+            if ($("#brasil_fantasy_name").val().length < 3) {
                 $("#brasilFantasyNameError").show();
                 isDataValid = false;
             }
-            if($("#brasil_company_document").val().length < 3) {
+            if ($("#brasil_company_document").val().length < 3) {
                 $("#brasilCompanyDocumentError").show();
                 isDataValid = false;
             }
-        }
-        else{
-            if($("#eua_fantasy_name").val().length < 3) {
+        } else {
+            if ($("#eua_fantasy_name").val().length < 3) {
                 $("#euaFantasyNameError").show();
                 isDataValid = false;
             }
-            if($("#eua_company_document").val().length < 3) {
+            if ($("#eua_company_document").val().length < 3) {
                 $("#euaCompanyDocumentError").show();
                 isDataValid = false;
             }
@@ -187,7 +166,7 @@ $(document).ready(function () {
         return isDataValid;
     }
 
-    function validateBasicData(){
+    function validateBasicData() {
 
         var isDataValid = true;
 
@@ -203,9 +182,9 @@ $(document).ready(function () {
             isDataValid = false;
         }
 
-        var emailFilter=/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        var illegalChars= /[\(\)\<\>\,\;\:\\\/\"\[\]]/
-        if(!(emailFilter.test($("#email").val())) || $("#email").val().match(illegalChars) || $("#email").val().indexOf(" ") !== -1){
+        var emailFilter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        var illegalChars = /[\(\)\<\>\,\;\:\\\/\"\[\]]/
+        if (!(emailFilter.test($("#email").val())) || $("#email").val().match(illegalChars) || $("#email").val().indexOf(" ") !== -1) {
             $("#emailError").show();
             isDataValid = false;
         }
@@ -225,28 +204,38 @@ $(document).ready(function () {
         return isDataValid;
     }
 
-    function validatePassword(){
+    function validatePassword() {
 
-        if($("#password").val().replace(/[^0-9]/g,'').length < 1){
+        if ($("#password").val().replace(/[^0-9]/g, '').length < 1) {
             return false;
         }
-        if($("#password").val().length < 8){
+        if ($("#password").val().length < 8) {
             return false;
         }
-        if($("#password").val().replace(/[^a-zA-Z]/g,'').length < 1){
+        if ($("#password").val().replace(/[^a-zA-Z]/g, '').length < 1) {
             return false;
         }
         return true;
     }
 
-    $("#jump").on("click", function(){
-        $("#progress-bar-register").css('width','99%');
+    $("#jump").on("click", function () {
+        $("#progress-bar-register").css('width', '99%');
         $(".div2").hide();
         $(".div3").hide();
         $(".div4").hide();
         $(".div5").hide();
         $(".div6").show();
         $(this).hide();
+        $("#btn-go").hide();
+        $.ajax({
+            method: "GET",
+            url: "/register/welcome/",
+            error: function () {
+            },
+            success: function () {
+            }
+
+        });
         setTimeout(registerComplete, 10000);
     });
 
@@ -258,16 +247,16 @@ $(document).ready(function () {
     });
 
     $("#btnUSA").click(function () {
-        $("#brasil-form").hide();
-        $("#eua-form").show();
+        //$("#brasil-form").hide();
+        //$("#eua-form").show();
     });
 
-    function registerComplete(){
+    function registerComplete() {
 
-        location.href="/dashboard";
+        location.href = "/dashboard";
     }
 
-    function alertCustom(type, message){
+    function alertCustom(type, message) {
 
         swal({
             position: 'top-right',

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\User;
+use Error;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Selector\Parser;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use PHPHtmlParser\Selector\Selector;
@@ -58,23 +60,36 @@ class TesteController extends Controller
 
     public function index()
     {
-        $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
 
-        $shopifyService->deleteShopWebhook();
+        try {
+            $x = Domain::first();
+        } catch (\Exception $e) {
+            dd($e);
+        } catch (Error $e) {
+            // This should work
+            dd($e);
+        } catch (Throwable $e) {
+            // This should work as well
+            dd('c');
+        }
 
-        $shopifyService->createShopWebhook([
-                                               "topic"   => "products/create",
-                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
-                                               "format"  => "json",
-                                           ]);
-
-        $shopifyService->createShopWebhook([
-                                               "topic"   => "products/update",
-                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
-                                               "format"  => "json",
-                                           ]);
-
-        dd($shopifyService->getShopWebhook());
+        //        $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
+        //
+        //        $shopifyService->deleteShopWebhook();
+        //
+        //        $shopifyService->createShopWebhook([
+        //                                               "topic"   => "products/create",
+        //                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
+        //                                               "format"  => "json",
+        //                                           ]);
+        //
+        //        $shopifyService->createShopWebhook([
+        //                                               "topic"   => "products/update",
+        //                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
+        //                                               "format"  => "json",
+        //                                           ]);
+        //
+        //        dd($shopifyService->getShopWebhook());
 
     }
 }

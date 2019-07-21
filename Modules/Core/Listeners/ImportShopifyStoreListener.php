@@ -5,7 +5,7 @@ namespace Modules\Core\Listeners;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ImportShopifyStoreListener
+class ImportShopifyStoreListener implements ShouldQueue
 {
     /**
      * Handle the event.

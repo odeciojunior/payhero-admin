@@ -8,16 +8,18 @@ class ShopifyIntegrationEvent
 {
     use SerializesModels;
 
-    protected $projectId;
+    public $projectId;
+    public $shopifyService;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($projectId)
+    public function __construct($projectId, $shopifyService)
     {
-        $this->projectId = $projectId;
+        $this->projectId      = $projectId;
+        $this->shopifyService = $shopifyService;
     }
 
     /**
@@ -29,4 +31,5 @@ class ShopifyIntegrationEvent
     {
         return [];
     }
+
 }

@@ -97,21 +97,35 @@ $(function () {
                 $("#qtd-reembolso").html(response.contChargeBack);
                 $("#qtd-pending").html(response.contPending);
                 $("#qtd-canceled").html(response.contCanceled);
-                $("#percent-credit-card").html(response.totalPercentCartao + ' %');
-                $("#percent-values-boleto").html(response.totalPercentPaidBoleto + ' %');
+                $("#percent-credit-card").html(response.totalPercentCartao + '%');
+                $("#percent-values-boleto").html(response.totalPercentPaidBoleto + '%');
                 $("#credit-card-value").html(response.currency + ' ' + response.totalValueCreditCard);
                 $("#boleto-value").html(response.currency + ' ' + response.totalValueBoleto);
-                $("#percent-boleto-convert").html(response.convercaoBoleto + ' %');
-                $("#percent-credit-card-convert").html(response.convercaoCreditCard + ' %');
-                $("#percent-desktop").html(response.conversaoDesktop + ' %');
-                $("#percent-mobile").html(response.conversaoMobile + ' %');
+                $("#percent-boleto-convert").html(response.convercaoBoleto + '%');
+                $("#percent-credit-card-convert").html(response.convercaoCreditCard + '%');
+                $("#percent-desktop").html(response.conversaoDesktop + '%');
+                $("#percent-mobile").html(response.conversaoMobile + '%');
+                $("#qtd-cartao-convert").html(response.cartaoConvert);
+                $("#qtd-boleto-convert").html(response.boletoConvert);
+                $("#ticket-medio").html(response.currency + ' ' + response.ticketMedio);
+
+                var table_data_itens = '';
+                $.each(response.plans, function (index, data) {
+                    console.log(data);
+                    table_data_itens += '<tr>';
+                    table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
+                    table_data_itens += '<td>' + data.name + "</td>";
+                    table_data_itens += '<td>' + data.quantidade + "</td>";
+                    table_data_itens += '</tr>';
+                });
+                $('#origins-table-itens').html("");
+                $("#origins-table-itens").append(table_data_itens);
 
                 updateGraph(response.chartData);
                 updateSalesByOrigin();
             }
         });
     }
-
 
     function updateSalesByOrigin(link = null) {
 
@@ -137,8 +151,7 @@ $(function () {
                 if (response.data == '') {
                     $('#origins-table').html("<td colspan='3' class='text-center'> Nenhuma venda encontrada</div>");
                     $("#pagination").html("");
-                }
-                else{
+                } else {
                     var table_data = '';
 
                     $.each(response.data, function (index, data) {
@@ -151,7 +164,7 @@ $(function () {
 
                     $('#origins-table').html("");
                     $("#origins-table").append(table_data);
-                    
+
                     pagination(response);
                 }
             }

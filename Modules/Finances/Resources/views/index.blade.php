@@ -18,20 +18,19 @@
                     <nav class="pt-20">
                         <div class="nav-tabs-horizontal">
                             <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
-                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
+                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-transfers"
                                    role="tab" aria-controls="nav-home" aria-selected="true">Transferências
                                 </a>
-                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-extract"
                                    role="tab" aria-controls="nav-profile" aria-selected="false">Extrato
                                 </a>
                             </div>
                         </div>
                     </nav>
-                    <div class="p-30 pt-20"> 
+                    <div class="p-30 pt-20">
                         <div class="tab-content" id="nav-tabContent">
-
                             <!-- TRANSFERENCIAS -->
-                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                            <div class="tab-pane fade show active" id="nav-transfers" role="tabpanel" aria-labelledby="nav-home-tab">
                                 <div class="row justify-content-start align-items-baseline">
                                     <div class="col-12 mb-3">
                                         <h5 class="title-pad"> Nova transferência </h5>
@@ -132,7 +131,6 @@
                                                         Sacar dinheiro
                                                     </button>
                                                 </div>
-                                               
                                                 <small class="text-muted">Cada saque acarreta uma taxa de
                                                     <span class="currency">R$</span>
                                                     03,80*
@@ -176,9 +174,8 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- EXTRATO -->
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="tab-pane fade" id="nav-extract" role="tabpanel" aria-labelledby="nav-profile-tab">
                                 <div class="row justify-content-between">
                                     <div class="col-12 fix-5">
                                         <div class="d-flex no-gutters justify-content-between">
@@ -245,9 +242,11 @@
                                         </table>
                                         <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                                             {{-- js carrega... --}}
-                                        </ul>                                
+                                        </ul>
                                     </div>
+
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -262,7 +261,27 @@
             @endif
         </div>
     </div>
-
+    <!-- Modal detalhes da venda-->
+    <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-sidebar modal-lg">
+            <div class="modal-content p-20 " style="width: 500px;">
+                <div class="header-modal">
+                    <div class="row justify-content-between align-items-center" style="width: 100%;">
+                        <div class="col-lg-2"> &nbsp;</div>
+                        <div class="col-lg-8 text-center" id='modal_venda_titulo'></div>
+                        <div class="col-lg-2 text-right">
+                            <a role="button" data-dismiss="modal">
+                                <i class="material-icons pointer">close</i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
     @push('scripts')
         <script src="{!! asset('modules/finances/js/index.js') !!}"></script>
         <script src="{!! asset('modules/transfers/js/index.js') !!}"></script>
@@ -270,4 +289,3 @@
 
 @endsection
 
- 

@@ -38,7 +38,7 @@ class SendgridService
         $requestBody = json_decode('{
                      "automatic_security": false,
                      "custom_spf" : true,
-                     "default" : true,
+                     "default" : false,
                      "domain" : "' . $domain . '"
                  }');
 
@@ -185,7 +185,7 @@ class SendgridService
     public function createLinkBrand($domain)
     {
         $request_body = json_decode('{
-                 "default": true,
+                 "default": false,
                  "domain": "' . $domain . '",
                  "subdomain": "mail"
              }');
@@ -276,19 +276,16 @@ class SendgridService
         }
     }
 
-    public function sendEmail(View $view, $subject, $fromEmail, $fromName, $toEmail, $toName)
+    public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);
-            $email->setSubject($subject);
             $email->addTo($toEmail, $toName);
-            $email->addContent(
-                "text/html", $view->render()
-            );
-            $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+            $email->addDynamicTemplateDatas($data);
+            $email->setTemplateId($templateId);
             try {
-                $response = $sendgrid->send($email);
+                $response = $this->sendgrid->send($email);
             } catch (Exception $e) {
                 return false;
                 echo 'Caught exception: ' . $e->getMessage() . "\n";

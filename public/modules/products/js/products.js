@@ -66,8 +66,7 @@ $(document).ready(function () {
 
         if ($(this).val() == 'proprio') {
             $("#div_carrier_id").hide();
-        }
-        else {
+        } else {
             $("#div_carrier_id").show();
         }
     });
@@ -78,8 +77,7 @@ $(document).ready(function () {
             $("#div_next_step").show();
             $("#div_save_digital_product").hide();
             $("#div_digital_product_upload").css('visibility', 'hidden');
-        }
-        else if (this.value == '0') {
+        } else if (this.value == '0') {
             $("#nav-logistic-tab").hide();
             $("#div_next_step").hide();
             $("#div_save_digital_product").show();
@@ -93,9 +91,44 @@ $(document).ready(function () {
     });
     $(".btnSave").on("click", function () {
         var name = $('#name').val();
-        if (name == '') {
+        var description = $("#description").val();
+        console.log(description);
+        if (name == '' ) {
             alertCustom("error", "O campo Nome é obrigatório");
         }
+        if(description == ''){
+            alertCustom("error", "O campo Descrição é obrigatório");
+        }
+    });
+
+    $(".delete-product").on('click', function (event) {
+        event.preventDefault();
+        var product = $('.delete-product').attr('product');
+        $("#bt_excluir").unbind('click');
+        $("#bt_excluir").on('click', function () {
+            $("#close-modal-delete").click();
+            $.ajax({
+                method: 'DELETE',
+                url: '/products/' + product,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function (response) {
+                    if (response.status == '422') {
+                        for (error in response.responseJSON.errors) {
+                            alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+                    }
+                    if (response.status == '400') {
+                        alertCustom('error', response.responseJSON.message);
+                    }
+                },
+                success: function (response) {
+                    alertCustom('success', response.message);
+                    window.location = "/products";
+                }
+            });
+        });
     });
 
 });

@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\DomainService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Domains\Http\Requests\DomainCreateRequest;
@@ -55,6 +56,22 @@ class DomainsController extends Controller
      * @var ShopifyService
      */
     private $shopifyService;
+    /**
+     * @var DomainService
+     */
+    private $domainService;
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|DomainService
+     */
+    private function getDomainService()
+    {
+        if (!$this->domainService) {
+            $this->domainService = app(DomainService::class);
+        }
+
+        return $this->domainService;
+    }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
@@ -152,8 +169,6 @@ class DomainsController extends Controller
                 $projectId = current(Hashids::decode($dataRequest["project"]));
 
                 $domains = $this->getDomainModel()->with(['project'])->where('project_id', $projectId)->get();
-
-                $project = $this->getProjectModel()->with('domains')->find($projectId);
 
                 return DomainResource::collection($domains);
             } else {
@@ -387,8 +402,12 @@ class DomainsController extends Controller
                                 $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                                 $shopify->setThemeByRole('main');
-                                $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
-                                $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                if (!empty($shopifyIntegration->theme_html)) {
+                                    $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                }
+                                if (!empty($shopifyIntegration->layout_theme_html)) {
+                                    $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                }
                                 $shopifyIntegration->delete();
                             }
                         } catch (\Exception $e) {
@@ -421,6 +440,7 @@ class DomainsController extends Controller
         $domain = $this->getDomainModel()->with(['project'])->where('id', Hashids::decode($domainId))->first();
 
         $data = (object) [
+            'id_code'   => $domain->id_code,
             'name'      => $domain->name,
             'domain_ip' => (empty($domain->project->shopify_id)) ? $domain->domain_ip : 'Shopify',
         ];
@@ -497,6 +517,33 @@ class DomainsController extends Controller
         } catch (Exception $e) {
             Log::warning('DomainsController destroyRecord - erro ao deletar dns');
             report($e);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function recheckDomain(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+            $domainId    = current(Hashids::decode($requestData['domain']));
+            if ($domainId) {
+                //hashid ok
+                if ($this->getDomainService()->verifyPendingDomains($domainId, true)) {
+                    return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
+                } else {
+                    return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('DomainsController recheckDomain - erro ao revalidar o domínio');
+            report($e);
+
+            return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
         }
     }
 }

@@ -86,11 +86,16 @@ class CloudFlareService
      */
     public function __construct()
     {
-        $this->key     = new APIKey(env('CLOUDFLARE_EMAIL'), env('CLOUDFLARE_TOKEN')); 
-        $this->adapter = new Guzzle($this->key);
-        $this->dns     = new DNS($this->adapter);
-        $this->zones   = new Zones($this->adapter);
-        $this->user    = new User($this->adapter);
+        try {
+            $this->key     = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
+            $this->adapter = new Guzzle($this->key);
+            $this->dns     = new DNS($this->adapter);
+            $this->zones   = new Zones($this->adapter);
+            $this->user    = new User($this->adapter);
+        } catch (Exception $e) {
+            Log::warning('__construct - Erro ao criar servico do cloudflare');
+            report($e);
+        }
     }
 
     /**
@@ -497,9 +502,8 @@ class CloudFlareService
                 return false;
             }
         } catch (Exception $e) {
-            // Log::warning('Erro ao checar dominio');
-            // report($e);
-
+            Log::warning('Erro ao checar dominio');
+            report($e);
             return false;
         }
     }

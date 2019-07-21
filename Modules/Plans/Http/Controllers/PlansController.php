@@ -72,6 +72,10 @@ class PlansController extends Controller
         return $this->zenviaSmsModel;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index(Request $request)
     {
         try {
@@ -92,6 +96,10 @@ class PlansController extends Controller
         }
     }
 
+    /**
+     * @param PlanStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(PlanStoreRequest $request)
     {
         try {
@@ -125,6 +133,11 @@ class PlansController extends Controller
         }
     }
 
+    /**
+     * @param PlanUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(PlanUpdateRequest $request, $id)
     {
         try {
@@ -164,28 +177,42 @@ class PlansController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
         if (isset($id)) {
-            $planId      = Hashids::decode($id)[0];
-            $service_sms = $this->getZenviaSms()->where('plan', $planId)->first();
+            $planId = current(Hashids::decode($id));
 
-            if ($service_sms != null) {
-                return response()->json('Impossível excluir, possui serviço de sms integrado.');
+            $plan = $this->getPlan()->with(['productsPlans', 'plansSales'])
+                         ->where('id', $planId)
+                         ->first();
+
+            if (count($plan->plansSales) > 0) {
+                return response()->json(['message' => 'Impossível excluir, possui vendas associadas a este plano.'], 400);
             }
-            $plan         = $this->getPlan()->where('id', $planId)->first();
-            $productPlans = $this->getProductPlan()->where('plan', $plan['id'])->get()->toArray();
-            if (count($productPlans) > 0) {
-                foreach ($productPlans as $productPlan) {
-                    ProductPlan::find($productPlan['id'])->delete();
+            if (count($plan->productsPlans) > 0) {
+                foreach ($plan->productsPlans as $productPlan) {
+                    $productPlan->delete();
                 }
             }
-            $plan->delete();
+            $planDeleted = $plan->delete();
+
+            if ($planDeleted) {
+                return response()->json(['Plano removido com sucesso'], 200);
+            }
         }
 
-        return response()->json('sucesso');
+        return response()->json(['message' => 'Impossível excluir, ocorreu um erro ao buscar dados do plano.'], 400);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function show(Request $request, $id)
     {
         try {
@@ -214,6 +241,10 @@ class PlansController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function details(Request $request)
     {
 
@@ -251,13 +282,6 @@ class PlansController extends Controller
         $modalBody .= "<tr>";
         $modalBody .= "<td><b>Preço:</b></td>";
         $modalBody .= "<td>" . $plan->price . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Possui frete:</b></td>";
-        if ($plan->shipment == 1)
-            $modalBody .= "<td>Sim</td>";
-        else
-            $modalBody .= "<td>Não</td>";
         $modalBody .= "</tr>";
 
         $produtosPlano = ProductPlan::where('plano', $plan->id)->get()->toArray();
@@ -315,21 +339,57 @@ class PlansController extends Controller
         return response()->json($modalBody);
     }
 
-    function randString($size)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function create(Request $request)
     {
+        try {
 
-        $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $products = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get();
 
-        $return = "";
-
-        for ($count = 0; $size > $count; $count++) {
-
-            $return .= $basic[rand(0, strlen($basic) - 1)];
+            return view('plans::create', [
+                'products' => $products,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Erro ao tentar acessar tela de cadastro (PlansController - create)');
+            report($e);
         }
-
-        return $return;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
+    public function edit(Request $request)
+    {
+        try {
+            $planId = Hashids::decode($request->input('planId'))[0];
+            $plan   = $this->getPlan()->find($planId);
+            if ($plan) {
+                $products     = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get()
+                                     ->toArray();
+                $productPlans = $this->getProductPlan()->where('plan', $plan->id)->get()->toArray();
+
+                return view('plans::edit', [
+                    'plan'         => $plan,
+                    'products'     => $products,
+                    'productPlans' => $productPlans,
+                ]);
+            }
+
+            return response()->json('erro');
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar tela editar pixel (PlansController - edit)');
+            report($e);
+        }
+    }
+
+    /**
+     * @param $str
+     * @return mixed|string
+     */
     function getValue($str)
     {
 
@@ -353,44 +413,5 @@ class PlansController extends Controller
         }
 
         return $str;
-    }
-
-    public function create(Request $request)
-    {
-        try {
-
-            $products = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get();
-
-            return view('plans::create', [
-                'products' => $products,
-            ]);
-        } catch (Exception $e) {
-            Log::error('Erro ao tentar acessar tela de cadastro (PlansController - create)');
-            report($e);
-        }
-    }
-
-    public function edit(Request $request)
-    {
-        try {
-            $planId = Hashids::decode($request->input('planId'))[0];
-            $plan   = $this->getPlan()->find($planId);
-            if ($plan) {
-                $products     = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get()
-                                     ->toArray();
-                $productPlans = $this->getProductPlan()->where('plan', $plan->id)->get()->toArray();
-
-                return view('plans::edit', [
-                    'plan'         => $plan,
-                    'products'     => $products,
-                    'productPlans' => $productPlans,
-                ]);
-            }
-
-            return response()->json('erro');
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela editar pixel (PlansController - edit)');
-            report($e);
-        }
     }
 }
