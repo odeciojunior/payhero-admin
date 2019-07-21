@@ -2,14 +2,18 @@
 
 namespace Modules\Core\Services;
 
+use Exception;
+use App\Entities\Plan;
 use PHPHtmlParser\Dom;
+use App\Entities\Product;
+use Slince\Shopify\Client;
+use App\Entities\ProductPlan;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Selector\Parser;
+use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
-use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
-use Exception;
 
 class ShopifyService
 {
@@ -312,23 +316,24 @@ class ShopifyService
 
         $script = new HtmlNode('script');
         $script->addChild(new TextNode("var url_string = window.location.href;
-var url = new URL(url_string);
-var src = url.searchParams.get('src');
-var utm_source = url.searchParams.get('utm_source');
-var utm_medium = url.searchParams.get('utm_medium');
-var utm_campaign = url.searchParams.get('utm_campaign');
-var utm_term = url.searchParams.get('utm_term');
-var utm_content = url.searchParams.get('utm_content');
+            var url = new URL(url_string);
+            var src = url.searchParams.get('src');
+            var utm_source = url.searchParams.get('utm_source');
+            var utm_medium = url.searchParams.get('utm_medium');
+            var utm_campaign = url.searchParams.get('utm_campaign');
+            var utm_term = url.searchParams.get('utm_term');
+            var utm_content = url.searchParams.get('utm_content');
 
-if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campaign != null) || (utm_term != null) || (utm_content != null) )
-{
-	var cookieName = '_landing_page';
-	var cookieValue = 'src='+src+'|'+'utm_source='+utm_source+'|'+'utm_medium='+utm_medium+'|'+'utm_campaign='+utm_campaign+'|'+'utm_term='+utm_term+'|'+'utm_content='+utm_content;
-	var myDate = new Date();
-	myDate.setMonth(myDate.getMonth() + 12);
-	
-	document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate; 
-}"));
+            if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campaign != null) || (utm_term != null) || (utm_content != null) )
+            {
+                var cookieName = '_landing_page';
+                var cookieValue = 'src='+src+'|'+'utm_source='+utm_source+'|'+'utm_medium='+utm_medium+'|'+'utm_campaign='+utm_campaign+'|'+'utm_term='+utm_term+'|'+'utm_content='+utm_content;
+                var myDate = new Date();
+                myDate.setMonth(myDate.getMonth() + 12);
+                
+                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate; 
+            }")
+        );
 
         $divFoxScriptUtm->addChild($script);
         $body->addChild($divFoxScriptUtm);
@@ -680,6 +685,127 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
         }
     }
 
+
+    /**
+     * Import products from some shopify store
+     * Called in the ImportShopifyStoreListener
+     * Runs in background
+     *
+     * @param  integer  $projectId
+     * @return void
+     */
+    public function importShopifyStore($projectId)
+    {
+        $storeProducts = $this->getShopProducts();
+
+        $planModel        = new Plan();
+        $productModel     = new Product();
+        $productPlanModel = new ProductPlan();
+
+        foreach ($storeProducts as $shopifyProduct) {
+
+            foreach ($shopifyProduct->getVariants() as $variant) {
+
+                $description = '';
+
+                try {
+                    $description = $variant->getOption1();
+                    if ($description == 'Default Title') {
+                        $description = '';
+                    }
+                    if ($variant->getOption2() != '') {
+                        $description .= ' - ' . $variant->getOption2();
+                    }
+                    if ($variant->getOption3() != '') {
+                        $description .= ' - ' . $variant->getOption3();
+                    }
+                } catch (\Exception $e) {
+                    //
+                }
+
+                $product = $productModel->create([
+                                                    'user'        => auth()->user()->id,
+                                                    'name'        => substr($shopifyProduct->getTitle(), 0, 100),
+                                                    'description' => $description,
+                                                    'guarantee'   => '0',
+                                                    'format'      => 1,
+                                                    'category'    => '11',
+                                                    'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
+                                                                            ->getCost(),
+                                                    'shopify'     => true,
+                                                    'price'       => '',
+                                                ]);
+
+                $plan = $planModel->create([
+                                                'shopify_id'         => $shopifyProduct->getId(),
+                                                'shopify_variant_id' => $variant->getId(),
+                                                'project'            => $projectId,
+                                                'name'               => substr($shopifyProduct->getTitle(), 0, 100),
+                                                'description'        => $description,
+                                                'code'               => '',
+                                                'price'              => $variant->getPrice(),
+                                                'status'             => '1',
+                                            ]);
+
+                $plan->update([
+                    'code' => Hashids::encode($plan->id)
+                ]);
+
+                if (count($shopifyProduct->getVariants()) > 1) {
+                    foreach ($shopifyProduct->getImages() as $image) {
+
+                        foreach ($image->getVariantIds() as $variantId) {
+                            if ($variantId == $variant->getId()) {
+
+                                if ($image->getSrc() != '') { 
+                                    $product->update([
+                                                        'photo' => $image->getSrc(),
+                                                    ]);
+                                } else { 
+
+                                    $product->update([
+                                                        'photo' => $shopifyProduct->getImage()->getSrc(),
+                                                    ]);
+                                }
+                            }
+                        }
+                    }
+                } else {
+
+                    $product->update([
+                                        'photo' => $shopifyProduct->getImage()->getSrc(),
+                                    ]);
+                }
+
+                $productPlanModel->create([
+                                            'product' => $product->id,
+                                            'plan'    => $plan->id,
+                                            'amount'  => '1',
+                                        ]);
+            }
+ 
+            if(getenv('APP_ENV') == 'production'){
+                $postbackUrl = "https://app.cloudfox.net/postback/shopify/";
+            }
+            else{
+                $postbackUrl = "";  //some ngrok tunnel...
+            }
+
+            $this->createShopWebhook([
+                "topic"   => "products/create",
+                "address" => $postbackUrl . Hashids::encode($projectId),
+                "format"  => "json",
+            ]);
+
+            $this->createShopWebhook([
+                "topic"   => "products/update",
+                "address" => $postbackUrl . Hashids::encode($projectId),
+                "format"  => "json",
+            ]);
+
+        }
+    }
+
     /**
      * @return string
      */
@@ -830,7 +956,6 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
         }
     }
 
-
     /**
      * @param null $productId
      * @return Slince\Shopify\Manager\Product\Product|null
@@ -863,3 +988,5 @@ if( (src != null) || (utm_source != null) || (utm_medium != null) || (utm_campai
     }
 
 }
+
+

@@ -53,7 +53,7 @@
                             <h4 class="modal-title" style="font-weight: 700;">Adicionar nova integração com Shopify</h4>
                         </div>
                         <div class="pt-10 pr-20 pl-20">
-                            <form id='form_add_integracao' method="post" action="#">
+                            <form id='form_add_integration' method="post" action="#">
                                 @csrf
                                 <div style="width:100%">
                                     <div class="row">
@@ -103,7 +103,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button id="bt_adicionar_integracao" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
+                            <button id="bt_add_integration" type="button" class="btn btn-success" data-dismiss="modal">Salvar</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>

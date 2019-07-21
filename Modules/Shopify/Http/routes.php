@@ -2,20 +2,18 @@
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
 {
-    Route::get('/', [
+    Route::Resource('/', 'ShopifyController')->only('index', 'store');
+    
+/*    Route::get('/', [
         'uses' => 'ShopifyController@index',
         'as' => 'shopify.index'
     ]);
 
     Route::post('/adicionarintegracao', [
-        'uses' => 'ShopifyController@adicionarIntegracao',
+        'uses' => 'ShopifyController@store',
         'as' => 'shopify.adicionarintegracao'
-    ]);
+    ]);*/
 
-    Route::post('/sincronizarintegracao', [
-        'uses' => 'ShopifyController@sincronizarIntegracao', 
-        'as' => 'shopify.sincronizarintegracao'
-    ]);
 });
 
 Route::group(['prefix' => 'apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
