@@ -15,20 +15,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DiscountCouponsController extends Controller
 {
-    private $discountCouponsModel;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDiscountCoupons()
-    {
-        if (!$this->discountCouponsModel) {
-            $this->discountCouponsModel = app(DiscountCoupon::class);
-        }
-
-        return $this->discountCouponsModel;
-    }
-
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -36,11 +22,12 @@ class DiscountCouponsController extends Controller
     public function index(Request $request)
     {
         try {
-            $requestData = $request->all();
+            $requestData          = $request->all();
+            $discountCouponsModel = new DiscountCoupon();
 
             if (isset($requestData['project'])) {
                 $projectId = Hashids::decode($requestData['project'])[0];
-                $coupons   = $this->getDiscountCoupons()->whereHas('project', function($query) use ($projectId) {
+                $coupons   = $discountCouponsModel->whereHas('project', function($query) use ($projectId) {
                     $query->where('project', $projectId);
                 })->get();
 
@@ -76,11 +63,13 @@ class DiscountCouponsController extends Controller
     {
         try {
 
+            $discountCouponsModel = new DiscountCoupon();
+
             $requestData            = $request->validated();
             $requestData["project"] = current(Hashids::decode($requestData['project']));
             $requestData['value']   = preg_replace("/[^0-9]/", "", $requestData['value']);
 
-            $discountCouponSaved = $this->getDiscountCoupons()->create($requestData);
+            $discountCouponSaved = $discountCouponsModel->create($requestData);
             if ($discountCouponSaved) {
                 return response()->json('Cupom criado com Sucesso', 200);
             }
@@ -99,10 +88,11 @@ class DiscountCouponsController extends Controller
     public function show(Request $request)
     {
         try {
-            $data = $request->all();
+            $discountCouponsModel = new DiscountCoupon();
+            $data                 = $request->all();
             if (isset($data['couponId'])) {
                 $couponId = Hashids::decode($data['couponId'])[0];
-                $coupon   = $this->getDiscountCoupons()->find($couponId);
+                $coupon   = $discountCouponsModel->find($couponId);
                 if ($coupon) {
                     return view('discountcoupons::details', ['coupon' => $coupon]);
                 }
@@ -123,10 +113,11 @@ class DiscountCouponsController extends Controller
     public function edit(Request $request)
     {
         try {
-            $data = $request->all();
+            $discountCouponsModel = new DiscountCoupon();
+            $data                 = $request->all();
             if (isset($data['couponId'])) {
                 $couponId = Hashids::decode($data['couponId'])[0];
-                $coupon   = $this->getDiscountCoupons()->find($couponId);
+                $coupon   = $discountCouponsModel->find($couponId);
                 if ($coupon) {
                     return view('discountcoupons::edit', ['coupon' => $coupon]);
                 }
@@ -147,10 +138,11 @@ class DiscountCouponsController extends Controller
     public function update(DiscountCouponsUpdateRequest $request, $id)
     {
         try {
-            $requestValidated = $request->validated();
+            $discountCouponsModel = new DiscountCoupon();
+            $requestValidated     = $request->validated();
 
             $couponId = current(Hashids::decode($id));
-            $coupon   = $this->getDiscountCoupons()->find($couponId);
+            $coupon   = $discountCouponsModel->find($couponId);
             unset($requestValidated['project']);
             $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
 
@@ -175,9 +167,11 @@ class DiscountCouponsController extends Controller
     public function destroy($id)
     {
         try {
+            $discountCouponsModel = new DiscountCoupon();
+
             if (isset($id)) {
                 $descountCouponId = Hashids::decode($id)[0];
-                $descountCoupon   = $this->getDiscountCoupons()->find($descountCouponId)->delete();
+                $descountCoupon   = $discountCouponsModel->find($descountCouponId)->delete();
                 if ($descountCoupon) {
                     return response()->json('Sucesso');
                 }
