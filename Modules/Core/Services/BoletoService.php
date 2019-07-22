@@ -403,8 +403,7 @@ class BoletoService
                     ];
 
                     if ($emailValidated && $boleto->count > 0) {
-                        Log::warning('verifyBoletoPaid');
-                        $user->notify(new boletoCompensatedNotification($boleto->count));
+//                        $user->notify(new boletoCompensatedNotification($user, $boleto->count));
 
                         $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
                     }

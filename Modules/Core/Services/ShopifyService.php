@@ -2,9 +2,13 @@
 
 namespace Modules\Core\Services;
 
+use App\Entities\Project;
+use App\Entities\User;
+use App\Events\Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use Exception;
 use App\Entities\Plan;
 use Illuminate\Support\Facades\Log;
+use Modules\Notifications\Notifications\ShopifyIntegrationReadyNotification;
 use PHPHtmlParser\Dom;
 use App\Entities\Product;
 use Slince\Shopify\Client;
@@ -51,10 +55,11 @@ class ShopifyService
                 $cache = $this->cacheDir;
             }
 
-            $this->credential = new PublicAppCredential($token);
-            $this->client     = new Client($this->credential, $urlStore, [
+            $this->credential    = new PublicAppCredential($token);
+            $this->client        = new Client($this->credential, $urlStore, [
                 'metaCacheDir' => $cache // Metadata cache dir, required
             ]);
+            $this->pusherService = new PusherService();
         } catch (Exception $e) {
             Log::warning('__construct - Erro ao criar servico do shopify');
             report($e);
@@ -700,13 +705,11 @@ class ShopifyService
         }
     }
 
-
     /**
      * Import products from some shopify store
      * Called in ImportShopifyStoreListener class
      * Runs in background
-     *
-     * @param  integer  $projectId
+     * @param integer $projectId
      * @return void
      */
     public function importShopifyStore($projectId, $userId)
@@ -716,6 +719,8 @@ class ShopifyService
         $planModel        = new Plan();
         $productModel     = new Product();
         $productPlanModel = new ProductPlan();
+        $projectModel     = new Project();
+        $userModel        = new User();
 
         foreach ($storeProducts as $shopifyProduct) {
 
@@ -739,32 +744,32 @@ class ShopifyService
                 }
 
                 $product = $productModel->create([
-                                                    'user'        => $userId,
-                                                    'name'        => substr($shopifyProduct->getTitle(), 0, 100),
-                                                    'description' => $description,
-                                                    'guarantee'   => '0',
-                                                    'format'      => 1,
-                                                    'category'    => '11',
-                                                    'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                                            ->getCost(),
-                                                    'shopify'     => true,
-                                                    'price'       => '',
-                                                ]);
+                                                     'user'        => $userId,
+                                                     'name'        => substr($shopifyProduct->getTitle(), 0, 100),
+                                                     'description' => $description,
+                                                     'guarantee'   => '0',
+                                                     'format'      => 1,
+                                                     'category'    => '11',
+                                                     'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
+                                                                           ->getCost(),
+                                                     'shopify'     => true,
+                                                     'price'       => '',
+                                                 ]);
 
                 $plan = $planModel->create([
-                                                'shopify_id'         => $shopifyProduct->getId(),
-                                                'shopify_variant_id' => $variant->getId(),
-                                                'project'            => $projectId,
-                                                'name'               => substr($shopifyProduct->getTitle(), 0, 100),
-                                                'description'        => $description,
-                                                'code'               => '',
-                                                'price'              => $variant->getPrice(),
-                                                'status'             => '1',
-                                            ]);
+                                               'shopify_id'         => $shopifyProduct->getId(),
+                                               'shopify_variant_id' => $variant->getId(),
+                                               'project'            => $projectId,
+                                               'name'               => substr($shopifyProduct->getTitle(), 0, 100),
+                                               'description'        => $description,
+                                               'code'               => '',
+                                               'price'              => $variant->getPrice(),
+                                               'status'             => '1',
+                                           ]);
 
                 $plan->update([
-                    'code' => Hashids::encode($plan->id)
-                ]);
+                                  'code' => Hashids::encode($plan->id),
+                              ]);
 
                 if (count($shopifyProduct->getVariants()) > 1) {
                     foreach ($shopifyProduct->getImages() as $image) {
@@ -772,15 +777,15 @@ class ShopifyService
                         foreach ($image->getVariantIds() as $variantId) {
                             if ($variantId == $variant->getId()) {
 
-                                if ($image->getSrc() != '') { 
+                                if ($image->getSrc() != '') {
                                     $product->update([
-                                                        'photo' => $image->getSrc(),
-                                                    ]);
-                                } else { 
+                                                         'photo' => $image->getSrc(),
+                                                     ]);
+                                } else {
 
                                     $product->update([
-                                                        'photo' => $shopifyProduct->getImage()->getSrc(),
-                                                    ]);
+                                                         'photo' => $shopifyProduct->getImage()->getSrc(),
+                                                     ]);
                                 }
                             }
                         }
@@ -788,38 +793,50 @@ class ShopifyService
                 } else {
 
                     $product->update([
-                                        'photo' => $shopifyProduct->getImage()->getSrc(),
-                                    ]);
+                                         'photo' => $shopifyProduct->getImage()->getSrc(),
+                                     ]);
                 }
 
                 $productPlanModel->create([
-                                            'product' => $product->id,
-                                            'plan'    => $plan->id,
-                                            'amount'  => '1',
-                                        ]);
+                                              'product' => $product->id,
+                                              'plan'    => $plan->id,
+                                              'amount'  => '1',
+                                          ]);
             }
- 
-            if(getenv('APP_ENV') == 'production'){
+
+            if (getenv('APP_ENV') == 'production') {
                 $postbackUrl = "https://app.cloudfox.net/postback/shopify/";
-            }
-            else{
+            } else {
                 $postbackUrl = "https://localhosst.com/postback/shopify/";  //some ngrok tunnel...
             }
 
             $this->deleteShopWebhook();
-    
-            $this->createShopWebhook([
-                "topic"   => "products/create",
-                "address" => $postbackUrl . Hashids::encode($projectId),
-                "format"  => "json",
-            ]);
 
             $this->createShopWebhook([
-                "topic"   => "products/update",
-                "address" => $postbackUrl . Hashids::encode($projectId),
-                "format"  => "json",
-            ]);
+                                         "topic"   => "products/create",
+                                         "address" => $postbackUrl . Hashids::encode($projectId),
+                                         "format"  => "json",
+                                     ]);
 
+            $this->createShopWebhook([
+                                         "topic"   => "products/update",
+                                         "address" => $postbackUrl . Hashids::encode($projectId),
+                                         "format"  => "json",
+                                     ]);
+
+            $project = $projectModel->find($projectId);
+            $user    = $userModel->find($userId);
+
+            $data = ['user ' => $user, 'project' => $project];
+            /*
+                        $data = [
+                            'user'    => $user,
+                            'project' => $project,
+                            'message' => 'Integração do projeto ' . $project->name . ' com shopify completada com sucesso',
+                        ];*/
+
+//            event(new ShopifyIntegrationReadyEvent($data));
+            //            $this->pusherService->sendPusher($dataPusher);
         }
     }
 
@@ -958,7 +975,6 @@ class ShopifyService
         }
     }
 
-    
     /**
      * @param null $variantId
      * @return Slince\Shopify\Manager\ProductVariant\Variant|null

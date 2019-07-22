@@ -4,29 +4,38 @@ namespace Modules\Notifications\Notifications;
 
 use App\Entities\User;
 use Exception;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\PusherService;
 use Pusher\Pusher;
 use Vinkla\Hashids\Facades\Hashids;
 
-class boletoCompensatedNotification extends Notification
+class BoletoCompensatedNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Dispatchable, InteractsWithSockets, SerializesModels, Queueable;
     /**
      * @var
      */
     private $boletosCount;
+    private $user;
+    private $pusherService;
 
     /**
      * Create a new notification instance.
-     * @param User $user
+     * @param $user
      * @param $boletoCount
+     * @param PusherService $pusherService
      */
-    public function __construct($boletoCount)
+    public function __construct($user, $boletoCount, $pusherService)
     {
-
-        $this->boletosCount = $boletoCount;
+        $this->user          = $user;
+        $this->boletosCount  = $boletoCount;
+        $this->pusherService = $pusherService;
     }
 
     public function broadcastOn()
@@ -59,30 +68,20 @@ class boletoCompensatedNotification extends Notification
      */
     public function toArray($notifiable)
     {
-
         try {
-            $options    = [
-                'cluster' => 'us2',
-                'useTLS'  => true,
-            ];
-            $pusher     = new Pusher(
-                '339254dee7e0c0a31840',
-                '78ed93b50a3327693d20',
-                '724843',
-                $options
-            );
             $dataPusher = [
-                'message' => 6 . ' boletos compensados',
+                'user'    => $this->user,
+                'message' => $this->boletosCount . ' boletos compensados',
             ];
-            $pusher->trigger('channel-' . Hashids::connection('pusher_connection')
-                                                 ->encode(auth()->user()->id), 'new-notification', $dataPusher);
+            $this->pusherService->sendPusher($dataPusher);
         } catch (Exception $e) {
             Log::warning('erro ao enviar notificação com pusher');
             report($e);
         }
 
         return [
-            '',
+            'user'    => $this->user,
+            'message' => $this->boletosCount . ' boletos compensados',
         ];
     }
 }

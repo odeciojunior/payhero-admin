@@ -32,7 +32,7 @@ class SmsController extends Controller
     {
         try {
             $data = $request->all();
-            $zenviaSmsModel = new ZenvaSms();
+            $zenviaSmsModel = new ZenviaSms();
 
             if (isset($data['project'])) {
                 $projectId = Hashids::decode($data['project'])[0];
