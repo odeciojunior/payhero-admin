@@ -34,10 +34,10 @@
     </script>
 </head>
 <body>
-<div class="loading">
+{{--<div class="loading">
     <div class="loader">
     </div>
-</div>
+</div>--}}
 <style>
     body {
         font-family: 'Muli', sans-serif;

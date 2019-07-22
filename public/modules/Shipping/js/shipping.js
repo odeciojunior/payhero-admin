@@ -86,7 +86,7 @@ $(document).ready(function () {
     });
 
     function atualizarFrete() {
-        $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        loadOnTable('#dados-tabela-frete','#tabela_fretes');
 
         $.ajax({
             method: "GET",

@@ -103,7 +103,7 @@
 
                 <div class="fixhalf"></div>
 
-                <div class="card shadow" style="min-height: 300px">
+                <div class="card shadow " style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
                         <table id="tabela_vendas" class="table-vendas table table-striped" style="width:100%;">
                             <thead>
@@ -121,6 +121,7 @@
                                 </tr>
                             </thead>
                             <tbody id="dados_tabela">
+
                                 {{-- js carrega... --}}
                             </tbody>
                         </table>

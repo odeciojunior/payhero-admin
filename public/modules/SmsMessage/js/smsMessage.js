@@ -65,7 +65,8 @@ $(function () {
     });
 
     function atualizarSms() {
-        $("#data-table-sms").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        loadOnTable('#data-table-sms','#tabela_sms');
+
         $.ajax({
             method: "GET",
             url: '/sms',
