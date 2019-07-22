@@ -15,8 +15,9 @@ $(document).ready(function () {
         alertCustom('success', data.message);
         updateUnreadNotificationsAmount();
     });
-
-    updateUnreadNotificationsAmount();
+    $("#notifications_button").on('click', function () {
+        updateUnreadNotificationsAmount();
+    });
 
     // verifica se existem novas notificações
     function updateUnreadNotificationsAmount() {
