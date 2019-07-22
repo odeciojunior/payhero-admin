@@ -98,7 +98,7 @@
                                         </div>
                                         <div class="input-group col-12">
                                             @foreach($companies as $company)
-                                                <input type="text" class="form-control" id="invite-link" value="https://app.cloudfox.net/register/{!! Hashids::encode($company['id']) !!}" disabled>
+                                                <input type="text" class="form-control" id="invite-link" value="https://app.cloudfox.net/register/{!! Hashids::encode($company['id']) !!}" readonly>
                                                 @break
                                             @endforeach
                                             <span class="input-group-btn">

@@ -6,13 +6,11 @@ use Exception;
 use App\Entities\Company;
 use App\Entities\Invitation;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\EmailHelper;
-use Modules\Core\Helpers\StringHelper;
 use App\Entities\SiteInvitationRequest;
 use Modules\Core\Services\EmailService;
 use App\Entities\HubsmartInvitationRequest;
@@ -25,48 +23,16 @@ use Modules\Invites\Http\Requests\SendInvitationRequest;
 class InvitesController extends Controller
 {
     /**
-     * @var Invitation
-     */
-    private $invitation;
-    /**
-     * @var Company
-     */
-    private $company;
-    /**
-     * @var SiteInvitationRequest
-     */
-    private $siteInvitationRequest;
-    /**
-     * @var HubsmartInvitationRequest
-     */
-    private $hubsmartInvitationRequest;
-
-    /**
-     * InvitesController constructor.
-     * @param Invitation $invitation
-     * @param Company $company
-     * @param SiteInvitationRequest $siteInvitationRequest
-     * @param HubsmartInvitationRequest $hubsmartInvitationRequest
-     */
-    function __construct(Invitation $invitation,
-                         Company $company,
-                         SiteInvitationRequest $siteInvitationRequest,
-                         HubsmartInvitationRequest $hubsmartInvitationRequest)
-    {
-        $this->invitation                = $invitation;
-        $this->company                   = $company;
-        $this->siteInvitationRequest     = $siteInvitationRequest;
-        $this->hubsmartInvitationRequest = $hubsmartInvitationRequest;
-    }
-
-    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        $invites = $this->invitation->where('invite', auth()->user()->id)->get();
+        $invitationModel = new Invitation();
+        $companyModel    = new Company();
 
-        $companies = $this->company->where('user_id', \Auth::user()->id)->get();
+        $invites = $invitationModel->where('invite', auth()->user()->id)->get();
+
+        $companies = $companyModel->where('user_id', auth()->user()->id)->get();
 
         return view('invites::index', [
             'invites'   => $invites,
@@ -81,19 +47,21 @@ class InvitesController extends Controller
     public function sendInvitation(SendInvitationRequest $request)
     {
         try {
+            $invitationModel = new Invitation();
+
             $requestData = $request->validated();
 
             $requestData['invite']    = auth()->user()->id;
-            $requestData['status']    = $this->invitation->getEnum('status', 'pending');
+            $requestData['status']    = $invitationModel->getEnum('status', 'pending');
             $requestData['parameter'] = $requestData['company'];
             $requestData['company']   = current(Hashids::decode($requestData['company']));
 
-            $invite = $this->invitation->where('email_invited', $requestData['email_invited'])->first();
+            $invite = $invitationModel->where('email_invited', $requestData['email_invited'])->first();
             if ($invite) {
                 $invite->delete();
             }
 
-            $invite = $this->invitation->create($requestData);
+            $invite = $invitationModel->create($requestData);
 
             if ($invite) {
                 EmailService::sendInvite($requestData['email_invited'], $requestData['parameter']);
@@ -113,9 +81,10 @@ class InvitesController extends Controller
      */
     public function getInvitation(Request $request)
     {
-        $requestData = $request->all();
+        $siteInvitationRequestModel = new SiteInvitationRequest();
+        $requestData                = $request->all();
 
-        $this->siteInvitationRequest->create($requestData);
+        $siteInvitationRequestModel->create($requestData);
 
         return 'success';
     }
@@ -127,9 +96,10 @@ class InvitesController extends Controller
     public function getHubsmartInvitation(Request $request)
     {
 
-        $requestData = $request->all();
+        $hubsmartInvitationRequestModel = HubsmartInvitationRequest();
+        $requestData                    = $request->all();
 
-        $this->hubsmartInvitationRequest->create($requestData);
+        $hubsmartInvitationRequestModel->create($requestData);
 
         return 'success';
     }

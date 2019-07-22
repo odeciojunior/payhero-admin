@@ -15,8 +15,11 @@ $(document).ready(function () {
         alertCustom('success', data.message);
         updateUnreadNotificationsAmount();
     });
-
-    updateUnreadNotificationsAmount();
+    $("#notification").on('click', function () {
+        $('#notificationTemplate').html('')
+        loadOnModal('#notificationTemplate');
+        updateUnreadNotificationsAmount();
+    });
 
     // verifica se existem novas notificações
     function updateUnreadNotificationsAmount() {
@@ -41,6 +44,7 @@ $(document).ready(function () {
                 } else {
                     htmlNotNotifications();
                 }
+                $('#notificationBadge').html('New ' + response.qtd_notification)
             }
         });
     }
@@ -48,10 +52,16 @@ $(document).ready(function () {
     function htmlNotNotifications() {
         $("#notificationTemplate").html('');
         dados = '';
-        dados += '<div class="d-flex align-items-center">';
-        dados += '<span class="">Nenhuma nova notificação</span>';
+        dados += '<a class="list-group-item dropdown-item" role="menuitem">';
+        dados += '<div class="media">';
+        dados += '<div class="pr-10">';
+        dados += '<i class="icon wb-chat bg-orange-600 white icon-circle" aria-hidden="true"></i>';
+        dados += '</div>';
+        dados += '<div class="media-body">';
+        dados += '<h6 class="media-heading">Nenhuma nova notificação</h6>';
         dados += '</div>';
         dados += '</div>';
+        dados += '</a>';
         $("#notificationTemplate").html(dados);
     }
 
@@ -67,6 +77,7 @@ $(document).ready(function () {
                 //
             },
             success: function (response) {
+                console.log(response.notificacoes)
                 $("#notificationTemplate").html('');
                 $("#notificationTemplate").html(response.notificacoes);
 
