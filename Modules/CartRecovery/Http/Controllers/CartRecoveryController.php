@@ -20,6 +20,10 @@ use Modules\CartRecovery\Transformers\CartRecoveryResource;
 use Modules\CartRecovery\Transformers\CarrinhosAbandonadosResource;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class CartRecoveryController
+ * @package Modules\CartRecovery\Http\Controllers
+ */
 class CartRecoveryController extends Controller
 {
     /**
@@ -27,11 +31,14 @@ class CartRecoveryController extends Controller
      */
     public function index()
     {
-        $userProjects = UserProject::where('user', \Auth::user()->id)->get()->toArray();
+        $userProjectModel = new UserProject();
+        $projectModel     = new Project();
+
+        $userProjects = $userProjectModel->where('user', auth()->user()->id)->get()->toArray();
         $projects     = [];
 
         foreach ($userProjects as $userProject) {
-            $project = Project::find($userProject['project']);
+            $project = $projectModel->find($userProject['project']);
             if ($project['id'] != null) {
                 $projects[] = [
                     'id'   => $project['id'],
@@ -43,19 +50,26 @@ class CartRecoveryController extends Controller
         return view('cartrecovery::index', compact('projects'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function getAbandonatedCarts(Request $request)
     {
 
         try {
-            $abandonedCarts = Checkout::whereIn('status', ['abandoned cart', 'recovered']);
+            $checkoutModel    = new Checkout();
+            $userProjectModel = new UserProject();
+
+            $abandonedCarts = $checkoutModel->whereIn('status', ['abandoned cart', 'recovered']);
 
             if ($request->has('project') && $request->input('project') != '') {
                 $abandonedCarts->where('project', $request->input('project'));
             } else {
-                $userProjects = UserProject::where([
-                                                       ['user', \Auth::user()->id],
-                                                       ['type', 'producer'],
-                                                   ])->pluck('project')->toArray();
+                $userProjects = $userProjectModel->where([
+                                                             ['user', auth()->user()->id],
+                                                             ['type', 'producer'],
+                                                         ])->pluck('project')->toArray();
 
                 $abandonedCarts->whereIn('project', $userProjects)->with(['projectModel']);
             }
