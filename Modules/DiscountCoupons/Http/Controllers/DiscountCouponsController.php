@@ -11,7 +11,6 @@ use Modules\DiscountCoupons\Http\Requests\DiscountCouponsStoreRequest;
 use Modules\DiscountCoupons\Http\Requests\DiscountCouponsUpdateRequest;
 use Modules\DiscountCoupons\Transformers\DiscountCouponsResource;
 use Vinkla\Hashids\Facades\Hashids;
-use Yajra\DataTables\Facades\DataTables;
 
 class DiscountCouponsController extends Controller
 {
