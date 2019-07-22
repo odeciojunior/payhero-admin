@@ -16,38 +16,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ShippingController extends Controller
 {
-    /**
-     * @var Shipping
-     */
-    private $shippingModel;
-    /**
-     * @var Project
-     */
-    private $projectModel;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getShipping()
-    {
-        if (!$this->shippingModel) {
-            $this->shippingModel = app(Shipping::class);
-        }
-
-        return $this->shippingModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getProject()
-    {
-        if (!$this->projectModel) {
-            $this->projectModel = app(Project::class);
-        }
-
-        return $this->projectModel;
-    }
 
     /**
      * @param Request $request
@@ -58,10 +26,12 @@ class ShippingController extends Controller
         try {
             $projectId = $request->input("project");
 
+            $projectModel = new Project();
+
             if ($projectId) {
                 $projectId = Hashids::decode($projectId)[0];
 
-                $project = $this->getProject()->with('shippings')->find($projectId);
+                $project = $projectModel->with('shippings')->find($projectId);
 
                 return ShippingResource::collection($project->shippings);
             }
@@ -92,11 +62,14 @@ class ShippingController extends Controller
     {
         try {
             $shippingValidated = $request->validated();
+
+            $shippingModel = new Shipping();
+
             if ($shippingValidated) {
                 $shippingValidated['project'] = current(Hashids::decode($shippingValidated['project']));
                 if ($shippingValidated['pre_selected']) {
 
-                    $shippings = $this->getShipping()->where([
+                    $shippings = $shippingModel->where([
                                                                  'project'      => $shippingValidated['project'],
                                                                  'pre_selected' => 1,
                                                              ])->first();
@@ -104,7 +77,7 @@ class ShippingController extends Controller
                         $shippings->update(['pre_selected' => 0]);
                     }
                 }
-                $shippingCreated = $this->getShipping()->create($shippingValidated);
+                $shippingCreated = $shippingModel->create($shippingValidated);
                 if ($shippingCreated) {
                     return response()->json(['message' => 'Frete cadastrado com sucesso!'], 200);
                 }
@@ -125,10 +98,12 @@ class ShippingController extends Controller
     {
         try {
 
+            $shippingModel = new Shipping();
+
             if ($request->input('freteId')) {
                 $shippingId = current(Hashids::decode($request->input('freteId')));
 
-                $shipping = $this->getShipping()->find($shippingId);
+                $shipping = $shippingModel->find($shippingId);
 
                 if ($shipping) {
                     return view("shipping::details", ['shipping' => $shipping]);
@@ -148,12 +123,14 @@ class ShippingController extends Controller
     public function edit(Request $request, $id)
     {
         try {
+
+            $shippingModel = new Shipping();
+
             if ($request->input('frete')) {
                 $shippingId = current(Hashids::decode($request->input('frete')));
-                $shipping   = $this->getShipping()->find($shippingId);
+                $shipping   = $shippingModel->find($shippingId);
 
                 if ($shipping) {
-
                     return view("shipping::edit", ['shipping' => $shipping]);
                 }
             }
@@ -173,12 +150,15 @@ class ShippingController extends Controller
         try {
             $requestValidated = $request->validated();
 
+            $shippingModel = new Shipping();
+
             if (isset($requestValidated) && isset($id)) {
+
                 $shippingId = current(Hashids::decode($id));
-                $shipping   = $this->getShipping()->find($shippingId);
+                $shipping   = $shippingModel->find($shippingId);
 
                 if ($requestValidated['pre_selected'] && !$shipping->pre_selected) {
-                    $s = $this->getShipping()->where([
+                    $s = $shippingModel->where([
                                                          ['project', $shipping->project],
                                                          ['id', '!=', $shipping->id],
                                                          ['pre_selected', 1],
@@ -192,24 +172,24 @@ class ShippingController extends Controller
                 $shippingUpdated = $shipping->update($requestValidated);
 
                 if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
-                    $sp = $this->getShipping()->where([
+                    $sp = $shippingModel->where([
                                                           ['project', $shipping->project],
                                                           ['pre_selected', 1],
                                                       ])->get();
 
                     if (count($sp) == 0) {
-                        $shipp = $this->getShipping()->where('project', $shipping->project)->first();
+                        $shipp = $shippingModel->where('project', $shipping->project)->first();
                         $shipp->update(['pre_selected' => 1]);
                     }
                 }
 
                 $mensagem = "Frete atualizado com sucesso!";
                 if ($shippingUpdated) {
-                    $shippings = $this->getShipping()->where([['project', $shipping->project], ['status', 1]])
+                    $shippings = $shippingModel->where([['project', $shipping->project], ['status', 1]])
                                       ->get();
 
                     if (count($shippings) == 0) {
-                        $sh = $this->getShipping()->where(['project' => $shipping->project])->first();
+                        $sh = $shippingModel->where(['project' => $shipping->project])->first();
 
                         $sh->update(['status' => 1]);
                         $mensagem = 'É obrigatório deixar um frete ativado';
@@ -222,8 +202,8 @@ class ShippingController extends Controller
             }
 
             return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
-        } catch
-        (Exception  $e) {
+
+        } catch(Exception  $e) {
             Log::warning('Erro ao tentar atualizar frete');
             report($e);
         }
@@ -236,8 +216,10 @@ class ShippingController extends Controller
     public function destroy($id)
     {
         try {
+            $shippingModel = new Shipping();
+
             if (isset($id) && !empty($id)) {
-                $shipping = $this->getShipping()->withCount(['sales'])->find(current(Hashids::decode($id)));
+                $shipping = $shippingModel->withCount(['sales'])->find(current(Hashids::decode($id)));
 
                 if ($shipping->sales_count > 0) {
                     return response()->json(['message' => 'Impossivel excluir, existem vendas associados a este frete!'], 400);
@@ -245,7 +227,7 @@ class ShippingController extends Controller
 
                 if ($shipping) {
                     if ($shipping->pre_selected) {
-                        $shippingPreSelected = $this->getShipping()
+                        $shippingPreSelected = $shippingModel
                                                     ->where([
                                                                 ['project', $shipping->project],
                                                                 ['id', '!=', $shipping->id],
@@ -278,16 +260,23 @@ class ShippingController extends Controller
     public function updateConfig(ShippingUpdateConfigResource $request, $projectId)
     {
         try {
+            $projectModel = new Project();
+
             $requestValidated = $request->validated();
+
             if ($projectId && $requestValidated) {
-                $project = $this->getProject()->find(current(Hashids::decode($projectId)));
+
+                $project = $projectModel->find(current(Hashids::decode($projectId)));
+
                 if ($project) {
+
                     if (!$requestValidated['shipment']) {
                         $requestValidated['carrier']              = null;
                         $requestValidated['shipment_responsible'] = null;
                     }
 
                     $projectUpdate = $project->update($requestValidated);
+
                     if ($projectUpdate) {
                         return response()->json(['message' => 'Configurações frete atualizados com sucesso'], 200);
                     }

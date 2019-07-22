@@ -2,192 +2,32 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use App\Entities\Company;
-use App\Entities\Product;
-use App\Entities\Shipping;
-use App\Entities\Transaction;
+use Exception;
 use Carbon\Carbon;
 use App\Entities\Plan;
 use App\Entities\Sale;
 use App\Entities\Client;
 use App\Entities\Project;
+use App\Entities\Company;
+use App\Entities\Product;
+use App\Entities\Shipping;
 use App\Entities\Checkout;
 use App\Entities\Delivery;
 use App\Entities\PlanSale;
-use Exception;
 use Illuminate\Http\Request;
+use App\Entities\Transaction;
 use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\Sales\Exports\Reports\SaleReportExport;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Modules\Sales\Transformers\SalesResource;
+use Modules\Sales\Exports\Reports\SaleReportExport;
 
 class SalesController extends Controller
 {
-    /**
-     * @var Sale
-     */
-    private $saleModel;
-    /**
-     * @var PlanSale
-     */
-    private $plansSalesModel;
-    /**
-     * @var Client
-     */
-    private $clientModel;
-    /**
-     * @var Delivery
-     */
-    private $deliveryModel;
-    /**
-     * @var Checkout
-     */
-    private $checkoutModel;
-    /**
-     * @var Plan
-     */
-    private $planModel;
-    /**
-     * @var Product
-     */
-    private $productModel;
-    /**
-     * @var UserProject
-     */
-    private $userProjectModel;
-    /**
-     * @var Company
-     */
-    private $companyModel;
-    /**
-     * @var Transaction
-     */
-    private $transaction;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getSaleModel()
-    {
-        if (!$this->saleModel) {
-            $this->saleModel = app(Sale::class);
-        }
-
-        return $this->saleModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getPlansSales()
-    {
-        if (!$this->plansSalesModel) {
-            $this->plansSalesModel = app(PlanSale::class);
-        }
-
-        return $this->plansSalesModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getClient()
-    {
-        if (!$this->clientModel) {
-            $this->clientModel = app(Client::class);
-        }
-
-        return $this->clientModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDelivery()
-    {
-        if (!$this->deliveryModel) {
-            $this->deliveryModel = app(Delivery::class);
-        }
-
-        return $this->deliveryModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCheckout()
-    {
-        if (!$this->checkoutModel) {
-            $this->checkoutModel = app(Checkout::class);
-        }
-
-        return $this->checkoutModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getPlan()
-    {
-        if (!$this->planModel) {
-            $this->planModel = app(Plan::class);
-        }
-
-        return $this->planModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getProduct()
-    {
-        if (!$this->productModel) {
-            $this->productModel = app(Product::class);
-        }
-
-        return $this->productModel;
-    }
-
-    /**
-     * @return Company|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCompany()
-    {
-        if (!$this->companyModel) {
-            $this->companyModel = app(Company::class);
-        }
-
-        return $this->companyModel;
-    }
-
-    /**
-     * @return Transaction|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getTransaction()
-    {
-        if (!$this->transaction) {
-            $this->transaction = app(Transaction::class);
-        }
-
-        return $this->transaction;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getUserProjectModel()
-    {
-        if (!$this->userProjectModel) {
-            $this->userProjectModel = app(UserProject::class);
-        }
-
-        return $this->userProjectModel;
-    }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -195,7 +35,10 @@ class SalesController extends Controller
     public function index()
     {
         try {
-            $userProjects = $this->getUserProjectModel()->with('projectId')->where('user', auth()->user()->id)->get();
+            $userProjectModel = new UserProject();
+            $saleModel        = new Sale();
+
+            $userProjects = $userProjectModel->with('projectId')->where('user', auth()->user()->id)->get();
 
             $projects = [];
 
@@ -210,7 +53,7 @@ class SalesController extends Controller
 
             return view('sales::index', [
                 'projetos'     => $projects,
-                'sales_amount' => $this->getSaleModel()->where('owner', auth()->user()->id)->get()->count(),
+                'sales_amount' => $saleModel->where('owner', auth()->user()->id)->get()->count(),
             ]);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - index');
@@ -227,15 +70,27 @@ class SalesController extends Controller
     {
         try {
             $requestData = $request->all();
+
+            $saleModel        = new Sale();
+            $planSaleModel    = new PlanSale();
+            $clientModel      = new Client();
+            $deliveryModel    = new Delivery();
+            $checkoutModel    = new Checkout();
+            $companyModel     = new Company();
+            $transactionModel = new Transaction();
+
             if (!empty($requestData['sale_id'])) {
-                $sale               = $this->getSaleModel()->with([
-                                                                      'transactions' => function($query) {
-                                                                          $query->where('company', '!=', null)->first();
-                                                                      },
-                                                                  ])->find(current(Hashids::connection('sale_id')
-                                                                                          ->decode($requestData['sale_id'])));
+                $sale               = $saleModel->with([
+                                                        'transactions' => function($query) {
+                                                            $query->where('company', '!=', null)->first();
+                                                        },
+                                                    ])->find(current(Hashids::connection('sale_id')
+                                                    ->decode($requestData['sale_id'])));
+
                 $sale['hours']      = (new Carbon($sale['start_date']))->format('H:m:s');
+
                 $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
+
                 if ($sale->flag) {
                     $sale['flag'] = $sale->flag;
                 } else if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
@@ -244,23 +99,23 @@ class SalesController extends Controller
                     $sale['flag'] = 'boleto';
                 }
 
-                $client              = $this->getClient()->find($sale->client);
+                $client              = $clientModel->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
-                $plansSales = $this->getPlansSales()->with('plan', 'plan.products')->where('sale', $sale->id)
+                $plansSales = $planSaleModel->with('plan', 'plan.products')->where('sale', $sale->id)
                                    ->get();
 
                 $plans = [];
                 $total = 0;
 
                 foreach ($plansSales as $key => $planSale) {
-                    $plans[$key]['name']   = $this->getPlan()->find($planSale['plan'])->name;
+                    $plans[$key]['name']   = $planModel->find($planSale['plan'])->name;
                     $plans[$key]['amount'] = $planSale['amount'];
                     $plans[$key]['value']  = $planSale['plan_value'];
                     $plans[$key]['photo']  = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
                     $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
                 }
-
+ 
                 $discount = '0,00';
                 $subTotal = $total;
 
@@ -272,12 +127,12 @@ class SalesController extends Controller
                     $discount = '0,00';
                 }
 
-                $delivery             = $this->getDelivery()->find($sale['delivery']);
-                $checkout             = $this->getCheckout()->find($sale['checkout']);
+                $delivery             = $deliveryModel->find($sale['delivery']);
+                $checkout             = $checkoutModel->find($sale['checkout']);
                 $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
-                $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id');
-                $transaction   = $this->getTransaction()->where('sale', $sale->id)->whereIn('company', $userCompanies)
+                $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
+                $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company', $userCompanies)
                                       ->first();
 
                 if ($transaction) {
@@ -342,9 +197,15 @@ class SalesController extends Controller
     {
         try {
 
-            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $companyModel  = new Company();
+            $saleModel     = new Sale();
+            $planSaleModel = new PlanSale();
+            $planModel     = new Plan();
+            $clientModel   = new Client();
 
-            $sales = $this->getSaleModel()
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+
+            $sales = $saleModel
                           ->with([
                                      'clientModel', 'plansSales', 'plansSales.plan', 'plansSales.plan.products', 'plansSales.plan.projectId',
                                      'transactions' => function($query) use ($userCompanies) {
@@ -354,13 +215,13 @@ class SalesController extends Controller
                           ->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status', '!=', 10]]);
 
             if ($request->projeto != '') {
-                $plans    = $this->getPlan()->where('project', $request->projeto)->pluck('id');
-                $salePlan = $this->getPlansSales()->whereIn('plan', $plans)->pluck('sale');
+                $plans    = $planModel->where('project', $request->projeto)->pluck('id');
+                $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
                 $sales->whereIn('id', $salePlan);
             }
 
             if ($request->comprador != '') {
-                $customers = $this->getClient()->where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
+                $customers = $clientModel->where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
                 $sales->whereIn('client', $customers);
             }
 
@@ -397,19 +258,25 @@ class SalesController extends Controller
             $dataRequest = $request->all();
             $dataRequest = array_filter($dataRequest);
 
+            $saleModel     = new Sale();
+            $planSaleModel = new PlanSale();
+            $clientModel   = new Client();
+            $planModel     = new Plan();
+
+
             //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
             $sales = $this->getSaleModel()
                           ->where('owner', auth()->user()->id);
             //->where('status', '!=', '3');
 
             if (!empty($dataRequest['select_project'])) {
-                $plans    = Plan::where('project', $dataRequest['select_project'])->pluck('id');
-                $salePlan = PlanSale::whereIn('plan', $plans)->pluck('sale');
+                $plans    = $planModel->where('project', $dataRequest['select_project'])->pluck('id');
+                $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
                 $sales->whereIn('id', $salePlan);
             }
 
             if (!empty($dataRequest['client'])) {
-                $clientes = Client::where('name', 'LIKE', '%' . $dataRequest['client'] . '%')->pluck('id');
+                $clientes = $clientModel->where('name', 'LIKE', '%' . $dataRequest['client'] . '%')->pluck('id');
                 $sales->whereIn('client', $clientes);
             }
 
@@ -482,10 +349,11 @@ class SalesController extends Controller
                 'utm_perfect',
 
             ];
+
             $saleData = collect();
             foreach ($salesResult as $sale) {
-                $checkout  = Checkout::find($sale->checkout);
-                $shipping  = Shipping::find($sale->shipping);
+                $checkout  = $checkoutModel->find($sale->checkout);
+                $shipping  = $shippingModel->find($sale->shipping);
                 $saleArray = [
                     'project_name'          => $sale->projectModel->name ?? '',
                     'sale_code'             => '#' . strtoupper(Hashids::connection('sale_id')

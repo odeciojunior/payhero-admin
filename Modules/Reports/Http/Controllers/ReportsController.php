@@ -20,89 +20,7 @@ use Matrix\Builder;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
-class ReportsController extends Controller
-{
-    /**
-     * @var UserProject
-     */
-    private $projectsModel;
-    /**
-     * @var Project
-     */
-    private $userProjectModel;
-    /**
-     * @var Sale
-     */
-    private $salesModel;
-    /**
-     * @var Company
-     */
-    private $companyModel;
-    /**
-     * @var Plan
-     */
-    private $planModel;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    public function getUserProjects()
-    {
-        if (!$this->userProjectModel) {
-
-            $this->userProjectModel = app(UserProject::class);
-        }
-
-        return $this->userProjectModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    public function getProjects()
-    {
-        if (!$this->projectsModel) {
-            $this->projectsModel = app(Project::class);
-        }
-
-        return $this->projectsModel;
-    }
-
-    /**
-     * @return Sale|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    public function getSales()
-    {
-        if (!$this->salesModel) {
-            $this->salesModel = app(Sale::class);
-        }
-
-        return $this->salesModel;
-    }
-
-    /**
-     * @return Company|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    public function getCompany()
-    {
-        if (!$this->companyModel) {
-            $this->companyModel = app(Company::class);
-        }
-
-        return $this->companyModel;
-    }
-
-    /**
-     * @return Plan|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    public function getPlan()
-    {
-        if (!$this->planModel) {
-            $this->planModel = app(Plan::class);
-        }
-
-        return $this->planModel;
-    }
+class ReportsController extends Controller {
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
@@ -110,8 +28,10 @@ class ReportsController extends Controller
     public function index()
     {
         try {
+            $userProjectModel = new UserProject();
+
             $user         = auth()->user();
-            $userProjects = $this->getUserProjects()->with(['projectId'])->where('user', $user->id)->get();
+            $userProjects = $userProjectModel->with(['projectId'])->where('user', $user->id)->get();
 
             if (isset($userProjects) && $userProjects->count() > 0) {
                 $projects = [];
@@ -144,17 +64,22 @@ class ReportsController extends Controller
         try {
             $dataSearch       = $request->all();
             $projectId        = current(Hashids::decode($request->input('project')));
+
+            $userProjectModel = new UserProject();
+            $saleModel        = new Sale();
+            $planModel        = new Plan();
+
             $requestStartDate = $request->input('startDate');
             $requestEndDate   = $request->input('endDate');
             if ($projectId) {
-                $userProject = $this->getUserProjects()->where([
-                                                                   ['user', auth()->user()->id],
-                                                                   ['type', 'producer'],
-                                                                   ['project', $projectId],
-                                                               ])->first();
+                $userProject = $userProjectModel->where([
+                                                            ['user', auth()->user()->id],
+                                                            ['type', 'producer'],
+                                                            ['project', $projectId],
+                                                        ])->first();
 
                 if ($userProject) {
-                    $sales = $this->getSales()
+                    $sales = $salesModel
                                   ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
                                   ->leftJoin('transactions as transaction', function($join) use ($userProject) {
                                       $join->where('transaction.company', $userProject->company);
@@ -181,7 +106,7 @@ class ReportsController extends Controller
                     $contSales = $sales->count();
 
                     // itens
-                    $itens = $this->getSales()
+                    $itens = $saleModel
                                   ->select(\DB::raw('count(*) as count'), 'plan_sale.plan')
                                   ->leftJoin('plans_sales as plan_sale', function($join) {
                                       $join->on('plan_sale.sale', '=', 'sales.id');
@@ -203,7 +128,7 @@ class ReportsController extends Controller
                     $itens = $itens->groupBy('plan_sale.plan')->orderBy('count', 'desc')->limit(3)->get()->toArray();
                     $plans = [];
                     foreach ($itens as $key => $iten) {
-                        $plan                      = $this->getPlan()->with('products')->find($iten['plan']);
+                        $plan                      = $planModel->with('products')->find($iten['plan']);
                         $plans[$key]['name']       = $plan->name . ' - ' . $plan->description;
                         $plans[$key]['photo']      = $plan->products[0]->photo;
                         $plans[$key]['quantidade'] = $iten['count'];
@@ -211,7 +136,7 @@ class ReportsController extends Controller
                     }
 
                     // calculos dashboard
-                    $salesDetails = $this->getSales()->select([
+                    $salesDetails = $salesModel->select([
 
                                                                   DB::raw('SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesAproved'),
                                                                   DB::raw('SUM(CASE WHEN sales.status = 2 THEN 1 ELSE 0 END) AS contSalesPending'),
@@ -361,9 +286,14 @@ class ReportsController extends Controller
      */
     public function getSalesByOrigin(Request $request)
     {
-        $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+        $companyModel = new Company();
+        $saleModel    = new Sale();
+
+        $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+
         if (!empty($request->project_id) && $request->project_id != null && $request->project_id != 'undefined') {
-            $orders = $this->getSales()
+
+            $orders = $saleModel
                            ->select(\DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.' . $request->origin . ' as origin'))
                            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                                $join->on('transaction.sale', '=', 'sales.id');
@@ -435,6 +365,9 @@ class ReportsController extends Controller
     {
         date_default_timezone_set('America/Sao_Paulo');
 
+        $companyModel = new Company();
+        $saleModel    = new Sale();
+
         if (Carbon::parse($data['startDate'])->format('m/d/y') == Carbon::now()->format('m/d/y')) {
 
             $labelList   = [];
@@ -451,12 +384,12 @@ class ReportsController extends Controller
             ];
         }
 
-        $userCompanies = $this->getCompany()
+        $userCompanies = $companyModel
                               ->where('user_id', \Auth::user()->id)
                               ->pluck('id')
                               ->toArray();
 
-        $orders = $this->getSales()
+        $orders = $saleModel
                        ->select(\DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
                        ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                            $join->on('transaction.sale', '=', 'sales.id');
@@ -506,19 +439,23 @@ class ReportsController extends Controller
     private function getByDays($data, $projectId, $currency)
     {
         try {
+            $companyModel = new Company();
+            $saleModel    = new Sale();
 
             $labelList    = [];
             $dataFormated = Carbon::parse($data['startDate']);
             $endDate      = Carbon::parse($data['endDate']);
+
             while ($dataFormated->lessThanOrEqualTo($endDate)) {
                 array_push($labelList, $dataFormated->format('d-m'));
                 $dataFormated = $dataFormated->addDays(1);
             }
+
             $data['endDate'] = date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'));
 
-            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
-            $orders = $this->getSales()
+            $orders = $saleModel
                            ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                                $join->on('transaction.sale', '=', 'sales.id');
@@ -572,6 +509,10 @@ class ReportsController extends Controller
     private function getByTwentyDays($date, $projectId, $currency)
     {
         try {
+
+            $companyModel = new Company();
+            $saleModel    = new Sale();
+
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(1);
             $endDate      = Carbon::parse($date['endDate']);
@@ -588,9 +529,9 @@ class ReportsController extends Controller
             }
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
-            $orders = $this->getSales()
+            $orders = $saleModel
                            ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                                $join->on('transaction.sale', '=', 'sales.id');
@@ -645,6 +586,9 @@ class ReportsController extends Controller
     private function getByFortyDays($date, $projectId, $currency)
     {
         try {
+            $companyModel = new Company();
+            $saleModel    = new Sale();
+
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(2);
             $endDate      = Carbon::parse($date['endDate']);
@@ -661,9 +605,9 @@ class ReportsController extends Controller
             }
 
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . '+ 1 day'));
-            $userCompanies   = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies   = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
-            $orders = $this->getSales()
+            $orders = $saleModel
                            ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                                $join->on('transaction.sale', '=', 'sales.id');
@@ -720,6 +664,9 @@ class ReportsController extends Controller
     private function getByWeek($date, $projectId, $currency)
     {
         try {
+            $saleModel    = new Sale();
+            $companyModel = new Company();
+
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate'])->addDays(6);
             $endDate      = Carbon::parse($date['endDate']);
@@ -736,9 +683,9 @@ class ReportsController extends Controller
             }
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
-            $orders = $this->getSales()
+            $orders = $saleModel
                            ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                                $join->on('transaction.sale', '=', 'sales.id');
@@ -793,6 +740,9 @@ class ReportsController extends Controller
     private function getByMonth($date, $projectId, $currency)
     {
         try {
+            $companyModel = new Company();
+            $saleModel    = new Sale();
+
             $labelList    = [];
             $dataFormated = Carbon::parse($date['startDate']);
             $endDate      = Carbon::parse($date['endDate']);
@@ -801,11 +751,12 @@ class ReportsController extends Controller
                 array_push($labelList, $dataFormated->format('m/y'));
                 $dataFormated = $dataFormated->addMonths(1);
             }
+
             $date['endDate'] = date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'));
 
-            $userCompanies = $this->getCompany()->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
-            $orders = $this->getSales()
+            $orders = $saleModel
                            ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                            ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
                                $join->on('transaction.sale', '=', 'sales.id');

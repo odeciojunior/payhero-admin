@@ -1,25 +1,28 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
     updateValues();
+    loading('#cardPendente','#loaderCard');
+    loading('#cardAntecipavel','#loaderCard');
+    loading('#cardDisponivel','#loaderCard');
+    loading('#cardTotal','#loaderCard');
 
-    $("#company").on("change",function(){
-
+    $("#company").on("change", function () {
         updateValues();
     });
 
-    function updateValues(){
+    function updateValues() {
 
         $.ajax({
-            method: "POST", 
+            method: "POST",
             url: "/dashboard/getvalues",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: { company: $('#company').val() },
-            error: function(){
+            data: {company: $('#company').val()},
+            error: function () {
                 //
             },
-            success: function(data){
+            success: function (data) {
 
                 $(".moeda").html(data.currency);
                 $("#pending_money").html(data.pending_balance);
@@ -30,8 +33,6 @@ $(document).ready(function(){
         });
 
     }
-
-
 
 
 
@@ -74,7 +75,7 @@ $(document).ready(function(){
     // }
 
     // function clear_map_points(){
-        
+
     //     vectorLayers.forEach((vectorLayer) => {
     //     var features = vectorLayer.getSource().getFeatures();
     //     features.forEach((feature) => {
@@ -116,7 +117,7 @@ $(document).ready(function(){
     //                         success : function(response) {
     //                         add_map_point(response.latitude, response.longitude);
     //                         }
-                
+
     //                     });
     //                 }
     //             });

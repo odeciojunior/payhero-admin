@@ -17,19 +17,26 @@ class ShowcaseController extends Controller {
 
     public function index() {
 
-        $userAffiliations = Affiliate::where('user',\Auth::user()->id)->pluck('project')->toArray();
+        $affiliateRequestModel = new AffiliateRequest();
+        $userProjectModel      = new UserProject();
+        $affiliateModel        = new Affiliate();
+        $projectModel          = new Project();
+        $userModel             = new User();
+        $planModel             = new Plan();
 
-        $availableProjects = UserProject::where([
+        $userAffiliations = $affiliateModel->where('user',\Auth::user()->id)->pluck('project')->toArray();
+
+        $availableProjects = $userProjectModel->where([
             ['user','!=',\Auth::user()->id],
             ['type','producer']
         ])->pluck('project')->toArray();
 
-        $pendingAffiliations = AffiliateRequest::where([
+        $pendingAffiliations = $affiliateRequestModel->where([
             ['user', \Auth::user()->id],
             ['status','pending']
         ])->pluck('project')->toArray();
 
-        $projects = Project::select('id','photo','name','description','percentage_affiliates')
+        $projects = $projectModel->select('id','photo','name','description','percentage_affiliates')
                             ->whereIn('id', $availableProjects)
                             ->whereNotIn('id',$userAffiliations)
                             ->whereNotIn('id',$pendingAffiliations)
@@ -38,14 +45,14 @@ class ShowcaseController extends Controller {
 
         foreach($projects as &$project){
 
-            $userProject = Userproject::where([
+            $userProject = $userProjectModel->where([
                 ['project',$project['id']],
                 ['type','producer']
             ])->first();
 
-            $user = User::find($userProject['user']);
+            $user = $userModel->find($userProject['user']);
             $project['producer'] = $user['name'];
-            $plan = Plan::where('project',$project['id'])->max('price');
+            $plan = $planModel->where('project',$project['id'])->max('price');
 
             $highestCommission = number_format($plan * 0.90, 2);
 

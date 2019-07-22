@@ -21,54 +21,6 @@ use Modules\Profile\Http\Requests\ProfileUpdateRequest;
  */
 class ProfileController extends Controller
 {
-    /**
-     * @var User
-     */
-    private $userModel;
-    /**
-     * @var DigitalOceanFileService
-     */
-    private $digitalOceanFileService;
-    /**
-     * @var UserDocument
-     */
-    private $userDocumentModel;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|DigitalOceanFileService
-     */
-    private function getDigitalOceanFileService()
-    {
-        if (!$this->digitalOceanFileService) {
-            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
-        }
-
-        return $this->digitalOceanFileService;
-    }
-
-    /**
-     * @return User|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getUserModel()
-    {
-        if (!$this->userModel) {
-            $this->userModel = app(User::class);
-        }
-
-        return $this->userModel;
-    }
-
-    /**
-     * @return UserDocument|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getUserDocumentModel()
-    {
-        if (!$this->userDocumentModel) {
-            $this->userDocumentModel = app(UserDocument::class);
-        }
-
-        return $this->userDocumentModel;
-    }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -123,14 +75,15 @@ class ProfileController extends Controller
             if ($userPhoto != null) {
 
                 try {
-                    $this->getDigitalOceanFileService()->deleteFile($user->photo);
+                    $digitalOceanService = new DigitalOceanFileService();
+                    $digitalOceanService->deleteFile($user->photo);
 
                     $img = Image::make($userPhoto->getPathname());
                     $img->crop($requestData['photo_w'], $requestData['photo_h'], $requestData['photo_x1'], $requestData['photo_y1']);
                     $img->resize(200, 200);
                     $img->save($userPhoto->getPathname());
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
+                    $digitalOceanPath = $digitalOceanService
                                              ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile', $userPhoto);
 
                     $user->update([
@@ -183,17 +136,20 @@ class ProfileController extends Controller
         try {
             $dataForm = $request->validated();
 
+            $digitalOceanService = new DigitalOceanFileService();
+            $userDocuments = new UserDocument();
+
             $document = $request->file('file');
 
-            $digitalOceanPath = $this->getDigitalOceanFileService()
+            $digitalOceanPath = $digitalOceanService
                                      ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents', $document, null, null, 'private');
 
-            $this->getUserDocumentModel()->create([
-                                                      'user_id'            => auth()->user()->id,
-                                                      'document_url'       => $digitalOceanPath,
-                                                      'document_type_enum' => $dataForm["document_type"],
-                                                      'status'             => null,
-                                                  ]);
+            $userDocuments->create([
+                                    'user_id'            => auth()->user()->id,
+                                    'document_url'       => $digitalOceanPath,
+                                    'document_type_enum' => $dataForm["document_type"],
+                                    'status'             => null,
+                                ]);
 
             $user = auth()->user();
 

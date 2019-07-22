@@ -26,71 +26,6 @@ use Modules\Companies\Transformers\CompanyResource;
 class CompaniesController extends Controller
 {
     /**
-     * @var Company
-     */
-    private $companyModel;
-    /**
-     * @var DigitalOceanFileService
-     */
-    private $digitalOceanFileService;
-    /**
-     * @var CompanyDocument
-     */
-    private $companyDocumentModel;
-    /**
-     * @var BankService
-     */
-    private $bankService;
-
-    /**
-     * @return Company|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCompanyModel()
-    {
-        if (!$this->companyModel) {
-            $this->companyModel = app(Company::class);
-        }
-
-        return $this->companyModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDigitalOceanFileService()
-    {
-        if (!$this->digitalOceanFileService) {
-            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
-        }
-
-        return $this->digitalOceanFileService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCompanyDocumentModel()
-    {
-        if (!$this->companyDocumentModel) {
-            $this->companyDocumentModel = app(CompanyDocument::class);
-        }
-
-        return $this->companyDocumentModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getBankService()
-    {
-        if (!$this->bankService) {
-            $this->bankService = app(BankService::class);
-        }
-
-        return $this->bankService;
-    }
-
-    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -113,14 +48,15 @@ class CompaniesController extends Controller
     public function store(CompanyCreateRequest $request)
     {
         try {
-            $requestData = $request->validated();
+            $companyModel = new Company();
+            $requestData  = $request->validated();
 
-            $company = $this->getCompanyModel()->create([
-                                                            'user_id'          => auth()->user()->id,
-                                                            'country'          => $requestData["country"],
-                                                            'fantasy_name'     => $requestData["fantasy_name"],
-                                                            'company_document' => $requestData["company_document"],
-                                                        ]);
+            $company = $companyModel->create([
+                                                 'user_id'          => auth()->user()->id,
+                                                 'country'          => $requestData["country"],
+                                                 'fantasy_name'     => $requestData["fantasy_name"],
+                                                 'company_document' => $requestData["company_document"],
+                                             ]);
 
             return response()->json([
                                         'message'  => 'Dados atualizados com sucesso',
@@ -141,7 +77,6 @@ class CompaniesController extends Controller
      */
     public function getCreateForm(CompanyCreateFormRequest $request)
     {
-
         try {
             if ($request->country == 'usa') {
                 $view = view('companies::create_american_company');
@@ -165,11 +100,14 @@ class CompaniesController extends Controller
     public function edit($encodedId)
     {
         try {
-            $company = $this->getCompanyModel()
-                            ->with('user')
-                            ->find(current(Hashids::decode($encodedId)));
+            $companyModel = new Company();
+            $bankService  = new BankService();
 
-            $banks = $this->getBankService()->getBanks('BR');
+            $company = $companyModel
+                ->with('user')
+                ->find(current(Hashids::decode($encodedId)));
+
+            $banks = $bankService->getBanks('BR');
 
             $companyResource = new CompanyResource($company);
 
@@ -199,12 +137,14 @@ class CompaniesController extends Controller
     public function update(CompanyUpdateRequest $request, $encodedId)
     {
         try {
+            $companyModel = new Company();
+
             $requestData = $request->validated();
 
-            $company = $this->getCompanyModel()
-                            ->find(current(Hashids::decode($encodedId)));
+            $company = $companyModel
+                ->find(current(Hashids::decode($encodedId)));
             if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
-                $company->bank_document_status = $this->getCompanyModel()->getEnum('bank_document_status', 'pending');
+                $company->bank_document_status = $companyModel->getEnum('bank_document_status', 'pending');
             }
             $requestData = array_filter($requestData);
 
@@ -226,11 +166,12 @@ class CompaniesController extends Controller
     public function destroy($encodedId)
     {
         try {
+            $companyModel = new Company();
 
-            $company = $this->getCompanyModel()->withCount([
-                                                               'transactions',
-                                                               'usersProjects',
-                                                           ])->find(current(Hashids::decode($encodedId)));
+            $company = $companyModel->withCount([
+                                                    'transactions',
+                                                    'usersProjects',
+                                                ])->find(current(Hashids::decode($encodedId)));
             if ($company) {
                 if ($company->transactions_count > 0) {
                     return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], 422);
@@ -260,20 +201,23 @@ class CompaniesController extends Controller
     public function uploadDocuments(CompanyUploadDocumentRequest $request)
     {
         try {
+            $companyModel            = new Company();
+            $digitalOceanFileService = new DigitalOceanFileService();
+            $companyDocumentModel    = new CompanyDocument();
+
             $dataForm = $request->validated();
-            $company  = $this->getCompanyModel()->find(current(Hashids::decode($dataForm['company_id'])));
+            $company  = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
 
             $document = $request->file('file');
 
-            $digitalOceanPath = $this->getDigitalOceanFileService()
-                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
+            $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
 
-            $this->getCompanyDocumentModel()->create([
-                                                         'company_id'         => $company->id,
-                                                         'document_url'       => $digitalOceanPath,
-                                                         'document_type_enum' => $dataForm["document_type"],
-                                                         'status'             => null,
-                                                     ]);
+            $companyDocumentModel->create([
+                                              'company_id'         => $company->id,
+                                              'document_url'       => $digitalOceanPath,
+                                              'document_type_enum' => $dataForm["document_type"],
+                                              'status'             => null,
+                                          ]);
 
             if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'bank_document_status')) {
                 $company->update([

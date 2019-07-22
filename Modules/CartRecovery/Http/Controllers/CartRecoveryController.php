@@ -23,71 +23,6 @@ use Illuminate\Support\Facades\Log;
 class CartRecoveryController extends Controller
 {
     /**
-     * @var Checkout
-     */
-    private $checkoutModel;
-    /**
-     * @var \App\Entities\Log
-     */
-    private $logModel;
-    /**
-     * @var CheckoutPlan
-     */
-    private $checkoutPlansModel;
-    /**
-     * @var Domain
-     */
-    private $domainModel;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCheckoutModel()
-    {
-        if (!$this->checkoutModel) {
-            $this->checkoutModel = app(Checkout::class);
-        }
-
-        return $this->checkoutModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getLogModel()
-    {
-        if (!$this->logModel) {
-            $this->logModel = app(CheckoutLog::class);
-        }
-
-        return $this->logModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCheckoutPlansModel()
-    {
-        if (!$this->checkoutPlansModel) {
-            $this->checkoutPlansModel = app(CheckoutPlan::class);
-        }
-
-        return $this->checkoutPlansModel;
-    }
-
-    /**
-     * @return Domain|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDomainModel()
-    {
-        if (!$this->domainModel) {
-            $this->domainModel = app(Domain::class);
-        }
-
-        return $this->domainModel;
-    }
-
-    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -107,19 +42,20 @@ class CartRecoveryController extends Controller
 
         return view('cartrecovery::index', compact('projects'));
     }
- 
-    public function getAbandonatedCarts(Request $request) {
 
-        try{
+    public function getAbandonatedCarts(Request $request)
+    {
+
+        try {
             $abandonedCarts = Checkout::whereIn('status', ['abandoned cart', 'recovered']);
 
             if ($request->has('project') && $request->input('project') != '') {
                 $abandonedCarts->where('project', $request->input('project'));
             } else {
                 $userProjects = UserProject::where([
-                    ['user', \Auth::user()->id],
-                    ['type', 'producer'],
-                ])->pluck('project')->toArray();
+                                                       ['user', \Auth::user()->id],
+                                                       ['type', 'producer'],
+                                                   ])->pluck('project')->toArray();
 
                 $abandonedCarts->whereIn('project', $userProjects)->with(['projectModel']);
             }
@@ -139,8 +75,7 @@ class CartRecoveryController extends Controller
             $abandonedCarts->orderBy('id', 'DESC');
 
             return CartRecoveryResource::collection($abandonedCarts->paginate(10));
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             dd($e);
         }
     }
@@ -153,13 +88,18 @@ class CartRecoveryController extends Controller
     public function getAbandonatedCardsDetails(Request $request)
     {
         try {
+            $checkoutModel     = new Checkout();
+            $logModel          = new CheckoutLog();
+            $checkoutPlanModel = new CheckoutPlan();
+            $domainModel       = new Domain();
+
             if ($request->input('checkout')) {
                 $checkoutId = current(Hashids::decode($request->input('checkout')));
-                $checkout   = $this->getCheckoutModel()->find($checkoutId);
+                $checkout   = $checkoutModel->find($checkoutId);
 
-                $log          = $this->getLogModel()->where('id_log_session', $checkout->id_log_session)
-                                     ->orderBy('id', 'DESC')
-                                     ->first();
+                $log          = $logModel->where('id_log_session', $checkout->id_log_session)
+                                         ->orderBy('id', 'DESC')
+                                         ->first();
                 $log['hours'] = with(new Carbon($checkout->created_at))->format('H:i:s');
                 $log['date']  = with(new Carbon($checkout->created_at))->format('d/m/Y');
 
@@ -170,12 +110,12 @@ class CartRecoveryController extends Controller
                     $status = 'Recuperado';
                 }
 
-                $checkoutPlans = $this->getCheckoutPlansModel()->with('plan', 'plan.products')
-                                      ->where('checkout', $checkoutId)
-                                      ->get();
+                $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.products')
+                                                   ->where('checkout', $checkoutId)
+                                                   ->get();
 
-                $plans         = [];
-                $total         = 0;
+                $plans = [];
+                $total = 0;
                 foreach ($checkoutPlans as $checkoutPlan) {
                     foreach ($checkoutPlan->getRelation('plan')->products as $key => $product) {
                         $plans[$key]['name']   = $checkoutPlan->getRelation('plan')->name;
@@ -186,17 +126,15 @@ class CartRecoveryController extends Controller
                     }
                 }
 
-
-
-                $domain = $this->getDomainModel()->where([['status', 3], ['project_id', $checkout->project]])->first();
+                $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
                 $link   = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
 
-                $whatsAppMsg = 'Olá '.$log->name;
+                $whatsAppMsg = 'Olá ' . $log->name;
 
                 $details = view('cartrecovery::details', [
                     'checkout'      => $checkout,
                     'log'           => $log,
-                    'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone).'&text='.$whatsAppMsg,
+                    'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
                     'status'        => $status,
                     'hours'         => $log['hours'],
                     'date'          => $log['date'],

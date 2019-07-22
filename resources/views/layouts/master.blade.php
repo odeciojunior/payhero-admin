@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/site.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
+    
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
@@ -49,17 +50,20 @@
     </script>
 </head>
 <body class="animsition site-navbar-small dashboard">
-<div class="loading">
-    <div class="loader">
-    </div>
-</div>
-<style>
-    body {
-        background-color: #f1f4f5;
-        font-family: 'Muli', sans-serif !important;
-    }
-</style>
-@include("layouts.menu-principal")
+
+    {{--<div class="loading">
+        <div class="loader">
+        </div>
+    </div>--}}
+
+    <style>
+        body {
+            background-color: #f1f4f5;
+            font-family: 'Muli', sans-serif !important;
+        }
+    </style>
+
+    @include("layouts.menu-principal")
 
 @yield('content')
 

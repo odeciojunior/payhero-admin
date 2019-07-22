@@ -11,13 +11,14 @@ use Modules\Transfers\Transformers\TransfersResource;
 
 class TransfersController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      * @return Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
+            $transfer = new Transfer();
 
             $transfersModel = new Transfer();
 
@@ -27,12 +28,9 @@ class TransfersController extends Controller
                         ->where('transaction.company',current(Hashids::decode($request->company)));
 
             return TransfersResource::collection($transfers->paginate(10));
-
         } catch (Exception $e) {
             Log::warning('Erro ao buscar lista de transferencias (TransfersController - index)');
             report($e);
         }
-
     }
-
 }

@@ -81,7 +81,7 @@ $(function () {
 
     });
     function atualizarCoupon() {
-        $("#data-table-coupon").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        loadOnTable('#data-table-coupon','#tabela-coupom')
         $.ajax({
             method: "GET",
             url: '/couponsdiscounts',

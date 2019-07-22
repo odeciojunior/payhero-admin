@@ -138,7 +138,7 @@
                         </a>
                     </div>
                     <div class="col-5">
-                        @if($project->shopify_id && $project->shopifyIntegrations()->first()->status != 1)
+                        @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1)
                             <a id="bt-change-shopify-integration" role="button" integration-status="{!! $project->shopifyIntegrations()->first()->status !!}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
                                 <i class="material-icons gray"> sync </i>
                                 <span class="gray"> {!! $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' !!} com shopify </span>

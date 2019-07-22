@@ -2,212 +2,37 @@
 
 namespace Modules\Projects\Http\Controllers;
 
+use Exception;
+use App\Entities\Project;
 use App\Entities\Carrier;
+use Illuminate\Http\Request;
+use App\Entities\UserProject;
 use App\Entities\DomainRecord;
 use App\Entities\ExtraMaterial;
-use App\Entities\Project;
-use App\Entities\ShopifyIntegration;
-use App\Entities\UserProject;
-use Exception;
-use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use App\Entities\ShopifyIntegration;
 use Intervention\Image\Facades\Image;
-use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
-use Vinkla\Hashids\Facades\Hashids;
 
 class ProjectsController extends Controller
 {
-    /**
-     * @var Project
-     */
-    private $projectModel;
-    /**
-     * @var UserProject
-     */
-    private $userProjectModel;
-    /**
-     * @var Carrier
-     */
-    private $carrierModel;
-    /**
-     * @var ExtraMaterial
-     */
-    private $extraMaterialsModel;
-    /**
-     * @var DigitalOceanFileService
-     */
-    private $digitalOceanFileService;
-    /**
-     * @var SendgridService
-     */
-    private $sendgridService;
-    /**
-     * @var CloudFlareService
-     */
-    private $cloudFlareService;
-    /**
-     * @var $domainRecordModel
-     */
-    private $domainRecordModel;
-    /**
-     * @var ShopifyService
-     */
-    private $shopifyService;
-    /**
-     * @var ShopifyIntegration
-     */
-    private $shopifyIntegrationModel;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    function getProjetctService()
-    {
-        if (!$this->projectService) {
-            $this->projectService = app(ProjectService::class);
-        }
-
-        return $this->projectService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    function getShopifyIntegration()
-    {
-        if (!$this->shopifyIntegrationModel) {
-            $this->shopifyIntegrationModel = app(ShopifyIntegration::class);
-        }
-
-        return $this->shopifyIntegrationModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    function getProject()
-    {
-        if (!$this->projectModel) {
-            $this->projectModel = app(Project::class);
-        }
-
-        return $this->projectModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
-     */
-    private function getShopifyService(string $urlStore = null, string $token = null)
-    {
-        if (!$this->shopifyService) {
-            $this->shopifyService = new ShopifyService($urlStore, $token);
-        }
-
-        return $this->shopifyService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDomainRecordModel()
-    {
-        if (!$this->domainRecordModel) {
-            $this->domainRecordModel = app(DomainRecord::class);
-        }
-
-        return $this->domainRecordModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
-     */
-    private function getSendgridService()
-    {
-        if (!$this->sendgridService) {
-            $this->sendgridService = app(SendgridService::class);
-        }
-
-        return $this->sendgridService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
-     */
-    private function getCloudFlareService()
-    {
-        if (!$this->cloudFlareService) {
-            $this->cloudFlareService = app(CloudFlareService::class);
-        }
-
-        return $this->cloudFlareService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getUserProject()
-    {
-        if (!$this->userProjectModel) {
-            $this->userProjectModel = app(UserProject::class);
-        }
-
-        return $this->userProjectModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCarrier()
-    {
-        if (!$this->carrierModel) {
-            $this->carrierModel = app(Carrier::class);
-        }
-
-        return $this->carrierModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    public function getExtraMaterials()
-    {
-        if (!$this->extraMaterialsModel) {
-            $this->extraMaterialsModel = app(ExtraMaterial::class);
-        }
-
-        return $this->extraMaterialsModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDigitalOceanFileService()
-    {
-        if (!$this->digitalOceanFileService) {
-            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
-        }
-
-        return $this->digitalOceanFileService;
-    }
-
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
         try {
-            $projects = $this->getProject()->whereHas('usersProjects', function($query) {
+            $projectModel = new Project();
+
+            $projects = $projectModel->whereHas('usersProjects', function($query) {
                 $query->where('user', auth()->user()->id);
             })->get();
 
@@ -243,18 +68,23 @@ class ProjectsController extends Controller
     {
         try {
             $requestValidated = $request->validated();
+
+            $projectModel        = new Project();
+            $userProjectModel    = new UserProject();
+            $digitalOceanService = new DigitalOceanFileService();
+
             if ($requestValidated) {
                 $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
 
-                $project = $this->getProject()->create([
-                                                           'name'                       => $requestValidated['name'],
-                                                           'description'                => $requestValidated['description'],
-                                                           'installments_amount'        => 12,
-                                                           'installments_interest_free' => 1,
-                                                           'visibility'                 => 'private',
-                                                           'automatic_affiliation'      => 0,
-                                                           'boleto'                     => 1,
-                                                       ]);
+                $project = $projectModel->create([
+                                                    'name'                       => $requestValidated['name'],
+                                                    'description'                => $requestValidated['description'],
+                                                    'installments_amount'        => 12,
+                                                    'installments_interest_free' => 1,
+                                                    'visibility'                 => 'private',
+                                                    'automatic_affiliation'      => 0,
+                                                    'boleto'                     => 1,
+                                                ]);
 
                 if ($project) {
                     $photo = $request->file('photo-main');
@@ -264,7 +94,7 @@ class ProjectsController extends Controller
                             $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
                             $img->save($photo->getPathname());
 
-                            $digitalOceanPath = $this->getDigitalOceanFileService()
+                            $digitalOceanPath = $digitalOceanService
                                                      ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
                             $project->update(['photo' => $digitalOceanPath]);
                         } catch (Exception $e) {
@@ -273,15 +103,15 @@ class ProjectsController extends Controller
                         }
                     }
 
-                    $userProject = $this->getUserProject()->create([
-                                                                       'user'              => auth()->user()->id,
-                                                                       'project'           => $project->id,
-                                                                       'company'           => $requestValidated['company'],
-                                                                       'type'              => 'producer',
-                                                                       'access_permission' => 1,
-                                                                       'edit_permission'   => 1,
-                                                                       'status'            => 'active',
-                                                                   ]);
+                    $userProject = $userProjectModel->create([
+                                                                'user'              => auth()->user()->id,
+                                                                'project'           => $project->id,
+                                                                'company'           => $requestValidated['company'],
+                                                                'type'              => 'producer',
+                                                                'access_permission' => 1,
+                                                                'edit_permission'   => 1,
+                                                                'status'            => 'active',
+                                                            ]);
                     if (!$userProject) {
                         $digitalOceanPath->deleteFile($project->photo);
                         $project->delete();
@@ -310,10 +140,12 @@ class ProjectsController extends Controller
             if ($id) {
                 $idProject = current(Hashids::decode($id));
 
+                $projectModel = new Project();
+
                 $user      = auth()->user()->load('companies');
                 $companies = $user->companies;
 
-                $project = $this->getProject()->with(['usersProjects'])->where('id', $idProject)->first();
+                $project = $projectModel->with(['usersProjects', 'shopifyIntegrations'])->where('id', $idProject)->first();
 
                 if ($project) {
 
@@ -339,8 +171,10 @@ class ProjectsController extends Controller
         try {
             $user = auth()->user()->load('companies');
 
+            $projectModel = new Project();
+
             $idProject = current(Hashids::decode($id));
-            $project   = $this->getProject()->with([
+            $project   = $projectModel->with([
                                                        'usersProjects' => function($query) use ($user, $idProject) {
                                                            $query->where('user', $user->id)
                                                                  ->where('project', $idProject)->first();
@@ -369,8 +203,13 @@ class ProjectsController extends Controller
         try {
 
             $requestValidated = $request->validated();
+
+            $projectModel        = new Project();
+            $userProjectModel    = new UserProject();
+            $digitalOceanService = new DigitalOceanFileService();
+
             if ($requestValidated) {
-                $project = $this->getProject()->where('id', Hashids::decode($id))->first();
+                $project = $projectModel->where('id', Hashids::decode($id))->first();
 
                 if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
                     $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
@@ -384,13 +223,13 @@ class ProjectsController extends Controller
                     try {
                         $projectPhoto = $request->file('photo');
                         if ($projectPhoto != null) {
-                            $this->getDigitalOceanFileService()->deleteFile($project->photo);
+                            $digitalOceanService->deleteFile($project->photo);
                             $img = Image::make($projectPhoto->getPathname());
                             $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
                             $img->resize(300, 300);
                             $img->save($projectPhoto->getPathname());
 
-                            $digitalOceanPath = $this->getDigitalOceanFileService()
+                            $digitalOceanPath = $digitalOceanService
                                                      ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
                             $project->update([
                                                  'photo' => $digitalOceanPath,
@@ -400,7 +239,7 @@ class ProjectsController extends Controller
                         $projectLogo = $request->file('logo');
                         if ($projectLogo != null) {
 
-                            $this->getDigitalOceanFileService()->deleteFile($project->logo);
+                            $digitalOceanService->deleteFile($project->logo);
                             $img = Image::make($projectLogo->getPathname());
 
                             $img->resize(null, 300, function($constraint) {
@@ -409,7 +248,7 @@ class ProjectsController extends Controller
 
                             $img->save($projectLogo->getPathname());
 
-                            $digitalOceanPathLogo = $this->getDigitalOceanFileService()
+                            $digitalOceanPathLogo = $digitalOceanService
                                                          ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/logo', $projectLogo);
 
                             $project->update([
@@ -421,17 +260,18 @@ class ProjectsController extends Controller
                         report($e);
                     }
 
-                    $userProject = $this->getUserProject()->where([
-                                                                      ['user', auth()->user()->id],
-                                                                      ['project', $project->id],
-                                                                  ])->first();
+                    $userProject = $userProjectModel->where([
+                                                                ['user', auth()->user()->id],
+                                                                ['project', $project->id],
+                                                            ])->first();
 
                     $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
+
                     if ($userProject->company != $requestValidated['company']) {
                         $userProject->update(['company' => $requestValidated['company']]);
                     }
 
-                    return response()->json('success', 200);
+                    return response()->json(['success' => 'success'], 200);
                 }
             }
 
@@ -450,10 +290,13 @@ class ProjectsController extends Controller
     {
         try {
             $projectId = current(Hashids::decode($id));
+
+            $projectService = new ProjectService();
+
             if ($projectId) {
-                if (!$this->getProjetctService()->hasSales($projectId)) {
+                if (!$projectService->hasSales($projectId)) {
                     //n tem venda
-                    if ($this->getProjetctService()->delete($projectId)) {
+                    if ($projectService->delete($projectId)) {
                         //projeto removido
                         return response()->json('success', 200);
                     } else {

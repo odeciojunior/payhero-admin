@@ -17,17 +17,6 @@ use Modules\Register\Http\Requests\RegisterRequest;
 
 class RegisterController extends Controller
 {
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|DigitalOceanFileService
-     */
-    private function getDigitalOceanFileService()
-    {
-        if (!$this->digitalOceanFileService) {
-            $this->digitalOceanFileService = app(DigitalOceanFileService::class);
-        }
-
-        return $this->digitalOceanFileService;
-    }
 
     public function create($parameter)
     {
@@ -40,6 +29,10 @@ class RegisterController extends Controller
     {
         try {
             $requestData = $request->validated();
+
+            $userModel    = new User();
+            $inviteModel  = new Invitation();
+            $companyModel = new Company();
 
             $requestData['password']                            = bcrypt($requestData['password']);
             $requestData['percentage_rate']                     = '6.5';
@@ -56,13 +49,13 @@ class RegisterController extends Controller
             $requestData['score']                               = '0';
             $requestData['sms_zenvia_amount']                   = '0';
 
-            $user = User::create($requestData);
+            $user = $userModel->create($requestData);
 
             $user->assignRole('administrador empresarial');
 
             auth()->loginUsingId($user['id']);
 
-            $invite = Invitation::where('email_invited', $requestData['email'])->first();
+            $invite = $inviteModel->where('email_invited', $requestData['email'])->first();
 
             if ($invite) {
                 $invite->update([
@@ -74,10 +67,10 @@ class RegisterController extends Controller
                                 ]);
             } else {
 
-                $company = Company::find(current(Hashids::decode($requestData['parameter'])));
+                $company = $companyModel->find(current(Hashids::decode($requestData['parameter'])));
 
                 if ($company) {
-                    Invitation::create([
+                    $inviteModel->create([
                                            'invite'          => null,
                                            'user_invited'    => $user->id,
                                            'status'          => '1',
@@ -119,8 +112,10 @@ class RegisterController extends Controller
     public function loginAsSomeUser($userId){
 
         auth()->loginUsingId($userId);
+        
+        $companyModel = new Company();
 
-        $companies = Company::where('user_id',\Auth::user()->id)->get()->toArray();
+        $companies = $companyModel->where('user_id',\Auth::user()->id)->get()->toArray();
 
         return view('dashboard::dashboard',[
             'companies' => $companies,

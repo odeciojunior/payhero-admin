@@ -76,7 +76,8 @@ $(function () {
         });
     });
     function atualizarPixel() {
-        $("#data-table-pixel").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        loadOnTable('#data-table-pixel','#table-pixel')
+
         $.ajax({
             method: "GET",
             url: "/pixels",

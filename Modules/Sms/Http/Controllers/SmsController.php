@@ -40,7 +40,9 @@ class SmsController extends Controller
 
                 return SmsResource::collection($sms);
             } else {
-                return response()->json('projeto não encontrado', 406);
+                return response()->json([
+                    'message' => 'projeto não encontrado'
+                ], 400);
             }
         } catch (Exception $e) {
             Log::warning("Erro ao tentar acessar dados (SmsController - index)");
@@ -90,7 +92,9 @@ class SmsController extends Controller
             $zenviaSmsSaved = $zenviaModel->create($data);
 
             if ($zenviaSmsSaved) {
-                return response()->json('Sucesso', 200);
+                return response()->json([
+                    'message' => 'Sucesso'
+                ], 200);
             }
 
             return response()->json('Erro');
@@ -118,7 +122,9 @@ class SmsController extends Controller
                 }
             }
 
-            return response()->json('Erro ao buscar Notificação');
+            return response()->json([
+                'message' => 'Erro ao buscar Notificação'
+            ],400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar dados (SmsController - show)');
             report($e);
@@ -142,7 +148,9 @@ class SmsController extends Controller
                 return view('sms::edit', ['sms' => $sms, 'sms_id' => $data['smsId']]);
             }
 
-            return response()->json('Dados não encontrados');
+            return response()->json([
+                'message' => 'Dados não encontrados'
+            ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela de editar sms');
             report($e);
@@ -178,10 +186,14 @@ class SmsController extends Controller
             $sms        = $zenviaModel->find($smsId);
             $smsUpdated = $zenviaModel->update($dataValidated);
             if ($smsUpdated) {
-                return response()->json('Sucesso', 200);
+                return response()->json([
+                    'message' => 'Sucesso'
+                ], 200);
             }
 
-            return response()->json('Erro');
+            return response()->json([
+                'message' => 'Erro'
+            ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar atualizar sms (SmsController - update)');
             report($e);
@@ -199,16 +211,19 @@ class SmsController extends Controller
             $zenviaSms        = $this->getZenviaSms()->find($zenviaSmsId);
             $zenviaSmsDeleted = $zenviaSms->delete();
             if ($zenviaSmsDeleted) {
-                return response()->json('Sucesso', 200);
+                return response()->json([
+                    'message' => 'Sucesso'
+                ], 200);
             }
 
-            return response()->json('Erro');
+            return response()->json([
+                'message' => 'Erro'
+            ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar deletar zenviSms (SmsController - destroy)');
             report($e);
         }
     }
-
 
     public function editarSms($id)
     {

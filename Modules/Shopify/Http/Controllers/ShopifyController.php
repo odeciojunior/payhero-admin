@@ -10,91 +10,30 @@ use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use App\Entities\ShopifyIntegration;
+use Modules\Core\Services\DomainService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 
-class ShopifyController extends Controller
-{
-    /**
-     * @var ShopifyService
-     */
-    private $shopifyService;
-    /**
-     * @var Project
-     */
-    private $projectModel;
-    /**
-     * @var ShopifyIntegration
-     */
-    private $shopifyIntegrationModel;
-    /**
-     * @var UserProject
-     */
-    private $userProjectModel;
-
-
-    /**
-     * @return ShopifyIntegration|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getShopifyIntegrationModel()
-    {
-        if (!$this->shopifyIntegrationModel) {
-            $this->shopifyIntegrationModel = app(ShopifyIntegration::class);
-        }
-
-        return $this->shopifyIntegrationModel;
-    }
-
-    /**
-     * @return Project|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getProjectModel()
-    {
-        if (!$this->projectModel) {
-            $this->projectModel = app(Project::class);
-        }
-
-        return $this->projectModel;
-    }
-
-    /**
-     * @return UserProject|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getUserProjectModel()
-    {
-        if (!$this->userProjectModel) {
-            $this->userProjectModel = app(UserProject::class);
-        }
-
-        return $this->userProjectModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
-     */
-    private function getShopifyService(string $urlStore = null, string $token = null)
-    {
-        if (!$this->shopifyService) {
-            $this->shopifyService = new ShopifyService($urlStore, $token);
-        }
-
-        return $this->shopifyService;
-    }
+class ShopifyController extends Controller {
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        $companies = Company::where('user_id', \Auth::user()->id)->get()->toArray();
+        $companyModel            = new Company();
+        $projectModel            = new Project();
+        $shopifyIntegrationModel = new ShopifyIntegration();
 
-        $shopifyIntegrations = ShopifyIntegration::where('user', \Auth::user()->id)->get()->toArray();
+        $companies = $companyModel->where('user_id', \Auth::user()->id)->get()->toArray();
+
+        $shopifyIntegrations = $shopifyIntegrationModel->where('user', \Auth::user()->id)->get();
 
         $projects = [];
 
         foreach ($shopifyIntegrations as $shopifyIntegration) {
 
-            $project = Project::find($shopifyIntegration['project']);
+            $project = $projectModel->find($shopifyIntegration->project);
 
             if ($project) {
                 $projects[] = $project;
@@ -116,7 +55,12 @@ class ShopifyController extends Controller
         try {
             $dados = $request->all();
 
-            $shopifyIntegration = $this->getShopifyIntegrationModel()
+            $companyModel            = new Company();
+            $projectModel            = new Project();
+            $userProjectModel        = new UserProject();
+            $shopifyIntegrationModel = new ShopifyIntegration();
+
+            $shopifyIntegration = $shopifyIntegrationModel
                                        ->where('token', $dados['token'])
                                        ->first();
 
@@ -129,7 +73,8 @@ class ShopifyController extends Controller
 
             try {
                 $urlStore = str_replace('.myshopify.com','',$dados['url_store']);
-                $shopifyStoreService = $this->getShopifyService($urlStore . '.myshopify.com', $dados['token']);
+
+                $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dados['token']);
 
                 if(empty($shopifyStoreService->getClient())){
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
@@ -142,29 +87,29 @@ class ShopifyController extends Controller
             }
 
             $shopifyName = $shopifyStoreService->getShopName();
-            $project     = $this->getProjectModel()->create([
-                                                                'name'                       => $shopifyName,
-                                                                'status'                     => $this->getProjectModel()
-                                                                                                ->getEnum('status', 'approved'),
-                                                                'visibility'                 => 'private',
-                                                                'percentage_affiliates'      => '0',
-                                                                'description'                => $shopifyName,
-                                                                'invoice_description'        => $shopifyName,
-                                                                'url_page'                   => 'https://' . $shopifyStoreService->getShopDomain(),
-                                                                'automatic_affiliation'      => false,
-                                                                'shopify_id'                 => $shopifyStoreService->getShopId(),
-                                                                'boleto'                     => '1',
-                                                                'installments_amount'        => '12',
-                                                                'installments_interest_free' => '1',
-                                                            ]);
+            $project     = $projectModel->create([
+                                                    'name'                       => $shopifyName,
+                                                    'status'                     => $this->getProjectModel()
+                                                                                    ->getEnum('status', 'approved'),
+                                                    'visibility'                 => 'private',
+                                                    'percentage_affiliates'      => '0',
+                                                    'description'                => $shopifyName,
+                                                    'invoice_description'        => $shopifyName,
+                                                    'url_page'                   => 'https://' . $shopifyStoreService->getShopDomain(),
+                                                    'automatic_affiliation'      => false,
+                                                    'shopify_id'                 => $shopifyStoreService->getShopId(),
+                                                    'boleto'                     => '1',
+                                                    'installments_amount'        => '12',
+                                                    'installments_interest_free' => '1',
+                                                ]);
 
-            $shopifyIntegration = $this->getShopifyIntegrationModel()->create([
-                                                                                'token'     => $dados['token'],
-                                                                                'url_store' => $dados['url_store'] . '.myshopify.com',
-                                                                                'user'      => auth()->user()->id,
-                                                                                'project'   => $project->id,
-                                                                                'status'    => 1,
-                                                                            ]);
+            $shopifyIntegration = $shopifyIntegrationModel->create([
+                                                                    'token'     => $dados['token'],
+                                                                    'url_store' => $dados['url_store'] . '.myshopify.com',
+                                                                    'user'      => auth()->user()->id,
+                                                                    'project'   => $project->id,
+                                                                    'status'    => 1,
+                                                                ]);
 
             $this->getUserProjectModel()->create([
                                                     'user'                 => auth()->user()->id,
@@ -199,9 +144,11 @@ class ShopifyController extends Controller
 
             $projectId = current(Hashids::decode($requestData['project_id']));
 
+            $projectModel = new Project();
+
             if ($projectId) {
                 //id decriptado
-                $project = $this->getProjectModel()
+                $project = $projectModel
                                 ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
                                 ->where('id', $projectId)->first();
 
@@ -210,7 +157,7 @@ class ShopifyController extends Controller
                     try {
 
                         foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                            $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                             $shopify->setThemeByRole('main');
                             if (!empty($shopifyIntegration->theme_html)) {
@@ -253,17 +200,20 @@ class ShopifyController extends Controller
     {
         try {
             $requestData = $request->all();
-
+            
             $projectId = current(Hashids::decode($requestData['project_id']));
+            
+            $domainService = new DomainService();
+            $project       = new Project();
 
             if ($projectId) {
                 //pega o primeiro dominio ativado
-                $domain = $this->getProjectModel()
-                               ->where('status', $this->getProjectModel()
+                $domain = $projectModel
+                               ->where('status', $projectModel
                                                       ->getEnum('status', 'approved'))
                                ->first();
 
-                if ($this->getDomainService()->verifyPendingDomains($domain->id, true)) {
+                if ($domainService->verifyPendingDomains($domain->id, true)) {
                     return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
                 } else {
                     return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
