@@ -18,8 +18,16 @@ $(document).ready(function () {
     $("#notification").on('click', function () {
         $('#notificationTemplate').html('')
         loadOnModal('#notificationTemplate');
-        updateUnreadNotificationsAmount();
+        if($('#notification-amount').html() != '0'){
+            $("#notificationTemplate").html('');
+            $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
+            updateUnreadNotification();
+        }else{
+            htmlNotNotifications();
+        }
     });
+
+    updateUnreadNotificationsAmount();
 
     // verifica se existem novas notificações
     function updateUnreadNotificationsAmount() {
@@ -37,13 +45,6 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#notification-amount").html(response.qtd_notification);
-                if (response.qtd_notification > 0) {
-                    $("#notificationTemplate").html('');
-                    $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
-                    updateUnreadNotification();
-                } else {
-                    htmlNotNotifications();
-                }
                 $('#notificationBadge').html('New ' + response.qtd_notification)
             }
         });

@@ -44,12 +44,10 @@
                             <span id='notificationBadge' class="badge badge-round badge-danger"></span>
                         </div>
                         <div class="list-group scrollable scrollable-vertical" style="position: relative;">
-                            <div class="scrollable-container" style="height: 270px; width: 370px;">
+                            <div class="scrollable-container" style="min-height: 140px; width: 358px;">
                                 <div id='notificationTemplate' class="scrollable-content" style="width: 358px;">
+
                                 </div>
-                            </div>
-                            <div class="scrollable-bar scrollable-bar-vertical scrollable-bar-hide" draggable="false">
-                                <div class="scrollable-bar-handle" style="height: 198.151px;"></div>
                             </div>
                         </div>
                         <div class="dropdown-menu-footer">
