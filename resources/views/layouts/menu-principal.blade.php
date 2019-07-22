@@ -32,20 +32,45 @@
                 </li>
             </ul>
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                <li id="notifications_button" class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#" title="Notifications" id='notification'
-                       aria-expanded="false" data-animation="scale-up" role="button">
+                <li id="notifications_button" class="nav-item dropdown" disabled='true'>
+                    <span class="nav-link" data-toggle="dropdown" title="Notifications" id='notification'
+                          aria-expanded="false" data-animation="scale-up" role="button">
                         <i class="material-icons">notifications_none</i>
                         <span class="badge badge-danger badge-notification" id="notification-amount">0</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-media no-border" role="menu">
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
                         <div class="dropdown-menu-header">
-                            <h5 class="title-small">Notificações</h5>
+                            <h5>NOTIFICAÇÕES</h5>
+                            <span id='notificationBadge' class="badge badge-round badge-danger"></span>
                         </div>
-                        <div class="list-group">
+                        <div class="list-group scrollable scrollable-vertical" style="position: relative;">
+                            <div class="scrollable-container" style="height: 270px; width: 370px;">
+                                <div id='notificationTemplate' class="scrollable-content" style="width: 358px;">
+                                </div>
+                            </div>
+                            <div class="scrollable-bar scrollable-bar-vertical scrollable-bar-hide" draggable="false">
+                                <div class="scrollable-bar-handle" style="height: 198.151px;"></div>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu-footer">
+                            <span class="dropdown-menu-footer-btn" role="button">
+
+                            </span>
+                            <span class="dropdown-item" role="menuitem">
+                                NOTIFICAÇÕES
+                            </span>
+                        </div>
+                    </div>
+                    {{--<div class="dropdown-menu dropdown-menu-right dropdown-menu-media no-border" role="menu">
+                        <div class="dropdown-menu-header">
+                            <h5>NOTIFICAÇÕES</h5>
+                            <span id='notificationBadge' class="badge badge-round badge-danger"></span>
+                        </div>
+                        <div class="list-group scrollable is-enabled scrollable-vertical">
                             <div data-role="container" style="width: 100%; height: auto;">
                                 <div id='notificationTemplate' data-role="content" style="width: 100%; ">
-                                    {{--@if(count(\Auth::user()->unreadNotifications) > 0)
+
+                                    @if(count(\Auth::user()->unreadNotifications) > 0)
                                         @foreach(\Auth::user()->unreadNotifications as $notification)
                                             @include('notifications::' . str_replace("Modules\\Checkout\\Notifications\\","",$notification->type), ['notification' => $notification])
                                         @endforeach
@@ -58,11 +83,12 @@
                                                 <span class="">Nenhuma nova notificação</span>
                                             </div>
                                         </div>
-                                    @endif--}}
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                    </div>--}}
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
