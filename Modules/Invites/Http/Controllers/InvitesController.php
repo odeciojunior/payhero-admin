@@ -2,20 +2,21 @@
 
 namespace Modules\Invites\Http\Controllers;
 
+use Exception;
 use App\Entities\Company;
 use App\Entities\Invitation;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Helpers\EmailHelper;
 use Modules\Core\Helpers\StringHelper;
 use App\Entities\SiteInvitationRequest;
+use Modules\Core\Services\EmailService;
 use App\Entities\HubsmartInvitationRequest;
 use Modules\Invites\Http\Requests\SendInvitationRequest;
-use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class InvitesController
@@ -95,11 +96,12 @@ class InvitesController extends Controller
             $invite = $this->invitation->create($requestData);
 
             if ($invite) {
-                EmailHelper::sendInvite($requestData['email_invited'], $requestData['parameter']);
+                EmailService::sendInvite($requestData['email_invited'], $requestData['parameter']);
             }
 
             return redirect()->route('invitations.invites');
         } catch (Exception $ex) {
+            dd($ex);
             Log::warning('Erro ao enviar convite (InvitesController - sendInvitation)');
             report($ex);
         }

@@ -11,16 +11,6 @@ use Modules\Transfers\Transformers\TransfersResource;
 
 class TransfersController extends Controller
 {
-    private $transfer;
-
-    private function getTransfer()
-    {
-        if (!$this->transfer) {
-            $this->transfer = app(Transfer::class);
-        }
-
-        return $this->transfer;
-    }
 
     /**
      * Display a listing of the resource.
@@ -29,7 +19,9 @@ class TransfersController extends Controller
     public function index(Request $request) {
         try {
 
-            $transfers = $this->getTransfer()
+            $transfersModel = new Transfer();
+
+            $transfers = $transfersModel
                         ->select('transfers.*','transaction.sale','transaction.company','transaction.currency')
                         ->leftJoin('transactions as transaction','transaction.id','transfers.transaction')
                         ->where('transaction.company',current(Hashids::decode($request->company)));

@@ -1,10 +1,10 @@
 <?php 
 
-namespace Modules\Core\Helpers;
+namespace Modules\Core\Services;
 
 use App\Entities\UserProjeto;
 
-class EmailHelper {
+class EmailService {
 
     public static function novaAfiliacao(){
 
@@ -74,7 +74,7 @@ class EmailHelper {
     public static function sendInvite($to, $parameter){
 
         try {
-            $emailLayout = view('core::emails.invite', [
+            $emailLayout = view('invites::email.invite', [
                 'link' => 'https://app.cloudfox.net/register/' . $parameter
             ]);
 
