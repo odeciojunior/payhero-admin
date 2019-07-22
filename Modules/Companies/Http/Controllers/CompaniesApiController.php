@@ -18,31 +18,15 @@ use Modules\Companies\Transformers\CompanyResource;
 class CompaniesApiController extends Controller
 {
     /**
-     * @var Company
-     */
-    private $companyModel;
-
-    /**
-     * @return Company|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCompanyModel()
-    {
-        if (!$this->companyModel) {
-            $this->companyModel = app(Company::class);
-        }
-
-        return $this->companyModel;
-    }
-
-    /**
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(Request $request)
     {
-        $companies = $this->getCompanyModel()
-                          ->with('user')
-                          ->where('user_id', auth()->user()->id)
-                          ->paginate(15);
+        $companyModel = new Company();
+
+        $companies = $companyModel->with('user')
+                                  ->where('user_id', auth()->user()->id)
+                                  ->paginate(15);
 
         return CompanyResource::collection($companies);
     }
@@ -63,7 +47,6 @@ class CompaniesApiController extends Controller
     public function store(Request $request)
     {
 
-
     }
 
     /**
@@ -73,7 +56,6 @@ class CompaniesApiController extends Controller
      */
     public function getCreateForm(Request $request)
     {
-
 
     }
 
@@ -151,7 +133,6 @@ class CompaniesApiController extends Controller
                          ->rawColumns(['detalhes'])
                          ->make(true);
     }
-
 }
 
 
