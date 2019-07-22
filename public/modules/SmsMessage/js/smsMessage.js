@@ -177,6 +177,22 @@ $(function () {
 
                 data += '<tr>';
                 data += '<td class= style="vertical-align: middle;">Email</td>';
+                data += '<td class= style="vertical-align: middle;">Boleto gerado</td>';
+                data += '<td class= style="vertical-align: middle;">10:00 horas 2 dias após</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, por falta de pagamento vamos ter que liberar sua mercadoria para o estoque novamente. Isso siginigfica que se você não efetuar o pagamento, cancelaremos seu pedido!</td>';
+                data += '<td class="shipping-status " style="vertical-align: middle;">';
+                data += '<span class="badge badge-success mb-1">Ativo</span>';
+                data += '<span class="badge badge-primary">Grátis</span>';
+                data += '</td>';
+                data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
+                data += '</td>';
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
+                data += "<td style='vertical-align: middle' class=''><a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>   <i class='material-icons gradient'> delete_outline </i> </a></td>";
+                data += '</tr>';
+
+                data += '<tr>';
+                data += '<td class= style="vertical-align: middle;">Email</td>';
                 data += '<td class= style="vertical-align: middle;">Boleto vencendo</td>';
                 data += '<td class= style="vertical-align: middle;">10:00 horas</td>';
                 data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, seu boleto vencerá hoje, ainda dá tempo de pagar! Não se esqueça, só enviaremos o seu pedido (que já está separado) se você efetuar o pagamento! {url_boleto}</td>';
@@ -211,7 +227,7 @@ $(function () {
                 data += '<td class= style="vertical-align: middle;">Email</td>';
                 data += '<td class= style="vertical-align: middle;">Carrinho abandonado</td>';
                 data += '<td class= style="vertical-align: middle;">10:00 horas próximo dia</td>';
-                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, vimos que você não aproveitou a promoção de ontem. O seu pedido ainda está separado aguardando a finalização da compra, mas não podemos segurar por muito tempo! {link_carrinho_abandonado</td>';
+                data += '<td class="shipping-zip-code-origin " style="vertical-align:">Olá {primeiro_nome}, vimos que você não aproveitou a promoção de ontem. O seu pedido ainda está separado aguardando a finalização da compra, mas não podemos segurar por muito tempo! {link_carrinho_abandonado}</td>';
                 data += '<td class="shipping-status " style="vertical-align: middle;">';
                 data += '<span class="badge badge-success mb-1">Ativo</span>';
                 data += '<span class="badge badge-primary">Grátis</span>';

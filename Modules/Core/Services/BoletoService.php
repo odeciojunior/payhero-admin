@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gustavo
- * Date: 08/07/19
- * Time: 15:03
- */
 
 namespace Modules\Core\Services;
 
@@ -44,7 +38,7 @@ class BoletoService
         //        }
     }
 
-    //Hoje vence o seu boleto
+    // Hoje vence o seu boleto
     public function verifyBoletosExpiring()
     {
         try {
@@ -53,6 +47,9 @@ class BoletoService
             $boletoDueToday = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $dateNow]])
                                   ->with('clientModel', 'plansSales.plan.products')
                                   ->get();
+
+            Log::info('boletos vencendo hoje -> ' . print_r($boletoDueToday, true));
+
             foreach ($boletoDueToday as $boleto) {
                 try {
                     $sendEmail   = new SendgridService();
@@ -97,9 +94,9 @@ class BoletoService
                         if ($telephoneValidated != '') {
                             $zenviaSms = new ZenviaSmsService();
                             Log::warning('verifyBoletosExpiring');
-
                             $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido!' . $boleto->boleto_link, $telephoneValidated);
                         }
+
                         $data           = [
                             "name"                  => $clientNameExploded[0],
                             "boleto_link"           => $boleto->boleto_link,
@@ -131,13 +128,16 @@ class BoletoService
         }
     }
 
-    //        Já separamos seu pedido
+    // Já separamos seu pedido
     public function verifyBoletoWaitingPayment()
     {
         try {
             $date                 = Carbon::now()->subDay('1')->toDateString();
             $boletoWaitionPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                                         ->with('clientModel', 'plansSales.plan.products')->get();
+
+            Log::info('boletos aguardando pagamento -> ' . print_r($boletoWaitionPayment, true));
+
             foreach ($boletoWaitionPayment as $boleto) {
                 try {
                     $sendEmail          = new SendgridService();
@@ -191,7 +191,6 @@ class BoletoService
 
                         if ($emailValidated) {
                             Log::warning('verifyBoletoWaitingPayment');
-
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
                         }
                     }
@@ -213,6 +212,9 @@ class BoletoService
             $date    = Carbon::now()->subDay('2')->toDateString();
             $boletos = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                            ->with('clientModel', 'plansSales.plan.products')->get();
+
+            Log::info('boletos aguardando pagamento 2 -> ' . print_r($boletoWaitionPayment, true));
+
             foreach ($boletos as $boleto) {
                 try {
                     $clientName         = $boleto->clientModel->name;
@@ -374,6 +376,9 @@ class BoletoService
             $boletosPaid = Sale::select(\DB::raw('count(*) as count'), 'owner', 'id')
                                ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
                                ->groupBy('sales.owner', 'id')->get();
+
+            Log::info('boletos pagos hoje -> ' . print_r($boletosPaid, true));
+
             foreach ($boletosPaid as $boleto) {
                 try {
                     $user = User::find($boleto->owner);

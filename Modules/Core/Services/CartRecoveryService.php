@@ -38,6 +38,8 @@ class CartRecoveryService
                                       ->with('projectModel', 'checkoutPlans.plan.products')
                                       ->get();
 
+            Log::info('carrinhos abandonados -> ' . print_r($abandonedCarts, true));
+
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
@@ -73,7 +75,6 @@ class CartRecoveryService
                         'checkout_link' => $link,
                         'contact_email' => 'sac@' . $domain['name'],
                         "products"      => $products,
-
                     ];
                     $emailValidated = FoxUtils::validateEmail($log['email']);
 
@@ -107,6 +108,9 @@ class CartRecoveryService
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                                       ->with('projectModel', 'checkoutPlans.plan.products')
                                       ->get();
+
+            Log::info('carrinhos abandonados 2 -> ' . print_r($abandonedCarts, true));
+
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
