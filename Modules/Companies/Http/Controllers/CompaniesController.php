@@ -50,7 +50,7 @@ class CompaniesController extends Controller
         try {
             $companyModel = new Company();
 
-            $requestData  = $request->validated();
+            $requestData = $request->validated();
 
             $company = $companyModel->create([
                                                  'user_id'          => auth()->user()->id,
@@ -203,7 +203,7 @@ class CompaniesController extends Controller
     {
         try {
             $companyModel            = new Company();
-            $digitalOceanFileService = new DigitalOceanFileService();
+            $digitalOceanFileService = app(DigitalOceanFileService::class);
             $companyDocumentModel    = new CompanyDocument();
 
             $dataForm = $request->validated();

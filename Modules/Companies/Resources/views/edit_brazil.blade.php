@@ -194,6 +194,7 @@
                                                 <div class="dz-message needsclick">
                                                 Arraste os arquivos ou clique para selecionar<br/>
                                                 </div>
+                                                <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="input-pad">
                                                 <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
                                             </form>
                                         </div>
