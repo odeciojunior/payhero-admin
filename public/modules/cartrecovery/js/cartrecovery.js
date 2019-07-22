@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+
     atualizar();
 
     $("#bt_filtro").on("click", function (event) {
@@ -10,7 +11,9 @@ $(document).ready(function () {
 
     function atualizar(link = null) {
 
-        $('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");
+        loadOnTable('#table_data','#carrinhoAbandonado');
+
+        /*$('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");*/
 
         if (link == null) {
             link = '/recoverycart/getabandonatedcarts?project=' + $("#project").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
@@ -31,6 +34,7 @@ $(document).ready(function () {
             success: function (response) {
 
                 $('#table_data').html('');
+                $('#carrinhoAbandonado').addClass('table-striped')
 
                 $.each(response.data, function (index, value) {
 
@@ -78,7 +82,7 @@ $(document).ready(function () {
 
                     $('#modal-title').html('Detalhes Carrinho Abandonado' + '<br><hr>');
 
-                    $('.modal-body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                    /*$('.modal-body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");*/
 
                     var data = {sale_id: venda};
 

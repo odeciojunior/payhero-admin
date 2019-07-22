@@ -76,8 +76,7 @@ $(document).ready(function () {
     });
 
     function updateDomains() {
-        $(".loading").css("visibility", "visible");
-        $("#domain-table-body").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        loadOnTable('#domain-table-body','#tabela-dominios');
 
         $.ajax({
             method: "GET",

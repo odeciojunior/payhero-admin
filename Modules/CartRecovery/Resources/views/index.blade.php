@@ -50,7 +50,7 @@
                 {{--</div>--}}
             </div>
             <div class="card shadow" style="min-height: 300px">
-                <table class="table table-striped">
+                <table id='carrinhoAbandonado' class="table table-striped">
                     <thead>
                         <tr>
                             <td class="table-title">Data</td>

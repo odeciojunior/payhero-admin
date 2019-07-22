@@ -1,5 +1,15 @@
 $(document).ready(function () {
 
+    /*$(document).ajaxStart(function (event, jqXHR, ajaxOptions, data) {
+        $('#dados_tabela').html('').hide(100);
+        $('#tabela_vendas').removeClass('table-striped');
+        $('#dados_tabela').append("<tr id='loaderLine'>"+
+            "<td id='foxLoadingTable' colspan='11' align='center' class='foxLoadingTable'>"+
+            "<img src='../modules/global/gif/cloudfox-loading-1.gif' class='foxLoaderTable'>"+
+            "</td>"+
+            "</tr>").show('slow');
+    })*/
+
     atualizar();
 
     $("#filtros").on("click", function () {
@@ -14,10 +24,56 @@ $(document).ready(function () {
         event.preventDefault();
         atualizar();
     });
+    $("#bt_get_csv").on("click", function () {
+        $('<input>').attr({
+            id: 'export-sales',
+            type: 'hidden',
+            name: 'type',
+            value: 'csv'
+        }).appendTo('form');
+
+        $('#filter_form').submit();
+        $('export-sales').remove();
+    });
+
+    $("#bt_get_xls").on("click", function () {
+        $('<input>').attr({
+            id: 'export-sales',
+            type: 'hidden',
+            name: 'type',
+            value: 'xls'
+        }).appendTo('form');
+
+        $('#filter_form').submit();
+        $('export-sales').remove();
+    });
+
+    function downloadFile(data, fileName, type = "text/plain") {
+        // Create an invisible A element
+        const a = document.createElement("a");
+        a.style.display = "none";
+        document.body.appendChild(a);
+
+        // Set the HREF to a Blob representation of the data to be downloaded
+        a.href = window.URL.createObjectURL(
+            new Blob([data], {type})
+        );
+
+        // Use download attribute to set set desired file name
+        a.setAttribute("download", fileName);
+
+        // Trigger the download by simulating click
+        a.click();
+
+        // Cleanup
+        window.URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
+    }
+
 
     function atualizar(link = null) {
 
-        $('#dados_tabela').html("<tr><td colspan='11'> Carregando...</td></tr>");
+        loadOnTable('#dados_tabela','#tabela_vendas');
 
         if (link == null) {
             link = '/sales/getsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
@@ -36,6 +92,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $('#dados_tabela').html('');
+                $('#tabela_vendas').addClass('table-striped')
 
                 $.each(response.data, function (index, value) {
                     dados = '';
@@ -114,52 +171,6 @@ $(document).ready(function () {
         });
     }
 
-    $("#bt_get_csv").on("click", function () {
-        $('<input>').attr({
-            id: 'export-sales',
-            type: 'hidden',
-            name: 'type',
-            value: 'csv'
-        }).appendTo('form');
-
-        $('#filter_form').submit();
-        $('export-sales').remove();
-    });
-
-    $("#bt_get_xls").on("click", function () {
-        $('<input>').attr({
-            id: 'export-sales',
-            type: 'hidden',
-            name: 'type',
-            value: 'xls'
-        }).appendTo('form');
-
-        $('#filter_form').submit();
-        $('export-sales').remove();
-    });
-
-    function downloadFile(data, fileName, type = "text/plain") {
-        // Create an invisible A element
-        const a = document.createElement("a");
-        a.style.display = "none";
-        document.body.appendChild(a);
-
-        // Set the HREF to a Blob representation of the data to be downloaded
-        a.href = window.URL.createObjectURL(
-            new Blob([data], {type})
-        );
-
-        // Use download attribute to set set desired file name
-        a.setAttribute("download", fileName);
-
-        // Trigger the download by simulating click
-        a.click();
-
-        // Cleanup
-        window.URL.revokeObjectURL(a.href);
-        document.body.removeChild(a);
-    }
-
     function csvSalesExport(link = null) {
 
         if (link == null) {
@@ -195,7 +206,7 @@ $(document).ready(function () {
             $("#primeira_pagina").attr('disabled', true);
             $("#primeira_pagina").addClass('nav-btn');
             $("#primeira_pagina").addClass('active');
-    }
+        }
 
         $('#primeira_pagina').on("click", function () {
             atualizar('?page=1');
@@ -230,7 +241,7 @@ $(document).ready(function () {
             if (response.meta.current_page + x >= response.meta.last_page) {
                 continue;
             }
- 
+
             $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
