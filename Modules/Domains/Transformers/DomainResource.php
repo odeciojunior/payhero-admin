@@ -10,39 +10,6 @@ use Illuminate\Http\Resources\Json\Resource;
 class DomainResource extends Resource
 {
     /**
-     * @var CloudFlareService
-     */
-    private $cloudFlareService;
-    /**
-     * @var SendgridService
-     */
-    private $sendgridService;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
-     */
-    private function getCloudFlareService()
-    {
-        if (!$this->cloudFlareService) {
-            $this->cloudFlareService = app(CloudFlareService::class);
-        }
-
-        return $this->cloudFlareService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
-     */
-    private function getSendgridService()
-    {
-        if (!$this->sendgridService) {
-            $this->sendgridService = app(SendgridService::class);
-        }
-
-        return $this->sendgridService;
-    }
-
-    /**
      * @param \Illuminate\Http\Request $request
      * @return array
      * @throws \Cloudflare\API\Endpoints\EndpointException
