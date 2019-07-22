@@ -46,7 +46,8 @@ class NotificationsController extends Controller
             foreach ($unreadNotifications as &$notification) {
                 /*$notification->updated_at = Carbon::createFromFormat('d/m/Y H:m:s', $notification->updated_at);
                 date('d/m/Y H:m:s', strtotime($notification->updated_at));*/
-                $view .= view('notifications::' . Str::replaceArray("Modules\\Checkout\\Notifications\\", [''], $notification->type), ['notification' => $notification])->render();
+                $type = explode("\\", $notification->type);
+                $view .= view('notifications::' . end($type), ['notification' => $notification])->render();
             }
 
             return response()->json([

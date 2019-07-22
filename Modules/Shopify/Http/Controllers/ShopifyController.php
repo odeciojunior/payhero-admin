@@ -13,9 +13,10 @@ use App\Entities\ShopifyIntegration;
 use Modules\Core\Services\DomainService;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Events\ShopifyIntegrationEvent;
+use Vinkla\Hashids\Facades\Hashids;
 
-class ShopifyController extends Controller {
-
+class ShopifyController extends Controller
+{
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -55,80 +56,79 @@ class ShopifyController extends Controller {
         try {
             $dados = $request->all();
 
-            $companyModel            = new Company();
             $projectModel            = new Project();
             $userProjectModel        = new UserProject();
             $shopifyIntegrationModel = new ShopifyIntegration();
 
             $shopifyIntegration = $shopifyIntegrationModel
-                                       ->where('token', $dados['token'])
-                                       ->first();
+                ->where('token', $dados['token'])
+                ->first();
 
-            if($shopifyIntegration){
-                if($shopifyIntegration->status == 1){
+            if ($shopifyIntegration) {
+                if ($shopifyIntegration->status == 1) {
                     return response()->json(['message' => 'Integração em andamento'], 400);
                 }
+
                 return response()->json(['message' => 'Projeto já integrado'], 400);
             }
 
             try {
-                $urlStore = str_replace('.myshopify.com','',$dados['url_store']);
+                $urlStore = str_replace('.myshopify.com', '', $dados['url_store']);
 
                 $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dados['token']);
 
-                if(empty($shopifyService->getClient())){
+                if (empty($shopifyService->getClient())) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
                 $shopifyService->getShopName();
-
             } catch (\Exception $e) {
                 report($e);
+
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
             }
 
             $shopifyName = $shopifyService->getShopName();
             $project     = $projectModel->create([
-                                                    'name'                       => $shopifyName,
-                                                    'status'                     => $this->getProjectModel()
-                                                                                    ->getEnum('status', 'approved'),
-                                                    'visibility'                 => 'private',
-                                                    'percentage_affiliates'      => '0',
-                                                    'description'                => $shopifyName,
-                                                    'invoice_description'        => $shopifyName,
-                                                    'url_page'                   => 'https://' . $shopifyService->getShopDomain(),
-                                                    'automatic_affiliation'      => false,
-                                                    'shopify_id'                 => $shopifyService->getShopId(),
-                                                    'boleto'                     => '1',
-                                                    'installments_amount'        => '12',
-                                                    'installments_interest_free' => '1',
-                                                ]);
+                                                     'name'                       => $shopifyName,
+                                                     'status'                     => $projectModel->getEnum('status', 'approved'),
+                                                     'visibility'                 => 'private',
+                                                     'percentage_affiliates'      => '0',
+                                                     'description'                => $shopifyName,
+                                                     'invoice_description'        => $shopifyName,
+                                                     'url_page'                   => 'https://' . $shopifyService->getShopDomain(),
+                                                     'automatic_affiliation'      => false,
+                                                     'shopify_id'                 => $shopifyService->getShopId(),
+                                                     'boleto'                     => '1',
+                                                     'installments_amount'        => '12',
+                                                     'installments_interest_free' => '1',
+                                                 ]);
 
             $shopifyIntegration = $shopifyIntegrationModel->create([
-                                                                    'token'     => $dados['token'],
-                                                                    'url_store' => $dados['url_store'] . '.myshopify.com',
-                                                                    'user'      => auth()->user()->id,
-                                                                    'project'   => $project->id,
-                                                                    'status'    => 1,
-                                                                ]);
+                                                                       'token'     => $dados['token'],
+                                                                       'url_store' => $dados['url_store'] . '.myshopify.com',
+                                                                       'user'      => auth()->user()->id,
+                                                                       'project'   => $project->id,
+                                                                       'status'    => 1,
+                                                                   ]);
 
-            $this->getUserProjectModel()->create([
-                                                    'user'                 => auth()->user()->id,
-                                                    'project'              => $project->id,
-                                                    'company'              => $dados['company'],
-                                                    'type'                 => 'producer',
-                                                    'shipment_responsible' => true,
-                                                    'permissao_acesso'     => true,
-                                                    'permissao_editar'     => true,
-                                                    'status'               => 'active',
-                                                ]);
+            $userProjectModel->create([
+                                          'user'                 => auth()->user()->id,
+                                          'project'              => $project->id,
+                                          'company'              => $dados['company'],
+                                          'type'                 => 'producer',
+                                          'shipment_responsible' => true,
+                                          'permissao_acesso'     => true,
+                                          'permissao_editar'     => true,
+                                          'status'               => 'active',
+                                      ]);
 
             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
 
             return response()->json(['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'], 200);
-
         } catch (\Exception $e) {
             Log::critical('Erro ao realizar integração com loja do shopify | ShopifyController@store');
             report($e);
+
             return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
         }
     }
@@ -149,8 +149,8 @@ class ShopifyController extends Controller {
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
-                                ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
-                                ->where('id', $projectId)->first();
+                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                    ->where('id', $projectId)->first();
 
                 if (!empty($project->shopify_id)) {
                     //se for shopify, voltar as integraçoes ao html padrao
@@ -200,18 +200,18 @@ class ShopifyController extends Controller {
     {
         try {
             $requestData = $request->all();
-            
+
             $projectId = current(Hashids::decode($requestData['project_id']));
-            
+
             $domainService = new DomainService();
-            $project       = new Project();
+            $projectModel  = new Project();
 
             if ($projectId) {
                 //pega o primeiro dominio ativado
                 $domain = $projectModel
-                               ->where('status', $projectModel
-                                                      ->getEnum('status', 'approved'))
-                               ->first();
+                    ->where('status', $projectModel
+                        ->getEnum('status', 'approved'))
+                    ->first();
 
                 if ($domainService->verifyPendingDomains($domain->id, true)) {
                     return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
@@ -229,7 +229,5 @@ class ShopifyController extends Controller {
             return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
         }
     }
-
-
 }
 
