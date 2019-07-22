@@ -15,7 +15,7 @@ $(document).ready(function () {
         alertCustom('success', data.message);
         updateUnreadNotificationsAmount();
     });
-    $("#notifications_button").click(function () {
+    $("#notifications_button").on('click', function () {
         updateUnreadNotificationsAmount();
     });
 
@@ -37,10 +37,7 @@ $(document).ready(function () {
                 $("#notification-amount").html(response.qtd_notification);
                 if (response.qtd_notification > 0) {
                     $("#notificationTemplate").html('');
-                    $("#notificationTemplate").css({
-                        'height': '150px',
-                        'overflow-y': 'scroll; transform: translate3d(0px, 122.091px, 0px); '
-                    }).addClass('scrollable-bar-handle');
+                    $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
                     updateUnreadNotification();
                 } else {
                     htmlNotNotifications();
