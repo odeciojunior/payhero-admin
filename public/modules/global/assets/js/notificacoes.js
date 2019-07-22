@@ -1,3 +1,4 @@
+/*
 $(document).ready(function(){
 
     $("#notifications_button").on("click", function(){
@@ -21,3 +22,4 @@ $(document).ready(function(){
     });
 
 });
+*/

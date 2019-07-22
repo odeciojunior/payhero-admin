@@ -20,6 +20,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Notifications\Notifications\boletoCompensatedNotification;
+use Pusher\Pusher;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BoletoService
 {
@@ -380,19 +383,23 @@ class BoletoService
 
                     $emailValidated = FoxUtils::validateEmail($user->email);
                     $message        = '';
+
                     if ($boleto->count == 1) {
                         $message = 'boleto foi compensado';
                     } else {
                         $message = 'boletos foram compensados';
                     }
+
                     $data = [
                         "name"              => $user->name,
                         'boleto_count'      => strval($boleto->count),
                         'message'           => $message,
                         'transaction_value' => "R$ 00,00",
                     ];
+
                     if ($emailValidated && $boleto->count > 0) {
                         Log::warning('verifyBoletoPaid');
+                        $user->notify(new boletoCompensatedNotification($boleto->count));
 
                         $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
                     }

@@ -92,6 +92,9 @@ class ReportsController extends Controller
         return $this->companyModel;
     }
 
+    /**
+     * @return Plan|\Illuminate\Contracts\Foundation\Application|mixed
+     */
     public function getPlan()
     {
         if (!$this->planModel) {

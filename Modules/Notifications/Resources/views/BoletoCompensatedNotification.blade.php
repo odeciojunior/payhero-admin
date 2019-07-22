@@ -5,10 +5,9 @@
         </div>
         <div class="media-body">
             <h6 class="media-heading">
-                {{$notification->data['qtd']}} {{ $notification->data['qtd'] > 1 ? ' novas vendas' : ' nova venda' }}
+                {{$notification->data['qtd']}} {{ $notification->data['qtd'] > 1 ? ' boletos compensandos' : ' boleto compensado' }}
             </h6>
             <time class="media-meta" datetime="2018-06-11T18:29:20+08:00">{{ date('d/m/Y H:m:s', strtotime($notification->updated_at)) }}</time>
         </div>
     </div>
 </a>
-
