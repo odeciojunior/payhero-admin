@@ -74,6 +74,15 @@ $(function () {
 
     function updateReports() {
         var date_range = $('#date_range_requests').val();
+
+        $('#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-reembolso, #qtd-pending, #qtd-canceled'+
+            '#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert'+
+            '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio').html("<span class='loading'>" +
+            "<span class='loaderSpan' >" +
+            "</span>" +
+            "</span>");
+        loadOnTable('#origins-table-itens','.table-vendas-itens')
+
         $.ajax({
             url: '/reports/getValues/' + $("#project").val(),
             type: 'GET',
@@ -129,7 +138,8 @@ $(function () {
 
     function updateSalesByOrigin(link = null) {
 
-        $('#origins-table').html("<td colspan='3' class='text-center'> Carregando... </div>");
+        /*$('#origins-table').html("<td colspan='3' class='text-center'> Carregando... </div>");*/
+        loadOnTable('#origins-table','.table-vendas')
 
         if (link == null) {
             link = '/reports/getsalesbyorigin?' + 'project_id=' + $("#project").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
@@ -164,6 +174,7 @@ $(function () {
 
                     $('#origins-table').html("");
                     $("#origins-table").append(table_data);
+                    $('.table-vendas').addClass('table-striped')
 
                     pagination(response);
                 }

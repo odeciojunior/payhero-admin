@@ -29,146 +29,19 @@ use Modules\Domains\Transformers\DomainResource;
 class DomainsController extends Controller
 {
     /**
-     * @var Domain
-     */
-    private $domainModel;
-    /**
-     * @var Project
-     */
-    private $projectModel;
-    /**
-     * @var Company
-     */
-    private $companyModel;
-    /**
-     * @var CloudFlareService
-     */
-    private $cloudFlareService;
-    /**
-     * @var $domainRecordModel
-     */
-    private $domainRecordModel;
-    /**
-     * @var SendgridService
-     */
-    private $sendgridService;
-    /**
-     * @var ShopifyService
-     */
-    private $shopifyService;
-    /**
-     * @var DomainService
-     */
-    private $domainService;
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|DomainService
-     */
-    private function getDomainService()
-    {
-        if (!$this->domainService) {
-            $this->domainService = app(DomainService::class);
-        }
-
-        return $this->domainService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
-     */
-    private function getSendgridService()
-    {
-        if (!$this->sendgridService) {
-            $this->sendgridService = app(SendgridService::class);
-        }
-
-        return $this->sendgridService;
-    }
-
-    /**
-     * @return Domain|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDomainModel()
-    {
-        if (!$this->domainModel) {
-            $this->domainModel = app(Domain::class);
-        }
-
-        return $this->domainModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getDomainRecordModel()
-    {
-        if (!$this->domainRecordModel) {
-            $this->domainRecordModel = app(DomainRecord::class);
-        }
-
-        return $this->domainRecordModel;
-    }
-
-    /**
-     * @return Project|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getProjectModel()
-    {
-        if (!$this->projectModel) {
-            $this->projectModel = app(Project::class);
-        }
-
-        return $this->projectModel;
-    }
-
-    /**
-     * @return Company|\Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getCompanyModel()
-    {
-        if (!$this->companyModel) {
-            $this->companyModel = app(Company::class);
-        }
-
-        return $this->companyModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
-     */
-    private function getCloudFlareService()
-    {
-        if (!$this->cloudFlareService) {
-            $this->cloudFlareService = app(CloudFlareService::class);
-        }
-
-        return $this->cloudFlareService;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|ShopifyService
-     */
-    private function getShopifyService(string $urlStore = null, string $token = null)
-    {
-        if (!$this->shopifyService) {
-            $this->shopifyService = new ShopifyService($urlStore, $token);
-        }
-
-        return $this->shopifyService;
-    }
-
-    /**
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(Request $request)
     {
         try {
+            $domainModel = new Domain();
+
             $dataRequest = $request->all();
             if (isset($dataRequest["project"])) {
                 $projectId = current(Hashids::decode($dataRequest["project"]));
 
-                $domains = $this->getDomainModel()->with(['project'])->where('project_id', $projectId)->get();
+                $domains = $domainModel->with(['project'])->where('project_id', $projectId)->get();
 
                 return DomainResource::collection($domains);
             } else {
@@ -193,6 +66,10 @@ class DomainsController extends Controller
     public function store(DomainStoreRequest $request)
     {
         try {
+            $domainModel       = new Domain();
+            $projectModel      = new Project();
+            $cloudFlareService = new CloudFlareService();
+
             DB::beginTransaction();
             $requestData = $request->validated();
 
@@ -201,31 +78,28 @@ class DomainsController extends Controller
 
             if ($projectId) {
 
-                $project = $this->getProjectModel()->find($projectId);
+                $project = $projectModel->find($projectId);
 
                 if (!empty($project->shopify_id)) {
                     //projeto shopify
-                    $domainIp = $this->getCloudFlareService()::shopifyIp;
+                    $domainIp = $cloudFlareService::shopifyIp;
                 } else {
                     //projeto web
                     $domainIp = $requestData['domain_ip'];
                 }
 
-                $domainCreated = $this->getDomainModel()->create([
-                                                                     'project_id' => $projectId,
-                                                                     'name'       => $requestData['name'],
-                                                                     'domain_ip'  => $domainIp,
-                                                                     'status'     => $this->getDomainModel()
-                                                                                          ->getEnum('status', 'pending'),
-                                                                 ]);
+                $domainCreated = $domainModel->create([
+                                                          'project_id' => $projectId,
+                                                          'name'       => $requestData['name'],
+                                                          'domain_ip'  => $domainIp,
+                                                          'status'     => $domainModel->getEnum('status', 'pending'),
+                                                      ]);
 
                 if ($domainCreated) {
                     if ($project->shopify_id == null) {
-                        $newDomain = $this->getCloudFlareService()
-                                          ->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
+                        $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
                     } else {
-                        $newDomain                = $this->getCloudFlareService()
-                                                         ->integrationShopify($domainCreated->id, $requestData['name']);
+                        $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
                         $requestData['domain_ip'] = 'Domínio Shopify';
                     }
 
@@ -269,8 +143,12 @@ class DomainsController extends Controller
     public function edit($id)
     {
         try {
-            $domain    = $this->getDomainModel()->with(['project', 'records'])->find(current(Hashids::decode($id)));
-            $companies = $this->getCompanyModel()->all();
+            $domainModel       = new Domain();
+            $companyModel      = new Company();
+            $cloudFlareService = new CloudFlareService();
+
+            $domain    = $domainModel->with(['project', 'records'])->find(current(Hashids::decode($id)));
+            $companies = $companyModel->all();
 
             $registers = [];
             foreach ($domain->records as $record) {
@@ -278,10 +156,10 @@ class DomainsController extends Controller
                 $subdomain = explode('.', $record->name);
 
                 switch ($record->content) {
-                    CASE $this->getCloudFlareService()::shopifyIp:
+                    CASE $cloudFlareService::shopifyIp:
                         $content = "Servidores Shopify";
                         break;
-                    CASE $this->getCloudFlareService()::checkoutIp:
+                    CASE $cloudFlareService::checkoutIp:
                         $content = "Servidores CloudFox";
                         break;
                     default:
@@ -323,31 +201,33 @@ class DomainsController extends Controller
     public function update(Request $request)
     {
         try {
+            $domainModel       = new Domain();
+            $domainRecordModel = new DomainRecord();
+            $cloudFlareService = new CloudFlareService();
+
             DB::beginTransaction();
 
             $requestData = $request->all();
             $recordsJson = json_decode($requestData['data']);
 
-            $domain = $this->getDomainModel()->find(current(Hashids::decode($requestData['domain'])));
+            $domain = $domainModel->find(current(Hashids::decode($requestData['domain'])));
 
-            $this->getCloudFlareService()->setZone($domain->name);
+            $cloudFlareService->setZone($domain->name);
             foreach ($recordsJson as $records) {
                 foreach ($records as $record) {
-                    if (!$this->getDomainRecordModel()
-                              ->where('type', current($record[0]))
-                              ->where('name', current($record[1]))
-                              ->where('content', current($record[2]))
-                              ->exists()) {
+                    if (!$domainRecordModel->where('type', current($record[0]))
+                                           ->where('name', current($record[1]))
+                                           ->where('content', current($record[2]))
+                                           ->exists()) {
                         //nao existe a record
-                        $this->getCloudFlareService()
-                             ->addRecord(current($record[0]), current($record[1]), current($record[2]));
-                        $newRecord = $this->getDomainRecordModel()->create([
-                                                                               'domain_id'   => $domain->id,
-                                                                               'type'        => current($record[0]),
-                                                                               'name'        => current($record[1]),
-                                                                               'content'     => current($record[2]),
-                                                                               'system_flag' => 0,
-                                                                           ]);
+                        $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
+                        $newRecord = $domainRecordModel->create([
+                                                                    'domain_id'   => $domain->id,
+                                                                    'type'        => current($record[0]),
+                                                                    'name'        => current($record[1]),
+                                                                    'content'     => current($record[2]),
+                                                                    'system_flag' => 0,
+                                                                ]);
                     } else {
                         //dominio já cadastrado
                         DB::rollBack();
@@ -377,19 +257,24 @@ class DomainsController extends Controller
     public function destroy(DomainDestroyRequest $request)
     {
         try {
+            $domainModel       = new Domain();
+            $domainRecordModel = new DomainRecord();
+            $sendgridService   = new SendgridService();
+            $cloudFlareService = new CloudFlareService();
+
             $requestData = $request->validated();
 
             $domainId = current(Hashids::decode($requestData['id']));
 
-            $domain = $this->getDomainModel()->with('records', 'project', 'project.shopifyIntegrations')
-                           ->find($domainId);
+            $domain = $domainModel->with('records', 'project', 'project.shopifyIntegrations')
+                                  ->find($domainId);
 
-            if ($this->getCloudFlareService()->deleteZone($domain->name)) {
+            if ($cloudFlareService->deleteZone($domain->name)) {
                 //zona deletada
-                $this->getSendgridService()->deleteLinkBrand($domain->name);
-                $this->getSendgridService()->deleteZone($domain->name);
+                $sendgridService->deleteLinkBrand($domain->name);
+                $sendgridService->deleteZone($domain->name);
 
-                $recordsDeleted = $this->getDomainRecordModel()->where('domain_id', $domain->id)->delete();
+                $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
                 $domainDeleted  = $domain->delete();
 
                 if ($domainDeleted) {
@@ -399,7 +284,7 @@ class DomainsController extends Controller
                         try {
 
                             foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                                $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                                 $shopify->setThemeByRole('main');
                                 if (!empty($shopifyIntegration->theme_html)) {
@@ -437,7 +322,10 @@ class DomainsController extends Controller
      */
     public function show($domainId)
     {
-        $domain = $this->getDomainModel()->with(['project'])->where('id', Hashids::decode($domainId))->first();
+        $domainModel       = new Domain();
+        $cloudFlareService = new CloudFlareService();
+
+        $domain = $domainModel->with(['project'])->where('id', Hashids::decode($domainId))->first();
 
         $data = (object) [
             'id_code'   => $domain->id_code,
@@ -447,7 +335,7 @@ class DomainsController extends Controller
 
         $view = view('domains::show', [
             'domain' => $data,
-            'zones'  => $this->getCloudFlareService()->getZones(),
+            'zones'  => $cloudFlareService->getZones(),
         ]);
 
         return response()->json($view->render());
@@ -461,6 +349,7 @@ class DomainsController extends Controller
     public function create(DomainCreateRequest $request)
     {
         try {
+            $prejectModel = new Project();
 
             $requestData = $request->validated();
 
@@ -469,7 +358,7 @@ class DomainsController extends Controller
 
             if ($projectId) {
 
-                $project = $this->getProjectModel()->find($projectId);
+                $project = $prejectModel->find($projectId);
 
                 $form = view('domains::create', [
                     'project' => $project,
@@ -494,16 +383,19 @@ class DomainsController extends Controller
     public function destroyRecord(DomainDestroyRecordRequest $request)
     {
         try {
+            $domainRecordModel = new DomainRecord();
+            $cloudFlareService = new CloudFlareService();
+
             $requestData = $request->validated();
 
             $recordId = current(Hashids::decode($requestData['id_record']));
-            $record   = $this->getDomainRecordModel()->with('domain')->find($recordId);
+            $record   = $domainRecordModel->with('domain')->find($recordId);
 
-            $this->getCloudFlareService()->setZone($record->domain->name);
-            if ($this->getCloudFlareService()->deleteRecord($record->name . '.' . $record->domain->name)) {
+            $cloudFlareService->setZone($record->domain->name);
+            if ($cloudFlareService->deleteRecord($record->name . '.' . $record->domain->name)) {
                 //zona deletada
 
-                $recordsDeleted = $this->getDomainRecordModel()->where('id', $record->id)->delete();
+                $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
 
                 if ($recordsDeleted) {
                     return response()->json(['message' => 'Dns removido com sucesso'], 200);
@@ -527,11 +419,13 @@ class DomainsController extends Controller
     public function recheckDomain(Request $request)
     {
         try {
+            $domainService = new DomainService();
+
             $requestData = $request->all();
             $domainId    = current(Hashids::decode($requestData['domain']));
             if ($domainId) {
                 //hashid ok
-                if ($this->getDomainService()->verifyPendingDomains($domainId, true)) {
+                if ($domainService->verifyPendingDomains($domainId, true)) {
                     return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
                 } else {
                     return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);

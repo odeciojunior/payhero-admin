@@ -2,18 +2,18 @@
 
 namespace Modules\Profile\Http\Controllers;
 
+use Exception;
 use App\Entities\User;
 use App\Entities\UserDocument;
-use Modules\Profile\Http\Requests\ProfilePasswordRequest;
-use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
-use Modules\Profile\Transformers\UserResource;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
-use Exception;
+use Modules\Profile\Transformers\UserResource;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
+use Modules\Profile\Http\Requests\ProfilePasswordRequest;
+use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;
 
 /**
  * Class ProfileController
@@ -21,7 +21,6 @@ use Modules\Profile\Http\Requests\ProfileUpdateRequest;
  */
 class ProfileController extends Controller
 {
-
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -50,7 +49,8 @@ class ProfileController extends Controller
     {
         try {
 
-            $requestData = $request->validated();
+            $digitalOceanFileService = new DigitalOceanFileService();
+            $requestData             = $request->validated();
 
             $user = auth()->user();
 
@@ -134,6 +134,9 @@ class ProfileController extends Controller
     public function uploadDocuments(ProfileUploadDocumentRequest $request)
     {
         try {
+            $digitalOceanFileService = new DigitalOceanFileService();
+            $userDocument            = new UserDocument();
+
             $dataForm = $request->validated();
 
             $digitalOceanService = new DigitalOceanFileService();
@@ -141,15 +144,14 @@ class ProfileController extends Controller
 
             $document = $request->file('file');
 
-            $digitalOceanPath = $digitalOceanService
-                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents', $document, null, null, 'private');
+            $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents', $document, null, null, 'private');
 
-            $userDocuments->create([
-                                    'user_id'            => auth()->user()->id,
-                                    'document_url'       => $digitalOceanPath,
-                                    'document_type_enum' => $dataForm["document_type"],
-                                    'status'             => null,
-                                ]);
+            $userDocument->create([
+                                      'user_id'            => auth()->user()->id,
+                                      'document_url'       => $digitalOceanPath,
+                                      'document_type_enum' => $dataForm["document_type"],
+                                      'status'             => null,
+                                  ]);
 
             $user = auth()->user();
 

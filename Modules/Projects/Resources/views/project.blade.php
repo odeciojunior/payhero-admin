@@ -103,7 +103,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h5 class="sm-title mt-30"> <strong> Descrição </strong> </h5>
+                                            <h5 class="sm-title mt-30"><strong> Descrição </strong></h5>
                                             <p class="card-text sm">
                                                 {{ $project->description }}
                                             </p>
@@ -112,8 +112,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <!-- Painel de Dominios -->
                         <div id="tab_domains" class="tab-pane" role="tabpanel">
                             @include('domains::index')
@@ -147,30 +145,26 @@
                             @include('projects::edit')
                         </div>
                     </div>
-
                     <!-- Modal padrão para adicionar Adicionar e Editar -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content"role="dialog" tabindex="-1">
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" role="dialog" tabindex="-1">
                         <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
                             <div class="modal-content p-10" id="conteudo_modal_add">
-
                                 <div class="modal-header simple-border-bottom mb-10">
                                     <h4 class="modal-title" id="modal-title"></h4>
                                     <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
                                         <i class="material-icons md-16">close</i>
                                     </a>
                                 </div>
-
-                                <div id="modal-add-body" class="modal-body">
+                                <div id="modal-add-body" class="modal-body" style='min-height: 100px'>
                                 </div>
-
                                 <div class="modal-footer">
-                                    <button id="btn-modal" type="button" class="btn btn-success" data-dismiss="modal"> <i class="material-icons btn-fix"> save </i> Salvar </button>
+                                    <button id="btn-modal" type="button" class="btn btn-success" data-dismiss="modal">
+                                        <i class="material-icons btn-fix"> save </i> Salvar
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                     <!-- Modal padrão para excluir -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -189,14 +183,13 @@
                                 </div>
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
                                     <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                                    <button id="bt_excluir" type="button" class="btn btn-danger" style="width: 20%;" >Excluir</button>
+                                    <button id="bt_excluir" type="button" class="btn btn-danger" style="width: 20%;">Excluir</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    @if($project->shopify_id)
-                        <!-- Modal para fazer-desfazer integração com shopify -->
+                @if($project->shopify_id)
+                    <!-- Modal para fazer-desfazer integração com shopify -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog  modal-dialog-centered  modal-simple">
                                 <div class="modal-content">
@@ -210,17 +203,16 @@
                                             <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
                                         </div>
                                         <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>
-                                        <p class="gray" id="modal-change-shopify-integration-text"> </p>
+                                        <p class="gray" id="modal-change-shopify-integration-text"></p>
                                     </div>
                                     <div class="modal-footer d-flex align-items-center justify-content-center">
                                         <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;" >Confirmar</button>
+                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;">Confirmar</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     @endif
-
                 </div>
             </div>
         </div>

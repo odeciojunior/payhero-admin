@@ -21,57 +21,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class PlansController extends Controller
 {
-    private $planModel;
-    private $productModel;
-    private $userProjectModel;
-    private $productPlanModel;
-    private $zenviaSmsModel;
-
-    private function getPlan()
-    {
-        if (!$this->planModel) {
-            $this->planModel = app(Plan::class);
-        }
-
-        return $this->planModel;
-    }
-
-    private function getProduct()
-    {
-        if (!$this->productModel) {
-            $this->productModel = app(Product::class);
-        }
-
-        return $this->productModel;
-    }
-
-    private function getUserProject()
-    {
-        if (!$this->userProjectModel) {
-            $this->userProjectModel = app(UserProject::class);
-        }
-
-        return $this->userProjectModel;
-    }
-
-    private function getProductPlan()
-    {
-        if (!$this->productPlanModel) {
-            $this->productPlanModel = app(ProductPlan::class);
-        }
-
-        return $this->productPlanModel;
-    }
-
-    private function getZenviaSms()
-    {
-        if (!$this->zenviaSmsModel) {
-            $this->zenviaSmsModel = app(ZenviaSms::class);
-        }
-
-        return $this->zenviaSmsModel;
-    }
-
     /**
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -79,14 +28,15 @@ class PlansController extends Controller
     public function index(Request $request)
     {
         try {
+            $planModel = new Plan();
             if ($request->has('project')) {
                 $projectId = current(Hashids::decode($request->input('project')));
-                $plans     = $this->getPlan()->with([
-                                                        'projectId.domains' => function($query) use ($projectId) {
-                                                            $query->where([['project_id', $projectId], ['status', 3]])
-                                                                  ->first();
-                                                        },
-                                                    ])->where('project', $projectId)->get();
+                $plans     = $planModel->with([
+                                                  'projectId.domains' => function($query) use ($projectId) {
+                                                      $query->where([['project_id', $projectId], ['status', 3]])
+                                                            ->first();
+                                                  },
+                                              ])->where('project', $projectId)->get();
 
                 return PlansResource::collection($plans);
             }
@@ -103,13 +53,16 @@ class PlansController extends Controller
     public function store(PlanStoreRequest $request)
     {
         try {
+            $planModel   = new Plan();
+            $productPlan = new ProductPlan();
+
             $requestData            = $request->validated();
             $requestData['project'] = current(Hashids::decode($requestData['project']));
             $requestData['status']  = 1;
 
             $requestData['price'] = $this->getValue($requestData['price']);
 
-            $plan = $this->getPlan()->create($requestData);
+            $plan = $planModel->create($requestData);
             $plan->update(['code' => $plan->id_code]);
             if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
                 foreach ($requestData['products'] as $keyProduct => $product) {
@@ -120,7 +73,7 @@ class PlansController extends Controller
                                 'plan'    => $plan->id,
                                 'amount'  => $productAmount,
                             ];
-                            $this->getProductPlan()->create($dataProductPlan);
+                            $productPlan->create($dataProductPlan);
                         }
                     }
                 }
@@ -141,18 +94,21 @@ class PlansController extends Controller
     public function update(PlanUpdateRequest $request, $id)
     {
         try {
+            $planModel   = new Plan();
+            $productPlan = new ProductPlan();
+
             $requestData = $request->validated();
             unset($requestData['project']);
             $planId               = Hashids::decode($id)[0];
             $requestData['price'] = $this->getValue($requestData['price']);
 
-            $plan = $this->getPlan()->where('id', $planId)->first();
+            $plan = $planModel->where('id', $planId)->first();
             $plan->update($requestData);
 
-            $productPlans = $this->getProductPlan()->where('plan', $plan->id)->get()->toArray();
+            $productPlans = $productPlan->where('plan', $plan->id)->get()->toArray();
             if (count($productPlans) > 0) {
                 foreach ($productPlans as $productPlan) {
-                    $this->getProductPlan()->find($productPlan['id'])->delete();
+                    $productPlan->find($productPlan['id'])->delete();
                 }
             }
             if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
@@ -164,7 +120,7 @@ class PlansController extends Controller
                                 'plan'    => $plan->id,
                                 'amount'  => $productAmount,
                             ];
-                            $this->getProductPlan()->create($dataProductPlan);
+                            $productPlan->create($dataProductPlan);
                         }
                     }
                 }
@@ -183,12 +139,14 @@ class PlansController extends Controller
      */
     public function destroy($id)
     {
+        $planModel = new Plan();
+
         if (isset($id)) {
             $planId = current(Hashids::decode($id));
 
-            $plan = $this->getPlan()->with(['productsPlans', 'plansSales'])
-                         ->where('id', $planId)
-                         ->first();
+            $plan = $planModel->with(['productsPlans', 'plansSales'])
+                              ->where('id', $planId)
+                              ->first();
 
             if (count($plan->plansSales) > 0) {
                 return response()->json(['message' => 'Impossível excluir, possui vendas associadas a este plano.'], 400);
@@ -216,6 +174,8 @@ class PlansController extends Controller
     public function show(Request $request, $id)
     {
         try {
+            $planModel = new Plan();
+
             $projectId = current(Hashids::decode($request->input('project')));
 
             if (isset($id)) {
@@ -224,12 +184,12 @@ class PlansController extends Controller
                 //                    $query->where([['project_id', $projectId], ['status', 3]])
                 //                          ->first();
                 //                },])->find($planId);
-                $plan = $this->getPlan()->with([
-                                                   'products', 'projectId.domains' => function($query) use ($projectId) {
+                $plan = $planModel->with([
+                                             'products', 'projectId.domains' => function($query) use ($projectId) {
                         $query->where([['project_id', $projectId], ['status', 3]])
                               ->first();
                     },
-                                               ])->find($planId);
+                                         ])->find($planId);
 
                 return view('plans::details', ['plan' => $plan]);
             }
@@ -346,8 +306,9 @@ class PlansController extends Controller
     public function create(Request $request)
     {
         try {
+            $productModel = new Product();
 
-            $products = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get();
+            $products = $productModel->where('user', \Auth::user()->id)->where('shopify', 0)->get();
 
             return view('plans::create', [
                 'products' => $products,
@@ -365,12 +326,16 @@ class PlansController extends Controller
     public function edit(Request $request)
     {
         try {
+            $planModel    = new Plan();
+            $productModel = new Product();
+            $productPlan  = new ProductPlan();
+
             $planId = Hashids::decode($request->input('planId'))[0];
-            $plan   = $this->getPlan()->find($planId);
+            $plan   = $planModel->find($planId);
             if ($plan) {
-                $products     = $this->getProduct()->where('user', \Auth::user()->id)->where('shopify', 0)->get()
-                                     ->toArray();
-                $productPlans = $this->getProductPlan()->where('plan', $plan->id)->get()->toArray();
+                $products     = $productModel->where('user', \Auth::user()->id)->where('shopify', 0)->get()
+                                             ->toArray();
+                $productPlans = $productPlan->where('plan', $plan->id)->get()->toArray();
 
                 return view('plans::edit', [
                     'plan'         => $plan,

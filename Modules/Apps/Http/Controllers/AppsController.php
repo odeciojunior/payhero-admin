@@ -7,9 +7,17 @@ use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
-class AppsController extends Controller {
-
-    public function index() {
+/**
+ * Class AppsController
+ * @package Modules\Apps\Http\Controllers
+ */
+class AppsController extends Controller
+{
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
 
         return view('apps::index');
 
@@ -29,5 +37,4 @@ class AppsController extends Controller {
 
         // dd($value);
     }
-
 }

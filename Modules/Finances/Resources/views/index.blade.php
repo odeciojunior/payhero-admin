@@ -42,9 +42,7 @@
                                             <div class="col-6 mb-15">
                                                 <div class="price-holder">
                                                     <h6 class="label-price"> Saldo pendente </h6>
-                                                    <h4 class="price">
-                                                        <span class="currency">R$</span>
-                                                        <span class="pending-balance">0,00</span>
+                                                    <h4 class="price saldoPendente">
                                                     </h4>
                                                     <div class="grad-border"></div>
                                                 </div>
@@ -52,9 +50,7 @@
                                             <div class="col-6 mb-15">
                                                 <div class="price-holder antecipacao" id="pop-antecipacao">
                                                     <h6 class="label-price"> Disponível para antecipar </h6>
-                                                    <h4 class="price align-items-baseline">
-                                                        <span class="currency">R$</span>
-                                                        <span class="antecipable-balance">0,00</span>
+                                                    <h4 class="price align-items-baseline disponivelAntecipar">
                                                         <a href="#">
                                                             <svg class="svg-antecipar"
                                                                  xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -87,18 +83,16 @@
                                             <div class="col-6 mb-15">
                                                 <div class="price-holder pointer">
                                                     <h6 class="label-price"> Saldo Disponível </h6>
-                                                    <h4 class="price">
-                                                        <span class="currency">R$</span>
-                                                        <span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>
-                                                        <div class="grad-border green"></div>
+                                                    <h4 class="price saldoDisponivel">
+                                                    </h4>
+                                                    <div class="grad-border green"></div>
                                                 </div>
                                             </div>
                                             <div class="col-6 mb-15">
                                                 <div class="price-holder">
                                                     <h6 class="label-price"> Saldo Total </h6>
-                                                    <h4 class="price">
-                                                        <span class="currency">R$</span>
-                                                        <span class="total-balance">0,00</span>
+                                                    <h4 class="price saltoTotal">
+
                                                     </h4>
                                                     <div class="grad-border blue"></div>
                                                 </div>
@@ -187,9 +181,8 @@
                                             <div class="p-2">
                                                 <div class="price-holder">
                                                     <h6 class="label-price"> Total na conta </h6>
-                                                    <h4 class="price">
-                                                        <span class="currency">R$</span>
-                                                        <span class="total-balance">0,00</span>
+                                                    <h4 class="price totalConta">
+
                                                     </h4>
                                                     <div class="grad-border blue"></div>
                                                 </div>
@@ -229,7 +222,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 mt-3">
-                                        <table class="table table-striped table-condensed">
+                                        <table id='transfersTable' class="table table-striped table-condensed">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Razão</th>
@@ -238,15 +231,14 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="table-transfers-body" class="custom-t-body">
+
                                             </tbody>
                                         </table>
                                         <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                                             {{-- js carrega... --}}
                                         </ul>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
