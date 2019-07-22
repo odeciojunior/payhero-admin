@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Tranferencias;
+namespace Modules\Core\Services;
 
 use Carbon\Carbon;
 use App\Entities\Company;
@@ -9,32 +9,32 @@ use App\Entities\Transaction;
 use Modules\Core\Sms\SmsService;
 use Illuminate\Support\Facades\Log;
 
-class Transferencias
+class TransfersService
 {
-    public static function verify()
-    {
+    public function verifyTransactions() {
 
         $transactions = Transaction::where([
                                                ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                ['status', 'paid'],
-                                           ])->get()->toArray();
+                                           ])->get();
 
         $transfers = [];
 
-        foreach ($transactions as $t) {
-            try {
-                $company = Company::find($t['company']);
+        $companyModel  = new Company();
+        $transferModel = new Transfer();
 
-                $transfer = Transfer::create([
-                                                 'transaction' => $t['id'],
-                                                 'user'        => $company['user_id'],
-                                                 'value'       => $t['value'],
+        foreach ($transactions as $transaction) {
+            try {
+                $company = $companyModel->find($transaction->company);
+
+                $transfer = $transferModel->create([
+                                                 'transaction' => $transaction->id,
+                                                 'user'        => $company->user_id,
+                                                 'value'       => $transaction->value,
                                                  'type'        => 'in',
                                              ]);
 
                 $transfers[] = $transfer;
-
-                $transaction = Transaction::find($t['id']);
 
                 $transaction->update([
                                          'status' => 'transfered',
@@ -43,6 +43,7 @@ class Transferencias
                 $company->update([
                                      'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $t['value'])),
                                  ]);
+
             } catch (\Exception $e) {
                 report($e);
                 continue;
@@ -51,4 +52,5 @@ class Transferencias
 
         Log::info('transferencias criadas ' . print_r($transfers, true));
     }
+
 }

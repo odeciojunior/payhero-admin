@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Modules\Core\Tranferencias\Transferencias;
+use Modules\Core\Services\TransfersService;
+
 
 class VerifyTransfers extends Command
 {
@@ -38,6 +39,7 @@ class VerifyTransfers extends Command
      */
     public function handle()
     {
-        Transferencias::verify();
+        $transfersSerice = new TransfersService();
+        $transfersSerice->verifyTransactions();
     }
 }

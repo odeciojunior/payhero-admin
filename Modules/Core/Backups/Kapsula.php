@@ -157,7 +157,7 @@ class Kapsula {
 
          //fechando-o para liberação do sistema.
          curl_close($cr); //fechamos o recurso e liberamos o sistema...
-         
+
          if ($err) {
              $retorno = [];
              $retorno = [
