@@ -13,9 +13,18 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-class AuthenticationApiController extends Controller {
-
-    public function login(Request $request) {
+/**
+ * Class AuthenticationApiController
+ * @package Modules\Authentication\Http\Controllers
+ */
+class AuthenticationApiController extends Controller
+{
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request)
+    {
 
         $request->validate([
             'email'    => 'required',
@@ -57,7 +66,12 @@ class AuthenticationApiController extends Controller {
 
     }
 
-    public function logout(Request $request) {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
 
         $value = $request->bearerToken();
 
