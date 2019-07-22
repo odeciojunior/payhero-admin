@@ -76,17 +76,17 @@ class ShopifyController extends Controller {
 
                 $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dados['token']);
 
-                if(empty($shopifyStoreService->getClient())){
+                if(empty($shopifyService->getClient())){
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
-                $shopifyStoreService->getShopName();
+                $shopifyService->getShopName();
 
             } catch (\Exception $e) {
                 report($e);
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
             }
 
-            $shopifyName = $shopifyStoreService->getShopName();
+            $shopifyName = $shopifyService->getShopName();
             $project     = $projectModel->create([
                                                     'name'                       => $shopifyName,
                                                     'status'                     => $this->getProjectModel()
@@ -95,9 +95,9 @@ class ShopifyController extends Controller {
                                                     'percentage_affiliates'      => '0',
                                                     'description'                => $shopifyName,
                                                     'invoice_description'        => $shopifyName,
-                                                    'url_page'                   => 'https://' . $shopifyStoreService->getShopDomain(),
+                                                    'url_page'                   => 'https://' . $shopifyService->getShopDomain(),
                                                     'automatic_affiliation'      => false,
-                                                    'shopify_id'                 => $shopifyStoreService->getShopId(),
+                                                    'shopify_id'                 => $shopifyService->getShopId(),
                                                     'boleto'                     => '1',
                                                     'installments_amount'        => '12',
                                                     'installments_interest_free' => '1',

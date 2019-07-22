@@ -49,7 +49,7 @@ class ProfileController extends Controller
     {
         try {
 
-            $digitalOceanFileService = new DigitalOceanFileService();
+            $digitalOceanFileService = app(DigitalOceanFileService::class); 
             $requestData             = $request->validated();
 
             $user = auth()->user();
@@ -75,7 +75,7 @@ class ProfileController extends Controller
             if ($userPhoto != null) {
 
                 try {
-                    $digitalOceanService = new DigitalOceanFileService();
+                    $digitalOceanService = app(DigitalOceanFileService::class);
                     $digitalOceanService->deleteFile($user->photo);
 
                     $img = Image::make($userPhoto->getPathname());
@@ -134,12 +134,12 @@ class ProfileController extends Controller
     public function uploadDocuments(ProfileUploadDocumentRequest $request)
     {
         try {
-            $digitalOceanFileService = new DigitalOceanFileService();
+            $digitalOceanFileService = app(DigitalOceanFileService::class);
             $userDocument            = new UserDocument();
 
             $dataForm = $request->validated();
 
-            $digitalOceanService = new DigitalOceanFileService();
+            $digitalOceanService = app(DigitalOceanFileService::class);
             $userDocuments = new UserDocument();
 
             $document = $request->file('file');
