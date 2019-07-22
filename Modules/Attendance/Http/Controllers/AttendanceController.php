@@ -6,9 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
-class AttendanceController extends Controller {
+/**
+ * Class AttendanceController
+ * @package Modules\Attendance\Http\Controllers
+ */
+class AttendanceController extends Controller
+{
 
-
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index() {
 
         return view('attendance::index');
