@@ -8,21 +8,12 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use PagarMe\Client;
 
+/**
+ * Class WithdrawalController
+ * @package Modules\Finances\Http\Controllers
+ */
 class WithdrawalController extends Controller
 {
-    /**
-     * @var Company
-     */
-    private $company;
-
-    /**
-     * WithdrawalController constructor.
-     * @param Company $company
-     */
-    public function __construct(Company $company)
-    {
-        $this->company = $company;
-    }
 
     /**
      * Display a listing of the resource.

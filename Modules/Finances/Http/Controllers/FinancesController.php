@@ -11,6 +11,10 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class FinancesController
+ * @package Modules\Finances\Http\Controllers
+ */
 class FinancesController extends Controller
 {
     /**
