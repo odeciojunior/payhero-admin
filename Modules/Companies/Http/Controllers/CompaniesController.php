@@ -49,6 +49,7 @@ class CompaniesController extends Controller
     {
         try {
             $companyModel = new Company();
+
             $requestData  = $request->validated();
 
             $company = $companyModel->create([

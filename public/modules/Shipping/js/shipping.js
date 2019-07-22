@@ -33,7 +33,8 @@ $(document).ready(function () {
     $("#add-shipping").on('click', function () {
 
         $("#modal-title").html('Cadastrar frete');
-        $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+        /*$("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");*/
+        loadOnModal('#modal-add-body');
 
         $.ajax({
             method: "GET",
