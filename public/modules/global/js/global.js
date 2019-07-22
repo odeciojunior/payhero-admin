@@ -95,16 +95,6 @@ $(document).ajaxSuccess(function (event, jqXHR, ajaxOptions, data) {
     $(".loaderCard").removeClass('loaderCard').fadeOut('slow');
 })
 
-function loadOnTable(whereToLoad, tableReference) {
-    $(whereToLoad).html('');
-    $(tableReference).removeClass('table-striped');
-    $(whereToLoad).append("<tr id='loaderLine'>" +
-        "<td colspan='11' align='center' class='loading' style='height:100px'>" +
-        "<a id='loader' class='loaderTable'></a>" +
-        "</td>" +
-        "</tr>");
-}
-
 function loading(elementId, loaderClass) {
 
     if (loaderClass == '') {
@@ -113,6 +103,24 @@ function loading(elementId, loaderClass) {
     } else if (loaderClass == '#loaderCard') {
         $(elementId).append('<a class="loaderCard"></a>');
     }
+}
+
+function loadOnModal(whereToLoad) {
+    $(whereToLoad).html('');
+    $(whereToLoad).append("<div id='loaderModal' class='loading'>" +
+        "<div class='loaderModal' >" +
+        "</div>" +
+        "</div>");
+}
+
+function loadOnTable(whereToLoad, tableReference) {
+    $(whereToLoad).html('');
+    $(tableReference).removeClass('table-striped');
+    $(whereToLoad).append("<tr id='loaderLine'>" +
+        "<td colspan='11' align='center' class='loading' style='height:100px'>" +
+        "<a id='loader' class='loaderTable'></a>" +
+        "</td>" +
+        "</tr>");
 }
 
 

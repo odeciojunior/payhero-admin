@@ -14,11 +14,12 @@ $(document).ready(function () {
     updateDomains();
 
     $("#add-domain").on('click', function (e) {
+        loadOnModal('#modal-add-body');
         e.preventDefault();
 
         $("#modal-title").html('Novo domínio');
 
-        $.ajax({
+       $.ajax({
             method: "GET",
             url: "/domains/create",
             data: {'project_id': projectId},

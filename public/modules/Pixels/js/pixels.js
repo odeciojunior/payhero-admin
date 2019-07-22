@@ -12,7 +12,8 @@ $(function () {
         $("#modal_add_size").addClass('modal_simples');
         $("#modal_add_size").removeClass('modal-lg');
 
-        $("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");
+        /*$("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");*/
+        loadOnModal('#modal-add-body');
 
         $.ajax({
             method: "GET",

@@ -9,7 +9,8 @@ $(function () {
 
     function updateTransfersTable(link = null) {
 
-        $("#table-transfers-body").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");
+        /*$("#table-transfers-body").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");*/
+        loadOnTable('table-transfers-body','transfersTable');
 
         if (link == null) {
             link = '/transfers';
