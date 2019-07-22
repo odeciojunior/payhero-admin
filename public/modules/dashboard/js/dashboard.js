@@ -31,20 +31,7 @@ $(document).ready(function(){
 
     }
 
-    // Pusher.logToConsole = false;
 
-    // var pusher = new Pusher('339254dee7e0c0a31840', {
-    //     cluster: 'us2',
-    //     forceTLS: true
-    // });
-
-    // var channel = pusher.subscribe('channel-{!! \Auth::user()->id !!}');
-
-    // channel.bind('my-event', function(data) {
-    //     alertPersonalizado('success','Nova venda realizada');
-    //     clear_map_points();
-    //     updateLastSales();
-    // });
 
 
 

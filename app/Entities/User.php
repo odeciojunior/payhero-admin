@@ -101,7 +101,7 @@ class User extends Authenticable
      * @var array
      */
     private $enum = [
-        'document_type' => [
+        'document_type'            => [
             1 => 'personal_document',
             2 => 'address_document',
         ],

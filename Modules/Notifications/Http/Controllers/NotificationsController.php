@@ -2,41 +2,58 @@
 
 namespace Modules\Notifications\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 
-class NotificationsController extends Controller {
-
-    public function markasread(Request $request) {
-
-        \Auth::user()->unreadNotifications->markAsRead();
+class NotificationsController extends Controller
+{
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markasread(Request $request)
+    {
+        auth()->user()->unreadNotifications->markAsRead();
 
         return response()->json('sucesso');
     }
 
-    public function getUnreadNotificationsCount(){
-
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUnreadNotificationsCount()
+    {
         return response()->json([
-            'qtd_notificacoes' => count(\Auth::user()->unreadNotifications)
-        ]);
+                                    'qtd_notification' => count(auth()->user()->unreadNotifications),
+                                ]);
     }
 
-    public function getUnreadNotifications(){
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function getUnreadNotifications()
+    {
+        $view               = '';
+        $countNotifications = count(auth()->user()->unreadNotifications);
 
-        if(count(\Auth::user()->unreadNotifications) > 0){
-            $unreadNotifications = \Auth::user()->unreadNotifications;
-            foreach($unreadNotifications as &$notification){
-                $notification->updated_at = date('d/m/Y H:m:s', strtotime($notification->updated_at));
+        if ($countNotifications > 0) {
+            $unreadNotifications = auth()->user()->unreadNotifications;
+
+            foreach ($unreadNotifications as &$notification) {
+                /*$notification->updated_at = Carbon::createFromFormat('d/m/Y H:m:s', $notification->updated_at);
+                date('d/m/Y H:m:s', strtotime($notification->updated_at));*/
+                $view .= view('notifications::' . Str::replaceArray("Modules\\Checkout\\Notifications\\", [''], $notification->type), ['notification' => $notification])->render();
             }
+
             return response()->json([
-                'notificacoes' => $unreadNotifications
-            ]);
-        }
-        else{
+                                        'notificacoes' => $view,
+                                    ]);
+        } else {
             return response()->json('null');
         }
-
     }
-
 }

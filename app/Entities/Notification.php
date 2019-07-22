@@ -18,21 +18,20 @@ class Notification extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'string';
-
     /**
      * Indicates if the IDs are auto-incrementing.
-     * 
      * @var bool
      */
     public $incrementing = false;
-
+    /**
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at', 'read_at'];
     /**
      * @var array
      */
     protected $fillable = ['type', 'notifiable_type', 'notifiable_id', 'data', 'read_at', 'created_at', 'updated_at'];
-
 }
