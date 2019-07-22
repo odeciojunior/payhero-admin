@@ -14,36 +14,20 @@ use Vinkla\Hashids\Facades\Hashids;
 use Yajra\DataTables\Facades\DataTables;
 use Exception;
 
+/**
+ * Class PixelsController
+ * @package Modules\Pixels\Http\Controllers
+ */
 class PixelsController extends Controller
 {
-    private $pixel;
-    private $project;
-
-    private function getPixel()
-    {
-        if (!$this->pixel) {
-            $this->pixel = app(Pixel::class);
-        }
-
-        return $this->pixel;
-    }
-
-    private function getProject()
-    {
-        if (!$this->project) {
-            $this->project = Project::class;
-        }
-
-        return $this->project;
-    }
-
     public function index(Request $request)
     {
         try {
-
             if ($request->has('project')) {
+                $pixelModel = new Pixel();
+
                 $projectId = current(Hashids::decode($request->input('project')));
-                $pixels    = $this->getPixel()->where('project', $projectId)->get();
+                $pixels    = $pixelModel->where('project', $projectId)->get();
 
                 return PixelsResource::collection($pixels);
             }
@@ -53,10 +37,15 @@ class PixelsController extends Controller
         }
     }
 
+    /**
+     * @param PixelStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(PixelStoreRequest $request)
     {
         try {
-            $validator = $request->validated();
+            $pixelModel = new Pixel();
+            $validator  = $request->validated();
 
             if (!$validator) {
                 return response()->json('erro');
@@ -64,7 +53,7 @@ class PixelsController extends Controller
 
             $validator['project'] = current(Hashids::decode($validator['project']));
 
-            $pixel = $this->getPixel()->create($validator);
+            $pixel = $pixelModel->create($validator);
 
             if ($pixel) {
                 return response()->json('Pixel Configurado com sucesso!', 200);
@@ -77,13 +66,20 @@ class PixelsController extends Controller
         }
     }
 
+    /**
+     * @param PixelUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(PixelUpdateRequest $request, $id)
     {
         $validated = $request->validated();
         try {
             if (isset($validated) && isset($id)) {
+                $pixelModel = new Pixel();
+
                 $pixelId      = Hashids::decode($id)[0];
-                $pixel        = $this->getPixel()->find($pixelId);
+                $pixel        = $pixelModel->find($pixelId);
                 $pixelUpdated = $pixel->update($validated);
                 if ($pixelUpdated) {
                     return response()->json('Sucesso', 200);
@@ -97,12 +93,18 @@ class PixelsController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
         try {
             if (isset($id)) {
+                $pixelModel = new Pixel();
+
                 $pixelId      = Hashids::decode($id)[0];
-                $pixelDeleted = $this->getPixel()->find($pixelId)->delete();
+                $pixelDeleted = $pixelModel->find($pixelId)->delete();
                 if ($pixelDeleted) {
                     return response()->json('sucesso', 200);
                 }
@@ -117,13 +119,19 @@ class PixelsController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function show(Request $request)
     {
         try {
+            $pixelModel = new Pixel();
+
             $data = $request->all();
             if (isset($data['pixelId'])) {
                 $pixelId = Hashids::decode($data['pixelId'])[0];
-                $pixel   = $this->getPixel()->find($pixelId);
+                $pixel   = $pixelModel->find($pixelId);
                 if ($pixel) {
                     return view("pixels::details", ['pixel' => $pixel]);
                 }
@@ -136,6 +144,9 @@ class PixelsController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         try {
@@ -146,11 +157,17 @@ class PixelsController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
     public function edit(Request $request)
     {
         try {
+            $pixelModel = new Pixel();
+
             $pixelId = $request->input('pixelId');
-            $pixel   = $this->getPixel()->find(Hashids::decode($pixelId)[0]);
+            $pixel   = $pixelModel->find(Hashids::decode($pixelId)[0]);
             if ($pixel) {
                 return view("pixels::edit", ['pixel' => $pixel]);
             }
