@@ -181,7 +181,7 @@ $(function () {
                     $("#bt_excluir").on('click', function () {
                         $("#modal-delete").modal('hide');
                         loadingOnScreen()
-                     /*   $.ajax({
+                        $.ajax({
                             method: "DELETE",
                             url: "/projects/" + projectId,
                             headers: {
@@ -200,7 +200,7 @@ $(function () {
                                     alertCustom('error', "Erro ao deletar projeto");
                                 }
                             }
-                        });*/
+                        });
                     });
 
                 });

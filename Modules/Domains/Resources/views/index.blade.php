@@ -1,9 +1,9 @@
 <!-- Page -->
 <div class='row no-gutters mb-10'>
-    <div style='position:absolute; width:50%' class="d-flex align-items-center">
+   <!-- <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'><i class="icon wb-info"></i></a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o dominio?</span>
-    </div>
+    </div>-->
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div id="add-domain" class="d-flex align-items-center justify-content-end">
             <span class="link-button-dependent red pointer" data-toggle="modal" data-target="#modal-content"> Adicionar domínio </span>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <!-- Modal detalhes do domínio -->
-<div class='modal fade example-modal-lg modal-3d-flip-vertical' id='modal-detalhes-dominio' aria-hidden='true' aria-labelledby='exampleModalTitle' role='dialog' tabindex='-1'>
+<!--<div class='modal fade example-modal-lg modal-3d-flip-vertical' id='modal-detalhes-dominio' aria-hidden='true' aria-labelledby='exampleModalTitle' role='dialog' tabindex='-1'>
     <div class='modal-dialog modal-simple'>
         <div class='modal-content'>
             <div class='modal-header'>
@@ -50,5 +50,5 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!-- End Modal -->
