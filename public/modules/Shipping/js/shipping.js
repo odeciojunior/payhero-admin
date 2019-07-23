@@ -58,6 +58,7 @@ $(document).ready(function () {
                 $(".btn-save").click(function () {
                     var formData = new FormData(document.getElementById('form-add-shipping'));
                     formData.append("project", projectId);
+                    loadingOnScreen();
                     $.ajax({
                         method: "POST",
                         url: "/shippings",
@@ -69,6 +70,7 @@ $(document).ready(function () {
                         contentType: false,
                         cache: false,
                         error: function (response) {
+                            loadingOnScreenRemove();
                             if (response.status === 422) {
                                 for (error in response.errors) {
                                     alertCustom('error', String(response.errors[error]));
@@ -76,6 +78,7 @@ $(document).ready(function () {
                             }
                         },
                         success: function (data) {
+                            loadingOnScreenRemove();
                             alertCustom("success", data.message);
                             atualizarFrete();
                         }
@@ -213,6 +216,7 @@ $(document).ready(function () {
                             $(".btn-update").on('click', function () {
                                 var formData = new FormData(document.getElementById('form-update-shipping'));
                                 formData.append("project", projectId);
+                                loadingOnScreen();
                                 $.ajax({
                                     method: "POST",
                                     url: "/shippings/" + frete,
@@ -224,6 +228,7 @@ $(document).ready(function () {
                                     contentType: false,
                                     cache: false,
                                     error: function () {
+                                        loadingOnScreenRemove();
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
@@ -231,6 +236,7 @@ $(document).ready(function () {
                                         }
                                     },
                                     success: function (data) {
+                                        loadingOnScreenRemove();
                                         alertCustom("success", "Frete atualizado com sucesso");
                                         atualizarFrete();
                                     }
@@ -250,7 +256,7 @@ $(document).ready(function () {
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on("click", function () {
                         $("#fechar_modal_excluir").click();
-
+                        loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
                             url: "/shippings/" + frete,
@@ -258,6 +264,7 @@ $(document).ready(function () {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function (response) {
+                                loadingOnScreenRemove();
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -268,6 +275,7 @@ $(document).ready(function () {
                                 }
                             },
                             success: function (data) {
+                                loadingOnScreenRemove();
                                 alertCustom("success", "Frete Removido com sucesso");
                                 atualizarFrete();
                             }

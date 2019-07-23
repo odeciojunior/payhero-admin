@@ -47,7 +47,7 @@ $(function () {
                     formData.append('checkout', $("#checkout").val());
                     formData.append('purchase_card', $("#purchase_card").val());
                     formData.append('purchase_boleto', $("#purchase_boleto").val());
-
+                    loadingOnScreen();
                     $.ajax({
                         method: "POST",
                         url: "/pixels",
@@ -59,6 +59,7 @@ $(function () {
                         contentType: false,
                         cache: false,
                         error: function (data) {
+                            loadingOnScreenRemove();
                             $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
                             if (data.status == '422') {
@@ -67,6 +68,7 @@ $(function () {
                                 }
                             }
                         }, success: function () {
+                            loadingOnScreenRemove();
                             $(".loading").css("visibility", "hidden");
                             alertCustom("success", "Pixel Adicionado!");
                             atualizarPixel();
@@ -77,7 +79,7 @@ $(function () {
         });
     });
     function atualizarPixel() {
-        loadOnTable('#data-table-pixel','#table-pixel')
+        loadOnTable('#data-table-pixel', '#table-pixel')
 
         $.ajax({
             method: "GET",
@@ -207,7 +209,7 @@ $(function () {
 
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
-
+                                loadingOnScreen();
                                 $.ajax({
                                     method: "PUT",
                                     url: "/pixels/" + pixel,
@@ -226,6 +228,7 @@ $(function () {
 
                                     },
                                     error: function (response) {
+                                        loadingOnScreenRemove()
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
@@ -233,6 +236,7 @@ $(function () {
                                         }
                                     },
                                     success: function (data) {
+                                        loadingOnScreenRemove()
                                         alertCustom("success", "Pixel atualizado com sucesso");
                                         atualizarPixel();
                                     }
@@ -251,7 +255,7 @@ $(function () {
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on('click', function () {
                         $("#fechar_modal_excluir").click();
-
+                        loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
                             url: "/pixels/" + pixel,
@@ -259,6 +263,7 @@ $(function () {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function () {
+                                loadingOnScreenRemove();
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -266,6 +271,7 @@ $(function () {
                                 }
                             },
                             success: function (data) {
+                                loadingOnScreenRemove();
                                 alertCustom("success", "Pixel Removido com sucesso");
                                 atualizarPixel();
                             }

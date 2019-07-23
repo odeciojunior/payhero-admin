@@ -51,7 +51,7 @@ $(function () {
 
                     var formData = new FormData(document.getElementById('form-register-coupon'));
                     formData.append("project", projectId);
-
+                    loadingOnScreen();
                     $.ajax({
                         method: "POST",
                         url: "/couponsdiscounts",
@@ -63,6 +63,7 @@ $(function () {
                         contentType: false,
                         cache: false,
                         error: function (response) {
+                            loadingOnScreenRemove();
                             $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
                             if (response.status == '422') {
@@ -71,6 +72,7 @@ $(function () {
                                 }
                             }
                         }, success: function () {
+                            loadingOnScreenRemove();
                             $(".loading").css("visibility", "hidden");
                             alertCustom("success", "Cupom Adicionado!");
                             atualizarCoupon();
@@ -200,6 +202,7 @@ $(function () {
                             $(".btn-update").on('click', function () {
                                 var formData = new FormData(document.getElementById('form-update-coupon'));
                                 formData.append("project", projectId);
+                                loadingOnScreen();
                                 $.ajax({
                                     method: "POST",
                                     url: "/couponsdiscounts/" + coupon,
@@ -211,6 +214,7 @@ $(function () {
                                     contentType: false,
                                     cache: false,
                                     error: function (response) {
+                                        loadingOnScreenRemove();
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
@@ -218,6 +222,7 @@ $(function () {
                                         }
                                     },
                                     success: function (data) {
+                                        loadingOnScreenRemove();
                                         alertCustom("success", "Cupom atualizado com sucesso");
                                         atualizarCoupon();
                                     }
@@ -235,7 +240,7 @@ $(function () {
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on('click', function () {
                         $("#fechar_modal_excluir").click();
-
+                        loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
                             url: "/couponsdiscounts/" + coupon,
@@ -243,6 +248,7 @@ $(function () {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function () {
+                                loadingOnScreenRemove();
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -250,6 +256,7 @@ $(function () {
                                 }
                             },
                             success: function (data) {
+                                loadingOnScreenRemove();
                                 alertCustom("success", "Cupom Removido com sucesso");
                                 atualizarCoupon();
                             }
