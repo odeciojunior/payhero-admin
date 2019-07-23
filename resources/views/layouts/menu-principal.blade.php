@@ -34,14 +34,14 @@
             <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
                 <li id="notifications_button" class="nav-item dropdown" disabled='true'>
                     <span class="nav-link" data-toggle="dropdown" title="Notifications" id='notification'
-                          aria-expanded="false" data-animation="scale-up" role="button">
+                          aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                         <i class="material-icons">notifications_none</i>
                         <span class="badge badge-danger badge-notification" id="notification-amount">0</span>
                     </span>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
                         <div class="dropdown-menu-header">
                             <h5>NOTIFICAÇÕES</h5>
-                            <span id='notificationBadge' class="badge badge-round badge-danger"></span>
+                            <span id='notificationBadge' class="badge badge-pill badge-danger"></span>
                         </div>
                         <div class="list-group scrollable scrollable-vertical" style="position: relative;">
                             <div class="scrollable-container" style="min-height: 140px; width: 358px;">
