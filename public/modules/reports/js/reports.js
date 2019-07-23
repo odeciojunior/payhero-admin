@@ -77,7 +77,7 @@ $(function () {
 
         $('#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-reembolso, #qtd-pending, #qtd-canceled'+
             '#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert'+
-            '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio').html("<span class='loading'>" +
+            '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio, #qtd-canceled').html("<span class='loading'>" +
             "<span class='loaderSpan' >" +
             "</span>" +
             "</span>");

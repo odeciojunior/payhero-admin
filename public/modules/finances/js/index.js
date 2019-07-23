@@ -39,7 +39,8 @@ $(document).ready(function () {
             },
             success : function(response) {
                 $('.saldoPendente').html('<span class="currency">R$</span><span class="pending-balance">0,00</span>')
-                $('.disponivelAntecipar').append('<span class="currency">R$</span><span class="antecipable-balance">0,00</span>')
+                $('.removeSpan').remove();
+                $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>')
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>')
                 $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>')
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>')

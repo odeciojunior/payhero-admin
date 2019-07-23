@@ -82,29 +82,29 @@ $(document).ready(function () {
         });
     });
 
-    $("#brazil_zip_code").on("input", function(){
+    $("#brazil_zip_code").on("input", function () {
 
         var zip_code = $('#brazil_zip_code').val().replace(/[^0-9]/g, '');
 
-        if(zip_code.length != 8)
+        if (zip_code.length != 8)
             return false;
 
         $.ajax({
-            url : "https://viacep.com.br/ws/"+ zip_code +"/json/", 
-            type : "GET",
+            url: "https://viacep.com.br/ws/" + zip_code + "/json/",
+            type: "GET",
             cache: false,
             async: false,
-            success : function(response) {
-                if(response.localidade){
+            success: function (response) {
+                if (response.localidade) {
                     $("#city").val(unescape(response.localidade));
                 }
-                if(response.bairro){
+                if (response.bairro) {
                     $("#neighborhood").val(unescape(response.bairro));
                 }
-                if(response.uf){
+                if (response.uf) {
                     $("#state").val(unescape(response.uf));
                 }
-                if(response.logradouro){
+                if (response.logradouro) {
                     $("#street").val(unescape(response.logradouro));
                 }
             }
@@ -152,9 +152,33 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function (file, response) {
         //update table
-        $('#td_bank_status').html(response.bank_document_translate);
-        $('#td_address_status').html(response.address_document_translate);
-        $('#td_contract_status').html(response.contract_document_translate);
+
+        if (response.data.bank_document_translate.status == 3) {
+
+            $('#td_bank_status').html('<span class="badge badge-aprovado">' +response.data.bank_document_translate.message+ '</span>');
+        } else {
+            $('#td_bank_status').html('<span class="badge badge-pendente">' +response.data.bank_document_translate.message+ '</span>');
+        }
+
+        if (response.data.address_document_translate.status == 3) {
+
+            $('#td_address_status').html('<span class="badge badge-aprovado">' +response.data.address_document_translate.message+ '</span>');
+        } else {
+            $('#td_address_status').html('<span class="badge badge-pendente">' +response.data.address_document_translate.message+ '</span>');
+        }
+
+        if (response.data.contract_document_translate.status == 3) {
+
+            $('#td_contract_status').html('<span class="badge badge-aprovado">' +response.data.contract_document_translate.message+ '</span>');
+        } else {
+            $('#td_contract_status').html('<span class="badge badge-pendente">' +response.data.contract_document_translate.message+ '</span>');
+        }
+
+        //<span class="badge badge-pendente"> {{ $company->bank_document_translate }} </span>
+
+        // $('#td_bank_status').html(response.bank_document_translate);
+        // $('#td_address_status').html(response.address_document_translate);
+        // $('#td_contract_status').html(response.contract_document_translate);
         swal({
             position: 'bottom',
             type: 'success',

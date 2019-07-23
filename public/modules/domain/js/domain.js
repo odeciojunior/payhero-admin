@@ -41,7 +41,7 @@ $(document).ready(function () {
 
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
-
+                    loadingOnScreen()
                     var form_data = new FormData(document.getElementById('form-add-domain'));
                     form_data.append('project_id', projectId);
 
@@ -57,6 +57,7 @@ $(document).ready(function () {
                         dataType: "json",
                         data: form_data,
                         error: function (response) {
+                            loadingOnScreenRemove()
                             if (response.status === 422) {
                                 for (error in response.errors) {
                                     alertCustom('error', String(response.errors[error]));
@@ -66,6 +67,7 @@ $(document).ready(function () {
                             }
                         },
                         success: function (response) {
+                            loadingOnScreenRemove()
                             alertCustom("success", response.message);
                             updateDomains();
                         }
@@ -127,7 +129,7 @@ $(document).ready(function () {
                 $(".details-domain").on('click', function () {
 
                         var dominio = $(this).attr('domain');
-
+                        $('#modal_add_size').removeClass('modal-lg');
                         $("#modal-title").html('Detalhes do domínio');
                         var data = {dominioId: dominio};
 
@@ -293,6 +295,8 @@ $(document).ready(function () {
                                     return retVal;
                                 }).get();
 
+                                loadingOnScreen()
+
                                 $.ajax({
                                     method: "PUT",
                                     url: "/domains/" + dominio,
@@ -305,6 +309,7 @@ $(document).ready(function () {
                                         domain: dominio,
                                     },
                                     error: function (response) {
+                                        loadingOnScreenRemove()
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
@@ -314,6 +319,7 @@ $(document).ready(function () {
                                         }
                                     },
                                     success: function (response) {
+                                        loadingOnScreenRemove()
                                         alertCustom("success", response.message);
                                         updateDomains();
                                     }
@@ -333,7 +339,7 @@ $(document).ready(function () {
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on("click", function () {
                         $("#fechar_modal_excluir").click();
-                        ''
+                        loadingOnScreen()
                         $.ajax({
                             method: "DELETE",
                             url: "/domains/" + dominio,
@@ -345,6 +351,7 @@ $(document).ready(function () {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function (response) {
+                                loadingOnScreenRemove()
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -354,6 +361,7 @@ $(document).ready(function () {
                                 }
                             },
                             success: function (response) {
+                                loadingOnScreenRemove()
                                 alertCustom("success", response.message);
                                 updateDomains();
                             }

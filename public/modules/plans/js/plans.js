@@ -64,7 +64,7 @@ $(function () {
 
                     var formData = new FormData(document.getElementById('form-register-plan'));
                     formData.append("project", projectId);
-
+                    loadingOnScreen();
                     $.ajax({
                         method: "POST",
                         url: "/plans",
@@ -76,6 +76,7 @@ $(function () {
                         contentType: false,
                         cache: false,
                         error: function (data) {
+                            loadingOnScreenRemove();
                             $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
                             if (data.status == '422') {
@@ -84,6 +85,7 @@ $(function () {
                                 }
                             }
                         }, success: function () {
+                            loadingOnScreenRemove();
                             $(".loading").css("visibility", "hidden");
                             alertCustom("success", "Plano Adicionado!");
                             atualizarPlan();
@@ -224,6 +226,7 @@ $(function () {
                             $(".btn-update").on('click', function () {
                                 var formData = new FormData(document.getElementById('form-update-plan'));
                                 formData.append("project", projectId);
+                                loadingOnScreen();
                                 $.ajax({
                                     method: "POST",
                                     url: "/plans/" + plan,
@@ -235,13 +238,16 @@ $(function () {
                                     contentType: false,
                                     cache: false,
                                     error: function (response) {
+                                        loadingOnScreenRemove();
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
                                         }
+                                        atualizarPlan();
                                     },
                                     success: function (data) {
+                                        loadingOnScreenRemove();
                                         alertCustom("success", "Plano atualizado com sucesso");
                                         atualizarPlan();
                                     }
@@ -260,7 +266,7 @@ $(function () {
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on('click', function () {
                         $("#fechar_modal_excluir").click();
-
+                        loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
                             url: "/plans/" + plan,
@@ -268,6 +274,7 @@ $(function () {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             error: function (response) {
+                                loadingOnScreenRemove();
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -278,6 +285,7 @@ $(function () {
                                 }
                             },
                             success: function (response) {
+                                loadingOnScreenRemove();
                                 alertCustom('success', response.message);
                                 atualizarPlan();
                             }

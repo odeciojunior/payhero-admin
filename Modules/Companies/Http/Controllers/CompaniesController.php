@@ -239,10 +239,21 @@ class CompaniesController extends Controller
             }
 
             return response()->json([
-                                        'message'                     => 'Arquivo enviado com sucesso.',
-                                        'bank_document_translate'     => $company->getEnum('bank_document_status', $company->bank_document_status, true),
-                                        'address_document_translate'  => $company->getEnum('address_document_status', $company->address_document_status, true),
-                                        'contract_document_translate' => $company->getEnum('contract_document_status', $company->contract_document_status, true),
+                                        'message' => 'Arquivo enviado com sucesso.',
+                                        'data'    => [
+                                            'bank_document_translate'     => [
+                                                'status'  => $company->bank_document_status,
+                                                'message' => $company->getEnum('bank_document_status', $company->bank_document_status, true),
+                                            ],
+                                            'address_document_translate'  => [
+                                                'status'  => $company->address_document_status,
+                                                'message' => $company->getEnum('address_document_status', $company->address_document_status, true),
+                                            ],
+                                            'contract_document_translate' => [
+                                                'status'  => $company->contract_document_status,
+                                                'message' => $company->getEnum('contract_document_status', $company->contract_document_status, true),
+                                            ],
+                                        ],
                                     ], 200);
         } catch (Exception $e) {
             Log::warning('ProfileController uploadDocuments');
