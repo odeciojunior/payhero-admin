@@ -1,6 +1,6 @@
 <!-- Page -->
 <div class='row no-gutters mb-10'>
-   <!-- <div style='position:absolute; width:50%' class="d-flex align-items-center">
+    <!--<div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
             <i class="icon wb-info"></i></a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o dominio?</span>
@@ -62,26 +62,28 @@
                 <div class="panel">
                     <div class="panel-heading" id="exampleHeadingFirst" role="tab">
                         <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFirst" aria-controls="exampleCollapseFirst" aria-expanded="false">
-                            Primeiro
+                            <strong>Primeiro</strong>
                         </a>
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseFirst" aria-labelledby="exampleHeadingFirst" role="tabpanel" style="">
                         <div class="panel-body justify-content-center">
-                            Clique em <strong>adicionar domínio</strong>
-                            <a class="ml-10 rounded-add pointer">
-                                <i class="icon wb-plus" aria-hidden="true"></i></a>
+                            <div class="d-flex align-items-center">
+                                <span> Clique em <strong>adicionar domínio</strong></span>
+                                <a class="ml-10 rounded-add pointer">
+                                    <i class="icon wb-plus" aria-hidden="true"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="panel">
                     <div class="panel-heading" id="exampleHeadingSecond" role="tab">
                         <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseSecond" aria-controls="exampleCollapseSecond" aria-expanded="false">
-                            Second
+                            <strong>Segundo</strong>
                         </a>
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="">
-                        <div class="panel-body">
-                            Diuturnitatem chremes gratia macedonum referatur intellegitur t ea industriae plus, ex videmus praetereat ratio mediocrem pro orestem, ipsam lictores perpetiuntur aperiri benivolentiam, nusquam ignaviamque athenis m plato videamus, liberatione scientia nihilo aristotelem quoquo consumere latinam, successerit certa morte menandro delectatum noster impetu videri senserit, infinitum iudicatum misisti conectitur, voce proficiscuntur.
+                        <div id='segundaInfo' class="panel-body">
+
                         </div>
                     </div>
                 </div>
@@ -101,4 +103,4 @@
         </div>
     </div>
 </div>
- MODAL INFORMAÇÃO -->
+MODAL INFORMAÇÃO -->

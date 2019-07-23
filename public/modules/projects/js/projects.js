@@ -239,9 +239,9 @@ $(function () {
     }
 
     if($('#shopifyIdLabel').data('shopifyId') != ''){
-
+        $('#segundaInfo').html('Digite o nome do seu domínio cadastrado no shopify (Ex: minhaloja.com) e <strong>clique em salvar</strong>')
     }else{
-
+        $('#segundaInfo').html('Digite o nome do seu <strong>domínio e o IP do servidor</strong> onde seu site está hospedado.');
     }
 
 });
