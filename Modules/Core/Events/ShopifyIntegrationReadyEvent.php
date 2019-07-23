@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events\Modules\Core\Events;
+namespace Modules\Core\Events;
 
 use App\Entities\Project;
 use App\Entities\User;
@@ -26,11 +26,13 @@ class ShopifyIntegrationReadyEvent
 
     /**
      * Create a new event instance.
-     * @param array $data
+     * @param User $user
+     * @param Project $project
      */
-    public function __construct(array $data)
+    public function __construct(User $user, Project $project)
     {
-        $this->data = $data;
+        $this->user    = $user;
+        $this->project = $project;
     }
 
     /**

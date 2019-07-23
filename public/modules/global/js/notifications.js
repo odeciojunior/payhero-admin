@@ -21,7 +21,6 @@ $(document).ready(function () {
         updateMarkAsReadNotification();
         $('#notificationTemplate').html('')
 
-        $("#notificationTemplate").html('');
         $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
         updateUnreadNotification();
 
