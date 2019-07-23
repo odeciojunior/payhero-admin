@@ -16,14 +16,15 @@ $(document).ready(function () {
         updateUnreadNotificationsAmount();
     });
     $("#notification").on('click', function () {
+        $("#notification-amount").html('0');
+        $('#notificationBadge').html('New 0');
+        updateMarkAsReadNotification();
         $('#notificationTemplate').html('')
-        if($('#notification-amount').html() != '0'){
-            $("#notificationTemplate").html('');
-            $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
-            updateUnreadNotification();
-        }else{
-            htmlNotNotifications();
-        }
+
+        $("#notificationTemplate").html('');
+        $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
+        updateUnreadNotification();
+
     });
 
     updateUnreadNotificationsAmount();
@@ -83,10 +84,8 @@ $(document).ready(function () {
                 $("#item-notification").on('click', function () {
                     updateMarkAsReadNotification();
                 });
-
             }
         });
-
     }
 
     // autaliza status das notificações
@@ -105,10 +104,4 @@ $(document).ready(function () {
             }
         });
     }
-
-    /*channel.bind('new-sale', function (data) {
-        alertPersonalizado('success', 'Nova venda realizada');
-        clear_map_points();
-        updateLastSales();
-    });*/
 });
