@@ -51,7 +51,7 @@ class BoletoService
                                   ->with('clientModel', 'plansSales.plan.products')
                                   ->get();
 
-            Log::info('boletos vencendo hoje -> ' . print_r($boletoDueToday, true));
+            Log::warning('boletos vencendo hoje -> ' . print_r($boletoDueToday, true));
 
             foreach ($boletoDueToday as $boleto) {
                 try {
@@ -121,12 +121,12 @@ class BoletoService
                         }
                     }
                 } catch (Exception $e) {
-                    Log::error('Erro ao enviar boleto para e-mail no foreach - Boleto vencendo');
+                    Log::warning('Erro ao enviar boleto para e-mail no foreach - Boleto vencendo');
                     report($e);
                 }
             }
         } catch (Exception $e) {
-            Log::error('Erro ao enviar boletos para e-mails - Boleto vencendo');
+            Log::warning('Erro ao enviar boletos para e-mails - Boleto vencendo');
             report($e);
         }
     }
@@ -139,7 +139,7 @@ class BoletoService
             $boletoWaitionPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                                         ->with('clientModel', 'plansSales.plan.products')->get();
 
-            Log::info('boletos aguardando pagamento -> ' . print_r($boletoWaitionPayment, true));
+            Log::warning('boletos aguardando pagamento -> ' . print_r($boletoWaitionPayment, true));
 
             foreach ($boletoWaitionPayment as $boleto) {
                 try {
@@ -198,12 +198,12 @@ class BoletoService
                         }
                     }
                 } catch (Exception $e) {
-                    Log::error('Erro ao enviar boletos par e-mail no foreach - Já separamos seu pedido');
+                    Log::warning('Erro ao enviar boletos par e-mail no foreach - Já separamos seu pedido');
                     report($e);
                 }
             }
         } catch (Exception $e) {
-            Log::error('Erro ao enviar boletos para e-mails - Já separamos seu pedido');
+            Log::warning('Erro ao enviar boletos para e-mails - Já separamos seu pedido');
             report($e);
         }
     }
@@ -216,7 +216,7 @@ class BoletoService
             $boletos = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                            ->with('clientModel', 'plansSales.plan.products')->get();
 
-            Log::info('boletos aguardando pagamento 2 -> ' . print_r($boletoWaitionPayment, true));
+            Log::warning('boletos aguardando pagamento 2 -> ' . print_r($boletoWaitionPayment, true));
 
             foreach ($boletos as $boleto) {
                 try {
@@ -275,12 +275,12 @@ class BoletoService
                         }
                     }
                 } catch (Exception $e) {
-                    Log::error('Erro ao enviar boleto para e-mail no foreach - Vamos ter que liberar sua mercadoria');
+                    Log::warning('Erro ao enviar boleto para e-mail no foreach - Vamos ter que liberar sua mercadoria');
                     report($e);
                 }
             }
         } catch (Exception $e) {
-            Log::error('Erro ao enviar boletos para e-mails - Vamos ter que liberar sua mercadoria');
+            Log::warning('Erro ao enviar boletos para e-mails - Vamos ter que liberar sua mercadoria');
             report($e);
         }
     }
@@ -380,7 +380,7 @@ class BoletoService
                                ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
                                ->groupBy('sales.owner', 'id')->get();
 
-            Log::info('boletos pagos hoje -> ' . print_r($boletosPaid, true));
+            Log::warning('boletos pagos hoje -> ' . print_r($boletosPaid, true));
 
             foreach ($boletosPaid as $boleto) {
                 try {
@@ -408,12 +408,12 @@ class BoletoService
                         $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
                     }
                 } catch (Exception $e) {
-                    Log::error('Erro ao enviar boleto para e-mail no foreach - Boletos compensados');
+                    Log::warning('Erro ao enviar boleto para e-mail no foreach - Boletos compensados');
                     report($e);
                 }
             }
         } catch (Exception $e) {
-            Log::error('Erro ao enviar boletos para e-mails - Boletos compensados');
+            Log::warning('Erro ao enviar boletos para e-mails - Boletos compensados');
             report($e);
         }
     }

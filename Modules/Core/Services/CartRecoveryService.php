@@ -8,15 +8,15 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Checkout;
-use App\Entities\Domain;
-use App\Entities\Log as CheckouLog;
-use App\Entities\Plan;
-use App\Entities\Project;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
+use App\Entities\Plan;
+use App\Entities\Domain;
+use App\Entities\Project;
+use App\Entities\Checkout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Entities\Log as CheckouLog;
 
 class CartRecoveryService
 {
@@ -38,7 +38,7 @@ class CartRecoveryService
                                       ->with('projectModel', 'checkoutPlans.plan.products')
                                       ->get();
 
-            Log::info('carrinhos abandonados -> ' . print_r($abandonedCarts, true));
+            Log::warning('carrinhos abandonados -> ' . print_r($abandonedCarts, true));
 
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
@@ -67,8 +67,7 @@ class CartRecoveryService
                         $zenviaSms = new ZenviaSmsService();
                         Log::warning('verifyAbandonedCarts');
 
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
-                    }
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);                    }
                     $data           = [
                         'name'          => $clientNameExploded[0],
                         'project_photo' => $project['logo'],
@@ -85,13 +84,13 @@ class CartRecoveryService
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-538d3405815c43debcf48aa44ceab965', $data);
                     }
                 } catch (Exception $e) {
-                    Log::error('Erro ao enviar e-mail no foreach - Carrinho abandonado');
+                    Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado');
 
                     report($e);
                 }
             }
         } catch (Exception $e) {
-            Log::error('Erro ao enviar e-mail - Carrinho abandonado ');
+            Log::warning('Erro ao enviar e-mail - Carrinho abandonado ');
 
             report($e);
         }
@@ -108,8 +107,8 @@ class CartRecoveryService
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                                       ->with('projectModel', 'checkoutPlans.plan.products')
                                       ->get();
-
-            Log::info('carrinhos abandonados 2 -> ' . print_r($abandonedCarts, true));
+  
+            Log::warning('carrinhos abandonados 2 -> ' . print_r($abandonedCarts, true));
 
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
@@ -158,12 +157,12 @@ class CartRecoveryService
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
                     }
                 } catch (Exception $e) {
-                    Log::error('Erro ao enviar e-mail no foreach - Carrinho abandonado, Dia seguinte');
+                    Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado, Dia seguinte');
                     report($e);
                 }
             }
         } catch (Exception $e) {
-            Log::error('Erro ao enviar e-mail - Carrinho abandonado, Dia seguinte');
+            Log::warning('Erro ao enviar e-mail - Carrinho abandonado, Dia seguinte');
 
             report($e);
         }
