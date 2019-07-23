@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
 
         // update pending domains automaticaly
         $schedule->command('verify:pendingdomains')->hourly();
- 
+
         // notify user to paid boletos
         $schedule->command('verify:boletopaid')->dailyAt('10:00');
 
@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:boletowaitingpayment')->dailyAt('10:00');
         $schedule->command('verify:boleto2')->dailyAt('10:00');
         $schedule->command('verify:boletoexpiring')->dailyAt('10:00');
-        
+
         // $schedule->command('verify:boletoexpired')->dailyAt('10:00');
         // $schedule->command('verify:boletoexpired3')->dailyAt('10:00');
         // $schedule->command('verify:boletoexpired4')->dailyAt('10:00');
@@ -46,6 +46,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('verify:abandonedcarts')->everyFifteenMinutes();
         $schedule->command('verify:abandonedcarts2')->everyFifteenMinutes();
 
+        //Alterar status do boletos de pendente para cancelado
+        $schedule->command('change:boletopendingtocanceled')->daily('08:30');
     }
 
     /**
