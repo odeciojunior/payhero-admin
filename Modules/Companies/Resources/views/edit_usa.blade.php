@@ -131,73 +131,65 @@
                             </form>
                         </div>
                         <div class="tab-pane" id="tab_documentos" role="tabpanel">
-
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <h5 class="title-pad"> Documents </h5>
-                                        <p class="sub-pad"> To make moviments in your account, we need some proof. </p>
-                                    </div>
-                                    <div class="col">
-                                    </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h5 class="title-pad"> Documents </h5>
+                                    <p class="sub-pad"> To make moviments in your account, we need some proof. </p>
                                 </div>
-
-                                <div class="row mt-15">
-                                    <div class="col-lg-6">
-                                        <div id="dropzone">
-                                            <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
-                                                @csrf
-                                                <div class="dz-message needsclick">
+                                <div class="col">
+                                </div>
+                            </div>
+                            <div class="row mt-15">
+                                <div class="col-lg-6">
+                                    <div id="dropzone">
+                                        <form method="POST" action="{!! route('companies.uploaddocuments') !!}" enctype="multipart/form-data" class="dropzone" id='dropzoneDocuments'>
+                                            @csrf
+                                            <div class="dz-message needsclick">
                                                 Drag the files here or click to select.<br/>
-                                                </div>
-                                                <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="input-pad">
-                                                <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
-                                            </form>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <table class="table table-striped">
-                                            <tbody class="custom-t-body">
-                                                <tr>
-                                                    <td>Bank</td>
-                                                    <td id="td_personal_status">
-                                                        <span class="badge badge-pendente"> {!! $company->bank_document_translate !!} </span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Residence</td>
-                                                    <td id="td_address_status">
-                                                        <span class="badge badge-pendente"> {!! $company->address_document_translate !!}</span>
-                                                    </td>
-                                                </tr>
-
-                                                <tr>
-                                                    <td>Company Contract</td>
-                                                    <td id="td_address_status">
-                                                        <span class="badge badge-pendente">  {!! $company->contract_document_translate !!} </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-
-                                    <div class="col-lg-12  mt-10">
-                                        <small class="text-muted" style="line-height: 1.5;"> 
-                                            Bank Account: valid bank statement <br>
-                                            Residence: electricity, water or utilities; <br>
-                                            Company Contract: proving that you are the owner / partner
-                                        </small>
+                                            </div>
+                                            <input id="company_id" name="company_id" value="{{$company->id_code}}" type="hidden" class="input-pad">
+                                            <input id="document_type" name="document_type" value="" type="hidden" class="input-pad">
+                                        </form>
                                     </div>
                                 </div>
-
-
+                                <div class="col-lg-6">
+                                    <table class="table table-striped">
+                                        <tbody class="custom-t-body">
+                                            <tr>
+                                                <td>Bank</td>
+                                                <td id="td_bank_status">
+                                                    <span class="badge {{ ($company->bank_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}"> {{ $company->bank_document_translate }} </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Residence</td>
+                                                <td id="td_address_status">
+                                                    <span class="badge {{ ($company->address_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}"> {{ $company->address_document_translate }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Company Contract</td>
+                                                <td id="td_contract_status">
+                                                    <span class="badge {{ ($company->contract_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}">  {{ $company->contract_document_translate }} </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-12  mt-10">
+                                    <small class="text-muted" style="line-height: 1.5;">
+                                        Bank Account: valid bank statement
+                                        <br> Residence: electricity, water or utilities;
+                                        <br> Company Contract: proving that you are the owner / partner
+                                    </small>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     </div>
 
