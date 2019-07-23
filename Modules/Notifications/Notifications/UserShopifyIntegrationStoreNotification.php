@@ -15,6 +15,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class UserShopifyIntegrationStoreNotification extends Notification
 {
+
     /**
      * @var User
      */
