@@ -1,10 +1,10 @@
 <!-- Page -->
 <div class='row no-gutters mb-10'>
-{{--    <div style='position:absolute; width:50%' class="d-flex align-items-center">
+    <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
             <i class="icon wb-info"></i></a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o dominio?</span>
-    </div>--}}
+    </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div id="add-domain" class="d-flex align-items-center justify-content-end">
             <span class="link-button-dependent red pointer" data-toggle="modal" data-target="#modal-content"> Adicionar domínio </span>
@@ -54,7 +54,7 @@
     </div>
 </div>-->
 <!-- End Modal -->
-<!--MODAL INFORMAÇÃO
+<!--MODAL INFORMAÇÃO-->
 <div class="modal fade modal-3d-flip-vertical" id="modal-detalhes-dominio" aria-hidden='true' aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -62,7 +62,7 @@
                 <div class="panel">
                     <div class="panel-heading" id="exampleHeadingFirst" role="tab">
                         <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFirst" aria-controls="exampleCollapseFirst" aria-expanded="false">
-                            <strong>Primeiro</strong>
+                            <strong>Primeiro passo</strong>
                         </a>
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseFirst" aria-labelledby="exampleHeadingFirst" role="tabpanel" style="">
@@ -78,24 +78,65 @@
                 <div class="panel">
                     <div class="panel-heading" id="exampleHeadingSecond" role="tab">
                         <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseSecond" aria-controls="exampleCollapseSecond" aria-expanded="false">
-                            <strong>Segundo</strong>
+                            <strong>Segundo passo</strong>
                         </a>
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="">
                         <div id='segundaInfo' class="panel-body">
-
                         </div>
                     </div>
                 </div>
                 <div class="panel">
                     <div class="panel-heading" id="exampleHeadingThird" role="tab">
                         <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseThird" aria-controls="exampleCollapseThird" aria-expanded="false">
-                            Third
+                            <strong>Terceiro passo</strong>
                         </a>
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseThird" aria-labelledby="exampleHeadingThird" role="tabpanel" style="">
                         <div class="panel-body">
-                            Audire scribimus spe platonis longinquitate evertunt scribi, notionem doleamus assentiar mortis lucilius, exedunt. Finitum genus coniunctione vidisse, ipsam grate studuisse respondendum ignorant probabo atomum. Corrumpit mortem instructus totam familiarem tertium voluntates consilia aperiam disputata, plena animumque ius supplicii incurrunt laboribus, rationis dedocendi incurreret illam triari utrisque eos commodius. Assentiar magnitudinem.
+                            Clique no botão de
+                            <strong>vizualizar nas opções</strong>, lá você vai encontrar as novas configurações de dns para seu domínio
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading" id="exampleHeadingFourth" role="tab">
+                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFourth" aria-controls="exampleCollapseFourth" aria-expanded="false">
+                            <strong>Quarto passo</strong>
+                        </a>
+                    </div>
+                    <div class="panel-collapse collapse" id="exampleCollapseFourth" aria-labelledby="exampleHeadingFourth" role="tabpanel" style="">
+                        <div class="panel-body">
+                            Logo após, vá até onde você registrou seu domínio e
+                            <strong>atualize as configurações</strong> com as novas entradas DNS
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading" id="exampleHeadingFifth" role="tab">
+                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFifth" aria-controls="exampleCollapseFifth" aria-expanded="false">
+                            <strong>Quinto passo</strong>
+                        </a>
+                    </div>
+                    <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="">
+                        <div class="panel-body">
+                            Pronto, agora é só
+                            <strong>esperar</strong> que assim que seu domínio estiver aprovado nós te avisaremos
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading" id="exampleHeadingSixth" role="tab">
+                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseSixth" aria-controls="exampleCollapseFifth" aria-expanded="false">
+                            <strong>Porque preciso configurar meu domínio?</strong>
+                        </a>
+                    </div>
+                    <div class="panel-collapse collapse" id="exampleCollapseSixth" aria-labelledby="exampleHeadingSixth" role="tabpanel" style="">
+                        <div class="panel-body">
+                            <ul>
+                                <li>Checkout transparente - assim que seu domínio estiver configurado o cliente final não precisa sair do seu domínio para finalizar o pagamento. (Ex: https://checkout.minhaloja.com</li>
+                                <li>Servidor de email - seus clientes receberão notificações de email em nome da sua loja.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -103,4 +144,4 @@
         </div>
     </div>
 </div>
-MODAL INFORMAÇÃO -->
+<!--MODAL INFORMAÇÃO -->
