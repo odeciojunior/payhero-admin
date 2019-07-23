@@ -6,7 +6,7 @@ $(document).ready(function () {
             alertCustom('error', 'Dados informados inválidos');
             return false;
         }
-        $('.loading').css("visibility", "visible");
+        loadingOnScreen();
 
         var form_data = new FormData(document.getElementById('form_add_integration'));
 
@@ -21,11 +21,11 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
-                $('.loading').css("visibility", "hidden");
+                loadingOnScreenRemove()
                 alertCustom('error', response.responseJSON.message);//'Ocorreu algum erro'
             },
             success: function (response) {
-                $('.loading').css("visibility", "hidden");
+                loadingOnScreenRemove()
                 alertCustom('success', response.message);
             },
         });

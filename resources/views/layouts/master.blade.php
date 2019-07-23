@@ -51,10 +51,9 @@
 </head>
 <body class="animsition site-navbar-small dashboard">
 
-    {{--<div class="loading">
-        <div class="loader">
-        </div>
-    </div>--}}
+    <div id='loadingOnScreen' style='height:100%; width:100%; position:absolute'>
+
+    </div>
 
     <style>
         body {
@@ -103,6 +102,7 @@
     };
 </script>
 <script>
+
     (function () {
         var w = window;
         var ic = w.Intercom;

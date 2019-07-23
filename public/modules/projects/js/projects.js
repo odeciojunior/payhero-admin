@@ -179,6 +179,7 @@ $(function () {
 
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on('click', function () {
+                        loadingOnScreen()
                         $("#fechar_modal_excluir");
                         $.ajax({
                             method: "DELETE",
@@ -188,9 +189,11 @@ $(function () {
                             },
                             error: function () {
                                 alertCustom('error', 'Ocorreu algum erro');
+                                loadingOnScreenRemove()
                             },
                             success: function (data) {
-                                console.log(data);
+                                loadingOnScreenRemove();
+                                /*console.log(data);*/
                                 if (data == 'success') {
                                     window.location = "/projects";
                                 } else {
