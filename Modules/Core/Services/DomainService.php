@@ -199,7 +199,7 @@ class DomainService
                     $domain->update([
                                         'status' => $this->getDomainModel()->getEnum('status', 'approved'),
                                     ]);
-                    event();
+                    //event();
 
                     Log::warning('domains update command final');
                 } else {

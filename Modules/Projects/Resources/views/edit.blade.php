@@ -17,8 +17,7 @@
                     <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden' name='photo_y1'>
                     <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
                     <p class='info pt-5' style='font-size: 10px;'>
-                        <i class='icon wb-info-circle' aria-hidden='true'></i>
-                        Usada apenas internamente no sistema
+                        <i class='icon wb-info-circle' aria-hidden='true'></i> Usada apenas internamente no sistema
                         <br>A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
                         <br> Dimensões ideais: 300 x 300 pixels.
                     </p>
@@ -71,7 +70,7 @@
             <p>Preencha as informações de checkout do seu produto</p>
             <div class='row'>
                 <div class='form-group col-4 col-xs-12'>
-                    <label for='invoice-description'>Descrição da Fatura</label> 
+                    <label for='invoice-description'>Descrição da Fatura</label>
                     <input name='invoice_description' value='{{$project->invoice_description}}' maxlength='13' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura'>
                 </div>
                 <div class='form-group col-4 col-xs-12'>
@@ -138,10 +137,10 @@
                         </a>
                     </div>
                     <div class="col-5">
-                        @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1)
-                            <a id="bt-change-shopify-integration" role="button" integration-status="{!! $project->shopifyIntegrations()->first()->status !!}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                        @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1 )
+                            <a id="bt-change-shopify-integration" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
                                 <i class="material-icons gray"> sync </i>
-                                <span class="gray"> {!! $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' !!} com shopify </span>
+                                <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
                             </a>
                         @endif
                     </div>
@@ -151,6 +150,5 @@
                 </div>
             </div>
         </div>
-
     </form>
 </div>

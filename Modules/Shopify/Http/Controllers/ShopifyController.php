@@ -2,6 +2,7 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
+use App\Entities\Domain;
 use Exception;
 use App\Entities\Company;
 use App\Entities\Project;
@@ -150,7 +151,7 @@ class ShopifyController extends Controller
                 //id decriptado
                 $project = $projectModel
                     ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
-                    ->where('id', $projectId)->first();
+                    ->find($projectId);
 
                 if (!empty($project->shopify_id)) {
                     //se for shopify, voltar as integraçoes ao html padrao
@@ -201,22 +202,72 @@ class ShopifyController extends Controller
         try {
             $requestData = $request->all();
 
-            $projectId = current(Hashids::decode($requestData['project_id']));
-
-            $domainService = new DomainService();
-            $projectModel  = new Project();
+            $projectId               = current(Hashids::decode($requestData['project_id']));
+            $projectModel            = new Project();
+            $shopifyIntegrationModel = new ShopifyIntegration();
 
             if ($projectId) {
-                //pega o primeiro dominio ativado
-                $domain = $projectModel
-                    ->where('status', $projectModel
-                        ->getEnum('status', 'approved'))
-                    ->first();
+                //id decriptado
+                $project = $projectModel
+                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                    ->find($projectId);
 
-                if ($domainService->verifyPendingDomains($domain->id, true)) {
-                    return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
+                if (!empty($project->shopify_id)) {
+                    //se for shopify, voltar as integraçoes ao html padrao
+                    try {
+
+                        foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                            $shopify->setThemeByRole('main');
+                            $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                            if ($htmlCart) {
+                                //template normal
+                                $shopifyIntegration->update([
+                                                                'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
+                                                                'theme_name' => $shopify->getThemeName(),
+                                                                'theme_file' => 'sections/cart-template.liquid',
+                                                                'theme_html' => $htmlCart,
+                                                            ]);
+
+                                $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
+                            } else {
+                                //template ajax
+                                $shopifyIntegration->update([
+                                                                'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
+                                                                'theme_name' => $shopify->getThemeName(),
+                                                                'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                'theme_html' => $htmlCart,
+                                                            ]);
+
+                                $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
+                            }
+
+                            //inserir o javascript para o trackeamento (src, utm)
+                            $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                            if ($htmlBody) {
+                                //template do layout
+                                $shopifyIntegration->update([
+                                                                'layout_theme_html' => $htmlBody,
+                                                            ]);
+
+                                //TODO validar para nao inserir duas vezes
+                                $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                            }
+
+                            $shopifyIntegration->update([
+                                                            'status' => $shopifyIntegration->getEnum('status', 'approved'),
+                                                        ]);
+                        }
+
+                        return response()->json(['message' => 'Integração com o shopify refeita'], 200);
+                    } catch (Exception $e) {
+                        //throwl
+                        return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+                    }
                 } else {
-                    return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                    return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
                 }
             } else {
                 //problema no id
