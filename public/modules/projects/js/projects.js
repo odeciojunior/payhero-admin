@@ -238,4 +238,10 @@ $(function () {
         });
     }
 
+    if($('#shopifyIdLabel').data('shopifyId') != ''){
+
+    }else{
+
+    }
+
 });
