@@ -2,16 +2,17 @@
 
 namespace Modules\Core\Listeners;
 
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
 use Modules\Core\Services\ShopifyService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ImportShopifyStoreListener implements ShouldQueue
 {
+    use Queueable;
+
     /**
      * Handle the event.
-     *
-     * @param  object  $event
+     * @param object $event
      * @return void
      */
     public function handle($event)
@@ -20,5 +21,4 @@ class ImportShopifyStoreListener implements ShouldQueue
 
         $shopifyService->importShopifyStore($event->shopifyIntegration->project, $event->userId);
     }
-
 }
