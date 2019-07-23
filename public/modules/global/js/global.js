@@ -107,7 +107,7 @@ function loading(elementId, loaderClass) {
 
 function loadingOnScreen() {
     $('#loadingOnScreen').html('');
-    $('#loadingOnScreen').append("<div class='loading'><div class='loader'></div></div>")
+    $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
 }
 function loadingOnScreenRemove(){
     $('#loadingOnScreen').html('');

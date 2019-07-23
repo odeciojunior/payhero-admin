@@ -1,13 +1,15 @@
 <!-- Page -->
 <div class='row no-gutters mb-10'>
-   <!-- <div style='position:absolute; width:50%' class="d-flex align-items-center">
-        <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'><i class="icon wb-info"></i></a>
+{{--    <div style='position:absolute; width:50%' class="d-flex align-items-center">
+        <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
+            <i class="icon wb-info"></i></a>
         <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o dominio?</span>
-    </div>-->
+    </div>--}}
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div id="add-domain" class="d-flex align-items-center justify-content-end">
             <span class="link-button-dependent red pointer" data-toggle="modal" data-target="#modal-content"> Adicionar domínio </span>
-            <a class="ml-10 rounded-add pointer" data-toggle="modal" data-target="#modal-content"><i class="icon wb-plus" aria-hidden="true"></i></a>
+            <a class="ml-10 rounded-add pointer" data-toggle="modal" data-target="#modal-content">
+                <i class="icon wb-plus" aria-hidden="true"></i></a>
         </div>
     </div>
 </div>
@@ -52,3 +54,53 @@
     </div>
 </div>-->
 <!-- End Modal -->
+<!--MODAL INFORMAÇÃO
+<div class="modal fade modal-3d-flip-vertical" id="modal-detalhes-dominio" aria-hidden='true' aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-group panel-group-continuous m-0" id="exampleAccrodion1" aria-multiselectable="true" role="tablist">
+                <div class="panel">
+                    <div class="panel-heading" id="exampleHeadingFirst" role="tab">
+                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseFirst" aria-controls="exampleCollapseFirst" aria-expanded="false">
+                            <strong>Primeiro</strong>
+                        </a>
+                    </div>
+                    <div class="panel-collapse collapse" id="exampleCollapseFirst" aria-labelledby="exampleHeadingFirst" role="tabpanel" style="">
+                        <div class="panel-body justify-content-center">
+                            <div class="d-flex align-items-center">
+                                <span> Clique em <strong>adicionar domínio</strong></span>
+                                <a class="ml-10 rounded-add pointer">
+                                    <i class="icon wb-plus" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading" id="exampleHeadingSecond" role="tab">
+                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseSecond" aria-controls="exampleCollapseSecond" aria-expanded="false">
+                            <strong>Segundo</strong>
+                        </a>
+                    </div>
+                    <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="">
+                        <div id='segundaInfo' class="panel-body">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading" id="exampleHeadingThird" role="tab">
+                        <a class="panel-title collapsed" data-parent="#exampleAccrodion1" data-toggle="collapse" href="#exampleCollapseThird" aria-controls="exampleCollapseThird" aria-expanded="false">
+                            Third
+                        </a>
+                    </div>
+                    <div class="panel-collapse collapse" id="exampleCollapseThird" aria-labelledby="exampleHeadingThird" role="tabpanel" style="">
+                        <div class="panel-body">
+                            Audire scribimus spe platonis longinquitate evertunt scribi, notionem doleamus assentiar mortis lucilius, exedunt. Finitum genus coniunctione vidisse, ipsam grate studuisse respondendum ignorant probabo atomum. Corrumpit mortem instructus totam familiarem tertium voluntates consilia aperiam disputata, plena animumque ius supplicii incurrunt laboribus, rationis dedocendi incurreret illam triari utrisque eos commodius. Assentiar magnitudinem.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+MODAL INFORMAÇÃO -->

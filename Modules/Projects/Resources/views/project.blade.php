@@ -216,6 +216,10 @@
                 </div>
             </div>
         </div>
+
+
+        <span id='shopifyIdLabel' data-shopifyId='{{$project->shopify_id}}'></span>
+
         @push('scripts')
             <script src="{{asset('modules/partners/js/partners.js')}}"></script>
             <script src="{{asset('modules/Shipping/js/shipping.js')}}"></script>
