@@ -14,8 +14,8 @@ class ShopifyIntegrationEvent
 
     /**
      * Create a new event instance.
-     *
-     * @return void
+     * @param ShopifyIntegration $shopifyIntegration
+     * @param $userId
      */
     public function __construct(ShopifyIntegration $shopifyIntegration, $userId)
     {

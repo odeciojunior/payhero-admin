@@ -829,8 +829,9 @@ class ShopifyService
 
         $project = $projectModel->find($projectId);
         $user    = $userModel->find($userId);
-
-        event(new ShopifyIntegrationReadyEvent($user, $project));
+        if (!empty($project) && !empty($user)) {
+            event(new ShopifyIntegrationReadyEvent($user, $project));
+        }
     }
 
     /**
