@@ -28,7 +28,6 @@ use Modules\Sales\Exports\Reports\SaleReportExport;
 
 class SalesController extends Controller
 {
-
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -79,16 +78,17 @@ class SalesController extends Controller
             $checkoutModel    = new Checkout();
             $companyModel     = new Company();
             $transactionModel = new Transaction();
+            $planModel        = new Plan();
 
             if (!empty($requestData['sale_id'])) {
-                $sale               = $saleModel->with([
-                                                        'transactions' => function($query) {
-                                                            $query->where('company', '!=', null)->first();
-                                                        },
-                                                    ])->find(current(Hashids::connection('sale_id')
-                                                    ->decode($requestData['sale_id'])));
+                $sale = $saleModel->with([
+                                             'transactions' => function($query) {
+                                                 $query->where('company', '!=', null)->first();
+                                             },
+                                         ])->find(current(Hashids::connection('sale_id')
+                                                                 ->decode($requestData['sale_id'])));
 
-                $sale['hours']      = (new Carbon($sale['start_date']))->format('H:m:s');
+                $sale['hours'] = (new Carbon($sale['start_date']))->format('H:m:s');
 
                 $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
 
@@ -104,7 +104,7 @@ class SalesController extends Controller
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
                 $plansSales = $planSaleModel->with('plan', 'plan.products')->where('sale', $sale->id)
-                                   ->get();
+                                            ->get();
 
                 $plans = [];
                 $total = 0;
@@ -116,7 +116,7 @@ class SalesController extends Controller
                     $plans[$key]['photo']  = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
                     $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
                 }
- 
+
                 $discount = '0,00';
                 $subTotal = $total;
 
@@ -134,7 +134,7 @@ class SalesController extends Controller
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
                 $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company', $userCompanies)
-                                      ->first();
+                                                  ->first();
 
                 if ($transaction) {
                     $value = $transaction->value;
@@ -207,13 +207,13 @@ class SalesController extends Controller
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
 
             $sales = $saleModel
-                          ->with([
-                                     'clientModel', 'plansSales', 'plansSales.plan', 'plansSales.plan.products', 'plansSales.plan.projectId',
-                                     'transactions' => function($query) use ($userCompanies) {
-                                         $query->whereIn('company', $userCompanies);
-                                     },
-                                 ])
-                          ->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status', '!=', 10]]);
+                ->with([
+                           'clientModel', 'plansSales', 'plansSales.plan', 'plansSales.plan.products', 'plansSales.plan.projectId',
+                           'transactions' => function($query) use ($userCompanies) {
+                               $query->whereIn('company', $userCompanies);
+                           },
+                       ])
+                ->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status', '!=', 10]]);
 
             if ($request->projeto != '') {
                 $plans    = $planModel->where('project', $request->projeto)->pluck('id');
@@ -263,7 +263,8 @@ class SalesController extends Controller
             $planSaleModel = new PlanSale();
             $clientModel   = new Client();
             $planModel     = new Plan();
-
+            $checkoutModel = new Checkout();
+            $shippingModel = new Shipping();
 
             //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
             $sales = $this->getSaleModel()
@@ -306,7 +307,7 @@ class SalesController extends Controller
 
             $salesResult = $sales->get();
 
-            $header   = [
+            $header = [
                 'Projeto',
                 'Código da Venda',
                 'Dono do Projeto',

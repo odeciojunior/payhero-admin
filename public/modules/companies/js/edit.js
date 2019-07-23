@@ -116,7 +116,7 @@ $(document).ready(function () {
 
 Dropzone.options.dropzoneDocuments = {
     paramName: "file",
-    maxFilesize: 10, // MB
+    maxFilesize: 20, // MB
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     accept: function (file, done) {
         var dropz = this;
