@@ -73,6 +73,7 @@ class SalesController extends Controller
 
             $saleModel        = new Sale();
             $planSaleModel    = new PlanSale();
+            $planModel        = new Plan();
             $clientModel      = new Client();
             $deliveryModel    = new Delivery();
             $checkoutModel    = new Checkout();

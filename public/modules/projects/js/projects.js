@@ -159,10 +159,7 @@ $(function () {
                                     }
                                 }
                             }, success: function (response) {
-                                if (response == 'success') {
-                                    alertCustom('success', 'Projeto autalizado com sucesso');
-
-                                }
+                                alertCustom('success', response.message);
 
                                 $("#image-logo-email").imgAreaSelect({remove: true});
                                 $("#previewimage").imgAreaSelect({remove: true});
