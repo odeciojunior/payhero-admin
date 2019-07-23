@@ -179,9 +179,9 @@ $(function () {
 
                     $("#bt_excluir").unbind('click');
                     $("#bt_excluir").on('click', function () {
+                        $("#modal-delete").modal('hide');
                         loadingOnScreen()
-                        $("#fechar_modal_excluir");
-                        $.ajax({
+                     /*   $.ajax({
                             method: "DELETE",
                             url: "/projects/" + projectId,
                             headers: {
@@ -193,14 +193,14 @@ $(function () {
                             },
                             success: function (data) {
                                 loadingOnScreenRemove();
-                                /*console.log(data);*/
+
                                 if (data == 'success') {
                                     window.location = "/projects";
                                 } else {
                                     alertCustom('error', "Erro ao deletar projeto");
                                 }
                             }
-                        });
+                        });*/
                     });
 
                 });
