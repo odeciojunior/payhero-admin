@@ -88,7 +88,7 @@
                                             <div class="row justify-content-between align-items-baseline">
                                                 <div class="col-md-6">
                                                     <h4 class="title-pad">{{ $project->name }}</h4>
-                                                    <p class="card-text sm"> Criado em 14/06/2019 </p>
+                                                    <p class="card-text sm"> Criado em {{$project->created_at->format('d/m/Y')}} </p>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="d-flex">
