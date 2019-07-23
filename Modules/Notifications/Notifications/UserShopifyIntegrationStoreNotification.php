@@ -4,7 +4,6 @@ namespace Modules\Notifications\Notifications;
 
 use App\Entities\Project;
 use App\Entities\User;
-use Exception;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -12,11 +11,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\PusherService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SendPushShopifyIntegrationReadyNotification extends Notification
+class UserShopifyIntegrationStoreNotification extends Notification
 {
     /**
      * @var User
@@ -38,9 +35,14 @@ class SendPushShopifyIntegrationReadyNotification extends Notification
         $this->project = $project;
     }
 
+    /**
+     * Get the notification's delivery channels.
+     * @param mixed $notifiable
+     * @return array
+     */
     public function via($notifiable)
     {
-        return [];
+        return ['database'];
     }
 
     /**
@@ -50,18 +52,10 @@ class SendPushShopifyIntegrationReadyNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        try {
-            $pusherService = new PusherService();
 
-            $data = [
-                'message' => 'Integração do seu projeto ' . $this->project->name . 'com o shopify está pronto',
-                'user'    => $this->user->id,
-            ];
-
-            $pusherService->sendPusher($data);
-        } catch (Exception $e) {
-            Log::warning('erro ao enviar notificação com pusher');
-            report($e);
-        }
+        return [
+            'message' => 'Integração do seu projeto ' . $this->project->name . ' com o shopify está concluida',
+            'link'    => Hashids::encode($this->project->id),
+        ];
     }
 }

@@ -403,7 +403,7 @@ class BoletoService
                     ];
 
                     if ($emailValidated && $boleto->count > 0) {
-//                        $user->notify(new boletoCompensatedNotification($user, $boleto->count));
+                        //                        $user->notify(new boletoCompensatedNotification($user, $boleto->count));
 
                         $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
                     }
@@ -415,6 +415,23 @@ class BoletoService
         } catch (Exception $e) {
             Log::warning('Erro ao enviar boletos para e-mails - Boletos compensados');
             report($e);
+        }
+    }
+
+    public function changeBoletoPendingToCanceled()
+    {
+        $date = Carbon::now()->subDay('4')->toDateString();
+
+        $boletos = Sale::where([
+                                   ['payment_method', '=', '2'],
+                                   ['status', '=', '2'],
+                                   [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date],
+                               ])
+                       ->get();
+        foreach ($boletos as $boleto) {
+            $boleto->update([
+                                'status' => 3,
+                            ]);
         }
     }
 }

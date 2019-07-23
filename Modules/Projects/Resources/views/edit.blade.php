@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="form-group col-xl-6 col-lg-6">
                     <label for="url_page">URL da página principal</label>
-                    <input name="url_page" value="{{$project->url_page}}" type="text" class="input-pad" id="url-page" placeholder="URL da página">
+                    <input name="url_page" value="{{$project->url_page == null ? 'https://' : $project->url_page}}" type="text" class="input-pad" id="url-page" placeholder="URL da página">
                 </div>
                 <div class="form-group col-xl-6 col-lg-6">
                     <label for="contact">Email de Contato (checkout)</label>
@@ -76,7 +76,7 @@
                 </div>
                 <div class='form-group col-4 col-xs-12'>
                     <label for='url_redirection'>Url Redirecionamento</label>
-                    <input name='url_redirect' value='{{$project->url_redirect}}' type='text' class='input-pad' id='url_redirection' placeholder='Página pós compra'>
+                    <input name='url_redirect' value='{{$project->url_redirect == null ? 'https://' : $project->url_redirect}}' type='text' class='input-pad' id='url_redirection' placeholder='Página pós compra'>
                 </div>
                 <div class='form-group col-4 col-xs-12'>
                     <label for='company'>Empresa responsável</label>
