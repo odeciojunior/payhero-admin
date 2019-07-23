@@ -19,7 +19,7 @@ $(document).ready(function () {
 
         $("#modal-title").html('Novo domínio');
 
-       $.ajax({
+        $.ajax({
             method: "GET",
             url: "/domains/create",
             data: {'project_id': projectId},
@@ -77,7 +77,7 @@ $(document).ready(function () {
     });
 
     function updateDomains() {
-        loadOnTable('#domain-table-body','#tabela-dominios');
+        loadOnTable('#domain-table-body', '#tabela-dominios');
 
         $.ajax({
             method: "GET",
@@ -205,8 +205,8 @@ $(document).ready(function () {
                             //$('#dominio-value').mask('#.###,#0', {reverse: true});
 
                             $("#bt_add_record").unbind('click');
-                            $("#bt_add_record").on("click", function () {
-
+                            $('#bt_add_record').on("click", function (e) {
+                                e.preventDefault();
                                 $("#new_registers").after("<tr data-row='" + ($("#new_registers_table tr").length) + "' data-save='0'><td>" + $("#tipo_registro").val() + "</td><td>" + $("#nome_registro").val() + "</td><td>" + $("#valor_registro").val() + "</td><td><button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button></td></tr>");
 
                                 //$('#form-edit-domain').append('<input type="hidden" name="tipo_registro_' + qtd_novos_registros + '" id="tipo_registro_' + qtd_novos_registros + '" value="' + $("#tipo_registro").val() + '" />');

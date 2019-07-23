@@ -71,7 +71,7 @@ class ProjectsController extends Controller
 
             $projectModel        = new Project();
             $userProjectModel    = new UserProject();
-            $digitalOceanService = new DigitalOceanFileService();
+            $digitalOceanService = app(DigitalOceanFileService::class);
 
             if ($requestValidated) {
                 $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
@@ -206,8 +206,8 @@ class ProjectsController extends Controller
 
             $projectModel        = new Project();
             $userProjectModel    = new UserProject();
-            $digitalOceanService = new DigitalOceanFileService();
-
+            $digitalOceanService = app(DigitalOceanFileService::class);
+  
             if ($requestValidated) {
                 $project = $projectModel->where('id', Hashids::decode($id))->first();
 
@@ -271,7 +271,7 @@ class ProjectsController extends Controller
                         $userProject->update(['company' => $requestValidated['company']]);
                     }
 
-                    return response()->json(['success' => 'success'], 200);
+                    return response()->json(['message' => 'Projeto atualizado!'], 200);
                 }
             }
 

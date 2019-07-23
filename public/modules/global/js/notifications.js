@@ -16,15 +16,15 @@ $(document).ready(function () {
         updateUnreadNotificationsAmount();
     });
     $("#notification").on('click', function () {
+        $("#notification-amount").html('0');
+        $('#notificationBadge').html('New 0');
+        updateMarkAsReadNotification();
         $('#notificationTemplate').html('')
-        loadOnModal('#notificationTemplate');
-        if($('#notification-amount').html() != '0'){
-            $("#notificationTemplate").html('');
-            $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
-            updateUnreadNotification();
-        }else{
-            htmlNotNotifications();
-        }
+
+        $("#notificationTemplate").html('');
+        $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
+        updateUnreadNotification();
+
     });
 
     updateUnreadNotificationsAmount();
@@ -68,6 +68,7 @@ $(document).ready(function () {
 
     // monta html com as notificações
     function updateUnreadNotification() {
+        loadOnNotification('#notificationTemplate');
         $.ajax({
             method: 'GET',
             url: '/notificacoes/unread/',
@@ -78,17 +79,13 @@ $(document).ready(function () {
                 //
             },
             success: function (response) {
-                console.log(response.notificacoes)
                 $("#notificationTemplate").html('');
                 $("#notificationTemplate").html(response.notificacoes);
-
                 $("#item-notification").on('click', function () {
                     updateMarkAsReadNotification();
                 });
-
             }
         });
-
     }
 
     // autaliza status das notificações
@@ -107,10 +104,4 @@ $(document).ready(function () {
             }
         });
     }
-
-    /*channel.bind('new-sale', function (data) {
-        alertPersonalizado('success', 'Nova venda realizada');
-        clear_map_points();
-        updateLastSales();
-    });*/
 });

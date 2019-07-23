@@ -105,6 +105,22 @@ function loading(elementId, loaderClass) {
     }
 }
 
+function loadingOnScreen() {
+    $('#loadingOnScreen').html('');
+    $('#loadingOnScreen').append("<div class='loading'><div class='loader'></div></div>")
+}
+function loadingOnScreenRemove(){
+    $('#loadingOnScreen').html('');
+}
+
+function loadOnNotification(whereToLoad) {
+    $(whereToLoad).html('');
+    $(whereToLoad).append("<div class='loading' style='width:346px; height:150px'>" +
+        "<span class='loaderNotification' >" +
+        "</span>" +
+        "</div>");
+}
+
 function loadOnModal(whereToLoad) {
     $(whereToLoad).html('');
     $(whereToLoad).append("<div id='loaderModal' class='loading'>" +

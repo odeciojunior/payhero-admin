@@ -13,12 +13,12 @@ use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use App\Entities\CheckoutPlan;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Entities\Log as CheckoutLog;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\CartRecovery\Transformers\CartRecoveryResource;
 use Modules\CartRecovery\Transformers\CarrinhosAbandonadosResource;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CartRecoveryController
@@ -141,6 +141,7 @@ class CartRecoveryController extends Controller
                 }
 
                 $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
+
                 $link   = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
 
                 $whatsAppMsg = 'Olá ' . $log->name;
@@ -157,13 +158,11 @@ class CartRecoveryController extends Controller
                     'link'          => $link,
                 ]);
             }
-
             return response()->json($details->render());
         } catch (Exception $e) {
             Log::warning('Erro ao buscar detalhes do carrinho abandonado');
             report($e);
-
-            return redirect()->back();
+            return response()->json(['message' => 'Ocorreu algum erro']);
         }
     }
 }
