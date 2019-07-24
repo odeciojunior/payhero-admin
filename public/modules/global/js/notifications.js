@@ -16,14 +16,13 @@ $(document).ready(function () {
         updateUnreadNotificationsAmount();
     });
     $("#notification").on('click', function () {
+        updateUnreadNotification();
         $("#notification-amount").html('0');
         $('#notificationBadge').html('New 0');
 
-        updateUnreadNotification();
-
     });
 
-    updateUnreadNotificationsAmount();
+    // updateUnreadNotificationsAmount();
 
     // verifica se existem novas notificações
     function updateUnreadNotificationsAmount() {
@@ -79,9 +78,7 @@ $(document).ready(function () {
                 $("#notificationTemplate").html('');
                 $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
                 $("#notificationTemplate").html(response.notificacoes);
-                $("#item-notification").on('click', function () {
-                    updateMarkAsReadNotification();
-                });
+                updateMarkAsReadNotification();
             }
         });
     }
