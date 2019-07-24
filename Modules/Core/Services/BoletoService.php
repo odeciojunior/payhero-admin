@@ -10,6 +10,7 @@ use App\Entities\Project;
 use App\Entities\Sale;
 use App\Entities\Transaction;
 use App\Entities\User;
+use Modules\Core\Events\BoletoPaidEvent;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -212,11 +213,16 @@ class BoletoService
     public function verifyBoleto2()
     {
         try {
-            $date    = Carbon::now()->subDay('2')->toDateString();
-            $boletos = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
-                           ->with('clientModel', 'plansSales.plan.products')->get();
+            $saleModel    = new Sale();
+            $planModel    = new Plan();
+            $projectModel = new Project();
+            $domainModel  = new Domain();
 
-            Log::warning('boletos aguardando pagamento 2 -> ' . print_r($boletoWaitionPayment, true));
+            $date    = Carbon::now()->subDay('2')->toDateString();
+            $boletos = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
+                                 ->with('clientModel', 'plansSales.plan.products')->get();
+
+            Log::warning('boletos aguardando pagamento 2 -> ' . print_r($boletos, true));
 
             foreach ($boletos as $boleto) {
                 try {
@@ -232,9 +238,9 @@ class BoletoService
                         $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     }
                     foreach ($boleto->plansSales as $plansSale) {
-                        $plan    = Plan::find($plansSale['plan']);
-                        $project = Project::find($plan['project']);
-                        $domain  = Domain::where('project_id', $project->id)->first();
+                        $plan    = $planModel->find($plansSale['plan']);
+                        $project = $projectModel->find($plan['project']);
+                        $domain  = $domainModel->where('project_id', $project->id)->first();
 
                         $subTotal += str_replace('.', '', $plan['price']) * $plansSale["amount"];
                         foreach ($plansSale->getRelation('plan')->products as $product) {
@@ -373,18 +379,18 @@ class BoletoService
     public function verifyBoletoPaid()
     {
         try {
-            $date        = Carbon::now()->toDateString();
-            $sendEmail   = new SendgridService();
-            $data        = [];
-            $boletosPaid = Sale::select(\DB::raw('count(*) as count'), 'owner')
-                               ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
-                               ->groupBy('sales.owner')->get();
+            $userModel = new User();
+            $saleModel = new Sale();
 
-            Log::warning('boletos pagos hoje -> ' . print_r($boletosPaid, true));
+            $date        = Carbon::now()->subDays(15)->toDateString();
+            $data        = [];
+            $boletosPaid = $saleModel->select(\DB::raw('count(*) as count'), 'owner')
+                                     ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
+                                     ->groupBy('sales.owner')->get();
 
             foreach ($boletosPaid as $boleto) {
                 try {
-                    $user = User::find($boleto->owner);
+                    $user = $userModel->find($boleto->owner);
 
                     $emailValidated = FoxUtils::validateEmail($user->email);
                     $message        = '';
@@ -399,6 +405,7 @@ class BoletoService
                     }
 
                     $data = [
+                        'user'              => $user,
                         "name"              => $user->name,
                         'boleto_count'      => strval($boleto->count),
                         'message'           => $message,
@@ -407,9 +414,7 @@ class BoletoService
                     ];
 
                     if ($emailValidated && $boleto->count > 0) {
-                        //                        $user->notify(new boletoCompensatedNotification($user, $boleto->count));
-
-                        $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $user->email, $user->name, 'd-4ce62be1218d4b258c8d1ab139d4d664', $data);
+                        event(new BoletoPaidEvent($data));
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boletos compensados');
@@ -424,14 +429,17 @@ class BoletoService
 
     public function changeBoletoPendingToCanceled()
     {
+
+        $saleModel = new Sale();
+
         $date = Carbon::now()->subDay('4')->toDateString();
 
-        $boletos = Sale::where([
-                                   ['payment_method', '=', '2'],
-                                   ['status', '=', '2'],
-                                   [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date],
-                               ])
-                       ->get();
+        $boletos = $saleModel->where([
+                                         ['payment_method', '=', '2'],
+                                         ['status', '=', '2'],
+                                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date],
+                                     ])
+                             ->get();
         foreach ($boletos as $boleto) {
             $boleto->update([
                                 'status' => 3,

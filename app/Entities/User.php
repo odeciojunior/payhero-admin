@@ -206,4 +206,9 @@ class User extends Authenticable
     {
         return $this->hasMany('App\Entities\UserProject', 'user');
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany('App\Entities\User', 'users_projects', 'user', 'project');
+    }
 }

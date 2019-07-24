@@ -36,7 +36,7 @@
                     <span class="nav-link" data-toggle="dropdown" title="Notifications" id='notification'
                           aria-expanded="false" data-animation="scale-up" role="button" style='cursor:pointer'>
                         <i class="material-icons">notifications_none</i>
-                        <span class="badge badge-danger badge-notification" id="notification-amount">0</span>
+                        <span class="badge badge-danger badge-notification" id="notification-amount">{{count(auth()->user()->unreadNotifications)}}</span>
                     </span>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
                         <div class="dropdown-menu-header">

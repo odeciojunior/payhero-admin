@@ -52,38 +52,36 @@ class Project extends Model
 {
     use FoxModelTrait;
     use SoftDeletes;
-
     /**
      * @var array
      */
     protected $dates = ['deleted_at'];
-
     /**
      * @var array
      */
     protected $fillable = [
-        'carrier', 
-        'photo', 
-        'visibility', 
-        'status', 
-        'name', 
-        'description', 
-        'invoice_description', 
-        'percentage_affiliates', 
-        'url_page', 
-        'automatic_affiliation', 
-        'shopify_id', 
-        'installments_amount', 
-        'installments_interest_free', 
-        'cookie_duration', 
-        'url_cookies_checkout', 
-        'contact', 
-        'created_at', 
-        'updated_at', 
+        'carrier',
+        'photo',
+        'visibility',
+        'status',
+        'name',
+        'description',
+        'invoice_description',
+        'percentage_affiliates',
+        'url_page',
+        'automatic_affiliation',
+        'shopify_id',
+        'installments_amount',
+        'installments_interest_free',
+        'cookie_duration',
+        'url_cookies_checkout',
+        'contact',
+        'created_at',
+        'updated_at',
         'logo',
-        'url_redirect', 
-        'boleto', 
-        'deleted_at'
+        'url_redirect',
+        'boleto',
+        'deleted_at',
     ];
     /**
      * @var array
@@ -213,13 +211,18 @@ class Project extends Model
     {
         return $this->hasMany('App\Entities\ShopifyIntegration', 'project');
     }
- 
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function usersProjects()
     {
         return $this->hasMany('App\Entities\UserProject', 'project');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany('App\Entities\User', 'users_projects', 'project', 'user');
     }
 
     /**
