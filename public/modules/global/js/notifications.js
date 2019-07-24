@@ -15,6 +15,7 @@ $(document).ready(function () {
         alertCustom('success', data.message);
         updateUnreadNotificationsAmount();
     });
+
     $("#notification").on('click', function () {
         $("#notification-amount").html('0');
         $('#notificationBadge').html('New 0');

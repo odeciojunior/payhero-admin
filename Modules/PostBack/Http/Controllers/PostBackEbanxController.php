@@ -26,11 +26,11 @@ class PostBackEbanxController extends Controller {
 
     public function postBackListener(Request $request){
 
-        date_default_timezone_set('America/Sao_Paulo');
-
         $requestData = $request->all();
 
-        PostbackLog::create([
+        $postbackLogModel = new PostbackLog();
+
+        $postbackLogModel->create([
             'origin'      => 1,
             'data'        => json_encode($requestData),
             'description' => 'ebanx'
@@ -47,14 +47,16 @@ class PostBackEbanxController extends Controller {
 
         if(!isset($response->payment->status)){
             Log::write('info', 'Erro com response do ebanx ' . print_r($response, true));
-            return 'success';
+            return response()->json(['message' => 'success'], 200);
         }
 
-        $sale = Sale::where('gateway_id',$requestData['hash_codes'])->first();
+        $saleModel = new Sale();
+
+        $sale = $saleModel->where('gateway_id',$requestData['hash_codes'])->first();
 
         if(!$sale){
             Log::write('info', 'Venda não encontrada no retorno do Ebanx com código ' . $requestData['hash_codes']);
-            return 'success';
+            return response()->json(['message' => 'sale not found'], 200);
         }
 
         if($response->payment->status != $sale->gateway_status){
@@ -63,7 +65,11 @@ class PostBackEbanxController extends Controller {
                 'gateway_status' => $response->payment->status,
             ]);
 
-            $transactions = Transaction::where('sale',$sale->id)->get();
+            $transactionModel = new Transaction();
+            $companyModel     = new Company();
+            $userModel        = new User();
+
+            $transactions = $transactionModel->where('sale',$sale->id)->get();
 
             if($response->payment->status == 'CA'){
  
@@ -92,9 +98,9 @@ class PostBackEbanxController extends Controller {
 
                     if($transaction->company != null){
 
-                        $company = Company::find($transaction->company);
+                        $company = $companyModel->find($transaction->company);
 
-                        $user = User::find($company['user_id']);
+                        $user = $userModel->find($company['user_id']);
 
                         $transaction->update([
                             'status'            => 'paid',
@@ -111,11 +117,15 @@ class PostBackEbanxController extends Controller {
 
                 if($sale['shopify_order'] != ''){
 
-                    $plansSale = PlanSale::where('sale', $sale['id'])->first();
+                    $planSaleModel           = new PlanSale();
+                    $planModel               = new Plan();
+                    $shopifyIntegrationModel = new ShopifyIntegration();
 
-                    $plan = Plan::find($plansSale->plan);
+                    $plansSale = $planSaleModel->where('sale', $sale['id'])->first();
 
-                    $shopifyIntegration = ShopifyIntegration::where('project',$plan['project'])->first();
+                    $plan = $planModel->find($plansSale->plan);
+
+                    $shopifyIntegration = $shopifyIntegrationModel->where('project',$plan['project'])->first();
 
                     try{
                         $credential = new PublicAppCredential($shopifyIntegration['token']);

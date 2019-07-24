@@ -8,6 +8,7 @@ use App\Entities\Sale;
 use App\Entities\User;
 use App\Entities\Company;
 use App\Entities\PlanSale;
+use App\Entities\Transfer;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
 use App\Entities\PostbackLog;
@@ -28,7 +29,9 @@ class PostBackPagarmeController extends Controller {
 
         $requestData = $request->all();
 
-        PostbackLog::create([
+        $postBackLogModel = new PostbackLog();
+
+        $postBackLogModel->create([
             'origin'      => 2,
             'data'        => json_encode($requestData),
             'description' => 'pagarme'
@@ -36,18 +39,23 @@ class PostBackPagarmeController extends Controller {
 
         if(isset($requestData['event']) && $requestData['event'] = 'transaction_status_changed'){
 
-            $sale = Sale::find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
+            $saleModel        = new Sale();
+            $transactionModel = new Transaction();
+            $companyModel     = new Company();
+            $userModel        = new User();
+
+            $sale = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
 
             if($sale == null){
                 Log::write('info', 'VENDA NÃO ENCONTRADA!!!' . Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
-                return 'sucesso';
+                return response()->json(['message' => 'sale not found'], 200);
             }
 
             if($requestData['transaction']['status'] == $sale['gateway_status']){
-                return 'sucesso';
+                return response()->json(['message' => 'success'], 200);
             }
 
-            $transactions = Transaction::where('sale',$sale->id)->get();
+            $transactions = $transactionModel->where('sale',$sale->id)->get();
 
             if($requestData['transaction']['status'] == 'paid'){
 
@@ -63,14 +71,18 @@ class PostBackPagarmeController extends Controller {
 
                     if($transaction->company != null){
 
-                        $company = Company::find($transaction->company);
-
-                        $user = User::find($company['user_id']);
+                        $company = $companyModel->find($transaction->company);
+ 
+                        $user = $userModel->find($company['user_id']);
 
                         $transaction->update([
                             'status'            => 'paid',
                             'release_date'      => Carbon::now()->addDays($user['release_money_days'])->format('Y-m-d'),
                             'antecipation_date' => Carbon::now()->addDays($user['boleto_antecipation_money_days'])->format('Y-m-d'),
+                        ]);
+
+                        $company->update([
+                            'balance' => $company->balance += $transaction->value
                         ]);
                     }
                     else{
@@ -82,11 +94,15 @@ class PostBackPagarmeController extends Controller {
 
                 if($sale['shopify_order'] != ''){
 
-                    $plansSale = PlanSale::where('sale', $sale['id'])->first();
+                    $planModel               = new Plan();
+                    $planSaleModel           = new PlanSale();
+                    $shopifyIntegrationModel = new ShopifyIntegration();
 
-                    $plan = Plan::find($plansSale->plan);
+                    $plansSale = $planSaleModel->where('sale', $sale['id'])->first();
 
-                    $shopifyIntegration = ShopifyIntegration::where('project',$plan['project'])->first();
+                    $plan = $planModel->find($plansSale->plan);
+
+                    $shopifyIntegration = $shopifyIntegrationModel->where('project',$plan['project'])->first();
 
                     try{
                         $credential = new PublicAppCredential($shopifyIntegration['token']);
@@ -106,9 +122,49 @@ class PostBackPagarmeController extends Controller {
                 }
             }
             else{
-                foreach($transactions as $transaction){
-                    $transaction->update(['status' => $requestData['transaction']['status']]);
+ 
+                if($requestData['transaction']['status'] == 'chargedback'){
+                    $sale->update([
+                        'gateway_status' => 'chargedback',
+                        'status'         => '4' 
+                    ]);
+
+                    $transferModel = new Transfer();
+
+                    foreach($transactions as $transaction){
+ 
+                        if($transaction->status == 'transfered'){
+
+                            $transferModel->create([
+                                'transaction' => $transaction->id,
+                                'user'        => $company->user_id,
+                                'value'       => $transaction->value,
+                                'type'        => 'out',
+                            ]);
+
+                            $company = $companyModel->find($transaction->company);
+
+                            $company->update([
+                                'balance' => $company->balance -= $transaction->value
+                            ]);
+                        }
+
+                        $transaction->update([
+                            'status' => 'chargedback',
+                        ]);
+
+                    }
                 }
+                else{
+                    $sale->update([
+                        'gateway_status' => $requestData['transaction']['status'],
+                    ]);
+
+                    foreach($transactions as $transaction){
+                        $transaction->update(['status' => $requestData['transaction']['status']]);
+                    }
+                }
+
             }
         }
         return response()->json(['message' => 'success'], 200);

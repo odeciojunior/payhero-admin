@@ -12,7 +12,7 @@
         @elseif($sale->status == 3)
             <span class='badge badge-danger'>Recusada</span>
         @elseif($sale->status == 4)
-            <span class='badge badge-secondary'>Estornada</span>
+            <span class='badge badge-danger'>Estornada</span>
         @else
             <span class='badge badge-primary'>{{$sale->status}}</span>
         @endif

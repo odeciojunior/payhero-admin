@@ -1,8 +1,8 @@
 $(function () {
-    var startDate = moment().subtract(6, 'days').format('YYYY-MM-DD');
+    var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
     var endDate = moment().format('YYYY-MM-DD');
     $('input[name="daterange"]').daterangepicker({
-        startDate: moment().subtract(6, 'days'),
+        startDate: moment().subtract(30, 'days'),
         endDate: moment(),
         opens: 'left',
         maxDate: moment().endOf("day"),

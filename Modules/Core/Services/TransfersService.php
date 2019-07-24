@@ -13,15 +13,16 @@ class TransfersService
 {
     public function verifyTransactions() {
 
-        $transactions = Transaction::where([
+        $companyModel     = new Company();
+        $transferModel    = new Transfer();
+        $transactionModel = new Transaction();
+
+        $transactions = $transactionModel->where([
                                                ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                ['status', 'paid'],
                                            ])->get();
 
         $transfers = [];
-
-        $companyModel  = new Company();
-        $transferModel = new Transfer();
 
         foreach ($transactions as $transaction) {
             try {

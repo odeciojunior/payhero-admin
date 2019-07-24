@@ -159,7 +159,7 @@ class SalesController extends Controller
                     'sale'           => $sale,
                     'plans'          => $plans,
                     'client'         => $client,
-                    'delivery'       => $delivery,
+                    'delivery'       => $delivery, 
                     'checkout'       => $checkout,
                     'total'          => number_format(intval($total) / 100, 2, ',', '.'),
                     'subTotal'       => number_format(intval($subTotal) / 100, 2, ',', '.'),
