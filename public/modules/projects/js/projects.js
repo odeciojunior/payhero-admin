@@ -83,7 +83,7 @@ $(function () {
                                 imageHeight: this.naturalHeight,
                                 imageWidth: this.naturalWidth,
                                 onSelectEnd: function (img, selection) {
-                                    $('#photo_x1').val(selection.x1); 
+                                    $('#photo_x1').val(selection.x1);
                                     $('#photo_y1').val(selection.y1);
                                     $('#photo_w').val(selection.width);
                                     $('#photo_h').val(selection.height);
@@ -127,9 +127,7 @@ $(function () {
                         });
                     }
 
-
                 });
-
 
                 $("#bt-update-project").unbind('click');
                 $("#bt-update-project").on('click', function (event) {
@@ -210,11 +208,10 @@ $(function () {
 
                     var integrationStatus = $(this).attr('integration-status');
 
-                    if(integrationStatus == 2){
+                    if (integrationStatus == 2) {
                         $("#modal-change-shopify-integration-title").html("Desfazer integração com shopify?");
                         $("#modal-change-shopify-integration-text").html('Ao realizar essa operação os pagamentos não serão processados pelo checkout do CloudFox');
-                    }
-                    else if(integrationStatus == 3){
+                    } else if (integrationStatus == 3) {
                         $("#modal-change-shopify-integration-title").html("Integrar com shopify?");
                         $("#modal-change-shopify-integration-text").html('Ao realizar essa operação os pagamentos serão processados pelo checkout do CloudFox');
                     }
@@ -224,11 +221,50 @@ $(function () {
 
                         $("#bt-close-modal-change-shopify-integration").click();
 
-                        if(integrationStatus == 2){
-                            alertCustom('success','Integração desfeita!');
-                        }
-                        else{
-                            alertCustom('success','Projeto integrado com Shopify!');
+                        if (integrationStatus == 2) {
+                            $.ajax({
+                                method: "POST",
+                                url: "/apps/shopify/undointegration",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                data: {
+                                    project_id: projectId
+                                },
+
+                                error: function (response) {
+                                    loadingOnScreenRemove();
+                                    alertCustom('error', response.message);
+                                    window.location.reload();
+                                },
+                                success: function (response) {
+                                    loadingOnScreenRemove();
+                                    alertCustom('success', response.message);
+                                    window.location.reload();
+                                }
+                            });
+                        } else {
+                            $.ajax({
+                                method: "POST",
+                                url: "/apps/shopify/reintegration",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                data: {
+                                    project_id: projectId
+                                },
+
+                                error: function (response) {
+                                    alertCustom('error', response.message);
+                                    loadingOnScreenRemove()
+                                    window.location.reload();
+                                },
+                                success: function (response) {
+                                    loadingOnScreenRemove();
+                                    alertCustom('success', response.message);
+                                    window.location.reload();
+                                }
+                            });
                         }
                     });
 
@@ -236,6 +272,12 @@ $(function () {
 
             }
         });
+    }
+
+    if($('#shopifyIdLabel').data('shopifyid') != ''){
+        $('#segundaInfo').html('Digite o nome do seu domínio cadastrado no shopify (Ex: minhaloja.com) e <strong>clique em salvar</strong>')
+    }else{
+        $('#segundaInfo').html('Digite o nome do seu <strong>domínio e o IP do servidor</strong> onde seu site está hospedado.');
     }
 
 });

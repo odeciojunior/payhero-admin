@@ -136,7 +136,7 @@ class DomainService
 
                     if (!empty($domain->project->shopify_id)) {
                         Log::warning('domains update command if ...');
-                        
+
                         //dominio shopify, fazer as alteracoes nos templates
                         foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
 
@@ -199,6 +199,8 @@ class DomainService
                     $domain->update([
                                         'status' => $this->getDomainModel()->getEnum('status', 'approved'),
                                     ]);
+                    //event();
+
                     Log::warning('domains update command final');
                 } else {
                     dump('here 2');

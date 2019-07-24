@@ -3,12 +3,12 @@
 namespace Modules\Core\Services;
 
 use App\Entities\Project;
+use App\Entities\ShopifyIntegration;
 use App\Entities\User;
-use App\Events\Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use Exception;
 use App\Entities\Plan;
 use Illuminate\Support\Facades\Log;
-use Modules\Notifications\Notifications\ShopifyIntegrationReadyNotification;
+use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use PHPHtmlParser\Dom;
 use App\Entities\Product;
 use Slince\Shopify\Client;
@@ -716,11 +716,12 @@ class ShopifyService
     {
         $storeProducts = $this->getShopProducts();
 
-        $planModel        = new Plan();
-        $productModel     = new Product();
-        $productPlanModel = new ProductPlan();
-        $projectModel     = new Project();
-        $userModel        = new User();
+        $planModel               = new Plan();
+        $productModel            = new Product();
+        $productPlanModel        = new ProductPlan();
+        $projectModel            = new Project();
+        $userModel               = new User();
+        $shopifyIntegrationModel = new ShopifyIntegration();
 
         foreach ($storeProducts as $shopifyProduct) {
 
@@ -823,20 +824,13 @@ class ShopifyService
                                          "address" => $postbackUrl . Hashids::encode($projectId),
                                          "format"  => "json",
                                      ]);
+        }
+        $shopifyIntegrationModel->where('project', $projectId)->update(['status' => 1]);
 
-            $project = $projectModel->find($projectId);
-            $user    = $userModel->find($userId);
-
-            $data = ['user ' => $user, 'project' => $project];
-            /*
-                        $data = [
-                            'user'    => $user,
-                            'project' => $project,
-                            'message' => 'Integração do projeto ' . $project->name . ' com shopify completada com sucesso',
-                        ];*/
-
-//            event(new ShopifyIntegrationReadyEvent($data));
-            //            $this->pusherService->sendPusher($dataPusher);
+        $project = $projectModel->find($projectId);
+        $user    = $userModel->find($userId);
+        if (!empty($project) && !empty($user)) {
+            event(new ShopifyIntegrationReadyEvent($user, $project));
         }
     }
 

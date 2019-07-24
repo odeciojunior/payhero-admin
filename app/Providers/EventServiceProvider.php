@@ -17,6 +17,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'Modules\Core\Events\ShopifyIntegrationReadyEvent' => [
             'Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener',
+            'Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener',
         ],
     ];
 
