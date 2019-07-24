@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Services;
 
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 use SendGrid;
@@ -281,14 +283,16 @@ class SendgridService
         try {
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);
+            //            $email->setSubject(); TODO colocar subject nos email Luan
             $email->addTo($toEmail, $toName);
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
             try {
                 $response = $this->sendgrid->send($email);
             } catch (Exception $e) {
+                Log::warning('Caught exception: ' . $e->getMessage());
+
                 return false;
-                echo 'Caught exception: ' . $e->getMessage() . "\n";
             }
         } catch (Exception $e) {
             report($e);

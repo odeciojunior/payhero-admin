@@ -76,9 +76,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela','#tabela_vendas');
 
         if (link == null) {
-            link = '/sales/getsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/sales/getsales?' + 'projeto=' + $("#projeto").val() + '&transaction=' + $("#transaction").val().replace('#','') + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         } else {
-            link = '/sales/getsales' + link + '&projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/sales/getsales' + link + '&projeto=' + $("#projeto").val() + '&transaction=' + $("#transaction").val().replace('#','') + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         }
 
         $.ajax({
@@ -120,7 +120,7 @@ $(document).ready(function () {
 
                 });
                 if (response.data == '') {
-                    $('#dados_tabela').html("<tr><td colspan='11' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
+                    $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
                 pagination(response);
 

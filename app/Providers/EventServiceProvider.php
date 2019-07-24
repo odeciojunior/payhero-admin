@@ -19,6 +19,16 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\NotifyUserShopifyIntegrationReadyListener',
             'Modules\Core\Listeners\NotifyUserShopifyIntegrationStoreListener',
         ],
+        'Modules\Core\Events\DomainApprovedEvent'          => [
+            'Modules\Core\Listeners\DomainApprovedPusherNotifyUserListener',
+            'Modules\Core\Listeners\DomainApprovedNotifyUserListener',
+            'Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener',
+        ],
+        'Modules\Core\Events\BoletoPaidEvent'              => [
+            'Modules\Core\Listeners\BoletoPaidPusherNotifyUser',
+            'Modules\Core\Listeners\BoletoPaidNotifyUser',
+            'Modules\Core\Listeners\BoletoPaidEmailNotifyUser',
+        ],
     ];
 
     /**

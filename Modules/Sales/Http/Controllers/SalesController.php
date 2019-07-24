@@ -186,7 +186,6 @@ class SalesController extends Controller
      */
     public function refundSale(Request $request)
     {
-
         return response()->json('sucesso');
     }
 
@@ -220,6 +219,11 @@ class SalesController extends Controller
                 $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
                 $sales->whereIn('id', $salePlan);
             }
+ 
+            if ($request->transaction != '') {
+                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#','',$request->transaction)));
+                $sales->where('id', $saleId);
+            }
 
             if ($request->comprador != '') {
                 $customers = $clientModel->where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
@@ -229,6 +233,7 @@ class SalesController extends Controller
             if ($request->forma != '') {
                 $sales->where('payment_method', $request->forma);
             }
+
             if ($request->status != '') {
                 $sales->where('status', $request->status);
             }

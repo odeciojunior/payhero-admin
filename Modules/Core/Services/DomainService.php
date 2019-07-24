@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use App\Entities\Domain;
 use App\Entities\ShopifyIntegration;
+use Modules\Core\Events\DomainApprovedEvent;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -99,7 +100,11 @@ class DomainService
         try {
             //verifica todos os dominios pendentes
             $domains = $this->getDomainModel()
-                            ->with(['project', 'project.shopifyIntegrations']);
+                            ->with([
+                                       'project',
+                                       'project.shopifyIntegrations',
+                                       'project.users',
+                                   ]);
 
             if (!$reCheck) {
                 $domains->where('status', '!=', $this->getDomainModel()->getEnum('status', 'approved'));
@@ -199,12 +204,11 @@ class DomainService
                     $domain->update([
                                         'status' => $this->getDomainModel()->getEnum('status', 'approved'),
                                     ]);
-                    //event();
+
+                    event(new DomainApprovedEvent($domain, $domain->project, $domain->project->users));
 
                     Log::warning('domains update command final');
                 } else {
-                    dump('here 2');
-
                     $domain->update([
                                         'status' => $this->getDomainModel()->getEnum('status', 'pending'),
                                     ]);

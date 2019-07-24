@@ -16,7 +16,13 @@ class NotificationsController extends Controller
      */
     public function markasread(Request $request)
     {
-        auth()->user()->unreadNotifications->markAsRead();
+                auth()->user()->unreadNotifications->markAsRead();
+
+        /*$unreadNotifications = count(auth()->user()->unreadNotifications);
+
+        foreach ($unreadNotifications as $notification) {
+            $unreadNotifications->markAsRead();
+        }*/
 
         return response()->json('sucesso');
     }
