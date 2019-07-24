@@ -61,6 +61,10 @@ class TesteController extends Controller
     public function index()
     {
 
+        $shopifyService = new ShopifyService('plotplot.myshopify.com', '8153df9581010e821c22125300fbda56');
+
+        dd($shopifyService->getShopWebhook());
+
         try {
             $x = Domain::first();
         } catch (\Exception $e) {

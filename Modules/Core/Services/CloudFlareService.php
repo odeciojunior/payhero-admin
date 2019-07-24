@@ -478,6 +478,8 @@ class CloudFlareService
         try {
             $client = new Client([
                                      'base_uri' => $url,
+                                     'timeout'  => 3,
+                                     'connect_timeout'  => 3,
                                      //'headers'  => $headers,
                                      'Accept'   => 'application/json',
                                  ]);
@@ -504,6 +506,7 @@ class CloudFlareService
         } catch (Exception $e) {
             Log::warning('Erro ao checar dominio');
             report($e);
+
             return false;
         }
     }
