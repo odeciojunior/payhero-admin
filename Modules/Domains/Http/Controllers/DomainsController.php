@@ -106,7 +106,7 @@ class DomainsController extends Controller
                     if ($newDomain) {
                         DB::commit();
 
-                        return response()->json(['message' => 'Domínio cadastrado com sucesso'], 200);
+                        return response()->json(['message' => 'Domínio cadastrado com sucesso','data'=>['id_code'=>Hashids::encode($domainCreated->id)]], 200);
                     } else {
                         //problema ao cadastrar dominio
                         dd($newDomain);
