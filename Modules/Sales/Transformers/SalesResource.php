@@ -23,9 +23,9 @@ class SalesResource extends Resource
         } else {
             $this->flag = 'boleto';
         }
-
+ 
         return [
-            'sale_code'  => '#' . strtoupper(Hashids::connection('sale_id')->encode($this->id)),
+            'sale_code'  => '#' . Hashids::connection('sale_id')->encode($this->id),
             'id'         => Hashids::connection('sale_id')->encode($this->id),
             'project'    => $this->getRelation('plansSales')->first()->getRelation('plan')
                                  ->getRelation('projectId')->name,

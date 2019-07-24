@@ -104,10 +104,9 @@
 
         window.intercomSettings = {
             app_id: "q35ubavq",
-            user_id: "{!! Hashids::encode(\Auth::user()->name) !!}",
+            user_id: "{!! Hashids::encode(\Auth::user()->id) !!}",
             name: "{!! \Auth::user()->name !!}",
-            email: "{!! \Auth::user()->email !!}",
-            created_at: "1312182000"
+            email: "{!! \Auth::user()->email !!}"
         };
 
         var w = window;
@@ -139,13 +138,6 @@
                 w.addEventListener('load', l, false);
             }
         }
-
-    });
-</script>
-<script>
-
-    $(document).ready(function(){
-
 
     });
 </script>

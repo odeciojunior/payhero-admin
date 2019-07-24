@@ -9,7 +9,7 @@
     <!-- Page -->
     <div class="page">
         <div class="page-header container">
-            <h1 class="page-title">Carrinhos abandonados</h1>
+            <h1 class="page-title">Recuperação de vendas</h1>
         </div>
         <div class="page-content container">
             <div id="" class="card shadow p-20">

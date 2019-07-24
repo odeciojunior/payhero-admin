@@ -83,6 +83,10 @@
                         </div>
                         <div class="row mt-15">
                             <div class="col-3">
+                                <label for="comprador">Transação</label>
+                                <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
+                            </div>        
+                            <div class="col-3">
                                 <label for="data_inicial">Data inicial</label>
                                 <input name='start_date' id="data_inicial" class="form-control input-pad" type="date">
                             </div>
@@ -90,7 +94,7 @@
                                 <label for="data_final">Data final</label>
                                 <input name='end_date' id="data_final" class="form-control input-pad" type="date">
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">
                                     <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                 </button>
