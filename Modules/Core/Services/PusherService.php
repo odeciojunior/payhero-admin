@@ -47,7 +47,7 @@ class PusherService
             $this->pusher->trigger('channel-' . Hashids::connection('pusher_connection')
                                                        ->encode($data['user']), 'new-notification', $data);
         } catch (Exception $e) {
-            Log::warning('Erro ao tentar gera notificacao integracao shopify');
+            Log::warning('Erro ao tentar gerar notificacao');
             report($e);
         }
     }

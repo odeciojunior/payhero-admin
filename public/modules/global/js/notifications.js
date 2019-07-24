@@ -18,10 +18,7 @@ $(document).ready(function () {
     $("#notification").on('click', function () {
         $("#notification-amount").html('0');
         $('#notificationBadge').html('New 0');
-        updateMarkAsReadNotification();
-        $('#notificationTemplate').html('')
 
-        $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
         updateUnreadNotification();
 
     });
@@ -49,6 +46,7 @@ $(document).ready(function () {
         });
     }
 
+    // monta hmtl quando não tem notificação notificação
     function htmlNotNotifications() {
         $("#notificationTemplate").html('');
         dados = '';
@@ -79,6 +77,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#notificationTemplate").html('');
+                $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
                 $("#notificationTemplate").html(response.notificacoes);
                 $("#item-notification").on('click', function () {
                     updateMarkAsReadNotification();
