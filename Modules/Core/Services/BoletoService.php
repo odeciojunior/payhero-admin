@@ -376,9 +376,9 @@ class BoletoService
             $date        = Carbon::now()->toDateString();
             $sendEmail   = new SendgridService();
             $data        = [];
-            $boletosPaid = Sale::select(\DB::raw('count(*) as count'), 'owner', 'id')
+            $boletosPaid = Sale::select(\DB::raw('count(*) as count'), 'owner')
                                ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
-                               ->groupBy('sales.owner', 'id')->get();
+                               ->groupBy('sales.owner')->get();
 
             Log::info('boletos pagos hoje -> ' . print_r($boletosPaid, true));
 
@@ -388,17 +388,21 @@ class BoletoService
 
                     $emailValidated = FoxUtils::validateEmail($user->email);
                     $message        = '';
+                    $messageHeader  = '';
 
                     if ($boleto->count == 1) {
-                        $message = 'boleto foi compensado';
+                        $message       = 'boleto foi compensado';
+                        $messageHeader = 'Boleto Compensado!';
                     } else {
-                        $message = 'boletos foram compensados';
+                        $message       = 'boletos foram compensados';
+                        $messageHeader = 'Boletos Compensados!';
                     }
 
                     $data = [
                         "name"              => $user->name,
                         'boleto_count'      => strval($boleto->count),
                         'message'           => $message,
+                        'messageHeader'     => $messageHeader,
                         'transaction_value' => "R$ 00,00",
                     ];
 
