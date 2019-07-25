@@ -156,7 +156,13 @@ class DomainsController extends Controller
             $companyModel      = new Company();
             $cloudFlareService = new CloudFlareService();
 
-            $domain    = $domainModel->with(['project', 'records'])->find(current(Hashids::decode($id)));
+            $domain    = $domainModel->with([
+                'project',
+                'records' => function($query){
+                $query->where('system_flag', 0);
+                }
+            ])->find(current(Hashids::decode($id)));
+
             $companies = $companyModel->all();
 
             $registers = [];

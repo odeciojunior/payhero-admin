@@ -122,12 +122,14 @@ function loadOnNotification(whereToLoad) {
 }
 
 function loadOnModal(whereToLoad) {
+
     $(whereToLoad).children().hide('fast');
     $('#modal-title').html('Carregando ...')
     $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
         "<div class='loaderModal'>" +
         "</div>" +
         "</div>");
+    $('#loadingOnScreen').append("<div class='blockScreen'></div>");
 }
 
 function loadOnTable(whereToLoad, tableReference) {
@@ -140,7 +142,7 @@ function loadOnTable(whereToLoad, tableReference) {
         "</tr>");
 }
 
-function modalClear(modalBody){
+function modalClear(modalBody) {
     $(modalBody).html('');
 }
 

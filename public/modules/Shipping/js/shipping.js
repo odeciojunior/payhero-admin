@@ -207,6 +207,16 @@ $(document).ready(function () {
                             $("#modal-add-body").html(response);
                             $('#shipping-zip-code-origin').mask('00000-000');
 
+                            var selected = $("#shipping-type").val();
+                            if (selected === 'static') {
+                                $("#value-shipping-row").css('display', 'block');
+                                $("#zip-code-origin-shipping-row").css('display', 'none');
+
+                            } else {
+                                $("#value-shipping-row").css('display', 'none');
+                                $("#zip-code-origin-shipping-row").css('display', 'block');
+
+                            }
                             changeType();
                             $('#shipping-value').mask('#.###,#0', {reverse: true});
 

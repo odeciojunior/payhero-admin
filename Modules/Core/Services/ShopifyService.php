@@ -747,7 +747,6 @@ class ShopifyService
                 $plan->update([
                                   'name'        => substr($storeProduct->getTitle(), 0, 100),
                                   'description' => $description,
-                                  'code'        => '',
                                   'price'       => $variant->getPrice(),
                                   'status'      => '1',
                               ]);
@@ -812,6 +811,10 @@ class ShopifyService
                                                'price'              => $variant->getPrice(),
                                                'status'             => '1',
                                            ]);
+
+                $plan->update([
+                                  'code' => Hashids::encode($plan->id),
+                              ]);
 
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {
@@ -886,7 +889,7 @@ class ShopifyService
         if (getenv('APP_ENV') == 'production') {
             $postbackUrl = $url;
         } else {
-            $postbackUrl = "https://00505c6c.ngrok.io/postback/shopify/";  //some ngrok tunnel...
+            $postbackUrl = "https://3f09fa3a.ngrok.io/postback/shopify/";  //some ngrok tunnel...
         }
 
         $this->deleteShopWebhook();

@@ -16,7 +16,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class ShippingController extends Controller
 {
-
     /**
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -67,12 +66,16 @@ class ShippingController extends Controller
 
             if ($shippingValidated) {
                 $shippingValidated['project'] = current(Hashids::decode($shippingValidated['project']));
+                if ($shippingValidated['value'] == null || preg_replace("/[^0-9]/", "", $shippingValidated['value']) == 0) {
+                    $shippingValidated['value'] = '0,00';
+                }
+
                 if ($shippingValidated['pre_selected']) {
 
                     $shippings = $shippingModel->where([
-                                                                 'project'      => $shippingValidated['project'],
-                                                                 'pre_selected' => 1,
-                                                             ])->first();
+                                                           'project'      => $shippingValidated['project'],
+                                                           'pre_selected' => 1,
+                                                       ])->first();
                     if ($shippings) {
                         $shippings->update(['pre_selected' => 0]);
                     }
@@ -156,13 +159,15 @@ class ShippingController extends Controller
 
                 $shippingId = current(Hashids::decode($id));
                 $shipping   = $shippingModel->find($shippingId);
-
+                if ($requestValidated['value'] == null || preg_replace("/[^0-9]/", "", $requestValidated['value']) == 0) {
+                    $requestValidated['value'] = '0,00';
+                }
                 if ($requestValidated['pre_selected'] && !$shipping->pre_selected) {
                     $s = $shippingModel->where([
-                                                         ['project', $shipping->project],
-                                                         ['id', '!=', $shipping->id],
-                                                         ['pre_selected', 1],
-                                                     ])->first();
+                                                   ['project', $shipping->project],
+                                                   ['id', '!=', $shipping->id],
+                                                   ['pre_selected', 1],
+                                               ])->first();
 
                     if ($s) {
                         $s->update(['pre_selected' => 0]);
@@ -173,9 +178,9 @@ class ShippingController extends Controller
 
                 if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
                     $sp = $shippingModel->where([
-                                                          ['project', $shipping->project],
-                                                          ['pre_selected', 1],
-                                                      ])->get();
+                                                    ['project', $shipping->project],
+                                                    ['pre_selected', 1],
+                                                ])->get();
 
                     if (count($sp) == 0) {
                         $shipp = $shippingModel->where('project', $shipping->project)->first();
@@ -186,7 +191,7 @@ class ShippingController extends Controller
                 $mensagem = "Frete atualizado com sucesso!";
                 if ($shippingUpdated) {
                     $shippings = $shippingModel->where([['project', $shipping->project], ['status', 1]])
-                                      ->get();
+                                               ->get();
 
                     if (count($shippings) == 0) {
                         $sh = $shippingModel->where(['project' => $shipping->project])->first();
@@ -202,8 +207,7 @@ class ShippingController extends Controller
             }
 
             return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
-
-        } catch(Exception  $e) {
+        } catch (Exception  $e) {
             Log::warning('Erro ao tentar atualizar frete');
             report($e);
         }
@@ -228,10 +232,10 @@ class ShippingController extends Controller
                 if ($shipping) {
                     if ($shipping->pre_selected) {
                         $shippingPreSelected = $shippingModel
-                                                    ->where([
-                                                                ['project', $shipping->project],
-                                                                ['id', '!=', $shipping->id],
-                                                            ])->first();
+                            ->where([
+                                        ['project', $shipping->project],
+                                        ['id', '!=', $shipping->id],
+                                    ])->first();
 
                         if ($shippingPreSelected) {
                             $shipUpdateSelected = $shippingPreSelected->update(['pre_selected' => 1]);

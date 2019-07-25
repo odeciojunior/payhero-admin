@@ -284,8 +284,17 @@ $(function () {
     $('#modal-content').on('hidden.bs.modal', function () {
         $('#modal_add_size').removeClass('modal-lg');
         $('#btn-modal').show().removeAttr('disabled');
-        $('#btn-modal').attr('data-dismiss','modal');
+        $('#btn-modal').attr('data-dismiss', 'modal');
         modalClear('#modal-add-body');
     })
-
 });
+
+/*
+$(document).ready(function () {
+
+    $('#modal-content').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+
+});*/

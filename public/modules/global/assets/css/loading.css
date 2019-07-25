@@ -6,6 +6,13 @@
     z-index: 10000;
 }
 
+.blockScreen{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+}
+
 .loadingModal {
     background-color: rgba(255, 255, 255, 0.7);
     position: absolute;
