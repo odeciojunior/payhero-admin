@@ -23,77 +23,16 @@ use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Modules\Core\Services\DigitalOceanFileService;
 
-class TesteController extends Controller
-{
-    /**
-     * @var CloudFlareService
-     */
-    private $cloudFlareService;
-    /**
-     * @var SendgridService
-     */
-    private $sendgridService;
+class TesteController extends Controller {
 
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|CloudFlareService
-     */
-    private function getCloudFlareService()
-    {
-        if (!$this->cloudFlareService) {
-            $this->cloudFlareService = app(CloudFlareService::class);
-        }
+    public function index() {
 
-        return $this->cloudFlareService;
-    }
+        $shopifyService = new ShopifyService('issoeincrivel.myshopify.com', 'cfaa3e8a7aeb7f31e8a5b3b7006645a5');
 
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
-     */
-    private function getSendgridService()
-    {
-        if (!$this->sendgridService) {
-            $this->sendgridService = app(SendgridService::class);
-        }
-
-        return $this->sendgridService;
-    }
-
-    public function index()
-    {
-
-        $shopifyService = new ShopifyService('plotplot.myshopify.com', '8153df9581010e821c22125300fbda56');
 
         dd($shopifyService->getShopWebhook());
-
-        try {
-            $x = Domain::first();
-        } catch (\Exception $e) {
-            dd($e);
-        } catch (Error $e) {
-            // This should work
-            dd($e);
-        } catch (Throwable $e) {
-            // This should work as well
-            dd('c');
-        }
-
-        //        $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
-        //
-        //        $shopifyService->deleteShopWebhook();
-        //
-        //        $shopifyService->createShopWebhook([
-        //                                               "topic"   => "products/create",
-        //                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
-        //                                               "format"  => "json",
-        //                                           ]);
-        //
-        //        $shopifyService->createShopWebhook([
-        //                                               "topic"   => "products/update",
-        //                                               "address" => "https://d1a7e345.ngrok.io/postback/shopify/7DPXw3X0B3zmpqx",
-        //                                               "format"  => "json",
-        //                                           ]);
-        //
-        //        dd($shopifyService->getShopWebhook());
-
     }
+
 }
+
+
