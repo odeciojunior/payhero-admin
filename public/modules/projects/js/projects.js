@@ -281,4 +281,11 @@ $(function () {
         $('#segundaInfo').html('Digite o nome do seu <strong>domínio e o IP do servidor</strong> onde seu site está hospedado.');
     }
 
+    $('#modal-content').on('hidden.bs.modal', function () {
+        $('#modal_add_size').removeClass('modal-lg');
+        $('#btn-modal').show().removeAttr('disabled');
+        $('#btn-modal').attr('data-dismiss','modal');
+        modalClear('#modal-add-body');
+    })
+
 });

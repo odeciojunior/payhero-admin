@@ -12,6 +12,7 @@ $(function () {
 
         /*$("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");*/
         loadOnModal('#modal-add-body');
+        $('#btn-modal').attr('data-dismiss','modal');
 
         $.ajax({
             method: "GET",

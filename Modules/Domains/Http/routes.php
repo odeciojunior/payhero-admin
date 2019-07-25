@@ -10,5 +10,8 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Domains\H
 
     Route::post("/domains/recheck", "DomainsController@recheckDomain")
          ->name('domain.recheck');
+
+    Route::get('/domains/getDomainData/{domainId}', "DomainsController@getDomainData")
+        ->name('domain.getDomainData');
 });
 

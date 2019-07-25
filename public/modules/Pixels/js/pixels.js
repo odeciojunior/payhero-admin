@@ -8,13 +8,9 @@ $(function () {
     atualizarPixel();
     //criar novo pixel
     $("#add-pixel").on('click', function () {
-        $("#modal-title").html('Novo pixel');
-        $("#modal_add_size").addClass('modal_simples');
-        $("#modal_add_size").removeClass('modal-lg');
-
-        /*$("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");*/
         loadOnModal('#modal-add-body');
-
+        $("#modal_add_size").addClass('modal_simples');
+        $("#modal-title").html('Novo pixel');
         $.ajax({
             method: "GET",
             url: "/pixels/create",
@@ -27,7 +23,7 @@ $(function () {
             },
             success: function (data) {
                 $("#btn-modal").addClass('btn-save');
-                $("#btn-modal").text('Salvar');
+                $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
 
