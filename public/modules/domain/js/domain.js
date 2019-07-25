@@ -294,7 +294,7 @@ $(document).ready(function () {
 
                                 $(".btn-update").unbind('click');
                                 $(".btn-update").on('click', function () {
-                                    loadOnModel('#model-add-body');
+                                    loadOnModal('#model-add-body');
                                     var tbl = $('#new_registers_table tr').map(function (rowIdx, row) {
                                         if ((rowIdx > 0) && ($(row).attr('data-save') == 0)) {
                                             var rowObj = $(row).find('td').map(function (cellIdx, cell) {
