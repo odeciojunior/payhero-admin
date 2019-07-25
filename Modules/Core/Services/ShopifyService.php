@@ -787,7 +787,6 @@ class ShopifyService
                                          'photo' => $storeProduct->getImage()->getSrc(),
                                      ]);
                 }
-
             } else {
                 //plano nao existe, cria o plano, produto e produtosplanos
                 $product = $productModel->create([
@@ -840,10 +839,9 @@ class ShopifyService
                                      ]);
                 }
             }
-
         }
-        return true;
 
+        return true;
     }
 
     /**
@@ -852,23 +850,29 @@ class ShopifyService
      */
     public function importShopifyStore($projectId, $userId)
     {
-        $storeProducts = $this->getShopProducts();
-
         $projectModel            = new Project();
         $userModel               = new User();
         $shopifyIntegrationModel = new ShopifyIntegration();
+
+        $shopifyIntegrationModel->where('project', $projectId)->update([
+                                                                           'status' => $shopifyIntegrationModel->getEnum('status', 'pending'),
+                                                                       ]);
+
+        $storeProducts = $this->getShopProducts();
 
         foreach ($storeProducts as $shopifyProduct) {
             $this->importShopifyProduct($projectId, $userId, $shopifyProduct->getId());
         }
 
         $this->createShopifyIntegrationWebhook($projectId, "https://app.cloudfox.net/postback/shopify/");
-        $shopifyIntegrationModel->where('project', $projectId)->update(['status' => 1]);
 
         $project = $projectModel->find($projectId);
         $user    = $userModel->find($userId);
         if (!empty($project) && !empty($user)) {
             event(new ShopifyIntegrationReadyEvent($user, $project));
+            $shopifyIntegrationModel->where('project', $projectId)->update([
+                                                                               'status' => $shopifyIntegrationModel->getEnum('status', 'approved'),
+                                                                           ]);
         }
     }
 
