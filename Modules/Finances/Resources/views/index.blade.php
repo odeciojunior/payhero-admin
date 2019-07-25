@@ -118,7 +118,7 @@
                                                         <span class="input-group-text" id="basic-addon1 custom-addon" style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
                                                     </div>
                                                     <input type="text" class="form-control input-pad" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1" id="custom-input-addon">
-                                                    <button class="btn btn-success btn-sacar ml-3">
+                                                    <button class="btn btn-success btn-sacar ml-3" data-toggle="modal" data-target="#modal-withdrawal">
                                                         <svg class="mr-2" style="fill: white; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                                                             <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                         </svg>
@@ -136,7 +136,7 @@
                                         <h5 class="card-title"> Histórico de transferências </h5>
                                     </div>
                                     <div class="col-12">
-                                        <table class="table">
+                                        <table id='withdrawalsTable' class="table table-striped table-condensed">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Conta</th>
@@ -146,28 +146,17 @@
                                                     <th scope="col">Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody class="custom-t-body">
-                                                <tr>
-                                                    <td colspan="5" class="text-center"> Nenhum saque realizado até o momento</td>
-                                                </tr>
-                                                {{--  <tr>
-                                                    <td>
-                                                        <div class="d-flex flex-column">
-                                                            <span> <strong> Banco Itaú </strong> <small> CC: 19394-3
-                                                                </small> </span>
-                                                        </div>
-                                                    </td>
-                                                    <td>10/06/2019</td>
-                                                    <td>12/06/2019</td>
-                                                    <td class="money-td"><span class="currency">R$</span>02.500,00</td>
-                                                    <td><span class="badge badge-aprovado">Aprovado</span>
-                                                    </td>
-                                                </tr>  --}}
+                                            <tbody id="table-withdrawals-body" class="custom-t-body">
+
                                             </tbody>
                                         </table>
+                                        <ul id="withdrawals-pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                                            {{-- js carrega... --}}
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
+
                             <!-- EXTRATO -->
                             <div class="tab-pane fade" id="nav-extract" role="tabpanel" aria-labelledby="nav-profile-tab">
                                 <div class="row justify-content-between">
@@ -253,21 +242,27 @@
             @endif
         </div>
     </div>
-    <!-- Modal detalhes da venda-->
-    <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-            <div class="modal-content p-20 " style="width: 500px;">
+
+    <!-- Modal confirmar saque -->
+    <div class="modal fade modal-3d-flip-vertical" id="modal-withdrawal" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple">
+            <div class="modal-content p-20 " style="width: 500px;"> 
                 <div class="header-modal">
                     <div class="row justify-content-between align-items-center" style="width: 100%;">
                         <div class="col-lg-2"> &nbsp;</div>
-                        <div class="col-lg-8 text-center" id='modal_venda_titulo'></div>
+                        <div class="col-lg-8 text-center" id='modal-withdrawal-title'></div>
                         <div class="col-lg-2 text-right">
                             <a role="button" data-dismiss="modal">
-                                <i class="material-icons pointer">close</i></a>
+                                <i class="material-icons pointer">close</i>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="modal-body">
+                <div class="modal-withdrawal-body">
+                    <div class="text-center">
+                        <h3> Confirmar saque </h3>
+                    </div>
+
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -277,6 +272,7 @@
     @push('scripts')
         <script src="{!! asset('modules/finances/js/index.js') !!}"></script>
         <script src="{!! asset('modules/transfers/js/index.js') !!}"></script>
+        <script src="{!! asset('modules/withdrawals/js/index.js') !!}"></script>
     @endpush
 
 @endsection

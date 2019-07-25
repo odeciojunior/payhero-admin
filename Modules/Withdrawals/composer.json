@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/withdrawals",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Withdrawals\\Providers\\WithdrawalsServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Withdrawals\\": ""
+        }
+    }
+}
