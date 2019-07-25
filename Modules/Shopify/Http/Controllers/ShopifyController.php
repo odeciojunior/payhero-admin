@@ -168,6 +168,9 @@ class ShopifyController extends Controller
                                 $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
                             }
 
+                            //remove todos os webhooks
+                            $shopify->deleteShopWebhook();
+
                             $shopifyIntegration->update([
                                                             'status' => $shopifyIntegration->getEnum('status', 'disabled'),
                                                         ]);
@@ -255,6 +258,8 @@ class ShopifyController extends Controller
                                 //TODO validar para nao inserir duas vezes
                                 $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
                             }
+
+                            $shopify->importShopifyStore($projectId, auth()->user()->id);
 
                             $shopifyIntegration->update([
                                                             'status' => $shopifyIntegration->getEnum('status', 'approved'),

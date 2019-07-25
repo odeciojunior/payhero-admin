@@ -221,6 +221,7 @@ $(function () {
 
                         $("#bt-close-modal-change-shopify-integration").click();
 
+                        loadingOnScreen();
                         if (integrationStatus == 2) {
                             $.ajax({
                                 method: "POST",
@@ -274,9 +275,9 @@ $(function () {
         });
     }
 
-    if($('#shopifyIdLabel').data('shopifyid') != ''){
+    if ($('#shopifyIdLabel').data('shopifyid') != '') {
         $('#segundaInfo').html('Digite o nome do seu domínio cadastrado no shopify (Ex: minhaloja.com) e <strong>clique em salvar</strong>')
-    }else{
+    } else {
         $('#segundaInfo').html('Digite o nome do seu <strong>domínio e o IP do servidor</strong> onde seu site está hospedado.');
     }
 
