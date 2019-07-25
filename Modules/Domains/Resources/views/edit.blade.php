@@ -35,7 +35,7 @@
     <h4>Entradas personalizadas</h4>
 </div>
 <div class='col-xl-12 col-lg-12'>
-    <div class="table-responsive overflow:scroll">
+    <div id='divCustomDomain' class="table-responsive overflow:scroll">
         @if(isset($registers))
             @if(count($registers) > 0)
                 <table id='new_registers_table' class="table table-hover table-bordered table-stripped" style='table-layout: fixed;'>
@@ -53,7 +53,7 @@
                                 <tr data-save='1'>
                                     <td class='col-2'>{{ $register['type']}}</td>
                                     <td class='col-2'>{{ $register['name'] }}</td>
-                                    {{--                                <td class='col-6' style='overflow-x:scroll'>{{ $register['content'] }}</td>--}}
+                                    {{--<td class='col-6' style='overflow-x:scroll'>{{ $register['content'] }}</td>--}}
                                     <td class='col-6'>{{ $register['content'] }}</td>
                                     <td class='col-2 text-center align-middle'>
                                         <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro" {!! ($register['system_flag'] == 1) ? 'disabled' : '' !!}>Remover</button>

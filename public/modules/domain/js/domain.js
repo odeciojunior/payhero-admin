@@ -223,7 +223,22 @@ $(document).ready(function () {
                                 $("#bt_add_record").unbind('click');
                                 $('#bt_add_record').on("click", function (e) {
                                     e.preventDefault();
-                                    $("#new_registers").after("<tr data-row='" + ($("#new_registers_table tr").length) + "' data-save='0'><td>" + $("#tipo_registro").val() + "</td><td>" + $("#nome_registro").val() + "</td><td>" + $("#valor_registro").val() + "</td><td><button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button></td></tr>");
+                                    if($('#new_registers_table').html() == undefined)
+                                    {
+                                     $('#divCustomDomain').html("<table id='new_registers_table' class='table table-hover table-bordered table-stripped' style='table-layout: fixed;'>"+
+                                        "<thead>"+
+                                        "<tr>"+
+                                        "<th class='col-2'>Tipo</th>"+
+                                        "<th class='col-2'>Nome</th>"+
+                                        "<th class='col-6'>Conteúdo</th>"+
+                                        "<th class='col-2'></th>"+
+                                        "</tr>"+
+                                        "</thead>"+
+                                        "<tbody id='new_registers'>"+
+                                        "</tbody>"+
+                                        "</table>");
+                                    }
+                                    $("#new_registers").after("<tr class='alert-info' data-row='" + ($("#new_registers_table tr").length) + "' data-save='0'><td>" + $("#tipo_registro").val() + "</td><td>" + $("#nome_registro").val() + "</td><td>" + $("#valor_registro").val() + "</td><td><button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button></td></tr>");
 
                                     // $('#form-edit-domain').append('<input type="hidden" name="tipo_registro_' + qtd_novos_registros + '" id="tipo_registro_' + qtd_novos_registros + '" value="' + $("#tipo_registro").val() + '" />');
                                     //
@@ -253,7 +268,7 @@ $(document).ready(function () {
 
                                 $(".remover_registro").unbind('click');
                                 $(".remover_registro").on("click", function () {
-
+                                    loadingOnScreen()
                                     var id_registro = $(this).attr('id-registro');
 
                                     var row = $(this).parent().parent();
@@ -281,8 +296,10 @@ $(document).ready(function () {
                                                 } else {
                                                     alertCustom('error', String(response.responseJSON.message));
                                                 }
+                                                loadingOnScreenRemove()
                                             },
                                             success: function (response) {
+                                                loadingOnScreenRemove()
                                                 $(row).remove();
                                                 alertCustom("success", response.message);
                                                 updateDomains();
