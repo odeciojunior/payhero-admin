@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\CartRecovery\Transformers;
+namespace Modules\SalesRecovery\Transformers;
 
 use App\Entities\Project;
 use Carbon\Carbon;
@@ -11,7 +11,7 @@ use App\Entities\CheckoutPlan;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class CartRecoveryResource extends Resource
+class SalesRecoveryResource extends Resource
 {
     /**
      * @param \Illuminate\Http\Request $request
@@ -45,19 +45,22 @@ class CartRecoveryResource extends Resource
         $domain = Domain::where('project_id', $this->project)->first();
         $link   = "https://checkout." . $domain['name'] . "/recovery/" . $this->id_log_session;
 
-        $whatsAppMsg = 'Olá '.$log->name;
+        $whatsAppMsg = 'Olá ' . $log->name;
+
+        $emailSentAmount = ($this->email_sent_amount == null) ? 0 : $this->email_sent_amount;
+        $smsSentAmount   = ($this->sms_sent_amount == null) ? 0 : $this->sms_sent_amount;
 
         return [
             'id'              => Hashids::encode($this->id),
             'date'            => with(new Carbon($this->created_at))->format('d/m/Y H:i:s'),
             'project'         => $this->projectModel->name,
             'client'          => $client,
-            'email_status'    => 'Não enviado',
-            'sms_status'      => 'Não enviado',
+            'email_status'    => $emailSentAmount,
+            'sms_status'      => $smsSentAmount,
             'recovery_status' => $status,
             'value'           => $value,
             'link'            => $link,
-            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone).'&text='.$whatsAppMsg,
+            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
         ];
 
         return parent::toArray($request);

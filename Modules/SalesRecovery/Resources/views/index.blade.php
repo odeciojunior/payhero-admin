@@ -14,40 +14,37 @@
         <div class="page-content container">
             <div id="" class="card shadow p-20">
                 <div class="row">
-                    <div class="col-4">
-                        <label for="projeto">Projeto</label>
+                    <div class="col-3">
+                        <label for="project">Projeto</label>
                         <select name='select_project' id="project" class="form-control select-pad">
                             <option value="">Todos projetos</option>
                             @foreach($projects as $project)
-                                <option value="{!! $project['id'] !!}">{!! $project['nome'] !!}</option>
+                                <option value="{{Hashids::encode($project['id'])}}">{{$project['nome']}}</option>
                             @endforeach
                         </select>
                     </div>
-                    {{--<div class="col-3">--}}
-                    {{--<label for="comprador">Nome do cliente</label>--}}
-                    {{--<input name='client' id="client" class="input-pad" placeholder="cliente">--}}
-                    {{--</div>--}}
                     <div class="col-3">
-                        <label for="data_inicial">Data inicial</label>
+                        <label for="type_recovery">Tipo de Recuperação</label>
+                        <select name='select_type_recovery' id="type_recovery" class="form-control select-pad">
+                            <option value="1" selected>Carrinho Abandonado</option>
+                            <option value="2">Boleto Vencido</option>
+                            <option value="3">Cartão Recusado</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <label for="start_date">Data inicial</label>
                         <input name='start_date' id="start_date" class="form-control input-pad" type="date">
                     </div>
-                    <div class="col-3">
-                        <label for="data_final">Data final</label>
+                    <div class="col-2">
+                        <label for="end_date">Data final</label>
                         <input name='end_date' id="end_date" class="form-control input-pad" type="date">
                     </div>
-                    <div class="col-1 mt-30 text-right">
+                    <div class="col-1 mt-30 text-right float-right">
                         <button id="bt_filtro" class="btn btn-primary">
                             <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                         </button>
                     </div>
                 </div>
-                {{--<div class="row">--}}
-                {{--<div class="col text-right">--}}
-                {{--<button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">--}}
-                {{--<i class="icon wb-check" aria-hidden="true"></i>Aplicar--}}
-                {{--</button>--}}
-                {{--</div>--}}
-                {{--</div>--}}
             </div>
             <div class="card shadow" style="min-height: 300px">
                 <table id='carrinhoAbandonado' class="table table-striped">
@@ -75,7 +72,8 @@
                             <div class="header-modal">
                                 <div class="row justify-content-between align-items-center" style="width: 100%;">
                                     <div class="col-lg-2"> &nbsp;</div>
-                                    <div class="col-lg-8 text-center"><h4 id='modal-title'> Detalhes da venda </h4></div>
+                                    <div class="col-lg-8 text-center"><h4 id='modal-title'> Detalhes da venda </h4>
+                                    </div>
                                     <div class="col-lg-2 text-right">
                                         <a role="button" data-dismiss="modal">
                                             <i class="material-icons pointer">close</i></a>
@@ -99,7 +97,7 @@
             </div>
         </div>
         @push('scripts')
-            <script src="{!! asset('modules/cartrecovery/js/salesrecovery.js') !!}"></script>
+            <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
     @endpush
 
 @endsection

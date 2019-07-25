@@ -1,30 +1,29 @@
 <?php
 
-namespace Modules\CartRecovery\Http\Controllers;
+namespace Modules\SalesRecovery\Http\Controllers;
 
-use Exception;
-use Carbon\Carbon;
-use App\Entities\Plan;
-use App\Entities\Domain;
-use App\Entities\Project;
 use App\Entities\Checkout;
-use Illuminate\Http\Request;
-use App\Entities\UserProject;
-use Illuminate\Http\Response;
 use App\Entities\CheckoutPlan;
+use App\Entities\Domain;
+use App\Entities\Log as CheckoutLog;
+use App\Entities\Project;
+use App\Entities\UserProject;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\SalesRecovery\SalesRecoveryService;
+use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Entities\Log as CheckoutLog;
-use Yajra\DataTables\Facades\DataTables;
-use Modules\CartRecovery\Transformers\CartRecoveryResource;
-use Modules\CartRecovery\Transformers\CarrinhosAbandonadosResource;
+
+//use Modules\SalesRecovery\Transformers\CarrinhosAbandonadosResource;
 
 /**
- * Class CartRecoveryController
- * @package Modules\CartRecovery\Http\Controllers
+ * Class SalesRecoveryController
+ * @package Modules\SalesRecovery\Http\Controllers
  */
-class CartRecoveryController extends Controller
+class SalesRecoveryController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -39,7 +38,7 @@ class CartRecoveryController extends Controller
 
         foreach ($userProjects as $userProject) {
             $project = $projectModel->find($userProject['project']);
-            if ($project['id'] != null) {
+            if (!empty($project['id'])) {
                 $projects[] = [
                     'id'   => $project['id'],
                     'nome' => $project['name'],
@@ -47,7 +46,7 @@ class CartRecoveryController extends Controller
             }
         }
 
-        return view('cartrecovery::index', compact('projects'));
+        return view('salesrecovery::index', compact('projects'));
     }
 
     /**
@@ -58,39 +57,25 @@ class CartRecoveryController extends Controller
     {
 
         try {
-            $checkoutModel    = new Checkout();
-            $userProjectModel = new UserProject();
+            $salesRecoveryService = new SalesRecoveryService();
 
-            $abandonedCarts = $checkoutModel->whereIn('status', ['abandoned cart', 'recovered']);
-
-            if ($request->has('project') && $request->input('project') != '') {
-                $abandonedCarts->where('project', $request->input('project'));
-            } else {
-                $userProjects = $userProjectModel->where([
-                                                             ['user', auth()->user()->id],
-                                                             ['type', 'producer'],
-                                                         ])->pluck('project')->toArray();
-
-                $abandonedCarts->whereIn('project', $userProjects)->with(['projectModel']);
+            $projectId = null;
+            if (!empty($request->project)) {
+                $projectId = current(Hashids::decode($request->input('project')));
             }
 
-            if ($request->start_date != '' && $request->end_date != '') {
-                $abandonedCarts->whereBetween('created_at', [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))]);
-            } else {
-                if ($request->start_date != '') {
-                    $abandonedCarts->whereDate('created_at', '>=', $request->start_date);
-                }
-
-                if ($request->end_date != '') {
-                    $abandonedCarts->whereDate('created_at', '<', date('Y-m-d', strtotime($request->end_date . ' + 1 day')));
-                }
+            $endDate = null;
+            if (!empty($request->end_date)) {
+                $endDate = date('Y-m-d', strtotime($request->end_date . ' + 1 day'));
             }
 
-            $abandonedCarts->orderBy('id', 'DESC');
+            $abandonedCarts = $salesRecoveryService->verifyType($request->input('type'), $projectId, $request->start_date, $endDate);
 
-            return CartRecoveryResource::collection($abandonedCarts->paginate(10));
-        } catch (Exception $e) {
-            dd($e);
+            return $abandonedCarts;
+        } catch
+        (Exception $e) {
+            Log::warning('Erro ao buscar dados de recuperação de vendas');
+            report($e);
         }
     }
 
@@ -142,11 +127,11 @@ class CartRecoveryController extends Controller
 
                 $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
 
-                $link   = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
+                $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
 
                 $whatsAppMsg = 'Olá ' . $log->name;
 
-                $details = view('cartrecovery::details', [
+                $details = view('salesrecovery::details', [
                     'checkout'      => $checkout,
                     'log'           => $log,
                     'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
@@ -158,10 +143,12 @@ class CartRecoveryController extends Controller
                     'link'          => $link,
                 ]);
             }
+
             return response()->json($details->render());
         } catch (Exception $e) {
             Log::warning('Erro ao buscar detalhes do carrinho abandonado');
             report($e);
+
             return response()->json(['message' => 'Ocorreu algum erro']);
         }
     }
