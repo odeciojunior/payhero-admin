@@ -12,8 +12,42 @@ use Modules\Core\Exceptions\Services\ServiceException;
  * Class BankService
  * @package Modules\Core\Services
  */
-class BankService
-{
+class BankService {
+
+
+    /**
+     * @param $countryCode
+     * @return array
+     */
+    public function getBanks($countryCode)
+    {
+        switch ($countryCode) {
+            case 'BR':
+                return $this->brazilianBanks();
+                break;
+            default:
+                return [];
+                break;
+        }
+    }
+
+
+    /**
+     * @param $countryCode
+     * @return array
+     */
+    public function getBankName($bankCode) {
+
+        foreach($this->brazilianBanks() as $bank){
+            if($bank['code'] == $bankCode){
+                return $bank['name'];
+            }
+        }
+
+        return null;
+    }
+
+
     /**
      * @return array
      */
@@ -153,19 +187,5 @@ class BankService
         return $banks;
     }
 
-    /**
-     * @param $countryCode
-     * @return array
-     */
-    public function getBanks($countryCode)
-    {
-        switch ($countryCode) {
-            case 'BR':
-                return $this->brazilianBanks();
-                break;
-            default:
-                return [];
-                break;
-        }
-    }
+
 }

@@ -12,5 +12,10 @@
 */
 
 Route::prefix('withdrawals')->group(function() {
-    Route::get('/', 'WithdrawalsController@index');
+
+    Route::resource('/', 'WithdrawalsController')->only('index','store');
+
+    Route::get('/getaccountinformation/{company_id}', 'WithdrawalsController@getAccountInformation');
+
 });
+

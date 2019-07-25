@@ -1,13 +1,13 @@
 $(function () {
 
-    updateTransfersTable();
+    updateWithdrawalsTable();
 
     $("#extract_company_select").on("change", function () {
 
-        updateTransfersTable();
+        updateWithdrawalsTable();
     });
 
-    function updateTransfersTable(link = null) {
+    function updateWithdrawalsTable(link = null) {
 
         // loadOnTable('table-transfers-body','transfersTable');
 
@@ -69,7 +69,7 @@ $(function () {
         }
 
         $('#primeira_pagina').on("click", function () {
-            updateTransfersTable('?page=1');
+            updateWithdrawalsTable('?page=1');
         });
 
         for (x = 3; x > 0; x--) {
@@ -81,7 +81,7 @@ $(function () {
             $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
-                updateTransfersTable('?page=' + $(this).html());
+                updateWithdrawalsTable('?page=' + $(this).html());
             });
 
         }
@@ -101,7 +101,7 @@ $(function () {
             $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
 
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
-                updateTransfersTable('?page=' + $(this).html());
+                updateWithdrawalsTable('?page=' + $(this).html());
             });
 
         }
@@ -118,7 +118,7 @@ $(function () {
             }
 
             $('#ultima_pagina').on("click", function () {
-                updateTransfersTable('?page=' + response.meta.last_page);
+                updateWithdrawalsTable('?page=' + response.meta.last_page);
             });
         }
 
