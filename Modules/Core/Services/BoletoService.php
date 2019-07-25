@@ -62,8 +62,13 @@ class BoletoService
                     $products    = [];
                     $data        = [];
 
-                    $subTotal           = 0;
-                    $iof                = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $subTotal = 0;
+                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    if ($iof == 0) {
+                        $iof = '';
+                    } else {
+                        $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                    }
                     $clientNameExploded = explode(' ', $clientName);
 
                     if ($boleto->iof > '0') {
@@ -86,7 +91,6 @@ class BoletoService
                             $products[]                 = $productArray;
                         }
                         $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                        $iof                     = substr_replace($iof, ',', strlen($iof) - 2, 0);
                         $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
                         $boletoDigitableLine     = [];
                         $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
@@ -144,13 +148,18 @@ class BoletoService
 
             foreach ($boletoWaitionPayment as $boleto) {
                 try {
-                    $sendEmail          = new SendgridService();
-                    $clientName         = $boleto->clientModel->name;
-                    $clientEmail        = $boleto->clientModel->email;
-                    $products           = [];
-                    $data               = [];
-                    $subTotal           = 0;
-                    $iof                = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $sendEmail   = new SendgridService();
+                    $clientName  = $boleto->clientModel->name;
+                    $clientEmail = $boleto->clientModel->email;
+                    $products    = [];
+                    $data        = [];
+                    $subTotal    = 0;
+                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    if ($iof == 0) {
+                        $iof = '';
+                    } else {
+                        $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                    }
                     $clientNameExploded = explode(' ', $clientName);
                     if ($boleto->iof > '0') {
                         $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
@@ -172,7 +181,6 @@ class BoletoService
                             $products[]                 = $productArray;
                         }
                         $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                        $iof                     = substr_replace($iof, ',', strlen($iof) - 2, 0);
                         $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
                         $boletoDigitableLine     = [];
                         $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
@@ -226,12 +234,17 @@ class BoletoService
 
             foreach ($boletos as $boleto) {
                 try {
-                    $clientName         = $boleto->clientModel->name;
-                    $clientEmail        = $boleto->clientModel->email;
-                    $products           = [];
-                    $data               = [];
-                    $subTotal           = 0;
-                    $iof                = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $clientName  = $boleto->clientModel->name;
+                    $clientEmail = $boleto->clientModel->email;
+                    $products    = [];
+                    $data        = [];
+                    $subTotal    = 0;
+                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    if ($iof == 0) {
+                        $iof = '';
+                    } else {
+                        $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                    }
                     $clientNameExploded = explode(' ', $clientName);
                     if ($boleto->iof > '0') {
                         $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
@@ -253,7 +266,6 @@ class BoletoService
                             $products[]                 = $productArray;
                         }
                         $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                        $iof                     = substr_replace($iof, ',', strlen($iof) - 2, 0);
                         $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
                         $boletoDigitableLine     = [];
                         $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);

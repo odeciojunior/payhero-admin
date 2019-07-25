@@ -107,8 +107,8 @@ class PlansController extends Controller
 
             $productPlans = $productPlan->where('plan', $plan->id)->get()->toArray();
             if (count($productPlans) > 0) {
-                foreach ($productPlans as $productPlan) {
-                    $productPlan->find($productPlan['id'])->delete();
+                foreach ($productPlans as $productPlanArray) {
+                    $productPlan->find($productPlanArray['id'])->delete();
                 }
             }
             if (isset($requestData['products']) && isset($requestData['product_amounts'])) {

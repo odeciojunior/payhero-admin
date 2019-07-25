@@ -35,7 +35,7 @@ class CartRecoveryService
             $products = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
-                                      ->with('projectModel', 'checkoutPlans.plan.products')
+                                      ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
 
             Log::warning('carrinhos abandonados -> ' . print_r($abandonedCarts, true));
@@ -43,11 +43,11 @@ class CartRecoveryService
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
-                        foreach ($checkoutPlan->getRelation('plan')->products as $product) {
+                        foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
                             $productArray = [
-                                $productArray["name"] = $product->name,
-                                $productArray["photo"] = $product->photo,
-                                $productArray["amount"] = $checkoutPlan->amount,
+                                $productArray["name"] = $productPlan->getProduct->name,
+                                $productArray["photo"] = $productPlan->getProduct->photo,
+                                $productArray["amount"] = $productPlan->amount,
                                 $products[] = $productArray,
                             ];
                         }
@@ -67,13 +67,14 @@ class CartRecoveryService
                         $zenviaSms = new ZenviaSmsService();
                         Log::warning('verifyAbandonedCarts');
 
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);                    }
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                    }
                     $data           = [
-                        'name'          => $clientNameExploded[0],
-                        'project_logo'  => $project['logo'],
-                        'checkout_link' => $link,
-                        'contact_email' => 'sac@' . $domain['name'],
-                        "products"      => $products,
+                        'name'            => $clientNameExploded[0],
+                        'project_logo'    => $project['logo'],
+                        'checkout_link'   => $link,
+                        "project_contact" => $project['contact'],
+                        "products"        => $products,
                     ];
                     $emailValidated = FoxUtils::validateEmail($log['email']);
 
@@ -105,7 +106,7 @@ class CartRecoveryService
             $products = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
-                                      ->with('projectModel', 'checkoutPlans.plan.products')
+                                      ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
 
             Log::warning('carrinhos abandonados 2 -> ' . print_r($abandonedCarts, true));
@@ -113,11 +114,11 @@ class CartRecoveryService
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
-                        foreach ($checkoutPlan->getRelation('plan')->products as $product) {
+                        foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
                             $productArray = [
-                                $productArray["name"] = $product->name,
-                                $productArray["photo"] = $product->photo,
-                                $productArray["amount"] = $checkoutPlan->amount,
+                                $productArray["name"] = $productPlan->getProduct->name,
+                                $productArray["photo"] = $productPlan->getProduct->photo,
+                                $productArray["amount"] = $productPlan->amount,
                                 $products[] = $productArray,
                             ];
                         }
@@ -142,11 +143,11 @@ class CartRecoveryService
                     }
 
                     $data           = [
-                        'name'          => $clientNameExploded[0],
-                        'project_logo'  => $project['logo'],
-                        'checkout_link' => $link,
-                        'contact_email' => 'sac@' . $domain['name'],
-                        "products"      => $products,
+                        'name'            => $clientNameExploded[0],
+                        'project_logo'    => $project['logo'],
+                        'checkout_link'   => $link,
+                        "project_contact" => $project['contact'],
+                        "products"        => $products,
 
                     ];
                     $emailValidated = FoxUtils::validateEmail($log['email']);
