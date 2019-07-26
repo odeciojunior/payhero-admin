@@ -481,8 +481,8 @@ class CloudFlareService
         try {
             $client = new Client([
                                      'base_uri' => $url,
-                                     'timeout'  => 3,
-                                     'connect_timeout'  => 3,
+                                     'timeout'  => 10,
+                                     'connect_timeout'  => 10,
                                      //'headers'  => $headers,
                                      'Accept'   => 'application/json',
                                  ]);
