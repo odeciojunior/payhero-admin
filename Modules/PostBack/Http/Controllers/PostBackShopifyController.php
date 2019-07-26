@@ -10,6 +10,7 @@ use App\Entities\PostbackLog;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Entities\ShopifyIntegration;
 use Modules\Core\Services\ShopifyService;
@@ -62,6 +63,7 @@ class PostBackShopifyController extends Controller
                                 $sale->getRelation('delivery')->trackingHistories()->create([
                                                                                                 'tracking_code' => $fulfillment["tracking_number"],
                                                                                             ]);
+                                event(new TrackingCodeUpdatedEvent($sale));
                             }
 
                             return response()->json([
