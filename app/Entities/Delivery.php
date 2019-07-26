@@ -29,15 +29,30 @@ class Delivery extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
-    protected $fillable = ['carrier', 'zip_code', 'country', 'state', 'city', 'neighborhood', 'street', 'number', 'complement', 'id_order_carrier', 'status_carrier', 'tracking_code', 'type', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = [
+        'carrier',
+        'zip_code',
+        'country',
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+        'number',
+        'complement',
+        'id_order_carrier',
+        'status_carrier',
+        'tracking_code',
+        'type',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -53,5 +68,13 @@ class Delivery extends Model
     public function sales()
     {
         return $this->hasMany('App\Entities\Sale', 'delivery');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function trackingHistories()
+    {
+        return $this->hasMany('App\Entities\TrackingHistory');
     }
 }
