@@ -237,7 +237,7 @@ $(document).ready(function () {
                                         "</tbody>"+
                                         "</table>");
                                     }
-                                    $("#new_registers").after("<tr class='alert-info' data-row='" + ($("#new_registers_table tr").length) + "' data-save='0'><td>" + $("#tipo_registro").val() + "</td><td>" + $("#nome_registro").val() + "</td><td>" + $("#valor_registro").val() + "</td><td><button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button></td></tr>");
+                                    $("#new_registers").after("<tr class='alert-info' data-row='" + ($("#new_registers_table tr").length) + "' data-save='0'><td>" + $("#tipo_registro").val() + "</td><td>" + $("#nome_registro").val() + "</td><td>" + $("#valor_registro").val() + "</td><td class='col-2 text-center align-middle'><button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button></td></tr>");
 
                                     // $('#form-edit-domain').append('<input type="hidden" name="tipo_registro_' + qtd_novos_registros + '" id="tipo_registro_' + qtd_novos_registros + '" value="' + $("#tipo_registro").val() + '" />');
                                     //
