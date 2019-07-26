@@ -28,7 +28,7 @@ use Modules\Domains\Transformers\DomainResource;
  */
 class DomainsController extends Controller
 {
-    /**
+    /** 
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -43,7 +43,7 @@ class DomainsController extends Controller
 
                 $domains = $domainModel->with(['project'])->where('project_id', $projectId)->get();
 
-                return DomainResource::collection($domains);
+                return DomainResource::collection($domains); 
             } else {
                 return response()->json([
                                             'message' => 'Erro ao listar dados de domínios',
@@ -85,7 +85,7 @@ class DomainsController extends Controller
                     $domainIp = $cloudFlareService::shopifyIp;
                 } else {
                     //projeto web
-                    $domainIp = $requestData['domain_ip'];
+                    $domainIp = null;
                 }
 
                 $domainCreated = $domainModel->create([
@@ -96,7 +96,7 @@ class DomainsController extends Controller
                                                       ]);
 
                 if ($domainCreated) {
-                    if ($project->shopify_id == null) {
+                    if ($project->shopify_id == null) { 
                         $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
                     } else {
                         $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
@@ -110,7 +110,7 @@ class DomainsController extends Controller
                         foreach ($cloudFlareService->getZones() as $zone) {
                             if ($zone->name == $domainCreated->name) {
                                 foreach ($zone->name_servers as $new_name_server) {
-                                    $newNameServers[] = $new_name_server;
+                                    $newNameServers[] = $new_name_server; 
                                 }
                             }
                         }
@@ -118,20 +118,17 @@ class DomainsController extends Controller
                         return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
                     } else {
                         //problema ao cadastrar dominio
-                        dd($newDomain);
                         DB::rollBack();
 
                         return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                     }
                 } else {
-                    dd($domainCreated);
                     DB::rollBack();
 
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                 }
             } else {
                 //nao veio projectid
-
                 DB::rollBack();
 
                 return response()->json(['message' => 'Projeto não encontrado.'], 400);
@@ -388,6 +385,7 @@ class DomainsController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
             report($e);
+            return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
 
@@ -408,8 +406,8 @@ class DomainsController extends Controller
 
             $cloudFlareService->setZone($record->domain->name);
             if ($cloudFlareService->deleteRecord($record->name . '.' . $record->domain->name)) {
-                //zona deletada
 
+                //zona deletada
                 $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
 
                 if ($recordsDeleted) {
@@ -456,6 +454,10 @@ class DomainsController extends Controller
         }
     }
 
+    /**
+     * @param intger $domainId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getDomainData($domainId){
         $domainModel       = new Domain();
         $cloudFlareService = new CloudFlareService();
@@ -472,4 +474,6 @@ class DomainsController extends Controller
         }
         return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers]], 200);
     }
+
 }
+

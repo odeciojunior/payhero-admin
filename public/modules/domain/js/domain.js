@@ -101,7 +101,6 @@ $(document).ready(function () {
                     dados = '';
                     dados += '<tr>';
                     dados += '<td style="vertical-align: middle;">' + value.domain + '</td>';
-                    dados += '<td style="vertical-align: middle;">' + value.ip_domain + '</td>';
                     dados += '<td>';
                     if (value.status === 3) {
                         dados += '<span class="badge badge-success">' + value.status_translated + '</span>';
@@ -496,7 +495,7 @@ $(document).ready(function () {
         $('#modal-add-body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
             '<h3 align="center"><strong>Dominio registrado</strong></h3>' +
             '<h4 align="center">Tudo pronto já podemos começar</h4>' +
-            '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardanddo suas vendas.</h4>' +
+            '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
             '<span class="btn btn-success" onclick="' + updateDomains() + '" data-dismiss="modal" style="font-size: 25px">Começar</span>' +
             '</div>');
