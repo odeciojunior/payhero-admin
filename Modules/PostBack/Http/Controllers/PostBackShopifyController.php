@@ -46,7 +46,6 @@ class PostBackShopifyController extends Controller
                                    ->where('shopify_order', $shopifyOrder)
                                    ->where('project', $project->id)
                                    ->first();
-                $x    = $sale->getRelation('delivery')->trackingHistories();
 
                 if ($sale) {
                     //venda encontrada
