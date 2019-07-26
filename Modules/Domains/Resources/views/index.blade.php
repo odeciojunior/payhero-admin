@@ -20,7 +20,6 @@
                 <thead>
                     <tr>
                         <td class='table-title' width='400px'>Nome</td>
-                        <td class='table-title' width='400px'>Ip do domínio</td>
                         <td class='table-title' width='400px'>Status</td>
                         <td class='table-title' width='200px'>Opções</td>
                     </tr>

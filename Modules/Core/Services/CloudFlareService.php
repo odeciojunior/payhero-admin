@@ -253,11 +253,11 @@ class CloudFlareService
 
     /**
      * @param string $domain
-     * @param string $ipAddress
+     * @param string|null $ipAddress
      * @return bool
      * @throws \Cloudflare\API\Endpoints\EndpointException
      */
-    public function integrationWebsite(int $domainModelId, string $domain, string $ipAddress)
+    public function integrationWebsite(int $domainModelId, string $domain, $ipAddress)
     {
         $this->deleteZone($domain);
         $this->getDomainRecordModel()->where('domain_id', $domainModelId)->delete();
@@ -269,14 +269,17 @@ class CloudFlareService
             //dominio criado
 
             $this->setZone($newZone->name);
-            $this->addRecord("A", $newZone->name, $ipAddress);
-            $this->getDomainRecordModel()->create([
-                                                      'domain_id'   => $domainModelId,
-                                                      'type'        => 'A',
-                                                      'name'        => $newZone->name,
-                                                      'content'     => $ipAddress,
-                                                      'system_flag' => 1,
-                                                  ]);
+
+            if(!empty($ipAddress)){
+                $this->addRecord("A", $newZone->name, $ipAddress); 
+                $this->getDomainRecordModel()->create([
+                                                          'domain_id'   => $domainModelId,
+                                                          'type'        => 'A',
+                                                          'name'        => $newZone->name,
+                                                          'content'     => $ipAddress,
+                                                          'system_flag' => 1,
+                                                      ]);
+            }
 
             $this->addRecord("CNAME", 'www', $newZone->name);
             $this->getDomainRecordModel()->create([
