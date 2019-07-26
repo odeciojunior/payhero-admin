@@ -289,6 +289,7 @@ $(function () {
         $('#btn-modal').show().removeAttr('disabled');
         $('#btn-modal').attr('data-dismiss', 'modal');
         modalClear('#modal-add-body');
+        loadingOnScreenRemove();
     })
 });
 
