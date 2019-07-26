@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('withdrawals')->group(function() {
+Route::middleware(['web', 'auth'])->prefix('withdrawals')->group(function() {
 
     Route::resource('/', 'WithdrawalsController')->only('index','store');
 
