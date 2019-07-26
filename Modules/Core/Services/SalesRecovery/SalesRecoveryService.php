@@ -6,6 +6,7 @@ use App\Entities\Checkout;
 use App\Entities\CheckoutPlan;
 use App\Entities\Domain;
 use App\Entities\Log as CheckoutLog;
+use App\Entities\Log;
 use App\Entities\Sale;
 use App\Entities\UserProject;
 use Carbon\Carbon;
@@ -209,10 +210,32 @@ class SalesRecoveryService
     }
 
     /**
-     * @param Sale $sale
+     * @param int $saleId
+     * @return string
      */
-    public function getSalesCartOrBoletoDetails(Sale $sale)
+    public function getSalesCartOrBoletoDetails(int $saleId)
     {
+        /*$salesModel    = new Sale();
+        $logModel      = new Log();
+        $checkoutModel = new Checkout();
+        $sale          = $salesModel->with(['clientModel', 'checkoutModel'])->find($saleId);
+        dd($sale);
+        $log = $logModel->where('id_log_session', $sale->getRelation('checkoutModel')->id_log_session)
+                        ->orderBy('id', 'desc')->first();
+        dd($log);
 
+        /* return view('salesrecovery::details', [
+             'checkout'      => $sale,
+             'log'           => $log,
+             'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
+             'status'        => $status,
+             'hours'         => $log['hours'],
+             'date'          => $log['date'],
+             'plans'         => $plans,
+             'total'         => number_format(intval($total) / 100, 2, ',', '.'),
+             'link'          => $link,
+         ]);*/
+
+        return '';*/
     }
 }

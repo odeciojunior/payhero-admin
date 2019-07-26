@@ -101,8 +101,8 @@ class SalesRecoveryController extends Controller
                 if ($checkout) {
                     $details = $salesRecoveryService->getSalesCheckoutDetails($checkout);
                 } else {
-                    $sale    = $saleModel->find($checkoutId);
-                    $details = $salesRecoveryService->getSalesCartOrBoletoDetails($checkout);
+
+                    $details = $salesRecoveryService->getSalesCartOrBoletoDetails($checkoutId);
                 }
             }
 
