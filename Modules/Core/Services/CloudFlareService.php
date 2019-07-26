@@ -188,9 +188,9 @@ class CloudFlareService
      * @param bool $proxied
      * @return bool
      */
-    public function addRecord(string $type, string $name, string $content, int $ttl = 0, bool $proxied = true)
+    public function addRecord(string $type, string $name, string $content, int $ttl = 0, bool $proxied = true, $priority = '0')
     {
-        if ($this->dns->addRecord($this->zoneID, $type, $name, $content, $ttl, $proxied) === true) {
+        if ($this->dns->addRecord($this->zoneID, $type, $name, $content, $ttl, $proxied, $priority) === true) {
             return true;
         } else {
             return false;
