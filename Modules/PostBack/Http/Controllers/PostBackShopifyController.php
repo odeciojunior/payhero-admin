@@ -110,42 +110,50 @@ class PostBackShopifyController extends Controller
 
         $projectId = current(Hashids::decode($request->project_id));
 
-        $project = $projectModel->find($projectId);
+        if ($projectId) {
+            //hash ok
+            $project = $projectModel->find($projectId);
 
-        // Log::warning($projectId);
+            // Log::warning($projectId);
 
-        if (!$project) {
-            Log::warning('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
+            if (!$project) {
+                Log::warning('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
+
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 400);
+            }
+
+            $userProject = $userProjectModel->where([
+                                                        ['project', $project->id],
+                                                        ['type', 'producer'],
+                                                    ])->first();
+
+            try {
+                $shopIntegration = $shopifyIntegrationModel->where('project', $project->id)->first();
+
+                $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
+            } catch (\Exception $e) {
+                return response()->json([
+                                            'message' => 'Dados do shopify inválidos, revise os dados informados',
+                                        ], 400);
+            }
+
+            //foreach ($requestData['variants'] as $variant) {
+            $variant = current($requestData['variants']);
+
+            $shopifyService->importShopifyProduct($projectId, $userProject->user, $variant['product_id']);
+
+            //}
 
             return response()->json([
-                                        'message' => 'error',
-                                    ], 400);
-        }
-
-        $userProject = $userProjectModel->where([
-                                                    ['project', $project->id],
-                                                    ['type', 'producer'],
-                                                ])->first();
-
-        try {
-            $shopIntegration = $shopifyIntegrationModel->where('project', $project->id)->first();
-
-            $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
-        } catch (\Exception $e) {
+                                        'message' => 'success',
+                                    ], 200);
+        } else {
+            //hash invalido
             return response()->json([
-                                        'message' => 'Dados do shopify inválidos, revise os dados informados',
+                                        'message' => 'Projeto não encontrado',
                                     ], 400);
         }
-
-        //foreach ($requestData['variants'] as $variant) {
-        $variant = current($requestData['variants']);
-
-        $shopifyService->importShopifyProduct($projectId, $userProject->user, $variant['product_id']);
-
-        //}
-
-        return response()->json([
-                                    'message' => 'success',
-                                ], 200);
     }
 }
