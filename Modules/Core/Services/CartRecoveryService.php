@@ -30,15 +30,12 @@ class CartRecoveryService
             $dateStart->modify('-255 minutes');
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
-
-            $data     = [];
-            $products = [];
+            $data                = [];
+            $products            = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
-
-            Log::warning('carrinhos abandonados -> ' . print_r($abandonedCarts, true));
 
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
@@ -65,7 +62,6 @@ class CartRecoveryService
 
                     if ($telephoneValidated != '') {
                         $zenviaSms = new ZenviaSmsService();
-                        Log::warning('verifyAbandonedCarts');
 
                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
                     }
@@ -80,7 +76,6 @@ class CartRecoveryService
 
                     if ($emailValidated) {
                         $sendEmail = new SendgridService();
-                        Log::warning('verifyAbandonedCarts');
 
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-538d3405815c43debcf48aa44ceab965', $data);
                     }
@@ -109,8 +104,6 @@ class CartRecoveryService
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
 
-            Log::warning('carrinhos abandonados 2 -> ' . print_r($abandonedCarts, true));
-
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
@@ -137,7 +130,6 @@ class CartRecoveryService
 
                     if ($telephoneValidated != '') {
                         $zenviaSms = new ZenviaSmsService();
-                        Log::warning('verifyAbandonedCarts2');
 
                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
                     }
@@ -153,7 +145,6 @@ class CartRecoveryService
                     $emailValidated = FoxUtils::validateEmail($log['email']);
                     if ($emailValidated) {
                         $sendEmail = new SendgridService();
-                        Log::warning('verifyAbandonedCarts2');
 
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
                     }

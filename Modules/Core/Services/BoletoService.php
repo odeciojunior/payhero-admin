@@ -51,7 +51,6 @@ class BoletoService
             $boletoDueToday = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $dateNow]])
                                   ->with('clientModel', 'plansSales.plan.products')
                                   ->get();
-
             Log::warning('boletos vencendo hoje -> ' . print_r($boletoDueToday, true));
 
             foreach ($boletoDueToday as $boleto) {
@@ -394,7 +393,7 @@ class BoletoService
             $userModel = new User();
             $saleModel = new Sale();
 
-            $date        = Carbon::now()->subDays(15)->toDateString();
+            $date        = Carbon::now()->toDateString();
             $data        = [];
             $boletosPaid = $saleModel->select(\DB::raw('count(*) as count'), 'owner')
                                      ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
