@@ -85,7 +85,7 @@ class DomainsController extends Controller
                     $domainIp = $cloudFlareService::shopifyIp;
                 } else {
                     //projeto web
-                    $domainIp = $requestData['domain_ip'];
+                    $domainIp = null;
                 }
 
                 $domainCreated = $domainModel->create([
@@ -118,20 +118,17 @@ class DomainsController extends Controller
                         return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
                     } else {
                         //problema ao cadastrar dominio
-                        dd($newDomain);
                         DB::rollBack();
 
                         return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                     }
                 } else {
-                    dd($domainCreated);
                     DB::rollBack();
 
                     return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                 }
             } else {
                 //nao veio projectid
-
                 DB::rollBack();
 
                 return response()->json(['message' => 'Projeto não encontrado.'], 400);
@@ -156,12 +153,12 @@ class DomainsController extends Controller
             $companyModel      = new Company();
             $cloudFlareService = new CloudFlareService();
 
-            $domain    = $domainModel->with([
-                'project',
-                'records' => function($query){
-                $query->where('system_flag', 0);
-                }
-            ])->find(current(Hashids::decode($id)));
+            $domain = $domainModel->with([
+                                             'project',
+                                             'records' => function($query) {
+                                                 $query->where('system_flag', 0);
+                                             },
+                                         ])->find(current(Hashids::decode($id)));
 
             $companies = $companyModel->all();
 
@@ -225,36 +222,47 @@ class DomainsController extends Controller
             $requestData = $request->all();
             $recordsJson = json_decode($requestData['data']);
 
-            $domain = $domainModel->find(current(Hashids::decode($requestData['domain'])));
+            $domain = $domainModel->with(['records'])->find(current(Hashids::decode($requestData['domain'])));
 
             $cloudFlareService->setZone($domain->name);
             foreach ($recordsJson as $records) {
                 foreach ($records as $record) {
-                    if (!$domainRecordModel->where('type', current($record[0]))
-                                           ->where('name', current($record[1]))
-                                           ->where('content', current($record[2]))
-                                           ->exists()) {
-                        //nao existe a record
-                        $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
-                        $newRecord = $domainRecordModel->create([
-                                                                    'domain_id'   => $domain->id,
-                                                                    'type'        => current($record[0]),
-                                                                    'name'        => current($record[1]),
-                                                                    'content'     => current($record[2]),
-                                                                    'system_flag' => 0,
-                                                                ]);
-                    } else {
-                        //dominio já cadastrado
-                        DB::rollBack();
 
-                        return response()->json(['message' => 'Este dominio já esta cadastrado'], 400);
+                    if ((strpos(current($record[1]), '.') == false) ||
+                        ($record[1] == $domain->name)) {
+                        //dominio nao tem "ponto" ou é igual ao dominio
+
+//                        $domain->records->where('type', current($record[0]))->where('name', current($record[1]))
+//                                        ->where('content', current($record[2]))->count()
+
+                        if ($domain->records->where('type', current($record[0]))
+                                            ->where('name', current($record[1]))
+                                            ->where('content', current($record[2]))
+                                            ->count() == 0) {
+                            //nao existe a record
+                            $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
+                            $newRecord = $domainRecordModel->create([
+                                                                        'domain_id'   => $domain->id,
+                                                                        'type'        => current($record[0]),
+                                                                        'name'        => current($record[1]),
+                                                                        'content'     => current($record[2]),
+                                                                        'system_flag' => 0,
+                                                                    ]);
+                        } else {
+                            //dominio já cadastrado
+                            DB::rollBack();
+
+                            return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
+                        }
+                    } else {
+                        return response()->json(['message' => 'Domínio não permitido'], 400);
                     }
                 }
             }
 
             DB::commit();
 
-            return response()->json(['message' => "Dominio atualizado com sucesso"], 200);
+            return response()->json(['message' => "Domínio atualizado com sucesso"], 200);
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -388,6 +396,8 @@ class DomainsController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
 
@@ -407,9 +417,18 @@ class DomainsController extends Controller
             $record   = $domainRecordModel->with('domain')->find($recordId);
 
             $cloudFlareService->setZone($record->domain->name);
-            if ($cloudFlareService->deleteRecord($record->name . '.' . $record->domain->name)) {
-                //zona deletada
 
+            $recordName = '';
+            if (str_contains($record->name, '.')) {
+                $recordName = $record->name;
+            }
+            else{
+                $recordName = $record->name . '.' . $record->domain->name;
+            }
+
+            if ($cloudFlareService->deleteRecord($recordName)) {
+
+                //zona deletada
                 $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
 
                 if ($recordsDeleted) {
@@ -456,7 +475,12 @@ class DomainsController extends Controller
         }
     }
 
-    public function getDomainData($domainId){
+    /**
+     * @param intger $domainId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDomainData($domainId)
+    {
         $domainModel       = new Domain();
         $cloudFlareService = new CloudFlareService();
 
@@ -470,6 +494,8 @@ class DomainsController extends Controller
                 }
             }
         }
+
         return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers]], 200);
     }
 }
+

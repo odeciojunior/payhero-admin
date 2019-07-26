@@ -2,15 +2,14 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use App\Entities\Plan;
-use App\Entities\Product;
 use App\Entities\Project;
+use App\Entities\Sale;
 use Illuminate\Http\Request;
 use App\Entities\PostbackLog;
-use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Entities\ShopifyIntegration;
 use Modules\Core\Services\ShopifyService;
@@ -22,22 +21,73 @@ use Modules\Core\Services\ShopifyService;
 class PostBackShopifyController extends Controller
 {
     /**
-     * @var ShopifyService
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    private $shopifyService;
-
-    /**
-     * @param string|null $urlStore
-     * @param string|null $token
-     * @return ShopifyService
-     */
-    private function getShopifyService(string $urlStore = null, string $token = null)
+    public function postBackTracking(Request $request)
     {
-        if (!$this->shopifyService) {
-            $this->shopifyService = new ShopifyService($urlStore, $token);
-        }
+        $salesModel   = new Sale();
+        $projectModel = new Project();
 
-        return $this->shopifyService;
+        $requestData = $request->all();
+
+        $projectId = current(Hashids::decode($request->project_id));
+
+        if ($projectId) {
+            //projectid ok
+
+            $project = $projectModel->find($projectId);
+            if ($project) {
+                //projeto existe
+
+                $shopifyOrder = $requestData['id'];
+
+                $sale = $salesModel->with(['delivery', 'delivery.trackingHistories'])
+                                   ->where('shopify_order', $shopifyOrder)
+                                   ->where('project', $project->id)
+                                   ->first();
+
+                if ($sale) {
+                    //venda encontrada
+
+                    foreach ($requestData['fulfillments'] as $fulfillment) {
+
+                        if (!empty($fulfillment["tracking_number"])) {
+                            if ($sale->getRelation('delivery')->tracking_code != $fulfillment["tracking_number"]) {
+
+                                $sale->getRelation('delivery')->update([
+                                                                           'tracking_code' => $fulfillment["tracking_number"],
+                                                                       ]);
+
+                                $sale->getRelation('delivery')->trackingHistories()->create([
+                                                                                                'tracking_code' => $fulfillment["tracking_number"],
+                                                                                            ]);
+                                event(new TrackingCodeUpdatedEvent($sale));
+                            }
+
+                            return response()->json([
+                                                        'message' => 'success',
+                                                    ], 200);
+                        }
+                    }
+                } else {
+                    //venda nao encontrada
+                    return response()->json([
+                                                'message' => 'error',
+                                            ], 400);
+                }
+            } else {
+                //projeto nao existe
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 400);
+            }
+        } else {
+            //projectid errado
+            return response()->json([
+                                        'message' => 'error',
+                                    ], 400);
+        }
     }
 
     /**
@@ -46,6 +96,7 @@ class PostBackShopifyController extends Controller
      */
     public function postBackListener(Request $request)
     {
+
         $postBackLogModel        = new PostbackLog();
         $projectModel            = new Project();
         $userProjectModel        = new UserProject();
@@ -61,210 +112,50 @@ class PostBackShopifyController extends Controller
 
         $projectId = current(Hashids::decode($request->project_id));
 
-        $project = $projectModel->find($projectId);
+        if ($projectId) {
+            //hash ok
+            $project = $projectModel->find($projectId);
 
-        // Log::warning($projectId);
-
-        if (!$project) {
-            Log::warning('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
-
-            return response()->json([
-                                        'message' => 'error',
-                                    ], 400);
-        }
-
-        $userProject = $userProjectModel->where([
-                                                    ['project', $project->id],
-                                                    ['type', 'producer'],
-                                                ])->first();
-
-        try {
-            $shopIntegration = $shopifyIntegrationModel->where('project', $project->id)->first();
-
-            $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
-        } catch (\Exception $e) {
-            return response()->json([
-                                        'message' => 'Dados do shopify inválidos, revise os dados informados',
-                                    ], 400);
-        }
-
-        //foreach ($requestData['variants'] as $variant) {
-        $variant = current($requestData['variants']);
-
-        $shopifyService->importShopifyProduct($projectId, $userProject->user, $variant['product_id']);
-
-        //}
-
-        return response()->json([
-                                    'message' => 'success',
-                                ], 200);
-    }
-    /*
-        public function postBackListenerOLD(Request $request)
-        {
-            $requestData = $request->all();
-
-            PostbackLog::create([
-                                    'origin'      => 3,
-                                    'data'        => json_encode($requestData),
-                                    'description' => 'shopify',
-                                ]);
-
-            $project = Project::find(Hashids::decode($request->project_id)[0]);
-            Log::warning(Hashids::decode($request->project_id)[0]);
+            // Log::warning($projectId);
 
             if (!$project) {
-                Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
-                return 'error';
+                Log::warning('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
+
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 400);
             }
 
-            foreach ($requestData['variants'] as $variant) {
+            $userProject = $userProjectModel->where([
+                                                        ['project', $project->id],
+                                                        ['type', 'producer'],
+                                                    ])->first();
 
-                $plan = Plan::with('products')->where([
-                                                          ['shopify_variant_id', $variant['id']],
-                                                          ['project', $project->id],
-                                                      ])->first();
+            try {
+                $shopIntegration = $shopifyIntegrationModel->where('project', $project->id)->first();
 
-                $description = '';
-                try {
-                    $description = $variant['option1'];
-                    if ($description == 'Default Title') {
-                        $description = '';
-                    }
-                    if ($variant['option2'] != '') {
-                        $description .= ' - ' . $$variant['option2'];
-                    }
-                    if ($variant['option3'] != '') {
-                        $description .= ' - ' . $$variant['option3'];
-                    }
-                } catch (\Exception $e) {
-                    //report($e);
-                }
-
-                if ($plan) {
-                    $plan->update([
-                                      'name'        => substr($requestData['title'], 0, 100),
-                                      'price'       => $variant['price'],
-                                      'description' => $description,
-                                      'code'        => Hashids::encode($plan->id),
-                                  ]);
-
-                    $product = $plan->getRelation('products')[0];
-
-                    try {
-                        $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
-
-                        $shopifyService = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
-                    } catch (\Exception $e) {
-                        return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
-                    }
-
-                    $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
-
-                    $imgSrc = '';
-                    if($variant->getImageId()){
-                        $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
-                        $imgSrc = $image->getSrc();
-                    }
-                    else{
-                        $shopifyProduct = $shopifyService->getProduct($plan->shopify_id);
-                        try{
-                            $imgSrc = $shopifyProduct->getImage()->getSrc();
-                        }
-                        catch(\Exception $e){
-                            Log::write(print_r($shopifyProduct, true));
-                        }
-                    }
-
-                    if($variant->getImageId()){
-                        $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
-                    }
-                    else {
-                        try{
-                            $imgSrc = $requestData['image']['src'];
-                        }
-                        catch(\Exception $e){
-                            //
-                        }
-                    }
-
-                    $product->update([
-                                         'cost'  => $shopifyService->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
-                                         'photo' => $imgSrc,
-                                         'name'        => substr($requestData['title'], 0, 100),
-                                     ]);
-
-                } else {
-                    $userProject = UserProject::where([
-                                                          ['project', $project['id']],
-                                                          ['type', 'producer'],
-                                                      ])->first();
-
-                    $product = Product::create([
-                                                   'user'        => $userProject->user,
-                                                   'name'        => substr($requestData['title'], 0, 100),
-                                                   'description' => $description,
-                                                   'guarantee'   => '0',
-                                                   'available'   => true,
-                                                   'amount'      => '0',
-                                                   'format'      => 1,
-                                                   'category'    => 11,
-                                                   'cost'        => '',
-                                                   'shopify'     => '1',
-                                               ]);
-
-                    $plan = Plan::create([
-                                             'shopify_id'         => $requestData['id'],
-                                             'shopify_variant_id' => $variant['id'],
-                                             'project'            => $project['id'],
-                                             'name'               => substr($requestData['title'], 0, 100),
-                                             'description'        => $description,
-                                             'price'              => $variant['price'],
-                                             'status'             => '1',
-                                         ]);
-
-                    $plan->update([
-                                      'code' => Hashids::encode($plan->id),
-                                  ]);
-
-                    try {
-                        $shopIntegration = ShopifyIntegration::where('project', $project->id)->first();
-                        $shopifyService = $this->getShopifyService($shopIntegration->url_store, $shopIntegration->token);
-                    } catch (\Exception $e) {
-                        return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
-                    }
-
-                    $variant = $shopifyService->getProductVariant($plan->shopify_variant_id);
-
-                    $imgSrc = '';
-                    if($variant->getImageId()){
-                        $image = $shopifyService->getImage($variant->getProductId(),$variant->getImageId());
-                        $imgSrc = $image->getSrc();
-                    }
-                    else{
-                        try{
-                            $imgSrc = $requestData['image']['src'];
-                        }
-                        catch(\Exception $e){
-                            Log::write(print_r($variant, true));
-                        }
-                    }
-
-                    $product->update([
-                                         'cost'  => $shopifyService->getShopInventoryItem($variant->getInventoryItemId())->getCost(),
-                                         'photo' => $imgSrc
-                                     ]);
-
-                    ProductPlan::create([
-                                            'product' => $product->id,
-                                            'plan'    => $plan->id,
-                                            'amount'  => '1',
-                                        ]);
-                }
+                $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
+            } catch (\Exception $e) {
+                return response()->json([
+                                            'message' => 'Dados do shopify inválidos, revise os dados informados',
+                                        ], 400);
             }
 
-            return response()->json(['message' => 'success'], 200);
+            //foreach ($requestData['variants'] as $variant) {
+            $variant = current($requestData['variants']);
+
+            $shopifyService->importShopifyProduct($projectId, $userProject->user, $variant['product_id']);
+
+            //}
+
+            return response()->json([
+                                        'message' => 'success',
+                                    ], 200);
+        } else {
+            //hash invalido
+            return response()->json([
+                                        'message' => 'Projeto não encontrado',
+                                    ], 400);
         }
-        */
-
+    }
 }

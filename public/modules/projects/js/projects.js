@@ -132,7 +132,7 @@ $(function () {
                 $("#bt-update-project").unbind('click');
                 $("#bt-update-project").on('click', function (event) {
                     event.preventDefault();
-
+                    loadingOnScreen();
                     parcelas = parseInt($(".installment_amount option:selected").val());
                     parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
                     var verify = verificaParcelas(parcelas, parcelasJuros);
@@ -156,16 +156,19 @@ $(function () {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 }
+                                loadingOnScreenRemove();
                             }, success: function (response) {
                                 alertCustom('success', response.message);
 
                                 $("#image-logo-email").imgAreaSelect({remove: true});
                                 $("#previewimage").imgAreaSelect({remove: true});
                                 updateConfiguracoes();
+                                loadingOnScreenRemove();
                             }
                         });
                     } else {
                         $("#error-juros").css('display', 'block');
+                        loadingOnScreenRemove();
                     }
 
                 });
@@ -286,6 +289,7 @@ $(function () {
         $('#btn-modal').show().removeAttr('disabled');
         $('#btn-modal').attr('data-dismiss', 'modal');
         modalClear('#modal-add-body');
+        loadingOnScreenRemove();
     })
 });
 

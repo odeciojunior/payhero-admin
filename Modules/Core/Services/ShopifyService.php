@@ -757,6 +757,7 @@ class ShopifyService
                 $product->update([
                                      'name'        => substr($storeProduct->getTitle(), 0, 100),
                                      'description' => $description,
+                                     'weight'      => $variant->getWeight(),
                                      'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
                                                            ->getCost(),
                                  ]);
@@ -902,6 +903,12 @@ class ShopifyService
 
         $this->createShopWebhook([
                                      "topic"   => "products/update",
+                                     "address" => $postbackUrl . Hashids::encode($projectId),
+                                     "format"  => "json",
+                                 ]);
+
+        $this->createShopWebhook([
+                                     "topic"   => "orders/updated",
                                      "address" => $postbackUrl . Hashids::encode($projectId),
                                      "format"  => "json",
                                  ]);

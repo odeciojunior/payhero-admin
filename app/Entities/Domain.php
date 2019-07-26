@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $project
  * @property string $name
  * @property string $status
- * @property string $domain_ip
  * @property string $sendgrid_id
  * @property string $created_at
  * @property string $updated_at
@@ -30,7 +29,6 @@ class Domain extends Model
         'project_id',
         'name',
         'status',
-        'domain_ip', 
         'sendgrid_id',
         'created_at',
         'updated_at',

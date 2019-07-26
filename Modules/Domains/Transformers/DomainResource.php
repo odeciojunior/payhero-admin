@@ -14,15 +14,14 @@ class DomainResource extends Resource
      * @return array
      * @throws \Cloudflare\API\Endpoints\EndpointException
      */
-    public function toArray($request)
-    {
+    public function toArray($request) {
 
         return [
             'id'                => Hashids::encode($this->id),
             'domain'            => $this->name,
-            'ip_domain'         => ($this->project->shopify_id == null) ? $this->domain_ip : 'Shopify',
             'status'            => $this->status,
             'status_translated' => $this->getEnum('status', $this->status, true),
         ];
     }
+
 }
