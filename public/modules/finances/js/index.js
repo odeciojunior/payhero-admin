@@ -1,45 +1,47 @@
 $(document).ready(function () {
 
+    $.getScript("modules/withdrawals/js/index.js", function () {
+    })
+
     $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
     $("#pop-antecipacao").click(function () {
-        if($("#antecipa-popover").css('display') == 'none'){
+        if ($("#antecipa-popover").css('display') == 'none') {
             $("#antecipa-popover").fadeIn(200);
-        }
-        else{
+        } else {
             $("#antecipa-popover").fadeOut(100);
         }
     });
 
-    $("#transfers_company_select").on("change",function(){
+    $("#transfers_company_select").on("change", function () {
         $("#extract_company_select").val($(this).val());
         updateBalances();
     });
 
-    $("#extract_company_select").on("change",function(){
+    $("#extract_company_select").on("change", function () {
         $("#transfers_company_select").val($(this).val());
         updateBalances();
     });
 
     updateBalances();
 
-    function updateBalances(){
+    function updateBalances() {
 
         $(".price").append("<span class='loading'>" +
-        "<span class='loaderSpan' >" +
-        "</span>" +
-        "</span>");
+            "<span class='loaderSpan' >" +
+            "</span>" +
+            "</span>");
 
         $.ajax({
-            url : "/finances/getbalances/" + $("#transfers_company_select").val(),
-            type : "GET",
+            url: "/finances/getbalances/" + $("#transfers_company_select").val(),
+            type: "GET",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
                 //
             },
-            success : function(response) {
+            success: function (response) {
                 $('.saldoPendente').html('<span class="currency">R$</span><span class="pending-balance">0,00</span>');
                 $('.removeSpan').remove();
                 $('.disponivelAntecipar').append('<span class="currency removeSpan">R$</span><span class="antecipable-balance removeSpan">0,00</span>');
@@ -53,7 +55,7 @@ $(document).ready(function () {
                 $(".total-balance").html(response.total_balance);
                 $(".loading").remove();
                 $("#div-available-money").unbind('click');
-                $("#div-available-money").on("click", function(){
+                $("#div-available-money").on("click", function () {
                     $(".withdrawal-value").val(response.available_balance);
                 });
             }
@@ -61,38 +63,38 @@ $(document).ready(function () {
 
     }
 
-    $('#bt-withdrawal').on('click', function(){
+    $('#bt-withdrawal').on('click', function () {
 
         $.ajax({
-            url : "/withdrawals/getaccountinformation/" + $("#transfers_company_select").val(),
-            type : "GET",
+            url: "/withdrawals/getaccountinformation/" + $("#transfers_company_select").val(),
+            type: "GET",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
                 //
             },
-            success : function(response) {
-                $("#modal-withdrawal-value").html(' R$ ' + $('.withdrawal-value').val() + ' ');
+            success: function (response) {
+                $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
                 $("#modal-withdrawal-bank").html('  ' + response.data.bank);
                 $("#modal-withdrawal-agency").html('  ' + response.data.account);
-                if(response.data.agency_digit != '' && response.data.agency_digit != null){
+                if (response.data.agency_digit != '' && response.data.agency_digit != null) {
 
                     $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
                 }
                 $("#modal-withdrawal-account").html('  ' + response.data.account);
-                if(response.data.account_digit != '' && response.data.account_digit != null){
+                if (response.data.account_digit != '' && response.data.account_digit != null) {
 
                     $("#modal-withdrawal-account-digit").html(' - ' + response.data.account_digit);
                 }
                 $("#modal-withdrawal-document").html('  ' + response.data.document);
 
                 $("#bt-confirm-withdrawal").unbind("click");
-                $("#bt-confirm-withdrawal").on("click", function(){
+                $("#bt-confirm-withdrawal").on("click", function () {
 
                     $.ajax({
-                        url : "/withdrawals/",
-                        type : "POST",
+                        url: "/withdrawals/",
+                        type: "POST",
                         data: {
                             company: $("#transfers_company_select").val(),
                             value: $('.withdrawal-value').val()
@@ -103,7 +105,7 @@ $(document).ready(function () {
                         error: function () {
                             //
                         },
-                        success : function(response) {
+                        success: function (response) {
 
                             $(".close-withdrawal-modal").click();
                             updateWithdrawalsTable();
@@ -115,7 +117,25 @@ $(document).ready(function () {
 
     });
 
+    $('#custom-input-addon').on('change paste keyup', function () {
+        let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '')
+        let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '')
+        let availableBalance = parseInt(availableBalanceText);
+        let toTransfer = parseFloat(toTransferText);
+        if (toTransfer > availableBalance) {
+            alertCustom('error','O valor requerido ultrapassa o limite disponivel')
+            toTransferText = $('#custom-input-addon').val()
+            toTransfer = toTransferText.slice(0,-2)
+            $('#custom-input-addon').val(toTransfer);
+            $('#custom-input-addon').val().update();
+            $('.withdrawal-value').mask('#.###,#0', {reverse: true});
+            console.log(toTransfer)
 
+        } else {
+            console.log('Saque pode ser realizado')
+        }
+    })
 });
+
 
 

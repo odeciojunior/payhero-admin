@@ -65,7 +65,7 @@
                                                                 <h5 style="font-size: 16px; font-weight: 700; margin: 0;">
                                                                     Saldo após antecipação </h5>
                                                                 <h3 style="font-size: 25px;font-weight: 700;">
-                                                                    <span class="currency">R$</span> 
+                                                                    <span class="currency">R$</span>
                                                                     0,00
                                                                 </h3>
                                                                 <p style="font-weight: 300; font-size: 11px; color: black; opacity: 0.8;">
@@ -92,7 +92,6 @@
                                                 <div class="price-holder">
                                                     <h6 class="label-price"> Saldo Total </h6>
                                                     <h4 class="price saltoTotal">
-
                                                     </h4>
                                                     <div class="grad-border blue"></div>
                                                 </div>
@@ -117,7 +116,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text" id="basic-addon1 custom-addon" style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
                                                     </div>
-                                                    <input type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1" id="custom-input-addon">
+                                                    <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
                                                     <button id="bt-withdrawal" class="btn btn-success btn-sacar ml-3" data-toggle="modal" data-target="#modal-withdrawal">
                                                         <svg class="mr-2" style="fill: white; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                                                             <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
@@ -147,7 +146,6 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="table-withdrawals-body" class="custom-t-body">
-
                                             </tbody>
                                         </table>
                                         <ul id="withdrawals-pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
@@ -156,10 +154,8 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- EXTRATO -->
                             <div class="tab-pane fade" id="nav-extract" role="tabpanel" aria-labelledby="nav-profile-tab">
-
                                 <div class="row justify-content-between">
                                     <div class="col-12 fix-5">
                                         <div class="d-flex no-gutters justify-content-between">
@@ -172,7 +168,6 @@
                                                 <div class="price-holder">
                                                     <h6 class="label-price"> Total na conta </h6>
                                                     <h4 class="price totalConta">
-
                                                     </h4>
                                                     <div class="grad-border blue"></div>
                                                 </div>
@@ -221,7 +216,6 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="table-transfers-body" class="custom-t-body">
-
                                             </tbody>
                                         </table>
                                         <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
@@ -245,45 +239,84 @@
     </div>
 
     <!-- Modal confirmar saque -->
-    <div class="modal fade modal-3d-flip-vertical" id="modal-withdrawal" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple">
-            <div class="modal-content p-20 " style="width: 500px;"> 
-                <div class="header-modal">
-                    <div class="row justify-content-between align-items-center" style="width: 100%;">
-                        <div class="col-lg-2"> &nbsp;</div>
-                        <div class="col-lg-8 text-center" id='modal-withdrawal-title'></div>
-                        <div class="col-lg-2 text-right">
-                            <a role="button" data-dismiss="modal" id="close-withdrawal-modal">
-                                <i class="material-icons pointer">close</i>
-                            </a>
-                        </div>
+    <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
+        <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
+            <div id="conteudo_modal_add" class="modal-content p-10">
+                <div class="header-modal simple-border-bottom">
+                    <h2 id="modal-withdrawal-title" class="modal-title">Confirmar Saque</h2>
+                </div>
+                <div id="modal_body" class="modal-body simple-border-bottom" style='padding-bottom:1%;padding-top:1%;'>
+                    <div>
+                        <h5>Verifique os dados da conta:</h5>
+                        <h4>Banco:
+                            <span id="modal-withdrawal-bank"></span>
+                        </h4>
+                        <h4>Agência:
+                            <span id="modal-withdrawal-agency"></span>
+                            <span id="modal-withdrawal-agency-digit"></span>
+                        </h4>
+                        <h4>Conta:
+                            <span id="modal-withdrawal-account"></span>
+                            <span id="modal-withdrawal-account-digit"></span>
+                        </h4>
+                        <h4>Documento:
+                            <span id="modal-withdrawal-document"></span>
+                        </h4>
+                        <hr>
+                        <h3>Valor do saque:
+                            <span id="modal-withdrawal-value" class='greenGradientText'></span>
+                        </h3>
                     </div>
                 </div>
-                <div class="modal-withdrawal-body">
-                    <div class="text-center">
-                        <h3> Confirmar saque </h3>
-                    </div>
-                    <div style="margin-top: 30px">
-                        <p>Ao confirmar o saque, o valor de <span id="modal-withdrawal-value"></span> será transferido para a seguinte conta:</p>
-                        <p>Banco:<span id="modal-withdrawal-bank"></span></p>
-                        <p>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></p>
-                        <p>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></p>
-                        <p>Documento:<span id="modal-withdrawal-document"></span></p>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 35px">
-                    <div class="form-group col-12 text-right">
-                        <button id="bt-confirm-withdrawal" type="button" class="form-control btn" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:center">Confirmar saque</button>
-                    </div>
+                <div class="modal-footer">
+                    <button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
+                        <strong>Confirmar</strong></button>
+                    <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
+                        <strong>Cancelar</strong></button>
                 </div>
             </div>
         </div>
     </div>
+
+
+    {{--    <div class="modal fade modal-3d-flip-vertical" id="modal-withdrawal" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-simple">
+                <div class="modal-content p-20 " style="width: 500px;">
+                    <div class="header-modal">
+                        <div class="row justify-content-between align-items-center" style="width: 100%;">
+                            <div class="col-lg-2"> &nbsp;</div>
+                            <div class="col-lg-8 text-center" id='modal-withdrawal-title'></div>
+                            <div class="col-lg-2 text-right">
+                                <a role="button" data-dismiss="modal" id="close-withdrawal-modal">
+                                    <i class="material-icons pointer">close</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-withdrawal-body">
+                        <div class="text-center">
+                            <h3> Confirmar saque </h3>
+                        </div>
+                        <div style="margin-top: 30px">
+                            <p>Ao confirmar o saque, o valor de <span id="modal-withdrawal-value"></span> será transferido para a seguinte conta:</p>
+                            <p>Banco:<span id="modal-withdrawal-bank"></span></p>
+                            <p>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></p>
+                            <p>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></p>
+                            <p>Documento:<span id="modal-withdrawal-document"></span></p>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 35px">
+                        <div class="form-group col-12 text-right">
+                            <button id="bt-confirm-withdrawal" type="button" class="form-control btn" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:center">Confirmar saque</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>--}}
     <!-- End Modal -->
 
     @push('scripts')
         <script src="{!! asset('modules/transfers/js/index.js') !!}"></script>
-        <script src="{!! asset('modules/withdrawals/js/index.js') !!}"></script>
         <script src="{!! asset('modules/finances/js/index.js') !!}"></script>
     @endpush
 
