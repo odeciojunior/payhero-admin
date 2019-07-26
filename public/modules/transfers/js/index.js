@@ -49,12 +49,11 @@ $(function () {
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
                         data += '<td style="vertical-align: middle; color:green;">' + value.value + '</td>';
                         data += '</tr>';
-
                     });
 
                     $("#table-transfers-body").html(data);
 
-                    pagination(response);
+                    paginationTransfersTable(response);
                 }
                 $('.detalhes_venda').on('click', function () {
                     var sale = $(this).attr('sale');
@@ -85,7 +84,7 @@ $(function () {
         });
     }
 
-    function pagination(response) {
+    function paginationTransfersTable(response) {
 
         $("#pagination").html("");
 

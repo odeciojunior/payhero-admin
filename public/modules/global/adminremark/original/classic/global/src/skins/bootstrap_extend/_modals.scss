@@ -31,24 +31,24 @@
 
 // Variables
 // ========================================================================
-$modal-sidebar-bg              : $inverse !default;
+$modal-sidebar-bg: $inverse !default;
 
-$modal-fill-in-bg              : rgba(255, 255, 255, 0.95) !default;
+$modal-fill-in-bg: rgba(255, 255, 255, 0.95) !default;
 
-$modal-primary-color           : $inverse !default;
-$modal-primary-bg              : $brand-primary !default;
+$modal-primary-color: $inverse !default;
+$modal-primary-bg: $brand-primary !default;
 
-$modal-success-color           : $inverse !default;
-$modal-success-bg              : $brand-success !default;
+$modal-success-color: $inverse !default;
+$modal-success-bg: $brand-success !default;
 
-$modal-info-color              : $inverse !default;
-$modal-info-bg                 : $brand-info !default;
+$modal-info-color: $inverse !default;
+$modal-info-bg: $brand-info !default;
 
-$modal-warning-color           : $inverse !default;
-$modal-warning-bg              : $brand-warning !default;
+$modal-warning-color: $inverse !default;
+$modal-warning-bg: $brand-warning !default;
 
-$modal-danger-color            : $inverse !default;
-$modal-danger-bg               : $brand-danger !default;
+$modal-danger-color: $inverse !default;
+$modal-danger-bg: $brand-danger !default;
 
 
 // Component: Modal
@@ -64,6 +64,7 @@ $modal-danger-bg               : $brand-danger !default;
 .modal-footer {
   border-top: none;
 }
+
 // Modifier: `modal-top`
 // -------------------------
 

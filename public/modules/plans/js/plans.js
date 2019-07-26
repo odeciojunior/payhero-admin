@@ -5,11 +5,10 @@ $(function () {
         atualizarPlan();
     });
     $("#add-plan").on('click', function () {
-        $("#modal-title").html('Adicionar Plano <br><hr class="my-0">');
+        loadOnModal("#modal-add-body")
         $("#modal_add_size").addClass('modal_simples');
-        // $("#modal_add_size").addClass('modal-lg');
+        $("#modal-title").html('Adicionar Plano');
 
-        $("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");
         $.ajax({
             method: "GET",
             url: '/plans/create',
@@ -21,7 +20,7 @@ $(function () {
                 alertCustom('error', 'Ocorreu algum erro');
             }, success: function (data) {
                 $("#btn-modal").addClass('btn-save');
-                $("#btn-modal").text('Salvar');
+                $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
                 $('.products_amount').mask('0#');

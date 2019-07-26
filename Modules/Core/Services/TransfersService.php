@@ -35,15 +35,15 @@ class TransfersService
                                                  'type'        => 'in',
                                              ]);
 
-                $transfers[] = $transfer;
-
                 $transaction->update([
                                          'status' => 'transfered',
                                      ]);
 
                 $company->update([
-                                     'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $t['value'])),
+                                     'balance' => intval($company->balance) + intval(preg_replace("/[^0-9]/", "", $transaction->value)),
                                  ]);
+
+                $transfers[] = $transfer->toArray();
 
             } catch (\Exception $e) {
                 report($e);

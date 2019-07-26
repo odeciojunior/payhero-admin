@@ -106,7 +106,16 @@ class DomainsController extends Controller
                     if ($newDomain) {
                         DB::commit();
 
-                        return response()->json(['message' => 'Domínio cadastrado com sucesso','data'=>['id_code'=>Hashids::encode($domainCreated->id)]], 200);
+                        $newNameServers = [];
+                        foreach ($cloudFlareService->getZones() as $zone) {
+                            if ($zone->name == $domainCreated->name) {
+                                foreach ($zone->name_servers as $new_name_server) {
+                                    $newNameServers[] = $new_name_server;
+                                }
+                            }
+                        }
+
+                        return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
                     } else {
                         //problema ao cadastrar dominio
                         dd($newDomain);
@@ -147,7 +156,13 @@ class DomainsController extends Controller
             $companyModel      = new Company();
             $cloudFlareService = new CloudFlareService();
 
-            $domain    = $domainModel->with(['project', 'records'])->find(current(Hashids::decode($id)));
+            $domain    = $domainModel->with([
+                'project',
+                'records' => function($query){
+                $query->where('system_flag', 0);
+                }
+            ])->find(current(Hashids::decode($id)));
+
             $companies = $companyModel->all();
 
             $registers = [];
@@ -439,5 +454,22 @@ class DomainsController extends Controller
 
             return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
         }
+    }
+
+    public function getDomainData($domainId){
+        $domainModel       = new Domain();
+        $cloudFlareService = new CloudFlareService();
+
+        $domain = $domainModel->with(['project'])->where('id', current(Hashids::decode($domainId)))->first();
+
+        $newNameServers = [];
+        foreach ($cloudFlareService->getZones() as $zone) {
+            if ($zone->name == $domain->name) {
+                foreach ($zone->name_servers as $new_name_server) {
+                    $newNameServers[] = $new_name_server;
+                }
+            }
+        }
+        return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers]], 200);
     }
 }

@@ -58,13 +58,15 @@ class PostBackShopifyController extends Controller
                                       'data'        => json_encode($requestData),
                                       'description' => 'shopify',
                                   ]);
+
         $projectId = current(Hashids::decode($request->project_id));
 
         $project = $projectModel->find($projectId);
-        Log::warning($projectId);
+
+        // Log::warning($projectId);
 
         if (!$project) {
-            Log::write('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
+            Log::warning('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
 
             return response()->json([
                                         'message' => 'error',

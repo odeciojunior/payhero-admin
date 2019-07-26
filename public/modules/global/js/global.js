@@ -109,7 +109,7 @@ function loadingOnScreen() {
     $('#loadingOnScreen').html('');
     $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
 }
-function loadingOnScreenRemove(){
+function loadingOnScreenRemove() {
     $('#loadingOnScreen').html('');
 }
 
@@ -122,21 +122,39 @@ function loadOnNotification(whereToLoad) {
 }
 
 function loadOnModal(whereToLoad) {
-    $(whereToLoad).html('');
-    $(whereToLoad).append("<div id='loaderModal' class='loading'>" +
-        "<div class='loaderModal' >" +
+
+    $(whereToLoad).children().hide('fast');
+    $('#modal-title').html('Carregando ...')
+    $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
+        "<div class='loaderModal'>" +
         "</div>" +
         "</div>");
+    $('#loadingOnScreen').append("<div class='blockScreen'></div>");
 }
 
 function loadOnTable(whereToLoad, tableReference) {
     $(whereToLoad).html('');
     $(tableReference).removeClass('table-striped');
     $(whereToLoad).append("<tr id='loaderLine'>" +
-        "<td colspan='11' align='center' class='loading' style='height:100px'>" +
+        "<td colspan='12' align='center' class='loadingTable' style='height:100px'>" +
         "<a id='loader' class='loaderTable'></a>" +
         "</td>" +
         "</tr>");
+}
+
+function modalClear(modalBody) {
+    $(modalBody).html('');
+}
+
+function messageSwalSuccess(swalType, swalTitle, swalHtml, swalCloseButton, swalConfirmButton, swalFooter) {
+    swal({
+        type: swalType,
+        title: swalTitle,
+        html: swalHtml,
+        showCloseButton: swalCloseButton,
+        showConfirmButton: swalConfirmButton,
+        footer: swalFooter
+    })
 }
 
 

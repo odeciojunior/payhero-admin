@@ -31,10 +31,8 @@ $(document).ready(function () {
     $('#shipping-value').mask('#.###,#0', {reverse: true});
 
     $("#add-shipping").on('click', function () {
-
-        $("#modal-title").html('Cadastrar frete');
-        /*$("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");*/
         loadOnModal('#modal-add-body');
+        $("#modal-title").html('Cadastrar frete');
 
         $.ajax({
             method: "GET",
@@ -47,7 +45,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#btn-modal").addClass('btn-save');
-                $("#btn-modal").text('Salvar');
+                $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
                 $("#modal-add-body").html(response);
                 $('#shipping-zip-code-origin').mask('00000-000');
@@ -209,6 +207,16 @@ $(document).ready(function () {
                             $("#modal-add-body").html(response);
                             $('#shipping-zip-code-origin').mask('00000-000');
 
+                            var selected = $("#shipping-type").val();
+                            if (selected === 'static') {
+                                $("#value-shipping-row").css('display', 'block');
+                                $("#zip-code-origin-shipping-row").css('display', 'none');
+
+                            } else {
+                                $("#value-shipping-row").css('display', 'none');
+                                $("#zip-code-origin-shipping-row").css('display', 'block');
+
+                            }
                             changeType();
                             $('#shipping-value').mask('#.###,#0', {reverse: true});
 

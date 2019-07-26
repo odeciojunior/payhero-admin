@@ -7,12 +7,9 @@ $(function () {
     atualizarCoupon();
 
     $("#add-coupon").on('click', function () {
-        $("#modal-title").html('Novo cupom');
-        $("#modal_add_size").addClass('modal_simples');
-        $("#modal_add_size").removeClass('modal-lg');
-
-        /*$("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");*/
         loadOnModal('#modal-add-body');
+        $("#modal_add_size").addClass('modal_simples');
+        $("#modal-title").html('Novo cupom');
 
         $.ajax({
             method: "GET",
@@ -25,7 +22,7 @@ $(function () {
                 alertCustom('error', 'Ocorreu algum erro');
             }, success: function (data) {
                 $("#btn-modal").addClass('btn-save');
-                $("#btn-modal").text('Salvar');
+                $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
                 if ($("#type").val() == 1) {

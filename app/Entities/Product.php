@@ -83,7 +83,7 @@ class Product extends Model
      */
     public function productsPlans()
     {
-        return $this->hasMany('App\Entities\ProductsPlan', 'product');
+        return $this->hasMany('App\Entities\ProductPlan', 'product');
     }
 
     public function plans()
