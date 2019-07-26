@@ -2,7 +2,6 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use App\Entities\Plan;
 use App\Entities\Project;
 use App\Entities\Sale;
 use Illuminate\Http\Request;
