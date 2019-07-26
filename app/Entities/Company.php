@@ -99,7 +99,7 @@ class Company extends Model
         'address_document_status'  => [
             1 => 'pending',
             2 => 'analyzing',
-            3 => 'approved',
+            3 => 'approved', 
             4 => 'refused',
         ],
         'contract_document_status' => [

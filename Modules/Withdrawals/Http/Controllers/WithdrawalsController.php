@@ -17,9 +17,9 @@ class WithdrawalsController extends Controller {
     public function index(Request $request) {
 
         try {
-            $withdrasalModel = new Withdrawal();
+            $withdrawalModel = new Withdrawal();
 
-            $withdrawals = $withdrasalModel
+            $withdrawals = $withdrawalModel
                 ->where('company_id', current(Hashids::decode($request->company_id)))->orderBy('id', 'DESC');
 
             return WithdrawalResource::collection($withdrawals->paginate(10));
@@ -32,7 +32,50 @@ class WithdrawalsController extends Controller {
 
     public function store(Request $request){
 
-        return response()->json($request->all());
+        $data = $request->all();
+
+        $withdrawalModel = new Withdrawal();
+        $companyModel    = new Company();
+        $bankSservice    = new BankService();
+
+        $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
+
+        if(!$company->bank_document_status == $companyModel->getEnum('bank_document_status', 'approved') ||
+           !$company->address_document_status == $companyModel->getEnum('address_document_status', 'approved') ||
+           !$company->contract_document_status == $companyModel->getEnum('contract_document_status', 'approved')){
+            return response()->json([
+                'message' => 'error',
+                'data' => [
+                    'documents_status'  => 'pending',
+                ]
+            ], 400);
+        }
+
+        $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
+        if($withdrawalValue > $company->balance){
+
+            return response()->json([
+                'message' => 'Valor informado inválido',
+                'data'    => [
+                    'status' => 'error',
+                ]
+            ], 400);
+        }
+
+        $withdrawalModel->create([
+            'user'                => auth()->user()->id,
+            'value'               => $withdrawalValue,
+            'company_id'          => $company->id,
+            'account_information' => $bankService->getBankName($company->bank) . ' - Conta: ' . $company->account,
+            'status'              => $companyModel->getEnum('bank_document_status', 'pending') 
+        ]);
+
+        return response()->json([
+            'message' => 'Saque pendente',
+            'data'    => [
+                'status' => 'success',
+            ]
+        ]);
 
     }
 
@@ -43,17 +86,30 @@ class WithdrawalsController extends Controller {
 
         $company = $companyModel->find(current(Hashids::decode($companyId)));
 
-        return response()->json([
-            'message' => 'success',
-            'data' => [
-                'bank'          => $bankService->getBankName($company->bank),
-                'account'       => $company->account,
-                'account_digit' => $company->account_digit,
-                'agency'        => $company->agency,
-                'agency_digit'  => $company->agency_digit,
-                'document'      => $company->company_document,
-            ]
-        ],200);
+        if($company->bank_document_status == $companyModel->getEnum('bank_document_status', 'approved') && 
+           $company->address_document_status == $companyModel->getEnum('address_document_status', 'approved') && 
+           $company->contract_document_status == $companyModel->getEnum('contract_document_status', 'approved')){
+            return response()->json([
+                'message' => 'success',
+                'data' => [
+                    'documents_status'  => 'approved',
+                    'bank'              => $bankService->getBankName($company->bank),
+                    'account'           => $company->account,
+                    'account_digit'     => $company->account_digit,
+                    'agency'            => $company->agency,
+                    'agency_digit'      => $company->agency_digit,
+                    'document'          => $company->company_document,
+                ]
+            ],200);
+        }
+        else{
+            return response()->json([
+                'message' => 'success',
+                'data' => [
+                    'documents_status'  => 'pending',
+                ]
+            ], 200);
+        }
     }
 
 }

@@ -408,9 +408,7 @@ class DomainsController extends Controller
 
             $recordName = '';
             if (str_contains($record->name, '.')) {
-                if($record->name == $record->domain->name){
-                    $recordName = $record->name;
-                }
+                $recordName = $record->name;
             }
             else{
                 $recordName = $record->name . '.' . $record->domain->name;
