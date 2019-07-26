@@ -7,6 +7,7 @@ use App\Entities\CheckoutPlan;
 use App\Entities\Domain;
 use App\Entities\Log as CheckoutLog;
 use App\Entities\Project;
+use App\Entities\Sale;
 use App\Entities\UserProject;
 use Carbon\Carbon;
 use Exception;
@@ -87,61 +88,26 @@ class SalesRecoveryController extends Controller
     public function getAbandonatedCardsDetails(Request $request)
     {
         try {
-            $checkoutModel     = new Checkout();
-            $logModel          = new CheckoutLog();
-            $checkoutPlanModel = new CheckoutPlan();
-            $domainModel       = new Domain();
+            $checkoutModel = new Checkout();
+
+            $saleModel            = new Sale();
+            $salesRecoveryService = new SalesRecoveryService();
+            $details              = null;
 
             if ($request->input('checkout')) {
                 $checkoutId = current(Hashids::decode($request->input('checkout')));
-                $checkout   = $checkoutModel->find($checkoutId);
 
-                $log          = $logModel->where('id_log_session', $checkout->id_log_session)
-                                         ->orderBy('id', 'DESC')
-                                         ->first();
-                $log['hours'] = with(new Carbon($checkout->created_at))->format('H:i:s');
-                $log['date']  = with(new Carbon($checkout->created_at))->format('d/m/Y');
-
-                $status = '';
-                if ($checkout->status == 'abandoned cart') {
-                    $status = 'Não recuperado';
+                $checkout = $checkoutModel->find($checkoutId);
+                if ($checkout) {
+                    $details = $salesRecoveryService->getSalesCheckoutDetails($checkout);
                 } else {
-                    $status = 'Recuperado';
+                    $sale    = $saleModel->find($checkoutId);
+                    $details = $salesRecoveryService->getSalesCartOrBoletoDetails($checkout);
                 }
+            }
 
-                $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.products')
-                                                   ->where('checkout', $checkoutId)
-                                                   ->get();
-
-                $plans = [];
-                $total = 0;
-                foreach ($checkoutPlans as $checkoutPlan) {
-                    foreach ($checkoutPlan->getRelation('plan')->products as $key => $product) {
-                        $plans[$key]['name']   = $checkoutPlan->getRelation('plan')->name;
-                        $plans[$key]['value']  = $checkoutPlan->getRelation('plan')->price;
-                        $plans[$key]['photo']  = $product->photo;
-                        $plans[$key]['amount'] = $checkoutPlan->amount;
-                        $total                 += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->getRelation('plan')->price)) * intval($checkoutPlan->amount);
-                    }
-                }
-
-                $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
-
-                $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
-
-                $whatsAppMsg = 'Olá ' . $log->name;
-
-                $details = view('salesrecovery::details', [
-                    'checkout'      => $checkout,
-                    'log'           => $log,
-                    'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
-                    'status'        => $status,
-                    'hours'         => $log['hours'],
-                    'date'          => $log['date'],
-                    'plans'         => $plans,
-                    'total'         => number_format(intval($total) / 100, 2, ',', '.'),
-                    'link'          => $link,
-                ]);
+            if ($details == null) {
+                return response()->json(['message' => 'Ocorreu algum erro']);
             }
 
             return response()->json($details->render());

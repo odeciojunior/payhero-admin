@@ -3,6 +3,8 @@
 namespace Modules\SalesRecovery\Transformers;
 
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\Resource;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
@@ -10,9 +12,9 @@ use Vinkla\Hashids\Facades\Hashids;
 class SalesRecoveryCardRefusedResource extends Resource
 {
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function toArray($request)
     {
@@ -32,7 +34,6 @@ class SalesRecoveryCardRefusedResource extends Resource
 
         $whatsAppMsg       = 'Olá ' . $client->name;
         $client->telephone = FoxUtils::prepareCellPhoneNumber($client->telephone);
-
 
         return [
             'id'              => Hashids::encode($this->id),
