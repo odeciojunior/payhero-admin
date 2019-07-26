@@ -47,8 +47,8 @@ class SalesRecoveryResource extends Resource
 
         $whatsAppMsg = 'Olá ' . $log->name;
 
-        $emailSentAmount = ($this->email_sent_amount == null) ? 0 : $this->email_sent_amount;
-        $smsSentAmount   = ($this->sms_sent_amount == null) ? 0 : $this->sms_sent_amount;
+        $emailSentAmount = ($this->email_sent_amount == null) ? 'Não enviado' : $this->email_sent_amount;
+        $smsSentAmount   = ($this->sms_sent_amount == null) ? 'Não enviado' : $this->sms_sent_amount;
 
         return [
             'id'              => Hashids::encode($this->id),
@@ -62,7 +62,5 @@ class SalesRecoveryResource extends Resource
             'link'            => $link,
             'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
         ];
-
-        return parent::toArray($request);
     }
 }

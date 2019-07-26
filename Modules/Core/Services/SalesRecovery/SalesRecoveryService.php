@@ -6,6 +6,9 @@ use App\Entities\Checkout;
 use App\Entities\Sale;
 use App\Entities\UserProject;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefused;
+use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
 
 class SalesRecoveryService
@@ -17,7 +20,7 @@ class SalesRecoveryService
         } else if ($type == 2) {
             return $this->getBoletoExpired($projectId, $dateStart, $dateEnd);
         } else if ($type == 3) {
-            return $this->getRecusedCard();
+            return $this->getRefusedCard($projectId, $dateStart, $dateEnd);
         } else {
             return $this->getAllTypes();
         }
@@ -70,58 +73,25 @@ class SalesRecoveryService
 
     public function getBoletoExpired($projectId, $dateStart, $dateEnd)
     {
-        $checkoutModel     = new Checkout();
-        $salesModel        = new Sale();
-        $userProjectsModel = new UserProject();
-
-        $salesExpired = $salesModel->where([
-                                               ['payment_method', 2],
-                                               ['status', 3],
-                                           ]);
-        if (!empty($projectId)) {
-            $salesExpired->where('project', $projectId);
-        } else {
-            $userProjects = $userProjectsModel->where([
-                                                          ['user', auth()->user()->id],
-                                                          ['type', 'producer'],
-                                                      ])->pluck('project')->toArray();
-
-            $salesExpired->whereIn('project', $userProjects)->with('projectModel');
-        }
-        if (!empty($dateStart) && !empty($dateEnd)) {
-            $salesExpired->whereBetween('created_at', [$dateStart, $dateEnd]);
-        } else {
-            if (!empty($dateStart)) {
-                $salesExpired->whereDate('created_at', '>=', $dateStart);
-            }
-            if (!empty($dateEnd)) {
-                $salesExpired->whereDate('created_at', '<', $dateEnd);
-            }
-        }
-
-        $salesExpired->orderBy('id', 'DESC');
-
-        return '';
-    }
-
-    public function getRecusedCard()
-    {
-        $checkoutModel = new Checkout();
-
         $salesModel        = new Sale();
         $userProjectsModel = new UserProject();
 
         $salesExpired = $salesModel
-            ->select('sales.*', 'plan_sale.plan_value', 'plan_sale.amount', 'checkout.email_sent_amount', 'checkout.sms_sent_amount')
+            ->select('sales.*', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'), 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id_log_session')
             ->leftJoin('plans_sales as plan_sale', function($join) {
                 $join->on('plan_sale.sale', '=', 'sales.id');
-            })
-            ->leftJoin('checkouts as checkout', function($join) {
+            })->leftJoin('checkouts as checkout', function($join) {
                 $join->on('sales.checkout', 'checkout.id');
             })->where([
-                          ['sales.payment_method', 1],
-                          ['sales.status', 3],
-                      ]);
+                          ['sales.payment_method', 2], ['sales.status', 3],
+                      ])->with([
+                                   'projectModel',
+                                   'clientModel',
+                                   'projectModel.domains' => function($query) {
+                                       $query->where('status', 3)
+                                             ->first();
+                                   },
+                               ]);
         if (!empty($projectId)) {
             $salesExpired->where('sales.project', $projectId);
         } else {
@@ -130,7 +100,7 @@ class SalesRecoveryService
                                                           ['type', 'producer'],
                                                       ])->pluck('project')->toArray();
 
-            $salesExpired->whereIn('sales.project', $userProjects)->with('projectModel');
+            $salesExpired->whereIn('sales.project', $userProjects);
         }
         if (!empty($dateStart) && !empty($dateEnd)) {
             $salesExpired->whereBetween('sales.created_at', [$dateStart, $dateEnd]);
@@ -143,8 +113,61 @@ class SalesRecoveryService
             }
         }
 
-        $salesExpired->get();
+        $salesExpired->orderBy('id');
 
-        return '';
+        return SalesRecoveryCardRefusedResource::collection($salesExpired->paginate(10));
+    }
+
+    /**
+     * @param $projectId
+     * @param $dateStart
+     * @param $dateEnd
+     * @return AnonymousResourceCollection
+     */
+    public function getRefusedCard($projectId, $dateStart, $dateEnd)
+    {
+        $salesModel        = new Sale();
+        $userProjectsModel = new UserProject();
+
+        $salesExpired = $salesModel
+            ->select('sales.*', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'), 'checkout.email_sent_amount', 'checkout.sms_sent_amount', 'checkout.id_log_session')
+            ->leftJoin('plans_sales as plan_sale', function($join) {
+                $join->on('plan_sale.sale', '=', 'sales.id');
+            })->leftJoin('checkouts as checkout', function($join) {
+                $join->on('sales.checkout', 'checkout.id');
+            })->where([
+                          ['sales.payment_method', 1], ['sales.status', 3],
+                      ])->with([
+                                   'projectModel',
+                                   'clientModel',
+                                   'projectModel.domains' => function($query) {
+                                       $query->where('status', 3)
+                                             ->first();
+                                   },
+                               ]);
+        if (!empty($projectId)) {
+            $salesExpired->where('sales.project', $projectId);
+        } else {
+            $userProjects = $userProjectsModel->where([
+                                                          ['user', auth()->user()->id],
+                                                          ['type', 'producer'],
+                                                      ])->pluck('project')->toArray();
+
+            $salesExpired->whereIn('sales.project', $userProjects);
+        }
+        if (!empty($dateStart) && !empty($dateEnd)) {
+            $salesExpired->whereBetween('sales.created_at', [$dateStart, $dateEnd]);
+        } else {
+            if (!empty($dateStart)) {
+                $salesExpired->whereDate('sales.created_at', '>=', $dateStart);
+            }
+            if (!empty($dateEnd)) {
+                $salesExpired->whereDate('sales.created_at', '<', $dateEnd);
+            }
+        }
+
+        $salesExpired->orderBy('id');
+
+        return SalesRecoveryCardRefusedResource::collection($salesExpired->paginate(10));
     }
 }
