@@ -70,10 +70,8 @@ class BoletoService
                     }
                     $clientNameExploded = explode(' ', $clientName);
 
-                    if ($boleto->iof > '0') {
-                        $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-                        $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    }
+                    $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                    $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     foreach ($boleto->plansSales as $plansSale) {
                         $plan    = Plan::find($plansSale['plan']);
                         $project = Project::find($plan['project']);
@@ -90,6 +88,7 @@ class BoletoService
                             $products[]                 = $productArray;
                         }
                         $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                        $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
                         $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
                         $boletoDigitableLine     = [];
                         $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
@@ -159,11 +158,9 @@ class BoletoService
                     } else {
                         $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
                     }
-                    $clientNameExploded = explode(' ', $clientName);
-                    if ($boleto->iof > '0') {
-                        $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-                        $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    }
+                    $clientNameExploded       = explode(' ', $clientName);
+                    $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                    $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     foreach ($boleto->plansSales as $plansSale) {
                         $plan    = Plan::find($plansSale['plan']);
                         $project = Project::find($plan['project']);
@@ -180,6 +177,7 @@ class BoletoService
                             $products[]                 = $productArray;
                         }
                         $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                        $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
                         $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
                         $boletoDigitableLine     = [];
                         $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
@@ -228,7 +226,6 @@ class BoletoService
             $date    = Carbon::now()->subDay('2')->toDateString();
             $boletos = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                                  ->with('clientModel', 'plansSales.plan.products')->get();
-
             Log::warning('boletos aguardando pagamento 2 -> ' . print_r($boletos, true));
 
             foreach ($boletos as $boleto) {
@@ -244,11 +241,9 @@ class BoletoService
                     } else {
                         $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
                     }
-                    $clientNameExploded = explode(' ', $clientName);
-                    if ($boleto->iof > '0') {
-                        $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
-                        $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    }
+                    $clientNameExploded       = explode(' ', $clientName);
+                    $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
+                    $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     foreach ($boleto->plansSales as $plansSale) {
                         $plan    = $planModel->find($plansSale['plan']);
                         $project = $projectModel->find($plan['project']);
@@ -265,6 +260,7 @@ class BoletoService
                             $products[]                 = $productArray;
                         }
                         $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                        $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
                         $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
                         $boletoDigitableLine     = [];
                         $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
@@ -448,7 +444,7 @@ class BoletoService
         $boletos = $saleModel->where([
                                          ['payment_method', '=', '2'],
                                          ['status', '=', '2'],
-                                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date],
+                                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', $date],
                                      ])
                              ->get();
         foreach ($boletos as $boleto) {
