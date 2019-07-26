@@ -103,7 +103,6 @@ class CartRecoveryService
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
-
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
@@ -116,7 +115,6 @@ class CartRecoveryService
                             ];
                         }
                     }
-
                     $log = CheckouLog::where('id_log_session', $abandonedCart->id_log_session)
                                      ->orderBy('created_at', 'desc')
                                      ->first();
