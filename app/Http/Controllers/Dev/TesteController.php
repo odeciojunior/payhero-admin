@@ -29,26 +29,27 @@ class TesteController extends Controller
     {
 
         $shopifyService = new ShopifyService('plotplot.myshopify.com', '8153df9581010e821c22125300fbda56');
-        dd($shopifyService->getShopWebhook());
         $shopifyService->deleteShopWebhook();
+        //dd($shopifyService->getShopWebhook());
+
 
         $shopifyService->createShopWebhook([
                                                "topic"   => "products/create",
-                                               "address" => 'https://ef413380.ngrok.io/postback/shopify/dnQ7kZ7wEZ0eJLb',
+                                               "address" => 'https://bc512aa9.ngrok.io/postback/shopify/dnQ7kZ7wEZ0eJLb',
                                                "format"  => "json",
                                            ]);
 
         $shopifyService->createShopWebhook([
                                                "topic"   => "products/update",
-                                               "address" => 'https://ef413380.ngrok.io/postback/shopify/dnQ7kZ7wEZ0eJLb',
+                                               "address" => 'https://bc512aa9.ngrok.io/postback/shopify/dnQ7kZ7wEZ0eJLb',
                                                "format"  => "json",
                                            ]);
 
-//        $shopifyService->createShopWebhook([
-//                                               "topic"   => "orders/update",
-//                                               "address" => 'https://ef413380.ngrok.io/postback/shopify/dnQ7kZ7wEZ0eJLb',
-//                                               "format"  => "json",
-//                                           ]);
+        $shopifyService->createShopWebhook([
+                                               "topic"   => "orders/updated",
+                                               "address" => 'https://bc512aa9.ngrok.io/postback/shopify/dnQ7kZ7wEZ0eJLb',
+                                               "format"  => "json",
+                                           ]);
 
         dd($shopifyService->getShopWebhook());
     }
