@@ -405,7 +405,18 @@ class DomainsController extends Controller
             $record   = $domainRecordModel->with('domain')->find($recordId);
 
             $cloudFlareService->setZone($record->domain->name);
-            if ($cloudFlareService->deleteRecord($record->name . '.' . $record->domain->name)) {
+
+            $recordName = '';
+            if (str_contains($record->name, '.')) {
+                if($record->name == $record->domain->name){
+                    $recordName = $record->name;
+                }
+            }
+            else{
+                $recordName = $record->name . '.' . $record->domain->name;
+            }
+
+            if ($cloudFlareService->deleteRecord($recordName)) {
 
                 //zona deletada
                 $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
