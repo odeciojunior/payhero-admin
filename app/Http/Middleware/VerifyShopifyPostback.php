@@ -30,7 +30,7 @@ class VerifyShopifyPostback
      */
     public function handle($request, Closure $next)
     {
-        $projectModel = new Project();
+        /*$projectModel = new Project();
 
         $projectId = current(Hashids::decode($request->project_id));
 
@@ -65,7 +65,7 @@ class VerifyShopifyPostback
             return response()->json([
                                         'message' => 'unauthorized',
                                     ], 400);
-        }
+        }*/
 
         return $next($request);
     }
