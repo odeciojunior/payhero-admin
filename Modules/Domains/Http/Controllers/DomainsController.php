@@ -228,42 +228,42 @@ class DomainsController extends Controller
             foreach ($recordsJson as $records) {
                 foreach ($records as $record) {
 
-                    //                    if ((strpos(current($record[1]), '.') == false) ||
-                    //                        ($record[1] == $domain->name)) {
-                    //dominio nao tem "ponto" ou é igual ao dominio
+                    if ((strpos(current($record[1]), '.') == false) ||
+                        ($record[1] == $domain->name)) {
+                        //dominio nao tem "ponto" ou é igual ao dominio
 
-                    //                        $domain->records->where('type', current($record[0]))->where('name', current($record[1]))
-                    //                                        ->where('content', current($record[2]))->count()
+                        if ($domain->records->where('type', current($record[0]))
+                                            ->where('name', current($record[1]))
+                                            ->where('content', current($record[2]))
+                                            ->count() == 0) {
+                            //nao existe a record
 
-                    if ($domain->records->where('type', current($record[0]))
-                                        ->where('name', current($record[1]))
-                                        ->where('content', current($record[2]))
-                                        ->count() == 0) {
-                        //nao existe a record
+                            $quantityMx = $domain->records->where('type', 'MX')->count();
 
-                        //$quantityMx = $domain->records->where('type', 'MX')->count();
-
-                        if (current($record[0]) == 'MX') {
-                            $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]), 0, false, 10);
+                            if (current($record[0]) == 'MX') {
+                                $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]), 0, false, $quantityMx + 1);
+                            } else {
+                                $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
+                            }
+                            $newRecord = $domainRecordModel->create([
+                                                                        'domain_id'   => $domain->id,
+                                                                        'type'        => current($record[0]),
+                                                                        'name'        => current($record[1]),
+                                                                        'content'     => current($record[2]),
+                                                                        'system_flag' => 0,
+                                                                    ]);
                         } else {
-                            $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
+                            //dominio já cadastrado
+                            DB::rollBack();
+
+                            return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
                         }
-                        $newRecord = $domainRecordModel->create([
-                                                                    'domain_id'   => $domain->id,
-                                                                    'type'        => current($record[0]),
-                                                                    'name'        => current($record[1]),
-                                                                    'content'     => current($record[2]),
-                                                                    'system_flag' => 0,
-                                                                ]);
                     } else {
-                        //dominio já cadastrado
+                        //dominio nao permitido
                         DB::rollBack();
 
-                        return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
+                        return response()->json(['message' => 'Domínio não permitido: ' . $record[1]], 400);
                     }
-                    //                    } else {
-                    //                        return response()->json(['message' => 'Domínio não permitido'], 400);
-                    //                    }
                 }
             }
 

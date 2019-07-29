@@ -428,7 +428,7 @@ $(document).ready(function () {
                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
                             } else {
-                                alertCustom("error", 'ocorreu um erro verifique os dados informados');
+                                alertCustom("error", response.responseJSON.message);
                             }
                             loadingOnScreenRemove()
                         },
