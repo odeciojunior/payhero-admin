@@ -75,7 +75,7 @@ $(function () {
                         success: function (response) {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
 
-                            $('.modal-body').html(response);
+                            $('.modal-body-details').html(response);
 
                         }
                     });

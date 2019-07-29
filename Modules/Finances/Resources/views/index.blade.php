@@ -268,7 +268,7 @@
                         </h3>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div id='modal-withdraw-footer' class="modal-footer">
                     <button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">
                         <strong>Confirmar</strong></button>
                     <button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">
@@ -277,43 +277,33 @@
             </div>
         </div>
     </div>
-
-
-    {{--    <div class="modal fade modal-3d-flip-vertical" id="modal-withdrawal" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-simple">
-                <div class="modal-content p-20 " style="width: 500px;">
-                    <div class="header-modal">
-                        <div class="row justify-content-between align-items-center" style="width: 100%;">
-                            <div class="col-lg-2"> &nbsp;</div>
-                            <div class="col-lg-8 text-center" id='modal-withdrawal-title'></div>
-                            <div class="col-lg-2 text-right">
-                                <a role="button" data-dismiss="modal" id="close-withdrawal-modal">
-                                    <i class="material-icons pointer">close</i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-withdrawal-body">
-                        <div class="text-center">
-                            <h3> Confirmar saque </h3>
-                        </div>
-                        <div style="margin-top: 30px">
-                            <p>Ao confirmar o saque, o valor de <span id="modal-withdrawal-value"></span> será transferido para a seguinte conta:</p>
-                            <p>Banco:<span id="modal-withdrawal-bank"></span></p>
-                            <p>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></p>
-                            <p>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></p>
-                            <p>Documento:<span id="modal-withdrawal-document"></span></p>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top: 35px">
-                        <div class="form-group col-12 text-right">
-                            <button id="bt-confirm-withdrawal" type="button" class="form-control btn" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:center">Confirmar saque</button>
+    <!-- End Modal -->
+    <!-- Modal Detalhes -->
+    <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-simple modal-sidebar modal-lg">
+            <div class="modal-content p-20 " style="width: 500px;">
+                <div class="header-modal">
+                    <div class="row justify-content-between align-items-center" style="width: 100%;">
+                        <div class="col-lg-2"> &nbsp;</div>
+                        <div class="col-lg-8 text-center"><h4> Detalhes da venda </h4></div>
+                        <div class="col-lg-2 text-right">
+                            <a role="button" data-dismiss="modal">
+                                <i class="material-icons pointer">close</i></a>
                         </div>
                     </div>
                 </div>
+                <div class="modal-body-details">
+                </div>
+                <div class="clearfix"></div>
             </div>
-        </div>--}}
+        </div>
+    </div>
     <!-- End Modal -->
+
+
+
+
+
 
     @push('scripts')
         <script src="{!! asset('modules/transfers/js/index.js') !!}"></script>

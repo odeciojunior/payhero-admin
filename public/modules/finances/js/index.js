@@ -75,43 +75,83 @@ $(document).ready(function () {
                 //
             },
             success: function (response) {
-                $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
-                $("#modal-withdrawal-bank").html('  ' + response.data.bank);
-                $("#modal-withdrawal-agency").html('  ' + response.data.account);
-                if (response.data.agency_digit != '' && response.data.agency_digit != null) {
+                if (response.data.documents_status == 'pending') {
+                    let companie = $('#transfers_company_select').val();
+                    let route = '/companies/' + companie + '/edit'
+                    $('#modal-withdrawal-title').text("Oooppsssss!")
+                    $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
+                        '<h3 align="center"><strong>Documentos ainda não validados</strong></h3>' +
+                        '<h4 align="center">Parece que ainda existe pendencias com seus documentos</h4>' +
+                        '<h4 align="center">Seria bom conferir se todos os documentos ja foram cadastrados</h4>' +
+                        '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + route + '">clique aqui</a></h5>')
+                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                } else {
+                    $('#modal-withdrawal-title').text("Confirmar Saque")
+                    $('#modal_body').html('<div>' +
+                        '<h5>Verifique os dados da conta:</h5>' +
+                        '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' +
+                        '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' +
+                        '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' +
+                        '<h4>Documento:<span id="modal-withdrawal-document"></span></h4>' +
+                        '<hr>' +
+                        '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span></h3>' +
+                        '</div>')
+                    $('#modal-withdraw-footer').html('<button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">' +
+                        '<strong>Confirmar</strong></button>' +
+                        '<button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">' +
+                        '<strong>Cancelar</strong></button>');
 
-                    $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
-                }
-                $("#modal-withdrawal-account").html('  ' + response.data.account);
-                if (response.data.account_digit != '' && response.data.account_digit != null) {
+                    $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');
+                    $("#modal-withdrawal-bank").html('  ' + response.data.bank);
+                    $("#modal-withdrawal-agency").html('  ' + response.data.account);
+                    if (response.data.agency_digit != '' && response.data.agency_digit != null) {
 
-                    $("#modal-withdrawal-account-digit").html(' - ' + response.data.account_digit);
-                }
-                $("#modal-withdrawal-document").html('  ' + response.data.document);
+                        $("#modal-withdrawal-agency-digit").html(' - ' + response.data.agency_digit);
+                    }
+                    $("#modal-withdrawal-account").html('  ' + response.data.account);
+                    if (response.data.account_digit != '' && response.data.account_digit != null) {
 
-                $("#bt-confirm-withdrawal").unbind("click");
-                $("#bt-confirm-withdrawal").on("click", function () {
+                        $("#modal-withdrawal-account-digit").html(' - ' + response.data.account_digit);
+                    }
+                    $("#modal-withdrawal-document").html('  ' + response.data.document);
 
-                    $.ajax({
-                        url: "/withdrawals/",
-                        type: "POST",
-                        data: {
-                            company: $("#transfers_company_select").val(),
-                            value: $('.withdrawal-value').val()
-                        },
-                        headers: {
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
-                            //
-                        },
-                        success: function (response) {
+                    $("#bt-confirm-withdrawal").unbind("click");
+                    $("#bt-confirm-withdrawal").on("click", function () {
+                        loadOnModal('#modal-body');
+                        $.getScript('modules/withdrawals/js/index.js')
+                        $.ajax({
+                            url: "/withdrawals",
+                            type: "POST",
+                            data: {company_id: $('#transfers_company_select').val(), withdrawal_value: $('#custom-input-addon').val()},
+                            headers: {
+                                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function () {
+                                loadingOnScreenRemove()
+                                updateWithdrawalsTable()
+                                $('#modal-withdrawal-title').text("Oooppsssss!")
+                                $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
+                                    '<h3 align="center"><strong>Algo deu errado!</strong></h3>' +
+                                    '<h4 align="center">Por algum motivo não foi possivel realizar sua solicitação de saque</h4>' +
+                                    '<h4 align="center">Entre em contato com o suporte para mais informações</h4>')
+                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
 
-                            $(".close-withdrawal-modal").click();
-                            updateWithdrawalsTable();
-                        }
+                            },
+                            success: function (response) {
+                                loadingOnScreenRemove()
+                                updateWithdrawalsTable()
+                                $('#modal-withdrawal-title').text("Sucesso!")
+                                $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
+                                    '<h3 align="center"><strong>Saque realizado com sucesso!</strong></h3>' +
+                                    '<h4 align="center">Sua solicitação foi para avaliação</h4>' +
+                                    '<h4 align="center">Em alguns instantes seu dinheiro estara em sua conta</h4>')
+                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+
+
+                            }
+                        })
                     });
-                });
+                }
             }
         });
 
@@ -123,9 +163,9 @@ $(document).ready(function () {
         let availableBalance = parseInt(availableBalanceText);
         let toTransfer = parseFloat(toTransferText);
         if (toTransfer > availableBalance) {
-            alertCustom('error','O valor requerido ultrapassa o limite disponivel')
+            alertCustom('error', 'O valor requerido ultrapassa o limite disponivel')
             toTransferText = $('#custom-input-addon').val()
-            toTransfer = toTransferText.slice(0,-2)
+            toTransfer = toTransferText.slice(0, -2)
             $('#custom-input-addon').val(toTransfer);
             $('#custom-input-addon').val().update();
             $('.withdrawal-value').mask('#.###,#0', {reverse: true});
@@ -135,7 +175,12 @@ $(document).ready(function () {
             console.log('Saque pode ser realizado')
         }
     })
+
 });
+
+
+
+
 
 
 
