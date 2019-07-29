@@ -36,17 +36,15 @@ class CartRecoveryService
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
-
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
-                            $productArray = [
-                                $productArray["name"] = $productPlan->getProduct->name,
-                                $productArray["photo"] = $productPlan->getProduct->photo,
-                                $productArray["amount"] = $productPlan->amount,
-                                $products[] = $productArray,
-                            ];
+                            $productArray = [];
+                                $productArray["name"] = $productPlan->getProduct->name;
+                                $productArray["photo"] = $productPlan->getProduct->photo;
+                                $productArray["amount"] = $productPlan->amount;
+                                $products[] = $productArray;
                         }
                     }
 
@@ -107,12 +105,12 @@ class CartRecoveryService
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
-                            $productArray = [
-                                $productArray["name"] = $productPlan->getProduct->name,
-                                $productArray["photo"] = $productPlan->getProduct->photo,
-                                $productArray["amount"] = $productPlan->amount,
-                                $products[] = $productArray,
-                            ];
+                            $productArray = [];
+                                $productArray["name"] = $productPlan->getProduct->name;
+                                $productArray["photo"] = $productPlan->getProduct->photo;
+                                $productArray["amount"] = $productPlan->amount;
+                                $products[] = $productArray;
+
                         }
                     }
                     $log = CheckouLog::where('id_log_session', $abandonedCart->id_log_session)
