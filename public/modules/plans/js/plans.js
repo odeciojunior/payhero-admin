@@ -16,6 +16,7 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
+                loadingOnScreenRemove();
                 $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
             }, success: function (data) {
