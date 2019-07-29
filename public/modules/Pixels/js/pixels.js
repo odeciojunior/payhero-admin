@@ -22,6 +22,7 @@ $(function () {
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function (data) {
+                loadingOnScreenRemove();
                 $("#btn-modal").addClass('btn-save');
                 $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
