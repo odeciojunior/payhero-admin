@@ -33,6 +33,7 @@ class ShopifyIntegration extends Model
         'user',
         'project',
         'token',
+        'shared_secret',
         'url_store',
         'theme_type',
         'theme_name',
@@ -44,7 +45,6 @@ class ShopifyIntegration extends Model
         'updated_at',
         'deleted_at',
     ];
-
     /**
      * @var array
      */
