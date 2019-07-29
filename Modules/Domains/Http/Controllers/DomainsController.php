@@ -88,6 +88,21 @@ class DomainsController extends Controller
                     $domainIp = null;
                 }
 
+                //TODO validar entrada de dominio
+//                if (substr_count($requestData['name'], '/') > 0) {
+//                    //existe barra
+//                    DB::rollBack();
+//
+//                    return response()->json(['message' => 'Domínio invalido, remova http://'], 400);
+//                }
+//
+//                if (substr_count($requestData['name'], '.') > 1) {
+//                    //existe mais que 1 ponto
+//                    DB::rollBack();
+//
+//                    return response()->json(['message' => 'Domínio invalido.'], 400);
+//                }
+
                 $domainCreated = $domainModel->create([
                                                           'project_id' => $projectId,
                                                           'name'       => $requestData['name'],

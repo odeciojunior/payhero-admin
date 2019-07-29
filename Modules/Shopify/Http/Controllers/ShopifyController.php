@@ -216,63 +216,71 @@ class ShopifyController extends Controller
                     ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
                     ->find($projectId);
 
-                if (!empty($project->shopify_id)) {
-                    //se for shopify, voltar as integraçoes ao html padrao
-                    try {
+                $domain = $project->domains->where('status', 3)->first();
 
-                        foreach ($project->shopifyIntegrations as $shopifyIntegration) {
-                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                if (!empty($domain)) {
+                    //primeiro dominio valido
+                    if (!empty($project->shopify_id)) {
+                        //se for shopify, voltar as integraçoes ao html padrao
+                        try {
 
-                            $shopify->setThemeByRole('main');
-                            $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+                            foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                            if ($htmlCart) {
-                                //template normal
+                                $shopify->setThemeByRole('main');
+                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                if ($htmlCart) {
+                                    //template normal
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                } else {
+                                    //template ajax
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                }
+
+                                //inserir o javascript para o trackeamento (src, utm)
+                                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                if ($htmlBody) {
+                                    //template do layout
+                                    $shopifyIntegration->update([
+                                                                    'layout_theme_html' => $htmlBody,
+                                                                ]);
+
+                                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                }
+
+                                $shopify->importShopifyStore($projectId, auth()->user()->id);
+
                                 $shopifyIntegration->update([
-                                                                'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
-                                                                'theme_name' => $shopify->getThemeName(),
-                                                                'theme_file' => 'sections/cart-template.liquid',
-                                                                'theme_html' => $htmlCart,
+                                                                'status' => $shopifyIntegration->getEnum('status', 'approved'),
                                                             ]);
-
-                                $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
-                            } else {
-                                //template ajax
-                                $shopifyIntegration->update([
-                                                                'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
-                                                                'theme_name' => $shopify->getThemeName(),
-                                                                'theme_file' => 'snippets/ajax-cart-template.liquid',
-                                                                'theme_html' => $htmlCart,
-                                                            ]);
-
-                                $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
                             }
 
-                            //inserir o javascript para o trackeamento (src, utm)
-                            $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
-                            if ($htmlBody) {
-                                //template do layout
-                                $shopifyIntegration->update([
-                                                                'layout_theme_html' => $htmlBody,
-                                                            ]);
-
-                                $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
-                            }
-
-                            $shopify->importShopifyStore($projectId, auth()->user()->id);
-
-                            $shopifyIntegration->update([
-                                                            'status' => $shopifyIntegration->getEnum('status', 'approved'),
-                                                        ]);
+                            return response()->json(['message' => 'Integração com o shopify refeita'], 200);
+                        } catch (Exception $e) {
+                            //throwl
+                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
                         }
-
-                        return response()->json(['message' => 'Integração com o shopify refeita'], 200);
-                    } catch (Exception $e) {
-                        //throwl
-                        return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+                    } else {
+                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
                     }
                 } else {
-                    return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                    //nenhum dominio ativado
+                    return response()->json(['message' => 'Este projeto não tem tem nenhum domínio aprovado'], 400);
                 }
             } else {
                 //problema no id

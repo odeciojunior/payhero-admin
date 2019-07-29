@@ -165,7 +165,7 @@ class DomainService
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart);
+                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
                                 } else {
                                     Log::warning('domains update command tema ajax ...');
 
@@ -178,7 +178,7 @@ class DomainService
                                                                     'theme_html' => $htmlCart,
                                                                 ]);
 
-                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, true);
+                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
                                 }
 
                                 //inserir o javascript para o trackeamento (src, utm)
@@ -189,7 +189,6 @@ class DomainService
                                                                     'layout_theme_html' => $htmlBody,
                                                                 ]);
 
-                                    //TODO validar para nao inserir duas vezes
                                     $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
                                 }
                             } catch (\Exception $e) {
