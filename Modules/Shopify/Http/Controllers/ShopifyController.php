@@ -105,11 +105,12 @@ class ShopifyController extends Controller
                                                  ]);
 
             $shopifyIntegration = $shopifyIntegrationModel->create([
-                                                                       'token'     => $dados['token'],
-                                                                       'url_store' => $dados['url_store'] . '.myshopify.com',
-                                                                       'user'      => auth()->user()->id,
-                                                                       'project'   => $project->id,
-                                                                       'status'    => 1,
+                                                                       'token'         => $dados['token'],
+                                                                       'shared_secret' => '',
+                                                                       'url_store'     => $dados['url_store'] . '.myshopify.com',
+                                                                       'user'          => auth()->user()->id,
+                                                                       'project'       => $project->id,
+                                                                       'status'        => 1,
                                                                    ]);
 
             $userProjectModel->create([
