@@ -44,6 +44,7 @@ $(document).ready(function () {
                 $("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
+                loadingOnScreenRemove();
                 $("#btn-modal").addClass('btn-save');
                 $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
