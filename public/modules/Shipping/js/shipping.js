@@ -41,6 +41,7 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
+                loadingOnScreenRemove();
                 $("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
