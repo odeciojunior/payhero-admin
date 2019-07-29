@@ -821,6 +821,12 @@ class ShopifyService
                                                'status'             => '1',
                                            ]);
 
+                $productPlanModel->create([
+                                              'product' => $product->id,
+                                              'plan'    => $plan->id,
+                                              'amount'  => '1',
+                                          ]);
+
                 $plan->update([
                                   'code' => Hashids::encode($plan->id),
                               ]);
