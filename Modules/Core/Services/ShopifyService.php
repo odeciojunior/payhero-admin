@@ -330,6 +330,14 @@ class ShopifyService
         $body = $dom->find('body');
         $body = $body[0];
 
+        //div FoxScript
+        $foxScriptUtm = new Selector('#foxScriptUtm', new Parser());
+        $divs         = $foxScriptUtm->find($body);
+        foreach ($divs as $div) {
+            $parent = $div->getParent();
+            $parent->removeChild($div->id());
+        }
+
         $divFoxScriptUtm = new HtmlNode('div');
 
         $divFoxScriptUtm->setAttribute('id', 'foxScriptUtm');

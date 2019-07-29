@@ -255,7 +255,6 @@ class ShopifyController extends Controller
                                                                 'layout_theme_html' => $htmlBody,
                                                             ]);
 
-                                //TODO validar para nao inserir duas vezes
                                 $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
                             }
 
