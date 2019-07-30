@@ -96,8 +96,8 @@ class DomainsController extends Controller
                 $requestData['name'] = 'http://' . $requestData['name'];
                 $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
-                if (!$project->domains->where('name', $requestData['name'])
-                                      ->exists()) {
+                if ($project->domains->where('name', $requestData['name'])
+                                     ->count() == 0) {
 
                     $domainCreated = $domainModel->create([
                                                               'project_id' => $projectId,
