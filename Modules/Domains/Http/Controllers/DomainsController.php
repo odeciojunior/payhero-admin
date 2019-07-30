@@ -79,7 +79,7 @@ class DomainsController extends Controller
 
             if ($projectId) {
 
-                $project = $projectModel->find($projectId);
+                $project = $projectModel->with(['domains'])->find($projectId);
 
                 if (!empty($project->shopify_id)) {
                     //projeto shopify
@@ -96,44 +96,55 @@ class DomainsController extends Controller
                 $requestData['name'] = 'http://' . $requestData['name'];
                 $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
-                $domainCreated = $domainModel->create([
-                                                          'project_id' => $projectId,
-                                                          'name'       => $requestData['name'],
-                                                          'domain_ip'  => $domainIp,
-                                                          'status'     => $domainModel->getEnum('status', 'pending'),
-                                                      ]);
+                if ($project->domains->where('name', $requestData['name'])
+                                     ->count() == 0) {
 
-                if ($domainCreated) {
-                    if ($project->shopify_id == null) {
-                        $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
-                    } else {
-                        $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
-                        $requestData['domain_ip'] = 'Domínio Shopify';
-                    }
+                    $domainCreated = $domainModel->create([
+                                                              'project_id' => $projectId,
+                                                              'name'       => $requestData['name'],
+                                                              'domain_ip'  => $domainIp,
+                                                              'status'     => $domainModel->getEnum('status', 'pending'),
+                                                          ]);
 
-                    if ($newDomain) {
-                        DB::commit();
-
-                        $newNameServers = [];
-                        foreach ($cloudFlareService->getZones() as $zone) {
-                            if ($zone->name == $domainCreated->name) {
-                                foreach ($zone->name_servers as $new_name_server) {
-                                    $newNameServers[] = $new_name_server;
-                                }
-                            }
+                    if ($domainCreated) {
+                        if ($project->shopify_id == null) {
+                            $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
+                        } else {
+                            $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
+                            $requestData['domain_ip'] = 'Domínio Shopify';
                         }
 
-                        return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
+                        if ($newDomain) {
+                            DB::commit();
+
+                            $newNameServers = [];
+                            foreach ($cloudFlareService->getZones() as $zone) {
+                                if ($zone->name == $domainCreated->name) {
+                                    foreach ($zone->name_servers as $new_name_server) {
+                                        $newNameServers[] = $new_name_server;
+                                    }
+                                }
+                            }
+
+                            return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
+                        } else {
+                            //problema ao cadastrar dominio
+                            DB::rollBack();
+
+                            return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                        }
                     } else {
-                        //problema ao cadastrar dominio
+                        //erro ao criar dominio
                         DB::rollBack();
 
                         return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                     }
                 } else {
+                    //dominio ja cadastrado
+
                     DB::rollBack();
 
-                    return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                    return response()->json(['message' => 'Domínios já cadastrado.'], 400);
                 }
             } else {
                 //nao veio projectid

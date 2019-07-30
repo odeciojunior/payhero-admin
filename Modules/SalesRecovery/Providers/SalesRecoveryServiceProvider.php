@@ -1,22 +1,20 @@
 <?php
 
-namespace Modules\CartRecovery\Providers;
+namespace Modules\SalesRecovery\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
-class CartRecoveryServiceProvider extends ServiceProvider
+class SalesRecoveryServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
-     *
      * @var bool
      */
     protected $defer = false;
 
     /**
      * Boot the application events.
-     *
      * @return void
      */
     public function boot()
@@ -30,7 +28,6 @@ class CartRecoveryServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -40,52 +37,49 @@ class CartRecoveryServiceProvider extends ServiceProvider
 
     /**
      * Register config.
-     *
      * @return void
      */
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('cartrecovery.php'),
-        ], 'config');
+                             __DIR__ . '/../Config/config.php' => config_path('salesrecovery.php'),
+                         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'cartrecovery'
+            __DIR__ . '/../Config/config.php', 'salesrecovery'
         );
     }
 
     /**
      * Register views.
-     *
      * @return void
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/cartrecovery');
+        $viewPath = resource_path('views/modules/salesrecovery');
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . '/../Resources/views';
 
         $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+                             $sourcePath => $viewPath,
+                         ], 'views');
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/cartrecovery';
-        }, \Config::get('view.paths')), [$sourcePath]), 'cartrecovery');
+        $this->loadViewsFrom(array_merge(array_map(function($path) {
+            return $path . '/modules/salesrecovery';
+        }, \Config::get('view.paths')), [$sourcePath]), 'salesrecovery');
     }
 
     /**
      * Register translations.
-     *
      * @return void
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/cartrecovery');
+        $langPath = resource_path('lang/modules/salesrecovery');
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'cartrecovery');
+            $this->loadTranslationsFrom($langPath, 'salesrecovery');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'cartrecovery');
+            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'salesrecovery');
         }
     }
 
@@ -95,14 +89,13 @@ class CartRecoveryServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
+        if (!app()->environment('production')) {
             app(Factory::class)->load(__DIR__ . '/../Database/factories');
         }
     }
 
     /**
      * Get the services provided by the provider.
-     *
      * @return array
      */
     public function provides()

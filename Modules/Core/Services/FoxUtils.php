@@ -32,7 +32,7 @@ class FoxUtils
 
     public static function validateEmail($email)
     {
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($email)) {
             $emailExploded = explode('@', $email);
             $variant       = INTL_IDNA_VARIANT_2003;
             if (defined('INTL_IDNA_VARIANT_UTS46')) {
