@@ -4,6 +4,7 @@ namespace Modules\Domains\Http\Controllers;
 
 use App\Entities\Company;
 use App\Entities\DomainRecord;
+use Cloudflare\API\Endpoints\SSL;
 use Exception;
 use App\Entities\Domain;
 use App\Entities\Project;
@@ -93,8 +94,8 @@ class DomainsController extends Controller
                 $requestData['name'] = str_replace("http://", "", $requestData['name']);
                 $requestData['name'] = str_replace("https://", "", $requestData['name']);
                 $requestData['name'] = str_replace("www.", "", $requestData['name']);
-                $requestData['name'] = 'http://'.$requestData['name'];
-                $domainParsed = parse_url($requestData['name']);
+                $requestData['name'] = 'http://' . $requestData['name'];
+                $domainParsed        = parse_url($requestData['name']);
                 $requestData['name'] = $domainParsed['host'];
 
                 $domainCreated = $domainModel->create([
@@ -511,6 +512,44 @@ class DomainsController extends Controller
         }
 
         return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers]], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function recheckOnly(Request $request)
+    {
+        try {
+            $domainModel       = new Domain();
+            $cloudFlareService = new CloudFlareService();
+
+            $requestData = $request->all();
+            $domainId    = current(Hashids::decode($requestData['domain']));
+            if ($domainId) {
+                //hashid ok
+                $domain = $domainModel->find($domainId);
+                if ($domain) {
+                    //dominio existe
+
+                    if ($cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
+                        return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
+                    } else {
+                        return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                    }
+                } else {
+                    //dominio nao existe
+                    return response()->json(['message' => 'Domínio não encontrado'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('DomainsController recheckDomain - erro ao revalidar o domínio');
+            report($e);
+
+            return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+        }
     }
 }
 

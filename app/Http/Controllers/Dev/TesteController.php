@@ -28,6 +28,24 @@ class TesteController extends Controller
     public function index()
     {
 
+
+
+        $DominioParaVerificar = "http://http://www.uol.com";
+        $x=parse_url($DominioParaVerificar);
+        if (filter_var($DominioParaVerificar, FILTER_VALIDATE_URL))
+        {
+            echo"$DominioParaVerificar é valido";
+        }
+        //$shopify = new ShopifyService('plotplot.myshopify.com', '8153df9581010e821c22125300fbda56');
+        //dd($shopify->getShopWebhook());
+
+//        $shopify->setThemeByRole('main');
+//        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+//        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, 'lipoduo.com');
+
+        //$do = app(DigitalOceanFileService::class);
+        //dd($do->getTemporaryUrlFile('/uploads/user/5n4KovG1YGyDEmO/private/documents/6PQ4eog8VzSCeuzFbQmgZ5rUGumOdVpm1plhBF0o.pdf',120));
+/*
         $shopifyService = new ShopifyService('plotplot.myshopify.com', '8153df9581010e821c22125300fbda56');
         $shopifyService->deleteShopWebhook();
         //dd($shopifyService->getShopWebhook());
@@ -52,6 +70,8 @@ class TesteController extends Controller
                                            ]);
 
         dd($shopifyService->getShopWebhook());
+
+        */
     }
 }
 
