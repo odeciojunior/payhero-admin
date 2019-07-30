@@ -2,6 +2,8 @@
 
 namespace Modules\SalesRecovery\Transformers;
 
+use App\Entities\CheckoutPlan;
+use App\Entities\Plan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,6 +23,13 @@ class SalesRecoveryCardRefusedResource extends Resource
         $client  = $this->getRelation('clientModel');
         $project = $this->getRelation('projectModel');
         $domain  = $project->getRelation('domains')->first();
+
+        $status = 'Recuperado';
+        if ($this->payment_method == 1) {
+            $status = 'Recusado';
+        } else {
+            $status = 'Expirado';
+        }
 
         $link = 'Dominio não configurado';
         if (!empty($domain)) {
@@ -42,8 +51,8 @@ class SalesRecoveryCardRefusedResource extends Resource
             'client'          => $client->name,
             'email_status'    => $emailStatus,
             'sms_status'      => ($this->sms_sent_amount == null) ? 'Não enviado' : $this->sms_sent_amount,
-            'recovery_status' => 'Recusado',
-            'value'           => $this->value,
+            'recovery_status' => $status,
+            'value'           => number_format($this->value, 2, ',', '.'),
             'link'            => $link,
             'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . $client->telephone . '&text=' . $whatsAppMsg,
         ];

@@ -17,7 +17,7 @@
                     <div class="col-3">
                         <label for="project">Projeto</label>
                         <select name='select_project' id="project" class="form-control select-pad">
-                            <option value="">Todos projetos</option>
+                            {{--                            <option value="">Todos projetos</option>--}}
                             @foreach($projects as $project)
                                 <option value="{{Hashids::encode($project['id'])}}">{{$project['nome']}}</option>
                             @endforeach
@@ -96,8 +96,19 @@
                 </div>
             </div>
         </div>
-        @push('scripts')
-            <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
+    </div>
+    @push('scripts')
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
+        <script type='text/javascript'>
+            $(document).ready(function () {
+                $("#copy_link_checkout").on("click", function () {
+                    var linkTemp = $('#copy_link_checkout').attr('value');
+                    document.execCommand("copy");
+                    linkTemp.remove();
+                    alertCustom('success', 'Link copiado!');
+                });
+            });
+        </script>
     @endpush
 
 @endsection

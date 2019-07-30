@@ -94,11 +94,11 @@ class SalesRecoveryController extends Controller
             $salesRecoveryService = new SalesRecoveryService();
             $details              = null;
 
-            if ($request->input('checkout')) {
+            if ($request->has('checkout') && !empty($request->input('checkout'))) {
                 $checkoutId = current(Hashids::decode($request->input('checkout')));
 
                 $checkout = $checkoutModel->find($checkoutId);
-                if ($checkout) {
+                if (!empty($checkout)) {
                     $details = $salesRecoveryService->getSalesCheckoutDetails($checkout);
                 } else {
 

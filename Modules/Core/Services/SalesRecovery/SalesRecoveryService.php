@@ -14,10 +14,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Modules\Core\Services\FoxUtils;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
-
-//use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefused;
 
 class SalesRecoveryService
 {
@@ -33,13 +32,13 @@ class SalesRecoveryService
         if ($type == 1) {
             return $this->getAbandonedCart($projectId, $dateStart, $dateEnd);
         } else if ($type == 2) {
-            $paymentMethod = 1; // cartao
-            $status        = 3; // refused
+            $paymentMethod = 2; // boleto
+            $status        = 3; // expired
 
             return $this->getSaleExpiredOrRefused($projectId, $dateStart, $dateEnd, $paymentMethod, $status);
         } else if ($type == 3) {
-            $paymentMethod = 2; // boleto
-            $status        = 3; // expired
+            $paymentMethod = 1; // cartao
+            $status        = 3; // refused
 
             return $this->getSaleExpiredOrRefused($projectId, $dateStart, $dateEnd, $paymentMethod, $status);
         } else {
@@ -158,14 +157,21 @@ class SalesRecoveryService
      */
     public function getSalesCheckoutDetails(Checkout $checkout)
     {
-        $logModel          = new CheckoutLog();
-        $checkoutPlanModel = new CheckoutPlan();
-        $domainModel       = new Domain();
-        $log               = $logModel->where('id_log_session', $checkout->id_log_session)
-                                      ->orderBy('id', 'DESC')
-                                      ->first();
-        $log['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
-        $log['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
+        $logModel               = new CheckoutLog();
+        $checkoutPlanModel      = new CheckoutPlan();
+        $domainModel            = new Domain();
+        $log                    = $logModel->where('id_log_session', $checkout->id_log_session)
+                                           ->orderBy('id', 'DESC')
+                                           ->first();
+        $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
+        $checkout['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
+        $checkout->is_mobile    = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
+        $checkout->src          = ($checkout->src == 'null') ? '' : $checkout->src;
+        $checkout->utm_source   = ($checkout->utm_source == 'null') ? '' : $checkout->utm_source;
+        $checkout->utm_medium   = ($checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
+        $checkout->utm_campaign = ($checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
+        $checkout->utm_term     = ($checkout->utm_term == 'null') ? '' : $checkout->utm_term;
+        $checkout->utm_content  = ($checkout->utm_content == 'null') ? '' : $checkout->utm_content;
 
         $status = '';
         if ($checkout->status == 'abandoned cart') {
@@ -173,6 +179,8 @@ class SalesRecoveryService
         } else {
             $status = 'Recuperado';
         }
+
+        $checkout->is_mobile = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
 
         $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.products')
                                            ->where('checkout', $checkout->id)
@@ -198,11 +206,11 @@ class SalesRecoveryService
 
         return view('salesrecovery::details', [
             'checkout'      => $checkout,
-            'log'           => $log,
+            'client'        => $log,
             'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
             'status'        => $status,
-            'hours'         => $log['hours'],
-            'date'          => $log['date'],
+            'hours'         => $checkout['hours'],
+            'date'          => $checkout['date'],
             'plans'         => $plans,
             'total'         => number_format(intval($total) / 100, 2, ',', '.'),
             'link'          => $link,
@@ -211,31 +219,74 @@ class SalesRecoveryService
 
     /**
      * @param int $saleId
-     * @return string
+     * @return Factory|View
+     * @throws \Exception
      */
     public function getSalesCartOrBoletoDetails(int $saleId)
     {
-        /*$salesModel    = new Sale();
-        $logModel      = new Log();
-        $checkoutModel = new Checkout();
-        $sale          = $salesModel->with(['clientModel', 'checkoutModel'])->find($saleId);
-        dd($sale);
-        $log = $logModel->where('id_log_session', $sale->getRelation('checkoutModel')->id_log_session)
-                        ->orderBy('id', 'desc')->first();
-        dd($log);
+        $salesModel        = new Sale();
+        $checkoutModel     = new Checkout();
+        $domainModel       = new Domain();
+        $checkoutPlanModel = new CheckoutPlan();
 
-        /* return view('salesrecovery::details', [
-             'checkout'      => $sale,
-             'log'           => $log,
-             'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
-             'status'        => $status,
-             'hours'         => $log['hours'],
-             'date'          => $log['date'],
-             'plans'         => $plans,
-             'total'         => number_format(intval($total) / 100, 2, ',', '.'),
-             'link'          => $link,
-         ]);*/
+        $sale   = $salesModel->with(['clientModel', 'delivery'])->find($saleId);
+        $client = $sale->getRelation('clientModel');
 
-        return '';*/
+        $client->telephone = (FoxUtils::prepareCellPhoneNumber($client->telephone) == true) ? 'Telefone invalido' : $client->telephone;
+        $client->street    = $sale->getRelation('delivery')->street;
+        $client->zip_code  = $sale->getRelation('delivery')->zip_code;
+        $client->city      = $sale->getRelation('delivery')->city;
+        $client->state     = $sale->getRelation('delivery')->state;
+
+        $checkout               = $checkoutModel->where('id', $sale->checkout)->first();
+        $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
+        $checkout['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
+        $checkout->is_mobile    = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
+        $checkout->src          = ($checkout->src == 'null') ? '' : $checkout->src;
+        $checkout->utm_source   = ($checkout->utm_source == 'null') ? '' : $checkout->utm_source;
+        $checkout->utm_medium   = ($checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
+        $checkout->utm_campaign = ($checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
+        $checkout->utm_term     = ($checkout->utm_term == 'null') ? '' : $checkout->utm_term;
+        $checkout->utm_content  = ($checkout->utm_content == 'null') ? '' : $checkout->utm_content;
+
+        $status = 'Recuperado';
+        if ($sale->payment_method == 1) {
+            $status = 'Recusado';
+        } else {
+            $status = 'Expirado';
+        }
+
+        $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.products')
+                                           ->where('checkout', $checkout->id)
+                                           ->get();
+
+        $plans = [];
+        $total = 0;
+        foreach ($checkoutPlans as $checkoutPlan) {
+            foreach ($checkoutPlan->getRelation('plan')->products as $key => $product) {
+                $plans[$key]['name']   = $checkoutPlan->getRelation('plan')->name;
+                $plans[$key]['value']  = $checkoutPlan->getRelation('plan')->price;
+                $plans[$key]['photo']  = $product->photo;
+                $plans[$key]['amount'] = $checkoutPlan->amount;
+                $total                 += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->getRelation('plan')->price)) * intval($checkoutPlan->amount);
+            }
+        }
+
+        $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
+        $link   = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
+
+        $whatsAppMsg = 'Olá ' . $sale->getRelation('clientModel')->name;
+
+        return view('salesrecovery::details', [
+            'checkout'      => $checkout,
+            'client'        => $client,
+            'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg,
+            'status'        => $status,
+            'hours'         => $checkout['hours'],
+            'date'          => $checkout['date'],
+            'plans'         => $plans,
+            'total'         => number_format(intval($total) / 100, 2, ',', '.'),
+            'link'          => $link,
+        ]);
     }
 }

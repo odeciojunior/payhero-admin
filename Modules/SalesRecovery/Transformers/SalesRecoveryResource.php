@@ -40,7 +40,7 @@ class SalesRecoveryResource extends Resource
             $plan  = Plan::find($planCheckout['plan']);
             $value += str_replace('.', '', $plan['price']) * $planCheckout['amount'];
         }
-        $value = substr_replace($value, '.', strlen($value) - 2, 0);
+        //        $value = substr_replace($value, '.', strlen($value) - 2, 0);
 
         $domain = Domain::where('project_id', $this->project)->first();
         $link   = "https://checkout." . $domain['name'] . "/recovery/" . $this->id_log_session;
@@ -58,7 +58,7 @@ class SalesRecoveryResource extends Resource
             'email_status'    => $emailSentAmount,
             'sms_status'      => $smsSentAmount,
             'recovery_status' => $status,
-            'value'           => $value,
+            'value'           => number_format(intval(preg_replace("/[^0-9]/", "", $value)) / 100, 2, ',', '.'),
             'link'            => $link,
             'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
         ];
