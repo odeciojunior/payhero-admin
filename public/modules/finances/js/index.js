@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    $.getScript("modules/withdrawals/js/index.js", function () {
-    })
+    // $.getScript("modules/withdrawals/js/index.js", function () {
+    // })
 
     $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
@@ -58,6 +58,9 @@ $(document).ready(function () {
                 $("#div-available-money").on("click", function () {
                     $(".withdrawal-value").val(response.available_balance);
                 });
+                $.getScript('modules/withdrawals/js/index.js')
+                $("#table-withdrawals-body").html('');
+
             }
         });
 
@@ -118,7 +121,7 @@ $(document).ready(function () {
                     $("#bt-confirm-withdrawal").unbind("click");
                     $("#bt-confirm-withdrawal").on("click", function () {
                         loadOnModal('#modal-body');
-                        $.getScript('modules/withdrawals/js/index.js')
+                        // $.getScript('modules/withdrawals/js/index.js')
                         $.ajax({
                             url: "/withdrawals",
                             type: "POST",
@@ -128,7 +131,6 @@ $(document).ready(function () {
                             },
                             error: function () {
                                 loadingOnScreenRemove()
-                                updateWithdrawalsTable()
                                 $('#modal-withdrawal-title').text("Oooppsssss!")
                                 $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
                                     '<h3 align="center"><strong>Algo deu errado!</strong></h3>' +
@@ -139,14 +141,17 @@ $(document).ready(function () {
                             },
                             success: function (response) {
                                 loadingOnScreenRemove()
-                                updateWithdrawalsTable()
                                 $('#modal-withdrawal-title').text("Sucesso!")
                                 $('#modal_body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
                                     '<h3 align="center"><strong>Saque realizado com sucesso!</strong></h3>' +
                                     '<h4 align="center">Sua solicitação foi para avaliação</h4>' +
                                     '<h4 align="center">Em alguns instantes seu dinheiro estara em sua conta</h4>')
-                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                                $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                                $('.btn-return').click(function(){
+                                    $('#modal_body').modal('hide');
+                                    updateWithdrawalsTable()
 
+                                });
 
                             }
                         })
@@ -169,10 +174,8 @@ $(document).ready(function () {
             $('#custom-input-addon').val(toTransfer);
             $('#custom-input-addon').val().update();
             $('.withdrawal-value').mask('#.###,#0', {reverse: true});
-            console.log(toTransfer)
 
         } else {
-            console.log('Saque pode ser realizado')
         }
     })
 
