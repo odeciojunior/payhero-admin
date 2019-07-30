@@ -73,10 +73,7 @@
     <!-- DETALHES  -->
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         <h4> Dados Gerais </h4>
-        <span class="table-title gray"> Link:   </span>
-        <a role='button' id='copy_link_checkout' style='cursor:pointer;' value='{{$link}}'>
-            <i class='material-icons gradient icon-copy'>file_copy</i>
-        </a>
+        <span class="table-title gray"> Link: {{$link}}  </span>
         <br>
         <span class="table-title gray"> IP: {{$checkout->ip}}  </span>
         <br>
@@ -97,17 +94,3 @@
     </div>
 </div>
 
-
-@push('scripts')
-    <script type='text/javascript'>
-        $(document).ready(function () {
-            $("#copy_link_checkout").on("click", function () {
-                var linkTemp = $('#copy_link_checkout').attr('value');
-                document.execCommand("copy");
-                linkTemp.remove();
-                alertCustom('success', 'Link copiado!');
-            });
-        });
-    </script>
-
-@endpush

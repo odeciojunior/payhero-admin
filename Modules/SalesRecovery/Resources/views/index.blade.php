@@ -99,16 +99,7 @@
     </div>
     @push('scripts')
         <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
-        <script type='text/javascript'>
-            $(document).ready(function () {
-                $("#copy_link_checkout").on("click", function () {
-                    var linkTemp = $('#copy_link_checkout').attr('value');
-                    document.execCommand("copy");
-                    linkTemp.remove();
-                    alertCustom('success', 'Link copiado!');
-                });
-            });
-        </script>
+
     @endpush
 
 @endsection
