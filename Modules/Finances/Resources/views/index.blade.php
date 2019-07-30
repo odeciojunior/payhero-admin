@@ -145,13 +145,14 @@
                                                     <th scope="col">Status</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="table-withdrawals-body" class="custom-t-body">
+                                            <tbody id="withdrawals-table-data" class="custom-t-body">
                                             </tbody>
                                         </table>
                                         <ul id="withdrawals-pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                                             {{-- js carrega... --}}
                                         </ul>
                                     </div>
+
                                 </div>
                             </div>
                             <!-- EXTRATO -->
@@ -299,11 +300,6 @@
         </div>
     </div>
     <!-- End Modal -->
-
-
-
-
-
 
     @push('scripts')
         <script src="{!! asset('modules/transfers/js/index.js') !!}"></script>

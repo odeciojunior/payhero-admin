@@ -7,7 +7,8 @@ $("#extract_company_select").on("change", function () {
 
 function updateWithdrawalsTable(link = null) {
 
-    loadOnTable('table-withdrawals-body','transfersTable');
+    loadOnTable('table-withdrawals-body', 'transfersTable');
+    $("#table-withdrawals-body").html('');
 
     if (link == null) {
         link = '/withdrawals';
@@ -26,40 +27,47 @@ function updateWithdrawalsTable(link = null) {
             $("#table-withdrawals-body").html('Erro ao encontrar dados');
         },
         success: function (response) {
-            $("#table-withdrawals-body").html('');
+            $("#withdrawals-table-data").html('');
 
+            $.each(response.data, function (index, value) {
+                data = '';
+                data += '<tr>';
+                data += "<td>" + value.account_information + "</td>";
+                data += "<td>" + value.date_request + "</td>";
+                data += "<td>" + value.date_release + "</td>";
+                data += "<td>" + value.value + "</td>";
+                data += '<td class="shipping-status" width="70%" style="width:100px;">';
+                if (value.status == 1) {
+                    data += '<span class="badge badge-warning">Pendente</span>';
+                } else if (value.status == 2) {
+                    data += '<span class="badge badge-success">Aprovado</span>';
+                } else if (value.status == 3) {
+                    data += '<span class="badge badge-primary">Transferido</span>';
+                } else {
+                    data += '<span class="badge badge-danger">Recusado</span>';
+
+                }
+                data += '</td>';
+                data += '</tr>';
+
+                $("#withdrawals-table-data").append(data);
+            });
             if (response.data == '') {
-
-                $("#table-withdrawals-body").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
-                $("#pagination").html("");
-            } else {
-                let data = '';
-
-                $.each(response.data, function (index, value) {
-                    data += '<tr >';
-                    data += '<td style="vertical-align: middle;">' + value.description + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' +
-                        '<span style="color:black;">' + value.transaction_id + '</span></a></td>';
-                    data += '<td style="vertical-align: middle;">' + value.date + '</td>';
-                    data += '<td style="vertical-align: middle; color:green;">' + value.value + '</td>';
-                    data += '</tr>';
-
-                });
-
-                $("#table-withdrawals-body").html(data);
-
-                pagination(response);
+                $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                $("#withdrawals-pagination").html("");
             }
+            pagination(response);
         }
     });
 }
 
 function pagination(response) {
 
-    $("#pagination").html("");
+    $("#withdrawals-pagination").html("");
 
     var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
-    $("#pagination").append(primeira_pagina);
+    $("#withdrawals-pagination").append(primeira_pagina);
 
     if (response.meta.current_page == '1') {
         $("#primeira_pagina").addClass('nav-btn');
@@ -76,7 +84,7 @@ function pagination(response) {
             continue;
         }
 
-        $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+        $("#withdrawals-pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
 
         $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
             updateWithdrawalsTable('?page=' + $(this).html());
@@ -87,7 +95,7 @@ function pagination(response) {
     if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
         var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
 
-        $("#pagination").append(pagina_atual);
+        $("#withdrawals-pagination").append(pagina_atual);
     }
 
     for (x = 1; x < 4; x++) {
@@ -96,7 +104,7 @@ function pagination(response) {
             continue;
         }
 
-        $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+        $("#withdrawals-pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
 
         $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
             updateWithdrawalsTable('?page=' + $(this).html());
@@ -107,7 +115,7 @@ function pagination(response) {
     if (response.meta.last_page != '1') {
         var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
-        $("#pagination").append(ultima_pagina);
+        $("#withdrawals-pagination").append(ultima_pagina);
 
         if (response.meta.current_page == response.meta.last_page) {
             $("#ultima_pagina").attr('disabled', true);
