@@ -236,8 +236,8 @@ class DomainsController extends Controller
             foreach ($recordsJson as $records) {
                 foreach ($records as $record) {
 
-                    if ((strpos(current($record[1]), '.') == false) ||
-                        ($record[1] == $domain->name)) {
+                    if ((strpos(current($record[1]), '.') === false) ||
+                        (current($record[1]) == $domain->name)) {
                         //dominio nao tem "ponto" ou é igual ao dominio
 
                         if ($domain->records->where('type', current($record[0]))
