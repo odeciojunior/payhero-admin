@@ -26,10 +26,17 @@ class PostBackShopifyController extends Controller
      */
     public function postBackTracking(Request $request)
     {
-        $salesModel   = new Sale();
-        $projectModel = new Project();
+        $postBackLogModel = new PostbackLog();
+        $salesModel       = new Sale();
+        $projectModel     = new Project();
 
         $requestData = $request->all();
+
+        $postBackLogModel->create([
+                                      'origin'      => 3,
+                                      'data'        => json_encode($requestData),
+                                      'description' => 'shopify',
+                                  ]);
 
         $projectId = current(Hashids::decode($request->project_id));
 

@@ -531,8 +531,16 @@ class DomainsController extends Controller
                     //dominio existe
 
                     if ($cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
+                        $domain->update([
+                                            'status' => $domainModel->getEnum('status', 'approved'),
+                                        ]);
+
                         return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                     } else {
+                        $domain->update([
+                                            'status' => $domainModel->getEnum('status', 'pending'),
+                                        ]);
+
                         return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
                     }
                 } else {
@@ -540,6 +548,7 @@ class DomainsController extends Controller
                     return response()->json(['message' => 'Domínio não encontrado'], 400);
                 }
             } else {
+                //hash invalido
                 return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
             }
         } catch (Exception $e) {
