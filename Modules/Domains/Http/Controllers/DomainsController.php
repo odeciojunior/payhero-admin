@@ -90,13 +90,11 @@ class DomainsController extends Controller
                 }
 
                 //tratamento parcial do dominio
-                $requestData['name'] = 'http://http://www.uol.com.br';
                 $requestData['name'] = str_replace("http://", "", $requestData['name']);
                 $requestData['name'] = str_replace("https://", "", $requestData['name']);
                 $requestData['name'] = str_replace("www.", "", $requestData['name']);
                 $requestData['name'] = 'http://' . $requestData['name'];
-                $domainParsed        = parse_url($requestData['name']);
-                $requestData['name'] = $domainParsed['host'];
+                $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
                 $domainCreated = $domainModel->create([
                                                           'project_id' => $projectId,
