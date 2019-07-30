@@ -88,20 +88,14 @@ class DomainsController extends Controller
                     $domainIp = null;
                 }
 
-                //TODO validar entrada de dominio
-//                if (substr_count($requestData['name'], '/') > 0) {
-//                    //existe barra
-//                    DB::rollBack();
-//
-//                    return response()->json(['message' => 'Domínio invalido, remova http://'], 400);
-//                }
-//
-//                if (substr_count($requestData['name'], '.') > 1) {
-//                    //existe mais que 1 ponto
-//                    DB::rollBack();
-//
-//                    return response()->json(['message' => 'Domínio invalido.'], 400);
-//                }
+                //tratamento parcial do dominio
+                $requestData['name'] = 'http://http://www.uol.com.br';
+                $requestData['name'] = str_replace("http://", "", $requestData['name']);
+                $requestData['name'] = str_replace("https://", "", $requestData['name']);
+                $requestData['name'] = str_replace("www.", "", $requestData['name']);
+                $requestData['name'] = 'http://'.$requestData['name'];
+                $domainParsed = parse_url($requestData['name']);
+                $requestData['name'] = $domainParsed['host'];
 
                 $domainCreated = $domainModel->create([
                                                           'project_id' => $projectId,
