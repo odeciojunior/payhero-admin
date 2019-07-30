@@ -117,7 +117,7 @@
                                                         <span class="input-group-text" id="basic-addon1 custom-addon" style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
                                                     </div>
                                                     <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
-                                                    <button id="bt-withdrawal" class="btn btn-success btn-sacar ml-3" data-toggle="modal" data-target="#modal-withdrawal">
+                                                    <button id="bt-withdrawal" class="btn btn-success btn-sacar ml-3" data-toggle="modal">
                                                         <svg class="mr-2" style="fill: white; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                                                             <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                         </svg>
@@ -152,7 +152,6 @@
                                             {{-- js carrega... --}}
                                         </ul>
                                     </div>
-
                                 </div>
                             </div>
                             <!-- EXTRATO -->
