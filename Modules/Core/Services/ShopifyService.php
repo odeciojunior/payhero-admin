@@ -923,7 +923,7 @@ class ShopifyService
 
         $this->createShopWebhook([
                                      "topic"   => "orders/updated",
-                                     "address" => $postbackUrl . Hashids::encode($projectId),
+                                     "address" => $postbackUrl . Hashids::encode($projectId).'/tracking',
                                      "format"  => "json",
                                  ]);
 
