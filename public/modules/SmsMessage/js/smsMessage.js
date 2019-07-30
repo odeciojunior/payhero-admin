@@ -22,9 +22,11 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
+                loadingOnScreenRemove();
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function (data) {
+                loadingOnScreenRemove();
                 $("#btn-modal").addClass('btn-save');
                 $("#btn-modal").text('Salvar');
                 $("#btn-modal").show();

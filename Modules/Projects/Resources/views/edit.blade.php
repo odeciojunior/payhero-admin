@@ -142,6 +142,9 @@
                                 <i class="material-icons gray"> sync </i>
                                 <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
                             </a>
+                        @elseif($project->shopifyIntegrations->first()->status == 1)
+                                <i class="icon wb-alert-circle  gray"> </i>
+                                <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
                         @endif
                     </div>
                     <div class="col-3">

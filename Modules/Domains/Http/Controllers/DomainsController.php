@@ -88,6 +88,21 @@ class DomainsController extends Controller
                     $domainIp = null;
                 }
 
+                //TODO validar entrada de dominio
+//                if (substr_count($requestData['name'], '/') > 0) {
+//                    //existe barra
+//                    DB::rollBack();
+//
+//                    return response()->json(['message' => 'Domínio invalido, remova http://'], 400);
+//                }
+//
+//                if (substr_count($requestData['name'], '.') > 1) {
+//                    //existe mais que 1 ponto
+//                    DB::rollBack();
+//
+//                    return response()->json(['message' => 'Domínio invalido.'], 400);
+//                }
+
                 $domainCreated = $domainModel->create([
                                                           'project_id' => $projectId,
                                                           'name'       => $requestData['name'],
@@ -232,15 +247,19 @@ class DomainsController extends Controller
                         ($record[1] == $domain->name)) {
                         //dominio nao tem "ponto" ou é igual ao dominio
 
-//                        $domain->records->where('type', current($record[0]))->where('name', current($record[1]))
-//                                        ->where('content', current($record[2]))->count()
-
                         if ($domain->records->where('type', current($record[0]))
                                             ->where('name', current($record[1]))
                                             ->where('content', current($record[2]))
                                             ->count() == 0) {
                             //nao existe a record
-                            $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
+
+                            $quantityMx = $domain->records->where('type', 'MX')->count();
+
+                            if (current($record[0]) == 'MX') {
+                                $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]), 0, false, $quantityMx + 1);
+                            } else {
+                                $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
+                            }
                             $newRecord = $domainRecordModel->create([
                                                                         'domain_id'   => $domain->id,
                                                                         'type'        => current($record[0]),
@@ -255,7 +274,10 @@ class DomainsController extends Controller
                             return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
                         }
                     } else {
-                        return response()->json(['message' => 'Domínio não permitido'], 400);
+                        //dominio nao permitido
+                        DB::rollBack();
+
+                        return response()->json(['message' => 'Domínio não permitido: ' . $record[1]], 400);
                     }
                 }
             }
@@ -421,8 +443,7 @@ class DomainsController extends Controller
             $recordName = '';
             if (str_contains($record->name, '.')) {
                 $recordName = $record->name;
-            }
-            else{
+            } else {
                 $recordName = $record->name . '.' . $record->domain->name;
             }
 

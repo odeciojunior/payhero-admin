@@ -6,6 +6,7 @@ use App\Entities\DomainRecord;
 use Cloudflare\API\Auth\APIKey;
 use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Adapter\Guzzle;
+use Cloudflare\API\Endpoints\SSL;
 use Cloudflare\API\Endpoints\User;
 use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Http\Response;
@@ -36,6 +37,10 @@ class CloudFlareService
      * @var DNS
      */
     private $dns;
+    /**
+     * @var SSL
+     */
+    private $ssl;
     /**
      * @var Zones
      */
@@ -90,6 +95,7 @@ class CloudFlareService
             $this->key     = new APIKey(getenv('CLOUDFLARE_EMAIL'), getenv('CLOUDFLARE_TOKEN'));
             $this->adapter = new Guzzle($this->key);
             $this->dns     = new DNS($this->adapter);
+            $this->ssl     = new SSL($this->adapter);
             $this->zones   = new Zones($this->adapter);
             $this->user    = new User($this->adapter);
         } catch (Exception $e) {
@@ -481,8 +487,8 @@ class CloudFlareService
         try {
             $client = new Client([
                                      'base_uri' => $url,
-                                     'timeout'  => 3,
-                                     'connect_timeout'  => 3,
+                                     'timeout'  => 10,
+                                     'connect_timeout'  => 10,
                                      //'headers'  => $headers,
                                      'Accept'   => 'application/json',
                                  ]);

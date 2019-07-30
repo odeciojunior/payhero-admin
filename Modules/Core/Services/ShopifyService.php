@@ -261,18 +261,18 @@ class ShopifyService
      * @param string $value
      * @return bool
      */
-    public function updateTemplateHtml(string $templateKeyName, string $value, $ajax = false)
+    public function updateTemplateHtml(string $templateKeyName, string $value, $domain = null, $ajax = false)
     {
         if (!empty($this->theme)) {
             if ($ajax) {
                 $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
                     "key"   => $templateKeyName,
-                    "value" => $this->updateCartTemplateAjax($value),
+                    "value" => $this->updateCartTemplateAjax($value, $domain),
                 ]);
             } else {
                 $asset = $this->client->getAssetManager()->update($this->theme->getId(), [
                     "key"   => $templateKeyName,
-                    "value" => $this->updateCartTemplate($value),
+                    "value" => $this->updateCartTemplate($value, $domain),
                 ]);
             }
 
@@ -330,6 +330,14 @@ class ShopifyService
         $body = $dom->find('body');
         $body = $body[0];
 
+        //div FoxScript
+        $foxScriptUtm = new Selector('#foxScriptUtm', new Parser());
+        $divs         = $foxScriptUtm->find($body);
+        foreach ($divs as $div) {
+            $parent = $div->getParent();
+            $parent->removeChild($div->id());
+        }
+
         $divFoxScriptUtm = new HtmlNode('div');
 
         $divFoxScriptUtm->setAttribute('id', 'foxScriptUtm');
@@ -366,7 +374,7 @@ class ShopifyService
      * @return mixed|string
      * @throws \PHPHtmlParser\Exceptions\CircularException
      */
-    public function updateCartTemplateAjax($htmlCart)
+    public function updateCartTemplateAjax($htmlCart, $domain)
     {
         $dom = new Dom;
 
@@ -477,7 +485,7 @@ class ShopifyService
                 $parent->removeChild($button->id());
             }
 
-            $cartForm->setAttribute('action', 'https://checkout.{{ shop.domain }}/');
+            $cartForm->setAttribute('action', 'https://checkout.'.$domain.'/');
             $cartForm->setAttribute('id', 'cart_form');
             $cartForm->setAttribute('data-fox', 'cart_form');
 
@@ -545,7 +553,7 @@ class ShopifyService
      * @return mixed|string
      * @throws \PHPHtmlParser\Exceptions\CircularException
      */
-    public function updateCartTemplate($htmlCart)
+    public function updateCartTemplate($htmlCart, $domain = null)
     {
         $dom = new Dom;
         $dom->load($htmlCart);
@@ -644,7 +652,7 @@ class ShopifyService
                 $parent->removeChild($button->id());
             }
 
-            $cartForm->setAttribute('action', 'https://checkout.{{ shop.domain }}/');
+            $cartForm->setAttribute('action', 'https://checkout.'.$domain.'/');
             $cartForm->setAttribute('id', 'cart_form');
             $cartForm->setAttribute('data-fox', 'cart_form');
 
@@ -812,6 +820,12 @@ class ShopifyService
                                                'price'              => $variant->getPrice(),
                                                'status'             => '1',
                                            ]);
+
+                $productPlanModel->create([
+                                              'product' => $product->id,
+                                              'plan'    => $plan->id,
+                                              'amount'  => '1',
+                                          ]);
 
                 $plan->update([
                                   'code' => Hashids::encode($plan->id),

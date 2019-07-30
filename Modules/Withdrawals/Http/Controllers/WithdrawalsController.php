@@ -36,7 +36,7 @@ class WithdrawalsController extends Controller {
 
         $withdrawalModel = new Withdrawal();
         $companyModel    = new Company();
-        $bankSservice    = new BankService();
+        $bankService    = new BankService();
 
         $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
 
