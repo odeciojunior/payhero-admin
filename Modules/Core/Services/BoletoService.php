@@ -55,7 +55,11 @@ class BoletoService
 
             foreach ($boletoDueToday as $boleto) {
                 try {
-                    $sendEmail   = new SendgridService();
+                    $sendEmail     = new SendgridService();
+                    $checkoutModel = new Checkout();
+
+                    $checkout = $checkoutModel->where("id", $boleto->checkout)->first();
+
                     $clientName  = $boleto->clientModel->name;
                     $clientEmail = $boleto->clientModel->email;
                     $products    = [];
@@ -121,6 +125,8 @@ class BoletoService
                             Log::warning('verifyBoletosExpiring');
 
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
+
+                            $checkout->increment('email_sent_amount');
                         }
                     }
                 } catch (Exception $e) {
@@ -146,7 +152,10 @@ class BoletoService
 
             foreach ($boletoWaitionPayment as $boleto) {
                 try {
-                    $sendEmail   = new SendgridService();
+                    $sendEmail     = new SendgridService();
+                    $checkoutModel = new Checkout();
+
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout)->first();
                     $clientName  = $boleto->clientModel->name;
                     $clientEmail = $boleto->clientModel->email;
                     $products    = [];
@@ -201,6 +210,8 @@ class BoletoService
                         if ($emailValidated) {
                             Log::warning('verifyBoletoWaitingPayment');
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
+
+                            $checkout->increment('email_sent_amount');
                         }
                     }
                 } catch (Exception $e) {
@@ -230,6 +241,9 @@ class BoletoService
 
             foreach ($boletos as $boleto) {
                 try {
+                    $checkoutModel = new Checkout();
+
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout)->first();
                     $clientName  = $boleto->clientModel->name;
                     $clientEmail = $boleto->clientModel->email;
                     $products    = [];
@@ -285,6 +299,7 @@ class BoletoService
                             Log::warning('verifyBoleto2');
 
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
+                            $checkout->increment('email_sent_amount');
                         }
                     }
                 } catch (Exception $e) {
