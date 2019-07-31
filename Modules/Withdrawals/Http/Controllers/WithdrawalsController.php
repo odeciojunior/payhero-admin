@@ -20,6 +20,7 @@ class WithdrawalsController extends Controller
 
             $withdrawals = $withdrawalModel
                 ->where('company_id', current(Hashids::decode($request->company)))->orderBy('id', 'DESC');
+
             return WithdrawalResource::collection($withdrawals->paginate(5));
         } catch (Exception $e) {
             Log::warning('Erro ao buscar lista de saques (WithdrawalsController - index)');
@@ -37,7 +38,6 @@ class WithdrawalsController extends Controller
         $bankService     = new BankService();
 
         $company = $companyModel->find(current(Hashids::decode($data['company_id'])));
-
         if (!$company->bank_document_status == $companyModel->getEnum('bank_document_status', 'approved') ||
             !$company->address_document_status == $companyModel->getEnum('address_document_status', 'approved') ||
             !$company->contract_document_status == $companyModel->getEnum('contract_document_status', 'approved')) {
@@ -50,30 +50,38 @@ class WithdrawalsController extends Controller
         }
 
         $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
+        if ($withdrawalValue < 1000) {
+            return response()->json([
+                                        'message' => 'Valor de saque precisa ser maior que R$ 10,00',
+                                    ], 400);
+        }
+
         if ($withdrawalValue > $company->balance) {
 
             return response()->json([
                                         'message' => 'Valor informado inválido',
-                                        'data'    => [
-                                            'status' => 'error',
-                                        ],
                                     ], 400);
         }
 
+        $company->update([
+                             'balance' => $company->balance -= $withdrawalValue,
+                         ]);
+        $withdrawalValue -= 380;
         $withdrawalModel->create([
-                                     'user'                => auth()->user()->id,
-                                     'value'               => $withdrawalValue,
-                                     'company_id'          => $company->id,
-                                     'account_information' => $bankService->getBankName($company->bank) . ' - Agência: ' . $company->agency .' - Digito: '. $company->agency_digit.' - Conta: ' . $company->account.' - Digito: ' .$company->account_digit,
-                                     'status'              => $companyModel->getEnum('bank_document_status', 'pending'),
+                                     'user'          => auth()->user()->id,
+                                     'value'         => $withdrawalValue,
+                                     'company_id'    => $company->id,
+                                     'bank'          => $company->bank,
+                                     'agency'        => $company->agency,
+                                     'agency_digit'  => $company->agency_digit,
+                                     'account'       => $company->account,
+                                     'account_digit' => $company->account_digit,
+                                     'status'        => $companyModel->getEnum('bank_document_status', 'pending'),
                                  ]);
 
         return response()->json([
                                     'message' => 'Saque pendente',
-                                    'data'    => [
-                                        'status' => 'success',
-                                    ],
-                                ]);
+                                ], 200);
     }
 
     public function getAccountInformation($companyId)

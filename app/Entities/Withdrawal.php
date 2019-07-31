@@ -15,31 +15,31 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property Company $company
- */ 
+ */
 class Withdrawal extends Model
 {
     use FoxModelTrait;
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
-    /** 
+    /**
      * @var array
      */
     protected $fillable = [
-        'company_id', 
-        'value', 
-        'release_date', 
-        'account_information', 
-        'status', 
-        'created_at', 
-        'updated_at'
+        'company_id',
+        'value',
+        'release_date',
+        'bank',
+        'agency',
+        'agency_digit',
+        'account',
+        'account_digit',
+        'status',
+        'created_at',
+        'updated_at',
     ];
-
     /**
      * @var array
      */
@@ -59,7 +59,6 @@ class Withdrawal extends Model
     {
         return $this->belongsTo('App\Entities\Company');
     }
-
 }
 
 

@@ -901,11 +901,7 @@ class ShopifyService
      */
     public function createShopifyIntegrationWebhook($projectId, $url)
     {
-        if (getenv('APP_ENV') == 'production') {
-            $postbackUrl = $url;
-        } else {
-            $postbackUrl = "https://3f09fa3a.ngrok.io/postback/shopify/";  //some ngrok tunnel...
-        }
+        $postbackUrl = $url;
 
         $this->deleteShopWebhook();
 
