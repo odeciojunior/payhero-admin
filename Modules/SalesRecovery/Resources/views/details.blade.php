@@ -73,6 +73,8 @@
     <!-- DETALHES  -->
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         <h4> Dados Gerais </h4>
+        <span class="table-title gray"> Motivo: {{$client->error}}  </span>
+        <br>
         <span class="table-title gray"> Link: {{$link}}  </span>
         <br>
         <span class="table-title gray"> IP: {{$checkout->ip}}  </span>

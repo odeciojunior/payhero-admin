@@ -26,10 +26,12 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sales', 'namespace' 
     ]);
 
     Route::post('/update/trackingcode', [
+        'as'   => 'sales.updatetrackingcode',
         'uses' => 'SalesController@updateTrackingCode',
     ]);
 
     Route::post('/update/trackingcode/{sale}', [
+        'as'   => 'sales.sentemailtrackingcode',
         'uses' => 'SalesController@sendEmailUpdateTrackingCode',
     ]);
 });

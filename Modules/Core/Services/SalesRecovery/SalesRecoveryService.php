@@ -161,9 +161,8 @@ class SalesRecoveryService
         $checkoutPlanModel = new CheckoutPlan();
         $domainModel       = new Domain();
         $log               = $logModel->where('id_log_session', $checkout->id_log_session)
-                                      ->orderBy('id', 'DESC')
-                                      ->first();
-        $telephone         = FoxUtils::prepareCellPhoneNumber($log->telephone);
+                                      ->orderBy('id', 'DESC')->first();
+        $telephone = FoxUtils::prepareCellPhoneNumber($log->telephone);
         if (!empty($telephone)) {
             $log->telephone = $telephone;
         } else {
@@ -206,8 +205,11 @@ class SalesRecoveryService
         }
 
         $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
-
-        $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
+        if (!empty($domain)) {
+            $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
+        } else {
+            $link = 'Dominio removido';
+        }
 
         $whatsAppMsg = 'Olá ' . $log->name;
 
@@ -235,6 +237,7 @@ class SalesRecoveryService
         $checkoutModel     = new Checkout();
         $domainModel       = new Domain();
         $checkoutPlanModel = new CheckoutPlan();
+        $logModel          = new Log();
 
         $sale      = $salesModel->with(['clientModel', 'delivery'])->find($saleId);
         $client    = $sale->getRelation('clientModel');
@@ -260,6 +263,15 @@ class SalesRecoveryService
         $checkout->utm_term     = ($checkout->utm_term == 'null') ? '' : $checkout->utm_term;
         $checkout->utm_content  = ($checkout->utm_content == 'null') ? '' : $checkout->utm_content;
 
+        if ($sale->payment_method == 2) {
+            $client->error = 'Não pago até a data do vencimento';
+        } else {
+            $log           = $logModel->where('id_log_session', $checkout->id_log_session)
+                                      ->where('event', '=', 'payment error')
+                                      ->orderBy('id', 'DESC')
+                                      ->first();
+            $client->error = $log->error;
+        }
         $status = 'Recuperado';
         if ($sale->payment_method == 1) {
             $status = 'Recusado';
@@ -284,9 +296,13 @@ class SalesRecoveryService
         }
 
         $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
-        $link   = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
+        if (!empty($domain)) {
+            $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
+        } else {
+            $link = 'Dominio removido';
+        }
 
-        $whatsAppMsg = 'Olá ' . $sale->getRelation('clientModel')->name;
+        $whatsAppMsg = 'Olá ' . $client->name;
 
         return view('salesrecovery::details', [
             'checkout'      => $checkout,
