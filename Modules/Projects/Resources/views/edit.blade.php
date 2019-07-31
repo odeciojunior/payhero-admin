@@ -136,17 +136,23 @@
                             <span class="gray"> Deletar projeto</span>
                         </a>
                     </div>
-                    <div class="col-5">
-                        @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1 )
-                            <a id="bt-change-shopify-integration" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
-                            </a>
-                        @elseif($project->shopifyIntegrations->first()->status == 1)
+                    @if($project->shopify_id)
+                        <div class="col-5">
+                            @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1 )
+                                <a id="bt-change-shopify-integration" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                    <i class="material-icons gray"> sync </i>
+                                    <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
+                                </a>
+                            @elseif($project->shopifyIntegrations->first()->status == 1)
                                 <i class="icon wb-alert-circle  gray"> </i>
                                 <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
-                        @endif
-                    </div>
+                            @endif
+                        </div>
+                    @else
+                        <div class='col-5'>
+
+                        </div>
+                    @endif
                     <div class="col-3">
                         <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;"> Atualizar</button>
                     </div>
