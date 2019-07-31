@@ -162,7 +162,7 @@ class SalesRecoveryService
         $domainModel       = new Domain();
         $log               = $logModel->where('id_log_session', $checkout->id_log_session)
                                       ->orderBy('id', 'DESC')->first();
-        $telephone = FoxUtils::prepareCellPhoneNumber($log->telephone);
+        $telephone         = FoxUtils::prepareCellPhoneNumber($log->telephone);
         if (!empty($telephone)) {
             $log->telephone = $telephone;
         } else {
@@ -270,7 +270,7 @@ class SalesRecoveryService
                                       ->where('event', '=', 'payment error')
                                       ->orderBy('id', 'DESC')
                                       ->first();
-            $client->error = $log->error;
+            $client->error = $log->error . ' (saldo insuficiente)';
         }
         $status = 'Recuperado';
         if ($sale->payment_method == 1) {
