@@ -2,12 +2,13 @@
 
 namespace Modules\HotZapp\Http\Controllers;
 
-use App\Entities\Company;
-use App\Entities\HotzappIntegration;
+use App\Entities\HotZappIntegration;
+use App\Entities\Project;
 use App\Entities\UserProject;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
 class HotZappController extends Controller
 {
@@ -17,24 +18,26 @@ class HotZappController extends Controller
      */
     public function index()
     {
-        $companyModel            = new Company();
         $hotzappIntegrationModel = new HotzappIntegration();
-        $UserProjectModel        = new UserProject();
-        $companies               = $companyModel->where('user_id', auth()->user()->id)
-                                                ->get();
-        $hotzappIntegrations     = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
-        $projects                = [];
+        $projectModel            = new Project();
+        $userProjectModel        = new UserProject();
+
+        $projects            = [];
+        $projectsIntegrated  = [];
+        $userProjects        = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+        $hotzappIntegrations = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
+        foreach ($userProjects as $userProject) {
+            $projects[] = $userProject->projectId;
+        }
 
         foreach ($hotzappIntegrations as $hotzappIntegration) {
-            $userProjects = $UserProjectModel->where('user', $hotzappIntegration->user_id)->with('projectId')->get();
-            if ($userProjects->count() > 0) {
-                foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->projectId;
-                }
+            $project = $projectModel->find($hotzappIntegration->project_id);
+            if ($project) {
+                $projectsIntegrated[] = $project;
             }
         }
 
-        return view('hotzapp::index', ['companies' => $companies, 'projects' => $projects]);
+        return view('hotzapp::index', ['projects' => $projects, 'projectsIntegrated' => $projectsIntegrated]);
     }
 
     /**
@@ -53,31 +56,39 @@ class HotZappController extends Controller
      */
     public function store(Request $request)
     {
-        $data                    = $request->all();
-        $hotzappIntegrationModel = new HotzappIntegration();
-        $Integration             = $hotzappIntegrationModel->where('link', $data['link'])->first();
+        try {
+            $data                    = $request->all();
+            $hotzappIntegrationModel = new HotzappIntegration();
+            $Integration             = $hotzappIntegrationModel->where('link', $data['link'])->first();
+            if ($Integration) {
+                return response()->json([
+                                            'message' => 'Projeto já integrado',
+                                        ], 400);
+            }
 
-        if ($Integration) {
+            $integrationCreated = $hotzappIntegrationModel->create([
+                                                                       'link'                => $data['link'],
+                                                                       'boleto_generated'    => $data['boleto_generated'],
+                                                                       'boleto_paid'         => $data['boleto_paid'],
+                                                                       'credit_card_refused' => $data['credit_card_refused'],
+                                                                       'credit_card_paid'    => $data['credit_card_paid'],
+                                                                       'project_id'          => $data['project_id'],
+                                                                       'user_id'             => auth()->user()->id,
+                                                                   ]);
+            if ($integrationCreated) {
+                return response()->json([
+                                            'message' => 'Integração criada com sucesso!',
+                                        ], 200);
+            }
+
             return response()->json([
-                                        'message' => 'Projeto já integrado',
+                                        'message' => 'Ocorreu um erro ao realizar a integração',
                                     ], 400);
+        } catch (Exception $e) {
+            dd($e);
+            Log::warning('Erro ao realizar integração  HotZappController - store');
+            report($e);
         }
-
-        $integrationCreated = $hotzappIntegrationModel->create([
-                                                                   'company'     => $data['company'],
-                                                                   'user_id'     => auth()->user()->id,
-                                                                   'description' => $data['description'],
-                                                                   'link'        => $data['link'],
-                                                               ]);
-        if ($integrationCreated) {
-            return response()->json([
-                                        'message' => 'Integração criada com sucesso!',
-                                    ], 200);
-        }
-
-        return response()->json([
-                                    'message' => 'Ocorreu um erro ao realizar a integração',
-                                ], 400);
     }
 
     /**

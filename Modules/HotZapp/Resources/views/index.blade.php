@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class='page-content container'>
-            @if(count($projects) == 0)
+            @if(count($projectsIntegrated) == 0)
                 <div class="row justify-content-center mt-30">
                     <h4>Nenhuma integração encontrada</h4>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="clearfix"></div>
 
                 <div class="row">
-                    @foreach($projects as $project)
+                    @foreach($projectsIntegrated as $project)
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                             <a href="/projects/{!! Hashids::encode($project['id']) !!}" class="streched-link">
                                 <div class="card shadow">
@@ -65,16 +65,34 @@
                                     </div>
                                     <div class="row mt-20">
                                         <div class="col-12">
-                                            <label for="token">Descrição</label>
-                                            <input type="text" class="input-pad" name="description" id="description" placeholder="Descrição">
+                                            <label for="token">Boleto gerado</label>
+                                            <input type="text" class="input-pad" name="boleto_generated" id="boleto_generated" placeholder="Boleto gerado">
                                         </div>
                                     </div>
                                     <div class="row mt-20">
                                         <div class="col-12">
-                                            <label for="company">Selecione sua empresa</label>
-                                            <select class="select-pad" id="company" name="company">
-                                                @foreach($companies as $company)
-                                                    <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
+                                            <label for="token">Boleto pago</label>
+                                            <input type="text" class="input-pad" name="boleto_paid" id="boleto_paid" placeholder="Boleto pago">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-20">
+                                        <div class="col-12">
+                                            <label for="token">Cartão de crédito pago</label>
+                                            <input type="text" class="input-pad" name="credit_card_paid" id="credit_card_paid" placeholder="Cartão de crédito pago">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-20">
+                                        <div class="col-12">
+                                            <label for="token">Cartão de crédito Recusado</label>
+                                            <input type="text" class="input-pad" name="credit_card_refused" id="credit_card_refused" placeholder="Cartão de crédito recusado">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-20">
+                                        <div class="col-12">
+                                            <label for="company">Selecione seu projeto</label>
+                                            <select class="select-pad" id="project_id" name="project_id">
+                                                @foreach($projects as $project)
+                                                    <option value="{!! $project['id'] !!}">{!! $project['name'] !!}</option>
                                                 @endforeach
                                             </select>
                                         </div>

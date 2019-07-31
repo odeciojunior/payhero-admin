@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnUserIdTableHotzappIntegration extends Migration
+class AddColumnUserIdTableHotzappIntegrations extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddColumnUserIdTableHotzappIntegration extends Migration
      */
     public function up()
     {
-        Schema::table('hotzapp_integration', function(Blueprint $table) {
-            $table->integer('user_id')->unsigned()->after('company');
+        Schema::table('hotzapp_integrations', function(Blueprint $table) {
+            $table->integer('user_id')->unsigned()->after('project_id');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
@@ -24,7 +24,7 @@ class AddColumnUserIdTableHotzappIntegration extends Migration
      */
     public function down()
     {
-        Schema::table('hotzapp_integration', function(Blueprint $table) {
+        Schema::table('hotzapp_integrations', function(Blueprint $table) {
             $table->dropForeign('user_id');
         });
     }
