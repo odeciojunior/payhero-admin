@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Dev;
 
-use App\Entities\User;
 use Error;
+use Throwable;
+use App\Entities\User;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Tag;
 use Illuminate\Http\Request;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Selector\Parser;
-use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use PHPHtmlParser\Selector\Selector;
@@ -28,27 +28,39 @@ class TesteController extends Controller
     public function index()
     {
 
+        $shopify = new ShopifyService('issoeincrivel.myshopify.com', 'cfaa3e8a7aeb7f31e8a5b3b7006645a5');
 
+        dd($shopify->getShopWebhook());
 
-        $DominioParaVerificar = "http://http://www.uol.com";
-        $x=parse_url($DominioParaVerificar);
-        if (filter_var($DominioParaVerificar, FILTER_VALIDATE_URL))
-        {
-            echo"$DominioParaVerificar é valido";
-        }
-        //$shopify = new ShopifyService('plotplot.myshopify.com', '8153df9581010e821c22125300fbda56');
-        //dd($shopify->getShopWebhook());
+        $shopify->deleteShopWebhook();
+ 
+        $shopify->createShopWebhook([
+            "topic"   => "products/create",
+            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode(92),
+            "format"  => "json",
+        ]);
 
-//        $shopify->setThemeByRole('main');
-//        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
-//        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, 'lipoduo.com');
+        $shopify->createShopWebhook([
+            "topic"   => "products/update",
+            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode(92),
+            "format"  => "json",
+        ]);
 
-        //$do = app(DigitalOceanFileService::class);
-        //dd($do->getTemporaryUrlFile('/uploads/user/5n4KovG1YGyDEmO/private/documents/6PQ4eog8VzSCeuzFbQmgZ5rUGumOdVpm1plhBF0o.pdf',120));
-/*
+        $shopify->createShopWebhook([
+            "topic"   => "orders/updated",
+            "address" => 'https://app.cloudfox.net/postback/shopify/'.Hashids::encode(92),
+            "format"  => "json",
+        ]);
+
+        dd($shopify->getShopWebhook());
+
+        $shopify->setThemeByRole('main');
+        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, 'lipoduo.com');
+
         $shopifyService = new ShopifyService('plotplot.myshopify.com', '8153df9581010e821c22125300fbda56');
         $shopifyService->deleteShopWebhook();
-        //dd($shopifyService->getShopWebhook());
+        dd($shopifyService->getShopWebhook());
 
 
         $shopifyService->createShopWebhook([
@@ -71,7 +83,6 @@ class TesteController extends Controller
 
         dd($shopifyService->getShopWebhook());
 
-        */
     }
 }
 
