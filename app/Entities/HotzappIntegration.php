@@ -18,15 +18,13 @@ class HotzappIntegration extends Model
 {
     /**
      * The table associated with the model.
-     * 
      * @var string
      */
     protected $table = 'hotzapp_integration';
-
     /**
      * @var array
      */
-    protected $fillable = ['company', 'description', 'link', 'created_at', 'updated_at'];
+    protected $fillable = ['company', 'user_id', 'description', 'link', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
