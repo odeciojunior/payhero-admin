@@ -33,7 +33,8 @@
         Breakpoints();
     </script>
 </head>
-<body>
+<body style='background:none;padding:0%'>
+<img src="{{ asset('modules/global/adminremark/assets/images/gradient-bg.png') }}" style='width:100%;height:100%;position:fixed;z-index:-100;left:0%;top:0%;' alt="Background">
 {{--<div class="loading">
     <div class="loader">
     </div>

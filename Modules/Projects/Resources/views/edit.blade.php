@@ -99,7 +99,7 @@
                     <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                     <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                         @for($x=1; $x <=12; $x++)
-                            <option value='{{$x}}' {{$project->installments_interest_free == $x ? 'selected' : ''}}>{{$x}}</option>
+                            <option value='{{$x}}' {{$x > 1 ? 'disabled' : ''}}>{{$x > 1 ? 'EM BREVE ' : ''}}{{$x}}</option>
                         @endfor
                     </select>
                     <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
@@ -150,7 +150,6 @@
                         </div>
                     @else
                         <div class='col-5'>
-
                         </div>
                     @endif
                     <div class="col-3">

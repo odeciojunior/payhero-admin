@@ -14,8 +14,8 @@
                                     <select name="platform" type="text" class="form-control" id="platform">
                                         <option value="facebook">Facebook</option>
                                         <option value="google">Google</option>
-                                        <option value="taboola">Taboola</option>
-                                        <option value="outbrain">Outbrain</option>
+                                        <option value="null" disabled='disabled'>EM BREVE Taboola</option>
+                                        <option value="null" disabled='disabled'>EM BREVE Outbrain</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-6">

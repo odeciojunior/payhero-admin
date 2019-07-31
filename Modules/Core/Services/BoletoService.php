@@ -464,7 +464,7 @@ class BoletoService
                              ->get();
         foreach ($boletos as $boleto) {
             $boleto->update([
-                                'status' => 3,
+                                'status' => 5,
                             ]);
         }
     }
