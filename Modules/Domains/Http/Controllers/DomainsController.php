@@ -257,10 +257,12 @@ class DomainsController extends Controller
                 foreach ($records as $record) {
                     $subdomain = current($record[1]);
 
-                    $subdomain = str_replace("http://", "", $subdomain);
-                    $subdomain = str_replace("https://", "", $subdomain);
-                    $subdomain = 'http://' . $subdomain;
-                    $subdomain = parse_url($subdomain, PHP_URL_HOST);
+                    if (($subdomain != '') || ($subdomain != '@')) {
+                        $subdomain = str_replace("http://", "", $subdomain);
+                        $subdomain = str_replace("https://", "", $subdomain);
+                        $subdomain = 'http://' . $subdomain;
+                        $subdomain = parse_url($subdomain, PHP_URL_HOST);
+                    }
 
                     if ((strpos($subdomain, '.') === false) ||
                         ($subdomain == $domain->name)) {
