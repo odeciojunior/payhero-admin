@@ -1,0 +1,14 @@
+{
+    "name": "HotZapp",
+    "alias": "hotzapp",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\HotZapp\\Providers\\HotZappServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

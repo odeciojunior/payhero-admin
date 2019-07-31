@@ -4,9 +4,11 @@ namespace Modules\Core\Services;
 
 use App\Entities\DomainRecord;
 use Cloudflare\API\Auth\APIKey;
+use Cloudflare\API\Endpoints\Crypto;
 use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Endpoints\SSL;
+use Cloudflare\API\Endpoints\TLS;
 use Cloudflare\API\Endpoints\User;
 use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Http\Response;
@@ -41,6 +43,14 @@ class CloudFlareService
      * @var SSL
      */
     private $ssl;
+    /**
+     * @var TLS
+     */
+    private $tls;
+    /**
+     * @var Crypto
+     */
+    private $crypto;
     /**
      * @var Zones
      */
@@ -96,6 +106,8 @@ class CloudFlareService
             $this->adapter = new Guzzle($this->key);
             $this->dns     = new DNS($this->adapter);
             $this->ssl     = new SSL($this->adapter);
+            $this->tls     = new TLS($this->adapter);
+            $this->crypto  = new Crypto($this->adapter);
             $this->zones   = new Zones($this->adapter);
             $this->user    = new User($this->adapter);
         } catch (Exception $e) {
@@ -276,8 +288,8 @@ class CloudFlareService
 
             $this->setZone($newZone->name);
 
-            if(!empty($ipAddress)){
-                $this->addRecord("A", $newZone->name, $ipAddress); 
+            if (!empty($ipAddress)) {
+                $this->addRecord("A", $newZone->name, $ipAddress);
                 $this->getDomainRecordModel()->create([
                                                           'domain_id'   => $domainModelId,
                                                           'type'        => 'A',
@@ -486,11 +498,11 @@ class CloudFlareService
     {
         try {
             $client = new Client([
-                                     'base_uri' => $url,
-                                     'timeout'  => 10,
-                                     'connect_timeout'  => 10,
+                                     'base_uri'        => $url,
+                                     'timeout'         => 10,
+                                     'connect_timeout' => 10,
                                      //'headers'  => $headers,
-                                     'Accept'   => 'application/json',
+                                     'Accept'          => 'application/json',
                                  ]);
 
             $response = $client->request('get', '/');
@@ -514,6 +526,267 @@ class CloudFlareService
             }
         } catch (Exception $e) {
             Log::warning('Erro ao checar dominio');
+            report($e);
+
+            return false;
+        }
+    }
+
+    /**
+     * @param string $domain
+     * @return array|false|string
+     */
+    public function getSSLSetting(string $domain)
+    {
+        try {
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (empty($zoneID)) {
+                return [];
+            } else {
+                return $this->ssl->getSSLSetting($zoneID);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao ver configuração de SSL');
+            report($e);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param string $value
+     * @param null $domain
+     * @return array|bool
+     */
+    public function setSSLSetting(string $value, string $domain = null)
+    {
+        try {
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (!empty($zoneID)) {
+                return $this->ssl->updateSSLSetting($zoneID, $value);
+            } else {
+                return [];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao ver configuração de SSL');
+            report($e);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param string $value
+     * @param null $domain
+     * @return array|bool
+     */
+    public function setHTTPSRedirectSetting(string $value, string $domain = null)
+    {
+        try {
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (!empty($zoneID)) {
+                return $this->ssl->updateHTTPSRedirectSetting($zoneID, $value);
+            } else {
+                return [];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao configurar HTTPSRedirectS');
+            report($e);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param string $value
+     * @param null $domain
+     * @return array|bool
+     */
+    public function setHTTPSRewritesSetting(string $value, string $domain = null)
+    {
+        try {
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (!empty($zoneID)) {
+                return $this->ssl->updateHTTPSRewritesSetting($zoneID, $value);
+            } else {
+                return [];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao configurar HTTPSRewrites');
+            report($e);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param null $domain
+     * @return array|bool
+     */
+    public function enableTLS13(string $domain = null)
+    {
+        try {
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (!empty($zoneID)) {
+                return $this->tls->enableTLS13($zoneID);
+            } else {
+                return [];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao configurar TLS 1.3');
+            report($e);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param string $value
+     * @param null $domain
+     * @return array|bool
+     */
+    public function setOpportunisticEncryptionSetting(string $value, string $domain = null)
+    {
+        try {
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (!empty($zoneID)) {
+                return $this->crypto->updateOpportunisticEncryptionSetting($zoneID, $value);
+            } else {
+                return [];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao configurar OpportunisticEncryption');
+            report($e);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param string $value
+     * @param null $domain
+     * @return array|bool
+     */
+    public function setOnionRoutingSetting(string $value, string $domain = null)
+    {
+        try {
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (!empty($zoneID)) {
+                return $this->crypto->updateOnionRoutingSetting($zoneID, $value);
+            } else {
+                return [];
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao configurar OnionRouting');
+            report($e);
+
+            return [];
+        }
+    }
+
+    /**
+     * @param array $options
+     * @param string|null $domain
+     * @return bool
+     */
+    public function setCloudFlareConfig(string $domain = null, array $options = [])
+    {
+        /*
+        Configuracoes Default
+        Always Use HTTPS  - ON
+        Authenticated Origin Pulls - OFF
+        Opportunistic Encryption  - ON
+        Onion Routing - ON
+        TLS 1.3 - Enabled
+        Automatic HTTPS Rewrites - ON
+        */
+
+        try {
+
+            if ($domain) {
+                $zoneID = $this->zones->getZoneID($domain);
+            } else {
+                $zoneID = $this->zoneID;
+            }
+
+            if (empty($options)) {
+                $options = [
+                    'ssl'                      => 'flexible',
+                    'always_use_https'         => 'on',
+                    'origin_pulls'             => 'off',
+                    'opportunistic_encryption' => 'on',
+                    'onion_routing'            => 'on',
+                    'tls13'                    => 'on',
+                    'automatic_https_rewrites' => 'on',
+                ];
+            }
+
+            if (!empty($options["ssl"])) {
+                $this->ssl->updateSSLSetting($zoneID, $options["ssl"]);
+            }
+
+            if (!empty($options["always_use_https"])) {
+                $this->ssl->updateHTTPSRedirectSetting($zoneID, $options["always_use_https"]);
+            }
+
+            if (!empty($options["origin_pulls"])) {
+                $this->tls->updateTLSClientAuth($zoneID, $options["origin_pulls"]);
+            }
+
+            if (!empty($options["opportunistic_encryption"])) {
+                $this->crypto->updateOpportunisticEncryptionSetting($zoneID, $options["opportunistic_encryption"]);
+            }
+
+            if (!empty($options["onion_routing"])) {
+                $this->crypto->updateOnionRoutingSetting($zoneID, $options["onion_routing"]);
+            }
+
+            if (!empty($options["tls13"])) {
+                $this->tls->enableTLS13($zoneID);
+            }
+
+            if (!empty($options["automatic_https_rewrites"])) {
+                $this->ssl->updateHTTPSRewritesSetting($zoneID, $options["automatic_https_rewrites"]);
+            }
+
+            return true;
+        } catch (Exception $e) {
+            Log::warning('Erro ao fazer confiuracao default do cloudflare');
             report($e);
 
             return false;
