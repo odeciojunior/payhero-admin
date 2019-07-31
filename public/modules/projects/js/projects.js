@@ -291,6 +291,10 @@ $(function () {
         modalClear('#modal-add-body');
         loadingOnScreenRemove();
     })
+
+    $('.modal').on('hidden.bs.modal', function () {
+        $('#btn-modal').show();
+    })
 });
 
 /*

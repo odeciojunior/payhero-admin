@@ -81,7 +81,12 @@
                         </a>
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="">
-                        <div id='segundaInfo' class="panel-body">
+                        {{--                        <div id='segundaInfo' class="panel-body">--}}
+                        {{--                        </div>--}}
+                        <div class="panel-body justify-content-center">
+                            <div class="d-flex align-items-center">
+                                <span> Digite o nome do seu <strong>dominio</strong> onde seu site esta hospedado e clique em  <i class="material-icons btn-fix" style='color:green'> save </i><strong style='color:green'>Salvar</strong></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -93,8 +98,14 @@
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseThird" aria-labelledby="exampleHeadingThird" role="tabpanel" style="">
                         <div class="panel-body">
-                            Clique no botão de
-                            <strong>vizualizar nas opções</strong>, lá você vai encontrar as novas configurações de dns para seu domínio
+                            <h4>Caso possua um site com o mesmo dominio.</h4>
+                            Adicione uma entrada do tipo <strong>A</strong>
+                            <ul>
+                                <li>O seu dominio ja devera estar preenchido, se não preencha o campo <strong>nome</strong></li>
+                                <li>Digite o ip no campo <strong>valor</strong></li>
+                                <li>Clique em <strong>Adicionar</strong></li>
+                            </ul>
+                            Após clique em <strong>Contiuar</strong>
                         </div>
                     </div>
                 </div>
@@ -107,7 +118,8 @@
                     <div class="panel-collapse collapse" id="exampleCollapseFourth" aria-labelledby="exampleHeadingFourth" role="tabpanel" style="">
                         <div class="panel-body">
                             Logo após, vá até onde você registrou seu domínio e
-                            <strong>atualize as configurações</strong> com as novas entradas DNS
+                            <strong>atualize as configurações</strong> com as novas entradas DNS geradas.
+                            Por fim clique em <strong>Verificar</strong>
                         </div>
                     </div>
                 </div>
@@ -119,8 +131,8 @@
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="">
                         <div class="panel-body">
-                            Pronto, agora é só
-                            <strong>esperar</strong> que assim que seu domínio estiver aprovado nós te avisaremos
+                            Obtendo sucesso o sistema estará pronto para uso. Caso contrário aguarde alguns minutos e utilize o botão
+                            <i class="material-icons gradient">remove_red_eye</i> para verificar novamente.
                         </div>
                     </div>
                 </div>

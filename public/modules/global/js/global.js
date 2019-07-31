@@ -111,6 +111,7 @@ function loadingOnScreen() {
 }
 function loadingOnScreenRemove() {
     $('#loadingOnScreen').html('');
+    $('#btn-modal').show();
 }
 
 function loadOnNotification(whereToLoad) {

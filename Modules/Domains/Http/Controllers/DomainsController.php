@@ -180,6 +180,7 @@ class DomainsController extends Controller
             $domainModel       = new Domain();
             $companyModel      = new Company();
             $cloudFlareService = new CloudFlareService();
+            $haveEnterA = false;
 
             $domain = $domainModel->with([
                                              'project',
@@ -193,6 +194,9 @@ class DomainsController extends Controller
             $registers = [];
             foreach ($domain->records as $record) {
 
+                if($record->type == 'A' && $record->name == $domain->name){
+                    $haveEnterA = true;
+                }
                 $subdomain = explode('.', $record->name);
 
                 switch ($record->content) {
@@ -225,6 +229,7 @@ class DomainsController extends Controller
                     'companies' => $companies,
                     'registers' => $registers,
                     'project'   => $domain->project,
+                    'haveEnterA' => $haveEnterA,
                 ]);
             }
         } catch (Exception $e) {
@@ -257,12 +262,10 @@ class DomainsController extends Controller
                 foreach ($records as $record) {
                     $subdomain = current($record[1]);
 
-                    if (($subdomain != '') || ($subdomain != '@')) {
-                        $subdomain = str_replace("http://", "", $subdomain);
-                        $subdomain = str_replace("https://", "", $subdomain);
-                        $subdomain = 'http://' . $subdomain;
-                        $subdomain = parse_url($subdomain, PHP_URL_HOST);
-                    }
+                    $subdomain = str_replace("http://", "", $subdomain);
+                    $subdomain = str_replace("https://", "", $subdomain);
+                    $subdomain = 'http://' . $subdomain;
+                    $subdomain = parse_url($subdomain, PHP_URL_HOST);
 
                     if ((strpos($subdomain, '.') === false) ||
                         ($subdomain == $domain->name)) {
