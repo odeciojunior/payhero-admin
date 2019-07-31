@@ -42,7 +42,7 @@ class TrackingCodeUpdatedSendEmailClientListener
                 $productArray["photo"]  = $product->photo;
                 $productArray["name"]   = $product->name;
                 $productArray["name"]   = $product->name;
-                $productArray["amount"] = $planSale->amount;
+                $productArray["amount"] = $planSale->amount; 
                 $products[]             = $productArray;
             }
         }
