@@ -157,12 +157,19 @@ class SalesRecoveryService
      */
     public function getSalesCheckoutDetails(Checkout $checkout)
     {
-        $logModel               = new CheckoutLog();
-        $checkoutPlanModel      = new CheckoutPlan();
-        $domainModel            = new Domain();
-        $log                    = $logModel->where('id_log_session', $checkout->id_log_session)
-                                           ->orderBy('id', 'DESC')
-                                           ->first();
+        $logModel          = new CheckoutLog();
+        $checkoutPlanModel = new CheckoutPlan();
+        $domainModel       = new Domain();
+        $log               = $logModel->where('id_log_session', $checkout->id_log_session)
+                                      ->orderBy('id', 'DESC')
+                                      ->first();
+        $telephone         = FoxUtils::prepareCellPhoneNumber($log->telephone);
+        if (!empty($telephone)) {
+            $log->telephone = $telephone;
+        } else {
+            $log->telephone = 'Numero Inválido';
+        }
+
         $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
         $checkout['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
         $checkout->is_mobile    = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
@@ -229,14 +236,18 @@ class SalesRecoveryService
         $domainModel       = new Domain();
         $checkoutPlanModel = new CheckoutPlan();
 
-        $sale   = $salesModel->with(['clientModel', 'delivery'])->find($saleId);
-        $client = $sale->getRelation('clientModel');
-
-        $client->telephone = (FoxUtils::prepareCellPhoneNumber($client->telephone) == true) ? 'Telefone invalido' : $client->telephone;
-        $client->street    = $sale->getRelation('delivery')->street;
-        $client->zip_code  = $sale->getRelation('delivery')->zip_code;
-        $client->city      = $sale->getRelation('delivery')->city;
-        $client->state     = $sale->getRelation('delivery')->state;
+        $sale      = $salesModel->with(['clientModel', 'delivery'])->find($saleId);
+        $client    = $sale->getRelation('clientModel');
+        $telephone = FoxUtils::prepareCellPhoneNumber($client->telephone);
+        if (!empty($telephone)) {
+            $client->telephone = $telephone;
+        } else {
+            $client->telephone = 'Numero Inválido';
+        }
+        $client->street   = $sale->getRelation('delivery')->street;
+        $client->zip_code = $sale->getRelation('delivery')->zip_code;
+        $client->city     = $sale->getRelation('delivery')->city;
+        $client->state    = $sale->getRelation('delivery')->state;
 
         $checkout               = $checkoutModel->where('id', $sale->checkout)->first();
         $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');

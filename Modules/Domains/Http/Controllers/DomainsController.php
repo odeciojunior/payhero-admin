@@ -99,45 +99,54 @@ class DomainsController extends Controller
                 if ($project->domains->where('name', $requestData['name'])
                                      ->count() == 0) {
 
-                    $domainCreated = $domainModel->create([
-                                                              'project_id' => $projectId,
-                                                              'name'       => $requestData['name'],
-                                                              'domain_ip'  => $domainIp,
-                                                              'status'     => $domainModel->getEnum('status', 'pending'),
-                                                          ]);
+                    if (empty($cloudFlareService->getZones($requestData['name']))) {
+                        $domainCreated = $domainModel->create([
+                                                                  'project_id' => $projectId,
+                                                                  'name'       => $requestData['name'],
+                                                                  'domain_ip'  => $domainIp,
+                                                                  'status'     => $domainModel->getEnum('status', 'pending'),
+                                                              ]);
 
-                    if ($domainCreated) {
-                        if ($project->shopify_id == null) {
-                            $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
-                        } else {
-                            $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
-                            $requestData['domain_ip'] = 'Domínio Shopify';
-                        }
-
-                        if ($newDomain) {
-                            DB::commit();
-
-                            $newNameServers = [];
-                            foreach ($cloudFlareService->getZones() as $zone) {
-                                if ($zone->name == $domainCreated->name) {
-                                    foreach ($zone->name_servers as $new_name_server) {
-                                        $newNameServers[] = $new_name_server;
-                                    }
-                                }
+                        if ($domainCreated) {
+                            if ($project->shopify_id == null) {
+                                $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
+                            } else {
+                                $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
+                                $requestData['domain_ip'] = 'Domínio Shopify';
                             }
 
-                            return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
+                            $cloudFlareService->setCloudFlareConfig($requestData['name']);
+
+                            if ($newDomain) {
+                                DB::commit();
+
+                                $newNameServers = [];
+                                foreach ($cloudFlareService->getZones() as $zone) {
+                                    if ($zone->name == $domainCreated->name) {
+                                        foreach ($zone->name_servers as $new_name_server) {
+                                            $newNameServers[] = $new_name_server;
+                                        }
+                                    }
+                                }
+
+                                return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
+                            } else {
+                                //problema ao cadastrar dominio
+                                DB::rollBack();
+
+                                return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                            }
                         } else {
-                            //problema ao cadastrar dominio
+                            //erro ao criar dominio
                             DB::rollBack();
 
                             return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
                         }
                     } else {
-                        //erro ao criar dominio
+                        //dominio ja existe registrado no cloudflare
                         DB::rollBack();
 
-                        return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                        return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
                     }
                 } else {
                     //dominio ja cadastrado
@@ -246,13 +255,19 @@ class DomainsController extends Controller
             $cloudFlareService->setZone($domain->name);
             foreach ($recordsJson as $records) {
                 foreach ($records as $record) {
+                    $subdomain = current($record[1]);
 
-                    if ((strpos(current($record[1]), '.') === false) ||
-                        (current($record[1]) == $domain->name)) {
+                    $subdomain = str_replace("http://", "", $subdomain);
+                    $subdomain = str_replace("https://", "", $subdomain);
+                    $subdomain = 'http://' . $subdomain;
+                    $subdomain = parse_url($subdomain, PHP_URL_HOST);
+
+                    if ((strpos($subdomain, '.') === false) ||
+                        ($subdomain == $domain->name)) {
                         //dominio nao tem "ponto" ou é igual ao dominio
 
                         if ($domain->records->where('type', current($record[0]))
-                                            ->where('name', current($record[1]))
+                                            ->where('name', $subdomain)
                                             ->where('content', current($record[2]))
                                             ->count() == 0) {
                             //nao existe a record
@@ -260,14 +275,14 @@ class DomainsController extends Controller
                             $quantityMx = $domain->records->where('type', 'MX')->count();
 
                             if (current($record[0]) == 'MX') {
-                                $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]), 0, false, $quantityMx + 1);
+                                $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, $quantityMx + 1);
                             } else {
-                                $cloudFlareService->addRecord(current($record[0]), current($record[1]), current($record[2]));
+                                $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
                             }
                             $newRecord = $domainRecordModel->create([
                                                                         'domain_id'   => $domain->id,
                                                                         'type'        => current($record[0]),
-                                                                        'name'        => current($record[1]),
+                                                                        'name'        => $subdomain,
                                                                         'content'     => current($record[2]),
                                                                         'system_flag' => 0,
                                                                     ]);
@@ -281,7 +296,7 @@ class DomainsController extends Controller
                         //dominio nao permitido
                         DB::rollBack();
 
-                        return response()->json(['message' => 'Domínio não permitido: ' . $record[1]], 400);
+                        return response()->json(['message' => 'Domínio não permitido: ' . $subdomain], 400);
                     }
                 }
             }
@@ -318,7 +333,7 @@ class DomainsController extends Controller
             $domain = $domainModel->with('records', 'project', 'project.shopifyIntegrations')
                                   ->find($domainId);
 
-            if ($cloudFlareService->deleteZone($domain->name)) {
+            if ($cloudFlareService->deleteZone($domain->name) || empty($cloudFlareService->getZones($domain->name))) {
                 //zona deletada
                 $sendgridService->deleteLinkBrand($domain->name);
                 $sendgridService->deleteZone($domain->name);
@@ -342,7 +357,6 @@ class DomainsController extends Controller
                                 if (!empty($shopifyIntegration->layout_theme_html)) {
                                     $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
                                 }
-                                $shopifyIntegration->delete();
                             }
                         } catch (\Exception $e) {
                             //throwl
@@ -457,16 +471,16 @@ class DomainsController extends Controller
                 $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
 
                 if ($recordsDeleted) {
-                    return response()->json(['message' => 'Dns removido com sucesso'], 200);
+                    return response()->json(['message' => 'Domínio removido com sucesso'], 200);
                 } else {
-                    return response()->json(['message' => 'Não foi possível deletar o dns!'], 400);
+                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
                 }
             } else {
                 //erro ao deletar zona
-                return response()->json(['message' => 'Não foi possível deletar o dns!'], 400);
+                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
             }
         } catch (Exception $e) {
-            Log::warning('DomainsController destroyRecord - erro ao deletar dns');
+            Log::warning('DomainsController destroyRecord - erro ao deletar domínio');
             report($e);
         }
     }
@@ -485,7 +499,7 @@ class DomainsController extends Controller
             if ($domainId) {
                 //hashid ok
                 if ($domainService->verifyPendingDomains($domainId, true)) {
-                    return response()->json(['message' => 'Dns revalidado com sucesso'], 200);
+                    return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                 } else {
                     return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
                 }
