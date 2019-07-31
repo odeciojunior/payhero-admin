@@ -112,13 +112,32 @@
         <br>
         <span class='table-title gray'>Telefone: {{$client->telephone}}</span>
         <a href="{{$whatsapp_link}}" target='_blank'>
-            <img src="{!! asset('modules/global/assets/img/whatsapplogo.png') !!}" width="25px">
+            <img src="{{ asset('modules/global/assets/img/whatsapplogo.png') }}" width="25px">
         </a>
         <br>
         <span class="table-title gray"> E-mail: {{$client->email}}</span>
         <br>
         <span class="table-title gray"> CPF: {{$client->document}}</span>
         <h4> Entrega </h4>
+        <span class="table-title gray table-code-tracking"> Código Rastreio:
+            <div class='tracking-code'>
+                <span class='tracking-code-value'>{{isset($delivery->tracking_code)? $delivery->tracking_code:'Não informado'}}</span>
+            </div>
+        </span>
+        <input type='text' class='input-value-trackingcode' style='display:none;' value='{{isset($delivery->tracking_code)? $delivery->tracking_code:''}}'>
+        <button type='button' class='btn-save-tracking' style='display: none;'>Salvar</button>
+        <button type='button' class='btn-cancel-tracking' style='display: none;'>Cancelar</button>
+        <div class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align is-hide' id='btn-edit-trackingcode' data-name='edit'>
+            <div class='icondemo vertical-align-middle'>
+                <a class='edit'><i class='icon wb-edit' aria-hidden='true'></i></a>
+            </div>
+        </div>
+        <div class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align' data-name='inbox' id='btn-sent-tracking-user' @if(!empty($delivery->tracking_code)) style='display: block;' @else style='display: none;' @endif>
+            <div class='icondemo vertical-align-middle'>
+                <a class=''><i class='icon wb-inbox' aria-hidden='true'></i></a>
+            </div>
+        </div>
+        <br>
         <span class="table-title gray"> Endereço: {{$delivery->street}}, {{$delivery->number}}</span>
         <br>
         <span class="table-title gray"> CEP: {{$delivery->zip_code}}</span>
@@ -147,17 +166,17 @@
         <span class="table-title gray "> Dispositivo: - </span>
         <br>
         <h4> Conversão </h4>
-        <span class="table-title gray"> SRC: {{$checkout->src ?? ''}}  </span>
+        <span class="table-title gray"> SRC: {{$checkout->src}}  </span>
         <br>
-        <span class="table-title gray"> UTM Source: {{$checkout->source ?? ''}}  </span>
+        <span class="table-title gray"> UTM Source: {{$checkout->source}}  </span>
         <br>
-        <span class="table-title gray"> UTM Medium: {{$checkout->utm_medium ?? ''}} </span>
+        <span class="table-title gray"> UTM Medium: {{$checkout->utm_medium}} </span>
         <br>
-        <span class="table-title gray"> UTM Campaign: {{$checkout->utm_campaign ?? ''}}</span>
+        <span class="table-title gray"> UTM Campaign: {{$checkout->utm_campaign}}</span>
         <br>
-        <span class="table-title gray"> UTM Term: {{$checkout->utm_term ?? ''}} </span>
+        <span class="table-title gray"> UTM Term: {{$checkout->utm_term}} </span>
         <br>
-        <span class="table-title gray"> UTM Content: {{$checkout->utm_content ?? ''}}</span>
+        <span class="table-title gray"> UTM Content: {{$checkout->utm_content}}</span>
     </div>
 </div>
 <script>
@@ -167,6 +186,83 @@
 
         $("#client_tab").css("min-width", $("#sales_tab").width());
         $("#products_tab").css("min-width", $("#sales_tab").width());
+
+        $("#btn-edit-trackingcode").on('click', function () {
+            $('.tracking-code').hide();
+            $('.input-value-trackingcode').show();
+            $('.btn-save-tracking').show();
+            $('.btn-cancel-tracking').show();
+        });
+
+        $('.btn-cancel-tracking').on('click', function () {
+            $('.tracking-code').show();
+            $('#btn-sent-tracking-user').show();
+            $('.input-value-trackingcode').val('').hide();
+            $('.btn-save-tracking').hide();
+            $('.btn-cancel-tracking').hide();
+        });
+
+        $('.btn-save-tracking').on('click', function () {
+            let trackingCode = $(".input-value-trackingcode").val();
+            ajaxUpdateTracking(trackingCode);
+        });
+
+        function ajaxUpdateTracking(tracking) {
+            var delivery = '{{\Vinkla\Hashids\Facades\Hashids::encode($delivery->id)}}';
+            var sale = '{{\Vinkla\Hashids\Facades\Hashids::encode($sale->id)}}';
+
+            $.ajax({
+                method: 'POST',
+                url: '/sales/update/trackingcode',
+                data: {
+                    sale: sale,
+                    delivery: delivery,
+                    trackingCode: tracking,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function (response) {
+                    if (response.status == '422') {
+                        for (error in response.responseJSON.errors) {
+                            alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+                    } else {
+                        alertCustom("error", response.message)
+                    }
+                    $(".btn-cancel-tracking").click();
+                },
+                success: function (response) {
+                    $(".btn-cancel-tracking").click();
+                    $(".tracking-code-value").html(tracking);
+                    alertCustom('success', response.message);
+                }
+            });
+        }
+
+        $('#btn-sent-tracking-user').on('click', function () {
+            let sale = '{{\Vinkla\Hashids\Facades\Hashids::connection('sale_id')->encode($sale->id)}}';
+
+            $.ajax({
+                method: 'POST',
+                url: '/sales/update/trackingcode/' + sale,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function (response) {
+                    if (response.status == '422') {
+                        for (error in response.responseJSON.errors) {
+                            alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+                    } else {
+                        alertCustom("error", response.message)
+                    }
+                },
+                success: function (response) {
+                    alertCustom('success', response.message);
+                }
+            });
+        });
     });
 </script>
 

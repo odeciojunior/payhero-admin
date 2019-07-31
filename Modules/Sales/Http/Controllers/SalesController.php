@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Aws\RAM\Exception\RAMException;
 use Exception;
 use Carbon\Carbon;
 use App\Entities\Plan;
@@ -21,6 +22,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Sales\Http\Requests\SaleUpdateRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Modules\Sales\Transformers\SalesResource;
@@ -128,9 +131,15 @@ class SalesController extends Controller
                     $discount = '0,00';
                 }
 
-                $delivery             = $deliveryModel->find($sale['delivery']);
-                $checkout             = $checkoutModel->find($sale['checkout']);
-                $sale->shipment_value = preg_replace('/[^0-9]/', '', $sale->shipment_value);
+                $delivery               = $deliveryModel->find($sale['delivery']);
+                $checkout               = $checkoutModel->find($sale['checkout']);
+                $checkout->src          = ($checkout->src == 'null') ? '' : $checkout->src;
+                $checkout->source       = ($checkout->source == 'null') ? '' : $checkout->source;
+                $checkout->utm_medium   = ($checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
+                $checkout->utm_campaign = ($checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
+                $checkout->utm_term     = ($checkout->utm_term == 'null') ? '' : $checkout->utm_term;
+                $checkout->utm_content  = ($checkout->utm_content == 'null') ? '' : $checkout->utm_content;
+                $sale->shipment_value   = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
                 $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company', $userCompanies)
@@ -159,7 +168,7 @@ class SalesController extends Controller
                     'sale'           => $sale,
                     'plans'          => $plans,
                     'client'         => $client,
-                    'delivery'       => $delivery, 
+                    'delivery'       => $delivery,
                     'checkout'       => $checkout,
                     'total'          => number_format(intval($total) / 100, 2, ',', '.'),
                     'subTotal'       => number_format(intval($subTotal) / 100, 2, ',', '.'),
@@ -219,9 +228,9 @@ class SalesController extends Controller
                 $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
                 $sales->whereIn('id', $salePlan);
             }
- 
+
             if ($request->transaction != '') {
-                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#','',$request->transaction)));
+                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $request->transaction)));
                 $sales->where('id', $saleId);
             }
 
@@ -424,6 +433,65 @@ class SalesController extends Controller
             report($e);
 
             return redirect()->back()->with('error', 'Erro ao tentar gerar o arquivo Excel . ');
+        }
+    }
+
+    /**
+     * @param SaleUpdateRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateTrackingCode(SaleUpdateRequest $request)
+    {
+        try {
+            $requestValidated = $request->validated();
+
+            $deliveryModel = new Delivery();
+            if ($requestValidated['delivery'] && !empty($requestValidated['delivery']) && !empty($requestValidated['trackingCode'])) {
+                $deliveryId = current(Hashids::decode($requestValidated['delivery']));
+
+                $delivery = $deliveryModel->find($deliveryId);
+                if (!empty($delivery)) {
+                    $delivery->update(['tracking_code' => $requestValidated['trackingCode']]);
+
+                    return response()->json([
+                                                'message' => 'Código Rastreio salvo com sucesso',
+                                                'data'    => [
+                                                    'tracking_code' => $delivery->tracking_code,
+                                                ],
+                                            ], 200);
+                }
+            }
+
+            return response()->json([
+                                        'message' => 'Preencha o campo Código Rastreio corretamente',
+                                        'data'    => [
+                                            'tracking_code' => $delivery->tracking_code,
+                                        ],
+                                    ], 400);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar atualizar o codigo de rastreio SalesController - updateTrackingCode');
+            report($e);
+        }
+    }
+
+    public function sendEmailUpdateTrackingCode($saleCode)
+    {
+        try {
+            $saleModel = new Sale();
+            if (!empty($saleCode)) {
+                $saleId = current(Hashids::connection('sale_id')->decode($saleCode));
+                $sale   = $saleModel->with('delivery')->find($saleId);
+                if (!empty($sale)) {
+                    event(new TrackingCodeUpdatedEvent($sale));
+
+                    return response()->json([
+                                                'message' => 'Email enviado com sucesso',
+                                            ], 200);
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar enviar email atualização tracking code');
+            report($e);
         }
     }
 }
