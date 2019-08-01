@@ -253,6 +253,7 @@ class DomainsController extends Controller
             DB::beginTransaction();
 
             $requestData = $request->all();
+
             $recordsJson = json_decode($requestData['data']);
 
             $domain = $domainModel->with(['records'])->find(current(Hashids::decode($requestData['domain'])));
@@ -277,10 +278,8 @@ class DomainsController extends Controller
                                             ->count() == 0) {
                             //nao existe a record
 
-                            $quantityMx = $domain->records->where('type', 'MX')->count();
-
                             if (current($record[0]) == 'MX') {
-                                $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, $quantityMx + 1);
+                                $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
                             } else {
                                 $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
                             }
