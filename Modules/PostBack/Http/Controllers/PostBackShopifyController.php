@@ -126,7 +126,7 @@ class PostBackShopifyController extends Controller
             // Log::warning($projectId);
 
             if (!$project) {
-                Log::warning('error', 'projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
+                Log::warning('projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
 
                 return response()->json([
                                             'message' => 'error',
