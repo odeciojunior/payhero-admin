@@ -69,13 +69,13 @@
                         <h1 class="page-title">Integrações com HotZapp</h1>
                     </div>
                     <div class="col text-right">
-                        <a data-toggle="modal" data-target="#modal_add_integracao" class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                        <a data-toggle="modal" id='btn-add-integration' data-target="#modal_add_integracao" class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                             <i class="icon wb-plus" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class='page-content container'>
+            <div class='page-content container' id='project-integrated'>
                 @if(count($projectsIntegrated) == 0)
                     <div class="row justify-content-center mt-30">
                         <h4>Nenhuma integração encontrada</h4>
@@ -90,8 +90,14 @@
                                 <div class="card shadow card-edit" project='{{\Hashids::encode($project->id)}}' style='cursor:pointer;'>
                                     <img class="card-img-top img-fluid w-full" src="{!! $project['photo'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/produto.png') !!}';" alt="{!! asset('modules/global/assets/img/produto.png') !!}">
                                     <div class="card-body">
-                                        <h4 class="card-title"> {!! $project['name'] !!}</h4>
-                                        <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p>
+                                        <div class='col-md-10'>
+                                            <h4 class="card-title"> {!! $project['name'] !!}</h4>
+                                            <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p>
+                                        </div>
+                                        <div class='col-md-2'>
+                                            <a role='button' class='delete-integration pointer float-right mt-35' project='{{\Hashids::encode($project->id)}}' data-toggle='modal' data-target='#modal-delete' type='a'>
+                                                <i class='material-icons gradient'>delete_outline</i></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -107,81 +113,12 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                                <h4 class="modal-title" style="font-weight: 700;">Adicionar nova Integração com HotZapp</h4>
+                                <h4 class="modal-title" style="font-weight: 700;"></h4>
                             </div>
                             <div class="pt-10 pr-20 pl-20 modal_integracao_body">
-                                <form id='form_add_integration' method="post" action="#">
-                                    @csrf
-                                    <div style="width:100%">
-                                        <div class="row mt-20">
-                                            <div class="col-12">
-                                                <div class='form-group'>
-                                                    <label for="company">Selecione seu projeto</label>
-                                                    <select class="select-pad" id="project_id" name="project_id">
-                                                        @foreach($projects as $project)
-                                                            <option value="{!! $project['id'] !!}">{!! $project['name'] !!}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class='form-group col-12'>
-                                                <label for="url_store">Link</label>
-                                                <div class="d-flex input-group">
-                                                    <input type="text" class="input-pad addon" name="link" id="link" placeholder="Digite o link">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-20">
-                                            <div class="col-6">
-                                                <div class="switch-holder">
-                                                    <label for="token" class='mb-10'>Boleto gerado:</label>
-                                                    <br>
-                                                    <label class="switch">
-                                                        <input type="checkbox" value='0' name="boleto_generated" id="boleto_generated" class='check'>
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="switch-holder">
-                                                    <label for="token" class='mb-10'>Boleto pago:</label>
-                                                    <br>
-                                                    <label class="switch">
-                                                        <input type="checkbox" value='0' name="boleto_paid" id="boleto_paid" class='check'>
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-20">
-                                            <div class="col-6">
-                                                <div class="switch-holder">
-                                                    <label for="token" class='mb-10'>Cartão de crédito pago:</label>
-                                                    <br>
-                                                    <label class="switch">
-                                                        <input type="checkbox" value='0' name="credit_card_paid" id="credit_card_paid" class='check' value='0'>
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="switch-holder">
-                                                    <label for="token" class='mb-10'>Cartão de crédito Recusado:</label>
-                                                    <br>
-                                                    <label class="switch">
-                                                        <input type="checkbox" value='0' name="credit_card_refused" id="credit_card_refused" class='check' value='0'>
-                                                        <span class="slider round"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
                             <div class="modal-footer" style="margin-top: 15px">
-                                <button id="bt_add_integration" type="button" class="btn btn-success" data-dismiss="modal">Adicionar integração</button>
+                                <button id="bt_integration" type="button" class="btn btn-success" data-dismiss="modal"></button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
                             </div>
                         </div>

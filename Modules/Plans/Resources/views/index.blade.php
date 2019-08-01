@@ -9,7 +9,7 @@
 <div class="card shadow">
     <div style='min-height: 300px'>
         <div class='page-invoice-table table-responsive'>
-            <table id='table-pixel' class='table text-left table-pixels table-striped' style='width:100%'>
+            <table id='table-plans' class='table text-left table-pixels table-striped' style='width:100%'>
                 <thead>
                     <tr>
                         <td class='table-title' width='300px'>Nome</td>

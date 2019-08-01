@@ -98,6 +98,7 @@ $(function () {
 
     });
     function atualizarPlan() {
+        loadOnTable('#data-table-plan','#table-plans');
         $("#data-table-plan").html("<tr class=''><td colspan='11'Carregando...></td></tr>");
         $.ajax({
             method: "GET",

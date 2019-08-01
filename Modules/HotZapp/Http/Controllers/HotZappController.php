@@ -47,7 +47,20 @@ class HotZappController extends Controller
      */
     public function create()
     {
-        return view('hotzapp::create');
+        try {
+            $userProjectModel = new UserProject();
+            $projects         = [];
+            $userProjects     = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+
+            foreach ($userProjects as $userProject) {
+                $projects[] = $userProject->projectId;
+            }
+
+            return view('hotzapp::create', ['projects' => $projects]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar redirecionar para tela de adicionar integração (HotZappController - create)');
+            report($e);
+        }
     }
 
     /**
@@ -60,7 +73,7 @@ class HotZappController extends Controller
         try {
             $data                    = $request->all();
             $hotzappIntegrationModel = new HotzappIntegration();
-            $integration             = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->first();
+            $integration             = $hotzappIntegrationModel->where('project_id', $data['project_id'])->first();
             if ($integration) {
                 return response()->json([
                                             'message' => 'Projeto já integrado',
@@ -119,7 +132,7 @@ class HotZappController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function edit(Request $request, $id)
     {
@@ -201,6 +214,46 @@ class HotZappController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $projectId               = current(Hashids::decode($id));
+            $hotzappIntegrationModel = new HotzappIntegration();
+            $integration             = $hotzappIntegrationModel->where('project_id', $projectId)->first();
+            $integrationDeleted      = $integration->delete();
+            if ($integrationDeleted) {
+                return response()->json([
+                                            'message' => 'Integração Removida com sucesso!',
+                                        ], 200);
+            }
+
+            return response()->json([
+                                        'message' => 'Erro ao tentar remover Integração',
+                                    ], 400);
+        } catch (Exception $e) {
+
+        }
+    }
+
+    public function getIntegrations()
+    {
+        $hotzappIntegrationModel = new HotzappIntegration();
+        $projectModel            = new Project();
+        $userProjectModel        = new UserProject();
+
+        $projects            = [];
+        $projectsIntegrated  = [];
+        $userProjects        = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+        $hotzappIntegrations = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
+        foreach ($userProjects as $userProject) {
+            $projects[] = $userProject->projectId;
+        }
+
+        foreach ($hotzappIntegrations as $hotzappIntegration) {
+            $project = $projectModel->find($hotzappIntegration->project_id);
+            if ($project) {
+                $projectsIntegrated[] = $project;
+            }
+        }
+
+        return view('hotzapp::include', ['projects' => $projects, 'projectsIntegrated' => $projectsIntegrated]);
     }
 }

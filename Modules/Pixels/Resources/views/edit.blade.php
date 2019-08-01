@@ -50,31 +50,34 @@
         <label>Rodar Pixel:</label>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="Checkout">
-                    Checkout:
-                </label>
+        <div class="col-md-4">
+            <div class="switch-holder">
+                <label for="Checkout">Checkout:</label>
                 <br>
-                <input type="checkbox" @if($pixel->checkout == '1') value="1" checked="" @else value="0" @endif name='checkout' id='checkout' class='check'>
+                <label class='switch'>
+                    <input type="checkbox" @if($pixel->checkout == '1') value="1" checked="" @else value="0" @endif name='checkout' id='checkout' class='check'>
+                    <span class='slider round'></span>
+                </label>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="form-group">
-                <label for="cartao">
-                    Purchase (cartão):
-                </label>
+            <div class="switch-holder">
+                <label for="cartao">Purchase (cartão):</label>
                 <br>
-                <input type="checkbox" @if($pixel->purchase_card == '1') value="1" checked="" @else value="0" @endif name='purchase_card' id='purchase_card' class='check'>
+                <label class='switch'>
+                    <input type="checkbox" @if($pixel->purchase_card == '1') value="1" checked="" @else value="0" @endif name='purchase_card' id='purchase_card' class='check'>
+                    <span class='slider round'></span>
+                </label>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="form-group">
-                <label for="boleto">
-                    Purchase (boleto):
-                </label>
+            <div class="switch-holder">
+                <label for="boleto">Purchase (boleto):</label>
                 <br>
-                <input type="checkbox" @if($pixel->purchase_boleto == '1') value="1" checked="" @else value="0" @endif name='purchase_boleto' id='purchase_boleto' class='check'>
+                <label class='switch'>
+                    <input type="checkbox" @if($pixel->purchase_boleto == '1') value="1" checked="" @else value="0" @endif name='purchase_boleto' id='purchase_boleto' class='check'>
+                    <span class='slider round'></span>
+                </label>
             </div>
         </div>
     </div>

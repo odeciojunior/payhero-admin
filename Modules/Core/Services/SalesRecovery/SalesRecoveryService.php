@@ -162,7 +162,7 @@ class SalesRecoveryService
         $domainModel       = new Domain();
         $log               = $logModel->where('id_log_session', $checkout->id_log_session)
                                       ->orderBy('id', 'DESC')->first();
-        $telephone = FoxUtils::prepareCellPhoneNumber($log->telephone);
+        $telephone         = FoxUtils::prepareCellPhoneNumber($log->telephone);
         if (!empty($telephone)) {
             $log->telephone = $telephone;
         } else {
@@ -266,13 +266,18 @@ class SalesRecoveryService
         if ($sale->payment_method == 2) {
             $client->error = 'Não pago até a data do vencimento';
         } else {
-            $log           = $logModel->where('id_log_session', $checkout->id_log_session)
-                                      ->where('event', '=', 'payment error')
-                                      ->orderBy('id', 'DESC')
-                                      ->first();
-            $client->error = $log->error;
+            $log = $logModel->where('id_log_session', $checkout->id_log_session)
+                            ->where('event', '=', 'payment error')
+                            ->orderBy('id', 'DESC')
+                            ->first();
+
+            if ($log->error == 'CARTÃO RECUSADO !') {
+                $client->error = $log->error . ' (saldo insuficiente)';
+            } else {
+                $client->error = $log->error;
+            }
         }
-        $status = 'Recuperado';
+
         if ($sale->payment_method == 1) {
             $status = 'Recusado';
         } else {
