@@ -214,7 +214,7 @@
             </a>
         </li>
         <li class="site-menu-item has-sub">
-            <a href="{{ route('apps') }}">
+            <a href="{{ route('apps') }}" id='apps-link'>
                 <i class="material-icons">apps</i>
                 <span class="site-menu-title">Aplicativos</span>
             </a>

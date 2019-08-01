@@ -18,8 +18,13 @@
         </div>
         <div class="page-content container">
             @if(count($projects) == 0)
-                <div class="row justify-content-center mt-30">
-                    <h4>Nenhuma integração encontrada</h4>
+                @push('css')
+                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                @endpush
+                <div class="content-error d-flex text-center">
+                    <img src="{!! asset('modules/global/assets/img/emptyconvites.svg') !!}" width="250px">
+                    <h1 class="big gray">Nenhuma integração encontrada!</h1>
+                    <p class="desc gray">Integre suas lojas Shopify com o checkout do Cloudfox!</p>
                 </div>
             @else
 

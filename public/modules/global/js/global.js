@@ -44,6 +44,7 @@ $(document).ready(function () {
     } else if (current_url.includes('apps')) {
         $("#apps_img").attr('src', '/modules/global/assets/img/icon-red/aplicativos-d.svg');
         $("#apps_img").parent().parent().addClass('menu-active');
+        $("#apps-link").addClass('menu-active');
         $("#apps_img").css('height', '28px').css('width', '28px').css('margin-left', '-5px');
     } else if (current_url.includes('invitations')) {
         $("#invitations_img").attr('src', '/modules/global/assets/img/icon-red/convites-d.svg');
