@@ -80,10 +80,6 @@ class PostBackPagarmeController extends Controller {
                             'release_date'      => Carbon::now()->addDays($user['release_money_days'])->format('Y-m-d'),
                             'antecipation_date' => Carbon::now()->addDays($user['boleto_antecipation_money_days'])->format('Y-m-d'),
                         ]);
-
-                        $company->update([
-                            'balance' => $company->balance += $transaction->value
-                        ]);
                     }
                     else{
                         $transaction->update([

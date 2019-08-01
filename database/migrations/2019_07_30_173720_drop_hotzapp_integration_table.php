@@ -13,7 +13,7 @@ class DropHotzappIntegrationTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::dropIfExists('hotzapp_integration');
     }
 
     /**
