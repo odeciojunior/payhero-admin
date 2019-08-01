@@ -13,13 +13,19 @@ $(document).ready(function () {
             // altera campo value dependendo do tipo do frete
             var selected = $("#shipping-type").val();
             if (selected === 'static') {
+                $('#shipping-name').attr('placeholder','TRANSPORTADORA')
                 $("#value-shipping-row").css('display', 'block');
                 $("#zip-code-origin-shipping-row").css('display', 'none');
 
-            } else {
+            } else if (selected == 'pac') {
+                $('#shipping-name').attr('placeholder','PAC')
                 $("#value-shipping-row").css('display', 'none');
                 $("#zip-code-origin-shipping-row").css('display', 'block');
 
+            } else if (selected == 'sedex') {
+                $('#shipping-name').attr('placeholder','SEDEX')
+                $("#value-shipping-row").css('display', 'none');
+                $("#zip-code-origin-shipping-row").css('display', 'block');
             }
 
             //mask money
@@ -33,7 +39,6 @@ $(document).ready(function () {
     $("#add-shipping").on('click', function () {
         loadOnModal('#modal-add-body');
         $("#modal-title").html('Cadastrar frete');
-
         $.ajax({
             method: "GET",
             url: "/shippings/create",
@@ -59,6 +64,8 @@ $(document).ready(function () {
                     var formData = new FormData(document.getElementById('form-add-shipping'));
                     formData.append("project", projectId);
                     loadingOnScreen();
+                    console.log($("#shipping-pre-selected").val())
+                    console.log($("#shipping-status").val())
                     $.ajax({
                         method: "POST",
                         url: "/shippings",
@@ -90,8 +97,8 @@ $(document).ready(function () {
     });
 
     function atualizarFrete() {
-        loadOnTable('#dados-tabela-frete','#tabela_fretes');
-
+        loadOnTable('#dados-tabela-frete', '#tabela_fretes');
+        changeType();
         $.ajax({
             method: "GET",
             url: '/shippings',
