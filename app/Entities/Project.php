@@ -79,7 +79,9 @@ class Project extends Model
         'created_at',
         'updated_at',
         'logo',
-        'url_redirect',
+        'boleto_redirect',
+        'card_redirect',
+        'analyzing_redirect',
         'boleto',
         'deleted_at',
     ];
