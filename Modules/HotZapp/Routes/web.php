@@ -11,13 +11,9 @@
 |
 */
 
-//Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\HotZapp\Http\Controllers'], function() {
-//
-//    Route::resource('/hotzapp', 'HotZappController')->only('index', 'create', 'store', 'edit', 'update','destroy')
-//         ->names('hotzapp');
-//});
 Route::group(['middleware' => ['web', 'auth']], function() {
-    Route::Resource('apps/hotzapp', 'HotZappController')->only('index', 'create', 'store', 'edit', 'update', 'show');
+    Route::Resource('apps/hotzapp', 'HotZappController')->only('index', 'create', 'store', 'edit', 'update', 'show','destroy');
+    Route::get('/getintegrations', 'HotZappController@getIntegrations');
 });
 //Route::prefix('hotzapp')->group(function() {
 //    Route::get('/', 'HotZappController@index');
