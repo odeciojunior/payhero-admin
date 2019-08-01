@@ -119,24 +119,33 @@
         <br>
         <span class="table-title gray"> CPF: {{$client->document}}</span>
         <h4> Entrega </h4>
-        <span class="table-title gray table-code-tracking"> Código Rastreio:
+        <span class="table-title gray table-code-tracking">
+            <div class='row' style='line-height: 1.5;'>
+                Código Rastreio:
+                @if (empty($sale->shopify_order))
+                    <div class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle'>
+                    <a id='btn-edit-trackingcode' class='edit pointer' style='margin-right:10px' title='Editar Código de rastreio' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'><i class='icon wb-edit' aria-hidden='true'></i></a>
+                    <a id='btn-sent-tracking-user' class='pointer' @if(!empty($delivery->tracking_code)) style='' @else style='display: none;' @endif title='Enviar Email' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'><i class='icon wb-inbox' aria-hidden='true'></i></a>
+                </div>
+                @endif
+            </div>
             <div class='tracking-code'>
                 <span class='tracking-code-value'>{{isset($delivery->tracking_code)? $delivery->tracking_code:'Não informado'}}</span>
             </div>
         </span>
         <input type='text' class='input-value-trackingcode' style='display:none;' value='{{isset($delivery->tracking_code)? $delivery->tracking_code:''}}'>
-        <button type='button' class='btn-save-tracking' style='display: none;'>Salvar</button>
+        <button type='button' class='btn-save-tracking' style='display: none;' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'>Salvar</button>
         <button type='button' class='btn-cancel-tracking' style='display: none;'>Cancelar</button>
-        <div class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align is-hide' id='btn-edit-trackingcode' data-name='edit'>
-            <div class='icondemo vertical-align-middle'>
-                <a class='edit'><i class='icon wb-edit' aria-hidden='true'></i></a>
-            </div>
-        </div>
-        <div class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align' data-name='inbox' id='btn-sent-tracking-user' @if(!empty($delivery->tracking_code)) style='display: block;' @else style='display: none;' @endif>
-            <div class='icondemo vertical-align-middle'>
-                <a class=''><i class='icon wb-inbox' aria-hidden='true'></i></a>
-            </div>
-        </div>
+        {{--        <div id='btn-edit-trackingcode' class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align is-hide' data-name='edit'>--}}
+        {{--            <div class='icondemo vertical-align-middle'>--}}
+        {{--                <a class='edit'><i class='icon wb-edit' aria-hidden='true'></i></a>--}}
+        {{--            </div>--}}
+        {{--        </div>--}}
+        {{--        <div id='btn-sent-tracking-user' class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align' data-name='inbox' @if(!empty($delivery->tracking_code)) style='display: block;' @else style='display: none;' @endif>--}}
+        {{--            <div class='icondemo vertical-align-middle'>--}}
+        {{--                <a class=''><i class='icon wb-inbox' aria-hidden='true'></i></a>--}}
+        {{--            </div>--}}
+        {{--        </div>--}}
         <br>
         <span class="table-title gray"> Endereço: {{$delivery->street}}, {{$delivery->number}}</span>
         <br>
@@ -196,7 +205,6 @@
 
         $('.btn-cancel-tracking').on('click', function () {
             $('.tracking-code').show();
-            $('#btn-sent-tracking-user').show();
             $('.input-value-trackingcode').val('').hide();
             $('.btn-save-tracking').hide();
             $('.btn-cancel-tracking').hide();
@@ -204,10 +212,11 @@
 
         $('.btn-save-tracking').on('click', function () {
             let trackingCode = $(".input-value-trackingcode").val();
-            ajaxUpdateTracking(trackingCode);
+            let referenceCode = $(this).attr('data-code');
+            ajaxUpdateTracking(trackingCode,referenceCode);
         });
 
-        function ajaxUpdateTracking(tracking) {
+        function ajaxUpdateTracking(tracking,reference) {
             var delivery = '{{\Vinkla\Hashids\Facades\Hashids::encode($delivery->id)}}';
             var sale = '{{\Vinkla\Hashids\Facades\Hashids::encode($sale->id)}}';
 
@@ -235,6 +244,7 @@
                 success: function (response) {
                     $(".btn-cancel-tracking").click();
                     $(".tracking-code-value").html(tracking);
+                    $('#btn-sent-tracking-user[data-code='+reference+']').show('slow');
                     alertCustom('success', response.message);
                 }
             });
