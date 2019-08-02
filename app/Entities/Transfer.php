@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Transfer extends Model
 {
+    use FoxModelTrait;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -30,8 +32,19 @@ class Transfer extends Model
         'user',
         'value',
         'type',
+        'type_enum',
+        'reason',
         'created_at',
         'updated_at',
+    ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'type_enum' => [
+            1 => 'in',
+            2 => 'out',
+        ],
     ];
 
     /**

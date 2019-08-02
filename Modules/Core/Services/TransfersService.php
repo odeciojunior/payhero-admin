@@ -11,16 +11,17 @@ use Illuminate\Support\Facades\Log;
 
 class TransfersService
 {
-    public function verifyTransactions() {
+    public function verifyTransactions()
+    {
 
         $companyModel     = new Company();
         $transferModel    = new Transfer();
         $transactionModel = new Transaction();
 
         $transactions = $transactionModel->where([
-                                               ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                                               ['status', 'paid'],
-                                           ])->get();
+                                                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                                                     ['status', 'paid'],
+                                                 ])->get();
 
         $transfers = [];
 
@@ -29,11 +30,13 @@ class TransfersService
                 $company = $companyModel->find($transaction->company);
 
                 $transfer = $transferModel->create([
-                                                 'transaction' => $transaction->id,
-                                                 'user'        => $company->user_id,
-                                                 'value'       => $transaction->value,
-                                                 'type'        => 'in',
-                                             ]);
+                                                       'transaction' => $transaction->id,
+                                                       'user'        => $company->user_id,
+                                                       'company_id'  => $company->id,
+                                                       'type_enum'   => $transferModel->getEnum('type_enum', 'in'),
+                                                       'value'       => $transaction->value,
+                                                       'type'        => 'in',
+                                                   ]);
 
                 $transaction->update([
                                          'status' => 'transfered',
@@ -44,7 +47,6 @@ class TransfersService
                                  ]);
 
                 $transfers[] = $transfer->toArray();
-
             } catch (\Exception $e) {
                 report($e);
                 continue;
@@ -53,5 +55,4 @@ class TransfersService
 
         Log::info('transferencias criadas ' . print_r($transfers, true));
     }
-
 }

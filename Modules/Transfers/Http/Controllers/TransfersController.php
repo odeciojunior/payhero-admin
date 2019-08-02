@@ -18,14 +18,14 @@ class TransfersController extends Controller
     public function index(Request $request)
     {
         try {
-            $transfer = new Transfer();
-
             $transfersModel = new Transfer();
 
             $transfers = $transfersModel
                 ->select('transfers.*', 'transaction.sale', 'transaction.company', 'transaction.currency')
                 ->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction')
-                ->where('transaction.company', current(Hashids::decode($request->company)))->orderBy('id', 'DESC');
+                ->where('transfers.company_id', current(Hashids::decode($request->company)))
+                ->orWhere('transaction.company', current(Hashids::decode($request->company)))
+                ->orderBy('id', 'DESC');
 
             return TransfersResource::collection($transfers->paginate(10));
         } catch (Exception $e) {

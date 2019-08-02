@@ -48,6 +48,7 @@ $(document).ready(function () {
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
                 $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
+                $('.total_available').html('<span class="currency">R$</span>'+response.available_balance);
                 $(".currency").html(response.currency);
                 $(".available-balance").html(response.available_balance);
                 $(".antecipable-balance").html(response.antecipable_balance);
