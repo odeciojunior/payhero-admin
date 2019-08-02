@@ -27,6 +27,7 @@ class Domain extends Model
      */
     protected $fillable = [
         'project_id',
+        'cloudflare_domain_id',
         'name',
         'status',
         'sendgrid_id',

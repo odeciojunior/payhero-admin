@@ -74,6 +74,12 @@ class ShopifyController extends Controller
             }
 
             try {
+                //tratamento parcial do dominio
+                $dados['url_store'] = str_replace("http://", "", $dados['url_store']);
+                $dados['url_store'] = str_replace("https://", "", $dados['url_store']);
+                $dados['url_store'] = 'http://' . $dados['url_store'];
+                $dados['url_store'] = parse_url($dados['url_store'], PHP_URL_HOST);
+
                 $urlStore = str_replace('.myshopify.com', '', $dados['url_store']);
 
                 $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dados['token']);

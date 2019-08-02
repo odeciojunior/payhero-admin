@@ -180,7 +180,7 @@ class DomainsController extends Controller
             $domainModel       = new Domain();
             $companyModel      = new Company();
             $cloudFlareService = new CloudFlareService();
-            $haveEnterA = false;
+            $haveEnterA        = false;
 
             $domain = $domainModel->with([
                                              'project',
@@ -194,7 +194,7 @@ class DomainsController extends Controller
             $registers = [];
             foreach ($domain->records as $record) {
 
-                if($record->type == 'A' && $record->name == $domain->name){
+                if ($record->type == 'A' && $record->name == $domain->name) {
                     $haveEnterA = true;
                 }
                 $subdomain = explode('.', $record->name);
@@ -225,10 +225,10 @@ class DomainsController extends Controller
             }
             if ($domain) {
                 return view('domains::edit', [
-                    'domain'    => $domain,
-                    'companies' => $companies,
-                    'registers' => $registers,
-                    'project'   => $domain->project,
+                    'domain'     => $domain,
+                    'companies'  => $companies,
+                    'registers'  => $registers,
+                    'project'    => $domain->project,
                     'haveEnterA' => $haveEnterA,
                 ]);
             }
@@ -263,6 +263,10 @@ class DomainsController extends Controller
                 foreach ($records as $record) {
                     $subdomain = current($record[1]);
 
+                    if ($subdomain == '' || $subdomain == '@') {
+                        $subdomain = $domain->name;
+                    }
+
                     $subdomain = str_replace("http://", "", $subdomain);
                     $subdomain = str_replace("https://", "", $subdomain);
                     $subdomain = 'http://' . $subdomain;
@@ -279,17 +283,32 @@ class DomainsController extends Controller
                             //nao existe a record
 
                             if (current($record[0]) == 'MX') {
-                                $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
+                                $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
+                            } else if (current($record[0]) == 'TXT') {
+                                $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
                             } else {
-                                $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
+                                $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
                             }
-                            $newRecord = $domainRecordModel->create([
-                                                                        'domain_id'   => $domain->id,
-                                                                        'type'        => current($record[0]),
-                                                                        'name'        => $subdomain,
-                                                                        'content'     => current($record[2]),
-                                                                        'system_flag' => 0,
-                                                                    ]);
+
+                            if (!empty($cloudRecordId)) {
+                                $newRecord = $domainRecordModel->create([
+                                                                            'domain_id'            => $domain->id,
+                                                                            'cloudflare_record_id' => $cloudRecordId,
+                                                                            'type'                 => current($record[0]),
+                                                                            'name'                 => $subdomain,
+                                                                            'content'              => current($record[2]),
+                                                                            'system_flag'          => 0,
+                                                                        ]);
+
+                                DB::commit();
+
+                                return response()->json(['message' => "Domínio atualizado com sucesso"], 200);
+                            } else {
+                                //dominio já cadastrado
+                                DB::rollBack();
+
+                                return response()->json(['message' => 'Erro ao atualizar domínios'], 400);
+                            }
                         } else {
                             //dominio já cadastrado
                             DB::rollBack();
@@ -304,17 +323,13 @@ class DomainsController extends Controller
                     }
                 }
             }
-
-            DB::commit();
-
-            return response()->json(['message' => "Domínio atualizado com sucesso"], 200);
         } catch (Exception $e) {
             DB::rollBack();
 
             Log::warning('Erro ao tentar salvar dominio personalisado DomainsController - update');
             report($e);
 
-            return response()->json(['message' => 'Erro ao atualizar dominios'], 400);
+            return response()->json(['message' => 'Erro ao atualizar domínios'], 400);
         }
     }
 
@@ -462,15 +477,7 @@ class DomainsController extends Controller
 
             $cloudFlareService->setZone($record->domain->name);
 
-            $recordName = '';
-            if (str_contains($record->name, '.')) {
-                $recordName = $record->name;
-            } else {
-                $recordName = $record->name . '.' . $record->domain->name;
-            }
-
-            if ($cloudFlareService->deleteRecord($recordName)) {
-
+            if ($cloudFlareService->deleteRecord($record->cloudflare_record_id)) {
                 //zona deletada
                 $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
 
@@ -486,6 +493,8 @@ class DomainsController extends Controller
         } catch (Exception $e) {
             Log::warning('DomainsController destroyRecord - erro ao deletar domínio');
             report($e);
+
+            return response()->json(['message' => 'Não foi possível deletar o subdomínio'], 400);
         }
     }
 

@@ -31,6 +31,7 @@ class DomainRecord extends Model
      */
     protected $fillable = [
         'domain_id',
+        'cloudflare_record_id',
         'type',
         'name',
         'content',
