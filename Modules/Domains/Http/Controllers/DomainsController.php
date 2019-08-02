@@ -587,7 +587,7 @@ class DomainsController extends Controller
                                                                     'status' => $domainModel->getEnum('status', 'approved'),
                                                                 ]);
 
-                                                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
+                                                return response()->json(['message' => 'Domínio validado com sucesso'], 202);
                                             } else {
                                                 $domain->update([
                                                                     'status' => $domainModel->getEnum('status', 'pending'),
@@ -615,10 +615,10 @@ class DomainsController extends Controller
                                                 'status' => $domainModel->getEnum('status', 'approved'),
                                             ]);
 
-                            return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
+                            return response()->json(['message' => 'Domínio revalidado com sucesso'], 201);
                         }
 
-                        return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
+                        //return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                     } else {
                         $domain->update([
                                             'status' => $domainModel->getEnum('status', 'pending'),
