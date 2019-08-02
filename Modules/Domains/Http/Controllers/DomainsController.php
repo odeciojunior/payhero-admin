@@ -564,14 +564,59 @@ class DomainsController extends Controller
             $domainId    = current(Hashids::decode($requestData['domain']));
             if ($domainId) {
                 //hashid ok
-                $domain = $domainModel->find($domainId);
+                $domain = $domainModel->with('records', 'project', 'project.shopifyIntegrations')
+                                      ->find($domainId);
                 if ($domain) {
                     //dominio existe
 
                     if ($cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
-                        $domain->update([
-                                            'status' => $domainModel->getEnum('status', 'approved'),
-                                        ]);
+
+                        if (!empty($domain->project->shopify_id)) {
+                            //se for shopify, fazer o check
+                            try {
+
+                                if ($domain->project->shopifyIntegrations) {
+                                    foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+                                        $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                        $shopify->setThemeByRole('main');
+                                        if (!empty($shopifyIntegration->layout_theme_html)) {
+                                            $html = $shopify->getTemplateHtml($shopify::templateKeyName);
+                                            if ($shopify->checkCartTemplate($html)) {
+                                                $domain->update([
+                                                                    'status' => $domainModel->getEnum('status', 'approved'),
+                                                                ]);
+
+                                                return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
+                                            } else {
+                                                $domain->update([
+                                                                    'status' => $domainModel->getEnum('status', 'pending'),
+                                                                ]);
+
+                                                return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    //integração nao encontrada
+                                    $domain->update([
+                                                        'status' => $domainModel->getEnum('status', 'pending'),
+                                                    ]);
+
+                                    return response()->json(['message' => 'Não foi possível revalidar o domínio, integração do shopify não encontrada'], 400);
+                                }
+                            } catch (\Exception $e) {
+                                //throwl
+
+                            }
+                        } else {
+                            //nao eh integracao shopfy, validar dominio
+                            $domain->update([
+                                                'status' => $domainModel->getEnum('status', 'approved'),
+                                            ]);
+
+                            return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
+                        }
 
                         return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                     } else {

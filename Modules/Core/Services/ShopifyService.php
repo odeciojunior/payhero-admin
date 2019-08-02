@@ -485,7 +485,7 @@ class ShopifyService
                 $parent->removeChild($button->id());
             }
 
-            $cartForm->setAttribute('action', 'https://checkout.'.$domain.'/');
+            $cartForm->setAttribute('action', 'https://checkout.' . $domain . '/');
             $cartForm->setAttribute('id', 'cart_form');
             $cartForm->setAttribute('data-fox', 'cart_form');
 
@@ -545,6 +545,36 @@ class ShopifyService
             return $html;
         } else {
             //thown parse error
+        }
+    }
+
+    /**
+     * @param $htmlCart
+     * @param null $domain
+     * @return bool
+     */
+    public function checkCartTemplate($htmlCart)
+    {
+        $dom = new Dom;
+        $dom->load($htmlCart);
+        $forms = $dom->find('form');
+        foreach ($forms as $form) {
+            $data = explode(' ', $form->getAttribute('class'));
+            if (in_array('cart', $data)) {
+                $cartForm = $form;
+                break;
+            }
+        }
+
+        if ($cartForm) {
+            //div Foxdata
+            $divFoxData = new Selector('#foxData', new Parser());
+            $divs       = $divFoxData->find($cartForm);
+            foreach ($divs as $div) {
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -652,7 +682,7 @@ class ShopifyService
                 $parent->removeChild($button->id());
             }
 
-            $cartForm->setAttribute('action', 'https://checkout.'.$domain.'/');
+            $cartForm->setAttribute('action', 'https://checkout.' . $domain . '/');
             $cartForm->setAttribute('id', 'cart_form');
             $cartForm->setAttribute('data-fox', 'cart_form');
 
@@ -919,7 +949,7 @@ class ShopifyService
 
         $this->createShopWebhook([
                                      "topic"   => "orders/updated",
-                                     "address" => $postbackUrl . Hashids::encode($projectId).'/tracking',
+                                     "address" => $postbackUrl . Hashids::encode($projectId) . '/tracking',
                                      "format"  => "json",
                                  ]);
 
