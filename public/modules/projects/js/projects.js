@@ -10,9 +10,7 @@ $(function () {
 
     ///// UDPATE CONFIGURAÇÃO Tela Project
     function updateConfiguracoes() {
-
         $.ajax({
-
             method: "GET",
             url: "/projects/" + projectId + '/edit',
             headers: {
