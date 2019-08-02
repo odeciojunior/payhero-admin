@@ -26,7 +26,7 @@
                     <button class='btn btn-primary' id='bt_add_record'>Adicionar</button>
                 </div>
             </div>
-            @if(!$haveEnterA)
+            @if(!$haveEnterA && $project->shopify_id == null)
                 <p class='info mt-12' style='font-size: 10px;'>
                     <i class='icon wb-info-circle' aria-hidden='true'></i><strong> Caso você possua um site hospedado em algum servidor com este dominio, você precisa criar uma entrada A com seu dominio apontando para o IP do servidor para seu site continuar funcionando normalmente. </strong>
                 </p>

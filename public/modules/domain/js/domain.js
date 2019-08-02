@@ -80,7 +80,7 @@ $(document).ready(function () {
                             fromNew = 'true';
                             // modalDomainEdit esta em função do globalDomain
                             var responseDomains = response;
-                            modalDomainEdit(responseDomains);
+                            modalDomainEdit(responseDomains,true);
                             updateDomains();
                         }
                     });
@@ -252,10 +252,14 @@ $(document).ready(function () {
 
     }
 
-    function modalDomainEdit(responseDomains) {
+    function modalDomainEdit(responseDomains,fromSave) {
         $("#modal-title").html("Editar Domínio");
         $('#btn-modal').removeAttr("data-dismiss")
-
+        if(fromSave){
+            $('#btn-modal').text('Proximo')
+        }else {
+            $('#btn-modal').text('Atualizar');
+        }
         var data = {dominio: globalDomain};
         responseDomainsVar = responseDomains
         $.ajax({
