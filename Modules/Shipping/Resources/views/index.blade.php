@@ -1,49 +1,43 @@
 <!-- Page -->
-
 <div class='row no-gutters mb-10'>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
-
             {{--<div id="config-shipping" class="btn-holder d-flex align-items-center pointer mr-10"   data-toggle="modal" data-target="#modal-content-shipping">--}}
-                {{--<a class="pointer"> <i class="material-icons"> settings</i> </a>--}}
-                {{--<span class="link-button-dependent gray ml-10"> Configurar frete </span>--}}
+            {{--<a class="pointer"> <i class="material-icons"> settings</i> </a>--}}
+            {{--<span class="link-button-dependent gray ml-10"> Configurar frete </span>--}}
             {{--</div>    --}}
-
-
-            <div id="add-shipping" class="btn-holder  d-flex align-items-center pointer"  data-toggle="modal" data-target="#modal-content">
+            <div id="add-shipping" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-content">
                 <span class="link-button-dependent red"> Adicionar Frete </span>
-                <a class="ml-10 rounded-add pointer"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
-            </div>    
-         
+                <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+            </div>
         </div>
     </div>
 </div>
-
-
 <div class="card shadow">
     <div style='min-height: 300px'>
-    <div class='page-invoice-table table-responsive'>
-        <table id='tabela-fretes' class='table text-left table-fretes table-striped' style='width:100%'>
-            <thead>
-                <tr>
-                    <td class='table-title' width='300px'>Tipo</td>
-                    <td class='table-title' width='300px'>Descrição</td>
-                    <td class='table-title' width='300px'>Valor</td>
-                    <td class='table-title' width='300px'>Informação</td>
-                    <td class='table-title' width='300px'>Status</td>
-                    <td class='table-title' width='200px'>Pré-Selecionado</td>
-                    <td class='table-title text-center' width='200px'>Opções</td>
-                </tr>
-            </thead>
-            <tbody id='dados-tabela-frete'>
-                {{-- js carregando dados --}}
-            </tbody>
-        </table>
+        <div class='page-invoice-table table-responsive'>
+            <table id='tabela-fretes' class='table text-left table-fretes table-striped' style='width:100%'>
+                <thead>
+                    <tr>
+                        <td class='table-title' width='300px'>Tipo</td>
+                        <td class='table-title' width='300px'>Descrição</td>
+                        <td class='table-title' width='300px'>Valor</td>
+                        <td class='table-title' width='300px'>Informação</td>
+                        <td class='table-title' width='300px'>Status</td>
+                        <td class='table-title' width='200px'>Pré-Selecionado</td>
+                        <td class='table-title text-center' width='200px'>Opções</td>
+                    </tr>
+                </thead>
+                <tbody id='dados-tabela-frete'>
+                    {{-- js carregando dados --}}
+                </tbody>
+            </table>
+        </div>
     </div>
-    </div>
-
 </div>
-
+<ul id="pagination-shippings" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+    {{-- js carrega... --}}
+</ul>
 <!-- Modal -->
 <div class='modal fade modal-3d-flip-vertical example-modal-lg' id='modal-content-shipping' tabindex='-1' role='dialog' aria-labelledby='TituloModal' aria-hidden='true'>
     <div class='modal-dialog modal-simple'>

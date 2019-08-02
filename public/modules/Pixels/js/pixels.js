@@ -76,81 +76,57 @@ $(function () {
             }
         });
     });
-    function atualizarPixel() {
+    function atualizarPixel(link = null) {
         loadOnTable('#data-table-pixel', '#table-pixel')
+
+        if (link == null) {
+            link = '/pixels?' + 'project=' + projectId;
+        } else {
+            link = '/pixels' + link + '&project=' + projectId;
+        }
 
         $.ajax({
             method: "GET",
-            url: "/pixels",
-            data: {project: projectId},
+            url: link,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
-                $("#data-table-pixel").html('Erro ao encontrar dados');
+            error: function (response) {
+                $("#data-table-pixel").html(response.message);
             },
             success: function (response) {
                 $("#data-table-pixel").html('');
-                $.each(response.data, function (index, value) {
-                    data = '';
-                    data += '<tr class="shipping-id">';
-                    data += '<td class="shipping-id" width="70%" style="width:120px;">' + value.name + '</td>';
-                    data += '<td class="shipping-type" width="70%" style="width:120px;">' + value.code + '</td>';
-                    data += '<td class="shipping-value"  width="70% "style="width:120px;">' + value.platform + '</td>';
-                    data += '<td class="shipping-status" width="70%" style="width:100px;">';
-                    if (value.status == 1) {
-                        data += '<span class="badge badge-success">Ativo</span>';
-                    } else {
-                        data += '<span class="badge badge-danger">Desativado</span>';
-                    }
-                    data += '</td>';
-
-                    // $(document).ready(function () {
-                    //
-                    //     var projectId = $("#project-id").val();
-                    //
-                    //     $("#tab-fretes").on('click', function () {
-                    //         $("#previewimage").imgAreaSelect({remove: true});
-                    //         atualizarFrete();
-                    //     });
-                    //     atualizarFrete();
-                    //
-                    //     function changeType() {
-                    //         $("#shipping-type").change(function () {
-                    //             // altera campo value dependendo do tipo do frete
-                    //             var selected = $("#shipping-type").val();
-                    //             if (selected === 'static') {
-                    //                 $("#value-shipping-row").css('display', 'block');
-                    //                 $("#zip-code-origin-shipping-row").css('display', 'none');
-                    //
-                    //             } else {
-                    //                 $("#value-shipping-row").css('display', 'none');
-                    //                 $("#zip-code-origin-shipping-row").css('display', 'block');
-                    //
-                    //             }
-                    //
-                    //             //mask money
-                    //             $('#shipping-value').mask('#.###,#0', {reverse: true});
-                    //         });
-                    //     }
-                    //
-                    // });
-
-                    data += "<td style='min-width:200px;'>" +
-                        "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
-                        "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a>" +
-                        "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>"
-                    "</td>";
-
-                    // data += "<td style='vertical-align: middle' class=''><a role='button' class='details-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
-                    // data += "<td style='vertical-align: middle' class=''><a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a></td>";
-                    // data += "<td style='vertical-align: middle' class=''><a role='button' class='delete-pixel pointer'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a></td>";
-                    data += '</tr>';
-                    $("#data-table-pixel").append(data);
-                });
                 if (response.data == '') {
                     $("#data-table-pixel").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                } else {
+                    $.each(response.data, function (index, value) {
+                        data = '';
+                        data += '<tr class="shipping-id">';
+                        data += '<td class="shipping-id" width="70%" style="width:120px;">' + value.name + '</td>';
+                        data += '<td class="shipping-type" width="70%" style="width:120px;">' + value.code + '</td>';
+                        data += '<td class="shipping-value"  width="70% "style="width:120px;">' + value.platform + '</td>';
+                        data += '<td class="shipping-status" width="70%" style="width:100px;">';
+                        if (value.status == 1) {
+                            data += '<span class="badge badge-success">Ativo</span>';
+                        } else {
+                            data += '<span class="badge badge-danger">Desativado</span>';
+                        }
+                        data += '</td>';
+
+                        data += "<td style='min-width:200px;'>" +
+                            "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
+                            "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a>" +
+                            "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>"
+                        "</td>";
+
+                        data += '</tr>';
+                        $("#data-table-pixel").append(data);
+                    });
                 }
+
+                pagination(response);
+
+                // details pixel
                 $(".details-pixel").unbind('click');
                 $(".details-pixel").on('click', function () {
                     var pixel = $(this).attr('pixel');
@@ -173,6 +149,8 @@ $(function () {
                         }
                     });
                 });
+
+                // edit pixel
                 $(".edit-pixel").unbind('click');
                 $(".edit-pixel").on('click', function () {
                     $("#modal-add-body").html("");
@@ -246,6 +224,7 @@ $(function () {
 
                 });
 
+                // delete pixel
                 $('.delete-pixel').on('click', function (event) {
                     event.preventDefault();
                     var pixel = $(this).attr('pixel');
@@ -278,8 +257,88 @@ $(function () {
                     });
 
                 });
+
             }
         });
+    }
+
+    function pagination(response) {
+        if (response.meta.last_page == 1) {
+            $("#primeira_pagina_pixel").hide();
+            $("#ultima_pagina_pixel").hide();
+        } else {
+
+            $("#pagination-pixels").html("");
+
+            var primeira_pagina_pixel = "<button id='primeira_pagina_pixel' class='btn nav-btn'>1</button>";
+
+            $("#pagination-pixels").append(primeira_pagina_pixel);
+
+            if (response.meta.current_page == '1') {
+                $("#primeira_pagina_pixel").attr('disabled', true);
+                $("#primeira_pagina_pixel").addClass('nav-btn');
+                $("#primeira_pagina_pixel").addClass('active');
+            }
+
+            $('#primeira_pagina_pixel').on("click", function () {
+                atualizarPixel('?page=1');
+            });
+
+            for (x = 3; x > 0; x--) {
+
+                if (response.meta.current_page - x <= 1) {
+                    continue;
+                }
+
+                $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+
+                $('#pagina_pixel_' + (response.meta.current_page - x)).on("click", function () {
+                    atualizarPixel('?page=' + $(this).html());
+                });
+
+            }
+
+            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+                var pagina_atual_pixel = "<button id='pagina_atual_pixel' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+
+                $("#pagination-pixels").append(pagina_atual_pixel);
+
+                $("#pagina_atual_pixel").attr('disabled', true);
+                $("#pagina_atual_pixel").addClass('nav-btn');
+                $("#pagina_atual_pixel").addClass('active');
+
+            }
+            for (x = 1; x < 4; x++) {
+
+                if (response.meta.current_page + x >= response.meta.last_page) {
+                    continue;
+                }
+
+                $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+                $('#pagina_pixel_' + (response.meta.current_page + x)).on("click", function () {
+                    atualizarPixel('?page=' + $(this).html());
+                });
+
+            }
+
+            if (response.meta.last_page != '1') {
+                var ultima_pagina_pixel = "<button id='ultima_pagina_pixel' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+                $("#pagination-pixels").append(ultima_pagina_pixel);
+
+                if (response.meta.current_page == response.meta.last_page) {
+                    $("#ultima_pagina_pixel").attr('disabled', true);
+                    $("#ultima_pagina_pixel").addClass('nav-btn');
+                    $("#ultima_pagina_pixel").addClass('active');
+                }
+
+                $('#ultima_pagina_pixel').on("click", function () {
+                    atualizarPixel('?page=' + response.meta.last_page);
+                });
+            }
+        }
+
     }
 
 });

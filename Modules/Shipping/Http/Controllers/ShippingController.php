@@ -23,20 +23,25 @@ class ShippingController extends Controller
     public function index(Request $request)
     {
         try {
-            $projectId = $request->input("project");
+            $shippingModel = new Shipping();
+            if ($request->has('project') && !empty($request->input("project"))) {
+                $projectId = current(Hashids::decode($request->input("project")));
 
-            $projectModel = new Project();
+                $shippings = $shippingModel->where('project', $projectId);
 
-            if ($projectId) {
-                $projectId = Hashids::decode($projectId)[0];
-
-                $project = $projectModel->with('shippings')->find($projectId);
-
-                return ShippingResource::collection($project->shippings);
+                return ShippingResource::collection($shippings->orderBy('id', 'DESC')->paginate(5));
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao listar dados de frete',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados (ShippingController - index)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao listar dados de frete',
+                                    ], 400);
         }
     }
 
@@ -50,6 +55,8 @@ class ShippingController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela criar frete (ShippingController - create)');
             report($e);
+
+            return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
     }
 
