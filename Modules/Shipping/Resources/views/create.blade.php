@@ -34,29 +34,29 @@
             <input name='zip_code_origin' id='shipping-zip-code-origin' type='text' class='input-pad' value='' placeholder='12345-678'>
         </div>
     </div>
-    {{--    <div class='row'>--}}
-    {{--        <div class="col-md-6 col-sm-6 col-xs-6">--}}
-    {{--            <div class="switch-holder">--}}
-    {{--                <label for="cartao">Status</label>--}}
-    {{--                <br>--}}
-    {{--                <label class='switch'>--}}
-    {{--                    <input id='shipping-status' name='status' value='0' class='check' type="checkbox" >--}}
-    {{--                    <span class='slider round'></span>--}}
-    {{--                </label>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--        <div class="col-md-6 col-sm-6 col-xs-6">--}}
-    {{--            <div class="switch-holder">--}}
-    {{--                <label for="cartao">Pré-selecionado</label>--}}
-    {{--                <br>--}}
-    {{--                <label class='switch'>--}}
-    {{--                    <input id='shipping-pre-selected' name='pre_selected' value='0' class='check' type="checkbox">--}}
-    {{--                    <span class='slider round'></span>--}}
-    {{--                </label>--}}
-    {{--            </div>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
-    <div class='row'>
+        <div class='row'>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="switch-holder">
+                    <label for="cartao">Status</label>
+                    <br>
+                    <label class='switch'>
+                        <input id='shipping-status' name='status' value='1' class='check' type="checkbox" >
+                        <span class='slider round'></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="switch-holder">
+                    <label for="cartao">Pré-selecionado</label>
+                    <br>
+                    <label class='switch'>
+                        <input id='shipping-pre-selected' name='pre_selected' value='1' class='check' type="checkbox">
+                        <span class='slider round'></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+{{--    <div class='row'>
         <div class='form-group col-12'>
             <label for='status'>Status</label>
             <select id='shipping-status' name='status' class='form-control input-pad'>
@@ -73,5 +73,5 @@
                 <option value='0'>Não</option>
             </select>
         </div>
-    </div>
+    </div>--}}
 </form>

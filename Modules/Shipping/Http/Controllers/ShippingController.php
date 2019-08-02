@@ -160,6 +160,13 @@ class ShippingController extends Controller
         try {
             $requestValidated = $request->validated();
 
+            if (empty($requestValidated['pre_selected'])) {
+                $requestValidated['pre_selected'] = 0;
+            }
+            if (empty($requestValidated['status'])) {
+                $requestValidated['status'] = 0;
+            }
+
             $shippingModel = new Shipping();
 
             if (isset($requestValidated) && isset($id)) {

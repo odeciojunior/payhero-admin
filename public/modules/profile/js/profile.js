@@ -201,7 +201,7 @@ $(document).ready(function () {
 
 Dropzone.options.dropzoneDocuments = {
     paramName: "file",
-    maxFilesize: 10, // MB
+    maxFilesize: 2, // MB
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     accept: function (file, done) {
         var dropz = this;
@@ -242,7 +242,7 @@ Dropzone.options.dropzoneDocuments = {
             position: 'bottom',
             type: 'success',
             toast: 'true',
-            title: response.message,
+            title: response,
             showConfirmButton: false,
             timer: 6000
         });
@@ -253,7 +253,7 @@ Dropzone.options.dropzoneDocuments = {
             position: 'bottom',
             type: 'error',
             toast: 'true',
-            title: response.message,
+            title: response,
             showConfirmButton: false,
             timer: 6000
         });
