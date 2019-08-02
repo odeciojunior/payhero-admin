@@ -345,7 +345,8 @@ $(document).ready(function () {
 
     function pagination(response) {
         if (response.meta.last_page == 1) {
-            //
+            $("#primeira_pagina_pixel").hide();
+            $("#ultima_pagina_pixel").hide();
         } else {
             $("#pagination-shippings").html("");
 

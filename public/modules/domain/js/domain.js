@@ -80,7 +80,7 @@ $(document).ready(function () {
                             fromNew = 'true';
                             // modalDomainEdit esta em função do globalDomain
                             var responseDomains = response;
-                            modalDomainEdit(responseDomains,true);
+                            modalDomainEdit(responseDomains, true);
                             updateDomains();
                         }
                     });
@@ -252,12 +252,12 @@ $(document).ready(function () {
 
     }
 
-    function modalDomainEdit(responseDomains,fromSave) {
+    function modalDomainEdit(responseDomains, fromSave) {
         $("#modal-title").html("Editar Domínio");
         $('#btn-modal').removeAttr("data-dismiss")
-        if(fromSave){
+        if (fromSave) {
             $('#btn-modal').text('Proximo')
-        }else {
+        } else {
             $('#btn-modal').text('Atualizar');
         }
         var data = {dominio: globalDomain};
@@ -624,75 +624,80 @@ $(document).ready(function () {
     }
 
     function pagination(response) {
+        if (response.meta.last_page == 1) {
+            $("#primeira_pagina_pixel").hide();
+            $("#ultima_pagina_pixel").hide();
+        } else {
 
-        $("#pagination").html("");
+            $("#pagination").html("");
 
-        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+            var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
-        $("#pagination").append(primeira_pagina);
+            $("#pagination").append(primeira_pagina);
 
-        if (response.meta.current_page == '1') {
-            $("#primeira_pagina").attr('disabled', true);
-            $("#primeira_pagina").addClass('nav-btn');
-            $("#primeira_pagina").addClass('active');
-        }
-
-        $('#primeira_pagina').on("click", function () {
-            updateDomains('?page=1');
-        });
-
-        for (x = 3; x > 0; x--) {
-
-            if (response.meta.current_page - x <= 1) {
-                continue;
+            if (response.meta.current_page == '1') {
+                $("#primeira_pagina").attr('disabled', true);
+                $("#primeira_pagina").addClass('nav-btn');
+                $("#primeira_pagina").addClass('active');
             }
 
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-            $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
-                updateDomains('?page=' + $(this).html());
+            $('#primeira_pagina').on("click", function () {
+                updateDomains('?page=1');
             });
 
-        }
+            for (x = 3; x > 0; x--) {
 
-        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+                if (response.meta.current_page - x <= 1) {
+                    continue;
+                }
 
-            $("#pagination").append(pagina_atual);
+                $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
 
-            $("#pagina_atual").attr('disabled', true);
-            $("#pagina_atual").addClass('nav-btn');
-            $("#pagina_atual").addClass('active');
+                $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
+                    updateDomains('?page=' + $(this).html());
+                });
 
-        }
-        for (x = 1; x < 4; x++) {
-
-            if (response.meta.current_page + x >= response.meta.last_page) {
-                continue;
             }
 
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+                var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
 
-            $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
-                updateDomains('?page=' + $(this).html());
-            });
+                $("#pagination").append(pagina_atual);
 
-        }
+                $("#pagina_atual").attr('disabled', true);
+                $("#pagina_atual").addClass('nav-btn');
+                $("#pagina_atual").addClass('active');
 
-        if (response.meta.last_page != '1') {
-            var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+            }
+            for (x = 1; x < 4; x++) {
 
-            $("#pagination").append(ultima_pagina);
+                if (response.meta.current_page + x >= response.meta.last_page) {
+                    continue;
+                }
 
-            if (response.meta.current_page == response.meta.last_page) {
-                $("#ultima_pagina").attr('disabled', true);
-                $("#ultima_pagina").addClass('nav-btn');
-                $("#ultima_pagina").addClass('active');
+                $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+                $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
+                    updateDomains('?page=' + $(this).html());
+                });
+
             }
 
-            $('#ultima_pagina').on("click", function () {
-                updateDomains('?page=' + response.meta.last_page);
-            });
+            if (response.meta.last_page != '1') {
+                var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+                $("#pagination").append(ultima_pagina);
+
+                if (response.meta.current_page == response.meta.last_page) {
+                    $("#ultima_pagina").attr('disabled', true);
+                    $("#ultima_pagina").addClass('nav-btn');
+                    $("#ultima_pagina").addClass('active');
+                }
+
+                $('#ultima_pagina').on("click", function () {
+                    updateDomains('?page=' + response.meta.last_page);
+                });
+            }
         }
 
     }

@@ -263,75 +263,80 @@ $(function () {
     }
 
     function pagination(response) {
+        if (response.meta.last_page == 1) {
+            $("#primeira_pagina_pixel").hide();
+            $("#ultima_pagina_pixel").hide();
+        } else {
 
-        $("#pagination-pixels").html("");
+            $("#pagination-pixels").html("");
 
-        var primeira_pagina_pixel = "<button id='primeira_pagina_pixel' class='btn nav-btn'>1</button>";
+            var primeira_pagina_pixel = "<button id='primeira_pagina_pixel' class='btn nav-btn'>1</button>";
 
-        $("#pagination-pixels").append(primeira_pagina_pixel);
+            $("#pagination-pixels").append(primeira_pagina_pixel);
 
-        if (response.meta.current_page == '1') {
-            $("#primeira_pagina_pixel").attr('disabled', true);
-            $("#primeira_pagina_pixel").addClass('nav-btn');
-            $("#primeira_pagina_pixel").addClass('active');
-        }
-
-        $('#primeira_pagina_pixel').on("click", function () {
-            atualizarPixel('?page=1');
-        });
-
-        for (x = 3; x > 0; x--) {
-
-            if (response.meta.current_page - x <= 1) {
-                continue;
+            if (response.meta.current_page == '1') {
+                $("#primeira_pagina_pixel").attr('disabled', true);
+                $("#primeira_pagina_pixel").addClass('nav-btn');
+                $("#primeira_pagina_pixel").addClass('active');
             }
 
-            $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-            $('#pagina_pixel_' + (response.meta.current_page - x)).on("click", function () {
-                atualizarPixel('?page=' + $(this).html());
+            $('#primeira_pagina_pixel').on("click", function () {
+                atualizarPixel('?page=1');
             });
 
-        }
+            for (x = 3; x > 0; x--) {
 
-        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual_pixel = "<button id='pagina_atual_pixel' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+                if (response.meta.current_page - x <= 1) {
+                    continue;
+                }
 
-            $("#pagination-pixels").append(pagina_atual_pixel);
+                $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
 
-            $("#pagina_atual_pixel").attr('disabled', true);
-            $("#pagina_atual_pixel").addClass('nav-btn');
-            $("#pagina_atual_pixel").addClass('active');
+                $('#pagina_pixel_' + (response.meta.current_page - x)).on("click", function () {
+                    atualizarPixel('?page=' + $(this).html());
+                });
 
-        }
-        for (x = 1; x < 4; x++) {
-
-            if (response.meta.current_page + x >= response.meta.last_page) {
-                continue;
             }
 
-            $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+                var pagina_atual_pixel = "<button id='pagina_atual_pixel' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
 
-            $('#pagina_pixel_' + (response.meta.current_page + x)).on("click", function () {
-                atualizarPixel('?page=' + $(this).html());
-            });
+                $("#pagination-pixels").append(pagina_atual_pixel);
 
-        }
+                $("#pagina_atual_pixel").attr('disabled', true);
+                $("#pagina_atual_pixel").addClass('nav-btn');
+                $("#pagina_atual_pixel").addClass('active');
 
-        if (response.meta.last_page != '1') {
-            var ultima_pagina_pixel = "<button id='ultima_pagina_pixel' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+            }
+            for (x = 1; x < 4; x++) {
 
-            $("#pagination-pixels").append(ultima_pagina_pixel);
+                if (response.meta.current_page + x >= response.meta.last_page) {
+                    continue;
+                }
 
-            if (response.meta.current_page == response.meta.last_page) {
-                $("#ultima_pagina_pixel").attr('disabled', true);
-                $("#ultima_pagina_pixel").addClass('nav-btn');
-                $("#ultima_pagina_pixel").addClass('active');
+                $("#pagination-pixels").append("<button id='pagina_pixel_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+                $('#pagina_pixel_' + (response.meta.current_page + x)).on("click", function () {
+                    atualizarPixel('?page=' + $(this).html());
+                });
+
             }
 
-            $('#ultima_pagina_pixel').on("click", function () {
-                atualizarPixel('?page=' + response.meta.last_page);
-            });
+            if (response.meta.last_page != '1') {
+                var ultima_pagina_pixel = "<button id='ultima_pagina_pixel' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+                $("#pagination-pixels").append(ultima_pagina_pixel);
+
+                if (response.meta.current_page == response.meta.last_page) {
+                    $("#ultima_pagina_pixel").attr('disabled', true);
+                    $("#ultima_pagina_pixel").addClass('nav-btn');
+                    $("#ultima_pagina_pixel").addClass('active');
+                }
+
+                $('#ultima_pagina_pixel').on("click", function () {
+                    atualizarPixel('?page=' + response.meta.last_page);
+                });
+            }
         }
 
     }
