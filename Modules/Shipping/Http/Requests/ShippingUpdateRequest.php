@@ -18,8 +18,8 @@ class ShippingUpdateRequest extends FormRequest
             "information"     => "required|string",
             "value"           => "nullable|string",
             "zip_code_origin" => "nullable|string",
-            "status"          => "required",
-            "pre_selected"    => "required",
+            "status"          => "nullable",
+            "pre_selected"    => "nullable",
         ];
     }
 

@@ -40,9 +40,9 @@ function updateWithdrawalsTable(link = null) {
                 if (value.status == 1) {
                     data += '<span class="badge badge-warning">Pendente</span>';
                 } else if (value.status == 2) {
-                    data += '<span class="badge badge-success">Aprovado</span>';
+                    data += '<span class="badge badge-primary">Aprovado</span>';
                 } else if (value.status == 3) {
-                    data += '<span class="badge badge-primary">Transferido</span>';
+                    data += '<span class="badge badge-success">Transferido</span>';
                 } else {
                     data += '<span class="badge badge-danger">Recusado</span>';
 
