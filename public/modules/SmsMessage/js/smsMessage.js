@@ -1,5 +1,24 @@
 $(function () {
 
+    $("#current-page-shippings2").on('click', function () {
+        $(".page-1").hide();
+        $(".page-2").show();
+        $("#current-page-shippings2").addClass('active').attr('disabled');
+        $("#current-page-shippings1").removeClass('active').removeAttr('disabled', 'disabled');
+    });
+
+    $("#current-page-shippings1").on('click', function () {
+        $(".page-1").show();
+        $(".page-2").hide();
+        $("#current-page-shippings1").addClass('active').attr('disabled', 'disabled');
+        $("#current-page-shippings2").removeClass('active').removeAttr('disabled');
+    });
+
+});
+
+/*
+$(function () {
+
     var projectId = $("#project-id").val();
     $('#tab_sms').on('click', function () {
         atualizarSms();
@@ -10,7 +29,7 @@ $(function () {
         $("#modal_add_size").addClass('modal_simples');
         $("#modal_add_size").addClass('modal-lg');
 
-        /*$("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");*/
+        /!*$("#modal-add-body").html("<div style='text-align:center;'>Carregando...</div>");*!/
         loadOnModal('#modal-add-body');
         $('#btn-modal').attr('data-dismiss','modal');
 
@@ -395,3 +414,4 @@ $(function () {
     }
 
 });
+*/

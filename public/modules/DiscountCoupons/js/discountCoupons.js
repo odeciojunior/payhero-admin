@@ -82,57 +82,58 @@ $(function () {
         });
 
     });
-    function atualizarCoupon() {
-        loadOnTable('#data-table-coupon','#tabela-coupom')
+
+    function atualizarCoupon(link = null) {
+        loadOnTable('#data-table-coupon', '#tabela-coupom');
+
+        if (link == null) {
+            link = '/couponsdiscounts?' + 'project=' + projectId;
+        } else {
+            link = '/couponsdiscounts' + link + '&project=' + projectId;
+        }
+
         $.ajax({
             method: "GET",
-            url: '/couponsdiscounts',
-            data: {project: projectId},
+            url: link,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function () {
-                $("#data-table-coupon").html('Erro ao encontrar dados');
+            error: function (response) {
+                $("#data-table-coupon").html(response.message);
             },
             success: function (response) {
                 $("#data-table-coupon").html('');
 
-                $.each(response.data, function (index, value) {
-                    data = '';
-                    data += '<tr>';
-                    data += '<td class="shipping-id">' + value.name + '</td>';
-                    data += '<td class="shipping-type">' + value.type + '</td>';
-                    data += '<td class="shipping-value">' + value.value + '</td>';
-                    data += '<td class="shipping-zip-code-origin">' + value.code + '</td>';
-                    data += '<td class="shipping-status" style="vertical-align: middle;">';
-                    if (value.status === 1) {
-                        data += '<span class="badge badge-success mr-10">Ativo</span>';
-                    } else {
-                        data += '<span class="badge badge-danger">Desativado</span>';
-                    }
-
-                    data += '</td>';
-
-                    // data += '<td class="shipping-pre-selected " style="vertical-align: middle;">';
-                    //
-                    // data += '</td>';
-
-                    data += "<td style='min-width:200px;'>" +
-                        "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
-                        "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"+
-                        "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
-                        "</td>";
-
-                    // data += "<td class='text-center'><a role='button' class='details-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a></td>";
-                    // data += "<td class='text-center'><a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a></td>";
-                    // data += "<td class='text-center'><a role='button' class='delete-coupon pointer' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a></td>";
-
-                    data += '</tr>';
-                    $("#data-table-coupon").append(data);
-                });
                 if (response.data == '') {
                     $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                } else {
+                    $.each(response.data, function (index, value) {
+                        data = '';
+                        data += '<tr>';
+                        data += '<td class="shipping-id">' + value.name + '</td>';
+                        data += '<td class="shipping-type">' + value.type + '</td>';
+                        data += '<td class="shipping-value">' + value.value + '</td>';
+                        data += '<td class="shipping-zip-code-origin">' + value.code + '</td>';
+                        data += '<td class="shipping-status" style="vertical-align: middle;">';
+                        if (value.status === 1) {
+                            data += '<span class="badge badge-success mr-10">Ativo</span>';
+                        } else {
+                            data += '<span class="badge badge-danger">Desativado</span>';
+                        }
+
+                        data += '</td>';
+
+                        data += "<td style='min-width:200px;'>" +
+                            "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
+                            "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>" +
+                            "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
+                        "</td>";
+                        data += '</tr>';
+                        $("#data-table-coupon").append(data);
+                    });
+                    pagination(response);
                 }
+
                 $(".details-coupon").unbind('click');
                 $(".details-coupon").on('click', function () {
                     var coupon = $(this).attr('coupon');
@@ -268,4 +269,84 @@ $(function () {
             }
         });
     }
+
+    function pagination(response) {
+        if (response.meta.last_page == 1) {
+            $("#primeira_pagina_pixel").hide();
+            $("#ultima_pagina_pixel").hide();
+        } else {
+
+            $("#pagination-coupons").html("");
+
+            var primeira_pagina_pixel = "<button id='primeira_pagina_coupons' class='btn nav-btn'>1</button>";
+
+            $("#pagination-coupons").append(primeira_pagina_pixel);
+
+            if (response.meta.current_page == '1') {
+                $("#primeira_pagina_coupons").attr('disabled', true);
+                $("#primeira_pagina_coupons").addClass('nav-btn');
+                $("#primeira_pagina_coupons").addClass('active');
+            }
+
+            $('#primeira_pagina_coupons').on("click", function () {
+                atualizarCoupon('?page=1');
+            });
+
+            for (x = 3; x > 0; x--) {
+
+                if (response.meta.current_page - x <= 1) {
+                    continue;
+                }
+
+                $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+
+                $('#pagina_coupons_' + (response.meta.current_page - x)).on("click", function () {
+                    atualizarCoupon('?page=' + $(this).html());
+                });
+
+            }
+
+            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+                var pagina_atual_coupons = "<button id='pagina_atual_coupons' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+
+                $("#pagination-coupons").append(pagina_atual_coupons);
+
+                $("#pagina_atual_coupons").attr('disabled', true);
+                $("#pagina_atual_coupons").addClass('nav-btn');
+                $("#pagina_atual_coupons").addClass('active');
+
+            }
+            for (x = 1; x < 4; x++) {
+
+                if (response.meta.current_page + x >= response.meta.last_page) {
+                    continue;
+                }
+
+                $("#pagination-coupons").append("<button id='pagina_coupons_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+                $('#pagina_coupons_' + (response.meta.current_page + x)).on("click", function () {
+                    atualizarCoupon('?page=' + $(this).html());
+                });
+
+            }
+
+            if (response.meta.last_page != '1') {
+                var ultima_pagina_coupons = "<button id='ultima_pagina_coupons' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+                $("#pagination-coupons").append(ultima_pagina_coupons);
+
+                if (response.meta.current_page == response.meta.last_page) {
+                    $("#ultima_pagina_coupons").attr('disabled', true);
+                    $("#ultima_pagina_coupons").addClass('nav-btn');
+                    $("#ultima_pagina_coupons").addClass('active');
+                }
+
+                $('#ultima_pagina_coupons').on("click", function () {
+                    atualizarCoupon('?page=' + response.meta.last_page);
+                });
+            }
+        }
+
+    }
+
 });

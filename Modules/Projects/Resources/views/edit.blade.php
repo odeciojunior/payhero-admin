@@ -65,67 +65,6 @@
                 </div>
             </div>
         </div>
-        <div class='mt-30 mb-15'>
-            <h3>Configurações Avançadas</h3>
-            <p>Preencha as informações de checkout do seu produto</p>
-            <div class='row'>
-                <div class='form-group col-6 col-xs-12'>
-                    <label for='invoice-description'>Descrição da Fatura</label>
-                    <input name='invoice_description' value='{{$project->invoice_description}}' maxlength='13' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura'>
-                </div>
-                <div class='form-group col-6 col-xs-12'>
-                    <label for='company'>Empresa responsável</label>
-                    <select id='companies' name='company' class="form-control select-pad">
-                        @foreach($companies as $company)
-                            <option value='{{$company->id_code}}' {{$company->id_code == Hashids::encode($project->usersProjects[0]->company)? 'selected' : ''}}>{{$company->fantasy_name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class='row'>
-                <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                    <label for='quantity-installment_amount'>Quantidade de parcelas (cartão de crédito)</label>
-                    <select class='installment_amount form-control select-pad' name='installments_amount' class='form-control select-pad'>
-                        @for($x=1;$x <= 12; $x++)
-                            <option value='{{$x}}' {{$project->installments_amount == $x ? 'selected' : ''}}>{{$x}}</option>
-                        @endfor
-                    </select>
-                </div>
-                <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                    <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
-                    <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
-                        @for($x=1; $x <=12; $x++)
-                            <option value='{{$x}}' {{$x > 1 ? 'disabled' : ''}}>{{$x > 1 ? 'EM BREVE ' : ''}}{{$x}}</option>
-                        @endfor
-                    </select>
-                    <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
-                </div>
-                <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                    <label for="parcelas_sem_juros">Boleto no checkout</label>
-                    <select name='boleto' class='form-control select-pad'>
-                        <option value='1' {{$project->boleto == 1 ? 'selected' : ''}}>Sim</option>
-                        <option value='0' {{$project->boleto == 0 ? 'selected' : ''}}>Não</option>
-                    </select>
-                </div>
-            </div>
-            <div class='row'>
-                <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                    <label for='boleto_redirect'>Boleto (Redirecionamento obrigado)</label>
-                    <input id='boleto_redirect' name='boleto_redirect' value='{{$project->boleto_redirect}}' class='input-pad' type='text' placeholder='URL'>
-                </div>
-                <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                    <label for='card_redirect'>Cartão (Redirecionamento obrigado)</label>
-                    <input id='card_redirect' name='card_redirect' value='{{$project->card_redirect}}' class='input-pad' type='text' placeholder='URL'>
-                </div>
-                <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                    <label for='analyzing_redirect'>Em Analise (Redirecionamento obrigado)</label>
-                    <input id='analyzing_redirect' name='analyzing_redirect' value='{{$project->analyzing_redirect}}' class='input-pad' type='text' placeholder='URL'>
-                </div>
-                <p class="info mt-5 col-12" style="font-size: 10px;">
-                    <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.
-                </p>
-            </div>
-        </div>
         <div>
             <label for='name'>Imagem para página do checkout e para emails</label>
             <div class=' row'>
@@ -136,12 +75,80 @@
                         <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                         <p class='info mt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
-                            <br> Dimensões ideais: largura ou altura de no máximo 300 x 300 pixels. <br>
+                            <br> Dimensões ideais: largura ou altura de no máximo 300 pixels. <br>
                             <strong>Sem sobras no topo ou na parte inferior.</strong>
                         </p>
                     </div>
                 </div>
             </div>
+            {{--COMEÇO CONFIGURAÇÕES AVANÇADAS--}}
+            <div class='mt-30 mb-15' >
+                <div class='hover' style='cursor:pointer;' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <h3>Configurações Avançadas</h3>
+                    <p>Preencha as informações de checkout do seu produto</p>
+                </div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class='row'>
+                        <div class='form-group col-6 col-xs-12'>
+                            <label for='invoice-description'>Descrição da Fatura</label>
+                            <input name='invoice_description' value='{{$project->invoice_description}}' maxlength='13' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura'>
+                        </div>
+                        <div class='form-group col-6 col-xs-12'>
+                            <label for='company'>Empresa responsável</label>
+                            <select id='companies' name='company' class="form-control select-pad">
+                                @foreach($companies as $company)
+                                    <option value='{{$company->id_code}}' {{$company->id_code == Hashids::encode($project->usersProjects[0]->company)? 'selected' : ''}}>{{$company->fantasy_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='form-group col-md-4 col-sm-12 col-xs-12'>
+                            <label for='quantity-installment_amount'>Quantidade de parcelas (cartão de crédito)</label>
+                            <select class='installment_amount form-control select-pad' name='installments_amount' class='form-control select-pad'>
+                                @for($x=1;$x <= 12; $x++)
+                                    <option value='{{$x}}' {{$project->installments_amount == $x ? 'selected' : ''}}>{{$x}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class='form-group col-md-4 col-sm-12 col-xs-12'>
+                            <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
+                            <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
+                                @for($x=1; $x <=12; $x++)
+                                    <option value='{{$x}}' {{$x > 1 ? 'disabled' : ''}}>{{$x > 1 ? 'EM BREVE ' : ''}}{{$x}}</option>
+                                @endfor
+                            </select>
+                            <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
+                        </div>
+                        <div class='form-group col-md-4 col-sm-12 col-xs-12'>
+                            <label for="parcelas_sem_juros">Boleto no checkout</label>
+                            <select name='boleto' class='form-control select-pad'>
+                                <option value='1' {{$project->boleto == 1 ? 'selected' : ''}}>Sim</option>
+                                <option value='0' {{$project->boleto == 0 ? 'selected' : ''}}>Não</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='form-group col-md-4 col-sm-12 col-xs-12'>
+                            <label for='boleto_redirect'>Boleto (Redirecionamento obrigado)</label>
+                            <input id='boleto_redirect' name='boleto_redirect' value='{{$project->boleto_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        </div>
+                        <div class='form-group col-md-4 col-sm-12 col-xs-12'>
+                            <label for='card_redirect'>Cartão (Redirecionamento obrigado)</label>
+                            <input id='card_redirect' name='card_redirect' value='{{$project->card_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        </div>
+                        <div class='form-group col-md-4 col-sm-12 col-xs-12'>
+                            <label for='analyzing_redirect'>Em Analise (Redirecionamento obrigado)</label>
+                            <input id='analyzing_redirect' name='analyzing_redirect' value='{{$project->analyzing_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        </div>
+                        <p class="info mt-5 col-12" style="font-size: 10px;">
+                            <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
+                            <strong>URL</strong> delas nos campos acima. Caso não informadas será redirecionado para a pagina de obrigado padrão do cloudfox.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {{--FIM CONFIGURAÇÕES AVANÇADAS--}}
             <div class="mt-30">
                 <div class="row">
                     <div class="col-4">

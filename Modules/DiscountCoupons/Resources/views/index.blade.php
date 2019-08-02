@@ -12,12 +12,12 @@
             <table id='tabela-coupon' class='table text-left table-coupon table-striped' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title'  width='300px'>Nome</td>
-                        <td class='table-title'  width='300px'>Tipo</td>
-                        <td class='table-title'  width='300px'>Valor</td>
-                        <td class='table-title'  width='300px'>Código</td>
-                        <td class='table-title'  width='200px'>Status</td>
-                        <td class='table-title text-center'  width='200px'>Opções</td>
+                        <td class='table-title' width='300px'>Nome</td>
+                        <td class='table-title' width='300px'>Tipo</td>
+                        <td class='table-title' width='300px'>Valor</td>
+                        <td class='table-title' width='300px'>Código</td>
+                        <td class='table-title' width='200px'>Status</td>
+                        <td class='table-title text-center' width='200px'>Opções</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-coupon'>
@@ -27,3 +27,6 @@
         </div>
     </div>
 </div>
+<ul id="pagination-coupons" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+    {{-- js carrega... --}}
+</ul>

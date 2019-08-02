@@ -23,17 +23,25 @@ class PixelsController extends Controller
     public function index(Request $request)
     {
         try {
-            if ($request->has('project')) {
+            if ($request->has('project') && !empty($request->input('project'))) {
                 $pixelModel = new Pixel();
 
                 $projectId = current(Hashids::decode($request->input('project')));
-                $pixels    = $pixelModel->where('project', $projectId)->get();
+                $pixels    = $pixelModel->where('project', $projectId);
 
-                return PixelsResource::collection($pixels);
+                return PixelsResource::collection($pixels->orderBy('id', 'DESC')->paginate(5));
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao listar dados de pixels',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar pixels (PixelsController - index)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao listar dados de pixels',
+                                    ], 400);
         }
     }
 

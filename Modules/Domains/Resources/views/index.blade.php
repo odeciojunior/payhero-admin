@@ -31,6 +31,9 @@
         </div>
     </div>
 </div>
+<ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+    {{-- js carrega... --}}
+</ul>
 <!-- Modal detalhes do domínio -->
 <!--<div class='modal fade example-modal-lg modal-3d-flip-vertical' id='modal-detalhes-dominio' aria-hidden='true' aria-labelledby='exampleModalTitle' role='dialog' tabindex='-1'>
     <div class='modal-dialog modal-simple'>
@@ -101,7 +104,8 @@
                             <h4>Caso possua um site com o mesmo dominio.</h4>
                             Adicione uma entrada do tipo <strong>A</strong>
                             <ul>
-                                <li>O seu dominio ja devera estar preenchido, se não preencha o campo <strong>nome</strong></li>
+                                <li>O seu dominio ja devera estar preenchido, se não preencha o campo
+                                    <strong>nome</strong></li>
                                 <li>Digite o ip no campo <strong>valor</strong></li>
                                 <li>Clique em <strong>Adicionar</strong></li>
                             </ul>
@@ -118,8 +122,8 @@
                     <div class="panel-collapse collapse" id="exampleCollapseFourth" aria-labelledby="exampleHeadingFourth" role="tabpanel" style="">
                         <div class="panel-body">
                             Logo após, vá até onde você registrou seu domínio e
-                            <strong>atualize as configurações</strong> com as novas entradas DNS geradas.
-                            Por fim clique em <strong>Verificar</strong>
+                            <strong>atualize as configurações</strong> com as novas entradas DNS geradas. Por fim clique em
+                            <strong>Verificar</strong>
                         </div>
                     </div>
                 </div>

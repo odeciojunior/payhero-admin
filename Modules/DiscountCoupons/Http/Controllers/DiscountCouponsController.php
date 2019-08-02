@@ -16,27 +16,32 @@ class DiscountCouponsController extends Controller
 {
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(Request $request)
     {
         try {
-            $requestData          = $request->all();
             $discountCouponsModel = new DiscountCoupon();
 
-            if (isset($requestData['project'])) {
-                $projectId = Hashids::decode($requestData['project'])[0];
+            if ($request->has('project') && !empty($request->input('project'))) {
+                $projectId = current(Hashids::decode($request->input('project')));
                 $coupons   = $discountCouponsModel->whereHas('project', function($query) use ($projectId) {
                     $query->where('project', $projectId);
-                })->get();
+                });
 
-                return DiscountCouponsResource::collection($coupons);
+                return DiscountCouponsResource::collection($coupons->orderBy('id', 'DESC')->paginate(5));
             } else {
-                return response()->json('Projeto não encontrado');
+                return response()->json([
+                                            'message' => 'Erro ao listar dados de cupons',
+                                        ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar cupons (DiscountCouponsController - index)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao listar dados de pixels',
+                                    ], 400);
         }
     }
 

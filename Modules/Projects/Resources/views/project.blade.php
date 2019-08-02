@@ -278,19 +278,19 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <span id='shopifyIdLabel' data-shopifyId='{{$project->shopify_id}}'></span>
 
-        <span id='shopifyIdLabel' data-shopifyId='{{$project->shopify_id}}'></span>
-
-        @push('scripts')
-            <script src="{{asset('modules/partners/js/partners.js')}}"></script>
-            <script src="{{asset('modules/Shipping/js/shipping.js')}}"></script>
-            <script src="{{asset('modules/domain/js/domain.js')}}"></script>
-            <script src="{{asset('modules/SmsMessage/js/smsMessage.js')}}"></script>
-            <script src="{{asset('modules/Pixels/js/pixels.js')}}"></script>
-            <script src="{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}"></script>
-            <script src="{{asset('modules/projects/js/projects.js')}}"></script>
-            <script src="{{asset('modules/plans/js/plans.js')}}"></script>
+    @push('scripts')
+        <script src="{{asset('modules/partners/js/partners.js')}}"></script>
+        <script src="{{asset('modules/Shipping/js/shipping.js')}}"></script>
+        <script src="{{asset('modules/domain/js/domain.js')}}"></script>
+        <script src="{{asset('modules/SmsMessage/js/smsMessage.js')}}"></script>
+        <script src="{{asset('modules/Pixels/js/pixels.js')}}"></script>
+        <script src="{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}"></script>
+        <script src="{{asset('modules/projects/js/projects.js')}}"></script>
+        <script src="{{asset('modules/plans/js/plans.js')}}"></script>
     @endpush
 @endsection
 
