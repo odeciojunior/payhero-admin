@@ -13,17 +13,17 @@ $(document).ready(function () {
             // altera campo value dependendo do tipo do frete
             var selected = $("#shipping-type").val();
             if (selected === 'static') {
-                $('#shipping-name').attr('placeholder','TRANSPORTADORA')
+                $('#shipping-name').attr('placeholder', 'TRANSPORTADORA')
                 $("#value-shipping-row").css('display', 'block');
                 $("#zip-code-origin-shipping-row").css('display', 'none');
 
             } else if (selected == 'pac') {
-                $('#shipping-name').attr('placeholder','PAC')
+                $('#shipping-name').attr('placeholder', 'PAC')
                 $("#value-shipping-row").css('display', 'none');
                 $("#zip-code-origin-shipping-row").css('display', 'block');
 
             } else if (selected == 'sedex') {
-                $('#shipping-name').attr('placeholder','SEDEX')
+                $('#shipping-name').attr('placeholder', 'SEDEX')
                 $("#value-shipping-row").css('display', 'none');
                 $("#zip-code-origin-shipping-row").css('display', 'block');
             }
@@ -39,6 +39,7 @@ $(document).ready(function () {
     $("#add-shipping").on('click', function () {
         loadOnModal('#modal-add-body');
         $("#modal-title").html('Cadastrar frete');
+
         $.ajax({
             method: "GET",
             url: "/shippings/create",
@@ -46,8 +47,14 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom("error", response.message)
+                }
                 loadingOnScreenRemove();
-                $("#modal-add-body").html('nao encontrado');
             },
             success: function (response) {
                 loadingOnScreenRemove();
@@ -64,8 +71,7 @@ $(document).ready(function () {
                     var formData = new FormData(document.getElementById('form-add-shipping'));
                     formData.append("project", projectId);
                     loadingOnScreen();
-                    console.log($("#shipping-pre-selected").val())
-                    console.log($("#shipping-status").val())
+
                     $.ajax({
                         method: "POST",
                         url: "/shippings",
@@ -77,12 +83,15 @@ $(document).ready(function () {
                         contentType: false,
                         cache: false,
                         error: function (response) {
-                            loadingOnScreenRemove();
-                            if (response.status === 422) {
-                                for (error in response.errors) {
-                                    alertCustom('error', String(response.errors[error]));
+                            if (response.status == '422') {
+                                for (error in response.responseJSON.errors) {
+                                    alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
+                            } else {
+                                alertCustom("error", response.message)
                             }
+                            loadingOnScreenRemove();
+
                         },
                         success: function (data) {
                             loadingOnScreenRemove();
@@ -96,211 +105,207 @@ $(document).ready(function () {
         })
     });
 
-    function atualizarFrete() {
+    function atualizarFrete(link = null) {
         loadOnTable('#dados-tabela-frete', '#tabela_fretes');
         changeType();
+        if (link == null) {
+            link = '/shippings?' + 'project=' + projectId;
+        } else {
+            link = '/shippings' + link + '&project=' + projectId;
+        }
         $.ajax({
             method: "GET",
-            url: '/shippings',
-            data: {project: projectId},
+            url: link,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function () {
-                $("#dados-tabela-frete").html('Erro ao encontrar dados');
+            error: function (response) {
+                $("#dados-tabela-frete").html(response.message);
             },
             success: function (response) {
 
                 $("#dados-tabela-frete").html('');
 
-                $.each(response.data, function (index, value) {
-                    dados = '';
-                    dados += '<tr>';
-                    dados += '<td class="shipping-id " style="vertical-align: middle; display: none;">' + value.shipping_id + '</td>';
-                    dados += '<td class="shipping-type " style="vertical-align: middle; display: none;">' + value.type + '</td>';
-                    dados += '<td class="shipping-value " style="vertical-align: middle; display: none;">' + value.value + '</td>';
-                    dados += '<td class="shipping-zip-code-origin " style="vertical-align: middle; display: none;">' + value.zip_code_origin + '</td>';
-                    dados += '<td class="shipping-id " style="vertical-align: middle;">' + value.type + '</td>';
-                    dados += '<td class="shipping-name " style="vertical-align: middle;">' + value.name + '</td>';
-                    dados += '<td class="shipping-type " style="vertical-align: middle;">' + value.value + '</td>';
-                    dados += '<td class="shipping-information " style="vertical-align: middle;">' + value.information + '</td>';
-                    dados += '<td class="shipping-status " style="vertical-align: middle;">';
-                    if (value.status === 1) {
-                        dados += '<span class="badge badge-success">Ativo</span>';
-                    } else {
-                        dados += '<span class="badge badge-danger">Desativado</span>';
-                    }
-
-                    dados += '</td>';
-
-                    dados += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
-                    if (value.pre_selected === 1) {
-                        dados += '<span class="badge badge-success">Sim</span>';
-                    } else {
-                        dados += '<span class="badge badge-primary"> Não </span>';
-                    }
-
-                    dados += '</td>';
-
-                    // dados += '<td class="shipping-pre-selected" style="vertical-align: middle;">';
-                    //
-                    // dados += '</td>';
-
-                    dados += "<td style='min-width:200px;'>" +
-                        "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>" +
-                        "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>" +
-                        "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>"
-                    "</td>";
-
-                    // dados += "<td style='vertical-align: middle' class=''><a role='button' class='pointer detalhes-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a></td>";
-                    // dados += "<td style='vertical-align: middle' class=''><a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a></td>";
-                    // dados += "<td style='vertical-align: middle' class=''><a role='button' class='pointer excluir-frete'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a></td>";
-
-                    dados += '</tr>';
-                    $("#dados-tabela-frete").append(dados);
-                });
-
                 if (response.data == '') {
                     $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
-                }
-                $(".detalhes-frete").unbind('click');
-                $(".detalhes-frete").on('click', function () {
-
-                    var frete = $(this).attr('frete');
-
-                    $("#modal-title").html('Detalhes do frete');
-                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
-                    var data = {freteId: frete};
-
-                    $("#btn-modal").hide();
-
-                    $.ajax({
-                        method: "GET",
-                        url: "/shippings/" + frete,
-                        data: data,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
-                            //
-                        }, success: function (response) {
-                            $("#modal-add-body").html(response);
-
+                } else {
+                    $.each(response.data, function (index, value) {
+                        dados = '';
+                        dados += '<tr>';
+                        dados += '<td class="shipping-id " style="vertical-align: middle; display: none;">' + value.shipping_id + '</td>';
+                        dados += '<td class="shipping-type " style="vertical-align: middle; display: none;">' + value.type + '</td>';
+                        dados += '<td class="shipping-value " style="vertical-align: middle; display: none;">' + value.value + '</td>';
+                        dados += '<td class="shipping-zip-code-origin " style="vertical-align: middle; display: none;">' + value.zip_code_origin + '</td>';
+                        dados += '<td class="shipping-id " style="vertical-align: middle;">' + value.type + '</td>';
+                        dados += '<td class="shipping-name " style="vertical-align: middle;">' + value.name + '</td>';
+                        dados += '<td class="shipping-type " style="vertical-align: middle;">' + value.value + '</td>';
+                        dados += '<td class="shipping-information " style="vertical-align: middle;">' + value.information + '</td>';
+                        dados += '<td class="shipping-status " style="vertical-align: middle;">';
+                        if (value.status === 1) {
+                            dados += '<span class="badge badge-success">Ativo</span>';
+                        } else {
+                            dados += '<span class="badge badge-danger">Desativado</span>';
                         }
-                    });
-                });
 
-                $(".editar-frete").unbind('click');
-                $(".editar-frete").on("click", function () {
-                    $("#modal-add-body").html("");
-                    var frete = $(this).attr('frete');
+                        dados += '</td>';
 
-                    $("#modal-title").html("Editar Frete");
-                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-
-                    var data = {frete: frete};
-
-                    $.ajax({
-                        method: "GET",
-                        url: "/shippings/" + frete + "/edit",
-                        data: data,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function () {
-                            //
-                        }, success: function (response) {
-                            $("#btn-modal").addClass('btn-update');
-                            $("#btn-modal").text('Atualizar');
-                            $("#btn-modal").show();
-                            $("#modal-add-body").html(response);
-                            $('#shipping-zip-code-origin').mask('00000-000');
-
-                            var selected = $("#shipping-type").val();
-                            if (selected === 'static') {
-                                $("#value-shipping-row").css('display', 'block');
-                                $("#zip-code-origin-shipping-row").css('display', 'none');
-
-                            } else {
-                                $("#value-shipping-row").css('display', 'none');
-                                $("#zip-code-origin-shipping-row").css('display', 'block');
-
-                            }
-                            changeType();
-                            $('#shipping-value').mask('#.###,#0', {reverse: true});
-
-                            $(".btn-update").unbind('click');
-                            $(".btn-update").on('click', function () {
-                                var formData = new FormData(document.getElementById('form-update-shipping'));
-                                formData.append("project", projectId);
-                                loadingOnScreen();
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/shippings/" + frete,
-                                    headers: {
-                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                    cache: false,
-                                    error: function () {
-                                        loadingOnScreenRemove();
-                                        if (response.status == '422') {
-                                            for (error in response.responseJSON.errors) {
-                                                alertCustom('error', String(response.responseJSON.errors[error]));
-                                            }
-                                        }
-                                    },
-                                    success: function (data) {
-                                        loadingOnScreenRemove();
-                                        alertCustom("success", "Frete atualizado com sucesso");
-                                        atualizarFrete();
-                                    }
-                                });
-
-                            });
+                        dados += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                        if (value.pre_selected === 1) {
+                            dados += '<span class="badge badge-success">Sim</span>';
+                        } else {
+                            dados += '<span class="badge badge-primary"> Não </span>';
                         }
+                        dados += '</td>';
+                        dados += "<td style='min-width:200px;'>" +
+                            "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>" +
+                            "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>" +
+                            "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>"
+                        "</td>";
+                        dados += '</tr>';
+                        $("#dados-tabela-frete").append(dados);
                     });
-                });
+                    pagination(response);
+                    $(".detalhes-frete").unbind('click');
+                    $(".detalhes-frete").on('click', function () {
 
-                $(".excluir-frete").on('click', function (event) {
-                    event.preventDefault();
-                    var frete = $(this).attr('frete');
+                        var frete = $(this).attr('frete');
 
-                    $("#modal_excluir_titulo").html("Remover Frete?");
+                        $("#modal-title").html('Detalhes do frete');
+                        $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+                        var data = {freteId: frete};
 
-                    $("#bt_excluir").unbind('click');
-                    $("#bt_excluir").on("click", function () {
-                        $("#fechar_modal_excluir").click();
-                        loadingOnScreen();
+                        $("#btn-modal").hide();
+
                         $.ajax({
-                            method: "DELETE",
+                            method: "GET",
                             url: "/shippings/" + frete,
+                            data: data,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function (response) {
-                                loadingOnScreenRemove();
-                                if (response.status == '422') {
-                                    for (error in response.responseJSON.errors) {
-                                        alertCustom('error', String(response.responseJSON.errors[error]));
-                                    }
-                                }
-                                if (response.status == '400') {
-                                    alertCustom('error', response.responseJSON.message);
-                                }
-                            },
-                            success: function (data) {
-                                loadingOnScreenRemove();
-                                alertCustom("success", "Frete Removido com sucesso");
-                                atualizarFrete();
+                            error: function () {
+                                //
+                            }, success: function (response) {
+                                $("#modal-add-body").html(response);
+
                             }
-
-                        })
-
+                        });
                     });
-                })
+
+                    $(".editar-frete").unbind('click');
+                    $(".editar-frete").on("click", function () {
+                        $("#modal-add-body").html("");
+                        var frete = $(this).attr('frete');
+
+                        $("#modal-title").html("Editar Frete");
+                        $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+
+                        var data = {frete: frete};
+
+                        $.ajax({
+                            method: "GET",
+                            url: "/shippings/" + frete + "/edit",
+                            data: data,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function () {
+                                //
+                            }, success: function (response) {
+                                $("#btn-modal").addClass('btn-update');
+                                $("#btn-modal").text('Atualizar');
+                                $("#btn-modal").show();
+                                $("#modal-add-body").html(response);
+                                $('#shipping-zip-code-origin').mask('00000-000');
+
+                                var selected = $("#shipping-type").val();
+                                if (selected === 'static') {
+                                    $("#value-shipping-row").css('display', 'block');
+                                    $("#zip-code-origin-shipping-row").css('display', 'none');
+
+                                } else {
+                                    $("#value-shipping-row").css('display', 'none');
+                                    $("#zip-code-origin-shipping-row").css('display', 'block');
+
+                                }
+                                changeType();
+                                $('#shipping-value').mask('#.###,#0', {reverse: true});
+
+                                $(".btn-update").unbind('click');
+                                $(".btn-update").on('click', function () {
+                                    var formData = new FormData(document.getElementById('form-update-shipping'));
+                                    formData.append("project", projectId);
+                                    loadingOnScreen();
+                                    $.ajax({
+                                        method: "POST",
+                                        url: "/shippings/" + frete,
+                                        headers: {
+                                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        cache: false,
+                                        error: function () {
+                                            loadingOnScreenRemove();
+                                            if (response.status == '422') {
+                                                for (error in response.responseJSON.errors) {
+                                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                                                }
+                                            }
+                                        },
+                                        success: function (data) {
+                                            loadingOnScreenRemove();
+                                            alertCustom("success", "Frete atualizado com sucesso");
+                                            atualizarFrete();
+                                        }
+                                    });
+
+                                });
+                            }
+                        });
+                    });
+
+                    $(".excluir-frete").on('click', function (event) {
+                        event.preventDefault();
+                        var frete = $(this).attr('frete');
+
+                        $("#modal_excluir_titulo").html("Remover Frete?");
+
+                        $("#bt_excluir").unbind('click');
+                        $("#bt_excluir").on("click", function () {
+                            $("#fechar_modal_excluir").click();
+                            loadingOnScreen();
+                            $.ajax({
+                                method: "DELETE",
+                                url: "/shippings/" + frete,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                error: function (response) {
+                                    loadingOnScreenRemove();
+                                    if (response.status == '422') {
+                                        for (error in response.responseJSON.errors) {
+                                            alertCustom('error', String(response.responseJSON.errors[error]));
+                                        }
+                                    }
+                                    if (response.status == '400') {
+                                        alertCustom('error', response.responseJSON.message);
+                                    }
+                                },
+                                success: function (data) {
+                                    loadingOnScreenRemove();
+                                    alertCustom("success", "Frete Removido com sucesso");
+                                    atualizarFrete();
+                                }
+
+                            })
+
+                        });
+                    })
+
+                }
+
             }
         });
     }
@@ -337,5 +342,76 @@ $(document).ready(function () {
             }
         });
     });
+
+    function pagination(response) {
+        if (response.meta.last_page == 1) {
+            //
+        } else {
+            $("#pagination-shippings").html("");
+
+            var first_page_shippings = "<button id='first_page_shippings' class='btn nav-btn'>1</button>";
+
+            $("#pagination-shippings").append(first_page_shippings);
+
+            if (response.meta.current_page == '1') {
+                $("#first_page_shippings").attr('disabled', true).addClass('nav-btn').addClass('active');
+            }
+
+            $('#first_page_shippings').on("click", function () {
+                atualizarFrete('?page=1');
+            });
+
+            for (x = 3; x > 0; x--) {
+
+                if (response.meta.current_page - x <= 1) {
+                    continue;
+                }
+
+                $("#pagination-shippings").append("<button id='page_shipping_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+
+                $('#page_shipping_' + (response.meta.current_page - x)).on("click", function () {
+                    atualizarFrete('?page=' + $(this).html());
+                });
+
+            }
+
+            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+                var current_page_shippings = "<button id='current_page_shippings' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+
+                $("#pagination-shippings").append(current_page_shippings);
+
+                $("#current_page_shippings").attr('disabled', true).addClass('nav-btn').addClass('active');
+
+            }
+            for (x = 1; x < 4; x++) {
+
+                if (response.meta.current_page + x >= response.meta.last_page) {
+                    continue;
+                }
+
+                $("#pagination-shippings").append("<button id='page_shippings_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+                $('#page_shippings_' + (response.meta.current_page + x)).on("click", function () {
+                    atualizarFrete('?page=' + $(this).html());
+                });
+
+            }
+
+            if (response.meta.last_page != '1') {
+                var last_page_shippings = "<button id='last_page_shippings' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+                $("#pagination-shippings").append(last_page_shippings);
+
+                if (response.meta.current_page == response.meta.last_page) {
+                    $("#last_page_shippings").attr('disabled', true).addClass('nav-btn').addClass('active');
+                }
+
+                $('#last_page_shippings').on("click", function () {
+                    atualizarFrete('?page=' + response.meta.last_page);
+                });
+            }
+        }
+
+    }
 
 });

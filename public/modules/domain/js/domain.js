@@ -90,13 +90,18 @@ $(document).ready(function () {
         })
     });
 
-    function updateDomains() {
+    function updateDomains(link = null) {
         loadOnTable('#domain-table-body', '#tabela-dominios');
+
+        if (link == null) {
+            link = '/domains?' + 'project=' + projectId;
+        } else {
+            link = '/domains' + link + '&project=' + projectId;
+        }
 
         $.ajax({
             method: "GET",
-            url: '/domains',
-            data: {project: projectId},
+            url: link,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
@@ -114,6 +119,8 @@ $(document).ready(function () {
                         modalUpdateDomains(index, value);
                     });
                 }
+
+                pagination(response);
 
                 $(".details-domain").unbind('click');
                 $(".details-domain").on('click', function () {
@@ -562,13 +569,13 @@ $(document).ready(function () {
                         "</tbody>" +
                         "</table>");
                 }
-                $("#new_registers").after("<tr class='alert-info' data-row='" + ($("#new_registers_table tr").length) + "' data-save='0'>"+
-                    "<td>" + $("#tipo_registro").val() + "</td>"+
-                    "<td>" + $("#nome_registro").val() + "</td>"+
-                    "<td>" + $("#valor_registro").val() + "</td>"+
-                    "<td hidden='hidden'>" + $("#valor_prioridade").val() + "</td>"+
-                    "<td class='col-2 text-center align-middle'>"+
-                    "<button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button>"+
+                $("#new_registers").after("<tr class='alert-info' data-row='" + ($("#new_registers_table tr").length) + "' data-save='0'>" +
+                    "<td>" + $("#tipo_registro").val() + "</td>" +
+                    "<td>" + $("#nome_registro").val() + "</td>" +
+                    "<td>" + $("#valor_registro").val() + "</td>" +
+                    "<td hidden='hidden'>" + $("#valor_prioridade").val() + "</td>" +
+                    "<td class='col-2 text-center align-middle'>" +
+                    "<button type='button' data-row='" + ($("#new_registers_table tr").length) + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button>" +
                     "</td></tr>");
                 $('#nome_registro').val('')
                 $('#valor_registro').val('')
@@ -591,7 +598,7 @@ $(document).ready(function () {
             $('#valor_registro').parent('.form-group').remove();
             $('#nome_registro').parent('.form-group').remove();
             $('#tipo_registro').parent('.form-group').after('<div class="form-group mx-sm-3 mb-3 col-md-3">' +
-                '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>'+
+                '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
                 ' <div class="form-group mx-sm-3 mb-3 col-md-3">' +
                 '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>' +
                 '<div class="form-group mx-sm-3 mb-3 col-md-2">' +
@@ -605,12 +612,85 @@ $(document).ready(function () {
         if ($('#valor_prioridade').html() != undefined) {
             $('#valor_registro, #valor_prioridade, #nome_registro').parent('.form-group').remove();
             $('#tipo_registro').parent('.form-group').after('<div class="form-group mx-sm-3 mb-3 col-md-4">' +
-                '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>'+
+                '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
                 '<div class="form-group mx-sm-3 mb-3 col-md-4">' +
                 '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>')
         }
 
     }
 
-})
-;
+    function pagination(response) {
+
+        $("#pagination").html("");
+
+        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+
+        $("#pagination").append(primeira_pagina);
+
+        if (response.meta.current_page == '1') {
+            $("#primeira_pagina").attr('disabled', true);
+            $("#primeira_pagina").addClass('nav-btn');
+            $("#primeira_pagina").addClass('active');
+        }
+
+        $('#primeira_pagina').on("click", function () {
+            updateDomains('?page=1');
+        });
+
+        for (x = 3; x > 0; x--) {
+
+            if (response.meta.current_page - x <= 1) {
+                continue;
+            }
+
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+
+            $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
+                updateDomains('?page=' + $(this).html());
+            });
+
+        }
+
+        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+
+            $("#pagination").append(pagina_atual);
+
+            $("#pagina_atual").attr('disabled', true);
+            $("#pagina_atual").addClass('nav-btn');
+            $("#pagina_atual").addClass('active');
+
+        }
+        for (x = 1; x < 4; x++) {
+
+            if (response.meta.current_page + x >= response.meta.last_page) {
+                continue;
+            }
+
+            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+            $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
+                updateDomains('?page=' + $(this).html());
+            });
+
+        }
+
+        if (response.meta.last_page != '1') {
+            var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+            $("#pagination").append(ultima_pagina);
+
+            if (response.meta.current_page == response.meta.last_page) {
+                $("#ultima_pagina").attr('disabled', true);
+                $("#ultima_pagina").addClass('nav-btn');
+                $("#ultima_pagina").addClass('active');
+            }
+
+            $('#ultima_pagina').on("click", function () {
+                updateDomains('?page=' + response.meta.last_page);
+            });
+        }
+
+    }
+
+});

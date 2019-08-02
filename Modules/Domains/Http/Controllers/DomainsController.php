@@ -42,9 +42,9 @@ class DomainsController extends Controller
             if (isset($dataRequest["project"])) {
                 $projectId = current(Hashids::decode($dataRequest["project"]));
 
-                $domains = $domainModel->with(['project'])->where('project_id', $projectId)->get();
+                $domains = $domainModel->with(['project'])->where('project_id', $projectId);
 
-                return DomainResource::collection($domains);
+                return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
             } else {
                 return response()->json([
                                             'message' => 'Erro ao listar dados de domínios',
@@ -431,7 +431,7 @@ class DomainsController extends Controller
     public function create(DomainCreateRequest $request)
     {
         try {
-            $prejectModel = new Project();
+            $projectModel = new Project();
 
             $requestData = $request->validated();
 
@@ -440,7 +440,7 @@ class DomainsController extends Controller
 
             if ($projectId) {
 
-                $project = $prejectModel->find($projectId);
+                $project = $projectModel->find($projectId);
 
                 $form = view('domains::create', [
                     'project' => $project,
