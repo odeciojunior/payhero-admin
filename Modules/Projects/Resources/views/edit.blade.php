@@ -135,15 +135,15 @@
                 </div>
                 <div class='row'>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                        <label for='boleto_redirect'>Boleto (Redirecionamento obrigado)</label>
+                        <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
                         <input id='boleto_redirect' name='boleto_redirect' value='{{$project->boleto_redirect}}' class='input-pad' type='text' placeholder='URL'>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                        <label for='card_redirect'>Cartão (Redirecionamento obrigado)</label>
+                        <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                         <input id='card_redirect' name='card_redirect' value='{{$project->card_redirect}}' class='input-pad' type='text' placeholder='URL'>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
-                        <label for='analyzing_redirect'>Em Analise (Redirecionamento obrigado)</label>
+                        <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>
                         <input id='analyzing_redirect' name='analyzing_redirect' value='{{$project->analyzing_redirect}}' class='input-pad' type='text' placeholder='URL'>
                     </div>
                     <p class="info mt-5 col-12" style="font-size: 10px;">
@@ -185,3 +185,5 @@
         </div>
     </form>
 </div>
+
+
