@@ -94,6 +94,8 @@ $(function () {
 
         $("#pagination").html("");
 
+        alert(response.toSource());
+
         var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
         $("#pagination").append(primeira_pagina);
@@ -103,7 +105,9 @@ $(function () {
             $("#primeira_pagina").addClass('active');
         }
 
+        $('#primeira_pagina').unbind("click");
         $('#primeira_pagina').on("click", function () {
+            alert('hey');
             updateTransfersTable('?page=1');
         });
 
@@ -160,3 +164,5 @@ $(function () {
     }
 
 });
+
+
