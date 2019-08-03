@@ -51,7 +51,6 @@ class BoletoService
             $boletoDueToday = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $dateNow]])
                                   ->with('clientModel', 'plansSales.plan.products')
                                   ->get();
-            Log::warning('boletos vencendo hoje -> ' . print_r($boletoDueToday, true));
 
             foreach ($boletoDueToday as $boleto) {
                 try {
@@ -103,7 +102,6 @@ class BoletoService
 
                         if ($telephoneValidated != '') {
                             $zenviaSms = new ZenviaSmsService();
-                            Log::warning('verifyBoletosExpiring');
                             $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido!' . $boleto->boleto_link, $telephoneValidated);
                         }
 
@@ -122,8 +120,6 @@ class BoletoService
                         ];
                         $emailValidated = FoxUtils::validateEmail($clientEmail);
                         if ($emailValidated) {
-                            Log::warning('verifyBoletosExpiring');
-
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
 
                             $checkout->increment('email_sent_amount');
@@ -147,8 +143,6 @@ class BoletoService
             $date                 = Carbon::now()->subDay('1')->toDateString();
             $boletoWaitionPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                                         ->with('clientModel', 'plansSales.plan.products')->get();
-
-            Log::warning('boletos aguardando pagamento -> ' . print_r($boletoWaitionPayment, true));
 
             foreach ($boletoWaitionPayment as $boleto) {
                 try {
@@ -208,7 +202,6 @@ class BoletoService
                         $emailValidated          = FoxUtils::validateEmail($clientEmail);
 
                         if ($emailValidated) {
-                            Log::warning('verifyBoletoWaitingPayment');
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
 
                             $checkout->increment('email_sent_amount');
@@ -237,7 +230,6 @@ class BoletoService
             $date    = Carbon::now()->subDay('2')->toDateString();
             $boletos = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                                  ->with('clientModel', 'plansSales.plan.products')->get();
-            Log::warning('boletos aguardando pagamento 2 -> ' . print_r($boletos, true));
 
             foreach ($boletos as $boleto) {
                 try {
@@ -296,7 +288,6 @@ class BoletoService
                         $emailValidated          = FoxUtils::validateEmail($clientEmail);
                         if ($emailValidated) {
                             $sendEmail = new SendgridService();
-                            Log::warning('verifyBoleto2');
 
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
                             $checkout->increment('email_sent_amount');
