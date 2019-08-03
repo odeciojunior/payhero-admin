@@ -367,11 +367,12 @@ class CloudFlareService
                 if ($responseDns->type == 'mx') {
                     $recordId = $this->addRecord('MX', $responseDns->host, $responseDns->data, 0, false, '1');
                     $this->getDomainRecordModel()->create([
-                                                              'domain_id'   => $domainModelId,
-                                                              'type'        => 'MX',
-                                                              'name'        => $responseDns->host,
-                                                              'content'     => $responseDns->data,
-                                                              'system_flag' => 1,
+                                                              'domain_id'            => $domainModelId,
+                                                              'cloudflare_record_id' => $recordId,
+                                                              'type'                 => 'MX',
+                                                              'name'                 => $responseDns->host,
+                                                              'content'              => $responseDns->data,
+                                                              'system_flag'          => 1,
                                                           ]);
                 } else {
                     $recordId = $this->addRecord(strtoupper($responseDns->type), $responseDns->host, $responseDns->data, 0, false);
