@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#profile_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('profile_update_form'));
-
+        loadingOnScreen()
         $.ajax({
             method: "POST",
             url: $('#profile_update_form').attr('action'),
@@ -15,13 +15,23 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
+                loadingOnScreenRemove()
+                // console.log(response)
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
+                        switch (String(response.responseJSON.errors[error])) {
+                            case 'The profile photo must be a file of type: jpeg, jpg, png.':
+                                alertCustom('error', 'A imagem de perfil deve estar em um dos seguintes formatos: jpeg, jpg, png.')
+                                break;
+                            default:
+                                alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+
                     }
                 }
             },
             success: function (response) {
+                loadingOnScreenRemove()
                 $(".div1").hide();
                 $(".div2").show();
                 alertCustom('success', response.message);
@@ -165,30 +175,30 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
     });
 
-    $("#zip_code").on("input", function(){
+    $("#zip_code").on("input", function () {
 
         var cep = $('#zip_code').val().replace(/[^0-9]/g, '');
 
-        if(cep.length != 8)
+        if (cep.length != 8)
             return false;
 
         $.ajax({
-            url : "https://viacep.com.br/ws/"+ cep +"/json/", 
-            type : "GET",
+            url: "https://viacep.com.br/ws/" + cep + "/json/",
+            type: "GET",
             cache: false,
             async: false,
-            success : function(response) {
+            success: function (response) {
 
-                if(response.localidade){
+                if (response.localidade) {
                     $("#city").val(unescape(response.localidade));
                 }
-                if(response.bairro){
+                if (response.bairro) {
                     $("#neighborhood").val(unescape(response.bairro));
                 }
-                if(response.uf){
+                if (response.uf) {
                     $("#state").val(unescape(response.uf));
                 }
-                if(response.logradouro){
+                if (response.logradouro) {
                     $("#street").val(unescape(response.logradouro));
                 }
 
@@ -248,6 +258,12 @@ Dropzone.options.dropzoneDocuments = {
         });
     },
     error: function (file, response) {
+
+        if(response.search('Max filesize') > 0){
+            response = 'A imagem e muito grande. Tamanho maximo: 2mb.'
+        }else if(response.search('upload files of this type') > 0){
+            response = 'A imagem deve estar em um dos seguintes formatos: jpeg, jpg, png.'
+        }
 
         swal({
             position: 'bottom',

@@ -159,4 +159,39 @@ function messageSwalSuccess(swalType, swalTitle, swalHtml, swalCloseButton, swal
     })
 }
 
+$(document).ajaxComplete(function (jqXHR, textStatus) {
+
+    switch (textStatus.status) {
+        case 200:
+
+            break;
+        case 401:
+            window.location.href = "/";
+            console.log(textStatus.status + ": " + textStatus.statusText)
+            break;
+        case 404:
+            break;
+        case 500:
+            break;
+        case 413:
+            alertCustom('error', 'O tamanho da imagem não pode exceder 2mb.')
+            console.log(textStatus.status + ": " + textStatus.statusText)
+            break;
+        case 422:
+            console.log(textStatus.status + ": " + textStatus.statusText)
+            break;
+        case 419:
+            window.location.href = "/";
+            console.log(textStatus.status + ": " + textStatus.statusText)
+            break;
+    }
+});
+
+
+
+
+
+
+
+
 
