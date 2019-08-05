@@ -4,6 +4,7 @@
         <h4> Adicionar nova entrada </h4>
     </div>
     <div class="col-lg-12">
+        <a id='shopify' hidden data-shopify='{{$project->shopify_id ?? null}}'></a>
         <form id="form-edit-domain" class="" method="post" action="{{route('domain.update', ['id' => $domain->id_code])}}">
             @csrf
             <div class='row'>
