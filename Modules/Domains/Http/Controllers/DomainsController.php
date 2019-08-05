@@ -256,7 +256,7 @@ class DomainsController extends Controller
 
             $recordsJson = json_decode($requestData['data']);
 
-            $domain = $domainModel->with(['records'])->find(current(Hashids::decode($requestData['domain'])));
+            $domain = $domainModel->with(['records', 'project'])->find(current(Hashids::decode($requestData['domain'])));
 
             $cloudFlareService->setZone($domain->name);
             foreach ($recordsJson as $records) {
@@ -286,6 +286,9 @@ class DomainsController extends Controller
                                 $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
                             } else if (current($record[0]) == 'TXT') {
                                 $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
+                            } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
+                                //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
+                                return response()->json(['message' => 'Erro ao atualizar domínios'], 400);
                             } else {
                                 $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
                             }
@@ -512,7 +515,7 @@ class DomainsController extends Controller
             if ($domainId) {
                 //hashid ok
                 if ($domainService->verifyPendingDomains($domainId, true)) {
-                    return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
+                    return response()->json(['message' => 'Domínio verificado com sucesso'], 200);
                 } else {
                     return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
                 }
@@ -587,13 +590,64 @@ class DomainsController extends Controller
                                                                     'status' => $domainModel->getEnum('status', 'approved'),
                                                                 ]);
 
-                                                return response()->json(['message' => 'Domínio validado com sucesso'], 202);
+                                                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                             } else {
+
+                                                try {
+
+                                                    $shopify->setThemeByRole('main');
+                                                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                                    if ($htmlCart) {
+                                                        //template normal
+
+                                                        $shopifyIntegration->update([
+                                                                                        'theme_type' => $shopifyIntegration->getEnum('theme_type', 'basic_theme'),
+                                                                                        'theme_name' => $shopify->getThemeName(),
+                                                                                        'theme_file' => 'sections/cart-template.liquid',
+                                                                                        'theme_html' => $htmlCart,
+                                                                                    ]);
+
+                                                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                                    } else {
+
+                                                        //template ajax
+                                                        $shopifyIntegration->update([
+                                                                                        'theme_type' => $this->getShopifyIntegrationModel()
+                                                                                                             ->getEnum('theme_type', 'ajax_theme'),
+                                                                                        'theme_name' => $shopify->getThemeName(),
+                                                                                        'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                                        'theme_html' => $htmlCart,
+                                                                                    ]);
+
+                                                        $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                                    }
+
+                                                    //inserir o javascript para o trackeamento (src, utm)
+                                                    $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                                    if ($htmlBody) {
+                                                        //template do layout
+                                                        $shopifyIntegration->update([
+                                                                                        'layout_theme_html' => $htmlBody,
+                                                                                    ]);
+
+                                                        $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                                    }
+                                                } catch (\Exception $e) {
+                                                    report($e);
+
+                                                    $domain->update([
+                                                                        'status' => $domainModel->getEnum('status', 'pending'),
+                                                                    ]);
+
+                                                    return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
+                                                }
+
                                                 $domain->update([
-                                                                    'status' => $domainModel->getEnum('status', 'pending'),
+                                                                    'status' => $domainModel->getEnum('status', 'approved'),
                                                                 ]);
 
-                                                return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
+                                                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                             }
                                         }
                                     }
@@ -615,9 +669,8 @@ class DomainsController extends Controller
                                                 'status' => $domainModel->getEnum('status', 'approved'),
                                             ]);
 
-                            return response()->json(['message' => 'Domínio revalidado com sucesso'], 201);
+                            return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                         }
-
                         //return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                     } else {
                         $domain->update([
