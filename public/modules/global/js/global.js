@@ -159,4 +159,27 @@ function messageSwalSuccess(swalType, swalTitle, swalHtml, swalCloseButton, swal
     })
 }
 
+$(document).ajaxComplete(function (jqXHR, textStatus) {
+
+    switch (textStatus.status) {
+        case 200:
+
+            break;
+        case 401:
+            window.location.href = "/";
+            break;
+        case 404:
+            break;
+        case 500:
+            break;
+    }
+});
+
+
+
+
+
+
+
+
 

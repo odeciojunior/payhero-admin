@@ -14,7 +14,7 @@ $(document).ready(function () {
     $("#company_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('company_update_form'));
-
+        loadingOnScreen()
         $.ajax({
             method: "POST",
             url: $('#company_update_form').attr('action'),
@@ -26,6 +26,7 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
+                loadingOnScreenRemove()
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -34,6 +35,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 alertCustom('success', response.message);
+                loadingOnScreenRemove()
             }
         });
 
@@ -42,7 +44,7 @@ $(document).ready(function () {
     $("#company_bank_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('company_bank_update_form'));
-
+        loadingOnScreen()
         $.ajax({
             method: "POST",
             url: $('#company_bank_update_form').attr('action'),
@@ -54,6 +56,7 @@ $(document).ready(function () {
             cache: false,
             data: form_data,
             error: function (response) {
+                loadingOnScreenRemove()
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -61,6 +64,7 @@ $(document).ready(function () {
                 }
             },
             success: function (response) {
+                loadingOnScreenRemove()
                 alertCustom('success', response.message);
             }
         });

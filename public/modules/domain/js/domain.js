@@ -255,11 +255,6 @@ $(document).ready(function () {
     function modalDomainEdit(responseDomains, fromSave) {
         $("#modal-title").html("Editar Domínio");
         $('#btn-modal').removeAttr("data-dismiss")
-        if (fromSave) {
-            $('#btn-modal').text('Proximo')
-        } else {
-            $('#btn-modal').text('Atualizar');
-        }
         var data = {dominio: globalDomain};
         responseDomainsVar = responseDomains
         $.ajax({
@@ -273,10 +268,10 @@ $(document).ready(function () {
                 //
             }, success: function (response) {
                 //predefinições da modal.
-                modalEdit(response);
+                modalEdit(response,fromSave);
 
                 //adiciona ip do usuario no campo do nome
-                if (newDomain != '') {
+                if (newDomain != '' && !$('#shopify').data('shopfy')) {
                     $('#nome_registro').val(newDomain);
                 }
 
@@ -544,10 +539,14 @@ $(document).ready(function () {
         $('#modal-add-body').show('slow');
     }
 
-    function modalEdit(response) {
+    function modalEdit(response,fromSave) {
         $("#btn-modal").removeAttr('disabled');
         $("#btn-modal").addClass('btn-update');
-        $("#btn-modal").text('Atualizar');
+        if(fromSave == true){
+            $("#btn-modal").text('Proximo');
+        }else{
+            $("#btn-modal").text('Atualizar');
+        }
         $("#modal_add_size").addClass('modal-lg');
         $('#btn-modal').removeAttr("data-dismiss")
         // $("#btn-modal").show();
