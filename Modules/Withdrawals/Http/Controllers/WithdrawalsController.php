@@ -3,6 +3,7 @@
 namespace Modules\Withdrawals\Http\Controllers;
 
 use App\Entities\Company;
+use App\Entities\User;
 use App\Entities\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -89,8 +90,19 @@ class WithdrawalsController extends Controller
 
         $companyModel = new Company();
         $bankService  = new BankService();
+        $userModel    = new User();
+        $company      = $companyModel->find(current(Hashids::decode($companyId)));
+        $user         = $userModel->where('id', auth()->user()->id)->first();
+        if ($user->address_document_status != $userModel->getEnum('address_document_status', 'approved') ||
+            $user->personal_document_status != $userModel->getEnum('personal_document_status', 'approved')) {
 
-        $company = $companyModel->find(current(Hashids::decode($companyId)));
+            return response()->json([
+                                        'message' => 'success',
+                                        'data'    => [
+                                            'user_documents_status' => 'pending',
+                                        ],
+                                    ], 200);
+        }
 
         if ($company->bank_document_status == $companyModel->getEnum('bank_document_status', 'approved') &&
             $company->address_document_status == $companyModel->getEnum('address_document_status', 'approved') &&

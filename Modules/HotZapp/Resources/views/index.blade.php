@@ -69,7 +69,7 @@
                         <h1 class="page-title">Integrações com HotZapp</h1>
                     </div>
                     <div class="col text-right">
-                        <a data-toggle="modal" id='btn-add-integration' data-target="#modal_add_integracao" class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
+                        <a data-toggle="modal" id='btn-add-integration' class="btn btn-floating btn-danger" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                             <i class="icon wb-plus" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -130,6 +130,19 @@
                     </div>
                 </div>
                 <!-- End Modal -->
+                <div id="modal-project" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
+                    <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
+                        <div id="conteudo_modal_add" class="modal-content p-10">
+                            <div class="header-modal simple-border-bottom">
+                                <h2 id="modal-project-title" class="modal-title"></h2>
+                            </div>
+                            <div id="modal_project_body" class="modal-body simple-border-bottom" style='padding-bottom:1%;padding-top:1%;'>
+                            </div>
+                            <div id='modal-withdraw-footer' class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

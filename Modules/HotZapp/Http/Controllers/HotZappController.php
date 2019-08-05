@@ -51,12 +51,18 @@ class HotZappController extends Controller
             $userProjectModel = new UserProject();
             $projects         = [];
             $userProjects     = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+            if ($userProjects->count() > 0) {
+                foreach ($userProjects as $userProject) {
+                    $projects[] = $userProject->projectId;
+                }
 
-            foreach ($userProjects as $userProject) {
-                $projects[] = $userProject->projectId;
+                return view('hotzapp::create', ['projects' => $projects]);
+            } else {
+
+                return response()->json([
+                                            'message' => 'Nenhum projeto encontrado',
+                                        ], 222);
             }
-
-            return view('hotzapp::create', ['projects' => $projects]);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar redirecionar para tela de adicionar integração (HotZappController - create)');
             report($e);
@@ -243,6 +249,7 @@ class HotZappController extends Controller
         $projectsIntegrated  = [];
         $userProjects        = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
         $hotzappIntegrations = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
+
         foreach ($userProjects as $userProject) {
             $projects[] = $userProject->projectId;
         }
