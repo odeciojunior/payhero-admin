@@ -134,13 +134,13 @@ class DomainsController extends Controller
                                 //problema ao cadastrar dominio
                                 DB::rollBack();
 
-                                return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                                return response()->json(['message' => 'Erro ao criar domínio.'], 400);
                             }
                         } else {
                             //erro ao criar dominio
                             DB::rollBack();
 
-                            return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
+                            return response()->json(['message' => 'Erro ao cadastrar domínios.'], 400);
                         }
                     } else {
                         //dominio ja existe registrado no cloudflare
@@ -256,7 +256,8 @@ class DomainsController extends Controller
 
             $recordsJson = json_decode($requestData['data']);
 
-            $domain = $domainModel->with(['records', 'project'])->find(current(Hashids::decode($requestData['domain'])));
+            $domain = $domainModel->with(['records', 'project'])
+                                  ->find(current(Hashids::decode($requestData['domain'])));
 
             $cloudFlareService->setZone($domain->name);
             foreach ($recordsJson as $records) {
@@ -288,7 +289,7 @@ class DomainsController extends Controller
                                 $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
                             } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
                                 //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
-                                return response()->json(['message' => 'Erro ao atualizar domínios'], 400);
+                                return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
                             } else {
                                 $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
                             }
@@ -305,12 +306,12 @@ class DomainsController extends Controller
 
                                 DB::commit();
 
-                                return response()->json(['message' => "Domínio atualizado com sucesso"], 200);
+                                return response()->json(['message' => "Subdomínio cadastrado com sucesso"], 200);
                             } else {
                                 //dominio já cadastrado
                                 DB::rollBack();
 
-                                return response()->json(['message' => 'Erro ao atualizar domínios'], 400);
+                                return response()->json(['message' => 'Erro ao cadastrar domínios'], 400);
                             }
                         } else {
                             //dominio já cadastrado
@@ -388,7 +389,7 @@ class DomainsController extends Controller
 
                     return response()->json(['message' => 'Domínio removido com sucesso'], 200);
                 } else {
-                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+                    return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
                 }
             } else {
                 //erro ao deletar zona
@@ -487,7 +488,7 @@ class DomainsController extends Controller
                 if ($recordsDeleted) {
                     return response()->json(['message' => 'Domínio removido com sucesso'], 200);
                 } else {
-                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+                    return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
                 }
             } else {
                 //erro ao deletar zona
@@ -497,7 +498,7 @@ class DomainsController extends Controller
             Log::warning('DomainsController destroyRecord - erro ao deletar domínio');
             report($e);
 
-            return response()->json(['message' => 'Não foi possível deletar o subdomínio'], 400);
+            return response()->json(['message' => 'Problema ao deletar o domínio'], 400);
         }
     }
 
@@ -517,16 +518,16 @@ class DomainsController extends Controller
                 if ($domainService->verifyPendingDomains($domainId, true)) {
                     return response()->json(['message' => 'Domínio verificado com sucesso'], 200);
                 } else {
-                    return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                    return response()->json(['message' => 'Não foi possível verificar o domínio'], 400);
                 }
             } else {
-                return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                return response()->json(['message' => 'Não foi possível validar o domínio'], 400);
             }
         } catch (Exception $e) {
             Log::warning('DomainsController recheckDomain - erro ao revalidar o domínio');
             report($e);
 
-            return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+            return response()->json(['message' => 'Problema ao validar o domínio'], 400);
         }
     }
 
@@ -691,7 +692,7 @@ class DomainsController extends Controller
             Log::warning('DomainsController recheckDomain - erro ao revalidar o domínio');
             report($e);
 
-            return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+            return response()->json(['message' => 'Problema ao revalidar o domínio'], 400);
         }
     }
 }
