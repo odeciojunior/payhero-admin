@@ -87,7 +87,6 @@ class ShopifyController extends Controller
                 if (empty($shopifyService->getClient())) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
-                $shopifyService->getShopName();
             } catch (\Exception $e) {
                 report($e);
 
