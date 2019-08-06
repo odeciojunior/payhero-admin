@@ -2,73 +2,85 @@
 
 namespace Modules\Invites\Http\Controllers;
 
-use App\Empresa;
-use App\Convite;
+use App\Entities\Invitation;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Mail;
-use Modules\Invites\Transformers\InvitesResource;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\EmailService;
+use Modules\Invites\Transformers\InviteResource;
+use Vinkla\Hashids\Facades\Hashids;
 
+class InvitesApiController extends Controller
+{
+    public function index()
+    {
+        try {
 
-class InvitesApiController extends Controller {
+            $invitationModel = new Invitation();
 
-    public function convites() {
+            $invites = $invitationModel->where('invite', auth()->user()->id);
 
-        $convites = Convite::where('user_convite',\Auth::user()->id);
+            return InviteResource::collection($invites->orderBy('register_date', 'DESC')->paginate(5));
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar listar convites (InvitesApiController - index)');
+            report($e);
 
-        return ConvitesResource::collection($convites->paginate());
+            return response()->json([
+                                        'message' => 'Erro ao tentar listar convites ',
+                                    ], 400);
+        }
     }
 
-    public function enviarConvite(Request $request) {
+    public function store(Request $request)
+    {
+        try {
 
-        $dados = $request->all();
+            $invitationModel = new Invitation();
+            $inviteSaved     = null;
 
-        $dados['user_convite'] = \Auth::user()->id;
-        $dados['status'] = "Convite enviado";
-        $dados['parametro']  = $this->randString(15);
+            $company = current(Hashids::decode($request->input('company')));
+            $invite  = $invitationModel->where([['email_invited', $request->input('email')], ['company', $company]])
+                                       ->first();
 
-        $dados['empresa'] = @Empresa::where('user', \Auth::user()->id)->first()->id;
-
-        try{
-            $convite = Convite::create($dados);
-
-            Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados) {
-                $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
-
-                $mail->to($dados['email_convidado'], 'Cloudfox')->subject('Convite!');
-            });
-        }
-        catch(\Exception $e){
-
-        }
-
-        return redirect()->route('convites');
-    }
-
-    function randString($size){
-
-        $novo_parametro = false;
-
-        while(!$novo_parametro){
-
-            $basic = 'abcdefghijlmnopqrstuvwxyz0123456789';
-
-            $parametro = "";
-
-            for($count= 0; $size > $count; $count++){
-                $parametro.= $basic[rand(0, strlen($basic) - 1)];
+            if (!$invite) {
+                $data   = [
+                    'invite'        => auth()->user()->id,
+                    'status'        => $invitationModel->getEnum('status', 'pending'),
+                    'company'       => current(Hashids::decode($request->input('company'))),
+                    'email_invited' => $request->input('email'),
+                    'parameter'     => $request->input('company'),
+                ];
+                $invite = $invitationModel->create($data);
             }
+            try {
 
-            $convite = Convite::where('parametro', $parametro)->first();
+                if (!$invite) {
+                    return response()->json([
+                                                'message' => 'Erro ao tentar enviar convite',
+                                            ], 400);
+                } else {
+                    EmailService::sendInvite($invite['email_invited'], $invite['parameter']);
 
-            if($convite == null){
-                $novo_parametro = true;
+                    return response()->json([
+                                                'message' => 'Convite enviado com sucesso!',
+                                            ], 200);
+                }
+            } catch (Exception $e) {
+                Log::warning('Erro ao tentar enviar convite (InvitesApiController - store)');
+                report($e);
+
+                return response()->json([
+                                            'message' => 'Erro ao tentar enviar convite',
+                                        ], 400);
             }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar enviar convite (InvitesApiController - index)');
+            report($e);
 
+            return response()->json([
+                                        'message' => 'Erro ao tentar enviar convite',
+                                    ], 400);
         }
-
-        return $parametro;
     }
-
 }

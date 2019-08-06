@@ -243,7 +243,7 @@
             </a>
         </li>
         <li class="site-menu-item has-sub">
-            <a href="{{ route('invitations.invites') }}">
+            <a href="{{ route('invitations.index') }}">
                 <i class="material-icons">person_add</i>
                 <span class="site-menu-title">Convites</span>
             </a>

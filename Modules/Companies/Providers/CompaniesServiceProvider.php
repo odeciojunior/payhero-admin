@@ -9,14 +9,12 @@ class CompaniesServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
-     *
      * @var bool
      */
     protected $defer = false;
 
     /**
      * Boot the application events.
-     *
      * @return void
      */
     public function boot()
@@ -30,52 +28,48 @@ class CompaniesServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
     {
-        //
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**
      * Register config.
-     *
      * @return void
      */
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('companies.php'),
-        ], 'config');
+                             __DIR__ . '/../Config/config.php' => config_path('companies.php'),
+                         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'companies'
+            __DIR__ . '/../Config/config.php', 'companies'
         );
     }
 
     /**
      * Register views.
-     *
      * @return void
      */
     public function registerViews()
     {
         $viewPath = resource_path('views/modules/companies');
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . '/../Resources/views';
 
         $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+                             $sourcePath => $viewPath,
+                         ], 'views');
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
+        $this->loadViewsFrom(array_merge(array_map(function($path) {
             return $path . '/modules/companies';
         }, \Config::get('view.paths')), [$sourcePath]), 'companies');
     }
 
     /**
      * Register translations.
-     *
      * @return void
      */
     public function registerTranslations()
@@ -85,7 +79,7 @@ class CompaniesServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'companies');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'companies');
+            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'companies');
         }
     }
 
@@ -95,14 +89,13 @@ class CompaniesServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
+        if (!app()->environment('production')) {
             app(Factory::class)->load(__DIR__ . '/../Database/factories');
         }
     }
 
     /**
      * Get the services provided by the provider.
-     *
      * @return array
      */
     public function provides()
