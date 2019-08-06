@@ -34,3 +34,7 @@ $(document).ready(function () {
 
     });
 });
+
+function openInNewWindow(url) {
+   window.open(url)
+}
