@@ -2,121 +2,110 @@
 
 @section('content')
 
+    @push('css')
+        <link rel="stylesheet" href="{{ asset('modules/global/assets/css/empty.css') }}">
+    @endpush
     <div class="page">
         <div class="page-header container">
-            <button id="enviar_convite" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" data-target='#modal_convite' data-toggle='modal'>
+            <button id="store-invite" type="button" class="btn btn-floating btn-danger" style="position: relative; float: right" {{--data-target='#modal' data-toggle='modal'--}}>
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Convites</h2>
-            @if(count($invites) > 0)
-                <p style="margin-top: 12px">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
-            @endif
+            <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
         </div>
-        <div class="page-content container">
-            @if(count($invites) > 0)
-                <div class="card shadow" data-plugin="matchHeight">
-                    <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
-                        <table class="table table-striped">
-                            <thead class="text-center">
-                                <th class="text-left">Convite</th>
-                                <td>Email convidado</td>
-                                <td>Status</td>
-                                <td>Data cadastro</td>
-                                <td>Data expiração</td>
-                            </thead>
-                            <tbody>
-                                @foreach($invites as $key => $invite)
-                                    <tr>
-                                        <td class="text-left">
-                                            <button class="btn btn-floating btn-primary btn-sm" disabled>{!! $key + 1!!}</button>
-                                        </td>
-                                        <td class="text-center" style="vertical-align: middle">{!! $invite->email_invited !!}</td>
-                                        <td class="text-center" style="vertical-align: middle">
-                                            @if($invite->status == $invite->getEnum('status', 'accepted'))
-                                                <span class='badge badge-success'>Aceito</span>
-                                            @elseif($invite->status == $invite->getEnum('status','pending'))
-                                                <span class='badge badge-primary'>Pendente</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center" style="vertical-align: middle">{!! $invite->register_date != '' ? date('d/m/Y', strtotime($invite->register_date)) : 'Pendente' !!}</td>
-                                        <td class="text-center" style="vertical-align: middle">{!! $invite->expiration_date != '' ? date('d/m/Y', strtotime($invite->expiration_date)) : 'Pendente' !!}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            @else
-                @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
-                @endpush
-
-                <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/assets/img/emptyconvites.svg') !!}" width="250px">
-                    <h1 class="big gray">Você ainda não enviou convites!</h1>
-                    <p class="desc gray"> Envie convites, e
+        <div class="page-content container" id='page-invites'>
+            <div id="content-error" style='display:none;'>
+                <div class="content-modal-error ">
+                    <img src="/public/modules/global/assets/img/emptyconvites.svg" width="250px"/>
+                    <h4 class="big gray">Você ainda não enviou convites!</h4> <br>
+                    <p class="desc gray">Envie convites, e
                         <strong>ganhe 1% de tudo que seu convidado vender durante um ano!</strong></p>
                 </div>
-            @endif
-            <div class="modal fade modal-3d-flip-vertical" id="modal_convite" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+            </div>
+            <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none;'>
+                <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
+                    <table class="table table-striped">
+                        <thead class="text-center">
+                            <th class="text-left">Convite</th>
+                            <th class="text-center">Email convidado</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Data cadastro</th>
+                            <th class="text-center">Data expiração</th>
+                        </thead>
+                        <tbody id='table-body-invites'>
+                            {{-- js invites carrega  --}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <ul id="pagination-invites" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                {{-- js pagination carrega --}}
+            </ul>
+            <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1" {{--style='display:none;'--}}>
                 <div class="modal-dialog modal-simple">
-                    <div class="modal-content">
+                    <div id="modal-not-companies" class='modal-content p-10'>
+                        <div class='header-modal simple-border-bottom'>
+                            <h2 id='modal-title' class='modal-title'>Ooooppsssss!</h2>
+                        </div>
+                        <div class='modal-body simple-border-bottom' style='padding-bottom:1%; padding-top:1%;'>
+                            <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
+                                <span class='swal2-x-mark'>
+                                    <span class='swal2-x-mark-line-left'></span>
+                                    <span class='swal2-x-mark-line-right'></span>
+                                </span>
+                            </div>
+                            <h3 align='center'>Você não cadastrou nenhuma empresa</h3>
+                            <h5 align='center'>Deseja cadastrar uma empresa?
+                                <a class='red pointer' href='/companies' target='_blank'>clique aqui</a>
+                            </h5>
+                        </div>
+                        <div style='width:100%; text-align:center; padding-top:3%;'>
+                            <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>Retornar</span>
+                        </div>
+                    </div>
+                    <div id="modal-then-companies" class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
-                            <h4 id="modal_estornar_titulo" class="modal-title" style="width: 100%; text-align:center">
-                                @if(count($companies) > 0)
-                                    Novo Convite
-                                @else
-                                    Nenhuma empresa encontrada
-                                @endif
-                            </h4>
+                            <h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center"></h4>
                         </div>
-                        <div id="modal_estornar_body" class="modal-body">
-                            @if(count($companies) > 0)
-                                <form method="POST" action="{{ route('invitations.send.invitation') }}">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="form-group col-12">
-                                            <label for="email">Email do convidado</label>
-                                            <input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">
-                                        </div>
+                        <div id="modal-reverse-body" class="modal-body">
+                            <div id='body-modal'>
+                                <div class="row">
+                                    <div class="form-group col-12">
+                                        <label for="email">Email do convidado</label>
+                                        <input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">
                                     </div>
-                                    <div class="row">
-                                        <div class="form-group col-12">
-                                            <label for="company">Empresa para receber</label>
-                                            <select id="company" name="company" class="form-control">
-                                                @foreach($companies as $company)
-                                                    <option value="{!! Hashids::encode($company['id']) !!}" invite-parameter="{!! Hashids::encode($company['id']) !!}">{!! $company['fantasy_name'] !!}</option>
-                                                @endforeach
-                                            </select>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-12">
+                                        <label for="company">Empresa para receber</label>
+                                        <div id='company-list'>
                                         </div>
+                                        {{--<select id="company" name="company" class="form-control">
+                                          --}}{{--  @foreach($companies as $company)
+                                                <option value="{!! Hashids::encode($company['id']) !!}" invite-parameter="{!! Hashids::encode($company['id']) !!}">{!! $company['fantasy_name'] !!}</option>
+                                            @endforeach--}}{{--
+                                        </select>--}}
                                     </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label for="email">Link de convite</label>
-                                        </div>
-                                        <div class="input-group col-12">
-                                            @foreach($companies as $company)
-                                                <input type="text" class="form-control" id="invite-link" value="https://app.cloudfox.net/register/{!! Hashids::encode($company['id']) !!}" readonly>
-                                                @break
-                                            @endforeach
-                                            <span class="input-group-btn">
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for="email">Link de convite</label>
+                                    </div>
+                                    <div id='invite-link-select' class="input-group col-12">
+                                        <input type="text" class="form-control" id="invite-link" value="" readonly>
+                                        <span class="input-group-btn">
                                             <button id="copy-link" class="btn btn-default" type="button">Copiar</button>
                                         </span>
-                                        </div>
                                     </div>
-                                    <div class="row" style="margin-top: 35px">
-                                        <div class="form-group col-12">
-                                            <input type="submit" class="form-control btn" value="Enviar Convite" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">
-                                        </div>
-                                    </div>
-                                </form>
-                            @else
-                                <div class="row">
-                                    <h3 class="text-center">Para enviar convites primeiro cadastre uma empresa</h3>
                                 </div>
-                            @endif
+                                <div class="row" style="margin-top: 35px">
+                                    <div class="form-group col-12">
+                                        <input id='btn-send-invite' type="button" class="form-control btn" value="Enviar Convite" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,8 +113,9 @@
         </div>
     </div>
 
+
     @push('scripts')
-        <script src="{!! asset('modules/invites/js/invites.js') !!}"></script>
+        <script src="{{asset('modules/invites/js/invites.js') }}"></script>
     @endpush
 
 @endsection

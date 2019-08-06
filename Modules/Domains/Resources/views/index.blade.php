@@ -3,7 +3,7 @@
     <div style='position:absolute; width:50%' class="d-flex align-items-center">
         <a class="ml-8 rounded-add pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='background-color: #4c6aff;'>
             <i class="icon wb-info"></i></a>
-        <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o dominio?</span>
+        <span class="link-button-dependent blue-50 pointer" data-toggle="modal" data-target="#modal-detalhes-dominio" style='margin-left:5px'>Como configurar o domínio?</span>
     </div>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div id="add-domain" class="d-flex align-items-center justify-content-end">
@@ -70,7 +70,7 @@
                     <div class="panel-collapse collapse" id="exampleCollapseFirst" aria-labelledby="exampleHeadingFirst" role="tabpanel" style="">
                         <div class="panel-body justify-content-center">
                             <div class="d-flex align-items-center">
-                                <span> Clique em <strong>adicionar domínio</strong></span>
+                                <span> Clique em <strong>Adicionar domínio</strong></span>
                                 <a class="ml-10 rounded-add pointer">
                                     <i class="icon wb-plus" aria-hidden="true"></i></a>
                             </div>
@@ -84,11 +84,9 @@
                         </a>
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="">
-                        {{--                        <div id='segundaInfo' class="panel-body">--}}
-                        {{--                        </div>--}}
                         <div class="panel-body justify-content-center">
                             <div class="d-flex align-items-center">
-                                <span> Digite o nome do seu <strong>dominio</strong> onde seu site esta hospedado e clique em  <i class="material-icons btn-fix" style='color:green'> save </i><strong style='color:green'>Salvar</strong></span>
+                                <span> Digite o nome do seu <strong>domínio</strong> onde seu site esta hospedado e clique em  <i class="material-icons btn-fix" style='color:green'> save </i><strong style='color:green'>Salvar</strong></span>
                             </div>
                         </div>
                     </div>
@@ -101,12 +99,12 @@
                     </div>
                     <div class="panel-collapse collapse" id="exampleCollapseThird" aria-labelledby="exampleHeadingThird" role="tabpanel" style="">
                         <div class="panel-body">
-                            <h4>Caso possua um site com o mesmo dominio.</h4>
-                            Adicione uma entrada do tipo <strong>A</strong>
+                            Se você estiver utilizando esse domínio em algum site,
+                            adicione uma entrada do tipo <strong>A</strong> para 
+                            seu site continuar funcionando normalmente.
                             <ul>
-                                <li>O seu dominio ja devera estar preenchido, se não preencha o campo
-                                    <strong>nome</strong></li>
-                                <li>Digite o ip no campo <strong>valor</strong></li>
+                                <li>Digite o nome do domínio no campo <strong>nome</strong></li>
+                                <li>Digite o ip do servidor onde o site está hospedado no campo <strong>valor</strong></li>
                                 <li>Clique em <strong>Adicionar</strong></li>
                             </ul>
                             Após clique em <strong>Contiuar</strong>

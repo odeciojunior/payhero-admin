@@ -44,7 +44,8 @@ $(document).ready(function () {
 
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
-                    loadOnModal('#modal-add-body')
+                    // loadOnModal('#modal-add-body')
+                    loadOnModalDomainEspecial('#modal-add-body');
                     $('#btn-modal').hide()
                     domainName = $('#name').val();
                     $('#btn-modal').attr('disabled', 'disabled');
@@ -253,10 +254,11 @@ $(document).ready(function () {
     }
 
     function modalDomainEdit(responseDomains, fromSave) {
-        $("#modal-title").html("Editar Domínio");
+        $('#especialModalTitle').remove();
         $('#btn-modal').removeAttr("data-dismiss")
         var data = {dominio: globalDomain};
         responseDomainsVar = responseDomains
+        $("#modal-title").html("Editar Domínio").show();
         $.ajax({
             method: "GET",
             url: "/domains/" + globalDomain + "/edit",
@@ -268,7 +270,7 @@ $(document).ready(function () {
                 //
             }, success: function (response) {
                 //predefinições da modal.
-                modalEdit(response,fromSave);
+                modalEdit(response, fromSave);
 
                 //adiciona ip do usuario no campo do nome
                 if (newDomain != '' && !$('#shopify').data('shopfy')) {
@@ -444,6 +446,8 @@ $(document).ready(function () {
         resetFooter();
         resetHtml();
         $('#btn-modal').show();
+        $('#modal-title').show();
+        $('#especialModalTitle').remove();
     })
 
     function resetHtml(whereToReset) {
@@ -468,7 +472,7 @@ $(document).ready(function () {
         $('#btn-modal').hide();
         $('#modal-title').html('Tudo certo!');
         $('#modal-add-body').html('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
-            '<h3 align="center"><strong>Dominio registrado</strong></h3>' +
+            '<h3 align="center"><strong>Domínio registrado</strong></h3>' +
             '<h4 align="center">Tudo pronto já podemos começar</h4>' +
             '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
@@ -482,7 +486,7 @@ $(document).ready(function () {
         $('#btn-modal').hide();
         $('#modal-title').html('Oppsssss...');
         $('#modal-add-body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
-            '<h3 align="center"><strong>Dominio ainda não registrado</strong></h3>' +
+            '<h3 align="center"><strong>Domínio ainda não registrado</strong></h3>' +
             '<h4 align="center">Parece que o seu dominio ainda não foi liberado</h4>' +
             '<h4 align="center">Seria bom conferir as configurações no seu provedor de dominio, caso tenha alguma duvida em como realizar a configuração <span class="red pointer" data-dismiss="modal" data-toggle="modal" data-target="#modal-detalhes-dominio">clique aqui</span></h4>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
@@ -517,7 +521,7 @@ $(document).ready(function () {
         $('#modal-add-body').children().hide('slow');
         $('#modal-add-body').delay(2000).html('');
         $('#modal-add-body').append('<div class="swal2-icon swal2-info swal2-animate-info-icon" style="display: flex;">i</div>' +
-            '<h3 align="center"><strong>Dominio cadastrado</strong></h3>' +
+            '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' +
             '<h4 align="center">Agora falta pouco</h4>' +
             '<h4 align="center">Você só precisa adicionar essas novas entradas <strong>DNS</strong> onde você registrou seu dominio. Logo apos clique em <strong style="color:green">verificar</strong>!</h4>' +
             '<div id="tableDomain" style="width:100%">' +
@@ -539,12 +543,12 @@ $(document).ready(function () {
         $('#modal-add-body').show('slow');
     }
 
-    function modalEdit(response,fromSave) {
+    function modalEdit(response, fromSave) {
         $("#btn-modal").removeAttr('disabled');
         $("#btn-modal").addClass('btn-update');
-        if(fromSave == true){
+        if (fromSave == true) {
             $("#btn-modal").text('Proximo');
-        }else{
+        } else {
             $("#btn-modal").text('Atualizar');
         }
         $("#modal_add_size").addClass('modal-lg');
@@ -700,5 +704,35 @@ $(document).ready(function () {
         }
 
     }
-
 });
+
+function loadOnModalDomainEspecial(whereToLoad) {
+
+    $(whereToLoad).children().hide('fast');
+    $('#modal-title').after('<h3 id="especialModalTitle" class="modal-title" style="weight:bold; color:black"></h3>')
+    $('#modal-title').hide();
+    $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
+        "<div class='loaderModal'>" +
+        "</div>" +
+        "</div>");
+    $('#loadingOnScreen').append("<div class='blockScreen'></div>");
+
+    $('#especialModalTitle').html('Iniciando ... ')
+
+    setTimeout(function () {
+        $('#especialModalTitle').html('Configurando domínio')
+    }, 1000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Configurando entradas DNS')
+    }, 6000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Preparando servidores de Email')
+    }, 13000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Preparando checkout transparente')
+    }, 20000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Finalizando ... ')
+    }, 25000)
+
+}

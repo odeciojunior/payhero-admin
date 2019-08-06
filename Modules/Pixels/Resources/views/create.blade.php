@@ -13,8 +13,8 @@
                         <select name="platform" type="text" class="form-control" id="platform">
                             <option value="facebook">Facebook</option>
                             <option value="google">Google</option>
-                            <option value="null" disabled='disabled'>EM BREVE Taboola</option>
-                            <option value="null" disabled='disabled'>EM BREVE Outbrain</option>
+                            <option value="null" disabled='disabled'>Taboola (em breve)</option>
+                            <option value="null" disabled='disabled'>Outbrain (em breve)</option>
                         </select>
                     </div>
                     <div class="form-group col-6">
@@ -40,7 +40,7 @@
                             <label for="checkout" class='mb-10'>Checkout:</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" value="0" name='checkout' id='checkout' class='check'>
+                                <input type="checkbox" value="0" name='checkout' id='checkout' class='check' checked>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -50,7 +50,7 @@
                             <label for="cartao">Purchase (cartão):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="0" name='purchase_card' id='purchase_card' class='check'>
+                                <input type="checkbox" value="0" name='purchase_card' id='purchase_card' class='check' checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>
@@ -60,7 +60,7 @@
                             <label for="boleto">Purchase (boleto):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="0" name='purchase_boleto' id='purchase_boleto' class='check'>
+                                <input type="checkbox" value="0" name='purchase_boleto' id='purchase_boleto' class='check' checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>

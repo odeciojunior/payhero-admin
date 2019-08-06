@@ -12,7 +12,7 @@
             <table id='tabela-coupon' class='table text-left table-coupon table-striped' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title' width='300px'>Nome</td>
+                        <td class='table-title' width='300px'>Descrição</td>
                         <td class='table-title' width='300px'>Tipo</td>
                         <td class='table-title' width='300px'>Valor</td>
                         <td class='table-title' width='300px'>Código</td>

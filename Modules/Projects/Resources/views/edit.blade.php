@@ -28,10 +28,16 @@
                     <div class='form-group col-lg-12'>
                         <label for='name'>Nome do projeto</label>
                         <input name='name' value='{{$project->name}}' type='text' class='input-pad' id='name' placeholder='Nome do Projeto' required>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
+                        </p>
                     </div>
                     <div class='form-group col-lg-12'>
                         <label for='description'>Descrição</label>
                         <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required=''>{{$project->description}}</textarea>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
+                        </p>    
                     </div>
                     <div class='form-group col-lg-4'>
                         <label for='visibility'>Visibilidade</label>
@@ -55,7 +61,9 @@
         </div>
         <div class='row'>
             <div class='col-md-4 col-lg-4 col-sm-12'>
-                <label for='name'>Imagem para página do checkout e para emails</label>
+                <div class="text-center">
+                    <label for='name'>Imagem para página do checkout e para emails</label>
+                </div>
                 <div class='row'>
                     <div class="col-12">
                         <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
@@ -76,10 +84,16 @@
                     <div class="form-group col-12">
                         <label for="url_page">URL da página principal</label>
                         <input name="url_page" value="{{$project->url_page == null ? 'https://' : $project->url_page}}" type="text" class="input-pad" id="url-page" placeholder="URL da página">
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> URL da página principal da loja
+                        </p>    
                     </div>
                     <div class="form-group col-12">
-                        <label for="contact">Email de Contato (checkout)</label>
+                        <label for="contact">Email de Contato (checkout e email)</label>
                         <input name="contact" value="{{$project->contact}}" type="text" class="input-pad" id="contact" placeholder="Contato">
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails
+                        </p>
                     </div>
                 </div>
                 <div class='col-12 row' style='margin:auto; padding-top:50px'>
@@ -97,6 +111,9 @@
                     <div class='form-group col-6 col-xs-12'>
                         <label for='invoice-description'>Descrição da Fatura</label>
                         <input name='invoice_description' value='{{$project->invoice_description}}' maxlength='13' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura'>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Descrição apresentada na fatura do cartão de crédito
+                        </p>
                     </div>
                     <div class='form-group col-6 col-xs-12'>
                         <label for='company'>Empresa responsável</label>
@@ -105,6 +122,9 @@
                                 <option value='{{$company->id_code}}' {{$company->id_code == Hashids::encode($project->usersProjects[0]->company)? 'selected' : ''}}>{{$company->fantasy_name}}</option>
                             @endforeach
                         </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Empresa responsável pelo faturamento das vendas
+                        </p>
                     </div>
                 </div>
                 <div class='row'>
@@ -115,14 +135,20 @@
                                 <option value='{{$x}}' {{$project->installments_amount == $x ? 'selected' : ''}}>{{$x}}</option>
                             @endfor
                         </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade máxima de parcelas oferecidas no checkout
+                        </p>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                         <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                             @for($x=1; $x <=12; $x++)
-                                <option value='{{$x}}' {{$x > 1 ? 'disabled' : ''}}>{{$x > 1 ? 'EM BREVE ' : ''}}{{$x}}</option>
+                                <option value='{{$x}}' {{$x > 1 ? 'disabled' : ''}}>{{$x}}{{$x > 1 ? ' (em breve) ' : ''}}</option>
                             @endfor
                         </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Quantidade de parcelas oferecidas sem juros (se oferecida mais de uma a taxa de juros é descontada do produtor)
+                        </p>
                         <span id='error-juros' class='text-danger' style='display: none'>A quantidade de parcelas sem juros deve ser menor ou igual que a quantidade de parcelas</span>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
@@ -131,6 +157,9 @@
                             <option value='1' {{$project->boleto == 1 ? 'selected' : ''}}>Sim</option>
                             <option value='0' {{$project->boleto == 0 ? 'selected' : ''}}>Não</option>
                         </select>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com boleto no checkout
+                        </p>
                     </div>
                 </div>
                 <div class='row'>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Modules\Invites\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -8,29 +8,23 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to your controller routes.
-     *
-     * In addition, it is set as the URL generator's root namespace.
-     *
+     * The module namespace to assume when generating URLs to actions.
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $moduleNamespace = 'Modules\Invites\Http\Controllers';
 
     /**
-     * Define your route model bindings, pattern filters, etc.
-     *
+     * Called before routes are registered.
+     * Register any model bindings or pattern based filters.
      * @return void
      */
     public function boot()
     {
-        //
-
         parent::boot();
     }
 
     /**
      * Define the routes for the application.
-     *
      * @return void
      */
     public function map()
@@ -38,36 +32,30 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
-
-        //
     }
 
     /**
      * Define the "web" routes for the application.
-     *
      * These routes all receive session state, CSRF protection, etc.
-     *
      * @return void
      */
     protected function mapWebRoutes()
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+             ->namespace($this->moduleNamespace)
+             ->group(__DIR__ . '/../Routes/web.php');
     }
 
     /**
      * Define the "api" routes for the application.
-     *
      * These routes are typically stateless.
-     *
      * @return void
      */
     protected function mapApiRoutes()
     {
         Route::prefix('api')
 //             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+             ->namespace($this->moduleNamespace)
+             ->group(__DIR__ . '/../Routes/api.php');
     }
 }

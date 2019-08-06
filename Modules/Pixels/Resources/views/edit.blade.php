@@ -11,8 +11,8 @@
             <select name="platform" type="text" class="form-control select-pad" id="platform">
                 <option value="facebook" {{ ($pixel->platform == 'facebook') ? 'selected' : '' }}>Facebook</option>
                 <option value="google" {{ ($pixel->platform == 'google') ? 'selected' : '' }}>Google</option>
-                <option value="null" {{--{{ ($pixel->platform == 'taboola') ? 'selected' : '' }}--}} disabled='disabled'>EM BREVE Taboola</option>
-                <option value="null" {{--{{ ($pixel->platform == 'outbrain') ? 'selected' : '' }}--}} disabled='disabled'>EM BREVE Outbrain</option>
+                <option value="null" {{--{{ ($pixel->platform == 'taboola') ? 'selected' : '' }}--}} disabled='disabled'>Taboola (em breve)</option>
+                <option value="null" {{--{{ ($pixel->platform == 'outbrain') ? 'selected' : '' }}--}} disabled='disabled'>Outbrain (em breve)</option>
             </select>
         </div>
         <div class="form-group col-6">

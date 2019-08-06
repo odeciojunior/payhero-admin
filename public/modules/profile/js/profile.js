@@ -16,9 +16,17 @@ $(document).ready(function () {
             data: form_data,
             error: function (response) {
                 loadingOnScreenRemove()
+                // console.log(response)
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
+                        switch (String(response.responseJSON.errors[error])) {
+                            case 'The profile photo must be a file of type: jpeg, jpg, png.':
+                                alertCustom('error', 'A imagem de perfil deve estar em um dos seguintes formatos: jpeg, jpg, png.')
+                                break;
+                            default:
+                                alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+
                     }
                 }
             },
@@ -250,6 +258,12 @@ Dropzone.options.dropzoneDocuments = {
         });
     },
     error: function (file, response) {
+
+        if(response.search('Max filesize') > 0){
+            response = 'A imagem e muito grande. Tamanho maximo: 2mb.'
+        }else if(response.search('upload files of this type') > 0){
+            response = 'A imagem deve estar em um dos seguintes formatos: jpeg, jpg, png.'
+        }
 
         swal({
             position: 'bottom',

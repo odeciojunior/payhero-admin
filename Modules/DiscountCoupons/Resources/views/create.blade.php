@@ -5,8 +5,8 @@
             <div style="width:100%">
                 <div class="row">
                     <div class="form-group col-xl-12">
-                        <label for="name">Nome</label>
-                        <input name="name" type="text" class="form-control" id="nome_cupom" placeholder="Nome">
+                        <label for="name">Descrição</label>
+                        <input name="name" type="text" class="form-control" id="nome_cupom" placeholder="Descrição">
                     </div>
                 </div>
                 <div class="row">

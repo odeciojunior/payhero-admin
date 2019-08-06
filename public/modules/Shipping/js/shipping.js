@@ -13,10 +13,9 @@ $(document).ready(function () {
             // altera campo value dependendo do tipo do frete
             var selected = $("#shipping-type").val();
             if (selected === 'static') {
-                $('#shipping-name').attr('placeholder', 'TRANSPORTADORA')
+                $('#shipping-name').attr('placeholder', 'Frete grátis')
                 $("#value-shipping-row").css('display', 'block');
                 $("#zip-code-origin-shipping-row").css('display', 'none');
-
             } else if (selected == 'pac') {
                 $('#shipping-name').attr('placeholder', 'PAC')
                 $("#value-shipping-row").css('display', 'none');
@@ -63,6 +62,8 @@ $(document).ready(function () {
                 $("#btn-modal").show();
                 $("#modal-add-body").html(response);
                 $('#shipping-zip-code-origin').mask('00000-000');
+                $('#shipping-value').mask('#.###,#0', {reverse: true});
+
 
                 changeType();
 

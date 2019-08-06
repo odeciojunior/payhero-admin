@@ -15,6 +15,7 @@ $(document).ready(function () {
 
     $("#transfers_company_select").on("change", function () {
         $("#extract_company_select").val($(this).val());
+        $('#custom-input-addon').val('');
         updateBalances();
     });
 
@@ -48,7 +49,7 @@ $(document).ready(function () {
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
                 $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
-                $('.total_available').html('<span class="currency">R$</span>'+response.available_balance);
+                $('.total_available').html('<span class="currency">R$</span>' + response.available_balance);
                 $(".currency").html(response.currency);
                 $(".available-balance").html(response.available_balance);
                 $(".antecipable-balance").html(response.antecipable_balance);
@@ -81,16 +82,25 @@ $(document).ready(function () {
                     //
                 },
                 success: function (response) {
-
-                    if (response.data.documents_status == 'pending') {
+                    if (response.data.user_documents_status == 'pending') {
+                        let route = '/profile'
+                        $('#modal-withdrawal').modal('show');
+                        $('#modal-withdrawal-title').text("Oooppsssss!")
+                        $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
+                            '<h3 align="center"><strong>Documentos pessoais ainda não validados</strong></h3>' +
+                            '<h4 align="center">Parece que ainda existe pendencias com seus documentos</h4>' +
+                            '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' +
+                            '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + route + '">clique aqui</a></h5>')
+                        $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                    } else if (response.data.documents_status == 'pending') {
                         let companie = $('#transfers_company_select').val();
                         let route = '/companies/' + companie + '/edit'
                         $('#modal-withdrawal').modal('show');
                         $('#modal-withdrawal-title').text("Oooppsssss!")
                         $('#modal_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' +
-                            '<h3 align="center"><strong>Documentos ainda não validados</strong></h3>' +
-                            '<h4 align="center">Parece que ainda existe pendencias com seus documentos</h4>' +
-                            '<h4 align="center">Seria bom conferir se todos os documentos ja foram cadastrados</h4>' +
+                            '<h3 align="center"><strong>Documentos da empresa ainda não validados</strong></h3>' +
+                            '<h4 align="center">Parece que ainda existe pendencias com os documentos de sua empresa</h4>' +
+                            '<h4 align="center">Seria bom conferir se todos os documentos já foram cadastrados</h4>' +
                             '<h5 align="center">Deseja ir ao documentos? <a class="red pointer" href="' + route + '">clique aqui</a></h5>')
                         $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                     } else {

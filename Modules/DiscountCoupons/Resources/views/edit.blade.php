@@ -7,8 +7,8 @@
             <div style="width:100%">
                 <div class="row">
                     <div class="form-group col-xl-12">
-                        <label for="name">Nome</label>
-                        <input value="{!! $coupon->name != '' ? $coupon->name : '' !!}" name="name" type="text" class="form-control" id="name_coupon" placeholder="Nome">
+                        <label for="name">Descrição</label>
+                        <input value="{!! $coupon->name != '' ? $coupon->name : '' !!}" name="name" type="text" class="form-control" id="name_coupon" placeholder="Descrição">
                     </div>
                 </div>
                 <div class="row">
