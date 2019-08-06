@@ -164,7 +164,7 @@
                 <div class=" content-error d-flex text-center">
                     <img src="{!! asset('modules/global/assets/img/emptyvendas.svg') !!}" width="250px">
                     <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
-                    <p class="desc gray">Comece agora mesmo a vender os produtos do seu projeto! </p>
+                    <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>
                     <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
                 </div>
 
