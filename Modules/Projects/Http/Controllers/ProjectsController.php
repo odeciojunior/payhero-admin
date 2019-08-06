@@ -2,6 +2,7 @@
 
 namespace Modules\Projects\Http\Controllers;
 
+use App\Entities\Shipping;
 use Exception;
 use App\Entities\Project;
 use App\Entities\Carrier;
@@ -71,21 +72,30 @@ class ProjectsController extends Controller
 
             $projectModel        = new Project();
             $userProjectModel    = new UserProject();
+            $shippingModel       = new Shipping();
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if ($requestValidated) {
                 $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
 
                 $project = $projectModel->create([
-                                                    'name'                       => $requestValidated['name'],
-                                                    'description'                => $requestValidated['description'],
-                                                    'installments_amount'        => 12,
-                                                    'installments_interest_free' => 1,
-                                                    'visibility'                 => 'private',
-                                                    'automatic_affiliation'      => 0,
-                                                    'boleto'                     => 1,
-                                                ]);
-
+                                                     'name'                       => $requestValidated['name'],
+                                                     'description'                => $requestValidated['description'],
+                                                     'installments_amount'        => 12,
+                                                     'installments_interest_free' => 1,
+                                                     'visibility'                 => 'private',
+                                                     'automatic_affiliation'      => 0,
+                                                     'boleto'                     => 1,
+                                                 ]);
+                $shippingModel->create([
+                                           'project'      => $project->id,
+                                           'name'         => 'Frete gratis',
+                                           'information'  => 'de 15 até 30 dias',
+                                           'value'        => '0,00',
+                                           'type'         => 'static',
+                                           'status'       => '1',
+                                           'pre_selected' => '1',
+                                       ]);
                 if ($project) {
                     $photo = $request->file('photo-main');
                     if ($photo != null) {
@@ -95,7 +105,7 @@ class ProjectsController extends Controller
                             $img->save($photo->getPathname());
 
                             $digitalOceanPath = $digitalOceanService
-                                                     ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
+                                ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
                             $project->update(['photo' => $digitalOceanPath]);
                         } catch (Exception $e) {
                             Log::warning('Erro ao tentar salvar foto projeto - ProjectsController - store');
@@ -104,14 +114,14 @@ class ProjectsController extends Controller
                     }
 
                     $userProject = $userProjectModel->create([
-                                                                'user'              => auth()->user()->id,
-                                                                'project'           => $project->id,
-                                                                'company'           => $requestValidated['company'],
-                                                                'type'              => 'producer',
-                                                                'access_permission' => 1,
-                                                                'edit_permission'   => 1,
-                                                                'status'            => 'active',
-                                                            ]);
+                                                                 'user'              => auth()->user()->id,
+                                                                 'project'           => $project->id,
+                                                                 'company'           => $requestValidated['company'],
+                                                                 'type'              => 'producer',
+                                                                 'access_permission' => 1,
+                                                                 'edit_permission'   => 1,
+                                                                 'status'            => 'active',
+                                                             ]);
                     if (!$userProject) {
                         $digitalOceanPath->deleteFile($project->photo);
                         $project->delete();
@@ -145,7 +155,8 @@ class ProjectsController extends Controller
                 $user      = auth()->user()->load('companies');
                 $companies = $user->companies;
 
-                $project = $projectModel->with(['usersProjects', 'shopifyIntegrations'])->where('id', $idProject)->first();
+                $project = $projectModel->with(['usersProjects', 'shopifyIntegrations'])->where('id', $idProject)
+                                        ->first();
 
                 if ($project) {
 
@@ -175,11 +186,11 @@ class ProjectsController extends Controller
 
             $idProject = current(Hashids::decode($id));
             $project   = $projectModel->with([
-                                                       'usersProjects' => function($query) use ($user, $idProject) {
-                                                           $query->where('user', $user->id)
-                                                                 ->where('project', $idProject)->first();
-                                                       },
-                                                   ])->find($idProject);
+                                                 'usersProjects' => function($query) use ($user, $idProject) {
+                                                     $query->where('user', $user->id)
+                                                           ->where('project', $idProject)->first();
+                                                 },
+                                             ])->find($idProject);
 
             $view = view('projects::edit', [
                 'companies' => $user->companies,
@@ -207,7 +218,7 @@ class ProjectsController extends Controller
             $projectModel        = new Project();
             $userProjectModel    = new UserProject();
             $digitalOceanService = app(DigitalOceanFileService::class);
-  
+
             if ($requestValidated) {
                 $project = $projectModel->where('id', Hashids::decode($id))->first();
 
@@ -230,7 +241,7 @@ class ProjectsController extends Controller
                             $img->save($projectPhoto->getPathname());
 
                             $digitalOceanPath = $digitalOceanService
-                                                     ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
+                                ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
                             $project->update([
                                                  'photo' => $digitalOceanPath,
                                              ]);
@@ -249,7 +260,7 @@ class ProjectsController extends Controller
                             $img->save($projectLogo->getPathname());
 
                             $digitalOceanPathLogo = $digitalOceanService
-                                                         ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/logo', $projectLogo);
+                                ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/logo', $projectLogo);
 
                             $project->update([
                                                  'logo' => $digitalOceanPathLogo,

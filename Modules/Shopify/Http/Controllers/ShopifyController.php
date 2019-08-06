@@ -87,7 +87,6 @@ class ShopifyController extends Controller
                 if (empty($shopifyService->getClient())) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
-                $shopifyService->getShopName();
             } catch (\Exception $e) {
                 report($e);
 
@@ -113,7 +112,7 @@ class ShopifyController extends Controller
             $shopifyIntegration = $shopifyIntegrationModel->create([
                                                                        'token'         => $dados['token'],
                                                                        'shared_secret' => '',
-                                                                       'url_store'     => $dados['url_store'] . '.myshopify.com',
+                                                                       'url_store'     => $urlStore . '.myshopify.com',
                                                                        'user'          => auth()->user()->id,
                                                                        'project'       => $project->id,
                                                                        'status'        => 1,

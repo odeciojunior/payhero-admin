@@ -61,14 +61,14 @@
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="support_telephone">Telefone</label>
-                                            <input name="support_telephone" value="{!! $company->support_telephone !!}" type="text" class="input-pad" id="support_telephone" placeholder='Telefone'>
+                                            <input name="support_telephone" value="{!! $company->support_telephone !!}" type="text" data-mask="(00) 0000-0000" class="input-pad" id="support_telephone" placeholder='Telefone'>
                                         </div>
                                     </div>
                                     <h3 class="mb-15">Informações complementares</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-2">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="{!! $company->zip_code !!}" type="text" class="input-pad" id="zip_code" placeholder='CEP'>
+                                            <input name="zip_code" value="{!! $company->zip_code !!}" type="text" data-mask="00000-000" class="input-pad" id="brazil_zip_code" placeholder='CEP'>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -78,7 +78,7 @@
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Nº</label>
-                                            <input name="number" value="{!! $company->number !!}" type="text" class="input-pad" id="number" placeholder='Nº'>
+                                            <input name="number" value="{!! $company->number !!}" type="text" data-mask="0#" class="input-pad" id="number" placeholder='Nº'>
                                         </div>
                                         <div class="form-group col-xl-5">
                                             <label for="neighborhood">Bairro</label>
