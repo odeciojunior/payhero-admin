@@ -61,7 +61,7 @@ class CartRecoveryService
                     if ($telephoneValidated != '') {
                         $zenviaSms = new ZenviaSmsService();
 
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ', $telephoneValidated, $link);
                         $abandonedCart->increment('sms_sent_amount');
                     }
                     $data           = [
@@ -128,7 +128,7 @@ class CartRecoveryService
                     if ($telephoneValidated != '') {
                         $zenviaSms = new ZenviaSmsService();
 
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ', $telephoneValidated, $link);
                         $abandonedCart->increment('sms_sent_amount');
                     }
 
