@@ -121,10 +121,10 @@
         <h4> Entrega </h4>
         <span class="table-title gray table-code-tracking">
             <div class='row' style='line-height: 1.5;'>
-                Código Rastreio:
-                @if (empty($sale->shopify_order))
+                <span class="table-title gray ml-15">Código Rastreio:</span>
+                @if (empty($sale->shopify_order) && $sale->status == 1)
                     <div class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle'>
-                    <a id='btn-edit-trackingcode' class='edit pointer' style='margin-right:10px' title='Editar Código de rastreio' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'><i class='icon wb-edit' aria-hidden='true'></i></a>
+                    <a id='btn-edit-trackingcode' class='edit pointer' title='Editar Código de rastreio' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'><i class='icon wb-edit' aria-hidden='true'></i></a>
                     <a id='btn-sent-tracking-user' class='pointer' @if(!empty($delivery->tracking_code)) style='' @else style='display: none;' @endif title='Enviar Email' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'><i class='icon wb-inbox' aria-hidden='true'></i></a>
                 </div>
                 @endif
@@ -133,9 +133,9 @@
                 <span class='tracking-code-value'>{{isset($delivery->tracking_code)? $delivery->tracking_code:'Não informado'}}</span>
             </div>
         </span>
-        <input type='text' class='input-value-trackingcode' style='display:none;' value='{{isset($delivery->tracking_code)? $delivery->tracking_code:''}}'>
-        <button type='button' class='btn-save-tracking' style='display: none;' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'>Salvar</button>
-        <button type='button' class='btn-cancel-tracking' style='display: none;'>Cancelar</button>
+        <input type='text' class='input-value-trackingcode my-10' style='display:none;' value='{{isset($delivery->tracking_code)? $delivery->tracking_code:''}}'>
+        <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'>Salvar</button>
+        <button type='button' class='btn-cancel-tracking mb-10' style='display: none;'>Cancelar</button>
         {{--        <div id='btn-edit-trackingcode' class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align is-hide' data-name='edit'>--}}
         {{--            <div class='icondemo vertical-align-middle'>--}}
         {{--                <a class='edit'><i class='icon wb-edit' aria-hidden='true'></i></a>--}}
@@ -163,9 +163,12 @@
             <br>
         @endif
         @if($sale->payment_method == 2)
-            <span class="table-title gray"> <a href="{{$sale->boleto_link ?? ''}}" class="gradient"> Link para o boleto </a></span>
+            <span class="table-title gray">Link para o boleto: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$sale->boleto_link ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+            {{--            <span class="table-title gray"> <a href="{{$sale->boleto_link ?? ''}}" class="gradient"> Link para o boleto </a></span>--}}
             <br>
-            <span class="table-title gray"> Linha Digitável:<br> {{$sale->boleto_digitable_line ?? ''}}</span>
+            {{--            <span class="table-title gray"> Linha Digitável:<br> {{$sale->boleto_digitable_line ?? ''}}</span>--}}
+            <span class="table-title gray">Linha Digitável: <a role='button' class='copy_link' style='cursor:pointer;' digitable-line='{{$sale->boleto_digitable_line ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+
             <br>
             <span class="table-title gray"> Vencimento: {{  with(new \Carbon\Carbon($sale->boleto_due_date))->format('d/m/Y ')?? ''}}</span>
             <br>
@@ -213,10 +216,10 @@
         $('.btn-save-tracking').on('click', function () {
             let trackingCode = $(".input-value-trackingcode").val();
             let referenceCode = $(this).attr('data-code');
-            ajaxUpdateTracking(trackingCode,referenceCode);
+            ajaxUpdateTracking(trackingCode, referenceCode);
         });
 
-        function ajaxUpdateTracking(tracking,reference) {
+        function ajaxUpdateTracking(tracking, reference) {
             var delivery = '{{\Vinkla\Hashids\Facades\Hashids::encode($delivery->id)}}';
             var sale = '{{\Vinkla\Hashids\Facades\Hashids::encode($sale->id)}}';
 
@@ -244,7 +247,7 @@
                 success: function (response) {
                     $(".btn-cancel-tracking").click();
                     $(".tracking-code-value").html(tracking);
-                    $('#btn-sent-tracking-user[data-code='+reference+']').show('slow');
+                    $('#btn-sent-tracking-user[data-code=' + reference + ']').show('slow');
                     alertCustom('success', response.message);
                 }
             });
