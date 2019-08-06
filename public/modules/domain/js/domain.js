@@ -44,7 +44,8 @@ $(document).ready(function () {
 
                 $(".btn-save").unbind();
                 $(".btn-save").click(function () {
-                    loadOnModal('#modal-add-body')
+                    // loadOnModal('#modal-add-body')
+                    loadOnModalDomainEspecial('#modal-add-body');
                     $('#btn-modal').hide()
                     domainName = $('#name').val();
                     $('#btn-modal').attr('disabled', 'disabled');
@@ -253,10 +254,11 @@ $(document).ready(function () {
     }
 
     function modalDomainEdit(responseDomains, fromSave) {
-        $("#modal-title").html("Editar Domínio");
+        $('#especialModalTitle').remove();
         $('#btn-modal').removeAttr("data-dismiss")
         var data = {dominio: globalDomain};
         responseDomainsVar = responseDomains
+        $("#modal-title").html("Editar Domínio").show();
         $.ajax({
             method: "GET",
             url: "/domains/" + globalDomain + "/edit",
@@ -268,7 +270,7 @@ $(document).ready(function () {
                 //
             }, success: function (response) {
                 //predefinições da modal.
-                modalEdit(response,fromSave);
+                modalEdit(response, fromSave);
 
                 //adiciona ip do usuario no campo do nome
                 if (newDomain != '' && !$('#shopify').data('shopfy')) {
@@ -444,6 +446,8 @@ $(document).ready(function () {
         resetFooter();
         resetHtml();
         $('#btn-modal').show();
+        $('#modal-title').show();
+        $('#especialModalTitle').remove();
     })
 
     function resetHtml(whereToReset) {
@@ -539,12 +543,12 @@ $(document).ready(function () {
         $('#modal-add-body').show('slow');
     }
 
-    function modalEdit(response,fromSave) {
+    function modalEdit(response, fromSave) {
         $("#btn-modal").removeAttr('disabled');
         $("#btn-modal").addClass('btn-update');
-        if(fromSave == true){
+        if (fromSave == true) {
             $("#btn-modal").text('Proximo');
-        }else{
+        } else {
             $("#btn-modal").text('Atualizar');
         }
         $("#modal_add_size").addClass('modal-lg');
@@ -700,5 +704,35 @@ $(document).ready(function () {
         }
 
     }
-
 });
+
+function loadOnModalDomainEspecial(whereToLoad) {
+
+    $(whereToLoad).children().hide('fast');
+    $('#modal-title').after('<h3 id="especialModalTitle" class="modal-title" style="weight:bold; color:black"></h3>')
+    $('#modal-title').hide();
+    $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
+        "<div class='loaderModal'>" +
+        "</div>" +
+        "</div>");
+    $('#loadingOnScreen').append("<div class='blockScreen'></div>");
+
+    $('#especialModalTitle').html('Iniciando ... ')
+
+    setTimeout(function () {
+        $('#especialModalTitle').html('Configurando domínio')
+    }, 1000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Configurando entradas DNS')
+    }, 6000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Preparando servidores de Email')
+    }, 13000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Preparando checkout transparente')
+    }, 20000)
+    setTimeout(function () {
+        $('#especialModalTitle').html('Finalizando ... ')
+    }, 25000)
+
+}
