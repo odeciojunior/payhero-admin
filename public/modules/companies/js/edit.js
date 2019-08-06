@@ -122,6 +122,7 @@ Dropzone.options.dropzoneDocuments = {
     paramName: "file",
     maxFilesize: 2, // MB
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
+    //uploadMultiple: true,
     accept: function (file, done) {
         var dropz = this;
 
@@ -183,14 +184,18 @@ Dropzone.options.dropzoneDocuments = {
         // $('#td_bank_status').html(response.bank_document_translate);
         // $('#td_address_status').html(response.address_document_translate);
         // $('#td_contract_status').html(response.contract_document_translate);
+        // done();
+
         swal({
             position: 'bottom',
             type: 'success',
             toast: 'true',
-            title: response,
+            title: response.message,
             showConfirmButton: false,
             timer: 6000
         });
+
+
     },
     error: function (file, response) {
 
