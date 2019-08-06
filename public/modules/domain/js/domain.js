@@ -127,6 +127,7 @@ $(document).ready(function () {
                 $(".details-domain").on('click', function () {
                         resetFooter();
                         hideElements('.modal-footer')
+                        loadOnModal('#modal-add-body')
                         dnsDomains($(this).attr('domain'))
                     }
                 );
@@ -208,7 +209,7 @@ $(document).ready(function () {
                 }
             },
             success: function (response) {
-
+                loadingOnScreenRemove();
                 modalVerify(response);
 
                 $('.btn-verifyDomain').on('click', function () {
@@ -482,7 +483,7 @@ $(document).ready(function () {
         hideElements('.modal-footer');
         $('#modal-title').html('Verificação');
         $('#modal-add-body').children().hide('slow');
-        $('#modal-add-body').delay(2000).html('');
+        $('#modal-add-body').html('');
         $('#modal-add-body').append('<div class="swal2-icon swal2-info swal2-animate-info-icon" style="display: flex;">i</div>' +
             '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' +
             '<h4 align="center">Agora falta pouco</h4>' +
@@ -556,7 +557,7 @@ $(document).ready(function () {
     }
 
     function modalAddDomain(response) {
-        $("#modal-title").html('Novo domínio');
+        $("#modal-title").text('Novo domínio');
         $('#btn-modal').removeAttr('data-dismiss')
         $("#btn-modal").addClass('btn-save');
         $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
@@ -672,7 +673,7 @@ $(document).ready(function () {
 function loadOnModalDomainEspecial(whereToLoad) {
 
     $(whereToLoad).children().hide('fast');
-    $('#modal-title').after('<h3 id="especialModalTitle" class="modal-title" style="weight:bold; color:black"></h3>')
+    $('#modal-title').after('<h3 id="especialModalTitle" style="weight:bold; color:black"></h3>')
     $('#modal-title').hide();
     $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" +
         "<div class='loaderModal'>" +
