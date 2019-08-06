@@ -138,7 +138,7 @@ Dropzone.options.dropzoneDocuments = {
             },
             showCancelButton: true,
             confirmButtonColor: '#3085D6',
-            cancelButtonColor: '#DD3333',
+            cancelButtonColor: '#DD3333', 
             confirmButtonText: 'Enviar'
         }).then(function (data) {
             if (data.value) {
@@ -157,7 +157,7 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function (file, response) {
         //update table
-
+  
         if (response.data.bank_document_translate.status == 3) {
 
             $('#td_bank_status').html('<span class="badge badge-aprovado">' +response.data.bank_document_translate.message+ '</span>');
@@ -198,6 +198,12 @@ Dropzone.options.dropzoneDocuments = {
 
     },
     error: function (file, response) {
+
+        if(response.search('Max filesize') > 0){
+            response = 'O documento é muito grande. Tamanho maximo: 2mb.'
+        }else if(response.search('upload files of this type') > 0){
+            response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.'
+        }
 
         swal({
             position: 'bottom',

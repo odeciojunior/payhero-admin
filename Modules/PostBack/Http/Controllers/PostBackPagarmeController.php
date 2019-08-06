@@ -18,8 +18,10 @@ use Modules\Core\HotZapp\HotZapp;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Entities\HotZappIntegration;
 use App\Entities\ShopifyIntegration;
 use Slince\Shopify\PublicAppCredential;
+use Modules\Core\Services\HotZappService;
 use Modules\Core\Transportadoras\Kapsula;
 use Modules\Core\Transportadoras\LiftGold;
 
@@ -43,10 +45,13 @@ class PostBackPagarmeController extends Controller {
             $transactionModel = new Transaction();
             $companyModel     = new Company();
             $userModel        = new User();
+            $planModel        = new Plan();
+            $planSaleModel    = new PlanSale();
+
 
             $sale = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
 
-            if($sale == null){
+            if(empty($sale)){
                 Log::write('info', 'VENDA NÃO ENCONTRADA!!!' . Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
                 return response()->json(['message' => 'sale not found'], 200);
             }
@@ -72,7 +77,7 @@ class PostBackPagarmeController extends Controller {
                     if($transaction->company != null){
 
                         $company = $companyModel->find($transaction->company);
- 
+
                         $user = $userModel->find($company['user_id']);
 
                         $transaction->update([
@@ -90,8 +95,6 @@ class PostBackPagarmeController extends Controller {
 
                 if($sale['shopify_order'] != ''){
 
-                    $planModel               = new Plan();
-                    $planSaleModel           = new PlanSale();
                     $shopifyIntegrationModel = new ShopifyIntegration();
 
                     $plansSale = $planSaleModel->where('sale', $sale['id'])->first();
@@ -116,6 +119,38 @@ class PostBackPagarmeController extends Controller {
                         report($e);
                     }
                 }
+
+                try{
+                    $hotZappIntegrationModel = new HotZappIntegration();
+
+                    $hotzappIntegration = $hotZappIntegrationModel->where('project',$plan['project'])->first();
+
+                    if(!empty($hotzappIntegration)){
+
+                        $hotZappService = new HotZappService($hotzappIntegration->link);
+
+                        $plansSale = $planSaleModel->where('sale', $sale['id'])->get();
+
+                        $plans = [];
+                        foreach ($plansSale as $planSale) {
+
+                            $plan = $planModel->find($planSale->plan);
+
+                            $plans[] = [
+                                "price"        => $plan->price,
+                                "quantity"     => $planSale->amount,
+                                "product_name" => $plan->name,
+                            ];
+                        }
+
+                        $hotZappService->newBoleto($sale,$plans);
+                    }
+                }
+                catch(\Exception $e){
+                    Log::write('info', 'erro ao enviar notificação pro HotZapp na venda '.$sale['id']);
+                    report($e);
+                }
+
             }
             else{
  
