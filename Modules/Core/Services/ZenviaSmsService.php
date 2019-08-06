@@ -26,6 +26,7 @@ class ZenviaSmsService
 
     public function sendSms($sms, $to)
     {
+        //
         try {
             $this->zenviaSms->setTo('55' . preg_replace("/[^0-9]/", "", $to));
             $this->zenviaSms->setMsg($sms);

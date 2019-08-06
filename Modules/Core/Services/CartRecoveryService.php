@@ -40,11 +40,11 @@ class CartRecoveryService
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
-                            $productArray = [];
-                                $productArray["name"] = $productPlan->getProduct->name;
-                                $productArray["photo"] = $productPlan->getProduct->photo;
-                                $productArray["amount"] = $productPlan->amount;
-                                $products[] = $productArray;
+                            $productArray           = [];
+                            $productArray["name"]   = $productPlan->getProduct->name;
+                            $productArray["photo"]  = $productPlan->getProduct->photo;
+                            $productArray["amount"] = $productPlan->amount;
+                            $products[]             = $productArray;
                         }
                     }
 
@@ -62,6 +62,7 @@ class CartRecoveryService
                         $zenviaSms = new ZenviaSmsService();
 
                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                        $abandonedCart->increment('sms_sent_amount');
                     }
                     $data           = [
                         'name'            => $clientNameExploded[0],
@@ -76,6 +77,7 @@ class CartRecoveryService
                         $sendEmail = new SendgridService();
 
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-538d3405815c43debcf48aa44ceab965', $data);
+                        $abandonedCart->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado');
@@ -105,12 +107,11 @@ class CartRecoveryService
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
-                            $productArray = [];
-                                $productArray["name"] = $productPlan->getProduct->name;
-                                $productArray["photo"] = $productPlan->getProduct->photo;
-                                $productArray["amount"] = $productPlan->amount;
-                                $products[] = $productArray;
-
+                            $productArray           = [];
+                            $productArray["name"]   = $productPlan->getProduct->name;
+                            $productArray["photo"]  = $productPlan->getProduct->photo;
+                            $productArray["amount"] = $productPlan->amount;
+                            $products[]             = $productArray;
                         }
                     }
                     $log = CheckouLog::where('id_log_session', $abandonedCart->id_log_session)
@@ -128,6 +129,7 @@ class CartRecoveryService
                         $zenviaSms = new ZenviaSmsService();
 
                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                        $abandonedCart->increment('sms_sent_amount');
                     }
 
                     $data           = [
@@ -143,6 +145,7 @@ class CartRecoveryService
                         $sendEmail = new SendgridService();
 
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
+                        $abandonedCart->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado, Dia seguinte');

@@ -66,6 +66,8 @@ class Checkout extends Model
         'utm_content',
         'src',
         'is_mobile',
+        'email_sent_amount',
+        'sms_sent_amount',
     ];
 
     /**

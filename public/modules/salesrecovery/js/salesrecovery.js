@@ -3,7 +3,6 @@ $(document).ready(function () {
     atualizar();
 
     $("#bt_filtro").on("click", function (event) {
-        console.log('oi');
         event.preventDefault();
         atualizar();
     });
