@@ -9,6 +9,7 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies
     Route::post('/companies/getcompanyform', 'CompaniesController@getCreateForm')
          ->name('companies.getcompanyform');
 });
+
 /*
 Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
 
