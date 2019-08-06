@@ -69,7 +69,7 @@ $(document).ready(function () {
                 }
                 else if (response.data == '' && $('#type_recovery').val() == 2) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido até o momento</td></tr>");
-                }else{
+                }else if (response.data == '' && $('#type_recovery').val() == 3){
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
 
                 }
