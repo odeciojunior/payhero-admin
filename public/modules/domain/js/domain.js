@@ -127,10 +127,7 @@ $(document).ready(function () {
                 $(".details-domain").on('click', function () {
                         resetFooter();
                         hideElements('.modal-footer')
-                        recheckOnly($(this).attr('domain'))
-
-                        // loadOnModal('#modal-add-body');
-                        // modalSuccessRegistry();
+                        dnsDomains($(this).attr('domain'))
                     }
                 );
 
@@ -404,40 +401,6 @@ $(document).ready(function () {
             }
         });
 
-    }
-
-    //SO AJAX
-
-    function recheckOnly(domainId) {
-        loadOnModal('#modal-add-body');
-        $('#btn-modal').hide()
-        $.ajax({
-            method: "POST",
-            url: "/domains/recheckOnly",
-            data: {
-                domain: domainId
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function (response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-                }
-                loadingOnScreenRemove()
-                dnsDomains(domainId);
-                updateDomains();
-            },
-            success: function (response) {
-                loadingOnScreenRemove()
-                modalSuccessRegistry();
-                updateDomains();
-            },
-        });
     }
 
     //SO ALTERAÇÃO DE HTML
