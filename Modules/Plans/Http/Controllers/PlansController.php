@@ -9,21 +9,27 @@ use App\Entities\Product;
 use App\Entities\ProductPlan;
 use App\Entities\UserProject;
 use App\Entities\ZenviaSms;
+use Auth;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansResource;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 
 class PlansController extends Controller
 {
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -36,19 +42,23 @@ class PlansController extends Controller
                                                       $query->where([['project_id', $projectId], ['status', 3]])
                                                             ->first();
                                                   },
-                                              ])->where('project', $projectId)->get();
+                                              ])->where('project', $projectId);
 
-                return PlansResource::collection($plans);
+                return PlansResource::collection($plans->orderBy('id', 'DESC')->paginate(5));
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar planos (PlansController - index)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao tentar listar planos',
+                                    ], 400);
         }
     }
 
     /**
      * @param PlanStoreRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(PlanStoreRequest $request)
     {
@@ -89,7 +99,7 @@ class PlansController extends Controller
     /**
      * @param PlanUpdateRequest $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(PlanUpdateRequest $request, $id)
     {
@@ -135,7 +145,7 @@ class PlansController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id)
     {
@@ -169,7 +179,7 @@ class PlansController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return Factory|JsonResponse|View
      */
     public function show(Request $request, $id)
     {
@@ -178,39 +188,58 @@ class PlansController extends Controller
 
             $projectId = current(Hashids::decode($request->input('project')));
 
-            if (isset($id)) {
-                $planId = Hashids::decode($id)[0];
-                //                $plan   = $this->getPlan()->with(['products', 'projectId.domains' => function($query) use ($projectId) {
-                //                    $query->where([['project_id', $projectId], ['status', 3]])
-                //                          ->first();
-                //                },])->find($planId);
-                $plan = $planModel->with([
-                                             'products', 'projectId.domains' => function($query) use ($projectId) {
+            if (!empty($id)) {
+                $planId = current(Hashids::decode($id));
+                $plan   = $planModel->with([
+                                               'products', 'projectId.domains' => function($query) use ($projectId) {
                         $query->where([['project_id', $projectId], ['status', 3]])
                               ->first();
                     },
-                                         ])->find($planId);
+                                           ])->find($planId);
 
-                return view('plans::details', ['plan' => $plan]);
+                $plan->code = isset($plan->projectId->domains[0]->name) ? 'https://checkout.' . $plan->projectId->domains[0]->name . '/' . $plan->code : 'Dominio não configurado';
+
+                if (empty($plan)) {
+
+                    return response()->json([
+                                                'message' => 'error',
+                                            ], 200);
+                } else {
+                    $view = view('plans::details', ['plan' => $plan]);
+
+                    return response()->json([
+                                                'message' => 'success',
+                                                'data'    => [
+                                                    'view' => $view->render(),
+                                                ],
+                                            ], 200);
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 200);
             }
-
-            return response()->json('Erro ao buscar Plano');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar detalhes do Plano (PlansController - show)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao buscar dados do plano!',
+                                    ], 400);
         }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function details(Request $request)
     {
+        $planModel = new Plan();
 
         $requestData = $request->all();
 
-        $plan = Plan::where('id', Hashids::decode($requestData['id_plano']))->first();
+        $plan = $planModel->with('project')->where('id', Hashids::decode($requestData['id_plano']))->first();
 
         $modalBody = '';
 
@@ -301,18 +330,34 @@ class PlansController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function create(Request $request)
     {
         try {
             $productModel = new Product();
 
-            $products = $productModel->where('user', \Auth::user()->id)->where('shopify', 0)->get();
+            $products = $productModel->where('user', auth()->user()->id)->where('shopify', 0)->get();
 
-            return view('plans::create', [
-                'products' => $products,
-            ]);
+            if (count($products) > 0) {
+
+                $view = view('plans::create', [
+                    'products' => $products,
+                ]);
+
+                return response()->json([
+                                            'message' => 'success',
+                                            'data'    => [
+                                                'view' => $view->render(),
+                                            ],
+                                        ]);
+            } else {
+
+                return response()->json([
+                                            'message' => 'error',
+                                        ]);
+            }
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de cadastro (PlansController - create)');
             report($e);
@@ -321,7 +366,7 @@ class PlansController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return Factory|JsonResponse|View
      */
     public function edit(Request $request)
     {
@@ -333,7 +378,7 @@ class PlansController extends Controller
             $planId = Hashids::decode($request->input('planId'))[0];
             $plan   = $planModel->find($planId);
             if ($plan) {
-                $products     = $productModel->where('user', \Auth::user()->id)->where('shopify', 0)->get()
+                $products     = $productModel->where('user', Auth::user()->id)->where('shopify', 0)->get()
                                              ->toArray();
                 $productPlans = $productPlan->where('plan', $plan->id)->get()->toArray();
 

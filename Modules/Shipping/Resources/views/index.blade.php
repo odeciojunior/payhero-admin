@@ -2,10 +2,6 @@
 <div class='row no-gutters mb-10'>
     <div class="top-holder text-right mb-5" style="width: 100%;">
         <div class="d-flex align-items-center justify-content-end">
-            {{--<div id="config-shipping" class="btn-holder d-flex align-items-center pointer mr-10"   data-toggle="modal" data-target="#modal-content-shipping">--}}
-            {{--<a class="pointer"> <i class="material-icons"> settings</i> </a>--}}
-            {{--<span class="link-button-dependent gray ml-10"> Configurar frete </span>--}}
-            {{--</div>    --}}
             <div id="add-shipping" class="btn-holder  d-flex align-items-center pointer" data-toggle="modal" data-target="#modal-content">
                 <span class="link-button-dependent red"> Adicionar Frete </span>
                 <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
