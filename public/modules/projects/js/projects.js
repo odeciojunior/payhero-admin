@@ -67,12 +67,26 @@ $(function () {
                         p.on('load', function () {
 
                             var img = document.getElementById('previewimage');
-                            var x1, x2, y1, y2;
+                            var x1, x2, y1, y2; 
 
-                            x1 = Math.floor(img.naturalWidth / 100 * 10);
-                            x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
-                            y1 = Math.floor(img.naturalHeight / 100 * 10);
-                            y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                            if (img.naturalWidth > img.naturalHeight) {
+                                y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1) / 2);
+                                x2 = x1 + (y2 - y1);
+                            } else {
+                                if (img.naturalWidth < img.naturalHeight) {
+                                    x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                    y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 2);
+                                    y2 = y1 + (x2 - x1);
+                                } else {
+                                    x1 = Math.floor(img.naturalWidth / 100 * 10);
+                                    x2 = img.naturalWidth - Math.floor(img.naturalWidth / 100 * 10);
+                                    y1 = Math.floor(img.naturalHeight / 100 * 10);
+                                    y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
+                                }
+                            }
 
                             $('#previewimage').imgAreaSelect({
                                 x1: x1, y1: y1, x2: x2, y2: y2,
