@@ -252,7 +252,7 @@ Dropzone.options.dropzoneDocuments = {
             position: 'bottom',
             type: 'success',
             toast: 'true',
-            title: response,
+            title: response.message,
             showConfirmButton: false,
             timer: 6000
         });
