@@ -12,6 +12,7 @@
             <h1 class="page-title">Recuperação de vendas</h1>
         </div>
         <div class="page-content container">
+            @if(count($projects) > 0 )
             <div id="" class="card shadow p-20">
                 <div class="row">
                     <div class="col-3">
@@ -95,6 +96,18 @@
                     </ul>
                 </div>
             </div>
+            @else
+                @push('css')
+                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                @endpush
+
+                <div class="content-error d-flex text-center">
+                    <img src="{!! asset('modules/global/assets/img/emptyprojetos.svg') !!}" width="250px">
+                    <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
+                    <p class="desc gray">Que tal criar um primeiro projeto para começar a vender? </p>
+                    <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>
+                </div>
+                @endif
         </div>
     </div>
     @push('scripts')

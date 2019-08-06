@@ -1,5 +1,7 @@
 $(document).ready(function () {
-
+    $('#btn-integration-model').on('click', function () {
+        $('.modal_integration_shopify').modal('show');
+    });
     $("#bt_add_integration").on("click", function () {
 
         if ($('#token').val() == '' || $('#url_store').val() == '' || $('#company').val() == '') {
@@ -31,5 +33,8 @@ $(document).ready(function () {
         });
 
     });
-
 });
+
+function openInNewWindow(url) {
+   window.open(url)
+}

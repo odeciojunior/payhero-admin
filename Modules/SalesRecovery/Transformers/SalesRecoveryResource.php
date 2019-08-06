@@ -47,8 +47,17 @@ class SalesRecoveryResource extends Resource
 
         $whatsAppMsg = 'Olá ' . $log->name;
 
-        $emailSentAmount = ($this->email_sent_amount == null) ? 'Não enviado' : $this->email_sent_amount;
-        $smsSentAmount   = ($this->sms_sent_amount == null) ? 'Não enviado' : $this->sms_sent_amount;
+        if ($this->email_sent_amount == null || $this->email_sent_amount == 0) {
+            $emailSentAmount = 'Não enviado';
+        } else {
+            $emailSentAmount = $this->email_sent_amount;
+        }
+
+        if ($this->sms_sent_amount == null || $this->sms_sent_amount == 0) {
+            $smsSentAmount = 'Não enviado';
+        } else {
+            $smsSentAmount = $this->sms_sent_amount;
+        }
 
         return [
             'id'              => Hashids::encode($this->id),
