@@ -43,14 +43,9 @@ class HotZappService {
             'financial_status'      => 'issued',
             'risk_level'            => '',
             'line_items'            => $plans,
-            // 'line_items' => [ [
-            //     'product_name' => @$plan->nome,
-            //     'quantity'     => '1',
-            //     'price'        => @$plano->preco,
-            // ] ]
         ];
 
-        self::sendPost($data,$plano->hotzapp_sale);
+        self::sendPost($data);
 
     }
 
@@ -82,14 +77,9 @@ class HotZappService {
             'financial_status'      => 'paid',
             'risk_level'            => '',
             'line_items'            => $plans,
-            // 'line_items' => [ [
-            //     'product_name' => @$plan->nome,
-            //     'quantity'     => '1',
-            //     'price'        => @$plano->preco,
-            // ] ]
         ];
 
-        self::sendPost($data,$plano->hotzapp_sale);
+        self::sendPost($data);
 
     }
 
@@ -122,14 +112,9 @@ class HotZappService {
             'financial_status'      => 'refused',
             'risk_level'            => '',
             'line_items'            => $plans,
-            // 'line_items' => [ [
-            //     'product_name' => @$plan->nome,
-            //     'quantity'     => '1',
-            //     'price'        => @$plano->preco,
-            // ] ]
         ];
 
-        self::sendPost($data,$plano->hotzapp_sale);
+        self::sendPost($data);
 
     }
 
@@ -161,14 +146,9 @@ class HotZappService {
             'financial_status'      => 'paid',
             'risk_level'            => '',
             'line_items'            => $plans,
-            // 'line_items' => [ [
-            //     'product_name' => @$plan->nome,
-            //     'quantity'     => '1',
-            //     'price'        => @$plano->preco,
-            // ] ]
         ];
 
-        self::sendPost($data,$plano->hotzapp_sale);
+        self::sendPost($data);
 
     }
 

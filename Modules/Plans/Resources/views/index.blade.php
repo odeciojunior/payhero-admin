@@ -36,7 +36,7 @@
     <div class="modal-dialog modal-simple">
         <div id="modal-not-products" class='modal-content p-10'>
             <div class='header-modal simple-border-bottom'>
-                <h2 id='modal-title' class='modal-title'>Ooooppsssss!</h2>
+                <h2 id='modal-title-plans-erro' class='modal-title-plans-erro'>Ooooppsssss!</h2>
             </div>
             <div class='modal-body simple-border-bottom' style='padding-bottom:1%; padding-top:1%;'>
                 <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>

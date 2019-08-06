@@ -221,7 +221,7 @@ class SalesController extends Controller
                                $query->whereIn('company', $userCompanies);
                            },
                        ])
-                ->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status', '!=', 10]]);
+                ->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status', '!=', 5], ['status', '!=', 10]]);
 
             if ($request->projeto != '') {
                 $plans    = $planModel->where('project', $request->projeto)->pluck('id');

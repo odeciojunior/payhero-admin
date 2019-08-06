@@ -103,6 +103,7 @@ class BoletoService
                         if ($telephoneValidated != '') {
                             $zenviaSms = new ZenviaSmsService();
                             $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido!' . $boleto->boleto_link, $telephoneValidated);
+                            $checkout->increment('sms_sent_amount');
                         }
 
                         $data           = [
@@ -204,7 +205,7 @@ class BoletoService
                         if ($emailValidated) {
                             $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
 
-                            $checkout->increment('email_sent_amount');
+                            $checkout->increment('email_sent_amount', 1);
                         }
                     }
                 } catch (Exception $e) {

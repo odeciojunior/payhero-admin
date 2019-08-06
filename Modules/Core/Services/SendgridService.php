@@ -283,7 +283,6 @@ class SendgridService
         try {
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);
-            //            $email->setSubject(); TODO colocar subject nos email Luan
             $email->addTo($toEmail, $toName);
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
