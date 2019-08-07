@@ -322,6 +322,8 @@ class ShopifyService
         $dom = new Dom;
 
         $dom->setOptions([
+                             'strict' => false,
+                             'preserveLineBreaks' => true,
                              'removeScripts' => false,
                          ]);
 
@@ -585,8 +587,22 @@ class ShopifyService
      */
     public function updateCartTemplate($htmlCart, $domain = null)
     {
+        preg_match_all("/({%)[\s\S]+?(%})/", $htmlCart, $tokens, PREG_OFFSET_CAPTURE);
+        foreach ($tokens[0] as $key => $item) {
+            $from = '/'.preg_quote($item[0], '/').'/';
+            $htmlCart = preg_replace($from, 'fox-fox-fox', $htmlCart, 1);
+        }
+
         $dom = new Dom;
+        $dom->setOptions([
+                             'strict' => false, // Set a global option to enable strict html parsing.
+                             'preserveLineBreaks' => true,
+                         ]);
+
+
+
         $dom->load($htmlCart);
+        $html = $dom->root->outerHtml();
 
         $forms = $dom->find('form');
         foreach ($forms as $form) {
@@ -598,6 +614,7 @@ class ShopifyService
         }
 
         if ($cartForm) {
+
 
             //div Foxdata
             $divFoxData = new Selector('#foxData', new Parser());
@@ -729,6 +746,11 @@ class ShopifyService
                   </div>";
 
             $html = $dom->root->outerHtml();
+            foreach ($tokens[0] as $key => $item) {
+                $from = '/'.preg_quote('fox-fox-fox', '/').'/';
+                $html = preg_replace($from, $item[0], $html, 1);
+            }
+
             preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
             foreach ($tokens[0] as $key => $item) {
                 if ((stripos($item[0], 'for ') !== false) &&
@@ -740,6 +762,7 @@ class ShopifyService
             return $html;
         } else {
             //thown parse error
+            return '';
         }
     }
 

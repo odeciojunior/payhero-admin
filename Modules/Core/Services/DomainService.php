@@ -7,6 +7,7 @@ use App\Entities\ShopifyIntegration;
 use Modules\Core\Events\DomainApprovedEvent;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\ShopifyService;
 
 class DomainService
 {
@@ -192,6 +193,7 @@ class DomainService
                                     $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
                                 }
                             } catch (\Exception $e) {
+                                Log::warning('Erro ao processar o html na integracao do shopify');
                                 report($e);
                                 //throwl
 
