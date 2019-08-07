@@ -11,6 +11,7 @@ use App\Entities\Checkout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Entities\Log as CheckoutLog;
+use Modules\Core\Services\LinkShortenerService;
 
 class CartRecoveryService
 {
@@ -96,7 +97,6 @@ class CartRecoveryService
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado');
-
                     report($e);
                 }
             }
@@ -117,12 +117,6 @@ class CartRecoveryService
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
-
-            foreach ($abandonedCarts as $abandonedCart) {
-                $log = CheckoutLog::where('id_log_session', $abandonedCart->id_log_session)
-                                  ->orderBy('created_at', 'desc')
-                                  ->first();
-            }
 
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
