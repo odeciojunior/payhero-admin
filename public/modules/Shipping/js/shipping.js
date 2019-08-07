@@ -64,6 +64,13 @@ $(document).ready(function () {
                 $('#shipping-zip-code-origin').mask('00000-000');
                 $('#shipping-value').mask('#.###,#0', {reverse: true});
 
+                $('.check').on('click', function () {
+                    if ($(this).is(':checked')) {
+                        $(this).val(1);
+                    } else {
+                        $(this).val(0);
+                    }
+                });
 
                 changeType();
 
@@ -218,7 +225,13 @@ $(document).ready(function () {
                                 $("#btn-modal").show();
                                 $("#modal-add-body").html(response);
                                 $('#shipping-zip-code-origin').mask('00000-000');
-
+                                $('.check').on('click', function () {
+                                    if ($(this).is(':checked')) {
+                                        $(this).val(1);
+                                    } else {
+                                        $(this).val(0);
+                                    }
+                                });
                                 var selected = $("#shipping-type").val();
                                 if (selected === 'static') {
                                     $("#value-shipping-row").css('display', 'block');
