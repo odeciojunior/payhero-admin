@@ -69,7 +69,20 @@ $(document).ready(function () {
     }
 
     $('#bt-withdrawal').on('click', function () {
-        if ($('#custom-input-addon').val() == '') {
+        let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '')
+        let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '')
+        let availableBalance = parseInt(availableBalanceText);
+        let toTransfer = parseFloat(toTransferText);
+        if (toTransfer > availableBalance) {
+            alertCustom('error', 'O valor requerido ultrapassa o limite disponivel')
+            toTransferText = $('#custom-input-addon').val()
+            toTransfer = toTransferText.slice(0, -2)
+            // $('#custom-input-addon').val(toTransfer);
+            // $('#custom-input-addon').val().update();
+            $('#custom-input-addon').val('');
+            $('.withdrawal-value').mask('#.###,#0', {reverse: true});
+
+        } else if ($('#custom-input-addon').val() == '') {
             alertCustom('error', 'Valor do saque inválido!');
         } else {
             $.ajax({
@@ -178,6 +191,11 @@ $(document).ready(function () {
                                         '<h4 align="center">Sua solicitação foi para avaliação</h4>' +
                                         '<h4 align="center">Em alguns instantes seu dinheiro estara em sua conta</h4>')
                                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success btn-return" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                                    $('.btn-return').on('click', function () {
+                                        $('#custom-input-addon').val('');
+
+                                    });
+
                                     $('.btn-return').click(function () {
                                         $('#modal_body').modal('hide');
                                         updateWithdrawalsTable()
@@ -195,23 +213,6 @@ $(document).ready(function () {
         }
 
     });
-
-    $('#custom-input-addon').on('change paste keyup', function () {
-        let availableBalanceText = $('.available-balance').html().replace(',', '').replace('.', '')
-        let toTransferText = $('#custom-input-addon').val().replace(',', '').replace('.', '')
-        let availableBalance = parseInt(availableBalanceText);
-        let toTransfer = parseFloat(toTransferText);
-        if (toTransfer > availableBalance) {
-            alertCustom('error', 'O valor requerido ultrapassa o limite disponivel')
-            toTransferText = $('#custom-input-addon').val()
-            toTransfer = toTransferText.slice(0, -2)
-            $('#custom-input-addon').val(toTransfer);
-            $('#custom-input-addon').val().update();
-            $('.withdrawal-value').mask('#.###,#0', {reverse: true});
-
-        } else {
-        }
-    })
 
 });
 
