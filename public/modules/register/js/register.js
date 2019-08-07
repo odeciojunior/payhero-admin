@@ -45,7 +45,7 @@ $(document).ready(function () {
 
     ///// botão prosseguir
     $("#btn-go").click(function () {
-
+        loadingOnScreen()
         if (currentPage == 'user') {
             basicDataComplete();
         } else if (currentPage == 'company') {
@@ -57,6 +57,7 @@ $(document).ready(function () {
 
         if (!validateCompanyData()) {
             alertCustom('error', 'Revise os dados informados');
+            loadingOnScreenRemove()
             return false;
         }
 
@@ -78,9 +79,11 @@ $(document).ready(function () {
                 number: ($('#country').val() == 'brasil') ? $('#brasil_number').val() : $('#eua_number').val(),
             },
             error: function (response) {
+                loadingOnScreenRemove()
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function (response) {
+                loadingOnScreenRemove()
                 // $("#company_id").val(response.data.id);
                 alertCustom('success', 'Empresa cadastrada com sucesso');
                 $(".div2").hide();
@@ -95,6 +98,7 @@ $(document).ready(function () {
 
         if (!validateBasicData()) {
             alertCustom('error', 'Revise os dados informados');
+            loadingOnScreenRemove()
             return false;
         }
 
@@ -117,8 +121,10 @@ $(document).ready(function () {
                         alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 }
+                loadingOnScreenRemove()
             },
             success: function (response) {
+                loadingOnScreenRemove()
                 if (response.success == 'true') {
                     currentPage = 'company';
                     $(".div1").hide();
