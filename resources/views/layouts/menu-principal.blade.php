@@ -41,7 +41,6 @@
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
                         <div class="dropdown-menu-header">
                             <h5>NOTIFICAÇÕES</h5>
-                            <span id='notificationBadge' class="badge badge-pill badge-danger"></span>
                         </div>
                         <div class="list-group scrollable scrollable-vertical" style="position: relative;">
                             <div class="scrollable-container" style="min-height: 140px; width: 358px;">
