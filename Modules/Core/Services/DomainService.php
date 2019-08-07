@@ -152,25 +152,37 @@ class DomainService
                                 $shopify = $this->getShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
                                 $shopify->setThemeByRole('main');
-                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
 
+                                $htmlCart = $shopify->getTemplateHtml($shopify::templateKeyName);
                                 if ($htmlCart) {
                                     //template normal
-                                    Log::warning('domains update command tema normal ...');
 
-                                    $shopifyIntegration->update([
-                                                                    'theme_type' => $this->getShopifyIntegrationModel()
-                                                                                         ->getEnum('theme_type', 'basic_theme'),
-                                                                    'theme_name' => $shopify->getThemeName(),
-                                                                    'theme_file' => 'sections/cart-template.liquid',
-                                                                    'theme_html' => $htmlCart,
-                                                                ]);
+                                    if ($shopify->checkCartTemplate($htmlCart)) {
+                                        $domain->update([
+                                                            'status' => $this->getDomainModel()
+                                                                             ->getEnum('status', 'approved'),
+                                                        ]);
 
-                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                        return true;
+                                    } else {
+
+                                        //template normal
+                                        Log::warning('domains update command tema normal ...');
+
+                                        $shopifyIntegration->update([
+                                                                        'theme_type' => $this->getShopifyIntegrationModel()
+                                                                                             ->getEnum('theme_type', 'basic_theme'),
+                                                                        'theme_name' => $shopify->getThemeName(),
+                                                                        'theme_file' => 'sections/cart-template.liquid',
+                                                                        'theme_html' => $htmlCart,
+                                                                    ]);
+
+                                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                    }
                                 } else {
+                                    //template ajax
                                     Log::warning('domains update command tema ajax ...');
 
-                                    //template ajax
                                     $shopifyIntegration->update([
                                                                     'theme_type' => $this->getShopifyIntegrationModel()
                                                                                          ->getEnum('theme_type', 'ajax_theme'),
@@ -214,14 +226,17 @@ class DomainService
                                         'status' => $this->getDomainModel()->getEnum('status', 'pending'),
                                     ]);
                     Log::warning('domains update command final else');
-                    if ($domainId) {
-                        return false;
-                    }
+
+                    return false;
                 }
             }
 
             return true;
         } catch (Exception $e) {
+            $domain->update([
+                                'status' => $this->getDomainModel()->getEnum('status', 'pending'),
+                            ]);
+            
             Log::warning('DomainService - Erro ao verificar dominios pendentes');
             report($e);
 

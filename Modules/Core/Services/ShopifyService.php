@@ -59,7 +59,6 @@ class ShopifyService
             $this->client        = new Client($this->credential, $urlStore, [
                 'metaCacheDir' => $cache // Metadata cache dir, required
             ]);
-            $this->pusherService = new PusherService();
         } catch (Exception $e) {
             Log::warning('__construct - Erro ao criar servico do shopify');
             report($e);
