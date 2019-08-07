@@ -26,23 +26,12 @@ class ZenviaSmsService
         $this->zenviaSms = new Sms();
     }
 
-    public function sendSms($msg, $to, $link = null)
+    public function sendSms($msg, $to)
     {
 
         try {
-            if ($link != null) {
-                $linkShortenerService = new LinkShortenerService();
-                $link                 = $linkShortenerService->shorten($link);
-
-                if (!$link) {
-                    Log::warning('Link URL invalido (ZenviaSmsService - sendSMS) - ' . $link);
-
-                    return false;
-                }
-            }
-
             $this->zenviaSms->setTo($to);
-            $this->zenviaSms->setMsg($msg . ' ' . $link);
+            $this->zenviaSms->setMsg($msg);
             $smsId = uniqid();
             $this->zenviaSms->setId($smsId);
             $this->zenviaSms->setCallbackOption(Sms::CALLBACK_NONE);

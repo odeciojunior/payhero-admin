@@ -102,11 +102,14 @@ class BoletoService
 
                         $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->clientModel->telephone);
 
-                        if ($telephoneValidated != '') {
+                        $linkShortenerService = new LinkShortenerService();
+                        $link                 = $linkShortenerService->shorten($boleto->boleto_link);
+                        if (!empty($link) && !empty($telephoneValidated)) {
                             $zenviaSms = new ZenviaSmsService();
-                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido!', $telephoneValidated, $boleto->boleto_link);
+                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
                             $checkout->increment('sms_sent_amount');
                         }
+
 
                         $data           = [
                             "name"                  => $clientNameExploded[0],
