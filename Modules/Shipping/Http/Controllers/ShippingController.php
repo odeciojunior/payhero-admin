@@ -68,17 +68,20 @@ class ShippingController extends Controller
     {
         try {
             $shippingValidated = $request->validated();
-
-            $shippingModel = new Shipping();
+            $shippingModel     = new Shipping();
 
             if ($shippingValidated) {
                 $shippingValidated['project'] = current(Hashids::decode($shippingValidated['project']));
                 if ($shippingValidated['value'] == null || preg_replace("/[^0-9]/", "", $shippingValidated['value']) == 0) {
                     $shippingValidated['value'] = '0,00';
                 }
-
+                if (empty($shippingValidated['status'])) {
+                    $shippingValidated['status'] = 0;
+                }
+                if (empty($shippingValidated['pre_selected'])) {
+                    $shippingValidated['pre_selected'] = 0;
+                }
                 if ($shippingValidated['pre_selected']) {
-
                     $shippings = $shippingModel->where([
                                                            'project'      => $shippingValidated['project'],
                                                            'pre_selected' => 1,
@@ -159,6 +162,7 @@ class ShippingController extends Controller
     {
         try {
             $requestValidated = $request->validated();
+            $shippingModel    = new Shipping();
 
             if (empty($requestValidated['pre_selected'])) {
                 $requestValidated['pre_selected'] = 0;
@@ -166,8 +170,6 @@ class ShippingController extends Controller
             if (empty($requestValidated['status'])) {
                 $requestValidated['status'] = 0;
             }
-
-            $shippingModel = new Shipping();
 
             if (isset($requestValidated) && isset($id)) {
 
