@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gustavo
- * Date: 08/07/19
- * Time: 15:03
- */
 
 namespace Modules\Core\Services;
 
@@ -16,7 +10,8 @@ use App\Entities\Project;
 use App\Entities\Checkout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Entities\Log as CheckouLog;
+use App\Entities\Log as CheckoutLog;
+use Modules\Core\Services\LinkShortenerService;
 
 class CartRecoveryService
 {
@@ -31,12 +26,14 @@ class CartRecoveryService
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
             $data                = [];
-            $products            = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
+
             foreach ($abandonedCarts as $abandonedCart) {
+                $products = [];
+
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
@@ -48,44 +45,58 @@ class CartRecoveryService
                         }
                     }
 
-                    $log                = CheckouLog::where('id_log_session', $abandonedCart->id_log_session)
-                                                    ->orderBy('created_at', 'desc')
-                                                    ->first();
+                    $log = CheckoutLog::where('id_log_session', $abandonedCart->id_log_session)
+                                      ->orderBy('created_at', 'desc')
+                                      ->first();
+
                     $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
                     $project            = Project::find($abandonedCart['project']);
                     $domain             = Domain::where('project_id', $project->id)->first();
 
-                    $link               = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
+                    $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
                     $clientNameExploded = explode(' ', $log['name']);
 
-                    if ($telephoneValidated != '') {
-                        $zenviaSms            = new ZenviaSmsService();
-                        $linkShortenerService = new LinkShortenerService();
-                        $link                 = $linkShortenerService->shorten($link);
-                        if (!empty($link)) {
+                    $linkShortenerService = new LinkShortenerService();
+                    $link                 = $linkShortenerService->shorten($linkCheckout);
+                    if (!empty($link)) {
+
+                        /**
+                         * Valida telefone
+                         */
+                        if (!empty($telephoneValidated)) {
+                            $zenviaSms = new ZenviaSmsService();
 
                             $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
                             $abandonedCart->increment('sms_sent_amount');
+                        } else {
+                            Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar e-sms, numero telefone inválido : ' . $log['telephone']);
                         }
-                    }
-                    $data           = [
-                        'name'            => $clientNameExploded[0],
-                        'project_logo'    => $project['logo'],
-                        'checkout_link'   => $link,
-                        "project_contact" => $project['contact'],
-                        "products"        => $products,
-                    ];
-                    $emailValidated = FoxUtils::validateEmail($log['email']);
 
-                    if ($emailValidated) {
-                        $sendEmail = new SendgridService();
+                        /**
+                         * Valida Email
+                         */
+                        $emailValidated = FoxUtils::validateEmail($log['email']);
+                        if ($emailValidated) {
+                            $data = [
+                                'name'            => $clientNameExploded[0],
+                                'project_logo'    => $project['logo'],
+                                'checkout_link'   => $link,
+                                "project_contact" => $project['contact'],
+                                "products"        => $products,
+                            ];
 
-                        $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-538d3405815c43debcf48aa44ceab965', $data);
-                        $abandonedCart->increment('email_sent_amount');
+                            $sendEmail = new SendgridService();
+
+                            $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-538d3405815c43debcf48aa44ceab965', $data);
+                            $abandonedCart->increment('email_sent_amount');
+                        } else {
+                            Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar e-mail, email inválido : ' . $log['email']);
+                        }
+                    } else {
+                        Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar (sms, email), link inválido : ' . $linkCheckout);
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado');
-
                     report($e);
                 }
             }
@@ -100,15 +111,18 @@ class CartRecoveryService
     public function verifyAbandonedCarts2()
     {
         try {
-            $date     = Carbon::now()->subDay('1')->toDateString();
-            $data     = [];
-            $products = [];
+            $date = Carbon::now()->subDay('1')->toDateString();
+            $data = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
+
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
+
+                    $products = [];
+
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
                             $productArray           = [];
@@ -118,41 +132,57 @@ class CartRecoveryService
                             $products[]             = $productArray;
                         }
                     }
-                    $log = CheckouLog::where('id_log_session', $abandonedCart->id_log_session)
-                                     ->orderBy('created_at', 'desc')
-                                     ->first();
+
+                    $log = CheckoutLog::where('id_log_session', $abandonedCart->id_log_session)
+                                      ->orderBy('created_at', 'desc')
+                                      ->first();
 
                     $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
                     $project            = Project::find($abandonedCart['project']);
                     $domain             = Domain::where('project_id', $project->id)->first();
 
-                    $link               = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
+                    $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
                     $clientNameExploded = explode(' ', $log['name']);
 
-                    if ($telephoneValidated != '') {
-                        $zenviaSms            = new ZenviaSmsService();
-                        $linkShortenerService = new LinkShortenerService();
-                        $link                 = $linkShortenerService->shorten($link);
-                        if (!empty($link)) {
+                    $linkShortenerService = new LinkShortenerService();
+                    $link                 = $linkShortenerService->shorten($linkCheckout);
+                    if (!empty($link)) {
+
+                        /**
+                         * Valida telefone
+                         */
+                        if (!empty($telephoneValidated)) {
+                            $zenviaSms = new ZenviaSmsService();
+
                             $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
                             $abandonedCart->increment('sms_sent_amount');
+                        } else {
+                            Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar e-sms, numero telefone inválido : ' . $log['telephone']);
                         }
-                    }
 
-                    $data           = [
-                        'name'            => $clientNameExploded[0],
-                        'project_logo'    => $project['logo'],
-                        'checkout_link'   => $link,
-                        "project_contact" => $project['contact'],
-                        "products"        => $products,
+                        /**
+                         * Valida Email
+                         */
+                        $emailValidated = FoxUtils::validateEmail($log['email']);
+                        if ($emailValidated) {
+                            $sendEmail = new SendgridService();
 
-                    ];
-                    $emailValidated = FoxUtils::validateEmail($log['email']);
-                    if ($emailValidated) {
-                        $sendEmail = new SendgridService();
+                            $data = [
+                                'name'            => $clientNameExploded[0],
+                                'project_logo'    => $project['logo'],
+                                'checkout_link'   => $link,
+                                "project_contact" => $project['contact'],
+                                "products"        => $products,
 
-                        $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
-                        $abandonedCart->increment('email_sent_amount');
+                            ];
+
+                            $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
+                            $abandonedCart->increment('email_sent_amount');
+                        } else {
+                            Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar e-mail, email inválido : ' . $log['email']);
+                        }
+                    } else {
+                        Log::warning('(Carrinho abandonado, Dia seguinte) - Erro ao enviar (sms, email), link inválido : ' . $linkCheckout);
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado, Dia seguinte');

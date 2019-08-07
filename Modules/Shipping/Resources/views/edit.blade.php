@@ -35,22 +35,44 @@
             <input name='zip_code_origin' id='shipping-zip-code-origin' type='text' class='input-pad' value='{{$shipping->zip_code_origin}}' placeholder='12345-678'>
         </div>
     </div>
-    <div class='row'>
-        <div class='form-group col-12'>
-            <label for='status'>Status</label>
-            <select id='shipping-status' name='status' class='form-control input-pad'>
-                <option value='1' {{$shipping->status == 1 ? 'selected':''}}>Ativado</option>
-                <option value='0'{{$shipping->status == 0 ? 'selected':''}}>Desativado</option>
-            </select>
+    <div class="row mt-20">
+        <div class="col-6">
+            <div class="switch-holder">
+                <label for="token" class='mb-10'>Status:</label>
+                <br>
+                <label class="switch">
+                    <input type="checkbox" @if($shipping->status == '1') value="1" checked="" @else value="0" @endif name="status" id="shipping-status" class='check' value='0'>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="switch-holder">
+                <label for="token" class='mb-10'>Pré-selecionado:</label>
+                <br>
+                <label class="switch">
+                    <input type="checkbox" @if($shipping->pre_selected == '1') value="1" checked="" @else value="0" @endif name="pre_selected" id="shipping-pre-selected" class='check' value='0'>
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
     </div>
-    <div class='row'>
-        <div class='form-group col-12'>
-            <label for='pre_selected'>Pré-selecionado</label>
-            <select name='pre_selected' id='shipping-pre-selected' class=' form-control input-pad'>
-                <option value='1' {{$shipping->pre_selected == 1 ?'selected':''}}>Sim</option>
-                <option value='0' {{$shipping->pre_selected == 0 ? 'selected' : ''}}>Não</option>
-            </select>
-        </div>
-    </div>
+    {{--    <div class='row'>--}}
+    {{--        <div class='form-group col-12'>--}}
+    {{--            <label for='status'>Status</label>--}}
+    {{--            <select id='shipping-status' name='status' class='form-control input-pad'>--}}
+    {{--                <option value='1' {{$shipping->status == 1 ? 'selected':''}}>Ativado</option>--}}
+    {{--                <option value='0'{{$shipping->status == 0 ? 'selected':''}}>Desativado</option>--}}
+    {{--            </select>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
+    {{--    <div class='row'>--}}
+    {{--        <div class='form-group col-12'>--}}
+    {{--            <label for='pre_selected'>Pré-selecionado</label>--}}
+    {{--            <select name='pre_selected' id='shipping-pre-selected' class=' form-control input-pad'>--}}
+    {{--                <option value='1' {{$shipping->pre_selected == 1 ?'selected':''}}>Sim</option>--}}
+    {{--                <option value='0' {{$shipping->pre_selected == 0 ? 'selected' : ''}}>Não</option>--}}
+    {{--            </select>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 </form>
