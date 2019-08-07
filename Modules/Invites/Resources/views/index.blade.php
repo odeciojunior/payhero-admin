@@ -13,11 +13,11 @@
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
         </div>
         <div class="page-content container" id='page-invites'>
-            <div id="content-error" style='display:none;'>
-                <div class="content-modal-error ">
-                    <img src="/public/modules/global/assets/img/emptyconvites.svg" width="250px"/>
-                    <h4 class="big gray">Você ainda não enviou convites!</h4> <br>
-                    <p class="desc gray">Envie convites, e
+            <div id="content-error" class='' style='display:none;'>
+                <div class="content-modal-error text-center" style=''>
+                    <img src="modules/global/assets/img/emptyconvites.svg" width="250px"/>
+                    <h4 class="big gray" style='width:100%'>Você ainda não enviou convites!</h4> <br>
+                    <p class="desc gray" style='width:100%'>Envie convites, e
                         <strong>ganhe 1% de tudo que seu convidado vender durante um ano!</strong></p>
                 </div>
             </div>
@@ -40,18 +40,18 @@
             <ul id="pagination-invites" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                 {{-- js pagination carrega --}}
             </ul>
-            <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1" {{--style='display:none;'--}}>
-                <div class="modal-dialog modal-simple">
-                    <div id="modal-not-companies" class='modal-content p-10'>
+            <div class="modal fade modal-3d-flip-vertical" id="modal-invite" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div id='mainModalBody' class="modal-dialog modal-simple">
+                    {{--<div id="modal-not-companies" class='modal-content p-10' style='display:none'>
                         <div class='header-modal simple-border-bottom'>
                             <h2 id='modal-title' class='modal-title'>Ooooppsssss!</h2>
                         </div>
                         <div class='modal-body simple-border-bottom' style='padding-bottom:1%; padding-top:1%;'>
                             <div class='swal2-icon swal2-error swal2-animate-error-icon' style='display:flex;'>
-                                <span class='swal2-x-mark'>
-                                    <span class='swal2-x-mark-line-left'></span>
-                                    <span class='swal2-x-mark-line-right'></span>
-                                </span>
+                                                    <span class='swal2-x-mark'>
+                                                        <span class='swal2-x-mark-line-left'></span>
+                                                        <span class='swal2-x-mark-line-right'></span>
+                                                    </span>
                             </div>
                             <h3 align='center'>Você não cadastrou nenhuma empresa</h3>
                             <h5 align='center'>Deseja cadastrar uma empresa?
@@ -61,8 +61,8 @@
                         <div style='width:100%; text-align:center; padding-top:3%;'>
                             <span class='btn btn-danger' data-dismiss='modal' style='font-size: 25px;'>Retornar</span>
                         </div>
-                    </div>
-                    <div id="modal-then-companies" class="modal-content">
+                    </div>--}}
+                    {{--<div id="modal-then-companies" class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
@@ -82,11 +82,6 @@
                                         <label for="company">Empresa para receber</label>
                                         <div id='company-list'>
                                         </div>
-                                        {{--<select id="company" name="company" class="form-control">
-                                          --}}{{--  @foreach($companies as $company)
-                                                <option value="{!! Hashids::encode($company['id']) !!}" invite-parameter="{!! Hashids::encode($company['id']) !!}">{!! $company['fantasy_name'] !!}</option>
-                                            @endforeach--}}{{--
-                                        </select>--}}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -107,7 +102,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>

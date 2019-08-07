@@ -81,7 +81,7 @@ $(document).ready(function () {
     }
     $("#store-invite").unbind();
     $("#store-invite").on('click', function () {
-
+        loadingOnScreen();
         $.ajax({
             method: "GET",
             url: "/api/companies",
@@ -103,11 +103,15 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (isEmpty(response.data)) {
-                    $("#modal-then-companies").css('display', 'none');
-                    $("#modal-not-companies").css('display', 'block');
+                    loadingOnScreenRemove()
+                    modalNotCompanies()
+                    /*$("#modal-then-companies").css('display', 'none');
+                    $("#modal-not-companies").css('display', 'block');*/
                 } else {
-                    $("#modal-not-companies").css('display', 'none');
-                    $("#modal-then-companies").css('display', 'block');
+                    loadingOnScreenRemove()
+                    modalThenCompanies()
+                    /*$("#modal-not-companies").css('display', 'none');
+                    $("#modal-then-companies").css('display', 'block');*/
 
                     $("#modal-reverse-title").html('Novo Convite');
                     let selCompany = '';
@@ -136,6 +140,7 @@ $(document).ready(function () {
 
                     $("#btn-send-invite").unbind();
                     $("#btn-send-invite").on('click', function () {
+                        loadingOnScreen()
                         let email = $("#email").val();
 
                         if (email == '') {
@@ -177,12 +182,13 @@ $(document).ready(function () {
                     alertCustom('error', response.responseJSON.message);
 
                 }
+                modalThenCompanies()
+                loadingOnScreenRemove();
             },
             success: function (response) {
-
                 $(".close").click();
                 alertCustom('success', response.message);
-
+                loadingOnScreenRemove();
                 updateInvites();
             }
         });
@@ -258,6 +264,41 @@ $(document).ready(function () {
             }
         }
 
+    }
+    //ALTERAÇÃO DE HTML
+
+    function modalNotCompanies() {
+        $('#mainModalBody').html('<div id="modal-not-companies" class="modal-content p-10">' +
+            '<div class="header-modal simple-border-bottom">' +
+            '<h2 id="modal-title" class="modal-title">Ooooppsssss!</h2></div>' +
+            '<div class="modal-body simple-border-bottom" style="padding-bottom:1%; padding-top:1%;">' +
+            '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display:flex;">' +
+            '<span class="swal2-x-mark">' +
+            '<span class="swal2-x-mark-line-left"></span>' +
+            '<span class="swal2-x-mark-line-right"></span></span></div>' +
+            '<h3 align="center">Você não cadastrou nenhuma empresa</h3>' +
+            '<h5 align="center">Deseja cadastrar uma empresa?' +
+            '<a class="red pointer" href="/companies" target="_blank">clique aqui</a></h5></div>' +
+            '<div style="width:100%; text-align:center; padding-top:3%;">' +
+            '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px;">Retornar</span>' +
+            '</div></div>')
+    }
+
+    function modalThenCompanies() {
+        $('#mainModalBody').html('<div id="modal-then-companies" class="modal-content"><div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+            '<h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center"></h4></div>' +
+            '<div id="modal-reverse-body" class="modal-body"><div id="body-modal"><div class="row">' +
+            '<div class="form-group col-12"><label for="email">Email do convidado</label>' +
+            '<input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">' +
+            '</div></div><div class="row"><div class="form-group col-12">' +
+            '<label for="company">Empresa para receber</label><div id="company-list"></div></div></div>' +
+            '<div class="row"><div class="col-12"><label for="email">Link de convite</label>' +
+            '</div><div id="invite-link-select" class="input-group col-12"><input type="text" class="form-control" id="invite-link" value="" readonly>' +
+            '<span class="input-group-btn"><button id="copy-link" class="btn btn-default" type="button">Copiar</button>' +
+            '</span></div></div><div class="row" style="margin-top: 35px"><div class="form-group col-12">' +
+            '<input id="btn-send-invite" type="button" class="form-control btn" value="Enviar Convite" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">' +
+            '</div></div></div></div></div>')
     }
 
 });
