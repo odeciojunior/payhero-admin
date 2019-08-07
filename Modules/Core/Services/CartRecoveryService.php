@@ -51,20 +51,15 @@ class CartRecoveryService
                     $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
                     $project            = Project::find($abandonedCart['project']);
                     $domain             = Domain::where('project_id', $project->id)->first();
-
                     $link               = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
                     $clientNameExploded = explode(' ', $log['name']);
 
                     if ($telephoneValidated != '') {
-                        $zenviaSms            = new ZenviaSmsService();
-                        $linkShortenerService = new LinkShortenerService();
-                        $link                 = $linkShortenerService->shorten($link);
-                        if (!empty($link)) {
-
-                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
-                            $abandonedCart->increment('sms_sent_amount');
-                        }
+                        $zenviaSms = new ZenviaSmsService();
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                        $abandonedCart->increment('sms_sent_amount');
                     }
+
                     $data           = [
                         'name'            => $clientNameExploded[0],
                         'project_logo'    => $project['logo'],
@@ -137,13 +132,10 @@ class CartRecoveryService
                     $clientNameExploded = explode(' ', $log['name']);
 
                     if ($telephoneValidated != '') {
-                        $zenviaSms            = new ZenviaSmsService();
-                        $linkShortenerService = new LinkShortenerService();
-                        $link                 = $linkShortenerService->shorten($link);
-                        if (!empty($link)) {
-                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
-                            $abandonedCart->increment('sms_sent_amount');
-                        }
+                        $zenviaSms = new ZenviaSmsService();
+
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                        $abandonedCart->increment('sms_sent_amount');
                     }
 
                     $data           = [
@@ -152,8 +144,8 @@ class CartRecoveryService
                         'checkout_link'   => $link,
                         "project_contact" => $project['contact'],
                         "products"        => $products,
-
                     ];
+
                     $emailValidated = FoxUtils::validateEmail($log['email']);
                     if ($emailValidated) {
                         $sendEmail = new SendgridService();
