@@ -246,8 +246,13 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function (file, response) {
         //update table
-        $('#td_personal_status').html(response.personal_document_translate);
-        $('#td_address_status').html(response.address_document_translate);
+
+        if (response.personal_document_translate == 'Em análise') {
+            $('#personal_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.personal_document_translate);
+        }
+        if (response.address_document_translate == 'Em análise') {
+            $('#address_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.address_document_translate);
+        }
         swal({
             position: 'bottom',
             type: 'success',
@@ -259,9 +264,9 @@ Dropzone.options.dropzoneDocuments = {
     },
     error: function (file, response) {
 
-        if(response.search('Max filesize') > 0){
+        if (response.search('Max filesize') > 0) {
             response = 'O documento é muito grande. Tamanho maximo: 2mb.'
-        }else if(response.search('upload files of this type') > 0){
+        } else if (response.search('upload files of this type') > 0) {
             response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.'
         }
 

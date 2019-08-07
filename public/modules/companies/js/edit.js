@@ -157,25 +157,24 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function (file, response) {
         //update table
-  
         if (response.data.bank_document_translate.status == 3) {
 
             $('#td_bank_status').html('<span class="badge badge-aprovado">' +response.data.bank_document_translate.message+ '</span>');
-        } else {
+        } else if (response.data.bank_document_translate.status == 2){
             $('#td_bank_status').html('<span class="badge badge-pendente">' +response.data.bank_document_translate.message+ '</span>');
         }
 
         if (response.data.address_document_translate.status == 3) {
 
             $('#td_address_status').html('<span class="badge badge-aprovado">' +response.data.address_document_translate.message+ '</span>');
-        } else {
+        } else if (response.data.address_document_translate.status == 2){
             $('#td_address_status').html('<span class="badge badge-pendente">' +response.data.address_document_translate.message+ '</span>');
         }
 
         if (response.data.contract_document_translate.status == 3) {
 
             $('#td_contract_status').html('<span class="badge badge-aprovado">' +response.data.contract_document_translate.message+ '</span>');
-        } else {
+        } else if (response.data.contract_document_translate.status == 2){
             $('#td_contract_status').html('<span class="badge badge-pendente">' +response.data.contract_document_translate.message+ '</span>');
         }
 

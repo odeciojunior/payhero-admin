@@ -161,13 +161,30 @@
                                                 <tr>
                                                     <td>Identidade</td>
                                                     <td id="td_personal_status">
-                                                        <span class="badge badge-pendente">{!! $user->personal_document_translate !!}</span>
+                                                        @if($user->personal_document_status == 1)
+                                                            <span class="badge badge-primary" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
+                                                        @elseif($user->personal_document_status == 2)
+                                                            <span class="badge badge-pendente" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
+                                                        @elseif($user->personal_document_status == 3)
+                                                            <span class="badge badge-success" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
+                                                        @else
+                                                            <span class="badge badge-danger" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Residência</td>
                                                     <td id="td_address_status">
-                                                        <span class="badge badge-pendente"> {!! $user->address_document_translate !!}</span>
+                                                        @if($user->address_document_status == 1)
+                                                            <span class="badge badge-primary" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
+                                                        @elseif($user->address_document_status == 2)
+                                                            <span class="badge badge-pendente" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
+                                                        @elseif($user->address_document_status == 3)
+                                                            <span class="badge badge-success" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
+                                                        @else
+                                                            <span class="badge badge-danger" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
+                                                        @endif
+{{--                                                        <span class="badge badge-pendente" id='address_document_badge'> {!! $user->address_document_translate !!}</span>--}}
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -179,10 +196,8 @@
                                         </small>
                                     </div>
                                 </div>
-                            
-                            
-                            
-                            --</div>
+                                --
+                            </div>
                         </div>
                     </div>
                 </div>
