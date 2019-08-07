@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gustavo
- * Date: 08/07/19
- * Time: 15:03
- */
 
 namespace Modules\Core\Services;
 
@@ -16,7 +10,7 @@ use App\Entities\Project;
 use App\Entities\Checkout;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Entities\Log as CheckouLog;
+use App\Entities\Log as CheckoutLog;
 
 class CartRecoveryService
 {
@@ -31,12 +25,14 @@ class CartRecoveryService
             $formatted_dateStart = $dateStart->format('y-m-d H:i:s');
             $formatted_dateEnd   = $dateEnd->format('y-m-d H:i:s');
             $data                = [];
-            $products            = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
+
             foreach ($abandonedCarts as $abandonedCart) {
+                $products            = [];
+
                 try {
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
@@ -48,9 +44,10 @@ class CartRecoveryService
                         }
                     }
 
-                    $log                = CheckouLog::where('id_log_session', $abandonedCart->id_log_session)
+                    $log                = CheckoutLog::where('id_log_session', $abandonedCart->id_log_session)
                                                     ->orderBy('created_at', 'desc')
                                                     ->first();
+
                     $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
                     $project            = Project::find($abandonedCart['project']);
                     $domain             = Domain::where('project_id', $project->id)->first();
@@ -98,23 +95,33 @@ class CartRecoveryService
         try {
             $date     = Carbon::now()->subDay('1')->toDateString();
             $data     = [];
-            $products = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
                                       ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
                                       ->get();
+
+            foreach($abandonedCarts as $abandonedCart){
+                $log = CheckoutLog::where('id_log_session', $abandonedCart->id_log_session)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
+
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
+
+                    $products = [];
+
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
-                            $productArray           = [];
+                            $productArray           = []; 
                             $productArray["name"]   = $productPlan->getProduct->name;
                             $productArray["photo"]  = $productPlan->getProduct->photo;
                             $productArray["amount"] = $productPlan->amount;
                             $products[]             = $productArray;
                         }
                     }
-                    $log = CheckouLog::where('id_log_session', $abandonedCart->id_log_session)
+
+                    $log = CheckoutLog::where('id_log_session', $abandonedCart->id_log_session)
                                      ->orderBy('created_at', 'desc')
                                      ->first();
 
@@ -147,6 +154,7 @@ class CartRecoveryService
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $log['email'], $log['name'], 'd-84ef2d36b629496da42c1a8bcbf6ed53', $data);
                         $abandonedCart->increment('email_sent_amount');
                     }
+
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar e-mail no foreach - Carrinho abandonado, Dia seguinte');
                     report($e);
