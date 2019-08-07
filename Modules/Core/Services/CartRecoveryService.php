@@ -56,10 +56,14 @@ class CartRecoveryService
                     $clientNameExploded = explode(' ', $log['name']);
 
                     if ($telephoneValidated != '') {
-                        $zenviaSms = new ZenviaSmsService();
+                        $zenviaSms            = new ZenviaSmsService();
+                        $linkShortenerService = new LinkShortenerService();
+                        $link                 = $linkShortenerService->shorten($link);
+                        if (!empty($link)) {
 
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
-                        $abandonedCart->increment('sms_sent_amount');
+                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                            $abandonedCart->increment('sms_sent_amount');
+                        }
                     }
                     $data           = [
                         'name'            => $clientNameExploded[0],
@@ -133,10 +137,13 @@ class CartRecoveryService
                     $clientNameExploded = explode(' ', $log['name']);
 
                     if ($telephoneValidated != '') {
-                        $zenviaSms = new ZenviaSmsService();
-
-                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
-                        $abandonedCart->increment('sms_sent_amount');
+                        $zenviaSms            = new ZenviaSmsService();
+                        $linkShortenerService = new LinkShortenerService();
+                        $link                 = $linkShortenerService->shorten($link);
+                        if (!empty($link)) {
+                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ', somos da loja ' . $project['name'] . ', vimos que você não finalizou seu pedido, aproveite o último dia da promoção: ' . $link, $telephoneValidated);
+                            $abandonedCart->increment('sms_sent_amount');
+                        }
                     }
 
                     $data           = [

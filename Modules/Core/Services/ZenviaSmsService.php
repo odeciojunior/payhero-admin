@@ -10,6 +10,8 @@ namespace Modules\Core\Services;
 
 use App\Entities\Sale;
 use App\Entities\ZenviaSms;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Zenvia\Model\Sms;
 use Zenvia\Model\SmsFacade;
 
@@ -24,12 +26,12 @@ class ZenviaSmsService
         $this->zenviaSms = new Sms();
     }
 
-    public function sendSms($sms, $to)
+    public function sendSms($msg, $to)
     {
-        //
+
         try {
-            $this->zenviaSms->setTo('55' . preg_replace("/[^0-9]/", "", $to));
-            $this->zenviaSms->setMsg($sms);
+            $this->zenviaSms->setTo($to);
+            $this->zenviaSms->setMsg($msg);
             $smsId = uniqid();
             $this->zenviaSms->setId($smsId);
             $this->zenviaSms->setCallbackOption(Sms::CALLBACK_NONE);
@@ -40,7 +42,7 @@ class ZenviaSmsService
                 }
 
                 return false;
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 return false;
             }
         } catch (\Exception $e) {

@@ -42,7 +42,9 @@ class BoletoService
         //        }
     }
 
-    // Hoje vence o seu boleto
+    /**
+     * Hoje vence o seu pedido
+     */
     public function verifyBoletosExpiring()
     {
         try {
@@ -100,11 +102,14 @@ class BoletoService
 
                         $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->clientModel->telephone);
 
-                        if ($telephoneValidated != '') {
+                        $linkShortenerService = new LinkShortenerService();
+                        $link                 = $linkShortenerService->shorten($boleto->boleto_link);
+                        if (!empty($link) && !empty($telephoneValidated)) {
                             $zenviaSms = new ZenviaSmsService();
-                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido!' . $boleto->boleto_link, $telephoneValidated);
+                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
                             $checkout->increment('sms_sent_amount');
                         }
+
 
                         $data           = [
                             "name"                  => $clientNameExploded[0],
@@ -137,7 +142,9 @@ class BoletoService
         }
     }
 
-    // Já separamos seu pedido
+    /**
+     * Já separamos seu pedido
+     */
     public function verifyBoletoWaitingPayment()
     {
         try {
@@ -219,7 +226,9 @@ class BoletoService
         }
     }
 
-    //Vamos ter que liberar sua mercadoria
+    /**
+     * Vamos ter que liberar sua mercadoria
+     */
     public function verifyBoleto2()
     {
         try {
@@ -305,6 +314,9 @@ class BoletoService
         }
     }
 
+    /**
+     *
+     */
     public function verifyBoletoExpired3()
     {
         //        $date          = Carbon::now()->subDay('3')->toDateString();
@@ -330,6 +342,9 @@ class BoletoService
         //        }
     }
 
+    /**
+     *
+     */
     public function verifyBoletoExpired4()
     {
         //        $date          = Carbon::now()->subDay('4')->toDateString();
@@ -389,7 +404,9 @@ class BoletoService
         //        }
     }
 
-    //Boletos compensados
+    /**
+     *  Boletos Compensado
+     */
     public function verifyBoletoPaid()
     {
         try {
@@ -441,6 +458,9 @@ class BoletoService
         }
     }
 
+    /**
+     *
+     */
     public function changeBoletoPendingToCanceled()
     {
 
