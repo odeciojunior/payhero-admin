@@ -188,17 +188,17 @@ class SalesRecoveryService
 
         $checkout->is_mobile = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
 
-        $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.products')
+        $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.productsPlans.getProduct')
                                            ->where('checkout', $checkout->id)
                                            ->get();
 
         $plans = [];
         $total = 0;
         foreach ($checkoutPlans as $checkoutPlan) {
-            foreach ($checkoutPlan->getRelation('plan')->products as $key => $product) {
-                $plans[$key]['name']   = $checkoutPlan->getRelation('plan')->name;
+            foreach ($checkoutPlan->getRelation('plan')->productsPlans as $key => $productPlan) {
+                $plans[$key]['name']   = $productPlan->getProduct->name;
                 $plans[$key]['value']  = $checkoutPlan->getRelation('plan')->price;
-                $plans[$key]['photo']  = $product->photo;
+                $plans[$key]['photo']  = $productPlan->getProduct->photo;
                 $plans[$key]['amount'] = $checkoutPlan->amount;
                 $total                 += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->getRelation('plan')->price)) * intval($checkoutPlan->amount);
             }
