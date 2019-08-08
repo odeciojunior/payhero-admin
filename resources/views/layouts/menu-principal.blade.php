@@ -48,43 +48,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dropdown-menu-footer">
-                            <span class="dropdown-menu-footer-btn" role="button">
+                        <div class="dropdown-menu-footer" style='margin:0px;background-image: linear-gradient(11deg, #e6774c, rgb(249, 34, 120))'>
 
-                            </span>
-                            <span class="dropdown-item" role="menuitem">
-                                NOTIFICAÇÕES
-                            </span>
                         </div>
                     </div>
-                    {{--<div class="dropdown-menu dropdown-menu-right dropdown-menu-media no-border" role="menu">
-                        <div class="dropdown-menu-header">
-                            <h5>NOTIFICAÇÕES</h5>
-                            <span id='notificationBadge' class="badge badge-round badge-danger"></span>
-                        </div>
-                        <div class="list-group scrollable is-enabled scrollable-vertical">
-                            <div data-role="container" style="width: 100%; height: auto;">
-                                <div id='notificationTemplate' data-role="content" style="width: 100%; ">
-
-                                    @if(count(\Auth::user()->unreadNotifications) > 0)
-                                        @foreach(\Auth::user()->unreadNotifications as $notification)
-                                            @include('notifications::' . str_replace("Modules\\Checkout\\Notifications\\","",$notification->type), ['notification' => $notification])
-                                        @endforeach
-                                    @else
-                                        <div class="media d-flex align-items-center p-20">
-                                            <div class="pr-10">
-                                                <i class="material-icons">check</i>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <span class="">Nenhuma nova notificação</span>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>--}}
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
