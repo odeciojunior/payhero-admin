@@ -72,8 +72,8 @@
             <form class="mt10">
                 <input type='hidden' id='parameter' value='{{$parameter}}'>
                 <div id="login" class="div1">
-                    <h4 class="bold title-content">Informe seus dados</h4>
-                    <p class="desc"> Esses são os dados que usaremos para enviar notificações e serão necessarios para efetuar o login.
+                    <h4 class="bold title-content">Dados básicos</h4>
+                    <p class="desc"> Preencha os dados atentamente.
                     </p>
                     <div class="row">
                         <div class="col-lg-6">
