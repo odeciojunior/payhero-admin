@@ -180,9 +180,6 @@ $(function () {
                                 }
                             });
 
-                            // changeType();
-                            // $('#shipping-value').mask('#.###,#0', {reverse: true});
-
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
                                 loadingOnScreen();
