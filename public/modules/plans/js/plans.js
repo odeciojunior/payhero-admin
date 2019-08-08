@@ -26,11 +26,11 @@ $(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 loadingOnScreenRemove();
                 $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
-            }, success: function (data) {
+            }, success: function success(data) {
                 console.log(data);
                 if (data.message === 'error') {
                     $("#modal-plans-error").modal('show');
@@ -54,7 +54,7 @@ $(function () {
                     });
 
                     //product
-                    $('#price').mask('#.###,#0', {reverse: true});
+                    $('#price').mask('#.###,#0', { reverse: true });
                     var qtd_products = '1';
 
                     var div_products = $('#products_div_' + qtd_products).parent().clone();
@@ -78,7 +78,6 @@ $(function () {
 
                         $('#products').append('<div class="">' + new_div.html() + '</div>');
                         $('.products_amount').mask('0#');
-
                     });
 
                     /**
@@ -100,7 +99,17 @@ $(function () {
                             processData: false,
                             contentType: false,
                             cache: false,
-                            error: function (data) {
+                            error: function (_error) {
+                                function error(_x) {
+                                    return _error.apply(this, arguments);
+                                }
+
+                                error.toString = function () {
+                                    return _error.toString();
+                                };
+
+                                return error;
+                            }(function (data) {
                                 loadingOnScreenRemove();
                                 $("#modal_add_produto").hide();
                                 $(".loading").css("visibility", "hidden");
@@ -109,7 +118,7 @@ $(function () {
                                         alertCustom('error', String(data.responseJSON.errors[error]));
                                     }
                                 }
-                            }, success: function () {
+                            }), success: function success() {
                                 loadingOnScreenRemove();
                                 $(".loading").css("visibility", "hidden");
                                 alertCustom("success", "Plano Adicionado!");
@@ -118,16 +127,16 @@ $(function () {
                         });
                     });
                 }
-
             }
         });
-
     });
 
     /**
      * Update Table Plan
      */
-    function updatePlan(link = null) {
+    function updatePlan() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
         loadOnTable('#data-table-plan', '#table-plans');
         $("#data-table-plan").html("<tr class=''><td colspan='11'>Carregando...</td></tr>");
 
@@ -140,11 +149,21 @@ $(function () {
         $.ajax({
             method: "GET",
             url: link,
-            data: {project: projectId},
+            data: { project: projectId },
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function () {
+            error: function (_error2) {
+                function error() {
+                    return _error2.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error2.toString();
+                };
+
+                return error;
+            }(function () {
                 $("#data-table-plan").html('Erro ao encontrar dados');
                 if (response.status == '422') {
                     for (error in response.errors) {
@@ -153,13 +172,12 @@ $(function () {
                 } else {
 
                     alertCustom('error', response.responseJSON.message);
-
                 }
-            },
-            success: function (response) {
+            }),
+            success: function success(response) {
 
                 if (isEmpty(response.data)) {
-                    $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-plan").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
 
                     $("#data-table-plan").html('');
@@ -179,10 +197,7 @@ $(function () {
 
                         data += '</td>';
 
-                        data += "<td style='min-width:200px;'>" +
-                            "<a class='pointer details-plan mr-30' plan='" + value.id + "'  role='button'><i class='material-icons gradient'>remove_red_eye</i></a>" +
-                            "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a>" +
-                            "<a class='pointer delete-plan ml-30' plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a>"
+                        data += "<td style='min-width:200px;'>" + "<a class='pointer details-plan mr-30' plan='" + value.id + "'  role='button'><i class='material-icons gradient'>remove_red_eye</i></a>" + "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a>" + "<a class='pointer delete-plan ml-30' plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a>";
                         "</td>";
 
                         data += '</tr>';
@@ -190,7 +205,7 @@ $(function () {
                         $("#data-table-plan").append(data);
                     });
 
-                    pagination(response, 'plans')
+                    pagination(response, 'plans');
                 }
 
                 /**
@@ -199,7 +214,7 @@ $(function () {
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {
                     var plan = $(this).attr('plan');
-                    var data = {planId: plan, project: projectId};
+                    var data = { planId: plan, project: projectId };
 
                     $.ajax({
                         method: "GET",
@@ -208,16 +223,26 @@ $(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function (response) {
+                        error: function (_error3) {
+                            function error(_x3) {
+                                return _error3.apply(this, arguments);
+                            }
+
+                            error.toString = function () {
+                                return _error3.toString();
+                            };
+
+                            return error;
+                        }(function (response) {
                             if (response.status == '422') {
                                 for (error in response.responseJSON.errors) {
                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
                             } else {
-                                alertCustom("error", response.responseJSON.message)
+                                alertCustom("error", response.responseJSON.message);
                             }
                             loadingOnScreenRemove();
-                        }, success: function (response) {
+                        }), success: function success(response) {
                             if (response.message == 'error') {
                                 alertCustom('error', 'Ocorreu um erro ao tentar buscar dados plano!');
                             } else {
@@ -227,9 +252,7 @@ $(function () {
 
                                 $("#modal-add-body").html(response.data['view']);
                                 $("#modal-content").modal('show');
-
                             }
-
                         }
                     });
                 });
@@ -244,7 +267,7 @@ $(function () {
                     $("#modal-title").html("Editar Plano<br><hr>");
                     // $("#modal_add_size").addClass('modal-lg');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-                    var data = {planId: plan};
+                    var data = { planId: plan };
                     $.ajax({
                         method: "GET",
                         url: "/plans/" + plan + "/edit",
@@ -252,9 +275,9 @@ $(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
-                        }, success: function (response) {
+                        }, success: function success(response) {
                             $("#btn-modal").addClass('btn-update');
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
@@ -267,7 +290,7 @@ $(function () {
                             });
 
                             //product
-                            $('#plan-price').mask('#.###,#0', {reverse: true});
+                            $('#plan-price').mask('#.###,#0', { reverse: true });
                             var qtd_products = '1';
 
                             var div_products = $('#products_div_1').clone();
@@ -288,7 +311,6 @@ $(function () {
 
                                 $('#products').append('<div class="row">' + new_div.html() + '</div>');
                                 $('.products_amount').mask('0#');
-
                             });
 
                             /**
@@ -309,7 +331,17 @@ $(function () {
                                     processData: false,
                                     contentType: false,
                                     cache: false,
-                                    error: function (response) {
+                                    error: function (_error4) {
+                                        function error(_x4) {
+                                            return _error4.apply(this, arguments);
+                                        }
+
+                                        error.toString = function () {
+                                            return _error4.toString();
+                                        };
+
+                                        return error;
+                                    }(function (response) {
                                         loadingOnScreenRemove();
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
@@ -317,18 +349,16 @@ $(function () {
                                             }
                                         }
                                         updatePlan();
-                                    },
-                                    success: function (data) {
+                                    }),
+                                    success: function success(data) {
                                         loadingOnScreenRemove();
                                         alertCustom("success", "Plano atualizado com sucesso");
                                         updatePlan();
                                     }
                                 });
-
                             });
                         }
                     });
-
                 });
 
                 /**
@@ -348,7 +378,17 @@ $(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function (response) {
+                            error: function (_error5) {
+                                function error(_x5) {
+                                    return _error5.apply(this, arguments);
+                                }
+
+                                error.toString = function () {
+                                    return _error5.toString();
+                                };
+
+                                return error;
+                            }(function (response) {
                                 loadingOnScreenRemove();
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
@@ -358,8 +398,8 @@ $(function () {
                                 if (response.status == '400') {
                                     alertCustom('error', response.responseJSON.message);
                                 }
-                            },
-                            success: function (response) {
+                            }),
+                            success: function success(response) {
                                 loadingOnScreenRemove();
                                 alertCustom('success', response.message);
                                 updatePlan();
@@ -367,9 +407,7 @@ $(function () {
 
                         });
                     });
-
                 });
-
             }
         });
     }
@@ -409,16 +447,14 @@ $(function () {
                 $('#page_' + (response.meta.current_page - x)).on("click", function () {
                     updatePlan('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var current_page = "<button id='current_page' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+                var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
                 $("#pagination-" + model).append(current_page);
 
                 $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-
             }
             for (x = 1; x < 4; x++) {
 
@@ -431,7 +467,6 @@ $(function () {
                 $('#page_' + (response.meta.current_page + x)).on("click", function () {
                     updatePlan('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.last_page != '1') {
@@ -448,6 +483,5 @@ $(function () {
                 });
             }
         }
-
     };
 });

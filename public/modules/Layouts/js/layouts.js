@@ -13,11 +13,11 @@ $(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 $('#modal_add').hide();
                 alertPersonalizado('error', 'Ocorreu algum erro');
             },
-            success: function (data) {
+            success: function success(data) {
 
                 $('#modal_add_body').html(data);
 
@@ -56,25 +56,25 @@ $(function () {
                         contentType: false,
                         cache: false,
                         data: form_data,
-                        error: function () {
+                        error: function error() {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('error', 'Ocorreu algum erro');
-                            $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
+                            $('#previewimage_checkout_cadastrar').imgAreaSelect({ remove: true });
                         },
-                        success: function (data) {
+                        success: function success(data) {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('success', 'Layout adicionado!');
                             $('#modal_add').hide();
                             $($.fn.dataTable.tables(true)).css('width', '100%');
                             $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                            $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
-                        },
+                            $('#previewimage_checkout_cadastrar').imgAreaSelect({ remove: true });
+                        }
                     });
                 });
 
                 $("#formato_logo_cadastrar").on("change", function () {
                     $("#foto_checkout").val('');
-                    $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
+                    $('#previewimage_checkout_cadastrar').imgAreaSelect({ remove: true });
                     $('#previewimage_checkout_cadastrar').attr('src', '#');
                     $("#preview_logo_formato").val($(this).val());
                 });
@@ -120,22 +120,20 @@ $(function () {
                                 if (img.naturalWidth > img.naturalHeight) {
                                     y1 = Math.floor(img.naturalHeight / 100 * 10);
                                     y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1));
-                                    if (x1 < 0)
-                                        x1 = 2;
-                                    x2 = x1 + ((y2 - y1) * 2);
+                                    x1 = Math.floor(img.naturalWidth / 2) - Math.floor(y2 - y1);
+                                    if (x1 < 0) x1 = 2;
+                                    x2 = x1 + (y2 - y1) * 2;
                                     if (x2 > img.naturalWidth) {
                                         x2 = img.naturalWidth - 2;
                                         y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
                                         y2 = y1 + Math.floor((x2 - x1) / 2);
                                     }
                                 } else {
-                                    x1 = 2
+                                    x1 = 2;
                                     x2 = img.naturalWidth - 2;
                                     y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
                                     y2 = y1 + Math.floor((x2 - x1) / 2);
                                 }
-
                             }
 
                             $('input[name="foto_checkout_cadastrar_x1"]').val(x1);
@@ -155,9 +153,9 @@ $(function () {
                             }
 
                             $('#modal_editar').on('hidden.bs.modal', function () {
-                                $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
+                                $('#previewimage_checkout_cadastrar').imgAreaSelect({ remove: true });
                             });
-                            $('#previewimage_checkout_cadastrar').imgAreaSelect({remove: true});
+                            $('#previewimage_checkout_cadastrar').imgAreaSelect({ remove: true });
 
                             $('#previewimage_checkout_cadastrar').imgAreaSelect({
                                 x1: x1, y1: y1, x2: x2, y2: y2,
@@ -165,7 +163,7 @@ $(function () {
                                 handles: true,
                                 imageHeight: this.naturalHeight,
                                 imageWidth: this.naturalWidth,
-                                onSelectEnd: function (img, selection) {
+                                onSelectEnd: function onSelectEnd(img, selection) {
                                     $('input[name="foto_checkout_cadastrar_x1"]').val(selection.x1);
                                     $('input[name="foto_checkout_cadastrar_y1"]').val(selection.y1);
                                     $('input[name="foto_checkout_cadastrar_w"]').val(selection.width);
@@ -175,11 +173,10 @@ $(function () {
                                     $('input[name="preview_logo_w"]').val(selection.width);
                                     $('input[name="preview_logo_h"]').val(selection.height);
                                 },
-                                parent: $('#conteudo_modal_add'),
+                                parent: $('#conteudo_modal_add')
                             });
-                        })
+                        });
                     };
-
                 });
 
                 $("#selecionar_foto_checkout_cadastrar").on("click", function () {
@@ -201,13 +198,9 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: 'POST',
-            data: {projeto: id_projeto}
+            data: { projeto: id_projeto }
         },
-        columns: [
-            {data: 'description', name: 'description'},
-            {data: 'status', name: 'status'},
-            {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-        ],
+        columns: [{ data: 'description', name: 'description' }, { data: 'status', name: 'status' }, { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false }],
         "language": {
             "sProcessing": "Carregando...",
             "lengthMenu": "Apresentando _MENU_ registros por página",
@@ -224,10 +217,10 @@ $(function () {
                 "sFirst": "Primeiro",
                 "sLast": "Último",
                 "sNext": "Próximo",
-                "sPrevious": "Anterior",
-            },
+                "sPrevious": "Anterior"
+            }
         },
-        "drawCallback": function () {
+        "drawCallback": function drawCallback() {
 
             $('.editar_layout').on('click', function () {
 
@@ -241,15 +234,15 @@ $(function () {
                 $.ajax({
                     method: "POST",
                     url: "/layouts/getformeditarlayout",
-                    data: {id: id_layout, projeto: id_projeto},
+                    data: { id: id_layout, projeto: id_projeto },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    error: function () {
+                    error: function error() {
                         $('#modal_editar').hide();
                         alertPersonalizado('error', 'Ocorreu algum erro');
                     },
-                    success: function (data) {
+                    success: function success(data) {
                         $('#modal_editar_body').html(data);
 
                         atualizarPreView();
@@ -261,7 +254,7 @@ $(function () {
 
                         $("#formato_logo_editar").on("change", function () {
                             $("#foto_checkout").val('');
-                            $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
+                            $('#previewimage_checkout_editar').imgAreaSelect({ remove: true });
                             $('#previewimage_checkout_editar').attr('src', '#');
                             $("#preview_logo_formato").val($(this).val());
                         });
@@ -307,17 +300,16 @@ $(function () {
                                         if (img.naturalWidth > img.naturalHeight) {
                                             y1 = Math.floor(img.naturalHeight / 100 * 10);
                                             y2 = img.naturalHeight - Math.floor(img.naturalHeight / 100 * 10);
-                                            x1 = Math.floor(img.naturalWidth / 2) - Math.floor((y2 - y1));
-                                            if (x1 < 0)
-                                                x1 = 2;
-                                            x2 = x1 + ((y2 - y1) * 2);
+                                            x1 = Math.floor(img.naturalWidth / 2) - Math.floor(y2 - y1);
+                                            if (x1 < 0) x1 = 2;
+                                            x2 = x1 + (y2 - y1) * 2;
                                             if (x2 > img.naturalWidth) {
                                                 x2 = img.naturalWidth - 2;
                                                 y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
                                                 y2 = y1 + Math.floor((x2 - x1) / 2);
                                             }
                                         } else {
-                                            x1 = 2
+                                            x1 = 2;
                                             x2 = img.naturalWidth - 2;
                                             y1 = Math.floor(img.naturalHeight / 2) - Math.floor((x2 - x1) / 4);
                                             y2 = y1 + Math.floor((x2 - x1) / 2);
@@ -340,9 +332,9 @@ $(function () {
                                         formato = '2:1';
                                     }
 
-                                    $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
+                                    $('#previewimage_checkout_editar').imgAreaSelect({ remove: true });
                                     $('#modal_editar').on('hidden.bs.modal', function () {
-                                        $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
+                                        $('#previewimage_checkout_editar').imgAreaSelect({ remove: true });
                                     });
                                     $('#previewimage_checkout_editar').imgAreaSelect({
                                         x1: x1, y1: y1, x2: x2, y2: y2,
@@ -350,7 +342,7 @@ $(function () {
                                         handles: true,
                                         imageHeight: this.naturalHeight,
                                         imageWidth: this.naturalWidth,
-                                        onSelectEnd: function (img, selection) {
+                                        onSelectEnd: function onSelectEnd(img, selection) {
                                             $('input[name="foto_checkout_editar_x1"]').val(selection.x1);
                                             $('input[name="foto_checkout_editar_y1"]').val(selection.y1);
                                             $('input[name="foto_checkout_editar_w"]').val(selection.width);
@@ -360,11 +352,10 @@ $(function () {
                                             $('input[name="preview_logo_w"]').val(selection.width);
                                             $('input[name="preview_logo_h"]').val(selection.height);
                                         },
-                                        parent: $('#conteudo_modal_editar'),
+                                        parent: $('#conteudo_modal_editar')
                                     });
-                                })
+                                });
                             };
-
                         });
 
                         $("#selecionar_foto_checkout_editar").on("click", function () {
@@ -394,19 +385,19 @@ $(function () {
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
-                                error: function () {
+                                error: function error() {
                                     $('.loading').css("visibility", "hidden");
                                     alertPersonalizado('error', 'Ocorreu algum erro');
-                                    $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
+                                    $('#previewimage_checkout_editar').imgAreaSelect({ remove: true });
                                 },
-                                success: function (data) {
+                                success: function success(data) {
                                     $('.loading').css("visibility", "hidden");
                                     alertPersonalizado('success', 'Layout atualizado!');
                                     $('#modal_add').hide();
                                     $($.fn.dataTable.tables(true)).css('width', '100%');
                                     $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    $('#previewimage_checkout_editar').imgAreaSelect({remove: true});
-                                },
+                                    $('#previewimage_checkout_editar').imgAreaSelect({ remove: true });
+                                }
                             });
                         });
                     }
@@ -432,12 +423,12 @@ $(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: {id: id_layout},
-                        error: function () {
+                        data: { id: id_layout },
+                        error: function error() {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('error', 'Ocorreu algum erro');
                         },
-                        success: function (data) {
+                        success: function success(data) {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('success', 'Layout removido!');
                             $($.fn.dataTable.tables(true)).css('width', '100%');
@@ -446,7 +437,6 @@ $(function () {
                     });
                 });
             });
-
         }
 
     });

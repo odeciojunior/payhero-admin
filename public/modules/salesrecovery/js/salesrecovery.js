@@ -7,7 +7,9 @@ $(document).ready(function () {
         atualizar();
     });
 
-    function atualizar(link = null) {
+    function atualizar() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
 
         loadOnTable('#table_data', '#carrinhoAbandonado');
 
@@ -25,13 +27,13 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 //
             },
-            success: function (response) {
+            success: function success(response) {
 
                 $('#table_data').html('');
-                $('#carrinhoAbandonado').addClass('table-striped')
+                $('#carrinhoAbandonado').addClass('table-striped');
 
                 $.each(response.data, function (index, value) {
 
@@ -62,16 +64,13 @@ $(document).ready(function () {
                         temp.remove();
                         alertCustom('success', 'Link copiado!');
                     });
-
                 });
                 if (response.data == '' && $('#type_recovery').val() == 1) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum carrinho abandonado até o momento</td></tr>");
-                }
-                else if (response.data == '' && $('#type_recovery').val() == 2) {
+                } else if (response.data == '' && $('#type_recovery').val() == 2) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum boleto vencido até o momento</td></tr>");
-                }else if (response.data == '' && $('#type_recovery').val() == 3){
+                } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
-
                 }
                 pagination(response);
 
@@ -87,19 +86,19 @@ $(document).ready(function () {
 
                     /*$('.modal-body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");*/
 
-                    var data = {sale_id: venda};
+                    var data = { sale_id: venda };
 
                     $.ajax({
                         method: "POST",
                         url: '/recoverycart/details',
-                        data: {checkout: venda},
+                        data: { checkout: venda },
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
                         },
-                        success: function (response) {
+                        success: function success(response) {
                             $('.modal-body').html(response);
 
                             $(".copy_link").on("click", function () {
@@ -122,9 +121,7 @@ $(document).ready(function () {
 
                     $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
                     $('#modal_estornar_body').html('');
-
                 });
-
             }
         });
     }
@@ -158,11 +155,10 @@ $(document).ready(function () {
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
             $("#pagination").append(pagina_atual);
 
@@ -182,7 +178,6 @@ $(document).ready(function () {
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.last_page != '1') {
@@ -200,7 +195,5 @@ $(document).ready(function () {
                 atualizar('?page=' + response.meta.last_page);
             });
         }
-
     }
-
 });

@@ -22,19 +22,18 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: form_data,
-            error: function (response) {
-                loadingOnScreenRemove()
-                alertCustom('error', response.responseJSON.message);//'Ocorreu algum erro'
+            error: function error(response) {
+                loadingOnScreenRemove();
+                alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
             },
-            success: function (response) {
-                loadingOnScreenRemove()
+            success: function success(response) {
+                loadingOnScreenRemove();
                 alertCustom('success', response.message);
-            },
+            }
         });
-
     });
 });
 
 function openInNewWindow(url) {
-   window.open(url)
+    window.open(url);
 }

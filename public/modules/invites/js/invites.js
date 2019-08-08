@@ -17,8 +17,10 @@ $(document).ready(function () {
         return Object.keys(obj).length === 0;
     }
 
-    function updateInvites(link = null) {
-        let cont = 0;
+    function updateInvites() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        var cont = 0;
 
         if (link == null) {
             link = '/api/invitations';
@@ -32,7 +34,17 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function (response) {
+            error: function (_error) {
+                function error(_x2) {
+                    return _error.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function (response) {
                 if (response.status === 422) {
                     for (error in response.errors) {
                         alertCustom('error', String(response.errors[error]));
@@ -40,7 +52,7 @@ $(document).ready(function () {
                 } else {
                     alertCustom('error', response.message);
                 }
-            }, success: function (response) {
+            }), success: function success(response) {
                 if (isEmpty(response.data)) {
                     $("#content-error").css('display', 'block');
                 } else {
@@ -74,7 +86,6 @@ $(document).ready(function () {
 
                     pagination(response, 'invites');
                 }
-
             }
         });
     }
@@ -88,7 +99,17 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function (response) {
+            error: function (_error2) {
+                function error(_x3) {
+                    return _error2.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error2.toString();
+                };
+
+                return error;
+            }(function (response) {
                 $('#companies_table_data').html("<tr class='text-center'><td colspan='11'>Error</td></tr>");
                 if (response.status == '422') {
                     for (error in response.errors) {
@@ -97,19 +118,19 @@ $(document).ready(function () {
                 } else {
                     alertCustom('error', response.responseJSON.message);
                 }
-            },
-            success: function (response) {
+            }),
+            success: function success(response) {
                 if (isEmpty(response.data)) {
-                    loadingOnScreenRemove()
-                    modalNotCompanies()
+                    loadingOnScreenRemove();
+                    modalNotCompanies();
                 } else {
-                    loadingOnScreenRemove()
-                    modalThenCompanies()
+                    loadingOnScreenRemove();
+                    modalThenCompanies();
 
                     $("#modal-reverse-title").html('Novo Convite');
-                    let selCompany = '';
+                    var selCompany = '';
                     selCompany = '<select class="select-company-list">';
-                    let option = '';
+                    var option = '';
 
                     $.each(response.data, function (index, value) {
                         option += '<option value=' + value.id_code + ' >' + value.fantasy_name + '</option>';
@@ -119,8 +140,8 @@ $(document).ready(function () {
 
                     $("#company-list").html('').append(selCompany);
 
-                    let linkInvite = '';
-                    let companyId = $(".select-company-list option:selected").val();
+                    var linkInvite = '';
+                    var companyId = $(".select-company-list option:selected").val();
                     linkInvite = 'https://app.cloudfox.net/register/' + $(".select-company-list option:selected").val();
 
                     $("#invite-link").val(linkInvite);
@@ -133,8 +154,8 @@ $(document).ready(function () {
 
                     $("#btn-send-invite").unbind();
                     $("#btn-send-invite").on('click', function () {
-                        loadingOnScreen()
-                        let email = $("#email").val();
+                        loadingOnScreen();
+                        var email = $("#email").val();
 
                         if (email == '') {
                             alertCustom('error', 'O campo Email do convidado é obrigatório');
@@ -144,7 +165,6 @@ $(document).ready(function () {
                             sendInviteAjax(email, companyId);
                         }
                     });
-
                 }
             }
         });
@@ -164,7 +184,17 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function (response) {
+            error: function (_error3) {
+                function error(_x4) {
+                    return _error3.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error3.toString();
+                };
+
+                return error;
+            }(function (response) {
                 console.log(response);
                 if (response.status == '422') {
                     for (error in response.errors) {
@@ -173,12 +203,11 @@ $(document).ready(function () {
                 } else {
 
                     alertCustom('error', response.responseJSON.message);
-
                 }
-                modalThenCompanies()
+                modalThenCompanies();
                 loadingOnScreenRemove();
-            },
-            success: function (response) {
+            }),
+            success: function success(response) {
                 $(".close").click();
                 alertCustom('success', response.message);
                 loadingOnScreenRemove();
@@ -217,16 +246,14 @@ $(document).ready(function () {
                 $('#page_' + (response.meta.current_page - x)).on("click", function () {
                     updateInvites('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var current_page = "<button id='current_page' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+                var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
                 $("#pagination-" + model).append(current_page);
 
                 $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-
             }
             for (x = 1; x < 4; x++) {
 
@@ -239,7 +266,6 @@ $(document).ready(function () {
                 $('#page_' + (response.meta.current_page + x)).on("click", function () {
                     updateInvites('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.last_page != '1') {
@@ -256,42 +282,14 @@ $(document).ready(function () {
                 });
             }
         }
-
     }
     //ALTERAÇÃO DE HTML
 
     function modalNotCompanies() {
-        $('#mainModalBody').html('<div id="modal-not-companies" class="modal-content p-10">' +
-            '<div class="header-modal simple-border-bottom">' +
-            '<h2 id="modal-title" class="modal-title">Ooooppsssss!</h2></div>' +
-            '<div class="modal-body simple-border-bottom" style="padding-bottom:1%; padding-top:1%;">' +
-            '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display:flex;">' +
-            '<span class="swal2-x-mark">' +
-            '<span class="swal2-x-mark-line-left"></span>' +
-            '<span class="swal2-x-mark-line-right"></span></span></div>' +
-            '<h3 align="center">Você não cadastrou nenhuma empresa</h3>' +
-            '<h5 align="center">Deseja cadastrar uma empresa?' +
-            '<a class="red pointer" href="/companies" target="_blank">clique aqui</a></h5></div>' +
-            '<div style="width:100%; text-align:center; padding-top:3%;">' +
-            '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px;">Retornar</span>' +
-            '</div></div>')
+        $('#mainModalBody').html('<div id="modal-not-companies" class="modal-content p-10">' + '<div class="header-modal simple-border-bottom">' + '<h2 id="modal-title" class="modal-title">Ooooppsssss!</h2></div>' + '<div class="modal-body simple-border-bottom" style="padding-bottom:1%; padding-top:1%;">' + '<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display:flex;">' + '<span class="swal2-x-mark">' + '<span class="swal2-x-mark-line-left"></span>' + '<span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center">Você não cadastrou nenhuma empresa</h3>' + '<h5 align="center">Deseja cadastrar uma empresa?' + '<a class="red pointer" href="/companies" target="_blank">clique aqui</a></h5></div>' + '<div style="width:100%; text-align:center; padding-top:3%;">' + '<span class="btn btn-danger" data-dismiss="modal" style="font-size: 25px;">Retornar</span>' + '</div></div>');
     }
 
     function modalThenCompanies() {
-        $('#mainModalBody').html('<div id="modal-then-companies" class="modal-content"><div class="modal-header">' +
-            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>' +
-            '<h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center"></h4></div>' +
-            '<div id="modal-reverse-body" class="modal-body"><div id="body-modal"><div class="row">' +
-            '<div class="form-group col-12"><label for="email">Email do convidado</label>' +
-            '<input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">' +
-            '</div></div><div class="row"><div class="form-group col-12">' +
-            '<label for="company">Empresa para receber</label><div id="company-list"></div></div></div>' +
-            '<div class="row"><div class="col-12"><label for="email">Link de convite</label>' +
-            '</div><div id="invite-link-select" class="input-group col-12"><input type="text" class="form-control" id="invite-link" value="" readonly>' +
-            '<span class="input-group-btn"><button id="copy-link" class="btn btn-default" type="button">Copiar</button>' +
-            '</span></div></div><div class="row" style="margin-top: 35px"><div class="form-group col-12">' +
-            '<input id="btn-send-invite" type="button" class="form-control btn" value="Enviar Convite" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">' +
-            '</div></div></div></div></div>')
+        $('#mainModalBody').html('<div id="modal-then-companies" class="modal-content"><div class="modal-header">' + '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>' + '<h4 id="modal-reverse-title" class="modal-title" style="width: 100%; text-align:center"></h4></div>' + '<div id="modal-reverse-body" class="modal-body"><div id="body-modal"><div class="row">' + '<div class="form-group col-12"><label for="email">Email do convidado</label>' + '<input name="email_invited" type="text" class="form-control" id="email" placeholder="Email">' + '</div></div><div class="row"><div class="form-group col-12">' + '<label for="company">Empresa para receber</label><div id="company-list"></div></div></div>' + '<div class="row"><div class="col-12"><label for="email">Link de convite</label>' + '</div><div id="invite-link-select" class="input-group col-12"><input type="text" class="form-control" id="invite-link" value="" readonly>' + '<span class="input-group-btn"><button id="copy-link" class="btn btn-default" type="button">Copiar</button>' + '</span></div></div><div class="row" style="margin-top: 35px"><div class="form-group col-12">' + '<input id="btn-send-invite" type="button" class="form-control btn" value="Enviar Convite" style="color:white;width: 30%;background-image: linear-gradient(to right, #e6774c, #f92278);position:relative; float:right">' + '</div></div></div></div></div>');
     }
-
 });

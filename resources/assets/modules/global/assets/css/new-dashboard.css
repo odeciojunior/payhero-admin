@@ -1,0 +1,96 @@
+body { font-family: 'Muli', sans-serif !important;}
+
+.card-desc {
+    margin-left: 10px;
+}
+
+
+.green {
+    fill: linear-gradient(to right, rgba(63, 218, 88, 1), rgb(81, 236, 195));
+}
+
+
+.card-header svg {
+    float: left;
+    position: relative;
+
+}
+
+.moeda {
+    font-size: 18px;
+    line-height: 1.06;
+    letter-spacing: normal;
+    color: black;
+    margin-right: 15px;
+  }
+
+  .indices {
+      margin-bottom: 25px;
+  }
+
+
+  .card-p {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: black;
+  }
+
+  
+  
+  .text-money {
+    font-family: Muli;
+    font-size: 32px;
+    color: black;
+    font-weight: 700;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 0.82;
+    letter-spacing: 1px;
+  }
+  
+  .card-bottom{ 
+
+    height:10px;
+    background-image: linear-gradient(to right, rgb(15, 4, 41), #000011);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+  }
+
+  .card-bottom.green {
+    background-image: linear-gradient(to right, rgba(63, 218, 88, 1), #51ecc3);
+  }
+
+  .card-bottom.blue {
+    background-image: linear-gradient(to right, rgb(88, 73, 226), rgb(81, 196, 236));
+  }
+
+  .card-bottom.orange {
+    background-image: linear-gradient(to right, rgb(250, 217, 97), rgb(247, 107, 28));
+  }
+
+  .card-bottom.orangered {
+    background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
+  }
+
+  
+
+  .drop-empresas {
+    min-height: 140px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    background: white;
+    padding: 20px 20px;
+  }
+
+  .drop-empresas.dz-message {
+    text-align: center;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+  }

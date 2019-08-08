@@ -1,0 +1,51 @@
+.ct-legend {
+    position: relative;
+    width: 100%;
+    z-index: 10;
+    margin: 0 0 20px 0;
+    list-style: none;
+    text-align: center;
+}
+.ct-legend li {
+    display: inline;
+    margin: 40px;
+}
+.ct-legend .ct-series-0 {
+    color: #00FF7F;
+}
+.ct-legend .ct-series-1 {
+    color: #1E90FF;
+}
+
+.ct-point {
+    display: none;
+}
+
+/*.ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}*/
+/*stroke: black;*/
+
+/*.ct-series {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}*/
+
+/*.ct-chart {
+    margin: auto;
+    width: 300px;
+    height: 300px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}*/
+
+

@@ -17,31 +17,27 @@ $(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 loadingOnScreenRemove();
                 $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
-            }, success: function (data) {
+            }, success: function success(data) {
                 loadingOnScreenRemove();
                 $("#btn-modal").addClass('btn-save');
                 $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
                 if ($("#type").val() == 1) {
-                    $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
-
+                    $("#valor_cupom_cadastrar").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
                 } else {
-                    $('#valor_cupom_cadastrar').mask('00%', {reverse: true});
-
+                    $('#valor_cupom_cadastrar').mask('00%', { reverse: true });
                 }
 
                 $("#type").on('change', function () {
                     if ($("#type").val() == 1) {
-                        $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
-
+                        $("#valor_cupom_cadastrar").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
                     } else {
-                        $('#valor_cupom_cadastrar').mask('00%', {reverse: true});
-
+                        $('#valor_cupom_cadastrar').mask('00%', { reverse: true });
                     }
                 });
 
@@ -61,7 +57,17 @@ $(function () {
                         processData: false,
                         contentType: false,
                         cache: false,
-                        error: function (response) {
+                        error: function (_error) {
+                            function error(_x) {
+                                return _error.apply(this, arguments);
+                            }
+
+                            error.toString = function () {
+                                return _error.toString();
+                            };
+
+                            return error;
+                        }(function (response) {
                             loadingOnScreenRemove();
                             $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
@@ -70,7 +76,7 @@ $(function () {
                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
                             }
-                        }, success: function () {
+                        }), success: function success() {
                             loadingOnScreenRemove();
                             $(".loading").css("visibility", "hidden");
                             alertCustom("success", "Cupom Adicionado!");
@@ -80,10 +86,11 @@ $(function () {
                 });
             }
         });
-
     });
 
-    function atualizarCoupon(link = null) {
+    function atualizarCoupon() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
         loadOnTable('#data-table-coupon', '#tabela-coupom');
 
         if (link == null) {
@@ -98,14 +105,14 @@ $(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function (response) {
+            error: function error(response) {
                 $("#data-table-coupon").html(response.message);
             },
-            success: function (response) {
+            success: function success(response) {
                 $("#data-table-coupon").html('');
 
                 if (response.data == '') {
-                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#data-table-coupon").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
                         data = '';
@@ -123,10 +130,7 @@ $(function () {
 
                         data += '</td>';
 
-                        data += "<td style='min-width:200px;'>" +
-                            "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" +
-                            "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>" +
-                            "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>"
+                        data += "<td style='min-width:200px;'>" + "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" + "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>" + "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>";
                         "</td>";
                         data += '</tr>';
                         $("#data-table-coupon").append(data);
@@ -140,7 +144,7 @@ $(function () {
                     $("#modal-title").html('Detalhes do Cupom');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
 
-                    var data = {couponId: coupon};
+                    var data = { couponId: coupon };
                     $("#btn-modal").hide();
                     $.ajax({
                         method: "GET",
@@ -149,11 +153,10 @@ $(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
-                        }, success: function (response) {
+                        }, success: function success(response) {
                             $("#modal-add-body").html(response);
-
                         }
                     });
                 });
@@ -164,7 +167,7 @@ $(function () {
                     $("#modal-title").html("Editar Cupom");
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
-                    var data = {couponId: coupon};
+                    var data = { couponId: coupon };
 
                     $.ajax({
                         method: "GET",
@@ -173,28 +176,24 @@ $(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
-                        }, success: function (response) {
+                        }, success: function success(response) {
                             $("#btn-modal").addClass('btn-update');
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
                             if ($("#type").val() == 1) {
-                                $("#value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
-
+                                $("#value").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
                             } else {
-                                $('#value').mask('00%', {reverse: true});
-
+                                $('#value').mask('00%', { reverse: true });
                             }
 
                             $("#type").on('change', function () {
                                 if ($("#type").val() == 1) {
-                                    $("#value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
-
+                                    $("#value").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
                                 } else {
-                                    $('#value').mask('00%', {reverse: true});
-
+                                    $('#value').mask('00%', { reverse: true });
                                 }
                             });
 
@@ -213,25 +212,33 @@ $(function () {
                                     processData: false,
                                     contentType: false,
                                     cache: false,
-                                    error: function (response) {
+                                    error: function (_error2) {
+                                        function error(_x3) {
+                                            return _error2.apply(this, arguments);
+                                        }
+
+                                        error.toString = function () {
+                                            return _error2.toString();
+                                        };
+
+                                        return error;
+                                    }(function (response) {
                                         loadingOnScreenRemove();
                                         if (response.status == '422') {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
                                         }
-                                    },
-                                    success: function (data) {
+                                    }),
+                                    success: function success(data) {
                                         loadingOnScreenRemove();
                                         alertCustom("success", "Cupom atualizado com sucesso");
                                         atualizarCoupon();
                                     }
                                 });
-
                             });
                         }
                     });
-
                 });
                 $('.delete-coupon').on('click', function (event) {
                     event.preventDefault();
@@ -247,25 +254,33 @@ $(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function (_error3) {
+                                function error() {
+                                    return _error3.apply(this, arguments);
+                                }
+
+                                error.toString = function () {
+                                    return _error3.toString();
+                                };
+
+                                return error;
+                            }(function () {
                                 loadingOnScreenRemove();
                                 if (response.status == '422') {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 }
-                            },
-                            success: function (data) {
+                            }),
+                            success: function success(data) {
                                 loadingOnScreenRemove();
                                 alertCustom("success", "Cupom Removido com sucesso");
                                 atualizarCoupon();
                             }
 
-                        })
+                        });
                     });
-
                 });
-
             }
         });
     }
@@ -303,18 +318,16 @@ $(function () {
                 $('#pagina_coupons_' + (response.meta.current_page - x)).on("click", function () {
                     atualizarCoupon('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var pagina_atual_coupons = "<button id='pagina_atual_coupons' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+                var pagina_atual_coupons = "<button id='pagina_atual_coupons' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
                 $("#pagination-coupons").append(pagina_atual_coupons);
 
                 $("#pagina_atual_coupons").attr('disabled', true);
                 $("#pagina_atual_coupons").addClass('nav-btn');
                 $("#pagina_atual_coupons").addClass('active');
-
             }
             for (x = 1; x < 4; x++) {
 
@@ -327,7 +340,6 @@ $(function () {
                 $('#pagina_coupons_' + (response.meta.current_page + x)).on("click", function () {
                     atualizarCoupon('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.last_page != '1') {
@@ -346,7 +358,5 @@ $(function () {
                 });
             }
         }
-
     }
-
 });

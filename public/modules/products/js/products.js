@@ -44,23 +44,22 @@ $(document).ready(function () {
                     handles: true,
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
-                    onSelectEnd: function (img, selection) {
+                    onSelectEnd: function onSelectEnd(img, selection) {
                         $('input[name="photo_x1"]').val(selection.x1);
                         $('input[name="photo_y1"]').val(selection.y1);
                         $('input[name="photo_w"]').val(selection.width);
                         $('input[name="photo_h"]').val(selection.height);
                     }
                 });
-            })
+            });
         };
-
     });
 
     $("#previewimage").on("click", function () {
         $("#photo").click();
     });
 
-    $('.money').mask('#.###,#0', {reverse: true});
+    $('.money').mask('#.###,#0', { reverse: true });
 
     $("#shipping").on("change", function () {
 
@@ -87,16 +86,16 @@ $(document).ready(function () {
 
     $("#next_step").on("click", function () {
         $("#nav-logistic-tab").click();
-        $("#previewimage").imgAreaSelect({remove: true});
+        $("#previewimage").imgAreaSelect({ remove: true });
     });
     $(".btnSave").on("click", function () {
         var name = $('#name').val();
         var description = $("#description").val();
         console.log(description);
-        if (name == '' ) {
+        if (name == '') {
             alertCustom("error", "O campo Nome é obrigatório");
         }
-        if(description == ''){
+        if (description == '') {
             alertCustom("error", "O campo Descrição é obrigatório");
         }
     });
@@ -113,7 +112,17 @@ $(document).ready(function () {
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                error: function (response) {
+                error: function (_error) {
+                    function error(_x) {
+                        return _error.apply(this, arguments);
+                    }
+
+                    error.toString = function () {
+                        return _error.toString();
+                    };
+
+                    return error;
+                }(function (response) {
                     if (response.status == '422') {
                         for (error in response.responseJSON.errors) {
                             alertCustom('error', String(response.responseJSON.errors[error]));
@@ -122,14 +131,12 @@ $(document).ready(function () {
                     if (response.status == '400') {
                         alertCustom('error', response.responseJSON.message);
                     }
-                },
-                success: function (response) {
+                }),
+                success: function success(response) {
                     alertCustom('success', response.message);
                     window.location = "/products";
                 }
             });
         });
     });
-
 });
-

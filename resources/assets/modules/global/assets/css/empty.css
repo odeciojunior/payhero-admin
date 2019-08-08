@@ -1,0 +1,83 @@
+.page-holder {
+    font-family: 'Muli', sans-serif;
+    color: black;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+
+    margin-bottom: 20px;
+    width: 60px;
+
+}
+
+.content-error {
+    color: black;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+}
+
+.big {
+
+    font-size: 40px;
+    width: 70%;
+    color: black;
+    font-weight: 700;
+
+
+}
+
+.desc {
+    width: 60%;
+}
+
+.gray {
+    color: #a1a1a1;
+}
+
+.btn.orange {
+    background: transparent;
+    background-color: transparent;
+    border: 2px solid orangered;
+    cursor: pointer;
+    color: orangered !important;
+    font-weight: 600;
+    border-radius: 5px;
+    align-self: center;
+    padding: 10px 22px;
+    transition: all 300ms linear;
+
+}
+
+.btn.gradient {
+    background: linear-gradient(77deg, #e6774c
+    , rgb(249, 34, 120));
+    border: transparent;
+    cursor: pointer;
+    color: white !important;
+    font-weight: 600;
+    border-radius: 5px;
+    align-self: center;
+    padding: 10px 22px;
+    transition: all 300ms linear;
+
+}
+
+
+.btn.orange:hover {
+    background-color: orangered;
+    border-color: orangered;
+    color: white !important;
+}

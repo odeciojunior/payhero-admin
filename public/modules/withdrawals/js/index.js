@@ -5,7 +5,9 @@ $("#extract_company_select").on("change", function () {
     updateWithdrawalsTable();
 });
 
-function updateWithdrawalsTable(link = null) {
+function updateWithdrawalsTable() {
+    var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
 
     loadOnTable('table-withdrawals-body', 'transfersTable');
     $("#table-withdrawals-body").html('');
@@ -19,14 +21,14 @@ function updateWithdrawalsTable(link = null) {
     $.ajax({
         method: "GET",
         url: link,
-        data: {company: $("#extract_company_select").val()},
+        data: { company: $("#extract_company_select").val() },
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        error: function () {
+        error: function error() {
             $("#table-withdrawals-body").html('Erro ao encontrar dados');
         },
-        success: function (response) {
+        success: function success(response) {
             $("#withdrawals-table-data").html('');
 
             $.each(response.data, function (index, value) {
@@ -45,7 +47,6 @@ function updateWithdrawalsTable(link = null) {
                     data += '<span class="badge badge-success">Transferido</span>';
                 } else {
                     data += '<span class="badge badge-danger">Recusado</span>';
-
                 }
                 data += '</td>';
                 data += '</tr>';
@@ -89,11 +90,10 @@ function pagination(response) {
         $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
             updateWithdrawalsTable('?page=' + $(this).html());
         });
-
     }
 
     if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-        var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+        var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
         $("#withdrawals-pagination").append(pagina_atual);
     }
@@ -109,7 +109,6 @@ function pagination(response) {
         $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
             updateWithdrawalsTable('?page=' + $(this).html());
         });
-
     }
 
     if (response.meta.last_page != '1') {
@@ -127,7 +126,4 @@ function pagination(response) {
             updateWithdrawalsTable('?page=' + response.meta.last_page);
         });
     }
-
 }
-
-

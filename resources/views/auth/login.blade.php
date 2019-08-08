@@ -105,7 +105,7 @@
 
 
     @push('scripts')
-        <script src="/modules/auth/js/reset.js"></script>
+        <script src="{{ mix('/modules/auth/js/reset.js') }}"></script>
     @endpush
 @endsection
 

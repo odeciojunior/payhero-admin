@@ -1,27 +1,27 @@
 function clearZipCodeForm() {
     //Limpa valores do formulário de cep.
-    document.getElementById('brasil_street').value = ("");
-    document.getElementById('brasil_neighborhood').value = ("");
-    document.getElementById('brasil_city').value = ("");
-    document.getElementById('brasil_state').value = ("");
+    document.getElementById('brasil_street').value = "";
+    document.getElementById('brasil_neighborhood').value = "";
+    document.getElementById('brasil_city').value = "";
+    document.getElementById('brasil_state').value = "";
 }
 
 function myCallback(data) {
     if (!("erro" in data)) {
         //Atualiza os campos com os valores.
-        document.getElementById('brasil_street').value = (data.logradouro);
-        document.getElementById('brasil_neighborhood').value = (data.bairro);
-        document.getElementById('brasil_city').value = (data.localidade);
-        document.getElementById('brasil_state').value = (data.uf);
+        document.getElementById('brasil_street').value = data.logradouro;
+        document.getElementById('brasil_neighborhood').value = data.bairro;
+        document.getElementById('brasil_city').value = data.localidade;
+        document.getElementById('brasil_state').value = data.uf;
     } //end if.
     else {
-        //CEP não Encontrado.
-        clearZipCodeForm();
-        // alert("CEP não encontrado.");
-    }
+            //CEP não Encontrado.
+            clearZipCodeForm();
+            // alert("CEP não encontrado.");
+        }
 }
 
-$("#brasil_zip_code").on("blur", function(){
+$("#brasil_zip_code").on("blur", function () {
 
     //Nova variável "cep" somente com dígitos.
     var cep = $(this).val().replace(/\D/g, '');
@@ -49,18 +49,15 @@ $("#brasil_zip_code").on("blur", function(){
 
             //Insere script no documento e carrega o conteúdo.
             document.body.appendChild(script);
-
         } //end if.
         else {
-            //cep é inválido.
-            clearZipCodeForm();
-            alert("Formato de CEP inválido.");
-        }
+                //cep é inválido.
+                clearZipCodeForm();
+                alert("Formato de CEP inválido.");
+            }
     } //end if.
     else {
-        //cep sem valor, limpa formulário.
-        clearZipCodeForm();
-    }
+            //cep sem valor, limpa formulário.
+            clearZipCodeForm();
+        }
 });
-
-

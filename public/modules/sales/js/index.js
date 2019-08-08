@@ -37,16 +37,16 @@ $(document).ready(function () {
         $('export-sales').remove();
     });
 
-    function downloadFile(data, fileName, type = "text/plain") {
+    function downloadFile(data, fileName) {
+        var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "text/plain";
+
         // Create an invisible A element
-        const a = document.createElement("a");
+        var a = document.createElement("a");
         a.style.display = "none";
         document.body.appendChild(a);
 
         // Set the HREF to a Blob representation of the data to be downloaded
-        a.href = window.URL.createObjectURL(
-            new Blob([data], {type})
-        );
+        a.href = window.URL.createObjectURL(new Blob([data], { type: type }));
 
         // Use download attribute to set set desired file name
         a.setAttribute("download", fileName);
@@ -59,7 +59,9 @@ $(document).ready(function () {
         document.body.removeChild(a);
     }
 
-    function atualizar(link = null) {
+    function atualizar() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
 
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
@@ -75,12 +77,12 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 //
             },
-            success: function (response) {
+            success: function success(response) {
                 $('#dados_tabela').html('');
-                $('#tabela_vendas').addClass('table-striped')
+                $('#tabela_vendas').addClass('table-striped');
 
                 $.each(response.data, function (index, value) {
                     dados = '';
@@ -89,7 +91,7 @@ $(document).ready(function () {
                     dados += "<td>" + value.project + "</td>";
                     dados += "<td>" + value.product + "</td>";
                     dados += "<td>" + value.client + "</td>";
-                    dados += `<td><img src='/modules/global/assets/img/cartoes/${value.brand}.png'  style='width: 60px'></td>`;
+                    dados += "<td><img src='/modules/global/assets/img/cartoes/" + value.brand + ".png'  style='width: 60px'></td>";
                     if (value.status == '1') {
                         dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
                     } else if (value.status == '2') {
@@ -105,7 +107,6 @@ $(document).ready(function () {
                     dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' style='margin-right:10px'><i class='material-icons gradient'>remove_red_eye</i></button></a></td>";
                     dados += '</tr>';
                     $("#dados_tabela").append(dados);
-
                 });
                 if (response.data == '') {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
@@ -121,7 +122,7 @@ $(document).ready(function () {
 
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = {sale_id: venda};
+                    var data = { sale_id: venda };
 
                     $.ajax({
                         method: "POST",
@@ -130,11 +131,11 @@ $(document).ready(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
                         },
-                        success: function (response) {
-                            $('.subTotal').mask('#.###,#0', {reverse: true});
+                        success: function success(response) {
+                            $('.subTotal').mask('#.###,#0', { reverse: true });
 
                             $('.modal-body').html(response);
 
@@ -166,14 +167,14 @@ $(document).ready(function () {
 
                     $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
                     $('#modal_estornar_body').html('');
-
                 });
-
             }
         });
     }
 
-    function csvSalesExport(link = null) {
+    function csvSalesExport() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
 
         if (link == null) {
             link = '/sales/getcsvsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
@@ -187,11 +188,11 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function (response) {
+            error: function error(response) {
                 console.log(response);
             },
-            success: function (response) {
-                downloadFile(response, 'export.xlsx')
+            success: function success(response) {
+                downloadFile(response, 'export.xlsx');
             }
         });
     }
@@ -225,18 +226,16 @@ $(document).ready(function () {
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
             $("#pagination").append(pagina_atual);
 
             $("#pagina_atual").attr('disabled', true);
             $("#pagina_atual").addClass('nav-btn');
             $("#pagina_atual").addClass('active');
-
         }
         for (x = 1; x < 4; x++) {
 
@@ -249,7 +248,6 @@ $(document).ready(function () {
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
                 atualizar('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.last_page != '1') {
@@ -267,6 +265,5 @@ $(document).ready(function () {
                 atualizar('?page=' + response.meta.last_page);
             });
         }
-
     }
 });

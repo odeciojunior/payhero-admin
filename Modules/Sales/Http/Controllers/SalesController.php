@@ -160,9 +160,10 @@ class SalesController extends Controller
                     $taxaReal = 'US$ ' . number_format((intval($taxa - $value)) / 100, 2, ',', '.');
                     $total    += preg_replace('/[^0-9]/', '', $sale->iof);
                 } else {
-                    $taxaReal = (intval($total / 100) * $transaction->percentage_rate) + 100;
+                    $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
+
                 $whatsAppMsg = 'Olá ' . $client->name;
                 $details     = view('sales::details', [
                     'sale'           => $sale,

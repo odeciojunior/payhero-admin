@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 53.2 (72643) - https://sketchapp.com -->
+    <title>BD24A4D0-3031-46C2-997F-267D01737893</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M3,17 L7.24,17 C7.50580298,17.0015368 7.76128117,16.8971865 7.95,16.71 L14.87,9.78 L14.87,9.78 L17.71,7 C17.8993127,6.8122334 18.0057983,6.55663754 18.0057983,6.29 C18.0057983,6.02336246 17.8993127,5.7677666 17.71,5.58 L13.47,1.29 C13.2822334,1.10068735 13.0266375,0.994201676 12.76,0.994201676 C12.4933625,0.994201676 12.2377666,1.10068735 12.05,1.29 L9.23,4.12 L9.23,4.12 L2.29,11.05 C2.10281349,11.2387188 1.99846324,11.494197 2,11.76 L2,16 C2,16.5522847 2.44771525,17 3,17 Z M12.76,3.41 L15.59,6.24 L14.17,7.66 L11.34,4.83 L12.76,3.41 Z M4,12.17 L9.93,6.24 L12.76,9.07 L6.83,15 L4,15 L4,12.17 Z M19,19 L1,19 C0.44771525,19 0,19.4477153 0,20 C0,20.5522847 0.44771525,21 1,21 L19,21 C19.5522847,21 20,20.5522847 20,20 C20,19.4477153 19.5522847,19 19,19 Z" id="path-1"></path>
+        <linearGradient x1="0%" y1="87.3016%" x2="211.535904%" y2="-63.0611359%" id="linearGradient-3">
+            <stop stop-color="#E6774C" offset="0%"></stop>
+            <stop stop-color="#F92278" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="CloudFox" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0.4.1.1-Projetos-Domínios" transform="translate(-1235.000000, -374.000000)">
+            <g id="icon/editar" transform="translate(1235.000000, 373.000000)">
+                <g id="color/primary/main-gradient-copy-13">
+                    <g>
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Mask" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
+                        <g id="color/primary/main-gradient" mask="url(#mask-2)" fill="url(#linearGradient-3)" fill-rule="nonzero">
+                            <g transform="translate(-2.000000, -1.000000)">
+                                <rect x="0" y="0" width="23" height="23"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

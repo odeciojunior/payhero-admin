@@ -415,7 +415,8 @@ class BoletoService
 
             $date        = Carbon::now()->toDateString();
             $data        = [];
-            $boletosPaid = $saleModel->select(\DB::raw('count(*) as count'), 'owner')
+            $boletosPaid = $saleModel->select(\DB::raw('count(*) as count'),\DB::raw('sum(transaction.value) as value'), 'owner')
+                                     ->leftJoin('transactions as transaction','transaction.sale', 'sales.id')
                                      ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
                                      ->groupBy('sales.owner')->get();
 
@@ -440,11 +441,11 @@ class BoletoService
                         "name"              => $user->name,
                         'boleto_count'      => strval($boleto->count),
                         'message'           => $message,
-                        'messageHeader'     => $messageHeader,
-                        'transaction_value' => "R$ 00,00",
+                        'messageHeader'     => $messageHeader, 
+                        'transaction_value' => "R$ " . number_format(intval($boleto['value']) / 100, 2, ',', '.'),
                     ];
 
-                    if ($emailValidated && $boleto->count > 0) {
+                    if ($emailValidated) {
                         event(new BoletoPaidEvent($data));
                     }
                 } catch (Exception $e) {
@@ -463,7 +464,6 @@ class BoletoService
      */
     public function changeBoletoPendingToCanceled()
     {
-
         $saleModel = new Sale();
 
         $date = Carbon::now()->subDay('4')->toDateString();
@@ -480,4 +480,6 @@ class BoletoService
                             ]);
         }
     }
+
 }
+

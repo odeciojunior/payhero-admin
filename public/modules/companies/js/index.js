@@ -12,10 +12,10 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function (response) {
+            error: function error(response) {
                 $('#companies_table_data').html("<tr class='text-center'><td colspan='11'>Error</td></tr>");
             },
-            success: function (response) {
+            success: function success(response) {
                 $.each(response.data, function (index, value) {
                     dados = "<tr>";
                     dados += "<td>" + value.fantasy_name + "</td>";
@@ -47,7 +47,17 @@ $(document).ready(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function (response) {
+                            error: function (_error) {
+                                function error(_x) {
+                                    return _error.apply(this, arguments);
+                                }
+
+                                error.toString = function () {
+                                    return _error.toString();
+                                };
+
+                                return error;
+                            }(function (response) {
                                 if (response.status == '422') {
                                     if (response.responseJSON.errors) {
                                         for (error in response.responseJSON.errors) {
@@ -57,8 +67,8 @@ $(document).ready(function () {
                                         alertCustom('error', String(response.responseJSON.message));
                                     }
                                 }
-                            },
-                            success: function (data) {
+                            }),
+                            success: function success(data) {
                                 alertCustom("success", data.message);
                                 atualizar(page);
                             }
@@ -94,11 +104,10 @@ $(document).ready(function () {
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 atualizar($(this).html());
             });
-
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' class='btn btn-primary' style='margin-right:5px;background-image: linear-gradient(to right, #e6774c, #f92278);border-radius: 40px;color:white'>" + response.meta.current_page + "</button>";
             $("#pagination").append(pagina_atual);
             $("#pagina_atual").attr('disabled', true);
         }
@@ -125,8 +134,5 @@ $(document).ready(function () {
                 atualizar(response.meta.last_page);
             });
         }
-
     }
-
 });
-

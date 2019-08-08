@@ -1,19 +1,18 @@
 $("#password").keyup(function (e) {
-    let strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
-    let mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+    var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+    var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
 
-    let enoughRegex = new RegExp("(?=.{8,}).*", "g");
-    let passwordStrongth = strongRegex.test($(this).val());
-    let passwordMedium = mediumRegex.test($(this).val());
+    var enoughRegex = new RegExp("(?=.{8,}).*", "g");
+    var passwordStrongth = strongRegex.test($(this).val());
+    var passwordMedium = mediumRegex.test($(this).val());
 
-    let score = 0;
+    var score = 0;
     if (false === enoughRegex.test($(this).val())) {
         $('#text-password').html('Mais caracteres');
         $("#number-count-correct").css('display', 'none');
         $("#number-count-incorrect").css('display', 'block');
 
         score = 0;
-
     } else if (passwordStrongth) {
         $('#text-password').html('forte!');
         $("#number-count-incorrect").css('display', 'none');
@@ -31,49 +30,40 @@ $("#password").keyup(function (e) {
         score = 25;
     }
 
-    if($("#password").val().replace(/[^0-9]/g,'').length > 0){
+    if ($("#password").val().replace(/[^0-9]/g, '').length > 0) {
         $("#length-correct").show();
         $("#length-incorrect").hide();
-    }
-    else{
+    } else {
         $("#length-correct").hide();
         $("#length-incorrect").show();
     }
 
-    if($("#password").val().replace(/[^a-zA-Z]/g,'').length > 0){
+    if ($("#password").val().replace(/[^a-zA-Z]/g, '').length > 0) {
         $("#character-count-correct").show();
         $("#character-count-incorrect").hide();
-    }
-    else{
+    } else {
         $("#character-count-correct").hide();
         $("#character-count-incorrect").show();
     }
 
-    let widt = 0 + '%';
-    let color = '';
+    var widt = 0 + '%';
+    var color = '';
 
     if (score === 100) {
         widt = 100 + '%';
-        color = 'green'
-
+        color = 'green';
     } else if (score === 50) {
         widt = 50 + '%';
         color = 'yellow';
-
     } else if (score === 25) {
         widt = 25 + '%';
         color = 'red';
-
     } else {
         widt = 0 + '%';
     }
 
-    $('#progress-password').css({'background': color});
+    $('#progress-password').css({ 'background': color });
     $("#progress-password").width(widt);
 
     return true;
 });
-
-
-
-
