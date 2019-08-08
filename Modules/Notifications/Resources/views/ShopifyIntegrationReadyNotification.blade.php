@@ -1,4 +1,4 @@
-<a class="list-group-item dropdown-item" href="/sales" role="menuitem" id='item-notification'>
+<a class="list-group-item dropdown-item" href="/sales" role="menuitem" id='item-notification' style='width:100%;@if($notification->read_at == null) background-color:#b5e0ee5e @endif'>
     <div class="media">
         <div class="pr-10">
             <i class="fas fa-shopping-bag bg-green-600 green icon-circle" sty aria-hidden="true"></i>

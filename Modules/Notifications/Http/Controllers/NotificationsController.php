@@ -16,7 +16,7 @@ class NotificationsController extends Controller
      */
     public function markasread(Request $request)
     {
-                auth()->user()->unreadNotifications->markAsRead();
+        auth()->user()->unreadNotifications->markAsRead();
 
         /*$unreadNotifications = count(auth()->user()->unreadNotifications);
 
@@ -56,11 +56,42 @@ class NotificationsController extends Controller
                 $view .= view('notifications::' . end($type), ['notification' => $notification])->render();
             }
 
-            return response()->json([
-                                        'notificacoes' => $view,
-                                    ]);
+            $view .= $this->completeReadNotification($countNotifications);
+
+            return response()->json(['notificacoes' => $view,]);
         } else {
-            return response()->json('null');
+            $view = $this->completeReadNotification(0);
+            if ($view != null) {
+                return response()->json(['notificacoes' => $view,]);
+            } else {
+                return response()->json('null');
+            }
+        }
+    }
+
+    public function completeReadNotification(int $notificationAmount)
+    {
+        $readNotifications = auth()->user()->readNotifications()->take(8 - $notificationAmount)
+                                   ->orderBy('created_at', 'desc')->get();
+        //        dd($readNotifications);
+        //        $reverseReadNotifications = array_reverse($readNotifications);
+        //        dd($readNotifications);
+        $view    = '';
+        $counter = 0;
+
+        if (count($readNotifications) > 0) {
+            foreach ($readNotifications as $notification) {
+                $type = explode("\\", $notification->type);
+                $view .= view('notifications::' . end($type), ['notification' => $notification])->render();
+                $counter++;
+                if ($counter >= 8 - $notificationAmount) {
+                    return $view;
+                }
+            }
+
+            return $view;
+        } else {
+            return null;
         }
     }
 }
