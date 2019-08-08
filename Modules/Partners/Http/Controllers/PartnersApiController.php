@@ -82,7 +82,6 @@ class PartnersApiController extends Controller {
             $convite = Convite::create($dados_convite);
 
             Mail::send('convites::email_convite', [ 'convite' => $convite ], function ($mail) use ($dados_convite) {
-                $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
 
                 $mail->to($dados_convite['email_convidado'], 'Cloudfox')->subject('Convite para participar de um projeto no Cloudfox!');
             });

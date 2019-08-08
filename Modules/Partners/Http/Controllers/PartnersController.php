@@ -159,10 +159,7 @@ class PartnersController extends Controller
             $convite = Invitation::create($requestDataConvite);
 
             Mail::send('convites::email_convite', ['convite' => $convite], function($mail) use ($requestDataConvite) {
-                $mail->from('julioleichtweis@gmail.com', 'Cloudfox');
 
-                $mail->to($requestDataConvite['email_convidado'], 'Cloudfox')
-                     ->subject('Convite para participar de um projeto no Cloudfox!');
             });
         }
 

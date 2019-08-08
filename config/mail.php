@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => 'julioleichtweis@gmail.com',
-        'name' => 'Cloudfox Teste',
+        'address' => 'noreply@cloudfox.net',
+        'name' => 'Cloudfox',
     ],
 
     /*
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'julioleichtweis@gmail.com',
+    'username' => 'noreply@cloudfox.net',
 
-    'password' => 'vxnhxuufmepnujnq',
+    'password' => '',
 
     /*
     |--------------------------------------------------------------------------

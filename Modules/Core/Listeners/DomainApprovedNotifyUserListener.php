@@ -34,7 +34,6 @@ class DomainApprovedNotifyUserListener
             $users   = $event->users;
             $message = '';
             foreach ($users as $user) {
-
                 $message = 'Dominio aprovado com sucesso para o projeto ' . $project->name . '.';
 
                 $user->notify(new DomainApprovedNotification($message, $project->id));
