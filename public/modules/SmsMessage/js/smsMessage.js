@@ -13,7 +13,6 @@ $(function () {
         $("#current-page-shippings1").addClass('active').attr('disabled', 'disabled');
         $("#current-page-shippings2").removeClass('active').removeAttr('disabled');
     });
-
 });
 
 /*

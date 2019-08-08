@@ -12,11 +12,11 @@ $(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 $('#modal_add').hide();
                 alertPersonalizado('error', 'Ocorreu algum erro');
             },
-            success: function (data) {
+            success: function success(data) {
                 $('#modal_add_body').html(data);
 
                 $('#cadastrar').unbind('click');
@@ -43,19 +43,19 @@ $(function () {
                         contentType: false,
                         cache: false,
                         data: form_data,
-                        error: function () {
+                        error: function error() {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('error', 'Ocorreu algum erro');
-                            $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
+                            $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
                         },
-                        success: function (data) {
+                        success: function success(data) {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('success', 'Brinde adicionado!');
                             $('#modal_add').hide();
                             $($.fn.dataTable.tables(true)).css('width', '100%');
                             $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                            $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
-                        },
+                            $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
+                        }
                     });
                 });
 
@@ -99,9 +99,9 @@ $(function () {
                             $('input[name="foto_brinde_cadastrar_h"]').val(y2 - y1);
 
                             $('#modal_editar').on('hidden.bs.modal', function () {
-                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
+                                $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
                             });
-                            $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
+                            $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
 
                             $('#previewimage_brinde_cadastrar').imgAreaSelect({
                                 x1: x1, y1: y1, x2: x2, y2: y2,
@@ -109,17 +109,16 @@ $(function () {
                                 handles: true,
                                 imageHeight: this.naturalHeight,
                                 imageWidth: this.naturalWidth,
-                                onSelectEnd: function (img, selection) {
+                                onSelectEnd: function onSelectEnd(img, selection) {
                                     $('input[name="foto_brinde_cadastrar_x1"]').val(selection.x1);
                                     $('input[name="foto_brinde_cadastrar_y1"]').val(selection.y1);
                                     $('input[name="foto_brinde_cadastrar_w"]').val(selection.width);
                                     $('input[name="foto_brinde_cadastrar_h"]').val(selection.height);
                                 },
-                                parent: $('#conteudo_modal_add'),
+                                parent: $('#conteudo_modal_add')
                             });
-                        })
+                        });
                     };
-
                 });
 
                 $("#selecionar_foto_brinde_cadastrar").on("click", function () {
@@ -135,13 +134,10 @@ $(function () {
                     if ($(this).val() == 2) {
                         $('#div_input_arquivo').hide();
                         $('#div_input_link').show();
-
                     }
                 });
-
             }
         });
-
     });
 
     $("#tabela_brindes").DataTable({
@@ -156,14 +152,9 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: 'POST',
-            data: {projeto: id_projeto}
+            data: { projeto: id_projeto }
         },
-        columns: [
-            {data: 'title', name: 'title'},
-            {data: 'description', name: 'description'},
-            {data: 'type', name: 'type'},
-            {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false},
-        ],
+        columns: [{ data: 'title', name: 'title' }, { data: 'description', name: 'description' }, { data: 'type', name: 'type' }, { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false }],
         "language": {
             "sProcessing": "Carregando...",
             "lengthMenu": "Apresentando _MENU_ registros por página",
@@ -180,20 +171,19 @@ $(function () {
                 "sFirst": "Primeiro",
                 "sLast": "Último",
                 "sNext": "Próximo",
-                "sPrevious": "Anterior",
-            },
+                "sPrevious": "Anterior"
+            }
         },
-        "drawCallback": function () {
+        "drawCallback": function drawCallback() {
 
             $('.detalhes_brinde').on('click', function () {
                 var brinde = $(this).attr('brinde');
                 $('#modal_detalhes_titulo').html('Detalhes da brinde');
                 $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                var data = {id_brinde: brinde};
-                $.post("/brindes/detalhe", data)
-                    .then(function (response, status) {
-                        $('#modal_detalhes_body').html(response);
-                    });
+                var data = { id_brinde: brinde };
+                $.post("/brindes/detalhe", data).then(function (response, status) {
+                    $('#modal_detalhes_body').html(response);
+                });
             });
 
             var id_brinde = '';
@@ -216,13 +206,13 @@ $(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: {id: id_brinde},
-                        error: function () {
+                        data: { id: id_brinde },
+                        error: function error() {
                             $('.loading').css("visibility", "hidden");
                             $('#fechar_modal_excluir').click();
                             alertPersonalizado('error', 'Ocorreu algum erro');
                         },
-                        success: function (data) {
+                        success: function success(data) {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('success', 'Brinde removido!');
                             $('#fechar_modal_excluir').click();
@@ -248,12 +238,12 @@ $(function () {
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    data: {id: id_brinde},
-                    error: function () {
+                    data: { id: id_brinde },
+                    error: function error() {
                         $('#modal_editar').hide();
                         alertPersonalizado('error', 'Ocorreu algum erro');
                     },
-                    success: function (data) {
+                    success: function success(data) {
                         $('#modal_editar_body').html(data);
 
                         $('#editar').unbind('click');
@@ -275,19 +265,19 @@ $(function () {
                                 contentType: false,
                                 cache: false,
                                 data: form_data,
-                                error: function () {
+                                error: function error() {
                                     $('.loading').css("visibility", "hidden");
                                     $('#modal_editar').hide();
                                     alertPersonalizado('error', 'Ocorreu algum erro');
-                                    $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
+                                    $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
                                 },
-                                success: function (data) {
+                                success: function success(data) {
                                     $('.loading').css("visibility", "hidden");
                                     alertPersonalizado('success', 'Brinde atualizado!');
                                     $('#modal_editar').hide();
                                     $($.fn.dataTable.tables(true)).css('width', '100%');
                                     $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
+                                    $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
                                 }
                             });
                         });
@@ -332,9 +322,9 @@ $(function () {
                                     $('input[name="foto_brinde_editar_h"]').val(y2 - y1);
 
                                     $('#modal_editar').on('hidden.bs.modal', function () {
-                                        $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
+                                        $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
                                     });
-                                    $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
+                                    $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
 
                                     $('#previewimage_brinde_editar').imgAreaSelect({
                                         x1: x1, y1: y1, x2: x2, y2: y2,
@@ -342,17 +332,16 @@ $(function () {
                                         handles: true,
                                         imageHeight: this.naturalHeight,
                                         imageWidth: this.naturalWidth,
-                                        onSelectEnd: function (img, selection) {
+                                        onSelectEnd: function onSelectEnd(img, selection) {
                                             $('input[name="foto_brinde_editar_x1"]').val(selection.x1);
                                             $('input[name="foto_brinde_editar_y1"]').val(selection.y1);
                                             $('input[name="foto_brinde_editar_w"]').val(selection.width);
                                             $('input[name="foto_brinde_editar_h"]').val(selection.height);
                                         },
-                                        parent: $('#conteudo_modal_editar'),
+                                        parent: $('#conteudo_modal_editar')
                                     });
-                                })
+                                });
                             };
-
                         });
 
                         $("#selecionar_foto_brinde_editar").on("click", function () {
@@ -368,7 +357,6 @@ $(function () {
                             if ($(this).val() == 2) {
                                 $('#div_input_arquivo').hide();
                                 $('#div_input_link').show();
-
                             }
                         });
 
@@ -380,13 +368,10 @@ $(function () {
                         if (tipo_brinde == '2') {
                             $('#div_input_link').show();
                         }
-
                     }
                 });
-
             });
         }
 
     });
-
 });

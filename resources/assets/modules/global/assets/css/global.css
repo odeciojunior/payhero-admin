@@ -1,0 +1,17 @@
+
+.table-responsive {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.menu-active{
+  border-right: 5px solid;
+  border-image-source: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
+  border-image-slice: 2;
+}
+
+.menu-img-active{
+  height:30px;
+  width:30px;
+  margin-left:-5px;
+}

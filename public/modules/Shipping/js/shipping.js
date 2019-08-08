@@ -3,7 +3,7 @@ $(document).ready(function () {
     var projectId = $("#project-id").val();
 
     $("#tab-fretes").on('click', function () {
-        $("#previewimage").imgAreaSelect({remove: true});
+        $("#previewimage").imgAreaSelect({ remove: true });
         atualizarFrete();
     });
     atualizarFrete();
@@ -13,27 +13,26 @@ $(document).ready(function () {
             // altera campo value dependendo do tipo do frete
             var selected = $("#shipping-type").val();
             if (selected === 'static') {
-                $('#shipping-name').attr('placeholder', 'Frete grátis')
+                $('#shipping-name').attr('placeholder', 'Frete grátis');
                 $("#value-shipping-row").css('display', 'block');
                 $("#zip-code-origin-shipping-row").css('display', 'none');
             } else if (selected == 'pac') {
-                $('#shipping-name').attr('placeholder', 'PAC')
+                $('#shipping-name').attr('placeholder', 'PAC');
                 $("#value-shipping-row").css('display', 'none');
                 $("#zip-code-origin-shipping-row").css('display', 'block');
-
             } else if (selected == 'sedex') {
-                $('#shipping-name').attr('placeholder', 'SEDEX')
+                $('#shipping-name').attr('placeholder', 'SEDEX');
                 $("#value-shipping-row").css('display', 'none');
                 $("#zip-code-origin-shipping-row").css('display', 'block');
             }
 
             //mask money
-            $('#shipping-value').mask('#.###,#0', {reverse: true});
+            $('#shipping-value').mask('#.###,#0', { reverse: true });
         });
     }
 
     //mask money
-    $('#shipping-value').mask('#.###,#0', {reverse: true});
+    $('#shipping-value').mask('#.###,#0', { reverse: true });
 
     $("#add-shipping").on('click', function () {
         loadOnModal('#modal-add-body');
@@ -45,24 +44,34 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function (_error) {
+                function error() {
+                    return _error.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function () {
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
                         alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 } else {
-                    alertCustom("error", response.message)
+                    alertCustom("error", response.message);
                 }
                 loadingOnScreenRemove();
-            },
-            success: function (response) {
+            }),
+            success: function success(response) {
                 loadingOnScreenRemove();
                 $("#btn-modal").addClass('btn-save');
                 $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
                 $("#btn-modal").show();
                 $("#modal-add-body").html(response);
                 $('#shipping-zip-code-origin').mask('00000-000');
-                $('#shipping-value').mask('#.###,#0', {reverse: true});
+                $('#shipping-value').mask('#.###,#0', { reverse: true });
 
                 $('.check').on('click', function () {
                     if ($(this).is(':checked')) {
@@ -90,30 +99,40 @@ $(document).ready(function () {
                         processData: false,
                         contentType: false,
                         cache: false,
-                        error: function (response) {
+                        error: function (_error2) {
+                            function error(_x) {
+                                return _error2.apply(this, arguments);
+                            }
+
+                            error.toString = function () {
+                                return _error2.toString();
+                            };
+
+                            return error;
+                        }(function (response) {
                             if (response.status == '422') {
                                 for (error in response.responseJSON.errors) {
                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
                             } else {
-                                alertCustom("error", response.message)
+                                alertCustom("error", response.message);
                             }
                             loadingOnScreenRemove();
-
-                        },
-                        success: function (data) {
+                        }),
+                        success: function success(data) {
                             loadingOnScreenRemove();
                             alertCustom("success", data.message);
                             atualizarFrete();
                         }
                     });
                 });
-
             }
-        })
+        });
     });
 
-    function atualizarFrete(link = null) {
+    function atualizarFrete() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
         loadOnTable('#dados-tabela-frete', '#tabela_fretes');
         changeType();
         if (link == null) {
@@ -127,15 +146,15 @@ $(document).ready(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function (response) {
+            error: function error(response) {
                 $("#dados-tabela-frete").html(response.message);
             },
-            success: function (response) {
+            success: function success(response) {
 
                 $("#dados-tabela-frete").html('');
 
                 if (response.data == '') {
-                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>")
+                    $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
                         dados = '';
@@ -164,10 +183,7 @@ $(document).ready(function () {
                             dados += '<span class="badge badge-primary"> Não </span>';
                         }
                         dados += '</td>';
-                        dados += "<td style='min-width:200px;'>" +
-                            "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>" +
-                            "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>" +
-                            "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>"
+                        dados += "<td style='min-width:200px;'>" + "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>" + "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>" + "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>";
                         "</td>";
                         dados += '</tr>';
                         $("#dados-tabela-frete").append(dados);
@@ -180,7 +196,7 @@ $(document).ready(function () {
 
                         $("#modal-title").html('Detalhes do frete');
                         $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
-                        var data = {freteId: frete};
+                        var data = { freteId: frete };
 
                         $("#btn-modal").hide();
 
@@ -191,11 +207,10 @@ $(document).ready(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function error() {
                                 //
-                            }, success: function (response) {
+                            }, success: function success(response) {
                                 $("#modal-add-body").html(response);
-
                             }
                         });
                     });
@@ -208,7 +223,7 @@ $(document).ready(function () {
                         $("#modal-title").html("Editar Frete");
                         $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
-                        var data = {frete: frete};
+                        var data = { frete: frete };
 
                         $.ajax({
                             method: "GET",
@@ -217,9 +232,9 @@ $(document).ready(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function error() {
                                 //
-                            }, success: function (response) {
+                            }, success: function success(response) {
                                 $("#btn-modal").addClass('btn-update');
                                 $("#btn-modal").text('Atualizar');
                                 $("#btn-modal").show();
@@ -236,14 +251,12 @@ $(document).ready(function () {
                                 if (selected === 'static') {
                                     $("#value-shipping-row").css('display', 'block');
                                     $("#zip-code-origin-shipping-row").css('display', 'none');
-
                                 } else {
                                     $("#value-shipping-row").css('display', 'none');
                                     $("#zip-code-origin-shipping-row").css('display', 'block');
-
                                 }
                                 changeType();
-                                $('#shipping-value').mask('#.###,#0', {reverse: true});
+                                $('#shipping-value').mask('#.###,#0', { reverse: true });
 
                                 $(".btn-update").unbind('click');
                                 $(".btn-update").on('click', function () {
@@ -260,21 +273,30 @@ $(document).ready(function () {
                                         processData: false,
                                         contentType: false,
                                         cache: false,
-                                        error: function () {
+                                        error: function (_error3) {
+                                            function error() {
+                                                return _error3.apply(this, arguments);
+                                            }
+
+                                            error.toString = function () {
+                                                return _error3.toString();
+                                            };
+
+                                            return error;
+                                        }(function () {
                                             loadingOnScreenRemove();
                                             if (response.status == '422') {
                                                 for (error in response.responseJSON.errors) {
                                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                                 }
                                             }
-                                        },
-                                        success: function (data) {
+                                        }),
+                                        success: function success(data) {
                                             loadingOnScreenRemove();
                                             alertCustom("success", "Frete atualizado com sucesso");
                                             atualizarFrete();
                                         }
                                     });
-
                                 });
                             }
                         });
@@ -296,7 +318,17 @@ $(document).ready(function () {
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
-                                error: function (response) {
+                                error: function (_error4) {
+                                    function error(_x3) {
+                                        return _error4.apply(this, arguments);
+                                    }
+
+                                    error.toString = function () {
+                                        return _error4.toString();
+                                    };
+
+                                    return error;
+                                }(function (response) {
                                     loadingOnScreenRemove();
                                     if (response.status == '422') {
                                         for (error in response.responseJSON.errors) {
@@ -306,20 +338,17 @@ $(document).ready(function () {
                                     if (response.status == '400') {
                                         alertCustom('error', response.responseJSON.message);
                                     }
-                                },
-                                success: function (data) {
+                                }),
+                                success: function success(data) {
                                     loadingOnScreenRemove();
                                     alertCustom("success", "Frete Removido com sucesso");
                                     atualizarFrete();
                                 }
 
-                            })
-
+                            });
                         });
-                    })
-
+                    });
                 }
-
             }
         });
     }
@@ -348,9 +377,9 @@ $(document).ready(function () {
             data: formData,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-            }, error: function () {
+            }, error: function error() {
                 //
-            }, success: function () {
+            }, success: function success() {
                 alertCustom('success', 'Configuração atualizadas com sucesso');
                 atualizarFrete();
             }
@@ -387,16 +416,14 @@ $(document).ready(function () {
                 $('#page_shipping_' + (response.meta.current_page - x)).on("click", function () {
                     atualizarFrete('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var current_page_shippings = "<button id='current_page_shippings' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+                var current_page_shippings = "<button id='current_page_shippings' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
                 $("#pagination-shippings").append(current_page_shippings);
 
                 $("#current_page_shippings").attr('disabled', true).addClass('nav-btn').addClass('active');
-
             }
             for (x = 1; x < 4; x++) {
 
@@ -409,7 +436,6 @@ $(document).ready(function () {
                 $('#page_shippings_' + (response.meta.current_page + x)).on("click", function () {
                     atualizarFrete('?page=' + $(this).html());
                 });
-
             }
 
             if (response.meta.last_page != '1') {
@@ -426,7 +452,5 @@ $(document).ready(function () {
                 });
             }
         }
-
     }
-
 });

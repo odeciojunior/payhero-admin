@@ -18,10 +18,10 @@ $(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function () {
+            error: function error() {
                 $("#data-table-partners").html("Erro ao encontrar dados");
             },
-            success: function (response) {
+            success: function success(response) {
                 $("#data-table-partners").html('');
                 $.each(response.data, function (index, value) {
                     dados = '';
@@ -43,7 +43,7 @@ $(function () {
                 });
 
                 if (response.data === '') {
-                    $("#data-table-partners").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align:middle;'>Nenhum registro encontrado </td></tr>")
+                    $("#data-table-partners").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align:middle;'>Nenhum registro encontrado </td></tr>");
                 }
             }
         });

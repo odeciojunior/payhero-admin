@@ -45,22 +45,18 @@ $(document).ready(function () {
                     handles: true,
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
-                    onSelectEnd: function (img, selection) {
+                    onSelectEnd: function onSelectEnd(img, selection) {
                         $('input[name="photo_x1"]').val(selection.x1);
                         $('input[name="photo_y1"]').val(selection.y1);
-                        $('input[name="photo_w"]').val(selection.width); 
+                        $('input[name="photo_w"]').val(selection.width);
                         $('input[name="photo_h"]').val(selection.height);
                     }
                 });
-            })
+            });
         };
-
     });
 
     $("#preview-image-project").on("click", function () {
         $("#project-photo").click();
     });
-
 });
-
-

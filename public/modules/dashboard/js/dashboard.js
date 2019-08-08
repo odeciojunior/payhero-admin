@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
     updateValues();
-    loading('#cardPendente','#loaderCard');
-    loading('#cardAntecipavel','#loaderCard');
-    loading('#cardDisponivel','#loaderCard');
-    loading('#cardTotal','#loaderCard');
+    loading('#cardPendente', '#loaderCard');
+    loading('#cardAntecipavel', '#loaderCard');
+    loading('#cardDisponivel', '#loaderCard');
+    loading('#cardTotal', '#loaderCard');
 
     $("#company").on("change", function () {
         updateValues();
@@ -18,11 +18,11 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: {company: $('#company').val()},
-            error: function () {
+            data: { company: $('#company').val() },
+            error: function error() {
                 //
             },
-            success: function (data) {
+            success: function success(data) {
 
                 $(".moeda").html(data.currency);
                 $("#pending_money").html(data.pending_balance);
@@ -31,6 +31,5 @@ $(document).ready(function () {
                 $("#total_money").html(data.total_balance);
             }
         });
-
     }
 });

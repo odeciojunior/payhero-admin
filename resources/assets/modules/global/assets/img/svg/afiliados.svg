@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="20px" viewBox="0 0 21 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 53.2 (72643) - https://sketchapp.com -->
+    <title>C5CD866B-B810-4109-A86E-F48B61B89590</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M6,14 C6.82842712,14 7.5,13.3284271 7.5,12.5 C7.50488174,12.4501192 7.50488174,12.3998808 7.5,12.35 L10.29,9.56 L10.52,9.56 L10.75,9.56 L12.36,11.17 C12.36,11.17 12.36,11.22 12.36,11.25 C12.36,12.0784271 13.0315729,12.75 13.86,12.75 C14.6884271,12.75 15.36,12.0784271 15.36,11.25 L15.36,11.17 L19,7.5 L19,7.5 C19.8284271,7.5 20.5,6.82842712 20.5,6 C20.5,5.17157288 19.8284271,4.5 19,4.5 C18.1715729,4.5 17.5,5.17157288 17.5,6 C17.4951183,6.04988084 17.4951183,6.10011916 17.5,6.15 L13.89,9.76 L13.73,9.76 L12,8 C12,7.17157288 11.3284271,6.5 10.5,6.5 C9.67157288,6.5 9,7.17157288 9,8 L6,11 L6,11 C5.17157288,11 4.5,11.6715729 4.5,12.5 C4.5,13.3284271 5.17157288,14 6,14 Z M19.5,18 L2.5,18 L2.5,1 C2.5,0.44771525 2.05228475,0 1.5,0 C0.94771525,0 0.5,0.44771525 0.5,1 L0.5,19 C0.5,19.5522847 0.94771525,20 1.5,20 L19.5,20 C20.0522847,20 20.5,19.5522847 20.5,19 C20.5,18.4477153 20.0522847,18 19.5,18 Z" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="menu/main/side" transform="translate(-38.000000, -385.000000)">
+            <g id="menu">
+                <g transform="translate(37.000000, 101.000000)">
+                    <g id="icon/afiliados" transform="translate(1.000000, 284.000000)">
+                        <g id="color/primary/main-gradient-copy-13">
+                            <g>
+                                <mask id="mask-2" fill="white">
+                                    <use xlink:href="#path-1"></use>
+                                </mask>
+                                <use id="Mask" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
+                                <g id="color/primary/gray" mask="url(#mask-2)" fill="#D4D4D4" fill-rule="nonzero">
+                                    <g transform="translate(-1.000000, -2.000000)" id="color/primary/main-gradient">
+                                        <rect x="0" y="0" width="23" height="23"></rect>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

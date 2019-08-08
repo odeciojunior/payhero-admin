@@ -1,9 +1,9 @@
 $(document).ready(function () {
 
     var options = {
-        onKeyPress: function (identificatioNumber, e, field, options) {
+        onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
             var masks = ['000.000.000-000', '00.000.000/0000-00'];
-            var mask = (identificatioNumber.length > 14) ? masks[1] : masks[0];
+            var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
             $('#cnpj').mask(mask, options);
         }
     };
@@ -14,7 +14,7 @@ $(document).ready(function () {
     $("#company_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('company_update_form'));
-        loadingOnScreen()
+        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: $('#company_update_form').attr('action'),
@@ -25,26 +25,35 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: form_data,
-            error: function (response) {
-                loadingOnScreenRemove()
+            error: function (_error) {
+                function error(_x) {
+                    return _error.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function (response) {
+                loadingOnScreenRemove();
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
                         alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 }
-            },
-            success: function (response) {
+            }),
+            success: function success(response) {
                 alertCustom('success', response.message);
-                loadingOnScreenRemove()
+                loadingOnScreenRemove();
             }
         });
-
     });
 
     $("#company_bank_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('company_bank_update_form'));
-        loadingOnScreen()
+        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: $('#company_bank_update_form').attr('action'),
@@ -55,27 +64,36 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: form_data,
-            error: function (response) {
-                loadingOnScreenRemove()
+            error: function (_error2) {
+                function error(_x2) {
+                    return _error2.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error2.toString();
+                };
+
+                return error;
+            }(function (response) {
+                loadingOnScreenRemove();
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
                         alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 }
-            },
-            success: function (response) {
-                loadingOnScreenRemove()
+            }),
+            success: function success(response) {
+                loadingOnScreenRemove();
                 alertCustom('success', response.message);
             }
         });
-
     });
 
     $(document).on("blur", '#routing_number', function () {
         $.ajax({
             method: "GET",
             url: "https://www.routingnumbers.info/api/data.json?rn=" + $("#routing_number").val(),
-            success: function (data) {
+            success: function success(data) {
                 if (data.message == 'OK') {
                     $("#bank").val(data.customer_name);
                 } else {
@@ -90,15 +108,14 @@ $(document).ready(function () {
 
         var zip_code = $('#brazil_zip_code').val().replace(/[^0-9]/g, '');
 
-        if (zip_code.length != 8)
-            return false;
+        if (zip_code.length != 8) return false;
 
         $.ajax({
             url: "https://viacep.com.br/ws/" + zip_code + "/json/",
             type: "GET",
             cache: false,
             async: false,
-            success: function (response) {
+            success: function success(response) {
                 if (response.localidade) {
                     $("#city").val(unescape(response.localidade));
                 }
@@ -113,9 +130,7 @@ $(document).ready(function () {
                 }
             }
         });
-
     });
-
 });
 
 Dropzone.options.dropzoneDocuments = {
@@ -123,7 +138,7 @@ Dropzone.options.dropzoneDocuments = {
     maxFilesize: 2, // MB
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
     //uploadMultiple: true,
-    accept: function (file, done) {
+    accept: function accept(file, done) {
         var dropz = this;
 
         swal({
@@ -134,11 +149,11 @@ Dropzone.options.dropzoneDocuments = {
             inputOptions: {
                 '1': 'Extrato bancário',
                 '2': 'Comprovante de residência',
-                '3': 'Contrato social',
+                '3': 'Contrato social'
             },
             showCancelButton: true,
             confirmButtonColor: '#3085D6',
-            cancelButtonColor: '#DD3333', 
+            cancelButtonColor: '#DD3333',
             confirmButtonText: 'Enviar'
         }).then(function (data) {
             if (data.value) {
@@ -147,35 +162,34 @@ Dropzone.options.dropzoneDocuments = {
                 done();
             } else {
                 //cancel
-                dropz.removeFile(file)
+                dropz.removeFile(file);
             }
-
         }).catch(function (reason) {
             //close
-            dropz.removeFile(file)
+            dropz.removeFile(file);
         });
     },
-    success: function (file, response) {
+    success: function success(file, response) {
         //update table
         if (response.data.bank_document_translate.status == 3) {
 
-            $('#td_bank_status').html('<span class="badge badge-aprovado">' +response.data.bank_document_translate.message+ '</span>');
-        } else if (response.data.bank_document_translate.status == 2){
-            $('#td_bank_status').html('<span class="badge badge-pendente">' +response.data.bank_document_translate.message+ '</span>');
+            $('#td_bank_status').html('<span class="badge badge-aprovado">' + response.data.bank_document_translate.message + '</span>');
+        } else if (response.data.bank_document_translate.status == 2) {
+            $('#td_bank_status').html('<span class="badge badge-pendente">' + response.data.bank_document_translate.message + '</span>');
         }
 
         if (response.data.address_document_translate.status == 3) {
 
-            $('#td_address_status').html('<span class="badge badge-aprovado">' +response.data.address_document_translate.message+ '</span>');
-        } else if (response.data.address_document_translate.status == 2){
-            $('#td_address_status').html('<span class="badge badge-pendente">' +response.data.address_document_translate.message+ '</span>');
+            $('#td_address_status').html('<span class="badge badge-aprovado">' + response.data.address_document_translate.message + '</span>');
+        } else if (response.data.address_document_translate.status == 2) {
+            $('#td_address_status').html('<span class="badge badge-pendente">' + response.data.address_document_translate.message + '</span>');
         }
 
         if (response.data.contract_document_translate.status == 3) {
 
-            $('#td_contract_status').html('<span class="badge badge-aprovado">' +response.data.contract_document_translate.message+ '</span>');
-        } else if (response.data.contract_document_translate.status == 2){
-            $('#td_contract_status').html('<span class="badge badge-pendente">' +response.data.contract_document_translate.message+ '</span>');
+            $('#td_contract_status').html('<span class="badge badge-aprovado">' + response.data.contract_document_translate.message + '</span>');
+        } else if (response.data.contract_document_translate.status == 2) {
+            $('#td_contract_status').html('<span class="badge badge-pendente">' + response.data.contract_document_translate.message + '</span>');
         }
 
         swal({
@@ -186,15 +200,13 @@ Dropzone.options.dropzoneDocuments = {
             showConfirmButton: false,
             timer: 6000
         });
-
-
     },
-    error: function (file, response) {
+    error: function error(file, response) {
 
-        if(response.search('Max filesize') > 0){
-            response = 'O documento é muito grande. Tamanho maximo: 2mb.'
-        }else if(response.search('upload files of this type') > 0){
-            response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.'
+        if (response.search('Max filesize') > 0) {
+            response = 'O documento é muito grande. Tamanho maximo: 2mb.';
+        } else if (response.search('upload files of this type') > 0) {
+            response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.';
         }
 
         swal({
@@ -206,7 +218,7 @@ Dropzone.options.dropzoneDocuments = {
             timer: 6000
         });
 
-        this.removeFile(file)
+        this.removeFile(file);
     }
 
 };

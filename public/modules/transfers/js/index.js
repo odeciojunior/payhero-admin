@@ -7,7 +7,9 @@ $(function () {
         updateTransfersTable();
     });
 
-    function updateTransfersTable(link = null) {
+    function updateTransfersTable() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
 
         /*$("#table-transfers-body").html("<tr class='text-center'><td colspan='11'Carregando...></td></tr>");*/
         loadOnTable('table-transfers-body', 'transfersTable');
@@ -21,14 +23,14 @@ $(function () {
         $.ajax({
             method: "GET",
             url: link,
-            data: {company: $("#extract_company_select").val()},
+            data: { company: $("#extract_company_select").val() },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 $("#table-transfers-body").html('Erro ao encontrar dados');
             },
-            success: function (response) {
+            success: function success(response) {
                 $("#table-transfers-body").html('');
 
                 if (response.data == '') {
@@ -40,18 +42,13 @@ $(function () {
 
                     $.each(response.data, function (index, value) {
                         data += '<tr >';
-                        data += '<td style="vertical-align: middle;">' + value.description + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' +
-                            '<span style="color:black;">'
-                            + value.transaction_id +
-                            '</span>'
-                        '</a>'
+                        data += '<td style="vertical-align: middle;">' + value.description + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>';
+                        '</a>';
                         '</td>';
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
-                        if(value.type_enum == 1)
-                        {
+                        if (value.type_enum == 1) {
                             data += '<td style="vertical-align: middle; color:green;">' + value.value + '</td>';
-                        }
-                        else {
+                        } else {
                             data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
                         }
                         data += '</tr>';
@@ -65,7 +62,7 @@ $(function () {
                     var sale = $(this).attr('sale');
 
                     $('#modal_venda_titulo').html('Detalhes da venda ' + sale + '<br><hr>');
-                    var data = {sale_id: sale};
+                    var data = { sale_id: sale };
 
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
                     $.ajax({
@@ -75,14 +72,13 @@ $(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
                         },
-                        success: function (response) {
-                            $('.subTotal').mask('#.###,#0', {reverse: true});
+                        success: function success(response) {
+                            $('.subTotal').mask('#.###,#0', { reverse: true });
 
                             $('.modal-body-details').html(response);
-
                         }
                     });
                 });
@@ -120,11 +116,10 @@ $(function () {
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 updateTransfersTable('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
             $("#pagination").append(pagina_atual);
         }
@@ -140,7 +135,6 @@ $(function () {
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
                 updateTransfersTable('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.last_page != '1') {
@@ -158,9 +152,5 @@ $(function () {
                 updateTransfersTable('?page=' + response.meta.last_page);
             });
         }
-
     }
-
 });
-
-

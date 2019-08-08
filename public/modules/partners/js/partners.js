@@ -3,14 +3,14 @@ $(function () {
     var projectId = $("#project-id").val();
 
     $("#tab-partners").on('click', function () {
-        $("#previewimage").imgAreaSelect({remove: true});
+        $("#previewimage").imgAreaSelect({ remove: true });
         updatePartners();
     });
 
     updatePartners();
 
     function maskPercent() {
-        $("#value-remuneration").mask("#0,00%", {reverse: true});
+        $("#value-remuneration").mask("#0,00%", { reverse: true });
     }
 
     $("#add-partners").click(function () {
@@ -23,10 +23,10 @@ $(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 $("#modal-add-body").html("Erro ao tentar acessar pagina");
             },
-            success: function (response) {
+            success: function success(response) {
                 $("#btn-modal").addClass('btn-save').text('Salvar').show();
                 $("#modal-add-body").html(response);
 
@@ -48,22 +48,31 @@ $(function () {
                         },
                         data: formData,
 
-                        error: function (response) {
+                        error: function (_error) {
+                            function error(_x) {
+                                return _error.apply(this, arguments);
+                            }
+
+                            error.toString = function () {
+                                return _error.toString();
+                            };
+
+                            return error;
+                        }(function (response) {
                             if (response.status === 422) {
                                 for (error in response.responseJSON.errors) {
                                     alertCustom('error', String(response.errors[error]));
                                 }
                             }
-                        },
-                        success: function (response) {
+                        }),
+                        success: function success(response) {
                             alertCustom("success", response.message);
                             updatePartners();
                         }
                     });
                 });
             }
-        })
-
+        });
     });
 
     function updatePartners() {
@@ -72,14 +81,14 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/partners",
-            data: {project: projectId},
+            data: { project: projectId },
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            error: function () {
+            error: function error() {
                 $("#data-table-partners").html("Erro ao encontrar dados");
             },
-            success: function (response) {
+            success: function success(response) {
                 $("#data-table-partners").html('');
                 $.each(response.data, function (index, value) {
                     dados = '';
@@ -98,7 +107,7 @@ $(function () {
                 });
 
                 if (response.data == '') {
-                    $("#data-table-partners").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align:middle;'>Nenhum registro encontrado </td></tr>")
+                    $("#data-table-partners").html("<tr class='text-center'><td colspan='11' style='height: 70px; vertical-align:middle;'>Nenhum registro encontrado </td></tr>");
                 }
 
                 $(".details-partners").unbind('click');
@@ -111,19 +120,19 @@ $(function () {
                     $.ajax({
                         method: "GET",
                         url: "/partners/" + partners,
-                        data: {data: partners},
+                        data: { data: partners },
                         headers: {
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content'),
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
                         },
-                        success: function (response) {
+                        success: function success(response) {
                             $("#btn-modal").hide();
                             $("#modal-add-body").html(response);
                         }
-                    })
-                })
+                    });
+                });
 
                 $(".editar-partners").unbind('click');
                 $(".editar-partners").on('click', function () {
@@ -136,7 +145,7 @@ $(function () {
                     var formData = new FormData(document.getElementById("form-edit-partners"));
                     formData.append('project', projectId);
 
-                    var data = {partner: partners};
+                    var data = { partner: partners };
 
                     $.ajax({
                         method: "GET",
@@ -145,10 +154,10 @@ $(function () {
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function () {
+                        error: function error() {
                             //
                         },
-                        success: function (response) {
+                        success: function success(response) {
                             $("#btn-modal").addClass('btn-save');
                             $("#btn-modal").text('Salvar');
                             $("#btn-modal").show();
@@ -166,14 +175,24 @@ $(function () {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
                                     data: formData,
-                                    error: function (response) {
+                                    error: function (_error2) {
+                                        function error(_x2) {
+                                            return _error2.apply(this, arguments);
+                                        }
+
+                                        error.toString = function () {
+                                            return _error2.toString();
+                                        };
+
+                                        return error;
+                                    }(function (response) {
                                         if (response.status === 422) {
                                             for (error in response.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
                                         }
-                                    },
-                                    success: function (response) {
+                                    }),
+                                    success: function success(response) {
                                         alertCustom('success', 'Parceiro atualizado com sucesso');
                                         updatePartners();
                                     }
@@ -199,14 +218,24 @@ $(function () {
                             headers: {
                                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
+                            error: function (_error3) {
+                                function error() {
+                                    return _error3.apply(this, arguments);
+                                }
+
+                                error.toString = function () {
+                                    return _error3.toString();
+                                };
+
+                                return error;
+                            }(function () {
                                 if (response.status === 422) {
                                     for (error in response.response.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
                                 }
-                            },
-                            success: function (data) {
+                            }),
+                            success: function success(data) {
                                 alertCustom('success', 'Parceiro removido com sucesso');
                                 updatePartners();
                             }
@@ -215,6 +244,5 @@ $(function () {
                 });
             }
         });
-
     }
 });

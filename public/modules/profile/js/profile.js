@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#profile_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('profile_update_form'));
-        loadingOnScreen()
+        loadingOnScreen();
         $.ajax({
             method: "POST",
             url: $('#profile_update_form').attr('action'),
@@ -14,33 +14,40 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             data: form_data,
-            error: function (response) {
-                loadingOnScreenRemove()
+            error: function (_error) {
+                function error(_x) {
+                    return _error.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function (response) {
+                loadingOnScreenRemove();
                 // console.log(response)
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
                         switch (String(response.responseJSON.errors[error])) {
                             case 'The profile photo must be a file of type: jpeg, jpg, png.':
-                                alertCustom('error', 'A imagem deve estar em um dos seguintes formatos: jpeg, jpg, png.')
+                                alertCustom('error', 'A imagem deve estar em um dos seguintes formatos: jpeg, jpg, png.');
                                 break;
                             default:
                                 alertCustom('error', String(response.responseJSON.errors[error]));
                         }
-
                     }
                 }
-            },
-            success: function (response) {
-                loadingOnScreenRemove()
+            }),
+            success: function success(response) {
+                loadingOnScreenRemove();
                 $(".div1").hide();
                 $(".div2").show();
                 alertCustom('success', response.message);
                 $("#progress-bar-register").css('width', '66%');
                 $("#jump").show();
-
             }
         });
-
     });
 
     var p = $("#previewimage");
@@ -87,16 +94,15 @@ $(document).ready(function () {
                     handles: true,
                     imageHeight: this.naturalHeight,
                     imageWidth: this.naturalWidth,
-                    onSelectEnd: function (img, selection) {
+                    onSelectEnd: function onSelectEnd(img, selection) {
                         $('input[name="photo_x1"]').val(selection.x1);
                         $('input[name="photo_y1"]').val(selection.y1);
                         $('input[name="photo_w"]').val(selection.width);
                         $('input[name="photo_h"]').val(selection.height);
                     }
                 });
-            })
+            });
         };
-
     });
 
     $("#previewimage").on("click", function () {
@@ -135,7 +141,7 @@ $(document).ready(function () {
                     new_password: $("#new_password").val(),
                     new_password_confirm: $("#new_password_confirm").val()
                 },
-                error: function (data) {
+                error: function error(data) {
                     swal({
                         position: 'bottom',
                         type: 'error',
@@ -145,7 +151,7 @@ $(document).ready(function () {
                         timer: 6000
                     });
                 },
-                success: function (data) {
+                success: function success(data) {
 
                     swal({
                         position: 'bottom',
@@ -158,36 +164,33 @@ $(document).ready(function () {
 
                     $('#new_password').val('');
                     $('#new_password_confirm').val('');
-
                 }
             });
         }
-
     });
 
     $("#nav_documents").on("click", function () {
         $("#tab_documentos").click();
-        $("#previewimage").imgAreaSelect({remove: true});
+        $("#previewimage").imgAreaSelect({ remove: true });
     });
 
     $("#nav_users").on("click", function () {
         $("#tab_user").click();
-        $("#previewimage").imgAreaSelect({remove: true});
+        $("#previewimage").imgAreaSelect({ remove: true });
     });
 
     $("#zip_code").on("input", function () {
 
         var cep = $('#zip_code').val().replace(/[^0-9]/g, '');
 
-        if (cep.length != 8)
-            return false;
+        if (cep.length != 8) return false;
 
         $.ajax({
             url: "https://viacep.com.br/ws/" + cep + "/json/",
             type: "GET",
             cache: false,
             async: false,
-            success: function (response) {
+            success: function success(response) {
 
                 if (response.localidade) {
                     $("#city").val(unescape(response.localidade));
@@ -201,19 +204,16 @@ $(document).ready(function () {
                 if (response.logradouro) {
                     $("#street").val(unescape(response.logradouro));
                 }
-
             }
         });
-
     });
-
 });
 
 Dropzone.options.dropzoneDocuments = {
     paramName: "file",
     maxFilesize: 2, // MB
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",
-    accept: function (file, done) {
+    accept: function accept(file, done) {
         var dropz = this;
 
         swal({
@@ -223,7 +223,7 @@ Dropzone.options.dropzoneDocuments = {
             inputPlaceholder: 'Selecione o documento',
             inputOptions: {
                 '1': 'Documento de identidade',
-                '2': 'Comprovante de residência',
+                '2': 'Comprovante de residência'
             },
             showCancelButton: true,
             confirmButtonColor: '#3085D6',
@@ -236,15 +236,14 @@ Dropzone.options.dropzoneDocuments = {
                 done();
             } else {
                 //cancel
-                dropz.removeFile(file)
+                dropz.removeFile(file);
             }
-
         }).catch(function (reason) {
             //close
-            dropz.removeFile(file)
+            dropz.removeFile(file);
         });
     },
-    success: function (file, response) {
+    success: function success(file, response) {
         //update table
 
         if (response.personal_document_translate == 'Em análise') {
@@ -262,12 +261,12 @@ Dropzone.options.dropzoneDocuments = {
             timer: 6000
         });
     },
-    error: function (file, response) {
+    error: function error(file, response) {
 
         if (response.search('Max filesize') > 0) {
-            response = 'O documento é muito grande. Tamanho maximo: 2mb.'
+            response = 'O documento é muito grande. Tamanho maximo: 2mb.';
         } else if (response.search('upload files of this type') > 0) {
-            response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.'
+            response = 'O documento deve estar em um dos seguintes formatos: jpeg, jpg, png.';
         }
 
         swal({
@@ -279,8 +278,7 @@ Dropzone.options.dropzoneDocuments = {
             timer: 6000
         });
 
-        this.removeFile(file)
+        this.removeFile(file);
     }
 
 };
-

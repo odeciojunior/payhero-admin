@@ -18,30 +18,9 @@ $(function () {
             toLabel: 'Até',
             customRangeLabel: 'Customizado',
             weekLabel: 'W',
-            daysOfWeek: [
-                'Dom',
-                'Seg',
-                'Ter',
-                'Qua',
-                'Qui',
-                'Sex',
-                'Sab'
-            ],
-            monthNames: [
-                'Janeiro',
-                'Fevereiro',
-                'Março',
-                'Abril',
-                'Maio',
-                'Junho',
-                'Julho',
-                'Agosto',
-                'Setembro',
-                'Outubro',
-                'Novembro',
-                'Dezembro'
-            ],
-            firstDay: 0,
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            firstDay: 0
         },
         ranges: {
             'Hoje': [moment(), moment()],
@@ -49,25 +28,22 @@ $(function () {
             'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
             'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
             'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-        },
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
     }, function (start, end) {
         startDate = start.format('YYYY-MM-DD');
         endDate = end.format('YYYY-MM-DD');
         updateReports();
-
     });
 
     $("#project").on('change', function () {
         $('#project').val($(this).val());
         updateReports();
-
     });
 
     $("#origin").on('change', function () {
         $('#origin').val($(this).val());
         updateSalesByOrigin();
-
     });
 
     var current_currency = '';
@@ -75,13 +51,8 @@ $(function () {
     function updateReports() {
         var date_range = $('#date_range_requests').val();
 
-        $('#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-reembolso, #qtd-pending, #qtd-canceled'+
-            '#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert'+
-            '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio, #qtd-canceled').html("<span class='loading'>" +
-            "<span class='loaderSpan' >" +
-            "</span>" +
-            "</span>");
-        loadOnTable('#origins-table-itens','.table-vendas-itens')
+        $('#revenue-generated, #qtd-aproved, #qtd-boletos, #qtd-recusadas, #qtd-reembolso, #qtd-pending, #qtd-canceled' + '#percent-credit-card, #percent-values-boleto, #credit-card-value, #boleto-value, #percent-boleto-convert' + '#percent-credit-card-convert, #percent-desktop, #percent-mobile, #qtd-cartao-convert, #qtd-boleto-convert, #ticket-medio, #qtd-canceled').html("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
+        loadOnTable('#origins-table-itens', '.table-vendas-itens');
 
         $.ajax({
             url: '/reports/getValues/' + $("#project").val(),
@@ -94,10 +65,10 @@ $(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
-            success: function (response) {
+            success: function success(response) {
                 current_currency = response.currency;
                 $("#revenue-generated").html(response.currency + ' ' + response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
@@ -136,10 +107,12 @@ $(function () {
         });
     }
 
-    function updateSalesByOrigin(link = null) {
+    function updateSalesByOrigin() {
+        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
 
         /*$('#origins-table').html("<td colspan='3' class='text-center'> Carregando... </div>");*/
-        loadOnTable('#origins-table','.table-vendas')
+        loadOnTable('#origins-table', '.table-vendas');
 
         if (link == null) {
             link = '/reports/getsalesbyorigin?' + 'project_id=' + $("#project").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
@@ -153,10 +126,10 @@ $(function () {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
-            error: function () {
+            error: function error() {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
-            success: function (response) {
+            success: function success(response) {
 
                 if (response.data == '') {
                     $('#origins-table').html("<td colspan='3' class='text-center'> Nenhuma venda encontrada</div>");
@@ -174,105 +147,93 @@ $(function () {
 
                     $('#origins-table').html("");
                     $("#origins-table").append(table_data);
-                    $('.table-vendas').addClass('table-striped')
+                    $('.table-vendas').addClass('table-striped');
 
                     pagination(response);
                 }
             }
-        })
+        });
     }
 
     updateReports();
 
     function updateGraph(chartData) {
 
-        var scoreChart = function (id, labelList, series1List, series2List) {
-                var scoreChart = new Chartist.Line("#" + id, {
-                        labels: labelList, series: [series1List, series2List]
+        var scoreChart = function scoreChart(id, labelList, series1List, series2List) {
+            var scoreChart = new Chartist.Line("#" + id, {
+                labels: labelList, series: [series1List, series2List]
+            }, {
+                lineSmooth: Chartist.Interpolation.simple({
+                    divisor: 2
+                }),
+                fullWidth: !0,
+                chartPadding: {
+                    right: 30
+                },
+                series: {
+                    "credit-card-data": {
+                        showArea: !0
                     },
-                    {
-                        lineSmooth: Chartist.Interpolation.simple({
-                            divisor: 2
-                        }),
-                        fullWidth: !0,
-                        chartPadding: {
-                            right: 30
-                        },
-                        series: {
-                            "credit-card-data": {
-                                showArea: !0
-                            },
-                            "boleto-data": {
-                                showArea: !0
-                            }
-                        },
-                        axisX: {
-                            showGrid: !1
-                        },
-                        axisY: {
-                            labelInterpolationFnc: function (value) {
-                                return chartData.currency + value;
-                                return value / 1e3 + "K"
-                            },
-                            scaleMinSpace: 40
-                        },
-                        plugins: [
-                            Chartist.plugins.tooltip({
-                                position: 'bottom'
-                            }),
-                            Chartist.plugins.legend()
-                        ],
-                        low: 0,
-                        height: 300
-                    });
-                scoreChart.on("created", function (data) {
-                        var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
-                            filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
-                                x: 0, y: "-10%", id: "shadow" + id
-                            }, "", !0));
-                        return filter.elem("feGaussianBlur", {
-                            in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
-                        }),
-                            filter.elem("feOffset", {
-                                dx: "0", dy: "800"
-                            }),
-                            filter.elem("feBlend", {
-                                in: "SourceGraphic", mode: "multiply"
-                            }),
-                            defs
+                    "boleto-data": {
+                        showArea: !0
                     }
-                ).on("draw", function (data) {
-                    "line" === data.type ? data.element.attr({
-                            filter: "url(#shadow" + id + ")"
-                        }
-                    ) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
-                        x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
-                    }),
-                    "line" !== data.type && "area" != data.type || data.element.animate({
-                        d: {
-                            begin: 1e3 * data.index,
-                            dur: 1e3,
-                            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-                            to: data.path.clone().stringify(),
-                            easing: Chartist.Svg.Easing.easeOutQuint
-                        }
-                    });
-                })
-            },
+                },
+                axisX: {
+                    showGrid: !1
+                },
+                axisY: {
+                    labelInterpolationFnc: function labelInterpolationFnc(value) {
+                        return chartData.currency + value;
+                        return value / 1e3 + "K";
+                    },
+                    scaleMinSpace: 40
+                },
+                plugins: [Chartist.plugins.tooltip({
+                    position: 'bottom'
+                }), Chartist.plugins.legend()],
+                low: 0,
+                height: 300
+            });
+            scoreChart.on("created", function (data) {
+                var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
+                    filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
+                    x: 0, y: "-10%", id: "shadow" + id
+                }, "", !0));
+                return filter.elem("feGaussianBlur", {
+                    in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
+                }), filter.elem("feOffset", {
+                    dx: "0", dy: "800"
+                }), filter.elem("feBlend", {
+                    in: "SourceGraphic", mode: "multiply"
+                }), defs;
+            }).on("draw", function (data) {
+                "line" === data.type ? data.element.attr({
+                    filter: "url(#shadow" + id + ")"
+                }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                    x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
+                }), "line" !== data.type && "area" != data.type || data.element.animate({
+                    d: {
+                        begin: 1e3 * data.index,
+                        dur: 1e3,
+                        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                        to: data.path.clone().stringify(),
+                        easing: Chartist.Svg.Easing.easeOutQuint
+                    }
+                });
+            });
+        },
             labelList = chartData.label_list,
             creditCardSalesData = {
-                name: "Cartão de crédito", data: chartData.boleto_data
-            },
-            boletoSalesData = {
-                name: "Boleto", data: chartData.credit_card_data
-            };
-        createChart = function (button) {
-            scoreChart("scoreLineToDay", labelList, creditCardSalesData, boletoSalesData);
+            name: "Cartão de crédito", data: chartData.boleto_data
         },
-            createChart(), $(".chart-action li a").on("click", function () {
-            createChart($(this))
-        })
-
+            boletoSalesData = {
+            name: "Boleto", data: chartData.credit_card_data
+        };
+        createChart = function createChart(button) {
+            scoreChart("scoreLineToDay", labelList, creditCardSalesData, boletoSalesData);
+        }, createChart(), $(".chart-action li a").on("click", function () {
+            createChart($(this));
+        });
     }
 
     function pagination(response) {
@@ -308,11 +269,10 @@ $(function () {
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 updateSalesByOrigin('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
+            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
             $("#pagination").append(pagina_atual);
         }
@@ -328,7 +288,6 @@ $(function () {
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
                 updateSalesByOrigin('?page=' + $(this).html());
             });
-
         }
 
         if (response.meta.last_page != '1') {
@@ -346,7 +305,5 @@ $(function () {
                 updateSalesByOrigin('?page=' + response.meta.last_page);
             });
         }
-
     }
-
 });
