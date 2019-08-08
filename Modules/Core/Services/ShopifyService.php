@@ -55,8 +55,8 @@ class ShopifyService
                 $cache = $this->cacheDir;
             }
 
-            $this->credential    = new PublicAppCredential($token);
-            $this->client        = new Client($this->credential, $urlStore, [
+            $this->credential = new PublicAppCredential($token);
+            $this->client     = new Client($this->credential, $urlStore, [
                 'metaCacheDir' => $cache // Metadata cache dir, required
             ]);
         } catch (Exception $e) {
@@ -321,9 +321,9 @@ class ShopifyService
         $dom = new Dom;
 
         $dom->setOptions([
-                             'strict' => false,
+                             'strict'             => false,
                              'preserveLineBreaks' => true,
-                             'removeScripts' => false,
+                             'removeScripts'      => false,
                          ]);
 
         $dom->load($html);
@@ -588,17 +588,15 @@ class ShopifyService
     {
         preg_match_all("/({%)[\s\S]+?(%})/", $htmlCart, $tokens, PREG_OFFSET_CAPTURE);
         foreach ($tokens[0] as $key => $item) {
-            $from = '/'.preg_quote($item[0], '/').'/';
+            $from     = '/' . preg_quote($item[0], '/') . '/';
             $htmlCart = preg_replace($from, 'fox-fox-fox', $htmlCart, 1);
         }
 
         $dom = new Dom;
         $dom->setOptions([
-                             'strict' => false, // Set a global option to enable strict html parsing.
+                             'strict'             => false, // Set a global option to enable strict html parsing.
                              'preserveLineBreaks' => true,
                          ]);
-
-
 
         $dom->load($htmlCart);
         $html = $dom->root->outerHtml();
@@ -613,7 +611,6 @@ class ShopifyService
         }
 
         if ($cartForm) {
-
 
             //div Foxdata
             $divFoxData = new Selector('#foxData', new Parser());
@@ -746,7 +743,7 @@ class ShopifyService
 
             $html = $dom->root->outerHtml();
             foreach ($tokens[0] as $key => $item) {
-                $from = '/'.preg_quote('fox-fox-fox', '/').'/';
+                $from = '/' . preg_quote('fox-fox-fox', '/') . '/';
                 $html = preg_replace($from, $item[0], $html, 1);
             }
 
@@ -798,6 +795,7 @@ class ShopifyService
                 //
             }
             $plan = $planModel->with('productsPlans')
+                              ->where('project', $projectId)
                               ->where('shopify_id', $storeProduct->getId())
                               ->where('shopify_variant_id', $variant->getId())
                               ->first();
