@@ -178,13 +178,6 @@ Dropzone.options.dropzoneDocuments = {
             $('#td_contract_status').html('<span class="badge badge-pendente">' +response.data.contract_document_translate.message+ '</span>');
         }
 
-        //<span class="badge badge-pendente"> {{ $company->bank_document_translate }} </span>
-
-        // $('#td_bank_status').html(response.bank_document_translate);
-        // $('#td_address_status').html(response.address_document_translate);
-        // $('#td_contract_status').html(response.contract_document_translate);
-        // done();
-
         swal({
             position: 'bottom',
             type: 'success',

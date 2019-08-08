@@ -1,15 +1,4 @@
 $(document).ready(function () {
-
-    /*$(document).ajaxStart(function (event, jqXHR, ajaxOptions, data) {
-        $('#dados_tabela').html('').hide(100);
-        $('#tabela_vendas').removeClass('table-striped');
-        $('#dados_tabela').append("<tr id='loaderLine'>"+
-            "<td id='foxLoadingTable' colspan='11' align='center' class='foxLoadingTable'>"+
-            "<img src='../modules/global/gif/cloudfox-loading-1.gif' class='foxLoaderTable'>"+
-            "</td>"+
-            "</tr>").show('slow');
-    })*/
-
     atualizar();
 
     $("#filtros").on("click", function () {

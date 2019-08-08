@@ -72,9 +72,6 @@ $(function () {
                         var select = new_div.find('select');
                         var input = new_div.find('.products_amount');
 
-                        // select.attr('id', 'product_' + qtd_produtos);
-                        // select.attr('name', 'product_' + qtd_produtos);
-                        // input.attr('name', 'products_amount_' + qtd_produtos);
                         input.addClass('products_amount');
 
                         div_products = new_div;
@@ -285,9 +282,6 @@ $(function () {
                                 var select = new_div.find('select');
                                 var input = new_div.find('.products_amount');
 
-                                // select.attr('id', 'product_' + qtd_produtos);
-                                // select.attr('name', 'product_' + qtd_produtos);
-                                // input.attr('name', 'products_amount_' + qtd_produtos);
                                 input.addClass('products_amount');
 
                                 div_products = new_div;

@@ -10,7 +10,6 @@ $(document).ready(function () {
     });
 
     $("#company").on("change", function () {
-
         $("#invite-link").val('https://app.cloudfox.net/register/' + $("#company option:selected").attr('invite-parameter'));
     });
 
@@ -96,22 +95,16 @@ $(document).ready(function () {
                         alertCustom('error', String(response.errors[error]));
                     }
                 } else {
-
                     alertCustom('error', response.responseJSON.message);
-
                 }
             },
             success: function (response) {
                 if (isEmpty(response.data)) {
                     loadingOnScreenRemove()
                     modalNotCompanies()
-                    /*$("#modal-then-companies").css('display', 'none');
-                    $("#modal-not-companies").css('display', 'block');*/
                 } else {
                     loadingOnScreenRemove()
                     modalThenCompanies()
-                    /*$("#modal-not-companies").css('display', 'none');
-                    $("#modal-then-companies").css('display', 'block');*/
 
                     $("#modal-reverse-title").html('Novo Convite');
                     let selCompany = '';

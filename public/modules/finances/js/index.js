@@ -1,8 +1,5 @@
 $(document).ready(function () {
 
-    // $.getScript("modules/withdrawals/js/index.js", function () {
-    // })
-
     $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
     $("#pop-antecipacao").click(function () {
@@ -77,8 +74,6 @@ $(document).ready(function () {
             alertCustom('error', 'O valor requerido ultrapassa o limite disponivel')
             toTransferText = $('#custom-input-addon').val()
             toTransfer = toTransferText.slice(0, -2)
-            // $('#custom-input-addon').val(toTransfer);
-            // $('#custom-input-addon').val().update();
             $('#custom-input-addon').val('');
             $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
@@ -150,7 +145,6 @@ $(document).ready(function () {
                         $("#bt-confirm-withdrawal").unbind("click");
                         $("#bt-confirm-withdrawal").on("click", function () {
                             loadOnModal('#modal-body');
-                            // $.getScript('modules/withdrawals/js/index.js')
                             $.ajax({
                                 url: "/withdrawals",
                                 type: "POST",

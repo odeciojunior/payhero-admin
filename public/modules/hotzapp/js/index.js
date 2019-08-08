@@ -61,7 +61,6 @@ $(document).ready(function () {
                             success: function (response) {
                                 updateIntegrations();
                                 alertCustom('success', response.message);
-                                // window.location.href='/apps/hotzapp/';
                             },
                         });
                     });

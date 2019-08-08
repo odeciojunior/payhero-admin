@@ -19,7 +19,6 @@ $(function () {
                 alertCustom('error', 'Ocorreu algum error');
             }, success: function (data) {
 
-                /* verifica quantidade parcelas com a quantidade parcelas sem juros */
                 let parcelas = '';
                 let parcelasJuros = '';
                 $(".installment_amount").on('change', function () {
@@ -309,12 +308,3 @@ $(function () {
     })
 });
 
-/*
-$(document).ready(function () {
-
-    $('#modal-content').modal({
-        backdrop: 'static',
-        keyboard: false
-    });
-
-});*/
