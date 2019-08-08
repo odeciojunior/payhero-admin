@@ -249,7 +249,7 @@ $(function () {
 
                                 error: function (response) {
                                     loadingOnScreenRemove();
-                                    alertCustom('error', response.message);
+                                    alertCustom('error', response.responseJSON.message);
                                     window.location.reload();
                                 },
                                 success: function (response) {
@@ -270,7 +270,7 @@ $(function () {
                                 },
 
                                 error: function (response) {
-                                    alertCustom('error', response.message);
+                                    alertCustom('error', response.responseJSON.message);
                                     loadingOnScreenRemove()
                                     window.location.reload();
                                 },

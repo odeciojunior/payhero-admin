@@ -221,6 +221,13 @@ class ShopifyController extends Controller
                     ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
                     ->find($projectId);
 
+                //puxa todos os produtos
+                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopify->importShopifyStore($projectId, auth()->user()->id);
+                }
+
+                //procura por um dominio aprovado
                 $domain = $project->domains->where('status', 3)->first();
 
                 if (!empty($domain)) {
@@ -268,8 +275,6 @@ class ShopifyController extends Controller
                                     $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
                                 }
 
-                                $shopify->importShopifyStore($projectId, auth()->user()->id);
-
                                 $shopifyIntegration->update([
                                                                 'status' => $shopifyIntegration->getEnum('status', 'approved'),
                                                             ]);
@@ -285,7 +290,7 @@ class ShopifyController extends Controller
                     }
                 } else {
                     //nenhum dominio ativado
-                    return response()->json(['message' => 'Este projeto não tem tem nenhum domínio aprovado'], 400);
+                    return response()->json(['message' => 'Produtos do shopify importados, adicione um domínio para finalizar a sua integração'], 200);
                 }
             } else {
                 //problema no id
