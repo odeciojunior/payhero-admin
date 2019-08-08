@@ -75,7 +75,11 @@
         <h4> Dados Gerais </h4>
         <span class="table-title gray"> Motivo: {{$client->error}}  </span>
         <br>
-        <span class="table-title gray"> Link: {{$link}}  </span>
+        @if($link == 'Dominio removido')
+            <span class="table-title gray"> Link: {{$link}} </span>
+        @else
+            <span class="table-title gray">Link: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$link ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+        @endif
         <br>
         <span class="table-title gray"> IP: {{$checkout->ip}}  </span>
         <br>

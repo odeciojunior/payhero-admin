@@ -29,9 +29,12 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\BoletoPaidNotifyUser',
             'Modules\Core\Listeners\BoletoPaidEmailNotifyUser',
         ],
-        'Modules\Core\Events\TrackingCodeUpdatedEvent' => [
+        'Modules\Core\Events\TrackingCodeUpdatedEvent'     => [
             'Modules\Core\Listeners\TrackingCodeUpdatedSendEmailClientListener',
-        ]
+        ],
+        'Modules\Core\Events\ResetPasswordEvent'           => [
+            'Modules\Core\Listeners\ResetPasswordSendEmailListener',
+        ],
     ];
 
     /**

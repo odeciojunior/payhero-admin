@@ -27,13 +27,13 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
-                                @if( isset($errors) && count($errors) > 0 )
-                                    <span class="invalid-feedback" role="alert">
-                                        @foreach( $errors->all() as $error )
-                                            <strong>{{ $error}}</strong><br>
-                                        @endforeach
-                                    </span>
-                                @endif
+{{--                                @if( isset($errors) && count($errors) > 0 )--}}
+{{--                                    <span class="invalid-feedback" role="alert">--}}
+{{--                                        @foreach( $errors->all() as $error )--}}
+{{--                                            <strong>{{ $error}}</strong><br>--}}
+{{--                                        @endforeach--}}
+{{--                                    </span>--}}
+{{--                                @endif--}}
                                 @if(session()->has('error'))
                                     <span class="invalid-feedback" role="alert">
                                         {{session('error') }}

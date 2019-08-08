@@ -4,6 +4,7 @@ namespace App\Entities;
 
 use App\Traits\FoxModelTrait;
 use Laravel\Passport\HasApiTokens;
+use Modules\Core\Events\ResetPasswordEvent;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticable;
@@ -210,5 +211,10 @@ class User extends Authenticable
     public function projects()
     {
         return $this->belongsToMany('App\Entities\User', 'users_projects', 'user', 'project');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        event(new ResetPasswordEvent($token, $this));
     }
 }

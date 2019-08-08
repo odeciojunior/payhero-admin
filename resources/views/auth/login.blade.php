@@ -11,8 +11,8 @@
                 </div>
                 <div class="toggle d-flex justify-content-center">
                     <div class="row align-items-center">
-                        <div id="login" class="col-6 toggle-text active">LOGIN</div>
-                        <div id="cadastro" class="col-6 toggle-text" onclick="window.open('http://www.cloudfox.net','_blank');">SIGN UP</div>
+                        <div id="login" class="col-6 toggle-text active" style='cursor:pointer;'>LOGIN</div>
+                        <div id="cadastro" class="col-6 toggle-text" style='cursor:pointer;' onclick="window.open('http://www.cloudfox.net','_blank');">SIGN UP</div>
                     </div>
                 </div>
                 <div class="clearfix"></div>

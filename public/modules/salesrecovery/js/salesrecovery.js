@@ -101,6 +101,15 @@ $(document).ready(function () {
                         },
                         success: function (response) {
                             $('.modal-body').html(response);
+
+                            $(".copy_link").on("click", function () {
+                                var temp = $("<input>");
+                                $("#nav-tabContent").append(temp);
+                                temp.val($(this).attr('link')).select();
+                                document.execCommand("copy");
+                                temp.remove();
+                                alertCustom('success', 'Link copiado!');
+                            });
                         }
                     });
                 });

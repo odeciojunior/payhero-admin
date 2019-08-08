@@ -152,7 +152,7 @@ $(document).ready(function () {
                                 temp.val($(this).attr('digitable-line')).select();
                                 document.execCommand("copy");
                                 temp.remove();
-                                alertCustom('success', 'Link copiado!');
+                                alertCustom('success', 'Linha Digitável copiado!');
                             });
                         }
                     });
