@@ -5,9 +5,7 @@ $("#extract_company_select").on("change", function () {
     updateWithdrawalsTable();
 });
 
-function updateWithdrawalsTable() {
-    var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
+function updateWithdrawalsTable(link = null) {
 
     loadOnTable('table-withdrawals-body', 'transfersTable');
     $("#table-withdrawals-body").html('');
@@ -21,43 +19,48 @@ function updateWithdrawalsTable() {
     $.ajax({
         method: "GET",
         url: link,
-        data: { company: $("#extract_company_select").val() },
+        data: {company: $("#extract_company_select").val()},
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        error: function error() {
+        error: function () {
             $("#table-withdrawals-body").html('Erro ao encontrar dados');
         },
-        success: function success(response) {
+        success: function (response) {
             $("#withdrawals-table-data").html('');
 
-            $.each(response.data, function (index, value) {
-                data = '';
-                data += '<tr>';
-                data += "<td>" + value.account_information + "</td>";
-                data += "<td>" + value.date_request + "</td>";
-                data += "<td>" + value.date_release + "</td>";
-                data += "<td>" + value.value + "</td>";
-                data += '<td class="shipping-status" width="70%" style="width:100px;">';
-                if (value.status == 1) {
-                    data += '<span class="badge badge-warning">Pendente</span>';
-                } else if (value.status == 2) {
-                    data += '<span class="badge badge-primary">Aprovado</span>';
-                } else if (value.status == 3) {
-                    data += '<span class="badge badge-success">Transferido</span>';
-                } else {
-                    data += '<span class="badge badge-danger">Recusado</span>';
-                }
-                data += '</td>';
-                data += '</tr>';
-
-                $("#withdrawals-table-data").append(data);
-            });
             if (response.data == '') {
                 $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                 $("#withdrawals-pagination").html("");
+            } else {
+                let cont = 0;
+                $.each(response.data, function (index, value) {
+                    data = '';
+                    data += '<tr>';
+                    data += "<td>" + value.account_information + "</td>";
+                    data += "<td>" + value.date_request + "</td>";
+                    data += "<td>" + value.date_release + "</td>";
+                    data += "<td>" + value.value + "</td>";
+                    data += '<td class="shipping-status" width="70%" style="width:100px;">';
+                    if (value.status == 1) {
+                        data += '<span class="badge badge-warning">Pendente</span>';
+                    } else if (value.status == 2) {
+                        data += '<span class="badge badge-primary">Aprovado</span>';
+                    } else if (value.status == 3) {
+                        data += '<span class="badge badge-success">Transferido</span>';
+                    } else {
+                        data += '<span class="badge badge-danger">Recusado</span>';
+
+                    }
+                    data += '</td>';
+                    data += '</tr>';
+
+                    $("#withdrawals-table-data").append(data);
+                    cont++;
+                });
+                pagination(response);
             }
-            pagination(response);
+
         }
     });
 }
@@ -65,6 +68,10 @@ function updateWithdrawalsTable() {
 function pagination(response) {
 
     $("#withdrawals-pagination").html("");
+
+    if (response.meta.last_page == '1') {
+        return false;
+    }
 
     var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Entities\Company;
 use App\Entities\Transfer;
 use App\Entities\Transaction;
+use Exception;
 use Modules\Core\Sms\SmsService;
 use Illuminate\Support\Facades\Log;
 
@@ -53,6 +54,41 @@ class TransfersService
             }
         }
 
+        $transactionsAnticipateds = $transactionModel->where([
+                                                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                                                     ['status', 'anticipated'],
+                                                 ])->get();
+
+        $transfersAnticipateds = [];
+
+        foreach ($transactionsAnticipateds as $transactionsAnticipated) {
+            try {
+                $company = $companyModel->find($transactionsAnticipated->company);
+
+                $transferAnticipted = $transferModel->create([
+                                                       'transaction' => $transactionsAnticipated->id,
+                                                       'user'        => $company->user_id,
+                                                       'company_id'  => $company->id,
+                                                       'type_enum'   => $transferModel->getEnum('type_enum', 'in'),
+                                                       'value'       => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
+                                                       'type'        => 'in',
+                                                   ]);
+
+                $transactionsAnticipated->update([
+                                         'status' => 'transfered',
+                                     ]);
+
+                $company->update([
+                                     'balance' => intval($company->balance) - $transferAnticipted->value,
+                                 ]);
+
+                $transfersAnticipateds[] = $transfer->toArray();
+            } catch (Exception $e) {
+                report($e);
+                continue;
+            }
+        }
         Log::info('transferencias criadas ' . print_r($transfers, true));
+        Log::info('transferencias antecipadas criadas ' . print_r($transfersAnticipateds, true));
     }
 }

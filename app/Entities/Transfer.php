@@ -30,6 +30,7 @@ class Transfer extends Model
     protected $fillable = [
         'transaction',
         'user',
+        'company_id',
         'value',
         'type',
         'type_enum',

@@ -56,7 +56,18 @@ class FinancesController extends Controller
             }
         }
 
-        $antecipableTransactions = $transactionModel->where('company', $company->id)
+        $anticipableTransactions = $transactionModel->where('company', $company->id)
+                                                    ->where('status', 'anticipated')
+                                                    ->whereDate('release_date', '>', Carbon::today()->toDateString())
+                                                    ->get()->toArray();
+
+        if (count($anticipableTransactions)) {
+            foreach ($anticipableTransactions as $anticipableTransaction) {
+                $pendingBalance += $anticipableTransaction['value'] - $anticipableTransaction['antecipable_value'];
+            }
+        }
+
+        $antecipableTransactions = $transactionModel->where('company', $company->id)->where('status', 'paid')
                                                     ->whereDate('release_date', '>', Carbon::today())
                                                     ->whereDate('antecipation_date', '<=', Carbon::today())
                                                     ->get()->toArray();

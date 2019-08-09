@@ -66,7 +66,19 @@ class DashboardController extends Controller
             }
         }
 
+        $anticipatedTransactions = $transactionModel->where('company', $request->company)
+                                                    ->where('status', 'anticipated')
+                                                    ->whereDate('release_date', '>', Carbon::today()->toDateString())
+                                                    ->get()->toArray();
+
+        if (count($anticipatedTransactions)) {
+            foreach ($anticipatedTransactions as $anticipatedTransaction) {
+                $pendingBalance += $anticipatedTransaction['value'] - $anticipatedTransaction['antecipable_value'];
+            }
+        }
+
         $antecipableTransactions = $transactionModel->where('company', $request->company)
+                                                    ->where('status', 'paid')
                                                     ->whereDate('release_date', '>', Carbon::today())
                                                     ->whereDate('antecipation_date', '<=', Carbon::today())
                                                     ->get()->toArray();
