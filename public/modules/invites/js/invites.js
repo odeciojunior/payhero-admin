@@ -1,17 +1,9 @@
 $(document).ready(function () {
     updateInvites();
 
-    $("#copy-link").on("click", function () {
-        var copyText = document.getElementById("invite-link");
-        copyText.select();
-        document.execCommand("copy");
-
-        alertCustom('success', 'Link copiado!');
-    });
-
-    $("#company").on("change", function () {
-        $("#invite-link").val('https://app.cloudfox.net/register/' + $("#company option:selected").attr('invite-parameter'));
-    });
+    // $("#company").on("change", function () {
+    //     $("#invite-link").val('https://app.cloudfox.net/register/' + $("#company option:selected").attr('invite-parameter'));
+    // });
 
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
@@ -150,6 +142,14 @@ $(document).ready(function () {
                         linkInvite = 'https://app.cloudfox.net/register/' + $(this).val();
                         $("#invite-link").val(linkInvite);
                         companyId = $(this).val();
+                    });
+
+                    $("#copy-link").on("click", function () {
+                        var copyText = document.getElementById("invite-link");
+                        copyText.select();
+                        document.execCommand("copy");
+
+                        alertCustom('success', 'Link copiado!');
                     });
 
                     $("#btn-send-invite").unbind();

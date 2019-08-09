@@ -50,33 +50,34 @@
                                             <div class="col-6 mb-15">
                                                 <div class="price-holder antecipacao" id="pop-antecipacao">
                                                     <h6 class="label-price"> Disponível para antecipar </h6>
-                                                    <h4 class="price align-items-baseline disponivelAntecipar">
+                                                    <h4 class="price align-items-baseline disponivelAntecipar" id='btn-disponible-antecipation'>
                                                         <a href="#">
                                                             <svg class="svg-antecipar"
                                                                  xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                                                 <path d="M11 6v8h7v-2h-5v-6h-2zm10.854 7.683l1.998.159c-.132.854-.351 1.676-.652 2.46l-1.8-.905c.2-.551.353-1.123.454-1.714zm-2.548 7.826l-1.413-1.443c-.486.356-1.006.668-1.555.933l.669 1.899c.821-.377 1.591-.844 2.299-1.389zm1.226-4.309c-.335.546-.719 1.057-1.149 1.528l1.404 1.433c.583-.627 1.099-1.316 1.539-2.058l-1.794-.903zm-20.532-5.2c0 6.627 5.375 12 12.004 12 1.081 0 2.124-.156 3.12-.424l-.665-1.894c-.787.2-1.607.318-2.455.318-5.516 0-10.003-4.486-10.003-10s4.487-10 10.003-10c2.235 0 4.293.744 5.959 1.989l-2.05 2.049 7.015 1.354-1.355-7.013-2.184 2.183c-2.036-1.598-4.595-2.562-7.385-2.562-6.629 0-12.004 5.373-12.004 12zm23.773-2.359h-2.076c.163.661.261 1.344.288 2.047l2.015.161c-.01-.755-.085-1.494-.227-2.208z"/>
                                                             </svg>
                                                         </a>
-                                                        <div class="custom-popover shadow-sm" id="antecipa-popover" style="display: none">
-                                                            <div class="d-flex flex-column text-center">
-                                                                <p style="font-size: 12px; font-weight: 700;"> O valor antecipado será incluido no seu
-                                                                    <strong style="color: green;"> Saldo Disponível </strong>
-                                                                </p>
-                                                                <h5 style="font-size: 16px; font-weight: 700; margin: 0;">
-                                                                    Saldo após antecipação </h5>
-                                                                <h3 style="font-size: 25px;font-weight: 700;">
-                                                                    <span class="currency">R$</span>
-                                                                    0,00
-                                                                </h3>
-                                                                <p style="font-weight: 300; font-size: 11px; color: black; opacity: 0.8;">
-                                                                    Uma taxa de
-                                                                    <span class="currency">R$</span>
-                                                                    0,00 será cobrada para liberar o valor antecipado.
-                                                                </p>
-                                                                <a class="btn btn-outline-success" href="#"> Antecipar</a>
-                                                            </div>
-                                                        </div>
                                                     </h4>
+                                                    <div class="custom-popover shadow-sm" id="antecipa-popover" style="display: none">
+                                                        <div class="d-flex flex-column text-center">
+                                                            <p style="font-size: 12px; font-weight: 700;"> O valor antecipado será incluido no seu
+                                                                <strong style="color: green;"> Saldo Disponível </strong>
+                                                            </p>
+                                                            <h5 style="font-size: 16px; font-weight: 700; margin: 0;">
+                                                                Saldo após antecipação </h5>
+                                                            <h3 style="font-size: 25px;font-weight: 700;">
+                                                                <span class="currency">R$</span>
+                                                                <span id='balance-after-anticipation'>0,00</span>
+                                                            </h3>
+                                                            <p style="font-weight: 300; font-size: 11px; color: black; opacity: 0.8;">
+                                                                Uma taxa de
+                                                                <span class="currency">R$</span>
+                                                                <span id='tax-value'>0,00</span>
+                                                                será cobrada para liberar o valor antecipado.
+                                                            </p>
+                                                            <a class="btn btn-outline-success" id='btn-anticipation' href="#"> Antecipar</a>
+                                                        </div>
+                                                    </div>
                                                     <div class="grad-border purple"></div>
                                                 </div>
                                             </div>
@@ -105,7 +106,7 @@
                                                     <label for="company"> Empresa</label>
                                                     <select class="form-control select-pad" id="transfers_company_select">
                                                         @foreach($companies as $company)
-                                                            <option value="{!! Hashids::encode($company['id']) !!}">{!! $company['fantasy_name'] !!}</option>
+                                                            <option value="{{ Hashids::encode($company['id'])}}">{{ $company['fantasy_name'] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -181,26 +182,26 @@
                                                     <label for="company"> Empresa</label>
                                                     <select class="form-control select-pad" id="extract_company_select">
                                                         @foreach($companies as $company)
-                                                            <option value="{!! Hashids::encode($company['id']) !!}"> {!! $company['fantasy_name'] !!}</option>
+                                                            <option value="{{Hashids::encode($company['id'])}}"> {{$company['fantasy_name']}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
-{{--                                            <div class="col-lg-6">--}}
-{{--                                                <label></label>--}}
-{{--                                                <div class="d-flex align-items-center justify-content-around">--}}
-{{--                                                    <div class="p-2">--}}
-{{--                                                    </div>--}}
-{{--                                                    <div class="p-2 d-flex">--}}
-{{--                                                        <a id="personalizado" class="text-filtros">--}}
-{{--                                                            <svg class="icon-filtro" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">--}}
-{{--                                                                <path d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z"/>--}}
-{{--                                                            </svg>--}}
-{{--                                                            Personalizado--}}
-{{--                                                        </a>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
+                                            {{--                                            <div class="col-lg-6">--}}
+                                            {{--                                                <label></label>--}}
+                                            {{--                                                <div class="d-flex align-items-center justify-content-around">--}}
+                                            {{--                                                    <div class="p-2">--}}
+                                            {{--                                                    </div>--}}
+                                            {{--                                                    <div class="p-2 d-flex">--}}
+                                            {{--                                                        <a id="personalizado" class="text-filtros">--}}
+                                            {{--                                                            <svg class="icon-filtro" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">--}}
+                                            {{--                                                                <path d="M24 2v22h-24v-22h3v1c0 1.103.897 2 2 2s2-.897 2-2v-1h10v1c0 1.103.897 2 2 2s2-.897 2-2v-1h3zm-2 6h-20v14h20v-14zm-2-7c0-.552-.447-1-1-1s-1 .448-1 1v2c0 .552.447 1 1 1s1-.448 1-1v-2zm-14 2c0 .552-.447 1-1 1s-1-.448-1-1v-2c0-.552.447-1 1-1s1 .448 1 1v2zm6.687 13.482c0-.802-.418-1.429-1.109-1.695.528-.264.836-.807.836-1.503 0-1.346-1.312-2.149-2.581-2.149-1.477 0-2.591.925-2.659 2.763h1.645c-.014-.761.271-1.315 1.025-1.315.449 0 .933.272.933.869 0 .754-.816.862-1.567.797v1.28c1.067 0 1.704.067 1.704.985 0 .724-.548 1.048-1.091 1.048-.822 0-1.159-.614-1.188-1.452h-1.634c-.032 1.892 1.114 2.89 2.842 2.89 1.543 0 2.844-.943 2.844-2.518zm4.313 2.518v-7.718h-1.392c-.173 1.154-.995 1.491-2.171 1.459v1.346h1.852v4.913h1.711z"/>--}}
+                                            {{--                                                            </svg>--}}
+                                            {{--                                                            Personalizado--}}
+                                            {{--                                                        </a>--}}
+                                            {{--                                                    </div>--}}
+                                            {{--                                                </div>--}}
+                                            {{--                                            </div>--}}
                                             <div class="col-12">
                                                 <span class="text-muted"> <small> Exibindo resultados de 16 de junho a 16 de julho </small> </span>
                                             </div>
@@ -301,8 +302,9 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{!! asset('modules/transfers/js/index.js') !!}"></script>
-        <script src="{!! asset('modules/finances/js/index.js') !!}"></script>
+        <script src="{{ asset('modules/transfers/js/index.js') }}"></script>
+        <script src="{{ asset('modules/finances/js/index.js') }}"></script>
+        <script src="{{ asset('modules/anticipations/js/index.js') }}"></script>
     @endpush
 
 @endsection

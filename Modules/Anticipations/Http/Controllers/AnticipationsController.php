@@ -1,27 +1,20 @@
 <?php
 
-namespace Modules\Finances\Http\Controllers;
+namespace Modules\Anticipations\Http\Controllers;
 
-use App\Entities\Company;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use PagarMe\Client;
 
-/**
- * Class WithdrawalController
- * @package Modules\Finances\Http\Controllers
- */
-class WithdrawalController extends Controller
+class AnticipationsController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      * @return Response
      */
     public function index()
     {
-
+        return view('anticipations::index');
     }
 
     /**
@@ -30,7 +23,7 @@ class WithdrawalController extends Controller
      */
     public function create()
     {
-        return view('finances::create');
+        return view('anticipations::create');
     }
 
     /**
@@ -50,7 +43,7 @@ class WithdrawalController extends Controller
      */
     public function show($id)
     {
-        return view('finances::show');
+        return view('anticipations::show');
     }
 
     /**
@@ -60,7 +53,7 @@ class WithdrawalController extends Controller
      */
     public function edit($id)
     {
-        return view('finances::edit');
+        return view('anticipations::edit');
     }
 
     /**

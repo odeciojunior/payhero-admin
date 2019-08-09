@@ -3,9 +3,11 @@
 namespace Modules\Transfers\Http\Controllers;
 
 use App\Entities\Transfer;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Transfers\Transformers\TransfersResource;
 
@@ -13,7 +15,7 @@ class TransfersController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(Request $request)
     {
