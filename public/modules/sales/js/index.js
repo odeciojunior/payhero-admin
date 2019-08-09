@@ -46,7 +46,7 @@ $(document).ready(function () {
         document.body.appendChild(a);
 
         // Set the HREF to a Blob representation of the data to be downloaded
-        a.href = window.URL.createObjectURL(new Blob([data], { type: type }));
+        a.href = window.URL.createObjectURL(new Blob([data], {type: type}));
 
         // Use download attribute to set set desired file name
         a.setAttribute("download", fileName);
@@ -61,7 +61,6 @@ $(document).ready(function () {
 
     function atualizar() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
 
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
@@ -122,7 +121,7 @@ $(document).ready(function () {
 
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
-                    var data = { sale_id: venda };
+                    var data = {sale_id: venda};
 
                     $.ajax({
                         method: "POST",
@@ -135,7 +134,7 @@ $(document).ready(function () {
                             //
                         },
                         success: function success(response) {
-                            $('.subTotal').mask('#.###,#0', { reverse: true });
+                            $('.subTotal').mask('#.###,#0', {reverse: true});
 
                             $('.modal-body').html(response);
 
@@ -175,7 +174,6 @@ $(document).ready(function () {
     function csvSalesExport() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-
         if (link == null) {
             link = '/sales/getcsvsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         } else {
@@ -203,9 +201,13 @@ $(document).ready(function () {
 
         var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
 
+        if (response.meta.last_page === 1) {
+            return false;
+        }
+
         $("#pagination").append(primeira_pagina);
 
-        if (response.meta.current_page == '1') {
+        if (response.meta.current_page === 1) {
             $("#primeira_pagina").attr('disabled', true);
             $("#primeira_pagina").addClass('nav-btn');
             $("#primeira_pagina").addClass('active');

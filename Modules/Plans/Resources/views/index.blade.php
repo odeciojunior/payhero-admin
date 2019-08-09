@@ -47,7 +47,7 @@
                 </div>
                 <h3 align='center'>Você não cadastrou nenhum produto</h3>
                 <h5 align='center'>Deseja cadastrar uma produto?
-                    <a class='red pointer' href='/products/create' target='_blank'>clique aqui</a>
+                    <a class='red pointer' href='/products/create'>clique aqui</a>
                 </h5>
             </div>
             <div style='width:100%; text-align:center; padding-top:3%;'>

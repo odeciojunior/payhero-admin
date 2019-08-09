@@ -3,7 +3,7 @@ $(document).ready(function () {
     var projectId = $("#project-id").val();
 
     $("#tab-fretes").on('click', function () {
-        $("#previewimage").imgAreaSelect({ remove: true });
+        $("#previewimage").imgAreaSelect({remove: true});
         atualizarFrete();
     });
     atualizarFrete();
@@ -27,12 +27,12 @@ $(document).ready(function () {
             }
 
             //mask money
-            $('#shipping-value').mask('#.###,#0', { reverse: true });
+            $('#shipping-value').mask('#.###,#0', {reverse: true});
         });
     }
 
     //mask money
-    $('#shipping-value').mask('#.###,#0', { reverse: true });
+    $('#shipping-value').mask('#.###,#0', {reverse: true});
 
     $("#add-shipping").on('click', function () {
         loadOnModal('#modal-add-body');
@@ -71,7 +71,7 @@ $(document).ready(function () {
                 $("#btn-modal").show();
                 $("#modal-add-body").html(response);
                 $('#shipping-zip-code-origin').mask('00000-000');
-                $('#shipping-value').mask('#.###,#0', { reverse: true });
+                $('#shipping-value').mask('#.###,#0', {reverse: true});
 
                 $('.check').on('click', function () {
                     if ($(this).is(':checked')) {
@@ -130,8 +130,7 @@ $(document).ready(function () {
         });
     });
 
-    function atualizarFrete() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    function atualizarFrete(link = null) {
 
         loadOnTable('#dados-tabela-frete', '#tabela_fretes');
         changeType();
@@ -188,7 +187,7 @@ $(document).ready(function () {
                         dados += '</tr>';
                         $("#dados-tabela-frete").append(dados);
                     });
-                    pagination(response);
+                    pagination(response, 'shippings');
                     $(".detalhes-frete").unbind('click');
                     $(".detalhes-frete").on('click', function () {
 
@@ -196,7 +195,7 @@ $(document).ready(function () {
 
                         $("#modal-title").html('Detalhes do frete');
                         $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
-                        var data = { freteId: frete };
+                        var data = {freteId: frete};
 
                         $("#btn-modal").hide();
 
@@ -223,7 +222,7 @@ $(document).ready(function () {
                         $("#modal-title").html("Editar Frete");
                         $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
-                        var data = { frete: frete };
+                        var data = {frete: frete};
 
                         $.ajax({
                             method: "GET",
@@ -256,7 +255,7 @@ $(document).ready(function () {
                                     $("#zip-code-origin-shipping-row").css('display', 'block');
                                 }
                                 changeType();
-                                $('#shipping-value').mask('#.###,#0', { reverse: true });
+                                $('#shipping-value').mask('#.###,#0', {reverse: true});
 
                                 $(".btn-update").unbind('click');
                                 $(".btn-update").on('click', function () {
@@ -386,71 +385,72 @@ $(document).ready(function () {
         });
     });
 
-    function pagination(response) {
-        if (response.meta.last_page == 1) {
-            $("#primeira_pagina_pixel").hide();
-            $("#ultima_pagina_pixel").hide();
-        } else {
-            $("#pagination-shippings").html("");
+    function pagination(response, model) {
 
-            var first_page_shippings = "<button id='first_page_shippings' class='btn nav-btn'>1</button>";
+        $("#pagination-" + model).html("");
 
-            $("#pagination-shippings").append(first_page_shippings);
+        var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
 
-            if (response.meta.current_page == '1') {
-                $("#first_page_shippings").attr('disabled', true).addClass('nav-btn').addClass('active');
-            }
-
-            $('#first_page_shippings').on("click", function () {
-                atualizarFrete('?page=1');
-            });
-
-            for (x = 3; x > 0; x--) {
-
-                if (response.meta.current_page - x <= 1) {
-                    continue;
-                }
-
-                $("#pagination-shippings").append("<button id='page_shipping_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-                $('#page_shipping_' + (response.meta.current_page - x)).on("click", function () {
-                    atualizarFrete('?page=' + $(this).html());
-                });
-            }
-
-            if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var current_page_shippings = "<button id='current_page_shippings' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-
-                $("#pagination-shippings").append(current_page_shippings);
-
-                $("#current_page_shippings").attr('disabled', true).addClass('nav-btn').addClass('active');
-            }
-            for (x = 1; x < 4; x++) {
-
-                if (response.meta.current_page + x >= response.meta.last_page) {
-                    continue;
-                }
-
-                $("#pagination-shippings").append("<button id='page_shippings_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
-                $('#page_shippings_' + (response.meta.current_page + x)).on("click", function () {
-                    atualizarFrete('?page=' + $(this).html());
-                });
-            }
-
-            if (response.meta.last_page != '1') {
-                var last_page_shippings = "<button id='last_page_shippings' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-
-                $("#pagination-shippings").append(last_page_shippings);
-
-                if (response.meta.current_page == response.meta.last_page) {
-                    $("#last_page_shippings").attr('disabled', true).addClass('nav-btn').addClass('active');
-                }
-
-                $('#last_page_shippings').on("click", function () {
-                    atualizarFrete('?page=' + response.meta.last_page);
-                });
-            }
+        if (response.meta.last_page === 1) {
+            return false;
         }
-    }
+
+        $("#pagination-" + model).append(first_page);
+
+        if (response.meta.current_page == '1') {
+            $("#first_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+        }
+
+        $('#first_page').on("click", function () {
+            atualizarFrete('?page=1');
+        });
+
+        for (x = 3; x > 0; x--) {
+
+            if (response.meta.current_page - x <= 1) {
+                continue;
+            }
+
+            $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+
+            $('#page_' + (response.meta.current_page - x)).on("click", function () {
+                atualizarFrete('?page=' + $(this).html());
+            });
+        }
+
+        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
+            var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
+
+            $("#pagination-" + model).append(current_page);
+
+            $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+        }
+        for (x = 1; x < 4; x++) {
+
+            if (response.meta.current_page + x >= response.meta.last_page) {
+                continue;
+            }
+
+            $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+            $('#page_' + (response.meta.current_page + x)).on("click", function () {
+                atualizarFrete('?page=' + $(this).html());
+            });
+        }
+
+        if (response.meta.last_page != '1') {
+            var last_page = "<button id='last_page' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+
+            $("#pagination-" + model).append(last_page);
+
+            if (response.meta.current_page == response.meta.last_page) {
+                $("#last_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+            }
+
+            $('#last_page').on("click", function () {
+                atualizarFrete('?page=' + response.meta.last_page);
+            });
+        }
+
+    };
 });
