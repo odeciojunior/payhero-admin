@@ -808,6 +808,7 @@ class ShopifyService
                                   'price'       => $variant->getPrice(),
                                   'status'      => '1',
                               ]);
+                Log::warning('UPDATE plan criado' );
 
                 $productPlan = $plan->productsPlans->first();
                 $product     = $productModel->find($productPlan->product);
@@ -819,6 +820,8 @@ class ShopifyService
                                      'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
                                                            ->getCost(),
                                  ]);
+
+                Log::warning('UPDATE product criado' );
 
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {
@@ -847,6 +850,7 @@ class ShopifyService
                 }
             } else {
                 //plano nao existe, cria o plano, produto e produtosplanos
+
                 $product = $productModel->create([
                                                      'user'        => $userId,
                                                      'name'        => substr($storeProduct->getTitle(), 0, 100),
@@ -859,6 +863,7 @@ class ShopifyService
                                                      'shopify'     => true,
                                                      'price'       => '',
                                                  ]);
+                Log::warning('product criado - ' . print_r($product, true));
 
                 $plan = $planModel->create([
                                                'shopify_id'         => $storeProduct->getId(),
@@ -871,11 +876,15 @@ class ShopifyService
                                                'status'             => '1',
                                            ]);
 
+                Log::warning('plano criado - ' . print_r($plan, true));
+
                 $productPlanModel->create([
                                               'product' => $product->id,
                                               'plan'    => $plan->id,
                                               'amount'  => '1',
                                           ]);
+
+                Log::warning('productoplano criado - ' . print_r($productPlanModel, true));
 
                 $plan->update([
                                   'code' => Hashids::encode($plan->id),
