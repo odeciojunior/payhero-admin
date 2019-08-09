@@ -847,6 +847,7 @@ class ShopifyService
                 }
             } else {
                 //plano nao existe, cria o plano, produto e produtosplanos
+
                 $product = $productModel->create([
                                                      'user'        => $userId,
                                                      'name'        => substr($storeProduct->getTitle(), 0, 100),
@@ -859,6 +860,7 @@ class ShopifyService
                                                      'shopify'     => true,
                                                      'price'       => '',
                                                  ]);
+                Log::warning('product criado - ' . print_r($product, true));
 
                 $plan = $planModel->create([
                                                'shopify_id'         => $storeProduct->getId(),
@@ -871,11 +873,15 @@ class ShopifyService
                                                'status'             => '1',
                                            ]);
 
+                Log::warning('plano criado - ' . print_r($plan, true));
+
                 $productPlanModel->create([
                                               'product' => $product->id,
                                               'plan'    => $plan->id,
                                               'amount'  => '1',
                                           ]);
+
+                Log::warning('productoplano criado - ' . print_r($productPlanModel, true));
 
                 $plan->update([
                                   'code' => Hashids::encode($plan->id),
