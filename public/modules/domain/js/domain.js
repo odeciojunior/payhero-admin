@@ -463,6 +463,7 @@ $(document).ready(function () {
     $('.modal').on('hidden.bs.modal', function () {
         resetFooter();
         resetHtml();
+        $('.modal-footer').css('display','');
         $('#btn-modal').show();
         $('#modal-title').show();
         $('#especialModalTitle').remove();

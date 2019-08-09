@@ -306,5 +306,12 @@ $(function () {
     $('.modal').on('hidden.bs.modal', function () {
         $('#btn-modal').show();
     })
+
+    $('.modal').on('hidden.bs.modal', function () {
+        $('.modal-footer').css('display','');
+        $('#btn-modal').show();
+        $('#modal-title').show();
+        $('#especialModalTitle').remove();
+    });
 });
 
