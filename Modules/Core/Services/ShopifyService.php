@@ -808,6 +808,7 @@ class ShopifyService
                                   'price'       => $variant->getPrice(),
                                   'status'      => '1',
                               ]);
+                Log::warning('UPDATE plan criado' );
 
                 $productPlan = $plan->productsPlans->first();
                 $product     = $productModel->find($productPlan->product);
@@ -819,6 +820,8 @@ class ShopifyService
                                      'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
                                                            ->getCost(),
                                  ]);
+
+                Log::warning('UPDATE product criado' );
 
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {
