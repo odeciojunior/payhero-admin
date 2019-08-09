@@ -259,73 +259,79 @@ class DomainsController extends Controller
             $domain = $domainModel->with(['records', 'project'])
                                   ->find(current(Hashids::decode($requestData['domain'])));
 
-            $cloudFlareService->setZone($domain->name);
-            foreach ($recordsJson as $records) {
-                foreach ($records as $record) {
-                    $subdomain = current($record[1]);
+            if (!empty($recordsJson)) {
+                $cloudFlareService->setZone($domain->name);
+                foreach ($recordsJson as $records) {
+                    foreach ($records as $record) {
+                        $subdomain = current($record[1]);
 
-                    if ($subdomain == '' || $subdomain == '@') {
-                        $subdomain = $domain->name;
-                    }
+                        if ($subdomain == '' || $subdomain == '@') {
+                            $subdomain = $domain->name;
+                        }
 
-                    $subdomain = str_replace("http://", "", $subdomain);
-                    $subdomain = str_replace("https://", "", $subdomain);
-                    $subdomain = 'http://' . $subdomain;
-                    $subdomain = parse_url($subdomain, PHP_URL_HOST);
+                        $subdomain = str_replace("http://", "", $subdomain);
+                        $subdomain = str_replace("https://", "", $subdomain);
+                        $subdomain = 'http://' . $subdomain;
+                        $subdomain = parse_url($subdomain, PHP_URL_HOST);
 
-                    if ((strpos($subdomain, '.') === false) ||
-                        ($subdomain == $domain->name)) {
-                        //dominio nao tem "ponto" ou é igual ao dominio
+                        if ((strpos($subdomain, '.') === false) ||
+                            ($subdomain == $domain->name)) {
+                            //dominio nao tem "ponto" ou é igual ao dominio
 
-                        if ($domain->records->where('type', current($record[0]))
-                                            ->where('name', $subdomain)
-                                            ->where('content', current($record[2]))
-                                            ->count() == 0) {
-                            //nao existe a record
+                            if ($domain->records->where('type', current($record[0]))
+                                                ->where('name', $subdomain)
+                                                ->where('content', current($record[2]))
+                                                ->count() == 0) {
+                                //nao existe a record
 
-                            if (current($record[0]) == 'MX') {
-                                $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
-                            } else if (current($record[0]) == 'TXT') {
-                                $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
-                            } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
-                                //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
-                                return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
-                            } else {
-                                $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
-                            }
+                                if (current($record[0]) == 'MX') {
+                                    $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
+                                } else if (current($record[0]) == 'TXT') {
+                                    $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
+                                } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
+                                    //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
+                                    return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
+                                } else {
+                                    $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
+                                }
 
-                            if (!empty($cloudRecordId)) {
-                                $newRecord = $domainRecordModel->create([
-                                                                            'domain_id'            => $domain->id,
-                                                                            'cloudflare_record_id' => $cloudRecordId,
-                                                                            'type'                 => current($record[0]),
-                                                                            'name'                 => $subdomain,
-                                                                            'content'              => current($record[2]),
-                                                                            'system_flag'          => 0,
-                                                                        ]);
+                                if (!empty($cloudRecordId)) {
+                                    $newRecord = $domainRecordModel->create([
+                                                                                'domain_id'            => $domain->id,
+                                                                                'cloudflare_record_id' => $cloudRecordId,
+                                                                                'type'                 => current($record[0]),
+                                                                                'name'                 => $subdomain,
+                                                                                'content'              => current($record[2]),
+                                                                                'system_flag'          => 0,
+                                                                            ]);
 
-                                DB::commit();
+                                    DB::commit();
 
-                                return response()->json(['message' => "Subdomínio cadastrado com sucesso"], 200);
+                                    return response()->json(['message' => "Subdomínio cadastrado com sucesso"], 200);
+                                } else {
+                                    //dominio já cadastrado
+                                    DB::rollBack();
+
+                                    return response()->json(['message' => 'Erro ao cadastrar domínios'], 400);
+                                }
                             } else {
                                 //dominio já cadastrado
                                 DB::rollBack();
 
-                                return response()->json(['message' => 'Erro ao cadastrar domínios'], 400);
+                                return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
                             }
                         } else {
-                            //dominio já cadastrado
+                            //dominio nao permitido
                             DB::rollBack();
 
-                            return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
+                            return response()->json(['message' => 'Domínio não permitido: ' . $subdomain], 400);
                         }
-                    } else {
-                        //dominio nao permitido
-                        DB::rollBack();
-
-                        return response()->json(['message' => 'Domínio não permitido: ' . $subdomain], 400);
                     }
                 }
+            } else {
+                DB::rollBack();
+
+                return response()->json(['message' => 'Nenhum domínio adicionado.'], 400);
             }
         } catch (Exception $e) {
             DB::rollBack();
