@@ -9,6 +9,7 @@ use App\Entities\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Products\Http\Requests\UpdateProductRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Services\DigitalOceanFileService;
@@ -166,10 +167,10 @@ class ProductsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update($id, Request $request)
+    public function update($id, UpdateProductRequest $request)
     {
         try {
-            $data    = $request->all();
+            $data    = $request->validated();
             $product = $this->productModel->findOrFail(Hashids::decode($id))->first();
             if (isset($data['price'])) {
                 $data['price'] = preg_replace("/[^0-9]/", "", $data['price']);

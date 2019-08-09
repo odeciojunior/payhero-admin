@@ -17,7 +17,7 @@ class PlanStoreRequest extends FormRequest
             'project'         => 'required',
             'name'            => 'required',
             'price'           => 'required',
-            'description'     => 'required|max:200',
+            'description'     => 'required|max:30',
             'products'        => 'required|array',
             'product_amounts' => 'required|array',
         ];
@@ -35,11 +35,13 @@ class PlanStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'O campo Nome é obrigatório',
-            'price.required' => 'O campo Preço é obrigatório',
-            'description.required' => 'O campo Descrição é obrigatório',
-            'products.required' => 'O campo Produto é obrigatório',
+            'name.required'            => 'O campo Nome é obrigatório',
+            'price.required'           => 'O campo Preço é obrigatório',
+            'description.required'     => 'O campo Descrição é obrigatório',
+            'products.required'        => 'O campo Produto é obrigatório',
             'product_amounts.required' => 'O campo Quantidade é obrigatório',
+            'description.max'          => 'O campo Descrição permite apenas 30 caracteres',
+
         ];
     }
 }

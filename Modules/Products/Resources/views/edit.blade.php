@@ -53,7 +53,7 @@
                                             <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
                                             <p class="info mt-5" style="font-size:10px;">
                                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
-                                            <br>.
+                                                <br>.
                                         </div>
                                     </div>
                                     <div class="col-lg-8">
@@ -61,10 +61,16 @@
                                             <div class="form-group col-lg-12">
                                                 <label for="name">Nome</label>
                                                 <input name="name" type="text" class="input-pad" id="name" value="{!! $product->name !!}" placeholder="O nome do seu produto" required="">
+                                                @error('name')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                             <div class="form-group col-lg-12">
                                                 <label for="description">Descrição</label>
                                                 <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required="">{!! $product->description !!}</textarea>
+                                                @error('description')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                                @enderror
                                                 <p> Máximo 30 caracteres. </p>
                                             </div>
                                             <div class="form-group col-lg-6">
