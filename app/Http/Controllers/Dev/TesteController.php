@@ -6,6 +6,7 @@ use App\Entities\Domain;
 use App\Entities\DomainRecord;
 use DOMDocument;
 use Error;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 use App\Entities\User;
@@ -80,6 +81,9 @@ class TesteController extends Controller
 
     public function index()
     {
+        throw new Exception('My first Sentry error!');
+        dd('a');
+
         $html = "<div class='page-width' data-section-id='{{ section.id }}' data-section-type='cart-template' data-ajax-enabled='{{ section.settings.cart_ajax_enable }}'>
 
   <div {% if cart.item_count == 0 %}class='hide' {% endif %}data-cart-wrapper>
