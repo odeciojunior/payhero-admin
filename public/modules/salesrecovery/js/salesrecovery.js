@@ -10,7 +10,6 @@ $(document).ready(function () {
     function atualizar() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-
         loadOnTable('#table_data', '#carrinhoAbandonado');
 
         /*$('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");*/
@@ -86,12 +85,12 @@ $(document).ready(function () {
 
                     /*$('.modal-body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");*/
 
-                    var data = { sale_id: venda };
+                    var data = {sale_id: venda};
 
                     $.ajax({
                         method: "POST",
                         url: '/recoverycart/details',
-                        data: { checkout: venda },
+                        data: {checkout: venda},
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -131,6 +130,10 @@ $(document).ready(function () {
         $("#pagination").html("");
 
         var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
+
+        if (response.meta.last_page === 1) {
+            return false;
+        }
 
         $("#pagination").append(primeira_pagina);
 
