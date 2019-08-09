@@ -27,7 +27,7 @@
                     <label for="token" class='mb-10'>Boleto gerado:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='0' name="boleto_generated" id="boleto_generated" class='check'>
+                        <input type="checkbox" value='0' name="boleto_generated" id="boleto_generated" class='check' checked>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -37,19 +37,19 @@
                     <label for="token" class='mb-10'>Boleto pago:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='0' name="boleto_paid" id="boleto_paid" class='check'>
+                        <input type="checkbox" value='0' name="boleto_paid" id="boleto_paid" class='check' checked>
                         <span class="slider round"></span>
                     </label>
                 </div>
             </div>
         </div>
-        <div class="row mt-20">
+        <div class="row mt-20"> 
             <div class="col-6">
                 <div class="switch-holder">
                     <label for="token" class='mb-10'>Cartão de crédito pago:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='0' name="credit_card_paid" id="credit_card_paid" class='check' value='0'>
+                        <input type="checkbox" value='0' name="credit_card_paid" id="credit_card_paid" class='check' checked value='0'>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -59,7 +59,7 @@
                     <label for="token" class='mb-10'>Cartão de crédito Recusado:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='0' name="credit_card_refused" id="credit_card_refused" class='check' value='0'>
+                        <input type="checkbox" value='0' name="credit_card_refused" id="credit_card_refused" class='check' checked value='0'>
                         <span class="slider round"></span>
                     </label>
                 </div>

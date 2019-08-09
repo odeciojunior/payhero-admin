@@ -51,6 +51,7 @@ $(document).ready(function () {
                         $('input[name="photo_h"]').val(selection.height);
                     }
                 });
+
             });
         };
     });

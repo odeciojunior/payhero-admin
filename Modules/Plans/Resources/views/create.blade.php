@@ -22,24 +22,6 @@
                         <input name="description" type="text" class="form-control" id="description" placeholder="Descrição">
                     </div>
                 </div>
-
-                {{--<div class="row">--}}
-                    {{--<div class="form-group col-xl-12">--}}
-                        {{--<label for="status">Status</label>--}}
-                        {{--<select name="status" type="text" class="form-control" id="status" required>--}}
-                            {{--<option value="1">Ativo</option>--}}
-                            {{--<option value="0">Inativo</option>--}}
-                        {{--</select>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-
-                {{--  <div class="row">
-                    <div id="div_id_plano_transportadora_cadastrar" class="form-group col-xl-6 col-lg-6" style="display:none">
-                        <label for="id_plano_transportadora_cadastrar">Id da transportadora</label>
-                        <input name="id_plano_transportadora" type="text" class="form-control" id="id_plano_transportadora_cadastrar" placeholder="id da transportadora">
-                    </div>
-                </div>  --}}
-
                 <div id="products">
                     <div id="products_div_1" class="row">
                         <div class='col-md-6'>
@@ -73,13 +55,3 @@
     </div>
 </form>
 
-
-                    {{--  <div class="form-group col-xl-6">
-                        <label for="hotzapp_dados">Integração com HotZapp</label>
-                        <select name="hotzapp_dados" id="hotzapp_dados" class="form-control">
-                            <option value="">Sem integração</option>
-                            @foreach($dados_hotzapp as $hotzapp_dados)
-                                <option value="{{ $hotzapp_dados['id'] }}">{{ $hotzapp_dados['descricao'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>  --}}

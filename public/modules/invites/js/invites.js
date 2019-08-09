@@ -1,10 +1,6 @@
 $(document).ready(function () {
     updateInvites();
 
-    // $("#company").on("change", function () {
-    //     $("#invite-link").val('https://app.cloudfox.net/register/' + $("#company option:selected").attr('invite-parameter'));
-    // });
-
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
     }
@@ -81,9 +77,10 @@ $(document).ready(function () {
             }
         });
     }
+
     $("#store-invite").unbind();
     $("#store-invite").on('click', function () {
-        loadingOnScreen();
+
         $.ajax({
             method: "GET",
             url: "/api/companies",
@@ -154,7 +151,6 @@ $(document).ready(function () {
 
                     $("#btn-send-invite").unbind();
                     $("#btn-send-invite").on('click', function () {
-                        loadingOnScreen();
                         var email = $("#email").val();
 
                         if (email == '') {
@@ -162,6 +158,7 @@ $(document).ready(function () {
                         } else if (companyId == '') {
                             alertCustom('error', 'O campo Empresa para receber é obrigatório');
                         } else {
+                            loadingOnScreen();
                             sendInviteAjax(email, companyId);
                         }
                     });

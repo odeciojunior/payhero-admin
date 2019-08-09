@@ -32,7 +32,7 @@
 <ul id="pagination-plans" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
     {{-- js pagination carrega --}}
 </ul>
-<div class="modal fade modal-3d-flip-vertical" id="modal-plans-error" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1" {{--style='display:none;'--}}>
+<div class="modal fade modal-3d-flip-vertical" id="modal-plans-error" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-simple">
         <div id="modal-not-products" class='modal-content p-10'>
             <div class='header-modal simple-border-bottom'>
@@ -47,7 +47,7 @@
                 </div>
                 <h3 align='center'>Você não cadastrou nenhum produto</h3>
                 <h5 align='center'>Deseja cadastrar uma produto?
-                    <a class='red pointer' href='/products/create' target='_blank'>clique aqui</a>
+                    <a class='red pointer' href='/products/create'>clique aqui</a>
                 </h5>
             </div>
             <div style='width:100%; text-align:center; padding-top:3%;'>

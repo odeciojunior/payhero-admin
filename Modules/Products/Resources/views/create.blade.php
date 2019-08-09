@@ -130,12 +130,12 @@
                                             <label for="shipping">Transportadora:</label>
                                             <select class="form-control select-pad" id="shipping">
                                                 <option value="proprio" {{--{!! 'proprio' == $product->shipping ? 'selected' : '' !!}--}}>Envio próprio</option>
-                                                <option value="null" {{--{!! 'kapsula' == $product->shipping ? 'selected' : '' !!}--}} disabled='disabled'>EM BREVE Kapsula</option>
-                                                <option value="null" {{--{!! 'hubsmart' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>EM BREVE Hubsmart</option>
-                                                <option value="null" {{--{!! 'cosmarca' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>EM BREVE Cosmarca</option>
-                                                <option value="null" {{--{!! 'nutreno' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>EM BREVE Nutreno</option>
-                                                <option value="null" {{--{!! 'nutracaps' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>EM BREVE Nutracaps</option>
-                                                <option value="null" {{--{!! 'biosupra' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>EM BREVE Biosupra</option>
+                                                <option value="null" {{--{!! 'kapsula' == $product->shipping ? 'selected' : '' !!}--}} disabled='disabled'>Kapsula (em breve)</option>
+                                                <option value="null" {{--{!! 'hubsmart' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Hubsmart (em breve)</option>
+                                                <option value="null" {{--{!! 'cosmarca' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Cosmarca (em breve)</option>
+                                                <option value="null" {{--{!! 'nutreno' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Nutreno (em breve)</option>
+                                                <option value="null" {{--{!! 'nutracaps' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Nutracaps (em breve)</option>
+                                                <option value="null" {{--{!! 'biosupra' == $product->shipping ? 'selected' : '' !!}--}}disabled='disabled'>Biosupra (em breve)</option>
                                             </select>
                                         </div>
                                         <div id="div_carrier_id" class="form-group col-lg-6" style="display: none">
