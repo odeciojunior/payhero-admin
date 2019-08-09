@@ -3,6 +3,7 @@
 namespace Modules\Shopify\Http\Controllers;
 
 use App\Entities\Domain;
+use App\Entities\Shipping;
 use Exception;
 use App\Entities\Company;
 use App\Entities\Project;
@@ -60,6 +61,7 @@ class ShopifyController extends Controller
             $projectModel            = new Project();
             $userProjectModel        = new UserProject();
             $shopifyIntegrationModel = new ShopifyIntegration();
+            $shippingModel           = new Shipping();
 
             $shopifyIntegration = $shopifyIntegrationModel
                 ->where('token', $dados['token'])
@@ -108,6 +110,15 @@ class ShopifyController extends Controller
                                                      'installments_amount'        => '12',
                                                      'installments_interest_free' => '1',
                                                  ]);
+            $shippingModel->create([
+                                       'project'      => $project->id,
+                                       'name'         => 'Frete gratis',
+                                       'information'  => 'de 15 até 30 dias',
+                                       'value'        => '0,00',
+                                       'type'         => 'static',
+                                       'status'       => '1',
+                                       'pre_selected' => '1',
+                                   ]);
 
             $shopifyIntegration = $shopifyIntegrationModel->create([
                                                                        'token'         => $dados['token'],
