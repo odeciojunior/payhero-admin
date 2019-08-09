@@ -40,7 +40,7 @@
                                         <div class="d-flex flex-column">
                                             <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
                                             <label for="name">Selecione uma imagem</label>
-                                            <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src='{{ $product->photo ?? asset('modules/global/assets/img/projeto.png')}}' style="height: 300px; width: 300px;">
+                                            <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src='{{ $product->photo ?? asset('modules/global/assets/img/projeto.png')}}' style="max-height: 300px; max-width: 300px;">
                                             <input type="hidden" name="photo_x1"> <input type="hidden" name="photo_y1">
                                             <input type="hidden" name="photo_w"> <input type="hidden" name="photo_h">
                                             <p class="info mt-5" style="font-size:10px;">
@@ -53,7 +53,7 @@
                                             <input type="file" id="digital_product" name="digital_product" data-plugin="dropify">
                                             <p class="info mt-5" style="font-size:10px;">
                                                 <i class="icon wb-info-circle" aria-hidden="true"></i> Produto digital que será enviado para o cliente.
-                                                <br>.
+                                            <br>.
                                         </div>
                                     </div>
                                     <div class="col-lg-8">
