@@ -79,7 +79,7 @@ class TransfersService
                                      ]);
 
                 $company->update([
-                                     'balance' => intval($company->balance) - $transferAnticipted->value,
+                                     'balance' => intval($company->balance) + $transferAnticipted->value,
                                  ]);
 
                 $transfersAnticipateds[] = $transfer->toArray();
