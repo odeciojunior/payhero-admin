@@ -14,12 +14,13 @@ class TransfersResource extends Resource
      */
     public function toArray($request)
     {
+        $value = number_format(intval($this->value) / 100, 2, ',', '.');
 
         return [
             'id'             => Hashids::encode($this->id),
             'type'           => $this->type,
             'type_enum'      => $this->type_enum,
-            'value'          => $this->currency == 'dolar' ? '$ ' : 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
+            'value'          => $this->currency == 'dolar' ? '$ ' . $value : 'R$ ' . $value,
             'reason'         => (!empty($this->transaction) && empty($this->reason)) ? 'Transação #' : $this->reason,
             'transaction_id' => strtoupper(Hashids::connection('sale_id')->encode($this->sale)),
             'sale_id'        => Hashids::connection('sale_id')->encode($this->sale),
