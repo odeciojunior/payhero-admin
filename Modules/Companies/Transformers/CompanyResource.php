@@ -16,7 +16,11 @@ class CompanyResource extends Resource
     private function documentStatus()
     {
         //TODO criar logica para trazer o status correto
-        return $this->getEnum('status', 2, true);
+        if ($this->bank_document_status == 3 && $this->address_document_status == 3 && $this->contract_document_status == 3) {
+            return $this->getEnum('status', 3, true);
+        } else {
+            return $this->getEnum('status', 1, true);
+        }
     }
 
     /**
