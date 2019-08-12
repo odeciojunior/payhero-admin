@@ -44,7 +44,7 @@
                         </div>
                         <div class="list-group scrollable scrollable-vertical" style="position: relative;">
                             <div class="scrollable-container" style="min-height: 250px; width: 358px;">
-                                <div id='notificationTemplate' class="scrollable-content" style="width: 358px; height:250px">
+                                <div id='notificationTemplate' class="scrollable-content" style="width: 358px; height:100%">
                                 </div>
                             </div>
                         </div>

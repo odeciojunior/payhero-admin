@@ -41,11 +41,10 @@ $(function () {
 
                     $.each(response.data, function (index, value) {
                         data += '<tr >';
-                        data += '<td style="vertical-align: middle;">' + value.reason + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>';
-                        '</a>';
-                        '</td>';
+                        data += '<td style="vertical-align: middle;">' + value.reason + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>' +
+                            '</a></td>';
                         data += '<td style="vertical-align: middle;">' + value.date + '</td>';
-                        if (value.type_enum == 1) {
+                        if (value.type_enum === 1) {
                             data += '<td style="vertical-align: middle; color:green;">' + value.value + '</td>';
                         } else {
                             data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
