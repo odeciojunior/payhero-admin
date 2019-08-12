@@ -20,10 +20,7 @@ $(document).ready(function () {
         updateUnreadNotification();
         $("#notification-amount").html('0');
         $('#notificationBadge').html('New 0');
-
     });
-
-    // updateUnreadNotificationsAmount();
 
     // verifica se existem novas notificações
     function updateUnreadNotificationsAmount() {

@@ -99,8 +99,6 @@
 <script src="{{ asset('modules/global/adminremark2/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js') }}"></script>
-<script src="https://js.pusher.com/4.4/pusher.min.js"></script>
-<script src="{{ asset('modules/global/js/notifications.js') }}"></script>
 
 @stack('scripts')
 
@@ -119,6 +117,11 @@
             name: "{!! \Auth::user()->name !!}",
             email: "{!! \Auth::user()->email !!}", 
         });
+
   </script>
+
+{{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
+<script src="{{ asset('modules/global/js/notifications.js') }}"></script>
+
 </body>
 </html>
