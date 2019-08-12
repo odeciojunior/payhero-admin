@@ -51,7 +51,7 @@
         // this.initializePluginAPIs();
         // this.initializePlugins();
 
-        // this.initComponents();
+        this.initComponents();
         // setTimeout(function () {
         //   _this2.setDefaultState();
         // }, 500);
@@ -71,9 +71,9 @@
 
         // //Dropdown menu setup
         // //===================
-        // this.$el.on('click', '.dropdown-menu-media', function (e) {
-        //   e.stopPropagation();
-        // });
+        this.$el.on('click', '.dropdown-menu-media', function (e) {
+          e.stopPropagation();
+        });
       }
     }, {
       key: '_getDefaultMeunbarType',
@@ -303,7 +303,7 @@
         // let loadingType = 'default';
         $BODY.animsition({
           inClass: 'fade-in',
-          inDuration: 100,
+          inDuration: 10,
           loading: false,
           loadingClass: 'loader-overlay',
           loadingParentElement: 'html',
