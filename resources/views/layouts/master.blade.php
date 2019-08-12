@@ -102,25 +102,27 @@
 
 @stack('scripts')
 
-<script>
-    @if(env('APP_ENV', 'production') == 'production')
-     Sentry.init({dsn: 'https://86728bcdb6544260b6d4a9648e4aeb08@sentry.io/1526015'});
+@if(env('APP_ENV', 'production') == 'production')
+
+    <script>
+        Sentry.init({dsn: 'https://86728bcdb6544260b6d4a9648e4aeb08@sentry.io/1526015'});
+    </script>
+
+     <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/q35ubavq';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
+ 
+     <script>
+           window.Intercom('boot', {
+               app_id: "q35ubavq",
+               user_id: "{!! \Auth::user()->id !!}",
+               name: "{!! \Auth::user()->name !!}",
+               email: "{!! \Auth::user()->email !!}", 
+           });
+ 
+     </script>
+ 
+     <script src="https://js.pusher.com/4.4/pusher.min.js"></script>
     @endif
-</script>
 
-  <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/q35ubavq';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
-
-  <script>
-        window.Intercom('boot', {
-            app_id: "q35ubavq",
-            user_id: "{!! \Auth::user()->id !!}",
-            name: "{!! \Auth::user()->name !!}",
-            email: "{!! \Auth::user()->email !!}", 
-        });
-
-  </script>
-
-{{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
 <script src="{{ asset('modules/global/js/notifications.js') }}"></script>
 
 </body>
