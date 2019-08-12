@@ -1,4 +1,5 @@
 (function (global, factory) {
+
   if (typeof define === "function" && define.amd) {
     define('/dashboard/v1', ['jquery', 'Site'], factory);
   } else if (typeof exports !== "undefined") {

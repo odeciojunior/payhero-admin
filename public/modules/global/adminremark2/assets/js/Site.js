@@ -12,7 +12,7 @@
   }
 })(this, function (exports, _jquery, _Base2, _Menubar, _Sidebar, _PageAside, _GridMenu) {
   'use strict';
-
+ 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -45,35 +45,35 @@
     babelHelpers.createClass(Site, [{
       key: 'initialize',
       value: function initialize() {
-        var _this2 = this;
+        // var _this2 = this;
 
         this.startLoading();
-        this.initializePluginAPIs();
-        this.initializePlugins();
+        // this.initializePluginAPIs();
+        // this.initializePlugins();
 
-        this.initComponents();
-        setTimeout(function () {
-          _this2.setDefaultState();
-        }, 500);
+        // this.initComponents();
+        // setTimeout(function () {
+        //   _this2.setDefaultState();
+        // }, 500);
       }
     }, {
       key: 'process',
       value: function process() {
-        this.polyfillIEWidth();
-        this.initBootstrap();
+        // this.polyfillIEWidth();
+        // this.initBootstrap();
 
-        this.setupMenubar();
-        this.setupFullScreen();
-        this.setupMegaNavbar();
-        this.setupTour();
-        this.setupNavbarCollpase();
-        this.setupGridMenu();
+        // this.setupMenubar();
+        // this.setupFullScreen();
+        // this.setupMegaNavbar();
+        // this.setupTour();
+        // this.setupNavbarCollpase();
+        // this.setupGridMenu();
 
-        // Dropdown menu setup
-        // ===================
-        this.$el.on('click', '.dropdown-menu-media', function (e) {
-          e.stopPropagation();
-        });
+        // //Dropdown menu setup
+        // //===================
+        // this.$el.on('click', '.dropdown-menu-media', function (e) {
+        //   e.stopPropagation();
+        // });
       }
     }, {
       key: '_getDefaultMeunbarType',
@@ -303,8 +303,8 @@
         // let loadingType = 'default';
         $BODY.animsition({
           inClass: 'fade-in',
-          inDuration: 800,
-          loading: true,
+          inDuration: 100,
+          loading: false,
           loadingClass: 'loader-overlay',
           loadingParentElement: 'html',
           loadingInner: '\n      <div class="loader-content">\n        <div class="loader-index">\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n        </div>\n      </div>',
