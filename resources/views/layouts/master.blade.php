@@ -104,7 +104,7 @@
 @stack('scripts')
 <script>
     @if(env('APP_ENV', 'production') == 'production')
-    // Sentry.init({dsn: 'https://86728bcdb6544260b6d4a9648e4aeb08@sentry.io/1526015'});
+     Sentry.init({dsn: 'https://86728bcdb6544260b6d4a9648e4aeb08@sentry.io/1526015'});
     @endif
 
     $(document).ready(function () {
