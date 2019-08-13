@@ -35,6 +35,12 @@ $(document).ready(function () {
                         }
                     });
 
+                    if ($(':checkbox').is(':checked')) {
+                        $(':checkbox').val(1);
+                    } else {
+                        $(':checkbox').val(0);
+                    }
+
                     $(".btn-save").unbind('click');
                     $(".btn-save").on('click', function () {
                         if ($('#link').val() == '') {
@@ -88,7 +94,7 @@ $(document).ready(function () {
                     var project = $(this).attr('project');
                     $(".modal-title").html("Editar Integração com Hotzapp");
                     $(".modal_integracao_body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-                    var data = { projectId: project };
+                    var data = {projectId: project};
                     $.ajax({
                         method: "GET",
                         url: "/apps/hotzapp/" + project + "/edit",

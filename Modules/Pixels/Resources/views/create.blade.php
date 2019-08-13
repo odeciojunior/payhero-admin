@@ -40,7 +40,7 @@
                             <label for="checkout" class='mb-10'>Checkout:</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" value="0" name='checkout' id='checkout' class='check' checked>
+                                <input type="checkbox" value="" name='checkout' id='checkout' class='check' checked>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -50,7 +50,7 @@
                             <label for="cartao">Purchase (cartão):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="0" name='purchase_card' id='purchase_card' class='check' checked>
+                                <input type="checkbox" value="" name='purchase_card' id='purchase_card' class='check' checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>
@@ -60,7 +60,7 @@
                             <label for="boleto">Purchase (boleto):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="0" name='purchase_boleto' id='purchase_boleto' class='check' checked>
+                                <input type="checkbox" value="" name='purchase_boleto' id='purchase_boleto' class='check' checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>
