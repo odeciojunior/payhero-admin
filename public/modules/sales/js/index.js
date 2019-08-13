@@ -65,9 +65,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/sales/getsales?' + 'projeto=' + $("#projeto").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/sales/getsales?' + 'projeto=' + $("#projeto").val() + '&transaction=' + $("#transaction").val().toString().replace('#', '') + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         } else {
-            link = '/sales/getsales' + link + '&projeto=' + $("#projeto").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/sales/getsales' + link + '&projeto=' + $("#projeto").val() + '&transaction=' + $("#transaction").val().toString().replace('#', '') + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         }
 
         $.ajax({

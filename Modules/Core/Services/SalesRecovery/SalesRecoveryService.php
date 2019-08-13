@@ -33,12 +33,12 @@ class SalesRecoveryService
             return $this->getAbandonedCart($projectId, $dateStart, $dateEnd);
         } else if ($type == 2) {
             $paymentMethod = 2; // boleto
-            $status        = 3; // expired
+            $status        = [3, 5]; // expired
 
             return $this->getSaleExpiredOrRefused($projectId, $dateStart, $dateEnd, $paymentMethod, $status);
         } else if ($type == 3) {
             $paymentMethod = 1; // cartao
-            $status        = 3; // refused
+            $status        = [3]; // refused
 
             return $this->getSaleExpiredOrRefused($projectId, $dateStart, $dateEnd, $paymentMethod, $status);
         } else {
@@ -102,7 +102,7 @@ class SalesRecoveryService
      * @param $status
      * @return AnonymousResourceCollection
      */
-    public function getSaleExpiredOrRefused(int $projectId = null, string $dateStart = null, string $dateEnd = null, int $paymentMethod, int $status)
+    public function getSaleExpiredOrRefused(int $projectId = null, string $dateStart = null, string $dateEnd = null, int $paymentMethod, array $status)
     {
         $salesModel        = new Sale();
         $userProjectsModel = new UserProject();
@@ -114,16 +114,16 @@ class SalesRecoveryService
                 $join->on('plan_sale.sale', '=', 'sales.id');
             })->leftJoin('checkouts as checkout', function($join) {
                 $join->on('sales.checkout', '=', 'checkout.id');
-            })->where([
-                          ['sales.payment_method', $paymentMethod], ['sales.status', $status],
-                      ])->with([
-                                   'projectModel',
-                                   'clientModel',
-                                   'projectModel.domains' => function($query) {
-                                       $query->where('status', 3)//dominio aprovado
-                                             ->first();
-                                   },
-                               ]);
+            })->whereIn('sales.status', $status)->where([
+                                                            ['sales.payment_method', $paymentMethod],
+                                                        ])->with([
+                                                                     'projectModel',
+                                                                     'clientModel',
+                                                                     'projectModel.domains' => function($query) {
+                                                                         $query->where('status', 3)//dominio aprovado
+                                                                               ->first();
+                                                                     },
+                                                                 ]);
         if (!empty($projectId)) {
             $salesExpired->where('sales.project', $projectId);
         } else {
