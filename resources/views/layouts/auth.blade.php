@@ -70,17 +70,17 @@
     <script src="{{ asset('modules/global/adminremark2/global/js/Base.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark2/global/js/Config.js') }}"></script>
     
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/Menubar.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/Plugin/menu.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/assets/js/Section/Menubar.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/assets/js/Section/GridMenu.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/assets/js/Section/Sidebar.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/assets/js/Section/PageAside.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/assets/js/Plugin/menu.js') }}"></script>
     
     <script src="{{ asset('modules/global/adminremark2/global/js/config/colors.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/assets/js/config/tour.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/assets/js/config/tour.js') }}"></script>
     <script>Config.set('assets', '../../assets');</script>
     
-    <script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/assets/js/Site.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark2/global/js/Plugin/asscrollable.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark2/global/js/Plugin/slidepanel.js') }}"></script>
     <script src="{{ asset('modules/global/adminremark2/global/js/Plugin/switchery.js') }}"></script>
