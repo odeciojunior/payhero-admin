@@ -15,7 +15,7 @@ class Animsition extends Plugin {
       inDuration: 800,
       outDuration: 500,
       linkElement: '.animsition-link',
-      loading: true,
+      loading: fa,
       loadingParentElement: 'body',
       loadingClass: 'loader',
       loadingType: 'default',

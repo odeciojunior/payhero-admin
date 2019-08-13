@@ -258,7 +258,7 @@ class Site extends Base {
     $BODY.animsition({
       inClass: 'fade-in',
       inDuration: 800,
-      loading: true,
+      loading: false,
       loadingClass: 'loader-overlay',
       loadingParentElement: 'html',
       loadingInner: `

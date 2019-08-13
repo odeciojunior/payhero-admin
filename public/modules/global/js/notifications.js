@@ -74,7 +74,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $("#notificationTemplate").html('');
-                $("#notificationTemplate").css({'height': '150px', 'overflow-y': 'scroll'});
+                $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
                 $("#notificationTemplate").html(response.notificacoes);
                 updateMarkAsReadNotification();
             }

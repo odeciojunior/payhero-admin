@@ -313,5 +313,13 @@ $(function () {
         $('#modal-title').show();
         $('#especialModalTitle').remove();
     });
+
+    $('#toggler').on('click',function(){
+        if($("#collapseOne").hasClass('show')){
+            $('#showMore').text('exibir mais')
+        }else{
+            $('#showMore').text('exibir menos')
+        }
+    })
 });
 

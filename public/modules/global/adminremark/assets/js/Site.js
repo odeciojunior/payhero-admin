@@ -322,7 +322,7 @@
           outClass: 'fade-out',
           inDuration: 800,
           outDuration: 500,
-          loading: true,
+          loading: false,
           loadingClass: 'loader-overlay',
           loadingParentElement: 'html',
           loadingInner: '\n      <div class="loader-content">\n        <div class="loader-index">\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n        </div>\n      </div>',

@@ -79,7 +79,7 @@
           inDuration: 800,
           outDuration: 500,
           linkElement: '.animsition-link',
-          loading: true,
+          loading: f,
           loadingParentElement: 'body',
           loadingClass: 'loader',
           loadingType: 'default',
