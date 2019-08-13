@@ -1,3 +1,4 @@
+/*
 $(function () {
 
     $("#btn-disponible-antecipation").on('click', function () {
@@ -73,3 +74,4 @@ $(function () {
     });
 
 });
+*/
