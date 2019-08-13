@@ -48,7 +48,6 @@ class PostBackPagarmeController extends Controller {
             $planModel        = new Plan();
             $planSaleModel    = new PlanSale();
 
-
             $sale = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
 
             if(empty($sale)){
@@ -56,7 +55,7 @@ class PostBackPagarmeController extends Controller {
                 return response()->json(['message' => 'sale not found'], 200);
             }
 
-            if($requestData['transaction']['status'] == $sale['gateway_status']){
+            if($requestData['transaction']['status'] == $sale->gateway_status){
                 return response()->json(['message' => 'success'], 200);
             }
 
@@ -93,15 +92,15 @@ class PostBackPagarmeController extends Controller {
                     }
                 }
 
-                if($sale['shopify_order'] != ''){
+                $plansSale = $planSaleModel->where('sale', $sale->id)->first();
+
+                $plan = $planModel->find($plansSale->plan);
+
+                if($sale->shopify_order != ''){
 
                     $shopifyIntegrationModel = new ShopifyIntegration();
 
-                    $plansSale = $planSaleModel->where('sale', $sale['id'])->first();
-
-                    $plan = $planModel->find($plansSale->plan);
-
-                    $shopifyIntegration = $shopifyIntegrationModel->where('project',$plan['project'])->first();
+                    $shopifyIntegration = $shopifyIntegrationModel->where('project',$plan->project)->first();
 
                     try{
                         $credential = new PublicAppCredential($shopifyIntegration['token']);
@@ -110,12 +109,12 @@ class PostBackPagarmeController extends Controller {
                             'metaCacheDir' => './tmp'
                         ]);
 
-                        $client->getTransactionManager()->create($sale['shopify_order'],[
+                        $client->getTransactionManager()->create($sale->shopify_order,[
                             "kind"      => "capture",
                         ]);
                     }
                     catch(\Exception $e){
-                        Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$sale['id']);
+                        Log::write('info', 'erro ao alterar estado do pedido no shopify com a venda '.$sale->id);
                         report($e);
                     }
                 }
@@ -123,13 +122,13 @@ class PostBackPagarmeController extends Controller {
                 try{
                     $hotZappIntegrationModel = new HotZappIntegration();
 
-                    $hotzappIntegration = $hotZappIntegrationModel->where('project',$plan['project'])->first();
+                    $hotzappIntegration = $hotZappIntegrationModel->where('project',$plan->project)->first();
 
                     if(!empty($hotzappIntegration)){
 
                         $hotZappService = new HotZappService($hotzappIntegration->link);
 
-                        $plansSale = $planSaleModel->where('sale', $sale['id'])->get();
+                        $plansSale = $planSaleModel->where('sale', $sale->id)->get();
 
                         $plans = [];
                         foreach ($plansSale as $planSale) {
@@ -147,7 +146,7 @@ class PostBackPagarmeController extends Controller {
                     }
                 }
                 catch(\Exception $e){
-                    Log::write('info', 'erro ao enviar notificação pro HotZapp na venda '.$sale['id']);
+                    Log::write('info', 'erro ao enviar notificação pro HotZapp na venda '.$sale->id);
                     report($e);
                 }
 
