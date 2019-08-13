@@ -19,22 +19,22 @@
     <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/site.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
 
     <!-- Plugins -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/vendor/animsition/animsition.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/fonts/web-icons/web-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/fonts/font-awesome/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css') }}">
 
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
@@ -56,8 +56,8 @@
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
     @endif
 
-    <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('modules/global/adminremark/global/vendor/breakpoints/breakpoints.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/global/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('modules/global/adminremark2/global/vendor/breakpoints/breakpoints.js') }}"></script>
     <script>
         Breakpoints();
     </script>
@@ -78,20 +78,20 @@
 @yield('content')
 
 <!-- Plugins -->
-<script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/popper-js/umd/popper.min.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/bootstrap/bootstrap.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/animsition/animsition.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
 <script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Component.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Plugin.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Base.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Config.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark2/assets/js/Section/Menubar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark2/assets/js/Section/Sidebar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark2/assets/js/Section/PageAside.js') }}"></script>

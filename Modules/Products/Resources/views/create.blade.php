@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
+        <link rel="stylesheet" href="{!!  asset('modules/global/adminremark2/global/vendor/dropify/dropify.min.css') !!}">
     @endpush
 
     <!-- Page -->
@@ -161,8 +161,8 @@
 
     @push('scripts')
         <script src="{!! asset('modules/products/js/products.js') !!}"></script>
-        <script src="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') !!}"></script>
-        <script src="{!! asset('modules/global/adminremark/global/js/Plugin/dropify.js') !!}"></script>
+        <script src="{!! asset('modules/global/adminremark2/global/vendor/dropify/dropify.min.js') !!}"></script>
+        <script src="{!! asset('modules/global/adminremark2/global/js/Plugin/dropify.js') !!}"></script>
     @endpush
 
 @endsection
