@@ -34,8 +34,8 @@ mix.babel([
 
 //discountcoupons
 mix.babel([
-    'resources/assets/modules/DiscountCoupons/js/discountCoupons.js',
-], 'public/modules/DiscountCoupons/js/discountCoupons.js');
+    'resources/assets/modules/discount-coupons/js/discountCoupons.js',
+], 'public/modules/discount-coupons/js/discountCoupons.js');
 
 //domains
 mix.babel([
@@ -49,8 +49,8 @@ mix.babel([
 
 //Gifts
 mix.babel([
-    'resources/assets/modules/Gifts/js/gift.js',
-], 'public/modules/Gifts/js/gift.js');
+    'resources/assets/modules/gifts/js/gift.js',
+], 'public/modules/gifts/js/gift.js');
 
 //hotzapp
 mix.babel([
@@ -64,8 +64,8 @@ mix.babel([
 
 //layouts
 mix.babel([
-    'resources/assets/modules/Layouts/js/layouts.js',
-], 'public/modules/Layouts/js/layouts.js');
+    'resources/assets/modules/layouts/js/layouts.js',
+], 'public/modules/layouts/js/layouts.js');
 
 //partners
 mix.babel([
@@ -79,8 +79,8 @@ mix.babel([
 
 //pixels
 mix.babel([
-    'resources/assets/modules/Pixels/js/pixels.js',
-], 'public/modules/Pixels/js/pixels.js');
+    'resources/assets/modules/pixels/js/pixels.js',
+], 'public/modules/pixels/js/pixels.js');
 
 //plans
 mix.babel([
@@ -170,8 +170,8 @@ mix.babel([
 
 //SmsMessage
 mix.babel([
-    'resources/assets/modules/SmsMessage/js/smsMessage.js',
-], 'public/modules/SmsMessage/js/smsMessage.js');
+    'resources/assets/modules/sms-messageage/js/smsMessage.js',
+], 'public/modules/sms-messageage/js/smsMessage.js');
 
 //transfers
 mix.babel([

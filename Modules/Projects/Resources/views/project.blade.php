@@ -286,9 +286,9 @@
         <script src="{{asset('modules/partners/js/partners.js')}}"></script>
         <script src="{{asset('modules/Shipping/js/shipping.js')}}"></script>
         <script src="{{asset('modules/domain/js/domain.js')}}"></script>
-        <script src="{{asset('modules/SmsMessage/js/smsMessage.js')}}"></script>
-        <script src="{{asset('modules/Pixels/js/pixels.js')}}"></script>
-        <script src="{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}"></script>
+        <script src="{{asset('modules/sms-messageage/js/smsMessage.js')}}"></script>
+        <script src="{{asset('modules/pixels/js/pixels.js')}}"></script>
+        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js')}}"></script>
         <script src="{{asset('modules/projects/js/projects.js')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js')}}"></script>
     @endpush
