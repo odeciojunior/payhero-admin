@@ -1,23 +1,19 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'recoverycart', 'namespace' => 'Modules\SalesRecovery\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'recovery', 'namespace' => 'Modules\SalesRecovery\Http\Controllers'], function() {
     Route::get('/', [
         'uses' => 'SalesRecoveryController@index',
-        'as'   => 'cartrecovery',
+        'as'   => 'recovery',
     ]);
 
-    Route::get('/getabandonatedcarts', [
-        'uses' => 'SalesRecoveryController@getAbandonatedCarts',
+    Route::get('/getrecoverydata', [
+        'uses' => 'SalesRecoveryController@getRecoveryData',
     ]);
 
     Route::post('/details', [
-        'uses' => 'SalesRecoveryController@getAbandonatedCardsDetails',
+        'uses' => 'SalesRecoveryController@getDetails',
     ]);
+
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/carrinhosabandonados', 'namespace' => 'Modules\SalesRecovery\Http\Controllers'], function() {
-    Route::get('/', [
-        'uses' => 'SalesRecoveryController@getCarrinhosAbandonados',
-    ]);
-});
 

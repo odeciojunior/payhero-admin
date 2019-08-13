@@ -15,9 +15,9 @@ $(document).ready(function () {
         /*$('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");*/
 
         if (link == null) {
-            link = '/recoverycart/getabandonatedcarts?project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
+            link = '/recovery/getrecoverydata?project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
         } else {
-            link = '/recoverycart/getabandonatedcarts' + link + '&project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
+            link = '/recovery/getrecoverydata' + link + '&project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
         }
 
         $.ajax({
@@ -89,7 +89,7 @@ $(document).ready(function () {
 
                     $.ajax({
                         method: "POST",
-                        url: '/recoverycart/details',
+                        url: '/recovery/details',
                         data: {checkout: venda},
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

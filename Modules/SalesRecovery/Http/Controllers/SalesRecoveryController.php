@@ -54,7 +54,7 @@ class SalesRecoveryController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function getAbandonatedCarts(Request $request)
+    public function getRecoveryData(Request $request)
     {
 
         try {
@@ -85,7 +85,7 @@ class SalesRecoveryController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable
      */
-    public function getAbandonatedCardsDetails(Request $request)
+    public function getDetails(Request $request)
     {
         try {
             $checkoutModel = new Checkout();
