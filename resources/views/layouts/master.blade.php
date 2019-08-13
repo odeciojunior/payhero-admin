@@ -22,31 +22,31 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/checkAnimation.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
 
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/daterangepicker.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
 
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/newFonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css') }}">
 
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
 
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
 
     <!-- New CSS --> 
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css') }}">
 
     @stack('css')
 

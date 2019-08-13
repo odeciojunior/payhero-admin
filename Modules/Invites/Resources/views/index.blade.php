@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('modules/global/assets/css/empty.css') }}">
+        <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
     @endpush
     <div class="page">
         <div class="page-header container">

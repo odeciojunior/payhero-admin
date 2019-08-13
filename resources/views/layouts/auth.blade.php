@@ -21,8 +21,8 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/new-login.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>

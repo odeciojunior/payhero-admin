@@ -158,7 +158,7 @@
                 </ul>
             @else
                 @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                 @endpush
 
                 <div class=" content-error d-flex text-center">

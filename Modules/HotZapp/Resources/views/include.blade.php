@@ -1,6 +1,6 @@
 @if(count($projectsIntegrated) == 0)
     @push('css')
-        <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
     @endpush
     <div class="content-error d-flex text-center">
         <img src="{!! asset('modules/global/assets/img/emptyconvites.svg') !!}" width="250px">

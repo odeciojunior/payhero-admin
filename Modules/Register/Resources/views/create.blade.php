@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{asset('modules/register/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('modules/register/css/jquery-ui.min.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/assets/img/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/assets/img/favicon-32x32.png') }}">
@@ -21,13 +21,13 @@
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/checkAnimation.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
@@ -37,11 +37,11 @@
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/3.7.95/css/materialdesignicons.min.css">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-dashboard.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/reports.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/reports.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/register/css/animateColor.css') }}">
     <script src="https://code.jquery.com/jquery-3.4.1.js"
             integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
