@@ -81,7 +81,7 @@
                         <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                     @endpush
                     <div class="content-error d-flex text-center">
-                        <img src="{!! asset('modules/global/assets/img/emptyconvites.svg') !!}" width="250px">
+                        <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
                         <h1 class="big gray">Nenhuma integração encontrada!</h1>
                         <p class="desc gray">Integre seus projetos com HotZapp de forma totalmente automatizada!</p>
                     </div>
@@ -93,7 +93,7 @@
                         @foreach($projectsIntegrated as $project)
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project='{{\Hashids::encode($project->id)}}' style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src="{!! $project['photo'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/produto.png') !!}';" alt="{!! asset('modules/global/assets/img/produto.png') !!}">
+                                    <img class="card-img-top img-fluid w-full" src="{!! $project['photo'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/img/produto.png') !!}';" alt="{!! asset('modules/global/img/produto.png') !!}">
                                     <div class="card-body">
                                         <div class='col-md-10'>
                                             <h4 class="card-title"> {!! $project['name'] !!}</h4>

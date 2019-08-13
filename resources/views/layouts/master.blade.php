@@ -13,10 +13,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/assets/img/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/assets/img/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/assets/img/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ asset('modules/global/assets/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
@@ -53,7 +53,7 @@
     <!-- Scripts -->
     @if(env('APP_ENV', 'production') == 'production')
         {{--  <script src="https://browser.sentry-cdn.com/5.6.0/bundle.min.js" integrity="sha384-9aGOmRDrtIQRcZmYbrNQmfS1dW44OCMtOlQ3JFUYCdCpxTJQ8vK+//K35AKgZh96" crossorigin="anonymous"></script>  --}}
-        <script src="{{ asset('modules/global/assets/js/sentry-bundle.min.js') }}"></script>
+        <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
     @endif
 
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
@@ -86,8 +86,8 @@
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
-<script src="{{ asset('modules/global/assets/js/jquery.mask.min.js') }}"></script>
-<script src="{{ asset('modules/global/assets/js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
+<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
@@ -121,7 +121,7 @@
      </script>
 
      {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
-     <script src="{{ asset('modules/global/assets/js/pusher.min.js') }}"></script>
+     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
 @endif
 

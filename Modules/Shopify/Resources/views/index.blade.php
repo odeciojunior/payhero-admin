@@ -26,7 +26,7 @@
                     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                 @endpush
                 <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/assets/img/emptyconvites.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
                     <h1 class="big gray">Nenhuma integração encontrada!</h1>
                     <p class="desc gray">Integre suas lojas Shopify com o checkout do Cloudfox!</p>
                 </div>
@@ -39,7 +39,7 @@
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                             <a href="/projects/{!! Hashids::encode($project['id']) !!}" class="streched-link">
                                 <div class="card shadow">
-                                    <img class="card-img-top img-fluid w-full" src="{!! $project['photo'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/produto.png') !!}';" alt="{!! asset('modules/global/assets/img/produto.png') !!}">
+                                    <img class="card-img-top img-fluid w-full" src="{!! $project['photo'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/img/produto.png') !!}';" alt="{!! asset('modules/global/img/produto.png') !!}">
                                     <div class="card-body">
                                         <h4 class="card-title"> {!! $project['name'] !!}</h4>
                                         <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p>

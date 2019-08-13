@@ -143,7 +143,7 @@
                             <div class="card">
                                 <div class="row no-gutters">
                                     <div class="col-md-3">
-                                        <img src="{{ $project->photo ? $project->photo : '/modules/global/assets/img/projeto.png' }}" class="card-img" alt="">
+                                        <img src="{{ $project->photo ? $project->photo : '/modules/global/img/projeto.png' }}" class="card-img" alt="">
                                     </div>
                                     <div class="col-md-9 pl-10">
                                         <div class="card-body">

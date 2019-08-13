@@ -18,7 +18,7 @@
     <div class="page-holder">
 
         <div class="content-error d-flex text-center">
-            <img class="svgorange" src="{!! asset('modules/global/assets/img/error.png') !!}">
+            <img class="svgorange" src="{!! asset('modules/global/img/error.png') !!}">
             <h1 class="big"> Oopppss!</h1>
             <p style="font-size:12px">Ocorreu algum erro. </p>
         </div>

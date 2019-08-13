@@ -22,7 +22,7 @@
                                 <input name='photo-main' type='file' class='form-control' id='project-photo' style="display:none">
                                 <label for='preview-image-project'>Selecione a foto do projeto</label>
                                 <br>
-                                <img id="preview-image-project" alt='Selecione a foto do projeto' class='img-fluid mb-sm-2' src="{{asset('modules/global/assets/img/projeto.png')}}" style="cursor:pointer;">
+                                <img id="preview-image-project" alt='Selecione a foto do projeto' class='img-fluid mb-sm-2' src="{{asset('modules/global/img/projeto.png')}}" style="cursor:pointer;">
                                 <br> <input type='hidden' name='photo_x1'/> <input type='hidden' name='photo_y1'/>
                                 <input type='hidden' name='photo_w'/> <input type='hidden' name='photo_h'/>
                             </div>
@@ -74,7 +74,7 @@
                 @endpush
 
                 <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/assets/img/emptyempresas.svg') !!}" width="250px" alt='Image principal'>
+                    <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px" alt='Image principal'>
                     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
                     <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
                     <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>
