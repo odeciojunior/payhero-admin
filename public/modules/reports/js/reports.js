@@ -95,7 +95,7 @@ $(function () {
                     table_data_itens += '<tr>';
                     table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
                     table_data_itens += '<td>' + data.name + "</td>";
-                    table_data_itens += '<td>' + data.quantidade + "</td>";
+                    table_data_itens += '<td> x ' + data.quantidade + "</td>";
                     table_data_itens += '</tr>';
                 });
                 $('#origins-table-itens').html("");
@@ -109,7 +109,6 @@ $(function () {
 
     function updateSalesByOrigin() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
 
         /*$('#origins-table').html("<td colspan='3' class='text-center'> Carregando... </div>");*/
         loadOnTable('#origins-table', '.table-vendas');
@@ -160,75 +159,75 @@ $(function () {
     function updateGraph(chartData) {
 
         var scoreChart = function scoreChart(id, labelList, series1List, series2List) {
-            var scoreChart = new Chartist.Line("#" + id, {
-                labels: labelList, series: [series1List, series2List]
-            }, {
-                lineSmooth: Chartist.Interpolation.simple({
-                    divisor: 2
-                }),
-                fullWidth: !0,
-                chartPadding: {
-                    right: 30
-                },
-                series: {
-                    "credit-card-data": {
-                        showArea: !0
+                var scoreChart = new Chartist.Line("#" + id, {
+                    labels: labelList, series: [series1List, series2List]
+                }, {
+                    lineSmooth: Chartist.Interpolation.simple({
+                        divisor: 2
+                    }),
+                    fullWidth: !0,
+                    chartPadding: {
+                        right: 30
                     },
-                    "boleto-data": {
-                        showArea: !0
-                    }
-                },
-                axisX: {
-                    showGrid: !1
-                },
-                axisY: {
-                    labelInterpolationFnc: function labelInterpolationFnc(value) {
-                        return chartData.currency + value;
-                        return value / 1e3 + "K";
+                    series: {
+                        "credit-card-data": {
+                            showArea: !0
+                        },
+                        "boleto-data": {
+                            showArea: !0
+                        }
                     },
-                    scaleMinSpace: 40
-                },
-                plugins: [Chartist.plugins.tooltip({
-                    position: 'bottom'
-                }), Chartist.plugins.legend()],
-                low: 0,
-                height: 300
-            });
-            scoreChart.on("created", function (data) {
-                var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
-                    filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
-                    x: 0, y: "-10%", id: "shadow" + id
-                }, "", !0));
-                return filter.elem("feGaussianBlur", {
-                    in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
-                }), filter.elem("feOffset", {
-                    dx: "0", dy: "800"
-                }), filter.elem("feBlend", {
-                    in: "SourceGraphic", mode: "multiply"
-                }), defs;
-            }).on("draw", function (data) {
-                "line" === data.type ? data.element.attr({
-                    filter: "url(#shadow" + id + ")"
-                }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
-                    x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
-                }), "line" !== data.type && "area" != data.type || data.element.animate({
-                    d: {
-                        begin: 1e3 * data.index,
-                        dur: 1e3,
-                        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-                        to: data.path.clone().stringify(),
-                        easing: Chartist.Svg.Easing.easeOutQuint
-                    }
+                    axisX: {
+                        showGrid: !1
+                    },
+                    axisY: {
+                        labelInterpolationFnc: function labelInterpolationFnc(value) {
+                            return chartData.currency + value;
+                            return value / 1e3 + "K";
+                        },
+                        scaleMinSpace: 40
+                    },
+                    plugins: [Chartist.plugins.tooltip({
+                        position: 'bottom'
+                    }), Chartist.plugins.legend()],
+                    low: 0,
+                    height: 300
                 });
-            });
-        },
+                scoreChart.on("created", function (data) {
+                    var defs = data.svg.querySelector("defs") || data.svg.elem("defs"),
+                        filter = (data.svg.width(), data.svg.height(), defs.elem("filter", {
+                            x: 0, y: "-10%", id: "shadow" + id
+                        }, "", !0));
+                    return filter.elem("feGaussianBlur", {
+                        in: "SourceAlpha", stdDeviation: "800", result: "offsetBlur"
+                    }), filter.elem("feOffset", {
+                        dx: "0", dy: "800"
+                    }), filter.elem("feBlend", {
+                        in: "SourceGraphic", mode: "multiply"
+                    }), defs;
+                }).on("draw", function (data) {
+                    "line" === data.type ? data.element.attr({
+                        filter: "url(#shadow" + id + ")"
+                    }) : "point" === data.type && new Chartist.Svg(data.element._node.parentNode).elem("line", {
+                        x1: data.x, y1: data.y, x2: data.x + .01, y2: data.y, class: "ct-point-content"
+                    }), "line" !== data.type && "area" != data.type || data.element.animate({
+                        d: {
+                            begin: 1e3 * data.index,
+                            dur: 1e3,
+                            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                            to: data.path.clone().stringify(),
+                            easing: Chartist.Svg.Easing.easeOutQuint
+                        }
+                    });
+                });
+            },
             labelList = chartData.label_list,
             creditCardSalesData = {
-            name: "Cartão de crédito", data: chartData.boleto_data
-        },
+                name: "Cartão de crédito", data: chartData.boleto_data
+            },
             boletoSalesData = {
-            name: "Boleto", data: chartData.credit_card_data
-        };
+                name: "Boleto", data: chartData.credit_card_data
+            };
         createChart = function createChart(button) {
             scoreChart("scoreLineToDay", labelList, creditCardSalesData, boletoSalesData);
         }, createChart(), $(".chart-action li a").on("click", function () {
