@@ -19,8 +19,8 @@
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="theme-color" content="#ffffff">
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/new-login.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/new-login.css') }}">
     <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
     <!-- Scripts -->
@@ -34,7 +34,7 @@
     </script>
 </head>
 <body style='background:none;padding:0%'>
-<img src="{{ asset('modules/global/adminremark/assets/images/gradient-bg.png') }}" style='width:100%;height:100%;position:fixed;z-index:-100;left:0%;top:0%;' alt="Background">
+<img src="{{ asset('modules/global/adminremark2/assets/images/gradient-bg.png') }}" style='width:100%;height:100%;position:fixed;z-index:-100;left:0%;top:0%;' alt="Background">
 {{--<div class="loading">
     <div class="loader">
     </div>
@@ -43,7 +43,7 @@
     body {
         font-family: 'Muli', sans-serif;
         min-height: 100vh;
-        background: url({{ asset('modules/global/adminremark/assets/images/gradient-bg.png') }}) bottom left no-repeat;
+        background: url({{ asset('modules/global/adminremark2/assets/images/gradient-bg.png') }}) bottom left no-repeat;
     }
 </style>
 @yield('content')
