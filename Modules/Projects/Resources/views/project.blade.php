@@ -284,7 +284,7 @@
 
     @push('scripts')
         <script src="{{asset('modules/partners/js/partners.js')}}"></script>
-        <script src="{{asset('modules/Shipping/js/shipping.js')}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js')}}"></script>
         <script src="{{asset('modules/domain/js/domain.js')}}"></script>
         <script src="{{asset('modules/sms-messageage/js/smsMessage.js')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js')}}"></script>

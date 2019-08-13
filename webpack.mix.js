@@ -160,8 +160,8 @@ mix.babel([
 
 //Shipping
 mix.babel([
-    'resources/assets/modules/Shipping/js/shipping.js',
-], 'public/modules/Shipping/js/shipping.js');
+    'resources/assets/modules/shipping/js/shipping.js',
+], 'public/modules/shipping/js/shipping.js');
 
 //shopify
 mix.babel([

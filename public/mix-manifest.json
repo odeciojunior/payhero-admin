@@ -34,7 +34,7 @@
     "/modules/reports/js/sales_by_origin.js": "/modules/reports/js/sales_by_origin.js",
     "/modules/sales/js/index.js": "/modules/sales/js/index.js",
     "/modules/salesrecovery/js/salesrecovery.js": "/modules/salesrecovery/js/salesrecovery.js",
-    "/modules/Shipping/js/shipping.js": "/modules/Shipping/js/shipping.js",
+    "/modules/shipping/js/shipping.js": "/modules/shipping/js/shipping.js",
     "/modules/shopify/js/index.js": "/modules/shopify/js/index.js",
     "/modules/sms-messageage/js/smsMessage.js": "/modules/sms-messageage/js/smsMessage.js",
     "/modules/transfers/js/index.js": "/modules/transfers/js/index.js",
