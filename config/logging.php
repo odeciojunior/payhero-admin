@@ -35,7 +35,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily'],
+            'channels' => ['daily', 'slack'],
         ],
 
         'single' => [
@@ -54,10 +54,11 @@ return [
 
         'slack' => [
             'driver' => 'slack',
-            'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'Laravel Log',
-            'emoji' => ':boom:',
+            'url' => env('SLACK_WEBHOOK'),
+            'username' => 'Laravel-Admin',
+            'emoji' => ':scream:',
             'level' => 'critical',
+            'channel' => env('SLACK_CHANNEL', "#laravel-admin"),
         ],
 
         'stderr' => [

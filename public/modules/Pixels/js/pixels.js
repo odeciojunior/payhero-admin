@@ -1,10 +1,17 @@
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _defineProperty(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {value: value, enumerable: true, configurable: true, writable: true});
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
 
 $(function () {
     var projectId = $("#project-id").val();
 
     $('#tab_pixels').on('click', function () {
-        $("#previewimage").imgAreaSelect({ remove: true });
+        $("#previewimage").imgAreaSelect({remove: true});
         atualizarPixel();
     });
     atualizarPixel();
@@ -36,12 +43,19 @@ $(function () {
                         $(this).val(1);
                     } else {
                         $(this).val(0);
+
                     }
                 });
 
+                if ($(':checkbox').is(':checked')) {
+                    $(':checkbox').val(1);
+                } else {
+                    $(':checkbox').val(0);
+                }
+
+
                 $(".btn-save").unbind('click');
                 $(".btn-save").on('click', function () {
-
                     var formData = new FormData(document.getElementById('form-register-pixel'));
                     formData.append('project', projectId);
                     formData.append('checkout', $("#checkout").val());
@@ -143,7 +157,7 @@ $(function () {
                     var pixel = $(this).attr('pixel');
                     $("#modal-title").html('Detalhes do pixel');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
-                    var data = { pixelId: pixel };
+                    var data = {pixelId: pixel};
                     $("#btn-modal").hide();
                     $.ajax({
                         method: "GET",
@@ -167,7 +181,7 @@ $(function () {
                     var pixel = $(this).attr('pixel');
                     $("#modal-title").html("Editar Pixel");
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-                    var data = { pixelId: pixel };
+                    var data = {pixelId: pixel};
                     $.ajax({
                         method: "GET",
                         url: "/pixels/" + pixel + "/edit",

@@ -84,7 +84,7 @@ class ReportsController extends Controller
                         ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
                         ->leftJoin('transactions as transaction', function($join) use ($userProject) {
                             $join->where('transaction.company', $userProject->company);
-                            $join->whereIn('transaction.status', ['paid', 'transfered']);
+                            $join->whereIn('transaction.status', ['paid', 'transfered', 'anticipated']);
                             $join->on('transaction.sale', '=', 'sales.id');
                         })
                         ->leftJoin('checkouts as checkout', function($join) {
@@ -204,6 +204,7 @@ class ReportsController extends Controller
                             if ($sale->status == 1) {
                                 $totalPaidValueAproved += $sale->value;
                             }
+
 
                             if ($sale->is_mobile) {
                                 $contMobile++;
