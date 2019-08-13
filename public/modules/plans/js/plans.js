@@ -136,7 +136,6 @@ $(function () {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-plan', '#table-plans');
-        $("#data-table-plan").html("<tr class=''><td colspan='11'>Carregando...</td></tr>");
 
         if (link == null) {
             link = '/plans';

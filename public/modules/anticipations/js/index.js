@@ -1,7 +1,8 @@
 $(function () {
 
     $("#btn-disponible-antecipation").on('click', function () {
-        loading("#balance-after-anticipation");
+        // loading("#balance-after-anticipation",'');
+        $('#balance-after-anticipation').html("<span class='loaderSpan' >" + "</span>")
         let company = $("#transfers_company_select").val();
         $("#tax-value").html('');
 
@@ -18,8 +19,8 @@ $(function () {
                         alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 } else if (response.status === 400) {
-                    $("#balance-after-anticipation").html(response.responseJSON.data['valueAntecipable']);
-                    $("#tax-value").html(response.responseJSON.data['taxValue']);
+                    $("#balance-after-anticipation").html(response.responseJSON.data['valueAntecipable'] + ',00');
+                    $("#tax-value").html(response.responseJSON.data['taxValue'] + ',00');
                     alertCustom("error", response.responseJSON.message)
                 } else {
                     alertCustom("error", response.responseJSON.message)

@@ -97,8 +97,8 @@
                     </div>
                 </div>
                 <div class='col-12 row' style='margin:auto; padding-top:50px'>
-                    <div class='col-12' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <h3 style='position:absolute; bottom: 0px;'>Configurações Avançadas <u style='font-size:15px; color:blue;cursor:pointer;'>exibir mais</u>
+                    <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <h3 style='position:absolute; bottom: 0px;'>Configurações Avançadas <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
                         </h3>
                     </div>
                 </div>

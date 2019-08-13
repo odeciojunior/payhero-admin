@@ -156,16 +156,16 @@
                                                     <div class="d-flex">
                                                         <div class="p-2 d-flex flex-column">
                                                             <span class="details-text">Visibilidade</span>
-                                                            <p class="card-text sm"> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>
+                                                            <p @if($project->visibility == 'public') class="card-text text-center sm badge-pill badge-primary" @else class="card-text text-center sm badge-pill badge-danger" @endif> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>
                                                         </div>
                                                         <div class="p-2 d-flex flex-column">
                                                             <span class="details-text">Status</span>
-                                                            <p class="card-text sm"> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>
+                                                            <p @if($project->status) class="card-text sm badge-pill badge-primary" @else class="card-text sm badge-pill badge-danger" @endif> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h5 class="sm-title mt-30"><strong> Descrição </strong></h5>
+                                            <h5 class="sm-title"><strong> Descrição </strong></h5>
                                             <p class="card-text sm">
                                                 {{ $project->description }}
                                             </p>
