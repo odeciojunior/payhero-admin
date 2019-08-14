@@ -18,7 +18,7 @@
     <div class="page-holder">
 
         <div class="content-error d-flex text-center">
-            <img class="svgorange" src="{!! asset('modules/global/assets/img/error.png') !!}">
+            <img class="svgorange" src="{!! asset('modules/global/img/error.png') !!}">
             <h1 class="big"> Ops! Nada por aqui</h1>
             <p>Erro | 404</p> 
             <p style="font-size:12px">Parece que essa página que você procura não existe. </p>

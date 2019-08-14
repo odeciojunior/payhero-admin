@@ -19,7 +19,7 @@
     <div class='row align-items-baseline justify-content-between mb-15'>
         @foreach($plans as $plan)
             <div class="col-lg-2">
-                <img src='{{$plan['photo'] ?? asset('modules/global/assets/img/produto.png')}}' width='50px' style='border-radius: 6px;'>
+                <img src='{{$plan['photo'] ?? asset('modules/global/img/produto.png')}}' width='50px' style='border-radius: 6px;'>
             </div>
             <div class='col-lg-4'>
                 <h4 class='table-title'>{{$plan['name']}}</h4>
@@ -57,7 +57,7 @@
         <br>
         <span class='table-title gray'>Telefone: {{$client->telephone}}</span>
         <a href="{{$whatsapp_link}}" target='_blank'>
-            <img src="{!! asset('modules/global/assets/img/whatsapplogo.png') !!}" width="25px">
+            <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px">
         </a>
         <br>
         <span class="table-title gray"> E-mail: {{$client->email}} </span>

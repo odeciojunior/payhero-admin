@@ -11,37 +11,37 @@
     <link rel="stylesheet" href="{{asset('modules/register/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('modules/register/css/jquery-ui.min.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/assets/img/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/assets/img/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/assets/img/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ asset('modules/global/assets/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/css/bootstrap-extend.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/checkAnimation.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
     <!-- Plugins -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/vendor/animsition/animsition.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
     <!-- Fonts -->
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/global/fonts/web-icons/web-icons.min.css') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/3.7.95/css/materialdesignicons.min.css">
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
     <!-- New CSS -->
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-dashboard.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/reports.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/reports.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/register/css/animateColor.css') }}">
     <script src="https://code.jquery.com/jquery-3.4.1.js"
             integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -596,22 +596,22 @@
 <script src="{{asset('modules/register/js/pesquisaCep.js')}}"></script>
 <script src="{{asset('modules/register/js/register.js')}}"></script>
 <script src="{{asset('modules/register/js/passwordStrength.js')}}"></script>
-<script src="{{ asset('modules/global/assets/js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js'></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/popper-js/umd/popper.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/bootstrap/bootstrap.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/babel-external-helpers/babel-external-helpers.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/popper-js/umd/popper.min.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/bootstrap/bootstrap.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/animsition/animsition.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/asscrollbar/jquery-asScrollbar.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
 <script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
-<script src="{{ asset('modules/global/assets/js/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
+<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Component.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Plugin.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Base.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark2/global/js/Config.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark2/assets/js/Section/Menubar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark2/assets/js/Section/Sidebar.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark2/assets/js/Section/PageAside.js') }}"></script>

@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/empty.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
 @endpush
 
 @section('content')
@@ -231,7 +231,7 @@
                 </div>
             @else
                 <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/assets/img/emptyempresas.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
                     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
                     <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
                     <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>

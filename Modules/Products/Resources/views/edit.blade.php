@@ -3,7 +3,7 @@
 @section('content')
 
     @push('css')
-        <link rel="stylesheet" href="{!!  asset('modules/global/adminremark/global/vendor/dropify/dropify.min.css') !!}">
+        <link rel="stylesheet" href="{!!  asset('modules/global/adminremark2/global/vendor/dropify/dropify.min.css') !!}">
     @endpush
 
     <!-- Page -->
@@ -40,7 +40,7 @@
                                         <div class="d-flex flex-column">
                                             <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
                                             <label for="name">Selecione uma imagem</label>
-                                            <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src='{{ $product->photo ?? asset('modules/global/assets/img/projeto.png')}}' style="max-height: 300px; max-width: 300px;">
+                                            <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src='{{ $product->photo ?? asset('modules/global/img/projeto.png')}}' style="max-height: 300px; max-width: 300px;">
                                             <input type="hidden" name="photo_x1"> <input type="hidden" name="photo_y1">
                                             <input type="hidden" name="photo_w"> <input type="hidden" name="photo_h">
                                             <p class="info mt-5" style="font-size:10px;">
@@ -196,8 +196,8 @@
 
     @push('scripts')
         <script src="{!! asset('modules/products/js/products.js') !!}"></script>
-        <script src="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') !!}"></script>
-        <script src="{!! asset('modules/global/adminremark/global/js/Plugin/dropify.js') !!}"></script>
+        <script src="{!! asset('modules/global/adminremark2/global/vendor/dropify/dropify.min.js') !!}"></script>
+        <script src="{!! asset('modules/global/adminremark2/global/js/Plugin/dropify.js') !!}"></script>
     @endpush
 
 @endsection

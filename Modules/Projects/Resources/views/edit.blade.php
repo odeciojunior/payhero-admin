@@ -12,7 +12,7 @@
                     <input name='photo' type='file' class='form-control' id='photoProject' style='display:none;' accept='image/*'>
                     <label for='photo'>Selecione uma imagem capa do projeto</label>
                     <div style="width:100%" class="text-center">
-                        <img id='previewimage' alt='Selecione a foto do projeto' src='{{$project->photo ?? asset('modules/global/assets/img/projeto.png')}}' style='min-width: 250px; max-width: 250px;margin: auto'>
+                        <img id='previewimage' alt='Selecione a foto do projeto' src='{{$project->photo ?? asset('modules/global/img/projeto.png')}}' style='min-width: 250px; max-width: 250px;margin: auto'>
                     </div>
                     <input type='hidden' id='photo_x1' name='photo_x1'><input id='photo_y1' type='hidden' name='photo_y1'>
                     <input type='hidden' id='photo_w' name='photo_w'><input id='photo_h' type='hidden' name='photo_h'>
@@ -68,7 +68,7 @@
                     <div class="col-12">
                         <div class='d-flex flex-column text-center' id='div-img-project' style='position: relative;'>
                             <input name='logo' type='file' class='form-control' id='photo-logo-email' style='display:none;'>
-                            <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/assets/img/projeto.png')}}' style='max-height:250px;max-width:250px;margin:auto'>
+                            <img id='image-logo-email' alt='Selecione a foto do projeto' src='{{$project->logo ?? asset('modules/global/img/projeto.png')}}' style='max-height:250px;max-width:250px;margin:auto'>
                             <input type='hidden' name='logo_h'> <input type='hidden' name='logo_w'>
                             <p class='info mt-5' style='font-size: 10px;'>
                                 <i class='icon wb-info-circle' aria-hidden='true'></i> A imagem escolhida deve estar no formato JPG, JPEG ou PNG.
