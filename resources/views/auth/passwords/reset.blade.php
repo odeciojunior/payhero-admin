@@ -7,7 +7,7 @@
         <div class="content-holder">
             <div class="page-content d-flex flex-column justify-content-center">
                 <div class="logobar text-center">
-                    <img src="{{ asset('modules/global/adminremark2/assets/images/logo-oficial.svg') }}" alt="CloudFox">
+                    <img src="{{ asset('modules/global/adminremark/assets/images/logo-oficial.svg') }}" alt="CloudFox">
                 </div>
                 <div class="clearfix"></div>
                 <div class="panel">

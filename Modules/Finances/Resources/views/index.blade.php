@@ -267,6 +267,7 @@
                         <hr>
                         <h3>Valor do saque:
                             <span id="modal-withdrawal-value" class='greenGradientText'></span>
+                            <span id='taxValue' style='font-size: 6px;'>- R$3,80</span>
                         </h3>
                     </div>
                 </div>
