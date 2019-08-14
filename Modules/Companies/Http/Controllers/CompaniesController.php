@@ -8,6 +8,7 @@ use App\Entities\Company;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Companies\Http\Requests\CompanyCreateFormRequest;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
@@ -108,20 +109,26 @@ class CompaniesController extends Controller
                 ->with('user')
                 ->find(current(Hashids::decode($encodedId)));
 
-            $banks = $bankService->getBanks('BR');
+            if (Gate::allows('edit', [$company])) {
+                $banks = $bankService->getBanks('BR');
 
-            $companyResource = new CompanyResource($company);
+                $companyResource = new CompanyResource($company);
 
-            if ($company->country == 'usa') {
-                return view('companies::edit_usa', [
-                    'company' => json_decode(json_encode($companyResource)),
-                    'banks'   => $banks,
-                ]);
+                if ($company->country == 'usa') {
+                    return view('companies::edit_usa', [
+                        'company' => json_decode(json_encode($companyResource)),
+                        'banks'   => $banks,
+                    ]);
+                } else {
+                    return view('companies::edit_brazil', [
+                        'company' => json_decode(json_encode($companyResource)),
+                        'banks'   => $banks,
+                    ]);
+                }
             } else {
-                return view('companies::edit_brazil', [
-                    'company' => json_decode(json_encode($companyResource)),
-                    'banks'   => $banks,
-                ]);
+                return response()->json([
+                                            'message' => 'Sem permissão para editar a empresa',
+                                        ], 403);
             }
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
@@ -144,14 +151,21 @@ class CompaniesController extends Controller
 
             $company = $companyModel
                 ->find(current(Hashids::decode($encodedId)));
-            if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
-                $company->bank_document_status = $companyModel->getEnum('bank_document_status', 'pending');
+
+            if (Gate::allows('update', [$company])) {
+                if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
+                    $company->bank_document_status = $companyModel->getEnum('bank_document_status', 'pending');
+                }
+                $requestData = array_filter($requestData);
+
+                $company->update($requestData);
+
+                return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
+            } else {
+                return response()->json([
+                                            'message' => 'Sem permissão para atualizar a empresa',
+                                        ], 403);
             }
-            $requestData = array_filter($requestData);
-
-            $company->update($requestData);
-
-            return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
         } catch (Exception $e) {
             Log::warning('CompaniesController - update - error');
             report($e);
@@ -174,12 +188,18 @@ class CompaniesController extends Controller
                                                     'usersProjects',
                                                 ])->find(current(Hashids::decode($encodedId)));
             if ($company) {
-                if ($company->transactions_count > 0) {
-                    return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], 422);
-                } else if ($company->users_projects_count > 0) {
-                    return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], 422);
+                if (Gate::allows('destroy', [$company])) {
+                    if ($company->transactions_count > 0) {
+                        return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], 422);
+                    } else if ($company->users_projects_count > 0) {
+                        return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], 422);
+                    } else {
+                        $company->delete();
+                    }
                 } else {
-                    $company->delete();
+                    return response()->json([
+                                                'message' => 'Sem permissão para remover a empresa',
+                                            ], 403);
                 }
             } else {
                 //empresa nao exsite
@@ -209,52 +229,58 @@ class CompaniesController extends Controller
             $dataForm = $request->validated();
             $company  = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
 
-            $document = $request->file('file');
+            if (Gate::allows('uploadDocuments', [$company])) {
+                $document = $request->file('file');
 
-            $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
+                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
 
-            $companyDocumentModel->create([
-                                              'company_id'         => $company->id,
-                                              'document_url'       => $digitalOceanPath,
-                                              'document_type_enum' => $dataForm["document_type"],
-                                              'status'             => null,
-                                          ]);
+                $companyDocumentModel->create([
+                                                  'company_id'         => $company->id,
+                                                  'document_url'       => $digitalOceanPath,
+                                                  'document_type_enum' => $dataForm["document_type"],
+                                                  'status'             => null,
+                                              ]);
 
-            if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'bank_document_status')) {
-                $company->update([
-                                     'bank_document_status' => $company->getEnum('bank_document_status', 'analyzing'),
-                                 ]);
-            }
+                if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'bank_document_status')) {
+                    $company->update([
+                                         'bank_document_status' => $company->getEnum('bank_document_status', 'analyzing'),
+                                     ]);
+                }
 
-            if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'address_document_status')) {
-                $company->update([
-                                     'address_document_status' => $company->getEnum('address_document_status', 'analyzing'),
-                                 ]);
-            }
+                if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'address_document_status')) {
+                    $company->update([
+                                         'address_document_status' => $company->getEnum('address_document_status', 'analyzing'),
+                                     ]);
+                }
 
-            if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'contract_document_status')) {
-                $company->update([
-                                     'contract_document_status' => $company->getEnum('contract_document_status', 'analyzing'),
-                                 ]);
-            }
+                if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'contract_document_status')) {
+                    $company->update([
+                                         'contract_document_status' => $company->getEnum('contract_document_status', 'analyzing'),
+                                     ]);
+                }
 
-            return response()->json([
-                                        'message' => 'Arquivo enviado com sucesso.',
-                                        'data'    => [
-                                            'bank_document_translate'     => [
-                                                'status'  => $company->bank_document_status,
-                                                'message' => $company->getEnum('bank_document_status', $company->bank_document_status, true),
+                return response()->json([
+                                            'message' => 'Arquivo enviado com sucesso.',
+                                            'data'    => [
+                                                'bank_document_translate'     => [
+                                                    'status'  => $company->bank_document_status,
+                                                    'message' => $company->getEnum('bank_document_status', $company->bank_document_status, true),
+                                                ],
+                                                'address_document_translate'  => [
+                                                    'status'  => $company->address_document_status,
+                                                    'message' => $company->getEnum('address_document_status', $company->address_document_status, true),
+                                                ],
+                                                'contract_document_translate' => [
+                                                    'status'  => $company->contract_document_status,
+                                                    'message' => $company->getEnum('contract_document_status', $company->contract_document_status, true),
+                                                ],
                                             ],
-                                            'address_document_translate'  => [
-                                                'status'  => $company->address_document_status,
-                                                'message' => $company->getEnum('address_document_status', $company->address_document_status, true),
-                                            ],
-                                            'contract_document_translate' => [
-                                                'status'  => $company->contract_document_status,
-                                                'message' => $company->getEnum('contract_document_status', $company->contract_document_status, true),
-                                            ],
-                                        ],
-                                    ], 200);
+                                        ], 200);
+            } else {
+                return response()->json([
+                                            'message' => 'Sem permissão para enviar documentos para a empresa',
+                                        ], 403);
+            }
         } catch (Exception $e) {
             Log::warning('ProfileController uploadDocuments');
             report($e);

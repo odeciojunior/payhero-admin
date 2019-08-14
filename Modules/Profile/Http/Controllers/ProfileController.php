@@ -111,7 +111,7 @@ class ProfileController extends Controller
 
             } else {
                 //sem permissao
-                return response()->json(['message' => 'Sem permissão para editar este perfil'], 400);
+                return response()->json(['message' => 'Sem permissão para editar este perfil'], 403);
             }
         } catch (Exception $e) {
             Log::warning('ProfileController update');
@@ -136,7 +136,7 @@ class ProfileController extends Controller
 
                 return response()->json("success");
             } else {
-                return response()->json(['message' => 'Sem permissão para trocar a senha '], 400);
+                return response()->json(['message' => 'Sem permissão para trocar a senha '], 403);
             }
         } catch (Exception $e) {
             Log::warning('ProfileController changePassword');
@@ -192,7 +192,7 @@ class ProfileController extends Controller
                                             'address_document_translate'  => $user->getEnum('address_document_status', $user->address_document_status, true),
                                         ], 200);
             } else {
-                return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 400);
+                return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);
             }
         } catch (Exception $e) {
             Log::warning('ProfileController uploadDocuments');

@@ -7,6 +7,7 @@ use App\Entities\Company;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Companies\Transformers\CompanyResource;
@@ -84,54 +85,6 @@ class CompaniesApiController extends Controller
     public function delete($id)
     {
 
-    }
-
-    /**
-     * @return mixed
-     * @throws Exception
-     */
-    public function getCompaniesData()
-    {
-
-        $companies = DB::table('companies as company')
-                       ->select([
-                                    'company.id',
-                                    'company.cnpj',
-                                    'company.fantasy_name',
-                                ]);
-
-        if (!auth()->user()->hasRole('administrador geral')) {
-            $companies = $companies->where('user', auth()->user()->id);
-        }
-
-        return Datatables::of($companies)
-                         ->editColumn('cnpj', function($company) {
-                             if (strlen($company->cnpj) == '14')
-                                 return vsprintf("%s%s.%s%s%s.%s%s%s/%s%s%s%s-%s%s", str_split($company->cnpj));
-                             else if (strlen($company->cnpj) == '11')
-                                 return vsprintf("%s%s%s.%s%s%s.%s%s%s-%s%s", str_split($company->cnpj));
-
-                             return $company->cnpj;
-                         })
-                         ->addColumn('detalhes', function($company) {
-                             return "<span data-toggle='modal' data-target='#modal_detalhes'>
-                        <a class='btn btn-outline btn-success detalhes_empresa' data-placement='top' data-toggle='tooltip' title='Detalhes' empresa='" . $company->id . "'>
-                            <i class='icon wb-order' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_editar'>
-                        <a href='/empresas/editar/$company->id' class='btn btn-outline btn-primary editar_empresa' data-placement='top' data-toggle='tooltip' title='Editar' empresa='" . $company->id . "'>
-                            <i class='icon wb-pencil' aria-hidden='true'></i>
-                        </a>
-                    </span>
-                    <span data-toggle='modal' data-target='#modal_excluir'>
-                        <a class='btn btn-outline btn-danger excluir_empresa' data-placement='top' data-toggle='tooltip' title='Excluir' empresa='" . $company->id . "'>
-                            <i class='icon wb-trash' aria-hidden='true'></i>
-                        </a>
-                    </span>";
-                         })
-                         ->rawColumns(['detalhes'])
-                         ->make(true);
     }
 }
 
