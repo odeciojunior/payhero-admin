@@ -6,7 +6,9 @@ use Exception;
 use App\Entities\User;
 use App\Entities\UserDocument;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Profile\Http\Requests\ProfileIndexRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
 use Modules\Profile\Transformers\UserResource;
@@ -27,13 +29,19 @@ class ProfileController extends Controller
     public function index()
     {
         try {
+
             $user = auth()->user();
 
-            $userResource = new UserResource($user);
+            if (Gate::allows('view', [$user])) {
+                $userResource = new UserResource($user);
 
-            return view('profile::index', [
-                'user' => json_decode(json_encode($userResource)),
-            ]);
+                return view('profile::index', [
+                    'user' => json_decode(json_encode($userResource)),
+                ]);
+            } else {
+                //sem permissao
+
+            }
         } catch (Exception $e) {
             Log::warning('ProfileController index');
             report($e);
@@ -48,57 +56,63 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request, $idCode)
     {
         try {
-
-            $digitalOceanFileService = app(DigitalOceanFileService::class); 
-            $requestData             = $request->validated();
-
             $user = auth()->user();
 
-            $user->update([
-                              'name'         => $requestData['name'],
-                              'email'        => $requestData['email'],
-                              'document'     => $requestData['document'],
-                              'cellphone'    => $requestData['cellphone'],
-                              'date_birth'   => $requestData['date_birth'],
-                              'zip_code'     => $requestData['zip_code'],
-                              'country'      => 'br',
-                              'state'        => $requestData['state'],
-                              'city'         => $requestData['city'],
-                              'neighborhood' => $requestData['neighborhood'],
-                              'street'       => $requestData['street'],
-                              'number'       => $requestData['number'],
-                              'complement'   => $requestData['complement'],
-                          ]);
+            if (Gate::allows('update', [$user])) {
 
-            $userPhoto = $request->file('profile_photo');
+                $digitalOceanFileService = app(DigitalOceanFileService::class);
+                $requestData             = $request->validated();
 
-            if ($userPhoto != null) {
+                $user->update([
+                                  'name'         => $requestData['name'],
+                                  'email'        => $requestData['email'],
+                                  'document'     => $requestData['document'],
+                                  'cellphone'    => $requestData['cellphone'],
+                                  'date_birth'   => $requestData['date_birth'],
+                                  'zip_code'     => $requestData['zip_code'],
+                                  'country'      => 'br',
+                                  'state'        => $requestData['state'],
+                                  'city'         => $requestData['city'],
+                                  'neighborhood' => $requestData['neighborhood'],
+                                  'street'       => $requestData['street'],
+                                  'number'       => $requestData['number'],
+                                  'complement'   => $requestData['complement'],
+                              ]);
 
-                try {
-                    $digitalOceanService = app(DigitalOceanFileService::class);
-                    $digitalOceanService->deleteFile($user->photo);
+                $userPhoto = $request->file('profile_photo');
 
-                    $img = Image::make($userPhoto->getPathname());
-                    $img->crop($requestData['photo_w'], $requestData['photo_h'], $requestData['photo_x1'], $requestData['photo_y1']);
-                    $img->resize(200, 200);
-                    $img->save($userPhoto->getPathname());
+                if ($userPhoto != null) {
 
-                    $digitalOceanPath = $digitalOceanService
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile', $userPhoto);
+                    try {
+                        $digitalOceanService = app(DigitalOceanFileService::class);
+                        $digitalOceanService->deleteFile($user->photo);
 
-                    $user->update([
-                                      'photo' => $digitalOceanPath,
-                                  ]);
-                } catch (Exception $e) {
-                    Log::warning('ProfileController - update - Erro ao enviar foto do profile');
-                    report($e);
+                        $img = Image::make($userPhoto->getPathname());
+                        $img->crop($requestData['photo_w'], $requestData['photo_h'], $requestData['photo_x1'], $requestData['photo_y1']);
+                        $img->resize(200, 200);
+                        $img->save($userPhoto->getPathname());
 
-                    return response()->json(['message' => 'Erro ao salvar foto'], 400);
+                        $digitalOceanPath = $digitalOceanService
+                            ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/profile', $userPhoto);
+
+                        $user->update([
+                                          'photo' => $digitalOceanPath,
+                                      ]);
+                    } catch (Exception $e) {
+                        Log::warning('ProfileController - update - Erro ao enviar foto do profile');
+                        report($e);
+
+                        return response()->json(['message' => 'Erro ao salvar foto'], 400);
+                    }
                 }
-            }
 
-            return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
-            //return redirect()->route('profile');
+                return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
+                //return redirect()->route('profile');
+
+            } else {
+                //sem permissao
+                return response()->json(['message' => 'Sem permissão para editar este perfil'], 400);
+            }
         } catch (Exception $e) {
             Log::warning('ProfileController update');
             report($e);
@@ -112,15 +126,18 @@ class ProfileController extends Controller
     public function changePassword(ProfilePasswordRequest $request)
     {
         try {
-            $requestData = $request->validated();
-
             $user = auth()->user();
+            if (Gate::allows('changePassword', [$user])) {
+                $requestData = $request->validated();
 
-            $user->update([
-                              'password' => bcrypt($requestData['new_password']),
-                          ]);
+                $user->update([
+                                  'password' => bcrypt($requestData['new_password']),
+                              ]);
 
-            return response()->json("success");
+                return response()->json("success");
+            } else {
+                return response()->json(['message' => 'Sem permissão para trocar a senha '], 400);
+            }
         } catch (Exception $e) {
             Log::warning('ProfileController changePassword');
             report($e);
@@ -134,44 +151,49 @@ class ProfileController extends Controller
     public function uploadDocuments(ProfileUploadDocumentRequest $request)
     {
         try {
-            $digitalOceanFileService = app(DigitalOceanFileService::class);
-            $userDocument            = new UserDocument();
-
-            $dataForm = $request->validated();
-
-            $digitalOceanService = app(DigitalOceanFileService::class);
-            $userDocuments = new UserDocument();
-
-            $document = $request->file('file');
-
-            $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents', $document, null, null, 'private');
-
-            $userDocument->create([
-                                      'user_id'            => auth()->user()->id,
-                                      'document_url'       => $digitalOceanPath,
-                                      'document_type_enum' => $dataForm["document_type"],
-                                      'status'             => null,
-                                  ]);
-
             $user = auth()->user();
 
-            if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'personal_document')) {
-                $user->update([
-                                  'personal_document_status' => $user->getEnum('personal_document_status', 'analyzing'),
-                              ]);
-            }
+            if (Gate::allows('uploadDocuments', [$user])) {
 
-            if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'address_document')) {
-                $user->update([
-                                  'address_document_status' => $user->getEnum('address_document_status', 'analyzing'),
-                              ]);
-            }
+                $digitalOceanFileService = app(DigitalOceanFileService::class);
+                $userDocument            = new UserDocument();
 
-            return response()->json([
-                                        'message'                     => 'Arquivo enviado com sucesso.',
-                                        'personal_document_translate' => $user->getEnum('personal_document_status', $user->personal_document_status, true),
-                                        'address_document_translate'  => $user->getEnum('address_document_status', $user->address_document_status, true),
-                                    ], 200);
+                $dataForm = $request->validated();
+
+                $digitalOceanService = app(DigitalOceanFileService::class);
+                $userDocuments       = new UserDocument();
+
+                $document = $request->file('file');
+
+                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/private/documents', $document, null, null, 'private');
+
+                $userDocument->create([
+                                          'user_id'            => auth()->user()->id,
+                                          'document_url'       => $digitalOceanPath,
+                                          'document_type_enum' => $dataForm["document_type"],
+                                          'status'             => null,
+                                      ]);
+
+                if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'personal_document')) {
+                    $user->update([
+                                      'personal_document_status' => $user->getEnum('personal_document_status', 'analyzing'),
+                                  ]);
+                }
+
+                if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'address_document')) {
+                    $user->update([
+                                      'address_document_status' => $user->getEnum('address_document_status', 'analyzing'),
+                                  ]);
+                }
+
+                return response()->json([
+                                            'message'                     => 'Arquivo enviado com sucesso.',
+                                            'personal_document_translate' => $user->getEnum('personal_document_status', $user->personal_document_status, true),
+                                            'address_document_translate'  => $user->getEnum('address_document_status', $user->address_document_status, true),
+                                        ], 200);
+            } else {
+                return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 400);
+            }
         } catch (Exception $e) {
             Log::warning('ProfileController uploadDocuments');
             report($e);
