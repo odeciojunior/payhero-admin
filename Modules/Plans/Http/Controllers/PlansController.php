@@ -381,12 +381,20 @@ class PlansController extends Controller
             $planModel    = new Plan();
             $productModel = new Product();
             $productPlan  = new ProductPlan();
+            $projectModel = new Project();
+
 
             $planId = Hashids::decode($request->input('planId'))[0];
             $plan   = $planModel->find($planId);
             if ($plan) {
-                $products     = $productModel->where('user', Auth::user()->id)->where('shopify', 0)->get()
-                                             ->toArray();
+
+                $project = $projectModel->find(current(Hashids::decode($request->input('project'))));
+                if (!empty($project->shopify_id)) {
+                    $products = $productModel->where('user', auth()->user()->id)->where('shopify', 1)->get();
+                } else {
+                    $products = $productModel->where('user', auth()->user()->id)->where('shopify', 0)->get();
+                }
+
                 $productPlans = $productPlan->where('plan', $plan->id)->get()->toArray();
 
                 return view('plans::edit', [
