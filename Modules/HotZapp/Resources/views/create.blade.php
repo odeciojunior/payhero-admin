@@ -27,7 +27,7 @@
                     <label for="token" class='mb-10'>Boleto gerado:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='' name="boleto_generated" id="boleto_generated" class='check' checked>
+                        <input type="checkbox" value='1' name="boleto_generated" id="boleto_generated" class='check' checked>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -37,7 +37,7 @@
                     <label for="token" class='mb-10'>Boleto pago:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='' name="boleto_paid" id="boleto_paid" class='check' checked>
+                        <input type="checkbox" value='1' name="boleto_paid" id="boleto_paid" class='check' checked>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -49,7 +49,7 @@
                     <label for="token" class='mb-10'>Cartão de crédito pago:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='' name="credit_card_paid" id="credit_card_paid" class='check' checked >
+                        <input type="checkbox" value='1' name="credit_card_paid" id="credit_card_paid" class='check' checked >
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -59,7 +59,7 @@
                     <label for="token" class='mb-10'>Cartão de crédito Recusado:</label>
                     <br>
                     <label class="switch">
-                        <input type="checkbox" value='' name="credit_card_refused" id="credit_card_refused" class='check' checked >
+                        <input type="checkbox" value='1' name="credit_card_refused" id="credit_card_refused" class='check' checked >
                         <span class="slider round"></span>
                     </label>
                 </div>

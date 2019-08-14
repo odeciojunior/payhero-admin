@@ -19,26 +19,7 @@ class HotZappController extends Controller
      */
     public function index()
     {
-        $hotzappIntegrationModel = new HotzappIntegration();
-        $projectModel            = new Project();
-        $userProjectModel        = new UserProject();
-
-        $projects            = [];
-        $projectsIntegrated  = [];
-        $userProjects        = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
-        $hotzappIntegrations = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
-        foreach ($userProjects as $userProject) {
-            $projects[] = $userProject->projectId;
-        }
-
-        foreach ($hotzappIntegrations as $hotzappIntegration) {
-            $project = $projectModel->find($hotzappIntegration->project_id);
-            if ($project) {
-                $projectsIntegrated[] = $project;
-            }
-        }
-
-        return view('hotzapp::index', ['projects' => $projects, 'projectsIntegrated' => $projectsIntegrated]);
+        return view('hotzapp::index');
     }
 
     /**
