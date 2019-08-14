@@ -2,6 +2,8 @@ $(document).ready(function () {
 
     var current_url = window.location.pathname;
 
+    $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical').css('overflow','hidden')
+
     if (current_url.includes('dashboard')) {
         $("#dashboard_img").attr('src', '/modules/global/img/icon-red/dashboard-d.svg');
         $("#dashboard_img").parent().parent().addClass('menu-active');
@@ -186,6 +188,9 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
             break;
     }
 });
+
+$('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').attr('overflow','hidden')
+// $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').on('m','hidden')
 
 
 
