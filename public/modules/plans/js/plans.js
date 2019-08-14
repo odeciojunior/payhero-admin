@@ -265,7 +265,7 @@ $(function () {
                     $("#modal-title").html("Editar Plano<br><hr>");
                     // $("#modal_add_size").addClass('modal-lg');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-                    var data = {planId: plan};
+                    var data = {planId: plan, project: projectId};
                     $.ajax({
                         method: "GET",
                         url: "/plans/" + plan + "/edit",
