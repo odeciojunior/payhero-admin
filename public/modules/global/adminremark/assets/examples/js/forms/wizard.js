@@ -55,14 +55,7 @@
         }
       },
       err: {
-        clazz: 'invalid-feedback'
-      },
-      control: {
-        // The CSS class for valid control
-        valid: 'is-valid',
-
-        // The CSS class for invalid control
-        invalid: 'is-invalid'
+        clazz: 'text-help'
       },
       row: {
         invalid: 'has-danger'
@@ -93,14 +86,7 @@
         }
       },
       err: {
-        clazz: 'invalid-feedback'
-      },
-      control: {
-        // The CSS class for valid control
-        valid: 'is-valid',
-
-        // The CSS class for invalid control
-        invalid: 'is-invalid'
+        clazz: 'text-help'
       },
       row: {
         invalid: 'has-danger'
@@ -145,7 +131,6 @@
   // http://formvalidation.io/api/#is-valid-container
   (function () {
     var defaults = Plugin.getDefaults("wizard");
-
     var options = _jquery2.default.extend(true, {}, defaults, {
       onInit: function onInit() {
         (0, _jquery2.default)('#exampleFormContainer').formValidation({
@@ -181,14 +166,7 @@
             }
           },
           err: {
-            clazz: 'invalid-feedback'
-          },
-          control: {
-            // The CSS class for valid control
-            valid: 'is-valid',
-
-            // The CSS class for invalid control
-            invalid: 'is-invalid'
+            clazz: 'text-help'
           },
           row: {
             invalid: 'has-danger'

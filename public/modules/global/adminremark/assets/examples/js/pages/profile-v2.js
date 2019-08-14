@@ -17,7 +17,6 @@
 
   (0, _jquery2.default)(document).ready(function ($$$1) {
     (0, _Site.run)();
-
     $$$1(".user-posts .user-posts-list").slick({
       dots: false,
       infinite: true,

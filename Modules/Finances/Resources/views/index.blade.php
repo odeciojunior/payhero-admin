@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/empty.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
 @endpush
 
 @section('content')
@@ -76,7 +76,7 @@
                                                                 <span id='tax-value'>0,00</span>
                                                                 será cobrada para liberar o valor antecipado.
                                                             </p>
-                                                            <a class="btn btn-outline-success" id='btn-anticipation' href="#"> Antecipar</a>
+                                                            <a class="btn btn-outline-success anticipation" id='btn-anticipation' href="#"> Antecipar</a>
                                                         </div>
                                                     </div>
                                                     <div class="grad-border purple"></div>
@@ -231,7 +231,7 @@
                 </div>
             @else
                 <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/assets/img/emptyempresas.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
                     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
                     <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
                     <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>
@@ -239,7 +239,6 @@
             @endif
         </div>
     </div>
-
     <!-- Modal confirmar saque -->
     <div id="modal-withdrawal" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
         <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
@@ -267,6 +266,7 @@
                         <hr>
                         <h3>Valor do saque:
                             <span id="modal-withdrawal-value" class='greenGradientText'></span>
+                            <span id="taxValue"class="" style="font-size: 6px">- R$3,80</span>
                         </h3>
                     </div>
                 </div>

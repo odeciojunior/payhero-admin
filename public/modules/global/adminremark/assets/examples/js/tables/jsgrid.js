@@ -124,7 +124,7 @@
   })();
 
   // Example Static Data
-  // -------------------
+  // ----------------------------
   (function () {
     (0, _jquery2.default)('#exampleStaticData').jsGrid({
       height: "500px",

@@ -14,7 +14,9 @@
   "use strict";
 
   (function () {
+
     var db = {
+
       loadData: function loadData(filter) {
         return $.grep(this.clients, function (client) {
           return (!filter.Name || client.Name.indexOf(filter.Name) > -1) && (!filter.Age || client.Age === filter.Age) && (!filter.Address || client.Address.indexOf(filter.Address) > -1) && (!filter.Country || client.Country === filter.Country) && (filter.Married === undefined || client.Married === filter.Married);

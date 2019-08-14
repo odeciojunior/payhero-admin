@@ -224,6 +224,7 @@
         };
 
         $('.plugin-selective').each(function () {
+
           setItems(member.length);
 
           var items = self.items;

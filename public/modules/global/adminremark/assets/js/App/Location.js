@@ -256,6 +256,7 @@
         var self = this;
 
         this.$allFriends.on('click', function () {
+
           $('.list-inline').on('click', function (event) {
             event.stopPropagation();
           });

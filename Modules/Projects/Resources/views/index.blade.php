@@ -20,7 +20,8 @@
                     @foreach($projects as $project)
                         <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                             <div class="card">
-                                <img class="card-img-top" src="{!! $project->photo != '' ? $project->photo : '/modules/global/assets/img/projeto.png' !!}" alt="">
+                                @if($project->shopify_id != null)<div class="ribbon"><span>Shopify <a class='ribbon-shopify-default'></a> </span></div>@endif
+                                <img class="card-img-top" src="{!! $project->photo != '' ? $project->photo : '/modules/global/img/projeto.png' !!}" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">{{$project->name}}</h5>
                                     <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p>
@@ -67,11 +68,11 @@
                 </div>
             @else
                 @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                 @endpush
 
                 <div class="content-error d-flex text-center">        
-                    <img src="{!! asset('modules/global/assets/img/emptyprojetos.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/emptyprojetos.svg') !!}" width="250px">
                     <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
                     <p class="desc gray">Que tal criar um primeiro projeto para começar a vender? </p>
                     <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>

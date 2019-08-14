@@ -19,26 +19,6 @@
     (0, _Site.run)();
   });
 
-  // Example bootstrap v4b tooltip (popper.js)
-  // -----------------------------------------
-  (function () {
-    (0, _jquery2.default)('[data-toggle="tooltip"]').tooltip();
-  })();
-
-  // Example bootstrap v4b popper.js
-  // -------------------------------
-  (function () {
-    (0, _jquery2.default)('[data-toggle="popover"]').popover();
-  })();
-
-  (function () {
-    (0, _jquery2.default)('.example-popover').popover({
-      container: 'body'
-    });
-  })();
-
-  // Example Webui Popover
-  // =====================
   var defaults = Plugin.getDefaults("webuiPopover");
 
   // Example Webui Popover Pop with Table

@@ -2,9 +2,15 @@ $(document).ready(function () {
 
     $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
+    $(document).on('click',function(e){
+        if($("#antecipa-popover").is(':visible') && (!$(e.target).hasClass('anticipation'))){
+            $("#antecipa-popover").fadeOut(100);
+        };
+    })
+
     $("#pop-antecipacao").click(function () {
         if ($("#antecipa-popover").css('display') == 'none') {
-            $("#antecipa-popover").fadeIn(200);
+            $("#antecipa-popover").delay(200).fadeIn(200);
         } else {
             $("#antecipa-popover").fadeOut(100);
         }
@@ -26,6 +32,7 @@ $(document).ready(function () {
     function updateBalances() {
 
         $(".price").append("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
+        loadOnTable('#withdrawals-table-data','#withdrawalsTable');
 
         $.ajax({
             url: "/finances/getbalances/" + $("#transfers_company_select").val(),
@@ -100,7 +107,7 @@ $(document).ready(function () {
                     } else {
                         $('#modal-withdrawal').modal('show');
                         $('#modal-withdrawal-title').text("Confirmar Saque");
-                        $('#modal_body').html('<div>' + '<h5>Verifique os dados da conta:</h5>' + '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' + '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' + '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' + '<h4>Documento:<span id="modal-withdrawal-document"></span></h4>' + '<hr>' + '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span></h3>' + '</div>');
+                        $('#modal_body').html('<div>' + '<h5>Verifique os dados da conta:</h5>' + '<h4>Banco:<span id="modal-withdrawal-bank"></span></h4>' + '<h4>Agência:<span id="modal-withdrawal-agency"></span><span id="modal-withdrawal-agency-digit"></span></h4>' + '<h4>Conta:<span id="modal-withdrawal-account"></span><span id="modal-withdrawal-account-digit"></span></h4>' + '<h4>Documento:<span id="modal-withdrawal-document"></span></h4>' + '<hr>' + '<h3>Valor do saque:<span id="modal-withdrawal-value" class=\'greenGradientText\'></span>'+'<span id="taxValue" class="text-gray-dark" style="font-size: 14px; color:#999999" title="Taxa de saque">- R$3,80</span>'+'</h3>' + '</div>');
                         $('#modal-withdraw-footer').html('<button id="bt-confirm-withdrawal" class="btn btn-success" style="background-image: linear-gradient(to right, #23E331, #44A44B);font-size:20px; width:100%">' + '<strong>Confirmar</strong></button>' + '<button id="bt-cancel-withdrawal" class="btn btn-success" data-dismiss="modal" aria-label="Close" style="background-image: linear-gradient(to right, #e6774c, #f92278);font-size:20px; width:100%">' + '<strong>Cancelar</strong></button>');
 
                         $("#modal-withdrawal-value").html(' R$ ' + $('#custom-input-addon').val() + ' ');

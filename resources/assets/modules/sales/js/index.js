@@ -89,7 +89,7 @@ $(document).ready(function () {
                     dados += "<td>" + value.project + "</td>";
                     dados += "<td>" + value.product + "</td>";
                     dados += "<td>" + value.client + "</td>";
-                    dados += `<td><img src='/modules/global/assets/img/cartoes/${value.brand}.png'  style='width: 60px'></td>`;
+                    dados += `<td><img src='/modules/global/img/cartoes/${value.brand}.png'  style='width: 60px'></td>`;
                     if (value.status == '1') {
                         dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
                     } else if (value.status == '2') {

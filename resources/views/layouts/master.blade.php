@@ -13,47 +13,48 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/assets/img/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/assets/img/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/assets/img/favicon-16x16.png') }}">
-    <link rel="mask-icon" href="{{ asset('modules/global/assets/img/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('modules/global/img/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('modules/global/img/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('modules/global/img/favicon-16x16.png') }}">
+    <link rel="mask-icon" href="{{ asset('modules/global/img/safari-pinned-tab.svg') }}" color="#5bbad5">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/css/bootstrap-extend.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/adminremark2/assets/css/site.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/loading.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/checkAnimation.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/adminremark/assets/css/site.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/loading.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/checkAnimation.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/ribbon.css') }}">
 
     <!-- Plugins -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/animsition/animsition.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery-mmenu.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/jquery-imgareaselect/css/imgareaselect-default.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/sweetalert2.min.css') }}">
-    <link rel='stylesheet' href="{{ asset('modules/global/assets/css/daterangepicker.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/sweetalert2.min.css') }}">
+    <link rel='stylesheet' href="{{ asset('modules/global/css/daterangepicker.css') }}">
 
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/web-icons/web-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('modules/global/adminremark/global/fonts/font-awesome/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/newFonts.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/newFonts.css') }}">
 
     <link href="https://fonts.googleapis.com/css?family=Muli:400,700,800&display=swap" rel="stylesheet">
 
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/materialdesignicons.min.css') }}">
 
-    <!-- New CSS --> 
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-site.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/finances.css') }}">
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/global.css') }}">
+    <!-- New CSS -->
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-site.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/finances.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/global.css') }}">
 
     @stack('css')
 
     <!-- Scripts -->
     @if(env('APP_ENV', 'production') == 'production')
         {{--  <script src="https://browser.sentry-cdn.com/5.6.0/bundle.min.js" integrity="sha384-9aGOmRDrtIQRcZmYbrNQmfS1dW44OCMtOlQ3JFUYCdCpxTJQ8vK+//K35AKgZh96" crossorigin="anonymous"></script>  --}}
-        <script src="{{ asset('modules/global/assets/js/sentry-bundle.min.js') }}"></script>
+        <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
     @endif
 
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
@@ -86,18 +87,18 @@
 <script src="{{ asset('modules/global/adminremark/global/vendor/asscrollable/jquery-asScrollable.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/jquery-mmenu/jquery.mmenu.min.all.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/vendor/matchheight/jquery.matchHeight-min.js') }}"></script>
-<script src="{{ asset('modules/global/assets/js/jquery.mask.min.js') }}"></script>
-<script src="{{ asset('modules/global/assets/js/sweetalert2.all.min.js') }}"></script>
+<script src="{{ asset('modules/global/js-extra/jquery.mask.min.js') }}"></script>
+<script src="{{ asset('modules/global/js-extra/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Component.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Plugin.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Base.js') }}"></script>
 <script src="{{ asset('modules/global/adminremark/global/js/Config.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark2/assets/js/Section/Menubar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark2/assets/js/Section/Sidebar.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark2/assets/js/Section/PageAside.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark2/assets/js/Section/GridMenu.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark2/assets/js/Site.js') }}"></script>
-<script src="{{ asset('modules/global/adminremark2/assets/examples/js/dashboard/v1.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/assets/js/Section/Menubar.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/assets/js/Section/Sidebar.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/assets/js/Section/PageAside.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/assets/js/Section/GridMenu.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/assets/js/Site.js') }}"></script>
+<script src="{{ asset('modules/global/adminremark/assets/examples/js/dashboard/v1.js') }}"></script>
 <script src="{{ asset('modules/global/jquery-imgareaselect/scripts/jquery.imgareaselect.pack.js') }}"></script>
 <script src="{{ asset('modules/global/js/global.js') }}"></script>
 
@@ -121,7 +122,7 @@
      </script>
 
      {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
-     <script src="{{ asset('modules/global/assets/js/pusher.min.js') }}"></script>
+     <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
 @endif
 

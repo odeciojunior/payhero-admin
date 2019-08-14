@@ -267,7 +267,7 @@
     }, {
       key: 'bindTaskInput',
       value: function bindTaskInput() {
-        this.$el.on('click', '.checkbox-custom input', function (e) {
+        this.$el.on("click", ".checkbox-custom input", function (e) {
           var $this = $(this);
 
           var $target = $this.closest('.list-group-item'),
@@ -514,12 +514,14 @@
       return '\n            <li class="list-group-item subtask">\n              <div class="checkbox-custom checkbox-primary">\n                <input type="checkbox" ' + checkedString + ' name="checkbox">\n                <label class="title">' + data.title + '</label>\n              </div>\n              <div class="subtask-editor">\n                <form>\n                  <div class="form-group">\n                    <input class="form-control subtask-title" type="text" name="title">\n                  </div>\n                  <div class="form-group">\n                    <button class="btn btn-primary subtask-editor-save" type="button">Save</button>\n                    <a class="btn btn-sm btn-white subtask-editor-delete" href="javascript:void(0)">Delete</a>\n                  </div>\n                </form>\n              </div>\n            </li>\n           ';
     },
     attachmentTpl: function attachmentTpl(data) {
+
       return '\n            <li class="list-group-item">\n              <div class="meida">\n                <div class="pr-20">\n                  <div class="attachments-image">\n                    <img src="' + data.src + '">\n                  </div>\n                </div>\n                <div class="media-body">\n                  <p><span class="name">' + data.title + '</span><span</p>\n                  <p>\n                    <span class="size">' + data.size + '</span>\n                    <span class="attachments-actions">\n                      <button class="btn btn-icon btn-pure" type="button">\n                        <i class="icon wb-download" aria-hidden="true"></i>\n                      </button>\n                      <button class="btn btn-icon btn-pure" type="button">\n                         <i class="icon wb-trash" aria-hidden="true"></i>\n                      </button>\n                    </span>\n                  </p>\n                </div>\n              </div>\n            </li>\n           ';
     },
     commentTpl: function commentTpl(src, user, time, content) {
       return '\n            <div class="comment media">\n              <div class="pr-20">\n                <a class="avatar avatar-lg" href="javascript:void(0)">\n                  <img src="' + src + '" alt="...">\n                </a>\n              </div>\n              <div class="media-body">\n                <div class="comment-body">\n                  <a class="comment-author" href="javascript:void(0)">' + user + '</a>\n                  <div class="comment-meta">\n                    <span class="date">' + time + '</span>\n                  </div>\n                <div class="comment-content"><p>' + content + '</p></div>\n              </div>\n            </div>\n           ';
     },
     handlePriority: function handlePriority() {
+
       $(document).on('click', '[name="priorities"]', function () {
         var $this = $(this);
         var $target = $this.closest('.slidePanel').data('slidePanel').target;

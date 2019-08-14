@@ -4,7 +4,7 @@
         Pagamento via {{$sale->payment_method == 2 ? 'Boleto' : 'Cartão ' . $sale->flag  }} em {{ $sale->start_date}} às {{$sale->hours}}
     </p>
     <div class="status d-inline">
-        <img style="width: 50px;" src="{{asset('/modules/global/assets/img/cartoes/'. $sale->flag. '.png')}}">
+        <img style="width: 50px;" src="{{asset('/modules/global/img/cartoes/'. $sale->flag. '.png')}}">
         @if($sale->status == 1)
             <span class='badge badge-success'>Aprovada</span></td>
         @elseif($sale->status == 2)
@@ -28,7 +28,7 @@
     <div class="row align-items-baseline justify-content-between mb-15">
         @foreach($plans as $plan)
             <div class="col-lg-2">
-                <img src="{{$plan['photo'] ?? asset('modules/global/assets/img/produto.png')  }}" width="50px;" style="border-radius:6px;">
+                <img src="{{$plan['photo'] ?? asset('modules/global/img/produto.png')  }}" width="50px;" style="border-radius:6px;">
             </div>
             <div class="col-lg-5">
                 <h4 class="table-title"> {{$plan['name']}} </h4>
@@ -112,7 +112,7 @@
         <br>
         <span class='table-title gray'>Telefone: {{$client->telephone}}</span>
         <a href="{{$whatsapp_link}}" target='_blank'>
-            <img src="{{ asset('modules/global/assets/img/whatsapplogo.png') }}" width="25px">
+            <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px">
         </a>
         <br>
         <span class="table-title gray"> E-mail: {{$client->email}}</span>

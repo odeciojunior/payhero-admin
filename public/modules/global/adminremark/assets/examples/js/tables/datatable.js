@@ -34,8 +34,8 @@
         header: true,
         headerOffset: offsetTop
       },
-      "paging": false,
-      "dom": "t" // just show table, no other controls
+      "bPaginate": false,
+      "sDom": "t" // just show table, no other controls
     });
 
     // redraw fixedHeaders as necessary

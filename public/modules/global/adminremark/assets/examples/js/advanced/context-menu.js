@@ -171,48 +171,4 @@
       }
     });
   })();
-
-  // // Demo 4
-  // // ------
-  // (function() {
-  //   $.contextMenu({
-  //     selector: '.contextMenu-example4',
-  //     // callback: function(key, options) {
-  //     //   var m = "clicked: " + key;
-  //     //   window.console && console.log(m) || alert(m);
-  //     // },
-  //     items: {
-  //       "edit": {
-  //         name: "Edit",
-  //         icon: "wb-edit"
-  //       },
-  //       "copy": {
-  //         name: "Copy",
-  //         icon: "wb-copy"
-  //       }
-  //     }
-  //   });
-  // })();
-
-  // // Demo 5
-  // // ------
-  // (function() {
-  //   $.contextMenu({
-  //     selector: '.contextMenu-example5',
-  //     // callback: function(key, options) {
-  //     //   var m = "clicked: " + key;
-  //     //   window.console && console.log(m) || alert(m);
-  //     // },
-  //     items: {
-  //       "edit": {
-  //         name: "Edit",
-  //         icon: "fa-edit"
-  //       },
-  //       "cut": {
-  //         name: "Cut",
-  //         icon: "fa-cut"
-  //       }
-  //     }
-  //   });
-  // })();
 });

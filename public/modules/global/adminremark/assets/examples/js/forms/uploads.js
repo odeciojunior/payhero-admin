@@ -76,7 +76,7 @@
     var dropZone = (0, _jquery2.default)('#exampleUploadForm'),
         timeout = window.dropZoneTimeout;
     if (!timeout) {
-      dropZone.addClass('show');
+      dropZone.addClass('in');
     } else {
       clearTimeout(timeout);
     }
@@ -96,7 +96,7 @@
     }
     window.dropZoneTimeout = setTimeout(function () {
       window.dropZoneTimeout = null;
-      dropZone.removeClass('show hover');
+      dropZone.removeClass('in hover');
     }, 100);
   });
 

@@ -24,7 +24,6 @@
           level = i;
         }
       }
-
       for (var m = 1; m < level; m++) {
         path += '../';
       }
@@ -32,12 +31,12 @@
       return path;
     };
 
-    var layout = 'base';
+    var layout = 'mmenu';
     var settingsName = 'remark.' + layout + '.skinTools';
     var settings = localStorage.getItem(settingsName);
 
     if (settings) {
-      if (settings[0] === '{') {
+      if (settings[0] === "{") {
         settings = JSON.parse(settings);
       }
 
@@ -48,7 +47,7 @@
         link.type = 'text/css';
         link.rel = 'stylesheet';
         link.href = getLevel(window.location.pathname, layout) + 'assets/skins/' + settings['primary'] + '.css';
-        link.id = 'skinStyle';
+        link.id = "skinStyle";
 
         head.appendChild(link);
       }
@@ -58,28 +57,27 @@
           var menubar = document.getElementsByClassName('site-menubar');
           if (menubar.length > 0) {
             clearInterval(menubarFn);
-            menubar[0].className += ' site-menubar-light';
+            menubar[0].className += " site-menubar-light";
           }
         }, 5);
       }
 
       var navbarFn = setInterval(function () {
         var navbar = document.getElementsByClassName('site-navbar');
-
         if (navbar.length > 0) {
           clearInterval(navbarFn);
           if (settings['navbar'] && settings['navbar'] !== 'primary') {
             navbar[0].className += ' bg-' + settings['navbar'] + '-600';
           }
           if (settings['navbarInverse'] && settings['navbarInverse'] !== 'false') {
-            navbar[0].className += ' navbar-inverse';
+            navbar[0].className += " navbar-inverse";
           }
         }
       }, 5);
     }
 
     if (document.addEventListener) {
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         var $body = $(document.body);
         var $doc = $(document);
         var $win = $(window);
@@ -109,7 +107,7 @@
               return null;
             }
 
-            if (value[0] === '{') {
+            if (value[0] === "{") {
               value = JSON.parse(value);
             }
 
@@ -265,6 +263,7 @@
             if (val === 'inverse') {
               checked ? this.$siteNavbar.addClass('navbar-inverse') : this.$siteNavbar.removeClass('navbar-inverse');
             } else {
+
               var bg = 'bg-' + val + '-600';
               if (val === 'yellow') {
                 bg = 'bg-yellow-700';

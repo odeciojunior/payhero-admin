@@ -98,11 +98,11 @@
             </div>
             @else
                 @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                 @endpush
 
                 <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/assets/img/emptyprojetos.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/emptyprojetos.svg') !!}" width="250px">
                     <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
                     <p class="desc gray">Que tal criar um primeiro projeto para começar a vender? </p>
                     <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>

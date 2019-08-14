@@ -143,7 +143,7 @@
                             <div class="card">
                                 <div class="row no-gutters">
                                     <div class="col-md-3">
-                                        <img src="{{ $project->photo ? $project->photo : '/modules/global/assets/img/projeto.png' }}" class="card-img" alt="">
+                                        <img src="{{ $project->photo ? $project->photo : '/modules/global/img/projeto.png' }}" class="card-img" alt="">
                                     </div>
                                     <div class="col-md-9 pl-10">
                                         <div class="card-body">
@@ -284,11 +284,11 @@
 
     @push('scripts')
         <script src="{{asset('modules/partners/js/partners.js')}}"></script>
-        <script src="{{asset('modules/Shipping/js/shipping.js')}}"></script>
+        <script src="{{asset('modules/shipping/js/shipping.js')}}"></script>
         <script src="{{asset('modules/domain/js/domain.js')}}"></script>
-        <script src="{{asset('modules/SmsMessage/js/smsMessage.js')}}"></script>
-        <script src="{{asset('modules/Pixels/js/pixels.js')}}"></script>
-        <script src="{{asset('modules/DiscountCoupons/js/discountCoupons.js')}}"></script>
+        <script src="{{asset('modules/sms-messageage/js/smsMessage.js')}}"></script>
+        <script src="{{asset('modules/pixels/js/pixels.js')}}"></script>
+        <script src="{{asset('modules/discount-coupons/js/discountCoupons.js')}}"></script>
         <script src="{{asset('modules/projects/js/projects.js')}}"></script>
         <script src="{{asset('modules/plans/js/plans.js')}}"></script>
     @endpush

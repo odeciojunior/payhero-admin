@@ -4,7 +4,7 @@
 @section('content')
 
 @push('css')
-    <link rel="stylesheet" href="{{ asset('modules/global/assets/css/new-dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
 @endpush
 
 <div class="page">
@@ -45,7 +45,7 @@
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
-                      <img src="{{ asset('modules/global/assets/img/svg/moeda-laranja.svg') }}" width="35px">
+                      <img src="{{ asset('modules/global/img/svg/moeda-laranja.svg') }}" width="35px">
                       <span class="card-desc">Pendente</span>
                     </div>
                 </div>
@@ -56,14 +56,14 @@
                     <div class="indices row justify-content-center align-items-center">
                       <div class="col-4">
                         <div class="d-flex justify-content-around">
-                          <img src="{{ asset('modules/global/assets/img/svg/arrow.svg') }}">
+                          <img src="{{ asset('modules/global/img/svg/arrow.svg') }}">
                           <span class="card-p"> +24% ao dia </span>
                         </div>
                       </div>
 
                       <div class="col-4">
                         <div class="d-flex justify-content-around">
-                          <img src="{{ asset('modules/global/assets/img/svg/arrow-down.svg') }}">
+                          <img src="{{ asset('modules/global/img/svg/arrow-down.svg') }}">
                           <span class="card-p"> -2% ao dia </span>
                         </div>
                       </div>
@@ -76,7 +76,7 @@
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
-                      <img src="{{ asset('modules/global/assets/img/svg/moeda-vermelha.svg') }}" width="35px">
+                      <img src="{{ asset('modules/global/img/svg/moeda-vermelha.svg') }}" width="35px">
                       <span class="card-desc">Antecipável</span>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
-                      <img src="{{ asset('modules/global/assets/img/svg/moeda.svg') }}" width="35px">
+                      <img src="{{ asset('modules/global/img/svg/moeda.svg') }}" width="35px">
                       <span class="card-desc">Disponível</span>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
-                      <img src="{{ asset('modules/global/assets/img/svg/moeda-azul.svg') }}" width="35px">
+                      <img src="{{ asset('modules/global/img/svg/moeda-azul.svg') }}" width="35px">
                       <span class="card-desc">Total</span>
                     </div>
                 </div>
@@ -123,17 +123,17 @@
                             <a class="close-card pointer" id="closeWelcome" role="button">
                                 <i class="material-icons md-16">close</i>
                             </a>
-                            <img class="card-img-top product-image br15" src="{!! asset('modules/global/assets/img/welcome-gradient.png') !!}">
+                            <img class="card-img-top product-image br15" src="{!! asset('modules/global/img/welcome-gradient.png') !!}">
                         </div>
                     </div>
                 </div>
             @else
                 @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
                 @endpush
 
                 <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/assets/img/emptyempresas.svg') !!}" width="250px">
+                    <img src="{!! asset('modules/global/img/emptyempresas.svg') !!}" width="250px">
                     <h1 class="big gray">Você ainda não tem nenhuma empresa!</h1>
                     <p class="desc gray">Vamos cadastrar a primeira empresa? </p>
                     <a href="/companies/create" class="btn btn-primary gradient">Cadastrar empresa</a>

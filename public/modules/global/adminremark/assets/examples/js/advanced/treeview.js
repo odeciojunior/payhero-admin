@@ -245,7 +245,7 @@
   })();
 
   // Example jstree use Search Plugin
-  // --------------------------------
+  // ------------------------------------
   (function () {
     (0, _jquery2.default)('#jstreeExample_7').jstree({
       'core': {
@@ -284,7 +284,7 @@
   })();
 
   // Example jstree use Drag & drop Plugin
-  // -------------------------------------
+  // ------------------------------------
   (function () {
     (0, _jquery2.default)('#jstreeExample_8').jstree({
       'core': {

@@ -82,63 +82,6 @@
     return Scrollable;
   }();
 
-  var Hoverscroll = function () {
-    function Hoverscroll($el) {
-      babelHelpers.classCallCheck(this, Hoverscroll);
-
-      this.$el = $el;
-      this.api = null;
-
-      this.init();
-    }
-
-    babelHelpers.createClass(Hoverscroll, [{
-      key: 'init',
-      value: function init() {
-        this.api = this.$el.asHoverScroll({
-          namespace: 'hoverscorll',
-          direction: 'vertical',
-          list: '.site-menu',
-          item: '> li',
-          exception: '.site-menu-sub',
-          fixed: false,
-          boundary: 100,
-          onEnter: function onEnter() {
-            // $(this).siblings().removeClass('hover'); $(this).addClass('hover');
-          },
-          onLeave: function onLeave() {
-            // $(this).removeClass('hover');
-          }
-        }).data('asHoverScroll');
-      }
-    }, {
-      key: 'update',
-      value: function update() {
-        if (this.api) {
-          this.api.update();
-        }
-      }
-    }, {
-      key: 'enable',
-      value: function enable() {
-        if (!this.api) {
-          this.init();
-        }
-        if (this.api) {
-          this.api.enable();
-        }
-      }
-    }, {
-      key: 'disable',
-      value: function disable() {
-        if (this.api) {
-          this.api.disable();
-        }
-      }
-    }]);
-    return Hoverscroll;
-  }();
-
   var Menubar = function (_Component) {
     babelHelpers.inherits(Menubar, _Component);
 
@@ -153,56 +96,11 @@
 
       var _this = babelHelpers.possibleConstructorReturn(this, (_ref = Menubar.__proto__ || Object.getPrototypeOf(Menubar)).call.apply(_ref, [this].concat(args)));
 
-      _this.top = false;
-      _this.folded = false;
-      _this.foldAlt = false;
-      _this.$menuBody = _this.$el.children('.site-menubar-body');
-      _this.$menu = _this.$el.find('[data-plugin=menu]');
+      _this.setupMenu();
+      _this.$menuBody = _this.$el.children('.mm-panels');
 
-      if ($BODY.data('autoMenubar') === false || $BODY.is('.site-menubar-keep')) {
-        if ($BODY.hasClass('site-menubar-fold')) {
-          _this.auto = 'fold';
-        } else if ($BODY.hasClass('site-menubar-unfold')) {
-          _this.auto = 'unfold';
-        }
-      } else {
-        _this.auto = true;
-      }
-
-      var breakpoint = Breakpoints.current();
-      if (_this.auto === true) {
-        if (breakpoint) {
-          switch (breakpoint.name) {
-            case 'lg':
-              _this.type = 'unfold';
-              break;
-            case 'md':
-            case 'sm':
-              _this.type = 'fold';
-              break;
-            case 'xs':
-              _this.type = 'hide';
-              break;
-          }
-        }
-      } else {
-        switch (_this.auto) {
-          case 'fold':
-            if (breakpoint.name == 'xs') {
-              _this.type = 'hide';
-            } else {
-              _this.type = 'fold';
-            }
-            break;
-          case 'unfold':
-            if (breakpoint.name == 'xs') {
-              _this.type = 'hide';
-            } else {
-              _this.type = 'unfold';
-            }
-            break;
-        }
-      }
+      // state
+      _this.type = 'fold'; // unfold, fold, open, hide;
       return _this;
     }
 
@@ -217,50 +115,35 @@
         }
 
         this.scrollable = new Scrollable(this.$menuBody);
-        this.hoverscroll = new Hoverscroll(this.$menuBody);
 
         $HTML.removeClass('css-menubar').addClass('js-menubar');
-
-        if ($BODY.is('.site-menubar-top')) {
-          this.top = true;
-        }
-
-        if ($BODY.is('.site-menubar-fold-alt')) {
-          this.foldAlt = true;
-        }
 
         this.change(this.type);
       }
     }, {
-      key: 'process',
-      value: function process() {
-        (0, _jquery2.default)('.site-menu-sub').on('touchstart', function (e) {
-          e.stopPropagation();
-        }).on('ponitstart', function (e) {
-          e.stopPropagation();
-        });
+      key: 'setupMenu',
+      value: function setupMenu() {
+        if (typeof _jquery2.default.fn.mmenu !== 'undefined') {
+          this.$el.mmenu({
+            offCanvas: false,
+            navbars: [{
+              position: 'bottom',
+              content: [
+                // '<div class="site-menubar-footer">\n              <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip" data-original-title="Settings">\n                <span class="icon wb-settings" aria-hidden="true"></span>\n              </a>\n              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">\n                <span class="icon wb-eye-close" aria-hidden="true"></span>\n              </a>\n              <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Logout">\n                <span class="icon wb-power" aria-hidden="true"></span>\n              </a>\n            </div>'
+              ]
+            }]
+          });
+        }
       }
     }, {
       key: 'getMenuApi',
       value: function getMenuApi() {
-        return this.$menu.data('menuApi');
-      }
-    }, {
-      key: 'setMenuData',
-      value: function setMenuData() {
-        var api = this.getMenuApi();
-
-        if (api) {
-          api.folded = this.folded;
-          api.foldAlt = this.foldAlt;
-          api.outerHeight = this.$el.outerHeight();
-        }
+        return this.$el.data('mmenu');
       }
     }, {
       key: 'update',
       value: function update() {
         this.scrollable.update();
-        this.hoverscroll.update();
       }
     }, {
       key: 'change',
@@ -268,7 +151,6 @@
         if (this.initialized) {
           this.reset();
           this[type]();
-          this.setMenuData();
         }
       }
     }, {
@@ -284,17 +166,42 @@
 
         this.$el.trigger('changing.site.menubar');
 
-        var menuApi = this.getMenuApi();
-        if (menuApi) {
-          menuApi.refresh();
-        }
-
         setTimeout(function () {
           callback.call(_this2);
           $BODY.removeClass('site-menubar-changing');
           _this2.update();
           _this2.$el.trigger('changed.site.menubar');
         }, 500);
+      }
+    }, {
+      key: 'hoverTrigger',
+      value: function hoverTrigger() {
+        var _this3 = this;
+
+        this.$el.on('mouseenter', function () {
+          $BODY.addClass('site-menubar-hover');
+
+          setTimeout(function () {
+            _this3.scrollable.enable();
+          }, 500);
+        }).on('mouseleave', function () {
+          $BODY.removeClass('site-menubar-hover');
+
+          var api = _this3.getMenuApi();
+          if (api) {
+            api.openPanel((0, _jquery2.default)('#mm-0'));
+          }
+
+          setTimeout(function () {
+            _this3.scrollable.disable();
+          }, 500);
+        });
+      }
+    }, {
+      key: 'hoverTriggerOff',
+      value: function hoverTriggerOff() {
+        this.$el.off('mouseenter');
+        this.$el.off('mouseleave');
       }
     }, {
       key: 'reset',
@@ -318,8 +225,6 @@
     }, {
       key: 'hide',
       value: function hide() {
-        this.hoverscroll.disable();
-
         this.animate(function () {
           $BODY.addClass('site-menubar-hide site-menubar-unfold');
         }, function () {
@@ -331,11 +236,9 @@
     }, {
       key: 'unfold',
       value: function unfold() {
-        this.hoverscroll.disable();
-
         this.animate(function () {
           $BODY.addClass('site-menubar-unfold');
-          this.folded = false;
+          this.hoverTriggerOff();
         }, function () {
           this.scrollable.enable();
 
@@ -350,11 +253,10 @@
         this.scrollable.disable();
 
         this.animate(function () {
-          $BODY.addClass('site-menubar-fold');
-          this.folded = true;
-        }, function () {
-          this.hoverscroll.enable();
 
+          $BODY.addClass('site-menubar-fold');
+          this.hoverTrigger();
+        }, function () {
           this.triggerResize();
         });
 

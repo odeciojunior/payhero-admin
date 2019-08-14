@@ -20,8 +20,10 @@
   });
 
   // Top Line Chart With Tooltips
-  // ----------------------------
+  // ------------------------------
   (function () {
+
+    // options for style
     var options = {
       showArea: true,
       low: 0,
@@ -61,6 +63,7 @@
     };
 
     var newScoreLineChart = function newScoreLineChart(chartId, labelList, series1List, series2List, options) {
+
       var lineChart = new Chartist.Line(chartId, {
         labels: labelList,
         series: [series1List, series2List]
@@ -82,13 +85,13 @@
           });
         }
       });
+      //end create
     };
 
     newScoreLineChart("#teamCompletedWidget .ct-chart", labelList, series1List, series2List, options);
   })();
 
   // item dialog
-  // -----------
   (function () {
 
     //handleSelective

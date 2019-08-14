@@ -41,7 +41,6 @@
       $panel.find('.panel-body').html('Lorem ipsum In nostrud Excepteur velit reprehenderit quis consequat veniam officia nisi labore in est.');
     }, 1000);
   };
-
   // Example rating
   // ----------------------
   // data-plugin="rating" data-half="true" data-number="9" data-score="3" data-hints="bad,,,,regular,,,,gorgeous"

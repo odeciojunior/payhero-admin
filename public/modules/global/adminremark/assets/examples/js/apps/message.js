@@ -15,6 +15,8 @@
 
   var _jquery2 = babelHelpers.interopRequireDefault(_jquery);
 
+  // (function(document, window, $) {
+
   (0, _jquery2.default)(document).ready(function () {
     AppMessage.run();
   });

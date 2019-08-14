@@ -35,7 +35,7 @@
                 @foreach($products as $product)
                     <div class="col-xl-3 col-md-6">
                         <div class="card shadow" style='cursor:pointer;'>
-                            <img class="card-img-top product-image" src="{!! $product->photo !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/assets/img/semimagem.png') !!}';" data-link="/products/{{Hashids::encode($product->id)}}/edit" alt="Imagem não encontrada">
+                            <img class="card-img-top product-image" src="{!! $product->photo !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/img/semimagem.png') !!}';" data-link="/products/{{Hashids::encode($product->id)}}/edit" alt="Imagem não encontrada">
                             <div class="card-body">
                                 <div class="row align-items-end justify-content-between">
                                     <div class="col-10">
@@ -53,11 +53,11 @@
 
         @else
             @push('css')
-                <link rel="stylesheet" href="{!! asset('modules/global/assets/css/empty.css') !!}">
+                <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
             @endpush
 
             <div class="content-error d-flex text-center">
-                <img src="{!! asset('modules/global/assets/img/emptyprodutos.svg') !!}" width="250px">
+                <img src="{!! asset('modules/global/img/emptyprodutos.svg') !!}" width="250px">
                 <h1 class="big gray">Zero produtos por aqui!</h1>
                 <p class="desc gray"> Vamos adicionar seu primeiro produto? </p>
                 <a href="/products/create" class="btn btn-primary gradient">Novo Produto</a>

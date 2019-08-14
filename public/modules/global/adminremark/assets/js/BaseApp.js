@@ -79,6 +79,7 @@
       value: function bindSlidePanelPlugin() {
         var self = this;
         (0, _jquery2.default)(document).on('click', '[data-toggle="slidePanel"]', function (e) {
+
           self.openSlidePanel((0, _jquery2.default)(this).data('url'));
 
           e.stopPropagation();

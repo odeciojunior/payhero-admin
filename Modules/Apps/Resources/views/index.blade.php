@@ -18,7 +18,7 @@
                     @else
                         <a href="/apps/hotzapp/" class="add-btn"><i class="icon wb-plus" aria-hidden="true"></i></a>
                     @endif
-                    <img class="card-img-top" src="{!! asset('modules/global/assets/img/hotzapp.png') !!}" alt="">
+                    <img class="card-img-top" src="{!! asset('modules/global/img/hotzapp.png') !!}" alt="">
                     <div class="card-body">
                         <h5 class="card-title">Hotzapp</h5>
                         <p class="card-text sm">Integre seus projetos com HotZapp </p>
@@ -32,7 +32,7 @@
                     @else
                         <a href="/apps/shopify" class="add-btn"><i class="icon wb-plus" aria-hidden="true"></i></a>
                     @endif
-                    <img class="card-img-top" src="{!! asset('modules/global/assets/img/shopify.png') !!}" alt="">
+                    <img class="card-img-top" src="{!! asset('modules/global/img/shopify.png') !!}" alt="">
                     <div class="card-body">
                         <h5 class="card-title">Shopify</h5>
                         <p class="card-text sm">Integre seus projetos com Shopify </p>
@@ -42,7 +42,7 @@
             {{--  <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                 <div class="card">
                 <a href="#" class="add-btn"> <i class="icon wb-plus" aria-hidden="true"></i> </a>
-                    <img class="card-img-top" src="{!! asset('modules/global/assets/img/sms.png') !!}" alt="">
+                    <img class="card-img-top" src="{!! asset('modules/global/img/sms.png') !!}" alt="">
                     <div class="card-body">
                         <h5 class="card-title">SMS</h5>
                         <p class="card-text sm">Integre seus projetos com SMS</p>

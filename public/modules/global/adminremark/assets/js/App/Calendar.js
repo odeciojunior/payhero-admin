@@ -179,6 +179,7 @@
     }, {
       key: 'handleSelective',
       value: function handleSelective() {
+
         var member = [{
           id: 'uid_1',
           name: 'Herman Beck',
