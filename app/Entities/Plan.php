@@ -4,6 +4,7 @@ namespace App\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -172,6 +173,9 @@ class Plan extends Model
         return $this->hasMany('App\Entities\ZenviaSms', 'plan');
     }
 
+    /**
+     * @return BelongsToMany
+     */
     public function products()
     {
         return $this->belongsToMany('App\Entities\Product', 'products_plans', 'plan', 'product');

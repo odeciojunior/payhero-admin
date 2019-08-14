@@ -5,6 +5,7 @@ namespace App\Entities;
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Anticipation extends Model
 {
@@ -30,5 +31,13 @@ class Anticipation extends Model
     public function company()
     {
         return $this->belongsTo('App\Entities\Companies');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function transactions()
+    {
+        return $this->belongsToMany('App\Entities\Transaction', 'antecipated_transactions', 'anticipation_id', 'transaction_id');
     }
 }

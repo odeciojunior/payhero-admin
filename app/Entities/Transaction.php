@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property integer $id
@@ -75,5 +76,13 @@ class Transaction extends Model
     public function transfers()
     {
         return $this->hasMany('App\Entities\Transfer', 'transaction');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function anticipations()
+    {
+        return $this->belongsToMany('App\Entities\Transaction', 'antecipated_transactions', 'transaction_id', 'anticipation_id');
     }
 }

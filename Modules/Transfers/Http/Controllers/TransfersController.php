@@ -23,8 +23,10 @@ class TransfersController extends Controller
             $transfersModel = new Transfer();
 
             $transfers = $transfersModel
-                ->select('transfers.*', 'transaction.sale', 'transaction.company', 'transaction.currency')
+                ->select('transfers.*', 'transaction.sale', 'transaction.company', 'transaction.currency', 'transaction.status',
+                          'transaction.antecipable_value', 'antecipatedtransaction.anticipation_id', 'antecipatedtransaction.created_at as anticipationCreatedAt')
                 ->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction')
+                ->leftJoin('antecipated_transactions as antecipatedtransaction', 'antecipatedtransaction.transaction_id', 'transfers.transaction')
                 ->where('transfers.company_id', current(Hashids::decode($request->company)))
                 ->orWhere('transaction.company', current(Hashids::decode($request->company)))
                 ->orderBy('id', 'DESC');
