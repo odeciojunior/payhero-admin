@@ -216,13 +216,19 @@ class ShippingController extends Controller
                         $mensagem = 'É obrigatório deixar um frete ativado';
                     }
 
-                    return response()->json(['message' => $mensagem], 200);
+                    return response()->json([
+                                                'message' => $mensagem,
+                                            ], 200);
                 }
 
-                return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
+                return response()->json([
+                                            'message' => 'Erro ao tentar atualizar dados!',
+                                        ], 400);
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao tentar atualizar dados!',
+                                        ], 400);
             }
-
-            return response()->json(['message' => 'Erro ao tentar atualizar dados!'], 400);
         } catch (Exception  $e) {
             Log::warning('Erro ao tentar atualizar frete');
             report($e);

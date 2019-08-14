@@ -26,10 +26,17 @@ $(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function error() {
+            error: function error(response) {
                 loadingOnScreenRemove();
+
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', String(response.responseJSON.errors[error]));
+                }
                 $("#modal-content").hide();
-                alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(data) {
                 loadingOnScreenRemove();
@@ -52,7 +59,6 @@ $(function () {
                 } else {
                     $(':checkbox').val(0);
                 }
-
 
                 $(".btn-save").unbind('click');
                 $(".btn-save").on('click', function () {
@@ -234,10 +240,12 @@ $(function () {
                                         return error;
                                     }(function (response) {
                                         loadingOnScreenRemove();
-                                        if (response.status == '422') {
+                                        if (response.status === 422) {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
+                                        } else {
+                                            alertCustom('error', String(response.responseJSON.message));
                                         }
                                     }),
                                     success: function success(data) {

@@ -75,13 +75,24 @@ class DiscountCouponsController extends Controller
 
             $discountCouponSaved = $discountCouponsModel->create($requestData);
             if ($discountCouponSaved) {
-                return response()->json('Cupom criado com Sucesso', 200);
-            }
+                return response()->json([
+                                            'message' => 'Cupom criado com sucesso!',
 
-            return response()->json('Erro');
+                                        ], 200);
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao tentar salvar cupom!',
+
+                                        ], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar cadastrar novo cupom de desconto (DiscountCouponsController - store)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao tentar salvar cupom!',
+
+                                    ], 400);
         }
     }
 

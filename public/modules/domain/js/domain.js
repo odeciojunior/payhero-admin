@@ -33,7 +33,15 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error(response) {
-                alertCustom('error', String(response.message));
+
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom("error", response.message);
+                }
+                loadingOnScreenRemove();
             },
             success: function success(response) {
                 modalAddDomain(response);
@@ -76,10 +84,9 @@ $(document).ready(function () {
 
                             return error;
                         }(function (response) {
-                            // loadingOnScreenRemove()
                             if (response.status === 422) {
-                                for (error in response.errors) {
-                                    alertCustom('error', String(response.errors[error]));
+                                for (error in response.responseJSON.errors) {
+                                    alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
                             } else {
                                 alertCustom('error', String(response.responseJSON.message));

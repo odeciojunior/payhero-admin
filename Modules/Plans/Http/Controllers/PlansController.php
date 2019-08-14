@@ -7,6 +7,7 @@ use App\Entities\Plan;
 use App\Entities\PlanGift;
 use App\Entities\Product;
 use App\Entities\ProductPlan;
+use App\Entities\Project;
 use App\Entities\UserProject;
 use App\Entities\ZenviaSms;
 use Auth;
@@ -337,8 +338,14 @@ class PlansController extends Controller
     {
         try {
             $productModel = new Product();
+            $projectModel = new Project();
 
-            $products = $productModel->where('user', auth()->user()->id)->where('shopify', 0)->get();
+            $project = $projectModel->find(current(Hashids::decode($request->input('project'))));
+            if (!empty($project->shopify_id)) {
+                $products = $productModel->where('user', auth()->user()->id)->where('shopify', 1)->get();
+            } else {
+                $products = $productModel->where('user', auth()->user()->id)->where('shopify', 0)->get();
+            }
 
             if (count($products) > 0) {
 

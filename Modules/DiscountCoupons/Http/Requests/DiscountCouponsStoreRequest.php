@@ -14,10 +14,10 @@ class DiscountCouponsStoreRequest extends FormRequest
     {
         return [
             'project' => 'required',
-            'name'    => 'required',
+            'name'    => 'required|string|max:100',
             'type'    => 'required',
-            'value'   => 'required',
-            'code'    => 'required',
+            'value'   => 'required|string|max:30',
+            'code'    => 'required|string|max:30',
             'status'  => 'nullable',
         ];
     }
@@ -25,10 +25,13 @@ class DiscountCouponsStoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'  => 'O campo Nome é obrigatório',
+            'name.required'  => 'O campo Descrição é obrigatório',
+            'name.max'       => 'O campo Descrição permite apenas 100 caracteres',
             'type.required'  => 'O campo Tipo é obrigatório',
             'value.required' => 'O campo Valor é obrigatório',
-            'code.required'  => 'O campo Código de origem é obrigatório',
+            'value.max'      => 'O campo Valor permite apenas 100 caracteres',
+            'code.required'  => 'O campo Código é obrigatório',
+            'code.max'       => 'O campo Código permite apenas 30 caracteres',
         ];
     }
 

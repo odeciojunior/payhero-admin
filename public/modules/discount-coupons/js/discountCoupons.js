@@ -17,10 +17,18 @@ $(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function error() {
+            error: function error(response) {
                 loadingOnScreenRemove();
                 $("#modal-content").hide();
-                alertCustom('error', 'Ocorreu algum erro');
+
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', String(response.responseJSON.message));
+
+                }
             }, success: function success(data) {
                 loadingOnScreenRemove();
                 $("#btn-modal").addClass('btn-save');
@@ -28,16 +36,16 @@ $(function () {
                 $("#btn-modal").show();
                 $('#modal-add-body').html(data);
                 if ($("#type").val() == 1) {
-                    $("#valor_cupom_cadastrar").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
+                    $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
                 } else {
-                    $('#valor_cupom_cadastrar').mask('00%', { reverse: true });
+                    $('#valor_cupom_cadastrar').mask('00%', {reverse: true});
                 }
 
                 $("#type").on('change', function () {
                     if ($("#type").val() == 1) {
-                        $("#valor_cupom_cadastrar").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
+                        $("#valor_cupom_cadastrar").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
                     } else {
-                        $('#valor_cupom_cadastrar').mask('00%', { reverse: true });
+                        $('#valor_cupom_cadastrar').mask('00%', {reverse: true});
                     }
                 });
 
@@ -71,10 +79,13 @@ $(function () {
                             loadingOnScreenRemove();
                             $("#modal_add_produto").hide();
                             $(".loading").css("visibility", "hidden");
-                            if (response.status == '422') {
+                            if (response.status === 422) {
                                 for (error in response.responseJSON.errors) {
                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
+                            } else {
+                                alertCustom('error', String(response.responseJSON.message));
+
                             }
                         }), success: function success() {
                             loadingOnScreenRemove();
@@ -144,7 +155,7 @@ $(function () {
                     $("#modal-title").html('Detalhes do Cupom');
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
 
-                    var data = { couponId: coupon };
+                    var data = {couponId: coupon};
                     $("#btn-modal").hide();
                     $.ajax({
                         method: "GET",
@@ -167,7 +178,7 @@ $(function () {
                     $("#modal-title").html("Editar Cupom");
                     $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
-                    var data = { couponId: coupon };
+                    var data = {couponId: coupon};
 
                     $.ajax({
                         method: "GET",
@@ -184,16 +195,16 @@ $(function () {
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
                             if ($("#type").val() == 1) {
-                                $("#value").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
+                                $("#value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
                             } else {
-                                $('#value').mask('00%', { reverse: true });
+                                $('#value').mask('00%', {reverse: true});
                             }
 
                             $("#type").on('change', function () {
                                 if ($("#type").val() == 1) {
-                                    $("#value").mask('#.###,#0', { reverse: true }).removeAttr('maxlength');
+                                    $("#value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
                                 } else {
-                                    $('#value').mask('00%', { reverse: true });
+                                    $('#value').mask('00%', {reverse: true});
                                 }
                             });
 

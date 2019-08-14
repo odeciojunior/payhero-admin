@@ -115,13 +115,13 @@
                                aria-controls="tab-fretes" role="tab">Frete
                             </a>
                         </li>
-                        @if($project->shopify_id == '')
+{{--                        @if($project->shopify_id == '')--}}
                             <li class="nav-item" role="presentation">
                                 <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
                                     Planos
                                 </a>
                             </li>
-                        @endif
+{{--                        @endif--}}
                         {{--<li class="nav-item" role="presentation">--}}
                         {{--<a id='tab-partners' class="nav-link" data-toggle="tab" href="#tab_partners"--}}
                         {{--aria-controls="tab_partners" role="tab">Parceiros--}}

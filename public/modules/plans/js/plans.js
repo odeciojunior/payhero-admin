@@ -23,6 +23,7 @@ $(function () {
         $.ajax({
             method: "GET",
             url: '/plans/create',
+            data: {project: projectId},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

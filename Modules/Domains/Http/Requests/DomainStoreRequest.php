@@ -12,20 +12,10 @@ class DomainStoreRequest extends FormRequest
      */
     public function rules()
     {
-        switch ($this->method()) {
-            case 'POST':
-
-                return [
-                    'project_id' => 'required|string|max:255',
-                    'domain_ip'  => 'nullable|string|max:255',
-                    'name'       => 'required|string|max:255',
-                ];
-
-                break;
-            default:
-
-                break;
-        }
+        return [
+            'project_id' => 'required|string|max:255',
+            'name'       => 'required|string|max:100',
+        ];
     }
 
     /**
@@ -35,5 +25,16 @@ class DomainStoreRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required' => 'O campo Dominio deve ser preenchido corretamente',
+            'name.max'      => 'O campo Dominio permite apenas 100 caracteres',
+        ];
     }
 }

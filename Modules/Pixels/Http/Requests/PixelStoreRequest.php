@@ -15,7 +15,7 @@ class PixelStoreRequest extends FormRequest
         return [
             'project'         => 'required',
             'campaign'        => 'nullable',
-            'name'            => 'required',
+            'name'            => 'required|max:100',
             'code'            => 'required',
             'platform'        => 'required',
             'status'          => 'nullable',
@@ -25,10 +25,14 @@ class PixelStoreRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array
+     */
     public function messages()
     {
         return [
-            'name.required'     => 'O campo Nome é obrigatório',
+            'name.required'     => 'O campo Descrição é obrigatório',
+            'name.max'          => 'O campo Descrição permite apenas 100 caracteres',
             'code.required'     => 'O campo Código é obrigatório',
             'platform.required' => 'O campo Plataforma é obrigatório',
         ];

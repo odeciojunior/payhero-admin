@@ -15,25 +15,30 @@ class ShippingStoreRequest extends FormRequest
         return [
             'project'         => 'required',
             "type"            => "required|string",
-            "name"            => "required|string",
-            "information"     => "required|string",
-            "value"           => "nullable|string",
+            "name"            => "required|string|max:100",
+            "information"     => "required|string|max:30",
+            "value"           => "nullable|string|max:30",
             "zip_code_origin" => "nullable|string",
             "status"          => "nullable",
             "pre_selected"    => "nullable",
-            'project'         => 'required',
         ];
     }
 
+    /**
+     * @return array
+     */
     public function messages()
     {
         return [
             'type.required'            => 'O campo tipo é obrigatório',
             'name.required'            => 'O campo descrição é obrigatório',
-            'information.required'     => 'O campo Informação é obrigatório',
+            'name.max'                 => 'O campo descrição permite apenas 100 caracteres',
+            'information.required'     => 'O campo Tempo de entrega é obrigatório',
+            'information.max'          => 'O campo Tempo de entrega permite apenas 30 caracteres',
             'zip_code_origin.required' => 'O campo código de origem é obrigatório',
             'status.required'          => 'O campo status é obrigatório',
             'pre_selected.required'    => 'O campo Pré-selecionado é obrigatório',
+            'value.max'                => 'O campo Valor do Frete permite apenas 30 caracteres',
         ];
     }
 

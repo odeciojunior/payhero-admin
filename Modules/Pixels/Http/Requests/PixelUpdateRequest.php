@@ -13,8 +13,8 @@ class PixelUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'            => 'required',
-            'code'            => 'required',
+            'name'            => 'required|max:100|string',
+            'code'            => 'required|string',
             'platform'        => 'required',
             'project'         => 'nullable',
             'campaign'        => 'nullable',
@@ -28,11 +28,13 @@ class PixelUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'     => 'O campo Nome é obrigatório',
+            'name.required'     => 'O campo Descrição é obrigatório',
+            'name.max'          => 'O campo Descrição permite apenas 100 caracteres',
             'code.required'     => 'O campo Código é obrigatório',
             'platform.required' => 'O campo Plataforma é obrigatório',
         ];
     }
+
     /**
      * Determine if the user is authorized to make this request.
      * @return bool

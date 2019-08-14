@@ -54,15 +54,16 @@ $(document).ready(function () {
                 };
 
                 return error;
-            }(function () {
-                if (response.status == '422') {
+            }(function (response) {
+                loadingOnScreenRemove();
+                if (response.status === 422) {
                     for (error in response.responseJSON.errors) {
                         alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 } else {
-                    alertCustom("error", response.message);
+                    alertCustom('error', String(response.responseJSON.message));
+
                 }
-                loadingOnScreenRemove();
             }),
             success: function success(response) {
                 loadingOnScreenRemove();
@@ -82,8 +83,44 @@ $(document).ready(function () {
                 });
 
                 changeType();
+                let name = true;
+                let information = true;
+                let value = true;
 
-                $(".btn-save").unbind();
+                $("#shipping-name").keyup(function () {
+                    if ($("#shipping-name").val().length >= 30) {
+                        $("#shipping-name-error").html("O campo descrição permite apenas 30 caracteres");
+                        name = false;
+                    } else {
+                        $("#shipping-name-error").html("")
+                        name = true;
+                    }
+
+                });
+
+                $("#shipping-information").keyup(function () {
+                    if ($("#shipping-information").val().length >= 30) {
+                        $("#shipping-information-error").html("O campo tempo de entrega estimado permite apenas 30 caracteres");
+                        information = false;
+                    } else {
+                        $("#shipping-information-error").html("")
+                        information = true;
+                    }
+
+                });
+
+                $("#shipping-value").keyup(function () {
+                    if ($.trim($("#shipping-value").val()).length >= 7) {
+                        $("#shipping-value-error").html("O campo valor permite apenas 6  caracteres");
+                        value = false;
+                    } else {
+                        $("#shipping-value-error").html("")
+                        value = true;
+                    }
+
+                });
+
+                $(".btn-save").unbind('click');
                 $(".btn-save").click(function () {
                     var formData = new FormData(document.getElementById('form-add-shipping'));
                     formData.append("project", projectId);
@@ -110,14 +147,14 @@ $(document).ready(function () {
 
                             return error;
                         }(function (response) {
-                            if (response.status == '422') {
+                            if (response.status === 422) {
                                 for (error in response.responseJSON.errors) {
                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
                             } else {
-                                alertCustom("error", response.message);
+                                alertCustom('error', String(response.responseJSON.message));
+
                             }
-                            loadingOnScreenRemove();
                         }),
                         success: function success(data) {
                             loadingOnScreenRemove();
@@ -282,12 +319,14 @@ $(document).ready(function () {
                                             };
 
                                             return error;
-                                        }(function () {
+                                        }(function (response) {
                                             loadingOnScreenRemove();
-                                            if (response.status == '422') {
+                                            if (response.status === 422) {
                                                 for (error in response.responseJSON.errors) {
                                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                                 }
+                                            } else {
+                                                alertCustom('error', String(response.responseJSON.message));
                                             }
                                         }),
                                         success: function success(data) {
