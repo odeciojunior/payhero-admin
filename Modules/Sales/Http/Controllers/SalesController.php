@@ -2,32 +2,27 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Aws\RAM\Exception\RAMException;
-use Exception;
-use Carbon\Carbon;
-use App\Entities\Plan;
-use App\Entities\Sale;
-use App\Entities\Client;
-use App\Entities\Project;
-use App\Entities\Company;
-use App\Entities\Product;
-use App\Entities\Shipping;
 use App\Entities\Checkout;
+use App\Entities\Client;
+use App\Entities\Company;
 use App\Entities\Delivery;
+use App\Entities\Plan;
 use App\Entities\PlanSale;
-use Illuminate\Http\Request;
+use App\Entities\Sale;
+use App\Entities\Shipping;
 use App\Entities\Transaction;
 use App\Entities\UserProject;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Sales\Http\Requests\SaleUpdateRequest;
-use Vinkla\Hashids\Facades\Hashids;
-use App\Http\Controllers\Controller;
-use Modules\Sales\Transformers\SalesResource;
 use Modules\Sales\Exports\Reports\SaleReportExport;
+use Modules\Sales\Http\Requests\SaleUpdateRequest;
+use Modules\Sales\Transformers\SalesResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SalesController extends Controller
 {
@@ -133,12 +128,12 @@ class SalesController extends Controller
 
                 $delivery               = $deliveryModel->find($sale['delivery']);
                 $checkout               = $checkoutModel->find($sale['checkout']);
-                $checkout->src          = ($checkout->src == 'null') ? '' : $checkout->src;
-                $checkout->source       = ($checkout->source == 'null') ? '' : $checkout->source;
-                $checkout->utm_medium   = ($checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
-                $checkout->utm_campaign = ($checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
-                $checkout->utm_term     = ($checkout->utm_term == 'null') ? '' : $checkout->utm_term;
-                $checkout->utm_content  = ($checkout->utm_content == 'null') ? '' : $checkout->utm_content;
+                $checkout->src          = ($checkout->src == null || $checkout->src == 'null') ? '' : $checkout->src;
+                $checkout->source       = ($checkout->source == null || $checkout->source == 'null') ? '' : $checkout->source;
+                $checkout->utm_medium   = ($checkout->utm_medium == null || $checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
+                $checkout->utm_campaign = ($checkout->utm_campaign == null || $checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
+                $checkout->utm_term     = ($checkout->utm_term == null || $checkout->utm_term == 'null') ? '' : $checkout->utm_term;
+                $checkout->utm_content  = ($checkout->utm_content == null || $checkout->utm_content == 'null') ? '' : $checkout->utm_content;
                 $sale->shipment_value   = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
@@ -282,8 +277,7 @@ class SalesController extends Controller
             $shippingModel = new Shipping();
 
             //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
-            $sales = $this->getSaleModel()
-                          ->where('owner', auth()->user()->id);
+            $sales = $saleModel->where('owner', auth()->user()->id);
             //->where('status', '!=', '3');
 
             if (!empty($dataRequest['select_project'])) {
