@@ -203,7 +203,7 @@ $(function () {
                         $("#data-table-plan").append(data);
                     });
 
-                    pagination(response, 'plans');
+                    pagination(response, 'plans', updatePlan);
                 }
 
                 /**
@@ -409,78 +409,4 @@ $(function () {
             }
         });
     }
-
-    /**
-     *  Pagination
-     * @param response
-     * @param model
-     */
-    function pagination(response, model) {
-
-        $("#pagination-" + model).html("");
-
-        var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
-
-        if (response.meta.last_page === 1) {
-            return false;
-        }
-
-        $("#pagination-" + model).append(first_page);
-
-        if (response.meta.current_page == '1') {
-            $("#first_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-
-        $('#first_page').on("click", function () {
-            updatePlan('?page=1');
-        });
-
-        for (x = 3; x > 0; x--) {
-
-            if (response.meta.current_page - x <= 1) {
-                continue;
-            }
-
-            $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-            $('#page_' + (response.meta.current_page - x)).on("click", function () {
-                updatePlan('?page=' + $(this).html());
-            });
-        }
-
-        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-
-            $("#pagination-" + model).append(current_page);
-
-            $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-        }
-        for (x = 1; x < 4; x++) {
-
-            if (response.meta.current_page + x >= response.meta.last_page) {
-                continue;
-            }
-
-            $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
-            $('#page_' + (response.meta.current_page + x)).on("click", function () {
-                updatePlan('?page=' + $(this).html());
-            });
-        }
-
-        if (response.meta.last_page != '1') {
-            var last_page = "<button id='last_page' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-
-            $("#pagination-" + model).append(last_page);
-
-            if (response.meta.current_page == response.meta.last_page) {
-                $("#last_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-            }
-
-            $('#last_page').on("click", function () {
-                updatePlan('?page=' + response.meta.last_page);
-            });
-        }
-
-    };
 });
