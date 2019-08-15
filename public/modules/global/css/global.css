@@ -4,14 +4,125 @@
     overflow-y: hidden;
 }
 
-.menu-active{
-  border-right: 5px solid;
-  border-image-source: linear-gradient(11deg, #e6774c, rgb(249, 34, 120));
-  border-image-slice: 2;
+.menu-active {
+    border-right: 5px solid;
+    border-image-source: linear-gradient(11deg, #E6774C, rgb(249, 34, 120));
+    border-image-slice: 2;
 }
 
-.menu-img-active{
-  height:30px;
-  width:30px;
-  margin-left:-5px;
+.menu-img-active {
+    height: 30px;
+    width: 30px;
+    margin-left: -5px;
+}
+
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+    .display-lg-none {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 815px) and (max-width: 991px) {
+    .display-m-none {
+        display: none;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 814px) {
+    .display-sm-none {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #modal-saleDetails {
+        width: unset !important;
+    }
+
+    .table td {
+        padding: .3em !important;
+    }
+
+    table.unify {
+        border: 1px solid #CCCCCC;
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    table.unify caption {
+        font-size: 1.5em;
+        margin: .5em 0 .75em;
+    }
+
+    table.unify tr {
+        background-color: #F8F8F8;
+        border: 1px solid #DDDDDD;
+        padding: .35em;
+    }
+
+    table.unify th,
+    table.unify td {
+        padding: .625em;
+        text-align: center;
+    }
+
+    table.unify th {
+        font-size: .85em;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+    }
+
+    table.unify .display-sm-none {
+        display: none;
+    }
+
+    @media screen and (max-width: 767px) {
+        table.unify {
+            border: 0;
+        }
+
+        table.unify caption {
+            font-size: 1.3em;
+        }
+
+        table.unify thead {
+            border: none;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+
+        table.unify tr {
+            border-bottom: 3px solid #DDDDDD;
+            display: block;
+            margin-bottom: .625em;
+        }
+
+        table.unify td {
+            border-bottom: 1px solid #DDDDDD;
+            display: block;
+            font-size: 1.0em;
+            text-align: center;
+        }
+
+        table.unify td::before {
+            /*
+            * aria-label has no advantage, it won't be read inside a table
+            content: attr(aria-label);
+            */
+            content: attr(data-label);
+        / float: left;/ font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        table.unify td:last-child {
+            border-bottom: 0;
+        }
+    }
 }

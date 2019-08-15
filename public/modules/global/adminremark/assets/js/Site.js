@@ -45,29 +45,29 @@
     babelHelpers.createClass(Site, [{
       key: 'initialize',
       value: function initialize() {
-        // var _this2 = this;
+        var _this2 = this;
 
         this.startLoading();
-        // this.initializePluginAPIs();
-        // this.initializePlugins();
+        this.initializePluginAPIs();
+        this.initializePlugins();
 
         this.initComponents();
-        // setTimeout(function () {
-        //   _this2.setDefaultState();
-        // }, 500);
+        setTimeout(function () {
+          _this2.setDefaultState();
+        }, 500);
       }
     }, {
       key: 'process',
       value: function process() {
-        // this.polyfillIEWidth();
-        // this.initBootstrap();
+        this.polyfillIEWidth();
+        this.initBootstrap();
 
-        // this.setupMenubar();
-        // this.setupFullScreen();
-        // this.setupMegaNavbar();
-        // this.setupTour();
-        // this.setupNavbarCollpase();
-        // this.setupGridMenu();
+        this.setupMenubar();
+        this.setupFullScreen();
+        this.setupMegaNavbar();
+        this.setupTour();
+        this.setupNavbarCollpase();
+        this.setupGridMenu();
 
         // //Dropdown menu setup
         // //===================

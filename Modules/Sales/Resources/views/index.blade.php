@@ -50,7 +50,7 @@
                     @csrf
                     <div id="" class="card shadow p-20">
                         <div class="row align-items-baseline">
-                            <div class="col-3">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="projeto">Projeto</label>
                                 <select name='select_project' id="projeto" class="form-control select-pad">
                                     <option value="">Todos projetos</option>
@@ -59,7 +59,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="forma">Forma de pagamento</label>
                                 <select name='select_payment_method' id="forma" class="form-control select-pad">
                                     <option value="">Boleto e cartão de crédito</option>
@@ -67,7 +67,7 @@
                                     <option value="2">Boleto</option>
                                 </select>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="status">Status</label>
                                 <select name='sale_status' id="status" class="form-control select-pad">
                                     <option value="">Todos status</option>
@@ -76,26 +76,26 @@
                                     <option value="4">Estornada</option>
                                 </select>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="comprador">Nome do cliente</label>
                                 <input name='client' id="comprador" class="input-pad" placeholder="cliente">
                             </div>
                         </div>
                         <div class="row mt-15">
-                            <div class="col-3">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="comprador">Transação</label>
                                 <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
                             </div>        
-                            <div class="col-3">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="data_inicial">Data inicial</label>
                                 <input name='start_date' id="data_inicial" class="form-control input-pad" type="date">
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="data_final">Data final</label>
                                 <input name='end_date' id="data_final" class="form-control input-pad" type="date">
                             </div>
-                            <div class="col-3">
-                                <button id="bt_filtro" class="btn btn-primary" style="margin-top: 30px">
+                            <div class="col-sm-6 col-md-6 col-xl-3 col-12">
+                                <button id="bt_filtro" class="btn btn-primary col-sm-12" style="margin-top: 30px">
                                     <i class="icon wb-check" aria-hidden="true"></i>Aplicar
                                 </button>
                             </div>
@@ -109,17 +109,17 @@
 
                 <div class="card shadow " style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="tabela_vendas" class="table-vendas table table-striped" style="width:100%;">
+                        <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                             <thead>
                                 <tr>
-                                    <td class="table-title">Transação</td>
+                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
                                     <td class="table-title">Projeto</td>
                                     <td class="table-title">Descrição</td>
-                                    <td class="table-title">Cliente</td>
+                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     <td class="table-title">Forma</td>
                                     <td class="table-title">Status</td>
-                                    <td class="table-title">Data</td>
-                                    <td class="table-title">Pagamento</td>
+                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title display-sm-none">Pagamento</td>
                                     <td class="table-title">Comissão</td>
                                     <td class="table-title" width="80px;"> &nbsp;</td>
                                 </tr>
@@ -133,7 +133,7 @@
                     <!-- Modal detalhes da venda-->
                     <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-                            <div class="modal-content p-20 " style="width: 500px;">
+                            <div id='modal-saleDetails' class="modal-content p-20 " style="width: 500px;">
                                 <div class="header-modal">
                                     <div class="row justify-content-between align-items-center" style="width: 100%;">
                                         <div class="col-lg-2"> &nbsp;</div>

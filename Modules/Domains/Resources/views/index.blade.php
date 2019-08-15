@@ -31,9 +31,10 @@
         </div>
     </div>
 </div>
-<ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+<ul id="pagination-domain" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
     {{-- js carrega... --}}
 </ul>
+
 <!-- Modal detalhes do domínio -->
 <!--<div class='modal fade example-modal-lg modal-3d-flip-vertical' id='modal-detalhes-dominio' aria-hidden='true' aria-labelledby='exampleModalTitle' role='dialog' tabindex='-1'>
     <div class='modal-dialog modal-simple'>

@@ -155,7 +155,7 @@ $(function () {
                     });
                 }
 
-                pagination(response);
+                pagination(response,'pixels',atualizarPixel);
 
                 // details pixel
                 $(".details-pixel").unbind('click');
