@@ -82,11 +82,11 @@ class TesteController extends Controller
     public function index()
     {
 
-        $shopify = new ShopifyService('lipo-duo.myshopify.com', 'd7a27718b291b2e835d2e7d6c3a4787e');
+        //$shopify = new ShopifyService('lipo-duo.myshopify.com', 'd7a27718b291b2e835d2e7d6c3a4787e');
 
-        $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+        //$htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
 
-        dd($htmlBody);
+        //dd($htmlBody);
 
 
 
