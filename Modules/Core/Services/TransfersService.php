@@ -7,6 +7,7 @@ use App\Entities\Company;
 use App\Entities\Transfer;
 use App\Entities\Transaction;
 use Exception;
+use Modules\Core\Events\ReleasedBalanceEvent;
 use Modules\Core\Sms\SmsService;
 use Illuminate\Support\Facades\Log;
 
@@ -23,8 +24,7 @@ class TransfersService
                                                      ['release_date', '<=', Carbon::now()->format('Y-m-d')],
                                                      ['status', 'paid'],
                                                  ])->get();
-
-        $transfers = [];
+        $transfers    = [];
 
         foreach ($transactions as $transaction) {
             try {
@@ -55,28 +55,27 @@ class TransfersService
         }
 
         $transactionsAnticipateds = $transactionModel->where([
-                                                     ['release_date', '<=', Carbon::now()->format('Y-m-d')],
-                                                     ['status', 'anticipated'],
-                                                 ])->get();
-
-        $transfersAnticipateds = [];
+                                                                 ['release_date', '<=', Carbon::now()->format('Y-m-d')],
+                                                                 ['status', 'anticipated'],
+                                                             ])->get();
+        $transfersAnticipateds    = [];
 
         foreach ($transactionsAnticipateds as $transactionsAnticipated) {
             try {
                 $company = $companyModel->find($transactionsAnticipated->company);
 
                 $transferAnticipted = $transferModel->create([
-                                                       'transaction' => $transactionsAnticipated->id,
-                                                       'user'        => $company->user_id,
-                                                       'company_id'  => $company->id,
-                                                       'type_enum'   => $transferModel->getEnum('type_enum', 'in'),
-                                                       'value'       => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
-                                                       'type'        => 'in',
-                                                   ]);
+                                                                 'transaction' => $transactionsAnticipated->id,
+                                                                 'user'        => $company->user_id,
+                                                                 'company_id'  => $company->id,
+                                                                 'type_enum'   => $transferModel->getEnum('type_enum', 'in'),
+                                                                 'value'       => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
+                                                                 'type'        => 'in',
+                                                             ]);
 
                 $transactionsAnticipated->update([
-                                         'status' => 'transfered',
-                                     ]);
+                                                     'status' => 'transfered',
+                                                 ]);
 
                 $company->update([
                                      'balance' => intval($company->balance) + $transferAnticipted->value,
@@ -88,6 +87,8 @@ class TransfersService
                 continue;
             }
         }
+        $arrayTransfers = array_merge($transfers, $transfersAnticipateds);
+        event(new ReleasedBalanceEvent(collect($arrayTransfers)));
         Log::info('transferencias criadas ' . print_r($transfers, true));
         Log::info('transferencias antecipadas criadas ' . print_r($transfersAnticipateds, true));
     }

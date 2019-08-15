@@ -35,6 +35,9 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\ResetPasswordEvent'           => [
             'Modules\Core\Listeners\ResetPasswordSendEmailListener',
         ],
+        'Modules\Core\Events\ReleasedBalanceEvent'         => [
+            'Modules\Core\Listeners\ReleasedBalanceNotifyUserListener',
+        ],
     ];
 
     /**
