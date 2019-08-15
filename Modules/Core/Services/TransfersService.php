@@ -82,7 +82,7 @@ class TransfersService
                                      'balance' => intval($company->balance) + $transferAnticipted->value,
                                  ]);
 
-                $transfersAnticipateds[] = $transfer->toArray();
+                $transfersAnticipateds[] = $transferAnticipted->toArray();
             } catch (Exception $e) {
                 report($e);
                 continue;

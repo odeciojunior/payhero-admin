@@ -37,7 +37,7 @@
                 <p class="sm-text text-muted"> {{$plan['amount']}}x </p>
             </div>
             <div class="col-lg-3 text-right">
-                <p class="sm-text text-muted"> R${{$plan['value']}} </p>
+                <p class="sm-text text-muted"> R${{number_format($plan['value'], 2, ',', '.')}} </p>
             </div>
         @endforeach
     </div>
