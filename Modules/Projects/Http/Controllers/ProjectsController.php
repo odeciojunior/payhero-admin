@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Entities\UserProject;
 use App\Entities\DomainRecord;
 use App\Entities\ExtraMaterial;
+use Illuminate\Support\Facades\Gate;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -158,12 +159,11 @@ class ProjectsController extends Controller
                 $project = $projectModel->with(['usersProjects', 'shopifyIntegrations'])->where('id', $idProject)
                                         ->first();
 
-                if ($project) {
-
+                if (Gate::allows('show', [$project])) {
                     return view('projects::project', ['project' => $project, 'companies' => $companies]);
+                } else {
+                    return redirect()->route('projects.index');
                 }
-
-                return redirect()->route('projects.index');
             }
         } catch (Exception $e) {
             dd($e);
@@ -192,12 +192,16 @@ class ProjectsController extends Controller
                                                  },
                                              ])->find($idProject);
 
-            $view = view('projects::edit', [
-                'companies' => $user->companies,
-                'project'   => $project,
-            ]);
+            if (Gate::allows('edit', [$project])) {
+                $view = view('projects::edit', [
+                    'companies' => $user->companies,
+                    'project'   => $project,
+                ]);
 
-            return response()->json($view->render());
+                return response()->json($view->render());
+            } else {
+                return redirect()->route('projects.index');
+            }
         } catch (Exception $e) {
             Log::error('Erro ao tentar buscar dados do edit (ProjectController - edit)');
             report($e);
@@ -220,73 +224,79 @@ class ProjectsController extends Controller
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if ($requestValidated) {
+
                 $project = $projectModel->where('id', Hashids::decode($id))->first();
 
-                if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
-                    $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
-                }
+                if (Gate::allows('update', [$project])) {
 
-                $requestValidated['cookie_duration'] = 60;
-                $requestValidated['status']          = 1;
-
-                $projectUpdate = $project->update($requestValidated);
-                if ($projectUpdate) {
-                    try {
-                        $projectPhoto = $request->file('photo');
-                        if ($projectPhoto != null) {
-                            $digitalOceanService->deleteFile($project->photo);
-                            $img = Image::make($projectPhoto->getPathname());
-                            $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
-                            $img->resize(300, 300);
-                            $img->save($projectPhoto->getPathname());
-
-                            $digitalOceanPath = $digitalOceanService
-                                ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
-                            $project->update([
-                                                 'photo' => $digitalOceanPath,
-                                             ]);
-                        }
-
-                        $projectLogo = $request->file('logo');
-                        if ($projectLogo != null) {
-
-                            $digitalOceanService->deleteFile($project->logo);
-                            $img = Image::make($projectLogo->getPathname());
-
-                            $img->resize(null, 300, function($constraint) {
-                                $constraint->aspectRatio();
-                            });
-
-                            $img->save($projectLogo->getPathname());
-
-                            $digitalOceanPathLogo = $digitalOceanService
-                                ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/logo', $projectLogo);
-
-                            $project->update([
-                                                 'logo' => $digitalOceanPathLogo,
-                                             ]);
-                        }
-                    } catch (Exception $e) {
-                        Log::warning('ProjectController - update - Erro ao enviar foto');
-                        report($e);
+                    if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
+                        $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
                     }
 
-                    $userProject = $userProjectModel->where([
-                                                                ['user', auth()->user()->id],
-                                                                ['project', $project->id],
-                                                            ])->first();
+                    $requestValidated['cookie_duration'] = 60;
+                    $requestValidated['status']          = 1;
 
-                    $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
+                    $projectUpdate = $project->update($requestValidated);
+                    if ($projectUpdate) {
+                        try {
+                            $projectPhoto = $request->file('photo');
+                            if ($projectPhoto != null) {
+                                $digitalOceanService->deleteFile($project->photo);
+                                $img = Image::make($projectPhoto->getPathname());
+                                $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                                $img->resize(300, 300);
+                                $img->save($projectPhoto->getPathname());
 
-                    if ($userProject->company != $requestValidated['company']) {
-                        $userProject->update(['company' => $requestValidated['company']]);
+                                $digitalOceanPath = $digitalOceanService
+                                    ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
+                                $project->update([
+                                                     'photo' => $digitalOceanPath,
+                                                 ]);
+                            }
+
+                            $projectLogo = $request->file('logo');
+                            if ($projectLogo != null) {
+
+                                $digitalOceanService->deleteFile($project->logo);
+                                $img = Image::make($projectLogo->getPathname());
+
+                                $img->resize(null, 300, function($constraint) {
+                                    $constraint->aspectRatio();
+                                });
+
+                                $img->save($projectLogo->getPathname());
+
+                                $digitalOceanPathLogo = $digitalOceanService
+                                    ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/logo', $projectLogo);
+
+                                $project->update([
+                                                     'logo' => $digitalOceanPathLogo,
+                                                 ]);
+                            }
+                        } catch (Exception $e) {
+                            Log::warning('ProjectController - update - Erro ao enviar foto');
+                            report($e);
+                        }
+
+                        $userProject = $userProjectModel->where([
+                                                                    ['user', auth()->user()->id],
+                                                                    ['project', $project->id],
+                                                                ])->first();
+
+                        $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
+
+                        if ($userProject->company != $requestValidated['company']) {
+                            $userProject->update(['company' => $requestValidated['company']]);
+                        }
+
+                        return response()->json(['message' => 'Projeto atualizado!'], 200);
                     }
 
-                    return response()->json(['message' => 'Projeto atualizado!'], 200);
+                    return response()->json('error', 422);
+                } else {
+                    return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
                 }
             }
-
-            return response()->json('error', 422);
         } catch (Exception $e) {
             Log::warning('ProjectController - update - Erro ao atualizar project');
             report($e);
@@ -300,25 +310,33 @@ class ProjectsController extends Controller
     public function destroy($id)
     {
         try {
+            $projectModel = new Project();
+
             $projectId = current(Hashids::decode($id));
+            $project   = $projectModel->where('id', Hashids::decode($id))->first();
 
-            $projectService = new ProjectService();
+            if (Gate::allows('destroy', [$project])) {
 
-            if ($projectId) {
-                if (!$projectService->hasSales($projectId)) {
-                    //n tem venda
-                    if ($projectService->delete($projectId)) {
-                        //projeto removido
-                        return response()->json('success', 200);
+                $projectService = new ProjectService();
+
+                if ($projectId) {
+                    if (!$projectService->hasSales($projectId)) {
+                        //n tem venda
+                        if ($projectService->delete($projectId)) {
+                            //projeto removido
+                            return response()->json('success', 200);
+                        } else {
+                            //erro ao remover projeto
+                            return response()->json('error', 400);
+                        }
                     } else {
-                        //erro ao remover projeto
-                        return response()->json('error', 400);
+                        return response()->json('Impossível remover projeto, possui vendas', 400);
                     }
                 } else {
-                    return response()->json('Impossível remover projeto, possui vendas', 400);
+                    return response()->json('Projeto não encontrado', 400);
                 }
             } else {
-                return response()->json('Projeto não encontrado', 400);
+                return response()->json('Sem permissão para remover projeto', 403);
             }
         } catch (Exception $e) {
             Log::warning('ProjectController - delete - Erro ao deletar project');
