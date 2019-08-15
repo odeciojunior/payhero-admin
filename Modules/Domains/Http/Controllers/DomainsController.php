@@ -502,7 +502,7 @@ class DomainsController extends Controller
 
                     return response()->json($form->render());
                 } else {
-                    return response()->json(['message' => 'Sem permissão para criar domínio'], 400);
+                    return response()->json(['message' => 'Sem permissão para criar domínio'], 403);
                 }
             } else {
                 //nao veio projectid

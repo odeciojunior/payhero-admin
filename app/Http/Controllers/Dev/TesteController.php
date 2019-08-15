@@ -81,6 +81,18 @@ class TesteController extends Controller
 
     public function index()
     {
+
+        $shopify = new ShopifyService('lipo-duo.myshopify.com', 'd7a27718b291b2e835d2e7d6c3a4787e');
+
+        $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+
+        dd($htmlBody);
+
+
+
+
+
+
         throw new Exception('My first Sentry error!');
         dd('a');
 
