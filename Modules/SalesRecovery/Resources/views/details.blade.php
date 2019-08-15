@@ -29,7 +29,7 @@
             </div>
             <div class='col-lg-4 text-right'>
                 <p class='sm-text text-muted'>
-                    {{$plan['value']}}
+                    {{number_format($plan['value'], 2, ',', '.')}}
                 </p>
             </div>
         @endforeach

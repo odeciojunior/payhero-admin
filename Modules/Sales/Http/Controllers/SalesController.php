@@ -145,7 +145,7 @@ class SalesController extends Controller
                 } else {
                     $value = '000';
                 }
-                $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, '.', strlen($value) - 2, 0);
+                $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
                 $taxa     = 0;
                 $taxaReal = 0;
@@ -158,7 +158,6 @@ class SalesController extends Controller
                     $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
-
                 $whatsAppMsg = 'Olá ' . $client->name;
                 $details     = view('sales::details', [
                     'sale'           => $sale,

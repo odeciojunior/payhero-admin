@@ -37,7 +37,7 @@ class SalesResource extends Resource
             'status'     => $this->status,
             'start_date' => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
             'end_date'   => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
-            'total_paid' => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace(@$this->getRelation('transactions')[0]->value, '.', strlen(@$this->getRelation('transactions')[0]->value) - 2, 0),
+            'total_paid' => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace(@$this->getRelation('transactions')[0]->value, ',', strlen(@$this->getRelation('transactions')[0]->value) - 2, 0),
             'brand'      => $this->flag,
         ];
     }
