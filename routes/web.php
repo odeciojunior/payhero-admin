@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function() {
     return view('auth.login');
 });
 
-Route::get('/terms', function () {
+/*Route::get('/terms', function () {
     return view('terms.terms');
-});
+});*/
 
 Route::group(
     [
@@ -35,18 +35,19 @@ Route::group(
         Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
         // Registration Routes...
-//        Route::get('/register', '\App\Http\Controllers\Auth\NewRegisterController@index')->name('register');
-//        Route::post('/register', '\App\Http\Controllers\Auth\NewRegisterController@store');
+        //        Route::get('/register', '\App\Http\Controllers\Auth\NewRegisterController@index')->name('register');
+        //        Route::post('/register', '\App\Http\Controllers\Auth\NewRegisterController@store');
 
         // Password Reset Routes...
-//        Route::get('/password/reset', '\App\Http\Controllers\Auth\ForgotPasswordController@showLinkRequestForm')
-//             ->name('password.request');
+        //        Route::get('/password/reset', '\App\Http\Controllers\Auth\ForgotPasswordController@showLinkRequestForm')
+        //             ->name('password.request');
 
         Route::post('/password/email', '\App\Http\Controllers\Auth\ForgotPasswordController@sendResetLinkEmail')
              ->name('password.email');
         Route::get('/password/reset/{token}', '\App\Http\Controllers\Auth\ResetPasswordController@showResetForm')
              ->name('password.reset');
-        Route::post('/password/reset', '\App\Http\Controllers\Auth\ResetPasswordController@reset')->name('password.reset.post');
+        Route::post('/password/reset', '\App\Http\Controllers\Auth\ResetPasswordController@reset')
+             ->name('password.reset.post');
 
         //Verificacao do usuario atraves do email
         // Route::get('/user/verify/{token}', '\App\Http\Controllers\Auth\NewRegisterController@userVerifyMail')

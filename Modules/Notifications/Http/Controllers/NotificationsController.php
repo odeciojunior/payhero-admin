@@ -3,9 +3,11 @@
 namespace Modules\Notifications\Http\Controllers;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class NotificationsController extends Controller
@@ -32,9 +34,20 @@ class NotificationsController extends Controller
      */
     public function getUnreadNotificationsCount()
     {
-        return response()->json([
-                                    'qtd_notification' => count(auth()->user()->unreadNotifications),
-                                ]);
+        try {
+
+            if (empty(auth()->user())) {
+                return redirect()->route('login');
+            } else {
+
+                return response()->json([
+                                            'qtd_notification' => count(auth()->user()->unreadNotifications),
+                                        ]);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar contar notificações do usuario');
+            report($e);
+        }
     }
 
     /**
