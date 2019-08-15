@@ -86,10 +86,10 @@ $(document).ready(function () {
                 $.each(response.data, function (index, value) {
                     dados = '';
                     dados += '<tr>';
-                    dados += "<td>" + value.sale_code + "</td>";
+                    dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.sale_code + "</td>";
                     dados += "<td>" + value.project + "</td>";
                     dados += "<td>" + value.product + "</td>";
-                    dados += "<td>" + value.client + "</td>";
+                    dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.client + "</td>";
                     dados += "<td><img src='/modules/global/img/cartoes/" + value.brand + ".png'  style='width: 60px'></td>";
                     if (value.status == '1') {
                         dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
@@ -100,10 +100,10 @@ $(document).ready(function () {
                     } else if (value.status == '5') {
                         dados += "<td><span class='badge badge-pendente'>Cancelada</span></td>";
                     }
-                    dados += "<td>" + value.start_date + "</td>";
-                    dados += "<td>" + value.end_date + "</td>";
+                    dados += "<td class='display-sm-none display-m-none'>" + value.start_date + "</td>";
+                    dados += "<td class='display-sm-none'>" + value.end_date + "</td>";
                     dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
-                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal' style='margin-right:10px'><i class='material-icons gradient'>remove_red_eye</i></button></a></td>";
+                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></a></td>";
                     dados += '</tr>';
                     $("#dados_tabela").append(dados);
                 });

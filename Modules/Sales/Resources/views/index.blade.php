@@ -109,17 +109,17 @@
 
                 <div class="card shadow " style="min-height: 300px">
                     <div class="page-invoice-table table-responsive">
-                        <table id="tabela_vendas" class="table-vendas table table-striped" style="">
+                        <table id="tabela_vendas" class="table-vendas table table-striped unify" style="">
                             <thead>
                                 <tr>
-                                    <td class="table-title">Transação</td>
+                                    <td class="table-title display-sm-none display-m-none  display-lg-none">Transação</td>
                                     <td class="table-title">Projeto</td>
                                     <td class="table-title">Descrição</td>
-                                    <td class="table-title">Cliente</td>
+                                    <td class="table-title display-sm-none display-m-none display-lg-none">Cliente</td>
                                     <td class="table-title">Forma</td>
                                     <td class="table-title">Status</td>
-                                    <td class="table-title">Data</td>
-                                    <td class="table-title">Pagamento</td>
+                                    <td class="table-title display-sm-none display-m-none">Data</td>
+                                    <td class="table-title display-sm-none">Pagamento</td>
                                     <td class="table-title">Comissão</td>
                                     <td class="table-title" width="80px;"> &nbsp;</td>
                                 </tr>
@@ -133,7 +133,7 @@
                     <!-- Modal detalhes da venda-->
                     <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-                            <div class="modal-content p-20 " style="width: 500px;">
+                            <div id='modal-saleDetails' class="modal-content p-20 " style="width: 500px;">
                                 <div class="header-modal">
                                     <div class="row justify-content-between align-items-center" style="width: 100%;">
                                         <div class="col-lg-2"> &nbsp;</div>
