@@ -11,6 +11,7 @@ use App\Entities\Project;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DomainService;
@@ -36,15 +37,23 @@ class DomainsController extends Controller
     public function index(Request $request)
     {
         try {
-            $domainModel = new Domain();
+            $domainModel  = new Domain();
+            $projectModel = new Project();
 
             $dataRequest = $request->all();
             if (isset($dataRequest["project"])) {
                 $projectId = current(Hashids::decode($dataRequest["project"]));
+                $project   = $projectModel->where('id', $projectId)->first();
 
-                $domains = $domainModel->with(['project'])->where('project_id', $projectId);
+                if (Gate::allows('index', [$project])) {
+                    $domains = $domainModel->with(['project'])->where('project_id', $projectId);
 
-                return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
+                    return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para visualizar os domínios',
+                                            ], 400);
+                }
             } else {
                 return response()->json([
                                             'message' => 'Erro ao listar dados de domínios',
@@ -81,79 +90,87 @@ class DomainsController extends Controller
 
                 $project = $projectModel->with(['domains'])->find($projectId);
 
-                if (!empty($project->shopify_id)) {
-                    //projeto shopify
-                    $domainIp = $cloudFlareService::shopifyIp;
-                } else {
-                    //projeto web
-                    $domainIp = null;
-                }
+                if (Gate::allows('edit', [$project])) {
+                    //se pode editar o projeto, pode editar os dominios
 
-                //tratamento parcial do dominio
-                $requestData['name'] = str_replace("http://", "", $requestData['name']);
-                $requestData['name'] = str_replace("https://", "", $requestData['name']);
-                $requestData['name'] = str_replace("www.", "", $requestData['name']);
-                $requestData['name'] = 'http://' . $requestData['name'];
-                $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
+                    if (!empty($project->shopify_id)) {
+                        //projeto shopify
+                        $domainIp = $cloudFlareService::shopifyIp;
+                    } else {
+                        //projeto web
+                        $domainIp = null;
+                    }
 
-                if ($project->domains->where('name', $requestData['name'])
-                                     ->count() == 0) {
+                    //tratamento parcial do dominio
+                    $requestData['name'] = str_replace("http://", "", $requestData['name']);
+                    $requestData['name'] = str_replace("https://", "", $requestData['name']);
+                    $requestData['name'] = str_replace("www.", "", $requestData['name']);
+                    $requestData['name'] = 'http://' . $requestData['name'];
+                    $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
 
-                    if (empty($cloudFlareService->getZones($requestData['name']))) {
-                        $domainCreated = $domainModel->create([
-                                                                  'project_id' => $projectId,
-                                                                  'name'       => $requestData['name'],
-                                                                  'domain_ip'  => $domainIp,
-                                                                  'status'     => $domainModel->getEnum('status', 'pending'),
-                                                              ]);
+                    if ($project->domains->where('name', $requestData['name'])
+                                         ->count() == 0) {
 
-                        if ($domainCreated) {
-                            if ($project->shopify_id == null) {
-                                $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
-                            } else {
-                                $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
-                                $requestData['domain_ip'] = 'Domínio Shopify';
-                            }
+                        if (empty($cloudFlareService->getZones($requestData['name']))) {
+                            $domainCreated = $domainModel->create([
+                                                                      'project_id' => $projectId,
+                                                                      'name'       => $requestData['name'],
+                                                                      'domain_ip'  => $domainIp,
+                                                                      'status'     => $domainModel->getEnum('status', 'pending'),
+                                                                  ]);
 
-                            $cloudFlareService->setCloudFlareConfig($requestData['name']);
-
-                            if ($newDomain) {
-                                DB::commit();
-
-                                $newNameServers = [];
-                                foreach ($cloudFlareService->getZones() as $zone) {
-                                    if ($zone->name == $domainCreated->name) {
-                                        foreach ($zone->name_servers as $new_name_server) {
-                                            $newNameServers[] = $new_name_server;
-                                        }
-                                    }
+                            if ($domainCreated) {
+                                if ($project->shopify_id == null) {
+                                    $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
+                                } else {
+                                    $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
+                                    $requestData['domain_ip'] = 'Domínio Shopify';
                                 }
 
-                                return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
+                                $cloudFlareService->setCloudFlareConfig($requestData['name']);
+
+                                if ($newDomain) {
+                                    DB::commit();
+
+                                    $newNameServers = [];
+                                    foreach ($cloudFlareService->getZones() as $zone) {
+                                        if ($zone->name == $domainCreated->name) {
+                                            foreach ($zone->name_servers as $new_name_server) {
+                                                $newNameServers[] = $new_name_server;
+                                            }
+                                        }
+                                    }
+
+                                    return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
+                                } else {
+                                    //problema ao cadastrar dominio
+                                    DB::rollBack();
+
+                                    return response()->json(['message' => 'Erro ao criar domínio.'], 400);
+                                }
                             } else {
-                                //problema ao cadastrar dominio
+                                //erro ao criar dominio
                                 DB::rollBack();
 
-                                return response()->json(['message' => 'Erro ao criar domínio.'], 400);
+                                return response()->json(['message' => 'Erro ao cadastrar domínios.'], 400);
                             }
                         } else {
-                            //erro ao criar dominio
+                            //dominio ja existe registrado no cloudflare
                             DB::rollBack();
 
-                            return response()->json(['message' => 'Erro ao cadastrar domínios.'], 400);
+                            return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
                         }
                     } else {
-                        //dominio ja existe registrado no cloudflare
+                        //dominio ja cadastrado
+
                         DB::rollBack();
 
-                        return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
+                        return response()->json(['message' => 'Domínios já cadastrado.'], 400);
                     }
                 } else {
-                    //dominio ja cadastrado
-
                     DB::rollBack();
 
-                    return response()->json(['message' => 'Domínios já cadastrado.'], 400);
+                    return response()->json(['message' => 'Sem permissão para criar um domínio neste projeto'], 403);
                 }
             } else {
                 //nao veio projectid
@@ -189,48 +206,56 @@ class DomainsController extends Controller
                                              },
                                          ])->find(current(Hashids::decode($id)));
 
-            $companies = $companyModel->all();
+            if (Gate::allows('edit', [$domain->project])) {
+                //se tem permissao para editar o projeto, pode editar um dominio ligado a ele
 
-            $registers = [];
-            foreach ($domain->records as $record) {
+                $companies = $companyModel->all();
 
-                if ($record->type == 'A' && $record->name == $domain->name) {
-                    $haveEnterA = true;
+                $registers = [];
+                foreach ($domain->records as $record) {
+
+                    if ($record->type == 'A' && $record->name == $domain->name) {
+                        $haveEnterA = true;
+                    }
+                    $subdomain = explode('.', $record->name);
+
+                    switch ($record->content) {
+                        CASE $cloudFlareService::shopifyIp:
+                            $content = "Servidores Shopify";
+                            break;
+                        CASE $cloudFlareService::checkoutIp:
+                            $content = "Servidores CloudFox";
+                            break;
+                        default:
+                            $content = $record->content;
+                            break;
+                    }
+
+                    $newRegister = [
+                        'id'          => Hashids::encode($record->id),
+                        'type'        => $record->type,
+                        //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
+                        'name'        => $record->name,
+                        'content'     => $content,
+                        'system_flag' => $record->system_flag,
+
+                    ];
+
+                    $registers[] = $newRegister;
                 }
-                $subdomain = explode('.', $record->name);
-
-                switch ($record->content) {
-                    CASE $cloudFlareService::shopifyIp:
-                        $content = "Servidores Shopify";
-                        break;
-                    CASE $cloudFlareService::checkoutIp:
-                        $content = "Servidores CloudFox";
-                        break;
-                    default:
-                        $content = $record->content;
-                        break;
+                if ($domain) {
+                    return view('domains::edit', [
+                        'domain'     => $domain,
+                        'companies'  => $companies,
+                        'registers'  => $registers,
+                        'project'    => $domain->project,
+                        'haveEnterA' => $haveEnterA,
+                    ]);
+                } else {
+                    return response()->json(['message' => 'Domínio não encontrados'], 400);
                 }
-
-                $newRegister = [
-                    'id'          => Hashids::encode($record->id),
-                    'type'        => $record->type,
-                    //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
-                    'name'        => $record->name,
-                    'content'     => $content,
-                    'system_flag' => $record->system_flag,
-
-                ];
-
-                $registers[] = $newRegister;
-            }
-            if ($domain) {
-                return view('domains::edit', [
-                    'domain'     => $domain,
-                    'companies'  => $companies,
-                    'registers'  => $registers,
-                    'project'    => $domain->project,
-                    'haveEnterA' => $haveEnterA,
-                ]);
+            } else {
+                return response()->json(['message' => 'Sem permissão para editar este domínio'], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar Domínio (DomainsController - edit)');
@@ -259,79 +284,86 @@ class DomainsController extends Controller
             $domain = $domainModel->with(['records', 'project'])
                                   ->find(current(Hashids::decode($requestData['domain'])));
 
-            if (!empty($recordsJson)) {
-                $cloudFlareService->setZone($domain->name);
-                foreach ($recordsJson as $records) {
-                    foreach ($records as $record) {
-                        $subdomain = current($record[1]);
+            if (Gate::allows('edit', [$domain->project])) {
 
-                        if ($subdomain == '' || $subdomain == '@') {
-                            $subdomain = $domain->name;
-                        }
+                if (!empty($recordsJson)) {
+                    $cloudFlareService->setZone($domain->name);
+                    foreach ($recordsJson as $records) {
+                        foreach ($records as $record) {
+                            $subdomain = current($record[1]);
 
-                        $subdomain = str_replace("http://", "", $subdomain);
-                        $subdomain = str_replace("https://", "", $subdomain);
-                        $subdomain = 'http://' . $subdomain;
-                        $subdomain = parse_url($subdomain, PHP_URL_HOST);
+                            if ($subdomain == '' || $subdomain == '@') {
+                                $subdomain = $domain->name;
+                            }
 
-                        if ((strpos($subdomain, '.') === false) ||
-                            ($subdomain == $domain->name)) {
-                            //dominio nao tem "ponto" ou é igual ao dominio
+                            $subdomain = str_replace("http://", "", $subdomain);
+                            $subdomain = str_replace("https://", "", $subdomain);
+                            $subdomain = 'http://' . $subdomain;
+                            $subdomain = parse_url($subdomain, PHP_URL_HOST);
 
-                            if ($domain->records->where('type', current($record[0]))
-                                                ->where('name', $subdomain)
-                                                ->where('content', current($record[2]))
-                                                ->count() == 0) {
-                                //nao existe a record
+                            if ((strpos($subdomain, '.') === false) ||
+                                ($subdomain == $domain->name)) {
+                                //dominio nao tem "ponto" ou é igual ao dominio
 
-                                if (current($record[0]) == 'MX') {
-                                    $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
-                                } else if (current($record[0]) == 'TXT') {
-                                    $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
-                                } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
-                                    //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
-                                    return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
-                                } else {
-                                    $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
-                                }
+                                if ($domain->records->where('type', current($record[0]))
+                                                    ->where('name', $subdomain)
+                                                    ->where('content', current($record[2]))
+                                                    ->count() == 0) {
+                                    //nao existe a record
 
-                                if (!empty($cloudRecordId)) {
-                                    $newRecord = $domainRecordModel->create([
-                                                                                'domain_id'            => $domain->id,
-                                                                                'cloudflare_record_id' => $cloudRecordId,
-                                                                                'type'                 => current($record[0]),
-                                                                                'name'                 => $subdomain,
-                                                                                'content'              => current($record[2]),
-                                                                                'system_flag'          => 0,
-                                                                            ]);
+                                    if (current($record[0]) == 'MX') {
+                                        $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
+                                    } else if (current($record[0]) == 'TXT') {
+                                        $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
+                                    } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
+                                        //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
+                                        return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
+                                    } else {
+                                        $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
+                                    }
 
-                                    DB::commit();
+                                    if (!empty($cloudRecordId)) {
+                                        $newRecord = $domainRecordModel->create([
+                                                                                    'domain_id'            => $domain->id,
+                                                                                    'cloudflare_record_id' => $cloudRecordId,
+                                                                                    'type'                 => current($record[0]),
+                                                                                    'name'                 => $subdomain,
+                                                                                    'content'              => current($record[2]),
+                                                                                    'system_flag'          => 0,
+                                                                                ]);
 
-                                    return response()->json(['message' => "Subdomínio cadastrado com sucesso"], 200);
+                                        DB::commit();
+
+                                        return response()->json(['message' => "Subdomínio cadastrado com sucesso"], 200);
+                                    } else {
+                                        //dominio já cadastrado
+                                        DB::rollBack();
+
+                                        return response()->json(['message' => 'Erro ao cadastrar domínios'], 400);
+                                    }
                                 } else {
                                     //dominio já cadastrado
                                     DB::rollBack();
 
-                                    return response()->json(['message' => 'Erro ao cadastrar domínios'], 400);
+                                    return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
                                 }
                             } else {
-                                //dominio já cadastrado
+                                //dominio nao permitido
                                 DB::rollBack();
 
-                                return response()->json(['message' => 'Este domínio já esta cadastrado'], 400);
+                                return response()->json(['message' => 'Domínio não permitido: ' . $subdomain], 400);
                             }
-                        } else {
-                            //dominio nao permitido
-                            DB::rollBack();
-
-                            return response()->json(['message' => 'Domínio não permitido: ' . $subdomain], 400);
                         }
                     }
+                } else {
+                    DB::rollBack();
+
+                    return response()->json(['message' => 'Nenhum domínio adicionado.'], 400);
                 }
             } else {
                 DB::rollBack();
 
-                return response()->json(['message' => 'Nenhum domínio adicionado.'], 400);
+                return response()->json(['message' => 'Sem permissão para atualizar domínio'], 400);
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -362,44 +394,49 @@ class DomainsController extends Controller
             $domain = $domainModel->with('records', 'project', 'project.shopifyIntegrations')
                                   ->find($domainId);
 
-            if ($cloudFlareService->deleteZone($domain->name) || empty($cloudFlareService->getZones($domain->name))) {
-                //zona deletada
-                $sendgridService->deleteLinkBrand($domain->name);
-                $sendgridService->deleteZone($domain->name);
+            if (Gate::allows('edit', [$domain->project])) {
 
-                $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
-                $domainDeleted  = $domain->delete();
+                if ($cloudFlareService->deleteZone($domain->name) || empty($cloudFlareService->getZones($domain->name))) {
+                    //zona deletada
+                    $sendgridService->deleteLinkBrand($domain->name);
+                    $sendgridService->deleteZone($domain->name);
 
-                if ($domainDeleted) {
+                    $recordsDeleted = $domainRecordModel->where('domain_id', $domain->id)->delete();
+                    $domainDeleted  = $domain->delete();
 
-                    if (!empty($domain->project->shopify_id)) {
-                        //se for shopify, voltar as integraçoes ao html padrao
-                        try {
+                    if ($domainDeleted) {
 
-                            foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                        if (!empty($domain->project->shopify_id)) {
+                            //se for shopify, voltar as integraçoes ao html padrao
+                            try {
 
-                                $shopify->setThemeByRole('main');
-                                if (!empty($shopifyIntegration->theme_html)) {
-                                    $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+                                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                    $shopify->setThemeByRole('main');
+                                    if (!empty($shopifyIntegration->theme_html)) {
+                                        $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                                    }
+                                    if (!empty($shopifyIntegration->layout_theme_html)) {
+                                        $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                                    }
                                 }
-                                if (!empty($shopifyIntegration->layout_theme_html)) {
-                                    $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
-                                }
+                            } catch (\Exception $e) {
+                                //throwl
+
                             }
-                        } catch (\Exception $e) {
-                            //throwl
-
                         }
-                    }
 
-                    return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                        return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                    } else {
+                        return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
+                    }
                 } else {
-                    return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
+                    //erro ao deletar zona
+                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
                 }
             } else {
-                //erro ao deletar zona
-                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+                return response()->json(['message' => 'Sem permissão para deletar domínio'], 400);
             }
         } catch (Exception $e) {
             Log::warning('DomainsController destroy - erro ao deletar domínio');
@@ -419,18 +456,23 @@ class DomainsController extends Controller
 
         $domain = $domainModel->with(['project'])->where('id', Hashids::decode($domainId))->first();
 
-        $data = (object) [
-            'id_code'   => $domain->id_code,
-            'name'      => $domain->name,
-            'domain_ip' => (empty($domain->project->shopify_id)) ? $domain->domain_ip : 'Shopify',
-        ];
+        if (Gate::allows('edit', [$domain->project])) {
 
-        $view = view('domains::show', [
-            'domain' => $data,
-            'zones'  => $cloudFlareService->getZones(),
-        ]);
+            $data = (object) [
+                'id_code'   => $domain->id_code,
+                'name'      => $domain->name,
+                'domain_ip' => (empty($domain->project->shopify_id)) ? $domain->domain_ip : 'Shopify',
+            ];
 
-        return response()->json($view->render());
+            $view = view('domains::show', [
+                'domain' => $data,
+                'zones'  => $cloudFlareService->getZones(),
+            ]);
+
+            return response()->json($view->render());
+        } else {
+            return response()->json(['message' => 'Sem permissão para visualizar domínio'], 400);
+        }
     }
 
     /**
@@ -452,11 +494,16 @@ class DomainsController extends Controller
 
                 $project = $projectModel->find($projectId);
 
-                $form = view('domains::create', [
-                    'project' => $project,
-                ]);
+                if (Gate::allows('edit', [$project])) {
 
-                return response()->json($form->render());
+                    $form = view('domains::create', [
+                        'project' => $project,
+                    ]);
+
+                    return response()->json($form->render());
+                } else {
+                    return response()->json(['message' => 'Sem permissão para criar domínio'], 400);
+                }
             } else {
                 //nao veio projectid
 
@@ -483,22 +530,26 @@ class DomainsController extends Controller
             $requestData = $request->validated();
 
             $recordId = current(Hashids::decode($requestData['id_record']));
-            $record   = $domainRecordModel->with('domain')->find($recordId);
+            $record   = $domainRecordModel->with(['domain', 'domain.project'])->find($recordId);
 
-            $cloudFlareService->setZone($record->domain->name);
+            if (Gate::allows('edit', [$record->domain->project])) {
+                $cloudFlareService->setZone($record->domain->name);
 
-            if ($cloudFlareService->deleteRecord($record->cloudflare_record_id)) {
-                //zona deletada
-                $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
+                if ($cloudFlareService->deleteRecord($record->cloudflare_record_id)) {
+                    //zona deletada
+                    $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
 
-                if ($recordsDeleted) {
-                    return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                    if ($recordsDeleted) {
+                        return response()->json(['message' => 'Domínio removido com sucesso'], 200);
+                    } else {
+                        return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
+                    }
                 } else {
-                    return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
+                    //erro ao deletar zona
+                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
                 }
             } else {
-                //erro ao deletar zona
-                return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
+                return response()->json(['message' => 'Sem permissão para remover record'], 403);
             }
         } catch (Exception $e) {
             Log::warning('DomainsController destroyRecord - erro ao deletar domínio');
@@ -516,15 +567,23 @@ class DomainsController extends Controller
     {
         try {
             $domainService = new DomainService();
+            $domainModel   = new Domain();
 
             $requestData = $request->all();
             $domainId    = current(Hashids::decode($requestData['domain']));
             if ($domainId) {
-                //hashid ok
-                if ($domainService->verifyPendingDomains($domainId, true)) {
-                    return response()->json(['message' => 'Domínio verificado com sucesso'], 200);
+                $domain = $domainModel->with(['project'])->where('id', $domainId)->first();
+
+                if (Gate::allows('edit', [$domain->project])) {
+
+                    //hashid ok
+                    if ($domainService->verifyPendingDomains($domainId, true)) {
+                        return response()->json(['message' => 'Domínio verificado com sucesso'], 200);
+                    } else {
+                        return response()->json(['message' => 'Não foi possível verificar o domínio'], 400);
+                    }
                 } else {
-                    return response()->json(['message' => 'Não foi possível verificar o domínio'], 400);
+                    return response()->json(['message' => 'Sem permissão para validar o domínio'], 400);
                 }
             } else {
                 return response()->json(['message' => 'Não foi possível validar o domínio'], 400);
@@ -548,16 +607,21 @@ class DomainsController extends Controller
 
         $domain = $domainModel->with(['project'])->where('id', current(Hashids::decode($domainId)))->first();
 
-        $newNameServers = [];
-        foreach ($cloudFlareService->getZones() as $zone) {
-            if ($zone->name == $domain->name) {
-                foreach ($zone->name_servers as $new_name_server) {
-                    $newNameServers[] = $new_name_server;
+        if (Gate::allows('edit', [$domain->project])) {
+
+            $newNameServers = [];
+            foreach ($cloudFlareService->getZones() as $zone) {
+                if ($zone->name == $domain->name) {
+                    foreach ($zone->name_servers as $new_name_server) {
+                        $newNameServers[] = $new_name_server;
+                    }
                 }
             }
-        }
 
-        return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers]], 200);
+            return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers]], 200);
+        } else {
+            return response()->json(['message' => 'Sem permissão para visualizar o domínio'], 400);
+        }
     }
 
     /**
@@ -576,119 +640,125 @@ class DomainsController extends Controller
                 //hashid ok
                 $domain = $domainModel->with('records', 'project', 'project.shopifyIntegrations')
                                       ->find($domainId);
-                if ($domain) {
-                    //dominio existe
 
-                    if ($cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
+                if (Gate::allows('edit', [$domain->project])) {
 
-                        if (!empty($domain->project->shopify_id)) {
-                            //se for shopify, fazer o check
-                            try {
+                    if ($domain) {
+                        //dominio existe
 
-                                if ($domain->project->shopifyIntegrations) {
-                                    foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
-                                        $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                        if ($cloudFlareService->checkHtmlMetadata('https://checkout.' . $domain->name, 'checkout-cloudfox', '1')) {
 
-                                        $shopify->setThemeByRole('main');
-                                        if (!empty($shopifyIntegration->layout_theme_html)) {
-                                            $html = $shopify->getTemplateHtml($shopify::templateKeyName);
-                                            if ($shopify->checkCartTemplate($html)) {
-                                                $domain->update([
-                                                                    'status' => $domainModel->getEnum('status', 'approved'),
-                                                                ]);
+                            if (!empty($domain->project->shopify_id)) {
+                                //se for shopify, fazer o check
+                                try {
 
-                                                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
-                                            } else {
+                                    if ($domain->project->shopifyIntegrations) {
+                                        foreach ($domain->project->shopifyIntegrations as $shopifyIntegration) {
+                                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                                                try {
-
-                                                    $shopify->setThemeByRole('main');
-                                                    $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
-
-                                                    if ($htmlCart) {
-                                                        //template normal
-
-                                                        $shopifyIntegration->update([
-                                                                                        'theme_type' => $shopifyIntegration->getEnum('theme_type', 'basic_theme'),
-                                                                                        'theme_name' => $shopify->getThemeName(),
-                                                                                        'theme_file' => 'sections/cart-template.liquid',
-                                                                                        'theme_html' => $htmlCart,
-                                                                                    ]);
-
-                                                        $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
-                                                    } else {
-
-                                                        //template ajax
-                                                        $shopifyIntegration->update([
-                                                                                        'theme_type' => $this->getShopifyIntegrationModel()
-                                                                                                             ->getEnum('theme_type', 'ajax_theme'),
-                                                                                        'theme_name' => $shopify->getThemeName(),
-                                                                                        'theme_file' => 'snippets/ajax-cart-template.liquid',
-                                                                                        'theme_html' => $htmlCart,
-                                                                                    ]);
-
-                                                        $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
-                                                    }
-
-                                                    //inserir o javascript para o trackeamento (src, utm)
-                                                    $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
-                                                    if ($htmlBody) {
-                                                        //template do layout
-                                                        $shopifyIntegration->update([
-                                                                                        'layout_theme_html' => $htmlBody,
-                                                                                    ]);
-
-                                                        $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
-                                                    }
-                                                } catch (\Exception $e) {
-                                                    report($e);
-
+                                            $shopify->setThemeByRole('main');
+                                            if (!empty($shopifyIntegration->layout_theme_html)) {
+                                                $html = $shopify->getTemplateHtml($shopify::templateKeyName);
+                                                if ($shopify->checkCartTemplate($html)) {
                                                     $domain->update([
-                                                                        'status' => $domainModel->getEnum('status', 'pending'),
+                                                                        'status' => $domainModel->getEnum('status', 'approved'),
                                                                     ]);
 
-                                                    return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
+                                                    return response()->json(['message' => 'Domínio validado com sucesso'], 200);
+                                                } else {
+
+                                                    try {
+
+                                                        $shopify->setThemeByRole('main');
+                                                        $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                                        if ($htmlCart) {
+                                                            //template normal
+
+                                                            $shopifyIntegration->update([
+                                                                                            'theme_type' => $shopifyIntegration->getEnum('theme_type', 'basic_theme'),
+                                                                                            'theme_name' => $shopify->getThemeName(),
+                                                                                            'theme_file' => 'sections/cart-template.liquid',
+                                                                                            'theme_html' => $htmlCart,
+                                                                                        ]);
+
+                                                            $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                                        } else {
+
+                                                            //template ajax
+                                                            $shopifyIntegration->update([
+                                                                                            'theme_type' => $this->getShopifyIntegrationModel()
+                                                                                                                 ->getEnum('theme_type', 'ajax_theme'),
+                                                                                            'theme_name' => $shopify->getThemeName(),
+                                                                                            'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                                            'theme_html' => $htmlCart,
+                                                                                        ]);
+
+                                                            $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                                        }
+
+                                                        //inserir o javascript para o trackeamento (src, utm)
+                                                        $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                                        if ($htmlBody) {
+                                                            //template do layout
+                                                            $shopifyIntegration->update([
+                                                                                            'layout_theme_html' => $htmlBody,
+                                                                                        ]);
+
+                                                            $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                                        }
+                                                    } catch (\Exception $e) {
+                                                        report($e);
+
+                                                        $domain->update([
+                                                                            'status' => $domainModel->getEnum('status', 'pending'),
+                                                                        ]);
+
+                                                        return response()->json(['message' => 'Domínio validado com sucesso, mas a integração com o shopify não foi encontrada'], 400);
+                                                    }
+
+                                                    $domain->update([
+                                                                        'status' => $domainModel->getEnum('status', 'approved'),
+                                                                    ]);
+
+                                                    return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                                 }
-
-                                                $domain->update([
-                                                                    'status' => $domainModel->getEnum('status', 'approved'),
-                                                                ]);
-
-                                                return response()->json(['message' => 'Domínio validado com sucesso'], 200);
                                             }
                                         }
+                                    } else {
+                                        //integração nao encontrada
+                                        $domain->update([
+                                                            'status' => $domainModel->getEnum('status', 'pending'),
+                                                        ]);
+
+                                        return response()->json(['message' => 'Não foi possível revalidar o domínio, integração do shopify não encontrada'], 400);
                                     }
-                                } else {
-                                    //integração nao encontrada
-                                    $domain->update([
-                                                        'status' => $domainModel->getEnum('status', 'pending'),
-                                                    ]);
+                                } catch (\Exception $e) {
+                                    //throwl
 
-                                    return response()->json(['message' => 'Não foi possível revalidar o domínio, integração do shopify não encontrada'], 400);
                                 }
-                            } catch (\Exception $e) {
-                                //throwl
+                            } else {
+                                //nao eh integracao shopfy, validar dominio
+                                $domain->update([
+                                                    'status' => $domainModel->getEnum('status', 'approved'),
+                                                ]);
 
+                                return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                             }
+                            //return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                         } else {
-                            //nao eh integracao shopfy, validar dominio
                             $domain->update([
-                                                'status' => $domainModel->getEnum('status', 'approved'),
+                                                'status' => $domainModel->getEnum('status', 'pending'),
                                             ]);
 
-                            return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
+                            return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
                         }
-                        //return response()->json(['message' => 'Domínio revalidado com sucesso'], 200);
                     } else {
-                        $domain->update([
-                                            'status' => $domainModel->getEnum('status', 'pending'),
-                                        ]);
-
-                        return response()->json(['message' => 'Não foi possível revalidar o domínio'], 400);
+                        //dominio nao existe
+                        return response()->json(['message' => 'Domínio não encontrado'], 400);
                     }
                 } else {
-                    //dominio nao existe
-                    return response()->json(['message' => 'Domínio não encontrado'], 400);
+                    return response()->json(['message' => 'Sem permissão para validar domínio'], 400);
                 }
             } else {
                 //hash invalido

@@ -22,6 +22,23 @@ class ProjectPolicy
 
     /**
      * @param User $user
+     * @param Project $project
+     * @return bool
+     */
+    public function index(User $user, Project $project)
+    {
+        $userProject = UserProject::where('user', $user->id)
+                                  ->where('project', $project->id)
+                                  ->first();
+        if ($userProject) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param User $user
      * @param Company $company
      * @return bool
      */
