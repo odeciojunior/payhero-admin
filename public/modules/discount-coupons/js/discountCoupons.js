@@ -146,7 +146,7 @@ $(function () {
                         data += '</tr>';
                         $("#data-table-coupon").append(data);
                     });
-                    pagination(response);
+                    pagination(response,'coupons',atualizarCoupon);
                 }
 
                 $(".details-coupon").unbind('click');

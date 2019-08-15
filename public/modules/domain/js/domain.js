@@ -138,7 +138,7 @@ $(document).ready(function () {
                     });
                 }
 
-                pagination(response);
+                pagination(response,'domain',updateDomains);
 
                 $(".details-domain").unbind('click');
                 $(".details-domain").on('click', function () {
