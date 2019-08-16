@@ -8,6 +8,54 @@ $(function () {
 
     var projectId = $("#project-id").val();
 
+    /* function verifyInputText() {
+         let verify = false;
+
+         if ($("#name").val().length > 30) {
+             verify = true;
+             $("#name-error").html('O campo Nome do projeto permite apenas 30 caracteres');
+         } else {
+             $("#name-error").html('');
+         }
+
+         if ($("#description").val().length > 255) {
+             verify = true;
+             $("#description-error").html('O campo Descrição permite apenas 255 caracteres');
+         } else {
+             $("#description-error").html('');
+         }
+
+         if ($("#url-page").val().length > 100) {
+             verify = true;
+             $("#url-page-error").html('O campo URL da página principal permite apenas 100 caracteres');
+         } else {
+             $("#url-page-error").html('');
+         }
+
+         if ($("#contact").val().length > 100) {
+             verify = true;
+             $("#contact-error").html('O campo URL da página principal permite apenas 100 caracteres');
+         } else {
+             $("#contact-error").html('');
+         }
+
+         if ($("#invoice-description").val().length > 100) {
+             verify = true;
+             $("#invoice-description-error").html('O campo URL da página principal permite apenas 100 caracteres');
+         } else {
+             $("#invoice-description-error").html('');
+         }
+
+         if ($("#input-pad").val().length > 100) {
+             verify = true;
+             $("#input-pad-error").html('O campo URL da página principal permite apenas 100 caracteres');
+         } else {
+             $("#input-pad-error").html('');
+         }
+
+         return verify;
+     }
+ */
     ///// UDPATE CONFIGURAÇÃO Tela Project
     function updateConfiguracoes() {
         $.ajax({
@@ -15,8 +63,15 @@ $(function () {
             url: "/projects/" + projectId + '/edit',
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-            }, error: function () {
-                alertCustom('error', 'Ocorreu algum error');
+            }, error: function (response) {
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors[error]) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', String(response.responseJSON.message));
+                }
+
             }, success: function (data) {
 
                 let parcelas = '';
@@ -66,7 +121,7 @@ $(function () {
                         p.on('load', function () {
 
                             var img = document.getElementById('previewimage');
-                            var x1, x2, y1, y2; 
+                            var x1, x2, y1, y2;
 
                             if (img.naturalWidth > img.naturalHeight) {
                                 y1 = Math.floor(img.naturalHeight / 100 * 10);
@@ -148,6 +203,8 @@ $(function () {
                     parcelasJuros = parseInt($(".parcelas-juros option:selected").val());
                     var verify = verificaParcelas(parcelas, parcelasJuros);
 
+                    /*var validationInput = verifyInputText();*/
+
                     var formData = new FormData(document.getElementById("update-project"));
 
                     if (!verify) {
@@ -162,12 +219,15 @@ $(function () {
                             },
                             data: formData,
                             error: function (response) {
-                                if (response.status === '422') {
+                                loadingOnScreenRemove();
+                                if (response.status === 422) {
                                     for (error in response.responseJSON.errors) {
                                         alertCustom('error', String(response.responseJSON.errors[error]));
                                     }
+                                } else {
+                                    alertCustom('error', String(response.responseJSON.message));
+
                                 }
-                                loadingOnScreenRemove();
                             }, success: function (response) {
                                 alertCustom('success', response.message);
 
@@ -308,16 +368,16 @@ $(function () {
     })
 
     $('.modal').on('hidden.bs.modal', function () {
-        $('.modal-footer').css('display','');
+        $('.modal-footer').css('display', '');
         $('#btn-modal').show();
         $('#modal-title').show();
         $('#especialModalTitle').remove();
     });
 
-    $('#toggler').on('click',function(){
-        if($("#collapseOne").hasClass('show')){
+    $('#toggler').on('click', function () {
+        if ($("#collapseOne").hasClass('show')) {
             $('#showMore').text('exibir mais')
-        }else{
+        } else {
             $('#showMore').text('exibir menos')
         }
     })
