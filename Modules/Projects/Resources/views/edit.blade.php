@@ -28,6 +28,7 @@
                     <div class='form-group col-lg-12'>
                         <label for='name'>Nome do projeto</label>
                         <input name='name' value='{{$project->name}}' type='text' class='input-pad' id='name' placeholder='Nome do Projeto' required>
+                        <span id='name-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
                         </p>
@@ -35,9 +36,10 @@
                     <div class='form-group col-lg-12'>
                         <label for='description'>Descrição</label>
                         <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required=''>{{$project->description}}</textarea>
+                        <span id='description-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
-                        </p>    
+                        </p>
                     </div>
                     <div class='form-group col-lg-4'>
                         <label for='visibility'>Visibilidade</label>
@@ -84,21 +86,25 @@
                     <div class="form-group col-12">
                         <label for="url_page">URL da página principal</label>
                         <input name="url_page" value="{{$project->url_page == null ? 'https://' : $project->url_page}}" type="text" class="input-pad" id="url-page" placeholder="URL da página">
+                        <span id='url-page-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> URL da página principal da loja
-                        </p>    
+                        </p>
                     </div>
                     <div class="form-group col-12">
                         <label for="contact">Email de Contato (checkout e email)</label>
                         <input name="contact" value="{{$project->contact}}" type="text" class="input-pad" id="contact" placeholder="Contato">
+                        <span id='contact-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails
                         </p>
+                        <span id='contact-error'></span>
                     </div>
                 </div>
                 <div class='col-12 row' style='margin:auto; padding-top:50px'>
                     <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <h3 style='position:absolute; bottom: 0px;'>Configurações Avançadas <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
+                        <h3 style='position:absolute; bottom: 0px;'>Configurações Avançadas
+                            <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
                         </h3>
                     </div>
                 </div>
@@ -111,6 +117,7 @@
                     <div class='form-group col-6 col-xs-12'>
                         <label for='invoice-description'>Descrição da Fatura</label>
                         <input name='invoice_description' value='{{$project->invoice_description}}' maxlength='13' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura'>
+                        <span id='invoice-description-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Descrição apresentada na fatura do cartão de crédito
                         </p>
@@ -143,7 +150,7 @@
                         <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                         <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                             @for($x=1; $x <=12; $x++)
-                                <option value='{{$x}}' {{$x > 1 ? 'disabled' : ''}}>{{$x}}{{$x > 1 ? ' (em breve) ' : ''}}</option>
+                                <option value='{{$x}}' {{$x == $project->installments_interest_free ? 'selected' : ''}}>{{$x}}</option>
                             @endfor
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
@@ -166,10 +173,13 @@
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
                         <input id='boleto_redirect' name='boleto_redirect' value='{{$project->boleto_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        <span id='boleto_redirect-error' class='text-danger'></span>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                         <input id='card_redirect' name='card_redirect' value='{{$project->card_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        <span id='input-pad-error' class='text-danger'></span>
+
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>
