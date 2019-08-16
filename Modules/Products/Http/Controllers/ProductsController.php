@@ -8,6 +8,7 @@ use App\Entities\Product;
 use App\Entities\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\Products\Http\Requests\UpdateProductRequest;
 use Vinkla\Hashids\Facades\Hashids;
@@ -148,18 +149,30 @@ class ProductsController extends Controller
     public function edit($id)
     {
         try {
-            $product = $this->productModel->find(Hashids::decode($id))->first();
-            if ($product) {
-                return view('products::edit', [
-                    'product'    => $product,
-                    'categories' => $this->categoryModel->all(),
-                ]);
-            }
 
-            return redirect()->back();
+            $productId = current(Hashids::decode($id));
+
+            if ($productId) {
+                //hash ok
+                $product = $this->productModel->find($productId);
+
+                if (Gate::allows('edit', [$product])) {
+                    return view('products::edit', [
+                        'product'    => $product,
+                        'categories' => $this->categoryModel->all(),
+                    ]);
+                } else {
+                    return redirect()->back();
+                }
+            } else {
+                //hash incorreto
+                return response()->json(['message' => 'Produto não encontrado'], 400);
+            }
         } catch (Exception $e) {
             Log::error('Erro ao tentar acessar tela de editar produto (ProductsController - edit)');
             report($e);
+
+            return response()->json(['message' => 'Produto não encontrado'], 400);
         }
     }
 
@@ -170,42 +183,57 @@ class ProductsController extends Controller
     public function update($id, UpdateProductRequest $request)
     {
         try {
-            $data    = $request->validated();
-            $product = $this->productModel->findOrFail(Hashids::decode($id))->first();
-            if (isset($data['price'])) {
-                $data['price'] = preg_replace("/[^0-9]/", "", $data['price']);
-            }
+            $data = $request->validated();
 
-            if (isset($data['cost'])) {
-                $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
-            }
-            $product->update($data);
+            $productId = current(Hashids::decode($id));
 
-            $productPhoto = $request->file('product_photo');
+            if ($productId) {
+                //hash correto
+                $product = $this->productModel->findOrFail($productId);
 
-            if ($productPhoto != null) {
+                if (Gate::allows('update', [$product])) {
 
-                try {
-                    $this->getDigitalOceanFileService()->deleteFile($product->photo);
+                    if (isset($data['price'])) {
+                        $data['price'] = preg_replace("/[^0-9]/", "", $data['price']);
+                    }
 
-                    $img = Image::make($productPhoto->getPathname());
-                    $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
-                    $img->resize(200, 200);
-                    $img->save($productPhoto->getPathname());
+                    if (isset($data['cost'])) {
+                        $data['cost'] = preg_replace("/[^0-9]/", "", $data['cost']);
+                    }
+                    $product->update($data);
 
-                    $digitalOceanPath = $this->getDigitalOceanFileService()
-                                             ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+                    $productPhoto = $request->file('product_photo');
 
-                    $product->update([
-                                         'photo' => $digitalOceanPath,
-                                     ]);
-                } catch (Exception $e) {
-                    Log::warning('ProfileController - update - Erro ao enviar foto do profile');
-                    report($e);
+                    if ($productPhoto != null) {
+
+                        try {
+                            $this->getDigitalOceanFileService()->deleteFile($product->photo);
+
+                            $img = Image::make($productPhoto->getPathname());
+                            $img->crop($data['photo_w'], $data['photo_h'], $data['photo_x1'], $data['photo_y1']);
+                            $img->resize(200, 200);
+                            $img->save($productPhoto->getPathname());
+
+                            $digitalOceanPath = $this->getDigitalOceanFileService()
+                                                     ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/products', $productPhoto);
+
+                            $product->update([
+                                                 'photo' => $digitalOceanPath,
+                                             ]);
+                        } catch (Exception $e) {
+                            Log::warning('ProfileController - update - Erro ao enviar foto do profile');
+                            report($e);
+                        }
+                    }
+
+                    return redirect()->route('products.index');
+                } else {
+                    return redirect()->route('products.index');
                 }
+            } else {
+                //hash incorreto
+                return redirect()->route('products.index');
             }
-
-            return redirect()->route('products.index');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar atualizar produto (ProductsController - update)');
             report($e);
@@ -219,21 +247,39 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         try {
-            $product = $this->productModel->find(Hashids::decode($id))->first();
+            $productId = current(Hashids::decode($id));
 
-            $productPlan = $this->productsPlansModel->where('product', $product->id)->count();
-            if ($productPlan == 0) {
-                $this->getDigitalOceanFileService()->deleteFile($product->photo);
-                $product->delete();
+            if ($productId) {
+                //hash ok
 
+                $product = $this->productModel->find($productId);
+
+                if (Gate::allows('destroy', [$product])) {
+
+                    $productPlan = $this->productsPlansModel->where('product', $product->id)->count();
+                    if ($productPlan == 0) {
+                        $this->getDigitalOceanFileService()->deleteFile($product->photo);
+                        $product->delete();
+
+                        return response()->json([
+                                                    'message' => 'Produto excluido com sucesso',
+                                                ], 200);
+                    } else {
+                        return response()->json([
+                                                    'message' => 'Impossivel excluir, existem planos associados a este produto!',
+                                                ], 400);
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para remover este produto',
+                                            ], 400);
+                }
+            } else {
+                //hash incorreto
                 return response()->json([
-                                            'message' => 'Produto excluido com sucesso',
-                                        ], 200);
+                                            'message' => 'Produto não encontrado',
+                                        ], 400);
             }
-
-            return response()->json([
-                                        'message' => 'Impossivel excluir, existem planos associados a este produto!',
-                                    ], 400);
         } catch (Exception $e) {
             Log::error('Erro ao tentar excluir produto (ProductsController - delete)');
             report($e);
