@@ -862,7 +862,9 @@ class ShopifyService
                                                                            ->getCost(),
                                                      'shopify'     => true,
                                                      'price'       => '',
-                                                 ]);
+                                                     'shopify_id'         => $storeProduct->getId(),
+                                                     'shopify_variant_id' => $variant->getId(),
+                                                ]);
                 Log::warning('product criado - ' . print_r($product, true));
 
                 $plan = $planModel->create([

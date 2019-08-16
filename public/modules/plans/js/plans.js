@@ -185,11 +185,12 @@ $(function () {
                     $.each(response.data, function (index, value) {
                         data = '';
                         data += '<tr>';
-                        data += '<td class="shipping-id " style="vertical-align: middle;">' + value.name + '</td>';
-                        data += '<td class="shipping-type " style="vertical-align: middle;">' + value.description + '</td>';
-                        data += '<td class="shipping-value " style="vertical-align: middle;">' + value.code + '</td>';
-                        data += '<td class="shipping-zip-code-origin " style="vertical-align: middle;">' + value.price + '</td>';
-                        data += '<td class="shipping-status">';
+                        data += '<td id=""     class=""                                                     style="vertical-align: middle;">' + value.name + '</td>';
+                        data += '<td id=""     class=""                                                     style="vertical-align: middle;">' + value.description + '</td>';
+                        data += '<td id="link" class="display-sm-none display-m-none"                       style="vertical-align: middle;">' + value.code + '</td>';
+                        data += '<td id=""     class="display-lg-none display-xlg-none"                     style="vertical-align: middle;"><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
+                        data += '<td id=""     class=""                                                     style="vertical-align: middle;">' + value.price + '</td>';
+                        data += '<td id=""     class="">';
                         if (value.status === 1) {
                             data += '<span class="badge badge-success mr-10">Ativo</span>';
                         } else {
@@ -197,13 +198,15 @@ $(function () {
                         }
 
                         data += '</td>';
-
-                        data += "<td style='min-width:200px;'>" + "<a class='pointer details-plan mr-30' plan='" + value.id + "'  role='button'><i class='material-icons gradient'>remove_red_eye</i></a>" + "<a class='pointer edit-plan' plan='" + value.id + "' data-target='#modal-content' data-toggle='modal' role='button'><i class='material-icons gradient'>edit</i></a>" + "<a class='pointer delete-plan ml-30' plan='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' role='button'><i class='material-icons gradient'>delete_outline</i></a>";
-                        "</td>";
-
+                        data += "<td style='text-align:center'>"
+                        data += "<a class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'                                                 ><i class='material-icons gradient'>remove_red_eye</i></a>"
+                        data += "<a class='pointer edit-plan'                     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><i class='material-icons gradient'>edit</i></a>"
+                        data += "<a class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><i class='material-icons gradient'>delete_outline</i></a>";
+                        data += "</td>";
                         data += '</tr>';
 
                         $("#data-table-plan").append(data);
+                        $('#table-plans').addClass('table-striped');
                     });
 
                     pagination(response, 'plans', updatePlan);

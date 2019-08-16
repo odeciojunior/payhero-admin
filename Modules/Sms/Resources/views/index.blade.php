@@ -10,7 +10,7 @@
 <div class="card shadow">
     <div style='min-height: 300px'>
         <div class='page-invoice-table table-responsive'>
-            <table id='tabela-sms' class='table text-left table-sms table-striped' style='width:100%'>
+            <table id='tabela-sms' class='table text-left table-sms table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
                         <td class='table-title'>Tipo</td>
@@ -18,6 +18,7 @@
                         <td class='table-title'>Tempo</td>
                         <td class='table-title'>Mensagem</td>
                         <td class='table-title'>Status</td>
+                        <td class='table-title text-center'>Opções</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-sms'>
@@ -32,18 +33,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td class="text-center" style="vertical-align: middle;">
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -56,18 +51,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class="text-center">
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -81,18 +70,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class="text-center">
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -105,18 +88,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class="text-center">
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -129,18 +106,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class="text-center">
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -153,18 +124,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class="text-center">
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -177,18 +142,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -201,18 +160,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -225,18 +178,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>
@@ -249,18 +196,12 @@
                             <span class="badge badge-success mb-1">Ativo</span>
                             <span class="badge badge-primary">Grátis</span>
                         </td>
-                        <td class="shipping-pre-selected " style="vertical-align: middle;">
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled details-sms' data-target='#modal-content' data-toggle='modal'>
+                        <td style='vertical-align: middle' class='text-center'>
+                            <a role='button' class='pointer disabled details-sms m-10' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'>remove_red_eye</i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
                             <a role='button' class='pointer disabled edit-sms' data-target='#modal-content' data-toggle='modal'>
                                 <i class='material-icons gradient'> edit </i></a>
-                        </td>
-                        <td style='vertical-align: middle' class=''>
-                            <a role='button' class='pointer disabled delete-sms' data-toggle='modal' data-target='#modal-delete'>
+                            <a role='button' class='pointer disabled delete-sms m-10' data-toggle='modal' data-target='#modal-delete'>
                                 <i class='material-icons gradient'> delete_outline </i></a>
                         </td>
                     </tr>

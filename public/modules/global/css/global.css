@@ -22,7 +22,7 @@
     }
 
     .mg-responsive {
-        margin: 0.5em;
+        margin: 0px 15px;
     }
 
     .table td {
@@ -50,7 +50,7 @@
     }
 
     .mg-responsive {
-        margin: 1em;
+        margin: 0px 10px;
     }
 
     .table td {
@@ -59,6 +59,10 @@
 
     tr td {
         text-align: center;
+    }
+
+    td.noMiddle {
+        text-align: justify !important;
     }
 }
 @media screen and (min-width: 768px) and (max-width: 814px) {
@@ -67,7 +71,7 @@
     }
 
     .mg-responsive {
-        margin: 1em;
+        margin: 0px 10px;
     }
 
     .table td {
@@ -77,20 +81,29 @@
     tr td {
         text-align: center;
     }
-    @media screen and (min-width: 768px) and (max-width: 794px){
+
+    td.noMiddle {
+        text-align: justify !important;
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 794px) {
         .mg-responsive {
             margin: 3px !important;
         }
     }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (min-width: 1px) and (max-width: 767px) {
+    .display-xsm-none {
+        display: none !important;
+    }
+
     #modal-saleDetails {
         width: unset !important;
     }
 
     .mg-responsive {
-        margin: 1.5em;
+        margin: 0px 1.5em;
     }
 
     .table td {
