@@ -143,7 +143,7 @@
                         <label for="parcelas_sem_juros">Quantidade de parcelas sem juros</label>
                         <select class='parcelas-juros form-control select-pad' name='installments_interest_free'>
                             @for($x=1; $x <=12; $x++)
-                                <option value='{{$x}}' {{$x > 1 ? 'disabled' : ''}}>{{$x}}{{$x > 1 ? ' (em breve) ' : ''}}</option>
+                                <option value='{{$x}}' {{$x == $project->installments_interest_free ? 'selected' : ''}}>{{$x}}</option>
                             @endfor
                         </select>
                         <p class='info pt-5' style='font-size: 10px;'>
