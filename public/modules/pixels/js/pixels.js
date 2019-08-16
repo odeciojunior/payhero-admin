@@ -135,11 +135,11 @@ $(function () {
                 } else {
                     $.each(response.data, function (index, value) {
                         data = '';
-                        data += '<tr class="shipping-id">';
-                        data += '<td class="shipping-id" width="70%" style="width:120px;">' + value.name + '</td>';
-                        data += '<td class="shipping-type" width="70%" style="width:120px;">' + value.code + '</td>';
-                        data += '<td class="shipping-value"  width="70% "style="width:120px;">' + value.platform + '</td>';
-                        data += '<td class="shipping-status" width="70%" style="width:100px;">';
+                        data += '<tr class="">';
+                        data += '<td class="" >' + value.name + '</td>';
+                        data += '<td class="" >' + value.code + '</td>';
+                        data += '<td class="" >' + value.platform + '</td>';
+                        data += '<td class="" >';
                         if (value.status == 1) {
                             data += '<span class="badge badge-success">Ativo</span>';
                         } else {
@@ -147,11 +147,15 @@ $(function () {
                         }
                         data += '</td>';
 
-                        data += "<td style='min-width:200px;'>" + "<a role='button' class='details-pixel pointer mr-30'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>" + "<a role='button'class='edit-pixel pointer'  pixel='" + value.id + "' data-target='#modal-content' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a>" + "<a role='button' class='delete-pixel pointer ml-30'  pixel='" + value.id + "'  data-toggle='modal' data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>";
+                        data += "<td style='text-align:center'>"
+                        data += "<a role='button' class='mg-responsive details-pixel pointer'   pixel='" + value.id + "'  data-target='#modal-content' data-toggle='modal'         type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>"
+                        data += "<a role='button' class='mg-responsive edit-pixel    pointer'   pixel='" + value.id + "'  data-target='#modal-content' data-toggle='modal'         type='a'><i class='material-icons gradient'>edit</i></a>"
+                        data += "<a role='button' class='mg-responsive delete-pixel  pointer'   pixel='" + value.id + "'  data-toggle='modal'          data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>";
                         "</td>";
 
                         data += '</tr>';
                         $("#data-table-pixel").append(data);
+                        $('#table-pixel').addClass('table-striped');
                     });
                 }
 

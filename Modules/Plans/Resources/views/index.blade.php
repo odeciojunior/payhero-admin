@@ -11,15 +11,15 @@
 <div class="card shadow">
     <div style='min-height: 300px'>
         <div class='page-invoice-table table-responsive'>
-            <table id='table-plans' class='table text-left table-pixels table-striped' style='width:100%'>
+            <table id='table-plans' class='table text-left table-pixels table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title' width='300px'>Nome</td>
-                        <td class='table-title' width='300px'>Descrição</td>
-                        <td class='table-title' width='300px'>Link</td>
-                        <td class='table-title' width='300px'>Preço</td>
-                        <td class='table-title' width='300px'>Status</td>
-                        <td class='table-title text-center' width='200px'>Opções</td>
+                        <td class='table-title' >Nome</td>
+                        <td class='table-title' >Descrição</td>
+                        <td class='table-title' >Link</td>
+                        <td class='table-title col-2' >Preço</td>
+                        <td class='table-title' >Status</td>
+                        <td class='table-title text-center col-2' >Opções</td>
                     </tr>
                 </thead>
                 <tbody id='data-table-plan'>
