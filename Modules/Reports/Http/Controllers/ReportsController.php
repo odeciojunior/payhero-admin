@@ -63,12 +63,12 @@ class ReportsController extends Controller
     {
         try {
 
-            $dataSearch = $request->all();
-            $projectId  = current(Hashids::decode($request->input('project')));
-
             $userProjectModel = new UserProject();
             $salesModel       = new Sale();
             $planModel        = new Plan();
+
+            $dataSearch = $request->all();
+            $projectId  = current(Hashids::decode($request->input('project')));
 
             $requestStartDate = $request->input('startDate');
             $requestEndDate   = $request->input('endDate');
