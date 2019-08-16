@@ -3,9 +3,11 @@
 namespace Modules\DiscountCoupons\Http\Controllers;
 
 use App\Entities\DiscountCoupon;
+use App\Entities\Project;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Modules\DiscountCoupons\Http\Requests\DiscountCouponsStoreRequest;
 use Modules\DiscountCoupons\Http\Requests\DiscountCouponsUpdateRequest;
@@ -22,14 +24,23 @@ class DiscountCouponsController extends Controller
     {
         try {
             $discountCouponsModel = new DiscountCoupon();
+            $projectModel         = new Project();
 
             if ($request->has('project') && !empty($request->input('project'))) {
                 $projectId = current(Hashids::decode($request->input('project')));
-                $coupons   = $discountCouponsModel->whereHas('project', function($query) use ($projectId) {
-                    $query->where('project', $projectId);
-                });
+                $project   = $projectModel->find($projectId);
 
-                return DiscountCouponsResource::collection($coupons->orderBy('id', 'DESC')->paginate(5));
+                if (Gate::allows('edit', [$project])) {
+                    $coupons = $discountCouponsModel->whereHas('project', function($query) use ($projectId) {
+                        $query->where('project', $projectId);
+                    });
+
+                    return DiscountCouponsResource::collection($coupons->orderBy('id', 'DESC')->paginate(5));
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para acessar os coupon',
+                                            ], 400);
+                }
             } else {
                 return response()->json([
                                             'message' => 'Erro ao listar dados de cupons',
@@ -68,20 +79,30 @@ class DiscountCouponsController extends Controller
         try {
 
             $discountCouponsModel = new DiscountCoupon();
+            $projectModel         = new Project();
 
             $requestData            = $request->validated();
             $requestData["project"] = current(Hashids::decode($requestData['project']));
             $requestData['value']   = preg_replace("/[^0-9]/", "", $requestData['value']);
 
-            $discountCouponSaved = $discountCouponsModel->create($requestData);
-            if ($discountCouponSaved) {
-                return response()->json([
-                                            'message' => 'Cupom criado com sucesso!',
+            $project = $projectModel->find($requestData["project"]);
 
-                                        ], 200);
+            if (Gate::allows('edit', [$project])) {
+                $discountCouponSaved = $discountCouponsModel->create($requestData);
+                if ($discountCouponSaved) {
+                    return response()->json([
+                                                'message' => 'Cupom criado com sucesso!',
+
+                                            ], 200);
+                } else {
+                    return response()->json([
+                                                'message' => 'Erro ao tentar salvar cupom!',
+
+                                            ], 400);
+                }
             } else {
                 return response()->json([
-                                            'message' => 'Erro ao tentar salvar cupom!',
+                                            'message' => 'Sem permissão para criar cupom neste projeto',
 
                                         ], 400);
             }
@@ -107,13 +128,22 @@ class DiscountCouponsController extends Controller
             $data                 = $request->all();
             if (isset($data['couponId'])) {
                 $couponId = Hashids::decode($data['couponId'])[0];
-                $coupon   = $discountCouponsModel->find($couponId);
-                if ($coupon) {
-                    return view('discountcoupons::details', ['coupon' => $coupon]);
+                $coupon   = $discountCouponsModel->with(['project'])->find($couponId);
+                $project  = $coupon->getRelation('project');
+
+                if (Gate::allows('edit', [$project])) {
+                    if ($coupon) {
+                        return view('discountcoupons::details', ['coupon' => $coupon]);
+                    } else {
+                        return response()->json('Erro ao buscar Cupom');
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para visualizar este cupom',
+
+                                            ], 400);
                 }
             }
-
-            return response()->json('Erro ao buscar Cupom');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar dados de um cupom (DiscountCouponsController - show)');
             report($e);
@@ -132,13 +162,22 @@ class DiscountCouponsController extends Controller
             $data                 = $request->all();
             if (isset($data['couponId'])) {
                 $couponId = Hashids::decode($data['couponId'])[0];
-                $coupon   = $discountCouponsModel->find($couponId);
-                if ($coupon) {
-                    return view('discountcoupons::edit', ['coupon' => $coupon]);
+                $coupon   = $discountCouponsModel->with(['project'])->find($couponId);
+                $project  = $coupon->getRelation('project');
+
+                if (Gate::allows('edit', [$project])) {
+                    if ($coupon) {
+                        return view('discountcoupons::edit', ['coupon' => $coupon]);
+                    } else {
+                        return response()->json('Erro');
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para editar este cupom',
+
+                                            ], 400);
                 }
             }
-
-            return response()->json('Erro');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar buscar dados para atualizar cupom (DescountCouponsController - edit)');
             report($e);
@@ -157,17 +196,27 @@ class DiscountCouponsController extends Controller
             $requestValidated     = $request->validated();
 
             $couponId = current(Hashids::decode($id));
-            $coupon   = $discountCouponsModel->find($couponId);
-            unset($requestValidated['project']);
-            $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
+            $coupon   = $discountCouponsModel->with(['project'])->find($couponId);
+            $project  = $coupon->getRelation('project');
 
-            $couponUpdated = $coupon->update($requestValidated);
+            if (Gate::allows('edit', [$project])) {
 
-            if ($couponUpdated) {
-                return response()->json('Sucesso', 200);
+                unset($requestValidated['project']);
+                $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
+
+                $couponUpdated = $coupon->update($requestValidated);
+
+                if ($couponUpdated) {
+                    return response()->json('Sucesso', 200);
+                } else {
+                    return response()->json('Erro');
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Sem permissão para atualizar este cupom',
+
+                                        ], 400);
             }
-
-            return response()->json('Erro');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar atualizar cupom de desconto  (DescountCouponController - update)');
             dd($e);
@@ -186,13 +235,24 @@ class DiscountCouponsController extends Controller
 
             if (isset($id)) {
                 $descountCouponId = Hashids::decode($id)[0];
-                $descountCoupon   = $discountCouponsModel->find($descountCouponId)->delete();
-                if ($descountCoupon) {
-                    return response()->json('Sucesso');
+
+                $descountCoupon = $discountCouponsModel->with(['project'])->find($descountCouponId);
+                $project        = $descountCoupon->getRelation('project');
+
+                if (Gate::allows('edit', [$project])) {
+                    $descountCoupon->delete();
+                    if ($descountCoupon) {
+                        return response()->json('Sucesso');
+                    } else {
+                        return response()->json('Erro');
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para remover este cupom',
+
+                                            ], 400);
                 }
             }
-
-            return response()->json('Erro');
         } catch (Exception $e) {
             Log::warning('Erro ao tentar excluir cupom de desconto (DescountCouponController - destroy)');
             report($e);

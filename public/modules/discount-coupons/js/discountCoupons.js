@@ -141,8 +141,10 @@ $(function () {
 
                         data += '</td>';
 
-                        data += "<td style='min-width:200px;'>" + "<a role='button' class='details-coupon pointer mr-30' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>" + "<a role='button' class='edit-coupon pointer' coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>" + "<a role='button' class='delete-coupon pointer ml-30' coupon='" + value.id + "' data-target='#modal-delete' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>";
-                        "</td>";
+                        data += "<td style='text-align:center;'>"
+                        data += "<a role='button' class='mg-responsive details-coupon pointer'  coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>"
+                        data += "<a role='button' class='mg-responsive edit-coupon pointer'     coupon='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"
+                        data += "<a role='button' class='mg-responsive delete-coupon pointer'   coupon='" + value.id + "' data-target='#modal-delete'  data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a></td>";
                         data += '</tr>';
                         $("#data-table-coupon").append(data);
                     });

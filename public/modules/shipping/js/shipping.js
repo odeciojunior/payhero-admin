@@ -212,14 +212,14 @@ $(document).ready(function () {
 
                         dados += '</td>';
 
-                        dados += '<td class="shipping-pre-selected text-center" style="vertical-align: middle;">';
+                        dados += '<td class="shipping-pre-selected text-center display-sm-none display-m-none" style="vertical-align: middle;">';
                         if (value.pre_selected === 1) {
                             dados += '<span class="badge badge-success">Sim</span>';
                         } else {
                             dados += '<span class="badge badge-primary"> Não </span>';
                         }
                         dados += '</td>';
-                        dados += "<td style='min-width:200px;'>" + "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>" + "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>" + "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>";
+                        dados += "<td style='text-align:center'>" + "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>" + "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>" + "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>";
                         "</td>";
                         dados += '</tr>';
                         $("#dados-tabela-frete").append(dados);

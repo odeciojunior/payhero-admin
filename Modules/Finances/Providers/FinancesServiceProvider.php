@@ -35,7 +35,7 @@ class FinancesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**
