@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $utm_term
  * @property string $utm_content
  * @property string $src
+ * @property string $operational_system
+ * @property string $browser
  * @property Project $project
  * @property CheckoutPlan[] $checkoutPlans
  * @property Sale[] $sales
@@ -68,6 +70,8 @@ class Checkout extends Model
         'is_mobile',
         'email_sent_amount',
         'sms_sent_amount',
+        'operational_system',
+        'browser',
     ];
 
     /**

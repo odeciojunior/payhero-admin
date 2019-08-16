@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $width
  * @property string $weight
  * @property string $digital_product_url
+ * @property string $shopify_id
+ * @property string $shopify_variant_id
  * @property boolean $shopify
  * @property string $created_at
  * @property string $updated_at
@@ -57,6 +59,8 @@ class Product extends Model
         'shopify',
         'digital_product_url',
         'price',
+        'shopify_id',
+        'shopify_variant_id',
         'created_at',
         'updated_at',
         'deleted_at',
