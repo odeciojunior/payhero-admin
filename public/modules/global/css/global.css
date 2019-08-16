@@ -16,9 +16,31 @@
     margin-left: -5px;
 }
 
+@media screen and (min-width: 1201px) {
+    .display-xlg-none {
+        display: none;
+    }
+
+    .mg-responsive {
+        margin: 0.5em;
+    }
+
+    .table td {
+        padding: 10px 13px !important;
+    }
+}
+
 @media screen and (min-width: 992px) and (max-width: 1200px) {
     .display-lg-none {
         display: none;
+    }
+
+    .mg-responsive {
+        margin: 0px 15px;
+    }
+
+    .table td {
+        padding: 10px 13px !important;
     }
 }
 
@@ -26,16 +48,49 @@
     .display-m-none {
         display: none;
     }
+
+    .mg-responsive {
+        margin: 1em;
+    }
+
+    .table td {
+        padding: 10px 13px !important;
+    }
+
+    tr td {
+        text-align: center;
+    }
 }
 @media screen and (min-width: 768px) and (max-width: 814px) {
     .display-sm-none {
         display: none;
+    }
+
+    .mg-responsive {
+        margin: 1em;
+    }
+
+    .table td {
+        padding: 10px 13px !important;
+    }
+
+    tr td {
+        text-align: center;
+    }
+    @media screen and (min-width: 768px) and (max-width: 794px){
+        .mg-responsive {
+            margin: 3px !important;
+        }
     }
 }
 
 @media screen and (max-width: 767px) {
     #modal-saleDetails {
         width: unset !important;
+    }
+
+    .mg-responsive {
+        margin: 1.5em;
     }
 
     .table td {
