@@ -16,12 +16,12 @@
 <div class="card shadow">
     <div style='min-height: 300px'>
         <div class='page-invoice-table table-responsive'>
-            <table id='tabela-dominios' class='table text-left table-dominios table-striped' style='width:100%'>
+            <table id='tabela-dominios' class='table text-left table-dominios table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title' width='400px'>Nome</td>
-                        <td class='table-title' width='400px'>Status</td>
-                        <td class='table-title' width='200px'>Opções</td>
+                        <td class='table-title col-7 noMiddle' >Nome</td>
+                        <td class='table-title col-2' >Status</td>
+                        <td class='table-title col-3 text-center' >Opções</td>
                     </tr>
                 </thead>
                 <tbody id='domain-table-body'>

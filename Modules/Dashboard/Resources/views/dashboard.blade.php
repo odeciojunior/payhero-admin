@@ -41,7 +41,7 @@
       <!-- CARDS EXTRATO -->
       @if(count($companies) > 0)
         <div class="row">
-          <div class="col-lg-3" >
+          <div class="col-sm-12 col-md-6 col-lg-3" >
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
@@ -72,7 +72,7 @@
                 <div class="card-bottom orange"> </div>
               </div>
           </div>
-          <div class="col-lg-3" >
+          <div class="col-sm-12 col-md-6 col-lg-3" >
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
@@ -86,7 +86,7 @@
                 <div class="card-bottom orangered"> </div>
               </div>
           </div>
-          <div class="col-lg-3" >
+          <div class="col-sm-12 col-md-6 col-lg-3" >
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
@@ -100,7 +100,7 @@
                 <div class="card-bottom green"> </div>
               </div>
           </div>
-          <div class="col-lg-3" >
+          <div class="col-sm-12 col-md-6 col-lg-3" >
               <div class="card card-shadow bg-white">
                 <div class="card-header d-flex justify-content-start align-items-center bg-white p-20">
                     <div class="font-size-14 gray-600">
