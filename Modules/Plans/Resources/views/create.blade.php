@@ -27,7 +27,7 @@
                         <div class='col-md-6'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>
-                                <select id="product_1" name="products[]" class="form-control">
+                                <select id="product_1" name="products[]" class="form-control plan_product">
                                     @foreach($products as $product)
                                         <option value="{{ $product->id }}">{{ $product->name }}</option>
                                     @endforeach

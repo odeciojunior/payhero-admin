@@ -56,7 +56,7 @@ $(function () {
                     $('#price').mask('#.###,#0', {reverse: true});
                     var qtd_products = '1';
 
-                    var div_products = $('#products_div_' + qtd_products).parent().clone();
+                    var div_products = $('#products_div_' + qtd_products).parent();
 
                     /**
                      * Add new product in array
@@ -84,7 +84,10 @@ $(function () {
                      */
                     $(".btn-save").unbind('click');
                     $(".btn-save").on('click', function () {
-
+                        if ($('.products_amount').val() == '' || $('.plan_product').val() == '') {
+                            alertCustom('error', 'Dados informados inválidos');
+                            return false;
+                        }
                         var formData = new FormData(document.getElementById('form-register-plan'));
                         formData.append("project", projectId);
                         loadingOnScreen();
@@ -316,6 +319,10 @@ $(function () {
                              */
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
+                                if ($('.products_amount').val() == '' || $('.plan_product').val() == '') {
+                                    alertCustom('error', 'Dados informados inválidos');
+                                    return false;
+                                }
                                 var formData = new FormData(document.getElementById('form-update-plan'));
                                 formData.append("project", projectId);
                                 loadingOnScreen();

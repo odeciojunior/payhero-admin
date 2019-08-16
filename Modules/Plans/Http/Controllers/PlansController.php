@@ -72,10 +72,9 @@ class PlansController extends Controller
             $requestData['status']  = 1;
 
             $requestData['price'] = $this->getValue($requestData['price']);
-
-            $plan = $planModel->create($requestData);
-            $plan->update(['code' => $plan->id_code]);
-            if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
+            if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
+                $plan = $planModel->create($requestData);
+                $plan->update(['code' => $plan->id_code]);
                 foreach ($requestData['products'] as $keyProduct => $product) {
                     foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
                         if ($keyProduct == $keyAmount) {
@@ -122,7 +121,7 @@ class PlansController extends Controller
                     $productPlan->find($productPlanArray['id'])->delete();
                 }
             }
-            if (isset($requestData['products']) && isset($requestData['product_amounts'])) {
+            if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                 foreach ($requestData['products'] as $keyProduct => $product) {
                     foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
                         if ($keyProduct == $keyAmount) {
@@ -233,105 +232,6 @@ class PlansController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     */
-    public function details(Request $request)
-    {
-        $planModel = new Plan();
-
-        $requestData = $request->all();
-
-        $plan = $planModel->with('project')->where('id', Hashids::decode($requestData['id_plano']))->first();
-
-        $modalBody = '';
-
-        $modalBody .= "<div class='col-xl-12 col-lg-12'>";
-        $modalBody .= "<table class='table table-bordered table-hover table-striped'>";
-        $modalBody .= "<thead>";
-        $modalBody .= "</thead>";
-        $modalBody .= "<tbody>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Nome:</b></td>";
-        $modalBody .= "<td>" . $plan->name . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Descrição:</b></td>";
-        $modalBody .= "<td>" . $plan->description . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Código identificador:</b></td>";
-        $modalBody .= "<td>" . $plan->code . "</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Status:</b></td>";
-        if ($plan->status == 1)
-            $modalBody .= "<td>Ativo</td>";
-        else
-            $modalBody .= "<td>Inativo</td>";
-        $modalBody .= "</tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<tr>";
-        $modalBody .= "<td><b>Preço:</b></td>";
-        $modalBody .= "<td>" . $plan->price . "</td>";
-        $modalBody .= "</tr>";
-
-        $produtosPlano = ProductPlan::where('plano', $plan->id)->get()->toArray();
-
-        if (count($produtosPlano) > 0) {
-
-            $modalBody .= "<tr class='text-center'>";
-            $modalBody .= "<td colspan='2'><b>Produtos do plano:</b></td>";
-            $modalBody .= "</tr>";
-
-            foreach ($produtosPlano as $produtoPlano) {
-
-                $produto   = Produto::find($produtoPlano['produto']);
-                $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Produto:</b></td>";
-                $modalBody .= "<td>" . $produto->name . "</td>";
-                $modalBody .= "</tr>";
-                $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Quantidade:</b></td>";
-                $modalBody .= "<td>" . $produtoPlano['product_amount'] . "</td>";
-                $modalBody .= "</tr>";
-            }
-        }
-
-        $planBrindes = PlanGift::where('plano', $plan->id)->get()->toArray();
-
-        if (count($planBrindes) > 0) {
-
-            $modalBody .= "<tr class='text-center'>";
-            $modalBody .= "<td colspan='2'><b>Brindes do plano:</b></td>";
-            $modalBody .= "</tr>";
-
-            foreach ($planBrindes as $planBrinde) {
-
-                $brinde = Gift::find($planBrinde['brinde']);
-
-                $modalBody .= "<tr>";
-                $modalBody .= "<td><b>Brinde:</b></td>";
-                $modalBody .= "<td>" . $brinde->descricao . "</td>";
-                $modalBody .= "</tr>";
-            }
-        }
-
-        $modalBody .= "</thead>";
-        $modalBody .= "</table>";
-        $modalBody .= "<div class='text-center'>";
-        if (!$plan->shopify_id) {
-            $modalBody .= "<img src='" . url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $plan->foto) . "?dummy=" . uniqid() . "' style='height: 250px'>";
-        } else {
-            $modalBody .= "<img src='" . $plan->foto . "' style='height: 250px'>";
-        }
-        $modalBody .= "</div>";
-        $modalBody .= "</div>";
-
-        return response()->json($modalBody);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
      * @throws Throwable
      */
     public function create(Request $request)
@@ -382,7 +282,6 @@ class PlansController extends Controller
             $productModel = new Product();
             $productPlan  = new ProductPlan();
             $projectModel = new Project();
-
 
             $planId = Hashids::decode($request->input('planId'))[0];
             $plan   = $planModel->find($planId);
