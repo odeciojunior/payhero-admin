@@ -38,9 +38,9 @@ $(document).ready(function () {
 
                     dados = '';
                     dados += '<tr>';
-                    dados += "<td>" + value.date + "</td>";
+                    dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
                     dados += "<td>" + value.project + "</td>";
-                    dados += "<td>" + value.client + "</td>";
+                    dados += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
                     dados += "<td>" + value.email_status + "</td>";
                     dados += "<td>" + value.sms_status + "</td>";
                     if (value.recovery_status == 'Recuperado') {
@@ -49,10 +49,16 @@ $(document).ready(function () {
                         dados += "<td><span class='badge badge-danger'>" + value.recovery_status + "</span></td>";
                     }
                     dados += "<td>" + value.value + "</td>";
-                    dados += "<td><a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
-                    dados += "<td> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
-                    dados += "<td><a  role='button' class='details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
-                    dados += '</tr>';
+                    dados += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
+                    dados += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
+                    dados += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+
+                    dados += "<td class='display-m-none display-lg-none display-xlg-none'>";
+                    dados += "<a role=''       class='mg-responsive'                       style='cursor:pointer;'                href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a>"
+                    dados += "<a role='button' class='mg-responsive copy_link'             style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a>"
+                    dados += "<a role='button' class='mg-responsive details-cart-recovery' style='cursor:pointer;' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></td>";
+
+                    dados += "</tr>";
                     $("#table_data").append(dados);
 
                     $(".copy_link").on("click", function () {
