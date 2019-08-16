@@ -84,10 +84,17 @@ $(function () {
                      */
                     $(".btn-save").unbind('click');
                     $(".btn-save").on('click', function () {
-                        if ($('.products_amount').val() == '' || $('.plan_product').val() == '') {
+                        var hasNoValue;
+                        $('.products_amount').each(function() {
+                            if ($(this).val() == '' || $(this).val() == 0) {
+                                hasNoValue = true;
+                            }
+                        });
+                        if (hasNoValue) {
                             alertCustom('error', 'Dados informados inválidos');
                             return false;
                         }
+
                         var formData = new FormData(document.getElementById('form-register-plan'));
                         formData.append("project", projectId);
                         loadingOnScreen();
@@ -322,10 +329,17 @@ $(function () {
                              */
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
-                                if ($('.products_amount').val() == '' || $('.plan_product').val() == '') {
+                                var hasNoValue;
+                                $('.products_amount').each(function() {
+                                    if ($(this).val() == '' || $(this).val() == 0) {
+                                        hasNoValue = true;
+                                    }
+                                });
+                                if (hasNoValue) {
                                     alertCustom('error', 'Dados informados inválidos');
                                     return false;
                                 }
+
                                 var formData = new FormData(document.getElementById('form-update-plan'));
                                 formData.append("project", projectId);
                                 loadingOnScreen();
