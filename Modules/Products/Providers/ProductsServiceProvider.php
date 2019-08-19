@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\products\Providers;
+namespace Modules\Products\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
-class productsServiceProvider extends ServiceProvider
+class ProductsServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -35,7 +35,7 @@ class productsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->register(AuthServiceProvider::class);
     }
 
     /**
