@@ -1,32 +1,32 @@
 <div class='container-fluid'>
-    <table class='table table-bordered table-striped table-hover'>
+    <table class='table table-bordered table-striped table-hover table-responsive'>
         <tbody>
             <tr>
                 <th style='width:40%;' class='text-center'>Nome:</th>
-                <td style='width: 20px'></td>
+                {{--                <td style='width: 20px'></td>--}}
                 <td class='text-left'>{{$plan->name}}</td>
                 <br>
             </tr>
             <tr>
                 <th style='width:40%;' class='text-center'>Descrição:</th>
-                <td style='width: 20px'></td>
+                {{--                <td style='width: 20px'></td>--}}
                 <td class='text-left'>{{$plan->description}}</td>
             </tr>
             <tr>
                 <th style='width:40%;' class='text-center'>Código:</th>
-                <td style='width: 20px'></td>
+                {{--                <td style='width: 20px'></td>--}}
                 <td class='text-left'>{{$plan->code}}</td>
             </tr>
             <tr>
                 <th style='width:40%;' class='text-center'>Preço:</th>
-                <td style='width: 20px'></td>
+                {{--                <td style='width: 20px'></td>--}}
                 <td class='text-left'>{{$plan->price}}</td>
             </tr>
             <tr>
                 <th style='width:40%;' class='text-center'>Status:</th>
-                <td style='width: 20px'></td>
+                {{--                <td style='width: 20px'></td>--}}
                 <td class='text-left'>
-{{--                    @dd($plan->projectId->domains[0]->name)--}}
+                    {{--                    @dd($plan->projectId->domains[0]->name)--}}
                     @if(!empty($plan->projectId->domains[0]->name))
                         <span class='badge badge-success text-left'>Ativo</span>
                     @else

@@ -2,7 +2,8 @@ $(document).ready(function () {
 
     var current_url = window.location.pathname;
 
-    $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical').css('overflow', 'hidden')
+    $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').css('scrollbar-width', 'none')
+    $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical').removeClass('scrollable scrollable-inverse scrollable-vertical')
 
     if (current_url.includes('dashboard')) {
         $("#dashboard_img").attr('src', '/modules/global/img/icon-red/dashboard-d.svg');

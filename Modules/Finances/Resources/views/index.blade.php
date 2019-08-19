@@ -38,9 +38,9 @@
                                         <p class="sub-pad"> Saque o dinheiro para sua conta bancária.
                                         </p>
                                     </div>
-                                    <div class="col-lg-5">
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
                                         <div class="row">
-                                            <div class="col-6 mb-15">
+                                            <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                                 <div class="price-holder">
                                                     <h6 class="label-price"> Saldo pendente </h6>
                                                     <h4 class="price saldoPendente">
@@ -48,7 +48,7 @@
                                                     <div class="grad-border"></div>
                                                 </div>
                                             </div>
-                                            <div class="col-6 mb-15">
+                                            <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                                 <div class="price-holder antecipacao" id="pop-antecipacao">
                                                     <h6 class="label-price"> Disponível para antecipar </h6>
                                                     <h4 class="price align-items-baseline disponivelAntecipar" id='btn-disponible-antecipation'>
@@ -82,7 +82,7 @@
                                                     <div class="grad-border purple"></div>
                                                 </div>
                                             </div>
-                                            <div class="col-6 mb-15">
+                                            <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                                 <div id="div-available-money" class="price-holder pointer">
                                                     <h6 class="label-price"> Saldo Disponível </h6>
                                                     <h4 class="price saldoDisponivel">
@@ -90,7 +90,7 @@
                                                     <div class="grad-border green"></div>
                                                 </div>
                                             </div>
-                                            <div class="col-6 mb-15">
+                                            <div class="col-sm-12 col-md-12 col-lg-6 mb-15">
                                                 <div class="price-holder">
                                                     <h6 class="label-price"> Saldo Total </h6>
                                                     <h4 class="price saltoTotal">
@@ -100,9 +100,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
                                         <div class="row flex-column">
-                                            <div class="col-lg-6 mb-3">
+                                            <div class="col-12 mb-3">
                                                 <div class="input-holder">
                                                     <label for="company"> Empresa</label>
                                                     <select class="form-control select-pad" id="transfers_company_select">
@@ -112,14 +112,16 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12">
+                                            <div class="col-12 mb-3">
                                                 <label for="company"> Valor a transferir</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon1 custom-addon" style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
+                                                <div class='row' style='display: flex; margin:0px'>
+                                                    <div class="input-group col-sm-12 col-md-12 col-lg-6" style='padding:0px'>
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon1 custom-addon" style="height: auto; border: 1px solid #ddd;"><span class="currency">$</span></span>
+                                                        </div>
+                                                        <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
                                                     </div>
-                                                    <input id="custom-input-addon" type="text" class="form-control input-pad withdrawal-value" placeholder="Digite o valor" aria-label="Digite o valor" aria-describedby="basic-addon1">
-                                                    <button id="bt-withdrawal" class="btn btn-success btn-sacar ml-3" data-toggle="modal">
+                                                    <button id="bt-withdrawal" class="btn btn-success btn-sacar ml-3 col-sm-12 col-md-12 col-lg-5" data-toggle="modal">
                                                         <svg class="mr-2" style="fill: white; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                                                             <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
                                                         </svg>
@@ -137,7 +139,7 @@
                                         <h5 class="card-title"> Histórico de transferências </h5>
                                     </div>
                                     <div class="col-12">
-                                        <table id='withdrawalsTable' class="table table-striped table-condensed">
+                                        <table id='withdrawalsTable' class="table table-striped table-condensed unify">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Conta</th>
@@ -178,7 +180,7 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="row justify-content-between align-items-baseline">
-                                            <div class="col-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="input-holder">
                                                     <label for="company"> Empresa</label>
                                                     <select class="form-control select-pad" id="extract_company_select">
@@ -209,12 +211,12 @@
                                         </div>
                                     </div>
                                     <div class="col-12 mt-3">
-                                        <table id='transfersTable' class="table table-striped table-condensed">
+                                        <table id='transfersTable' class="table table-striped table-condensed unify">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">Razão</th>
-                                                    <th scope="col">Data</th>
-                                                    <th scope="col">Valor</th>
+                                                    <th scope="col" class='headCenter'>Razão</th>
+                                                    <th scope="col" class='headCenter'>Data</th>
+                                                    <th scope="col" class='headCenter'>Valor</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table-transfers-body" class="custom-t-body">
@@ -266,7 +268,7 @@
                         <hr>
                         <h3>Valor do saque:
                             <span id="modal-withdrawal-value" class='greenGradientText'></span>
-                            <span id="taxValue"class="" style="font-size: 6px">- R$3,80</span>
+                            <span id="taxValue" class="" style="font-size: 6px">- R$3,80</span>
                         </h3>
                     </div>
                 </div>
