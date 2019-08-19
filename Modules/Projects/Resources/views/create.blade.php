@@ -29,7 +29,7 @@
                             <div class='col-md-8 col-sm-12'>
                                 <div class='form-group'>
                                     <label for='name'>Nome</label>
-                                    <input name='name' type='text' class='form-controll' id='name' placeholder='Nome do projeto' required>
+                                    <input name='name' type='text' class='form-controll' id='name' placeholder='Nome do projeto' maxlength='40' required>
                                     @if ($errors->has('name'))
                                         <div class="invalid-feedback d-block">
                                             <strong>{{ $errors->first('name') }}</strong>
@@ -52,7 +52,7 @@
                                 </div>
                                 <div class='form-group'>
                                     <label for='description'>Descrição</label>
-                                    <textarea name='description' class='form-control select-pad' id='description' placeholder='Descrição' rows='5' cols='50'></textarea>
+                                    <textarea name='description' class='form-control select-pad' id='description' placeholder='Descrição' rows='5' cols='50' maxlength='100'></textarea>
                                     @if ($errors->has('description'))
                                         <div class="invalid-feedback d-block">
                                             <strong>{{ $errors->first('description') }}</strong>

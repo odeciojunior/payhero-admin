@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="name">Descrição</label>
-                        <input value="{!! $coupon->name != '' ? $coupon->name : '' !!}" name="name" type="text" class="form-control" id="name_coupon" placeholder="Descrição">
+                        <input value="{!! $coupon->name != '' ? $coupon->name : '' !!}" name="name" type="text" class="form-control" id="name_coupon" placeholder="Descrição" maxlength='20'>
                     </div>
                 </div>
                 <div class="row">
@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="form-group col-xl-6">
                         <label for="code">Código</label>
-                        <input value="{!! $coupon->code != '' ? $coupon->code : '' !!}" name="code" type="text" class="form-control" id="code" placeholder="Código">
+                        <input value="{!! $coupon->code != '' ? $coupon->code : '' !!}" name="code" type="text" class="form-control" id="code" placeholder="Código" maxlength='30'>
                     </div>
                     <div class="form-group col-xl-6">
                         <label for="status">Status</label>

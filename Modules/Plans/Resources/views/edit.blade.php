@@ -9,7 +9,7 @@
                 <div class="row mt-2">
                     <div class="form-group col-xl-6 col-lg-6">
                         <label for="name">Nome</label>
-                        <input value="{!! $plan->name != '' ? $plan->name : '' !!}" name="name" type="text" class="form-control" id="plan-name" placeholder="Nome" required>
+                        <input value="{!! $plan->name != '' ? $plan->name : '' !!}" name="name" type="text" class="form-control" id="plan-name" placeholder="Nome" maxlength='50' required>
                     </div>
                     <div class="form-group col-xl-6 col-lg-6">
                         <label for="price">Preço</label>
@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="description">Descrição</label>
-                        <input value="{!! $plan->description != '' ? $plan->description : '' !!}" name="description" type="text" class="form-control" id="plan-description" placeholder="Descrição">
+                        <input value="{!! $plan->description != '' ? $plan->description : '' !!}" name="description" type="text" class="form-control" id="plan-description" maxlength='50' placeholder="Descrição">
                     </div>
                 </div>
                 {{--<div class="row">--}}

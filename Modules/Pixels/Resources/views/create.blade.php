@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="form-group col-12 mt-4">
                         <label for="name">Descrição</label>
-                        <input name="name" type="text" class="form-control" id="name" placeholder="Descrição">
+                        <input name="name" type="text" class="form-control" id="name" placeholder="Descrição" maxlength='30'>
                     </div>
                     <div class="form-group col-6">
                         <label for="platform">Plataforma</label>
@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="code">Código</label>
-                        <input name="code" type="text" class="form-control" id="code" placeholder="Código">
+                        <input name="code" type="text" class="form-control" id="code" placeholder="Código" maxlength='30'>
                     </div>
                 </div>
                 <div class='mb-1'>

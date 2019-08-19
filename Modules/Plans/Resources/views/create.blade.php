@@ -7,7 +7,7 @@
                 <div class="row mt-2">
                     <div class="form-group col-md-6 col-lg-6">
                         <label for="name">Nome</label>
-                        <input name="name" type="text" class="form-control" id="name" placeholder="Nome" required>
+                        <input name="name" type="text" class="form-control" id="name" placeholder="Nome" maxlength='50' required>
                     </div>
 
                     <div class="form-group col-md-6 col-lg-6">
@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for="description">Descrição</label>
-                        <input name="description" type="text" class="form-control" id="description" placeholder="Descrição">
+                        <input name="description" type="text" class="form-control" id="description" maxlength='50' placeholder="Descrição">
                     </div>
                 </div>
                 <div id="products">

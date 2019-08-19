@@ -14,9 +14,9 @@ class PlanUpdateRequest extends FormRequest
     {
         return [
             'project'         => 'nullable',
-            'name'            => 'required',
+            'name'            => 'required|max:50',
             'price'           => 'required',
-            'description'     => 'required|max:200',
+            'description'     => 'required|max:50',
             'products'        => 'required|array',
             'product_amounts' => 'required|array',
         ];

@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="name">Descrição</label>
-                        <input name="name" type="text" class="form-control" id="nome_cupom" placeholder="Descrição">
+                        <input name="name" type="text" class="form-control" id="nome_cupom" placeholder="Descrição" maxlength='20'>
                     </div>
                 </div>
                 <div class="row">
@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="form-group col-xl-6">
                         <label for="code">Código</label>
-                        <input name="code" type="text" class="form-control" id="code" placeholder="Código">
+                        <input name="code" type="text" class="form-control" id="code" placeholder="Código" maxlength='30'>
                     </div>
                     <div class="form-group col-xl-6">
                         <label for="status">Status</label>

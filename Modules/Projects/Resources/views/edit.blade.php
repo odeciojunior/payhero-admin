@@ -27,7 +27,7 @@
                 <div class='row'>
                     <div class='form-group col-lg-12'>
                         <label for='name'>Nome do projeto</label>
-                        <input name='name' value='{{$project->name}}' type='text' class='input-pad' id='name' placeholder='Nome do Projeto' required>
+                        <input name='name' value='{{$project->name}}' type='text' class='input-pad' id='name' placeholder='Nome do Projeto' maxlength='40' required>
                         <span id='name-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
@@ -35,7 +35,7 @@
                     </div>
                     <div class='form-group col-lg-12'>
                         <label for='description'>Descrição</label>
-                        <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required=''>{{$project->description}}</textarea>
+                        <textarea style='height:100px;' name='description' type='text' class='input-pad' id='description' placeholder='Fale um pouco sobre seu Projeto' required='' maxlength='100'>{{$project->description}}</textarea>
                         <span id='description-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Usado apenas internamente no sistema
@@ -85,7 +85,7 @@
                 <div class="col-12 row">
                     <div class="form-group col-12">
                         <label for="url_page">URL da página principal</label>
-                        <input name="url_page" value="{{$project->url_page == null ? 'https://' : $project->url_page}}" type="text" class="input-pad" id="url-page" placeholder="URL da página">
+                        <input name="url_page" value="{{$project->url_page == null ? 'https://' : $project->url_page}}" type="text" class="input-pad" id="url-page" placeholder="URL da página" maxlength='60'>
                         <span id='url-page-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> URL da página principal da loja
@@ -93,7 +93,7 @@
                     </div>
                     <div class="form-group col-12">
                         <label for="contact">Email de Contato (checkout e email)</label>
-                        <input name="contact" value="{{$project->contact}}" type="text" class="input-pad" id="contact" placeholder="Contato">
+                        <input name="contact" value="{{$project->contact}}" type="text" class="input-pad" id="contact" placeholder="Contato" maxlength='40'>
                         <span id='contact-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Contato da loja informado no checkout e nos emails
@@ -116,7 +116,7 @@
                 <div class='row'>
                     <div class='form-group col-6 col-xs-12'>
                         <label for='invoice-description'>Descrição da Fatura</label>
-                        <input name='invoice_description' value='{{$project->invoice_description}}' maxlength='13' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura'>
+                        <input name='invoice_description' value='{{$project->invoice_description}}' type='text' class='input-pad' id='invoice-description' placeholder='Descrição da fatura' maxlength='50'>
                         <span id='invoice-description-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Descrição apresentada na fatura do cartão de crédito
@@ -172,18 +172,18 @@
                 <div class='row'>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
-                        <input id='boleto_redirect' name='boleto_redirect' value='{{$project->boleto_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        <input id='boleto_redirect' name='boleto_redirect' value='{{$project->boleto_redirect}}' class='input-pad' type='text' placeholder='URL' maxlength='60'>
                         <span id='boleto_redirect-error' class='text-danger'></span>
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
-                        <input id='card_redirect' name='card_redirect' value='{{$project->card_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        <input id='card_redirect' name='card_redirect' value='{{$project->card_redirect}}' class='input-pad' type='text' placeholder='URL' maxlength='60'>
                         <span id='input-pad-error' class='text-danger'></span>
 
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>
-                        <input id='analyzing_redirect' name='analyzing_redirect' value='{{$project->analyzing_redirect}}' class='input-pad' type='text' placeholder='URL'>
+                        <input id='analyzing_redirect' name='analyzing_redirect' value='{{$project->analyzing_redirect}}' class='input-pad' type='text' placeholder='URL' maxlength='60'>
                     </div>
                     <p class="info mt-5 col-12" style="font-size: 10px;">
                         <i class="icon wb-info-circle" aria-hidden="true"></i> Caso você queira redirecionar o seu cliente para paginas de obrigado propias, informe a
