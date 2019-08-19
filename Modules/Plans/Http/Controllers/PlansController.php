@@ -97,7 +97,7 @@ class PlansController extends Controller
             $requestData['project'] = current(Hashids::decode($requestData['project']));
             $requestData['status']  = 1;
 
-            $projectId = current(Hashids::decode($requestData['project']));
+            $projectId = $requestData['project'];
 
             if ($projectId) {
                 //hash ok
