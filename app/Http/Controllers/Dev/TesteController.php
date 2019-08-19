@@ -35,7 +35,7 @@ class TesteController extends Controller
     public function index()
     {
 
-        $plans = Plan::whereNotNull('shopify_variant_id')->get();
+/*        $plans = Plan::whereNotNull('shopify_variant_id')->get();
 
         foreach($plans as $plan){
 
@@ -48,7 +48,12 @@ class TesteController extends Controller
                 ]); 
 
             }
-        }
+        }*/
+
+
+        $shopifyService = new ShopifyService('toda-bolsa.myshopify.com','985c9fc4999e55f988a9dfd388fe6890');
+
+        dd($shopifyService->getShopWebhook());
 
     }
 }
