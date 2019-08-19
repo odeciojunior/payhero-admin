@@ -64,7 +64,7 @@
                                     <td class="table-title display-sm-none">Detalhes</td>
                                 </tr>
                             </thead>
-                            <tbody id="table_data">
+                            <tbody id="table_data" class='min-row-height'>
                             </tbody>
                         </table>
                     </div>

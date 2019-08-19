@@ -13,14 +13,14 @@
     <div class='row'>
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
-            <input name='name' type='text' id='shipping-name' class='input-pad' value='' placeholder='Frete grátis'>
+            <input name='name' type='text' id='shipping-name' class='input-pad' value='' placeholder='Frete grátis' maxlength='50'>
             <span id='shipping-name-error' class='text-danger'></span>
         </div>
     </div>
     <div class='row'>
         <div class='form-group col-12'>
             <label for='information'>Tempo de entrega estimado apresentado no checkout</label>
-            <input name='information' type='text' id='shipping-information' class='input-pad' value='' placeholder='10 até 20 dias'>
+            <input name='information' type='text' id='shipping-information' class='input-pad' value='' placeholder='10 até 20 dias' maxlength='30'>
             <span id='shipping-information-error' class='text-danger'></span>
         </div>
     </div>

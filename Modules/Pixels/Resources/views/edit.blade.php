@@ -4,7 +4,7 @@
     <div class="row">
         <div class="form-group col-xl-12 mt-4">
             <label for="name">Descrição</label>
-            <input value="{{$pixel->name != '' ? $pixel->name : ''}}" name="name" type="text" class="input-pad" id="name_pixel" placeholder="Descrição">
+            <input value="{{$pixel->name != '' ? $pixel->name : ''}}" name="name" type="text" class="input-pad" id="name_pixel" placeholder="Descrição" maxlength='30'>
         </div>
         <div class="form-group col-6">
             <label for="platform">Plataforma</label>
@@ -24,7 +24,7 @@
         </div>
         <div class="form-group col-xl-12">
             <label for="code">Código</label>
-            <input value="{{$pixel->code != '' ? $pixel->code : ''}}" name="code" type="text" class="input-pad" id="code" placeholder="Código">
+            <input value="{{$pixel->code != '' ? $pixel->code : ''}}" name="code" type="text" class="input-pad" id="code" placeholder="Código" maxlength='30'>
         </div>
     </div>
     {{--<div class="row">--}}

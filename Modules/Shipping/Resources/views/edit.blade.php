@@ -14,13 +14,13 @@
     <div class='row'>
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
-            <input name='name' type='text' id='shipping-name' class='input-pad' value='{{$shipping->name}}' placeholder='PAC'>
+            <input name='name' type='text' id='shipping-name' class='input-pad' value='{{$shipping->name}}' placeholder='PAC' maxlength='50'>
         </div>
     </div>
     <div class='row'>
         <div class='form-group col-12'>
             <label for='information'>Tempo de entrega estimado Apresentada</label>
-            <input name='information' type='text' id='shipping-information' class='input-pad' value='{{$shipping->information}}' placeholder='10 até 20 dias'>
+            <input name='information' type='text' id='shipping-information' class='input-pad' value='{{$shipping->information}}' placeholder='10 até 20 dias' maxlength='30'>
         </div>
     </div>
     <div class='row' id='value-shipping-row' @if($shipping->type != 'static')style='display:none;'@endif>

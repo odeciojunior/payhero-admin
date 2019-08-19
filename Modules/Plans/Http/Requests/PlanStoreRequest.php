@@ -15,9 +15,9 @@ class PlanStoreRequest extends FormRequest
     {
         return [
             'project'         => 'required',
-            'name'            => 'required',
+            'name'            => 'required|max:50',
             'price'           => 'required',
-            'description'     => 'required|max:30',
+            'description'     => 'required|max:50',
             'products'        => 'required|array',
             'product_amounts' => 'required|array',
         ];

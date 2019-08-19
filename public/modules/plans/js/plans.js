@@ -208,9 +208,9 @@ $(function () {
                         }
 
                         data += '</td>';
-                        data += "<td style='text-align:center'>"
+                        data += "<td style='text-align:center' class='mg-responsive'>"
                         data += "<a class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'                                                 ><i class='material-icons gradient'>remove_red_eye</i></a>"
-                        data += "<a class='pointer edit-plan'                     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><i class='material-icons gradient'>edit</i></a>"
+                        data += "<a class='mg-responsive pointer edit-plan'                     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><i class='material-icons gradient'>edit</i></a>"
                         data += "<a class='mg-responsive pointer delete-plan'     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-delete'  ><i class='material-icons gradient'>delete_outline</i></a>";
                         data += "</td>";
                         data += '</tr>';
@@ -260,7 +260,7 @@ $(function () {
                             if (response.message == 'error') {
                                 alertCustom('error', 'Ocorreu um erro ao tentar buscar dados plano!');
                             } else {
-                                $("#modal-title").html('Detalhes do Plano <br><hr>');
+                                $("#modal-title").html('Detalhes do Plano <br>');
                                 $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
                                 $("#btn-modal").hide();
 

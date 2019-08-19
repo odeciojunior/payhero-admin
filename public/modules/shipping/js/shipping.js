@@ -219,21 +219,22 @@ $(document).ready(function () {
                             dados += '<span class="badge badge-primary"> Não </span>';
                         }
                         dados += '</td>';
-                        dados += "<td style='text-align:center'>" + "<a role='button' class='pointer detalhes-frete mr-30'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>" + "<a role='button' class='pointer editar-frete'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>" + "<a role='button' class='pointer excluir-frete ml-30'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>";
+                        dados += "<td style='text-align:center'>"
+                        dados += "<a role='button' class='pointer detalhes-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>"
+                        dados += "<a role='button' class='pointer editar-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>"
+                        dados += "<a role='button' class='pointer excluir-frete mg-responsive'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>";
                         "</td>";
                         dados += '</tr>';
                         $("#dados-tabela-frete").append(dados);
                     });
 
-                    pagination(response, 'shippings',atualizarFrete);
+                    pagination(response, 'shippings', atualizarFrete);
 
                     $(".detalhes-frete").unbind('click');
                     $(".detalhes-frete").on('click', function () {
-
-                        var frete = $(this).attr('frete');
-
+                        loadOnModal("#modal-add-body");
+                        var frete = $(this).attr('frete')
                         $("#modal-title").html('Detalhes do frete');
-                        $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
                         var data = {freteId: frete};
 
                         $("#btn-modal").hide();
@@ -247,7 +248,9 @@ $(document).ready(function () {
                             },
                             error: function error() {
                                 //
+                                loadingOnScreenRemove();
                             }, success: function success(response) {
+                                loadingOnScreenRemove();
                                 $("#modal-add-body").html(response);
                             }
                         });
@@ -255,11 +258,11 @@ $(document).ready(function () {
 
                     $(".editar-frete").unbind('click');
                     $(".editar-frete").on("click", function () {
+                        loadOnModal("#modal-add-body");
                         $("#modal-add-body").html("");
                         var frete = $(this).attr('frete');
 
                         $("#modal-title").html("Editar Frete");
-                        $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
 
                         var data = {frete: frete};
 
@@ -272,7 +275,9 @@ $(document).ready(function () {
                             },
                             error: function error() {
                                 //
+                                loadingOnScreenRemove()
                             }, success: function success(response) {
+                                loadingOnScreenRemove()
                                 $("#btn-modal").addClass('btn-update');
                                 $("#btn-modal").text('Atualizar');
                                 $("#btn-modal").show();

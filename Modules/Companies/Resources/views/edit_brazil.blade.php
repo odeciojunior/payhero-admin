@@ -43,7 +43,7 @@
                                     <div class="row">
                                         <div class="form-group col-xl-4">
                                             <label for="fantasy_name">Nome Fantasia</label>
-                                            <input name="fantasy_name" value="{!! $company->fantasy_name !!}" type="text" class="input-pad" id="fantasy_name" placeholder="Nome Fantasia">
+                                            <input name="fantasy_name" value="{!! $company->fantasy_name !!}" type="text" class="input-pad" id="fantasy_name" placeholder="Nome Fantasia" maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="company_document">CNPJ</label>
@@ -51,13 +51,13 @@
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="business_website">Site</label>
-                                            <input name="business_website" value="{!! $company->business_website !!}" type="text" class="input-pad" id="business_website" placeholder='Site'>
+                                            <input name="business_website" value="{!! $company->business_website !!}" type="text" class="input-pad" id="business_website" placeholder='Site' maxlength='60'>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
                                             <label for="support_email">E-mail</label>
-                                            <input name="support_email" value="{!! $company->support_email !!}" type="text" class="input-pad" id="support_email" placeholder='E-mail'>
+                                            <input name="support_email" value="{!! $company->support_email !!}" type="text" class="input-pad" id="support_email" placeholder='E-mail' maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="support_telephone">Telefone</label>
@@ -74,27 +74,27 @@
                                     <div class="row">
                                         <div class="form-group col-xl-5">
                                             <label for="street">Rua/Avenida</label>
-                                            <input name="street" value="{!! $company->street !!}" type="text" class="input-pad" id="street" placeholder='Rua/Avenida'>
+                                            <input name="street" value="{!! $company->street !!}" type="text" class="input-pad" id="street" placeholder='Rua/Avenida' maxlength='40'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Nº</label>
-                                            <input name="number" value="{!! $company->number !!}" type="text" data-mask="0#" class="input-pad" id="number" placeholder='Nº'>
+                                            <input name="number" value="{!! $company->number !!}" type="text" data-mask="0#" class="input-pad" id="number" placeholder='Nº' maxlength='10'>
                                         </div>
                                         <div class="form-group col-xl-5">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="{!! $company->neighborhood !!}" type="text" class="input-pad" id="neighborhood" placeholder='Bairro'>
+                                            <input name="neighborhood" value="{!! $company->neighborhood !!}" type="text" class="input-pad" id="neighborhood" placeholder='Bairro' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="{!! $company->complement !!}" type="text" class="input-pad" id="complement" placeholder='Complemento'>
+                                            <input name="complement" value="{!! $company->complement !!}" type="text" class="input-pad" id="complement" placeholder='Complemento' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="{!! $company->state !!}" type="text" class="input-pad" id="state" placeholder='Estado'>
+                                            <input name="state" value="{!! $company->state !!}" type="text" class="input-pad" id="state" placeholder='Estado' maxlength='30'>
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="{!! $company->city !!}" type="text" class="input-pad" id="city" placeholder='Cidade'>
+                                            <input name="city" value="{!! $company->city !!}" type="text" class="input-pad" id="city" placeholder='Cidade' maxlength='30'>
                                         </div>
                                         {{--<div class="form-group col-xl-6">--}}
                                         {{--<label for="country">Country</label>--}}
@@ -125,19 +125,19 @@
                                     <div class="row">
                                         <div class="form-group col-xl-3">
                                             <label for="agency">Agência</label>
-                                            <input name="agency" value="{!! $company->agency !!}" type="text" class="input-pad" id="agency" placeholder='Agência'>
+                                            <input name="agency" value="{!! $company->agency !!}" type="text" class="input-pad" id="agency" placeholder='Agência' maxlength='20'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="agency_digit">Digito</label>
-                                            <input name="agency_digit" value="{!! $company->agency_digit !!}" type="text" class="input-pad" id="agency_digit" placeholder='Digito'>
+                                            <input name="agency_digit" value="{!! $company->agency_digit !!}" type="text" class="input-pad" id="agency_digit" placeholder='Digito' maxlength='20'>
                                         </div>
                                         <div class="form-group col-xl-3">
                                             <label for="account">Conta</label>
-                                            <input name="account" value="{!! $company->account !!}" type="text" class="input-pad" id="account" placeholder='Conta'>
+                                            <input name="account" value="{!! $company->account !!}" type="text" class="input-pad" id="account" placeholder='Conta' maxlength='20'>
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="account_digit">Digito</label>
-                                            <input name="account_digit" value="{!! $company->account_digit !!}" type="text" class="input-pad" id="account_digit" placeholder='Digito'>
+                                            <input name="account_digit" value="{!! $company->account_digit !!}" type="text" class="input-pad" id="account_digit" placeholder='Digito' maxlength='20'>
                                         </div>
                                     </div>
                                     <div class="form-group text-right">
