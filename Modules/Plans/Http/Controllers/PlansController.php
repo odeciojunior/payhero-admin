@@ -366,9 +366,16 @@ class PlansController extends Controller
                 if (Gate::allows('edit', [$project])) {
 
                     if (!empty($project->shopify_id)) {
-                        $products = $productModel->where('user', auth()->user()->id)->where('shopify', 1)->get();
+                        $products = $productModel->where('user', auth()->user()->id)
+                                                 ->where('shopify', 1)
+                                                 ->whereHas('productsPlans.plan', function($queryPlan) use($projectId) {
+                                                     $queryPlan->where('project', $projectId);
+                                                 })
+                                                 ->get();
                     } else {
-                        $products = $productModel->where('user', auth()->user()->id)->where('shopify', 0)->get();
+                        $products = $productModel->where('user', auth()->user()->id)
+                                                 ->where('shopify', 0)
+                                                 ->get();
                     }
 
                     if (count($products) > 0) {
