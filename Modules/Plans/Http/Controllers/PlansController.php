@@ -169,7 +169,7 @@ class PlansController extends Controller
             $planDeleted = $plan->delete();
 
             if ($planDeleted) {
-                return response()->json(['Plano removido com sucesso'], 200);
+                return response()->json(['message' => 'Plano removido com sucesso'], 200);
             }
         }
 

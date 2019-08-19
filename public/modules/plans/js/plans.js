@@ -66,9 +66,9 @@ $(function () {
                         qtd_products++;
 
                         var new_div = div_products.clone();
-                        var opt = new_div.find('option:selected');
-                        opt.remove();
-                        var select = new_div.find('select');
+                        // var opt = new_div.find('option:selected');
+                        // opt.remove();
+                        // var select = new_div.find('select');
                         var input = new_div.find('.products_amount');
 
                         input.addClass('products_amount');
@@ -122,6 +122,9 @@ $(function () {
                                 loadingOnScreenRemove();
                                 $("#modal_add_produto").hide();
                                 $(".loading").css("visibility", "hidden");
+                                if (data.status == '400') {
+                                    alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
+                                }
                                 if (data.status == '422') {
                                     for (error in data.responseJSON.errors) {
                                         alertCustom('error', String(data.responseJSON.errors[error]));
@@ -311,9 +314,9 @@ $(function () {
                                 qtd_products++;
 
                                 var new_div = div_products.clone();
-                                var opt = new_div.find('option:selected');
-                                opt.remove();
-                                var select = new_div.find('select');
+                                // var opt = new_div.find('option:selected');
+                                // opt.remove();
+                                // var select = new_div.find('select');
                                 var input = new_div.find('.products_amount');
 
                                 input.addClass('products_amount');
