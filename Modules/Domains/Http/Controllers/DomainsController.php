@@ -191,7 +191,7 @@ class DomainsController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         try {
             $domainModel       = new Domain();
@@ -199,63 +199,78 @@ class DomainsController extends Controller
             $cloudFlareService = new CloudFlareService();
             $haveEnterA        = false;
 
-            $domain = $domainModel->with([
-                                             'project',
-                                             'records' => function($query) {
-                                                 $query->where('system_flag', 0);
-                                             },
-                                         ])->find(current(Hashids::decode($id)));
+            $domainId = current(Hashids::decode($id));
 
-            if (Gate::allows('edit', [$domain->project])) {
-                //se tem permissao para editar o projeto, pode editar um dominio ligado a ele
+            if ($domainId) {
+                //hash ok
 
-                $companies = $companyModel->all();
+                $domainProject = $domainModel->with(['project'])->find($domainId);
 
-                $registers = [];
-                foreach ($domain->records as $record) {
+                $domain = $domainModel->with([
+                                                 'records' => function($query) use ($domainProject) {
+                                                     $query->where('system_flag', 0);
+                                                     $query->orWhere(function($queryWhere) use ($domainProject) {
+                                                         $queryWhere->where('type', 'A');
+                                                         $queryWhere->where('name', $domainProject->name);
+                                                     });
+                                                 },
+                                             ])->find($domainId);
 
-                    if ($record->type == 'A' && $record->name == $domain->name) {
-                        $haveEnterA = true;
+                if (Gate::allows('edit', [$domainProject->project])) {
+                    //se tem permissao para editar o projeto, pode editar um dominio ligado a ele
+
+                    $companies = $companyModel->all();
+
+                    $registers = [];
+                    foreach ($domain->records as $record) {
+
+                        if ($record->type == 'A' && $record->name == $domain->name) {
+                            $haveEnterA = true;
+                        }
+                        $subdomain = explode('.', $record->name);
+
+                        switch ($record->content) {
+                            CASE $cloudFlareService::shopifyIp:
+                                $content = $record->content;
+                                //$content = "Servidores Shopify";
+                                break;
+                            CASE $cloudFlareService::checkoutIp:
+                                $content = "Servidores CloudFox";
+                                break;
+                            default:
+                                $content = $record->content;
+                                break;
+                        }
+
+                        $newRegister = [
+                            'id'          => Hashids::encode($record->id),
+                            'type'        => $record->type,
+                            //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
+                            'name'        => $record->name,
+                            'content'     => $content,
+                            'system_flag' => $record->system_flag,
+
+                        ];
+
+                        $registers[] = $newRegister;
                     }
-                    $subdomain = explode('.', $record->name);
-
-                    switch ($record->content) {
-                        CASE $cloudFlareService::shopifyIp:
-                            $content = "Servidores Shopify";
-                            break;
-                        CASE $cloudFlareService::checkoutIp:
-                            $content = "Servidores CloudFox";
-                            break;
-                        default:
-                            $content = $record->content;
-                            break;
+                    if ($domain) {
+                        return view('domains::edit', [
+                            'domain'     => $domain,
+                            'companies'  => $companies,
+                            'registers'  => $registers,
+                            'project'    => $domainProject->project,
+                            'haveEnterA' => $haveEnterA,
+                        ]);
+                    } else {
+                        return response()->json(['message' => 'Domínio não encontrado'], 400);
                     }
-
-                    $newRegister = [
-                        'id'          => Hashids::encode($record->id),
-                        'type'        => $record->type,
-                        //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
-                        'name'        => $record->name,
-                        'content'     => $content,
-                        'system_flag' => $record->system_flag,
-
-                    ];
-
-                    $registers[] = $newRegister;
-                }
-                if ($domain) {
-                    return view('domains::edit', [
-                        'domain'     => $domain,
-                        'companies'  => $companies,
-                        'registers'  => $registers,
-                        'project'    => $domain->project,
-                        'haveEnterA' => $haveEnterA,
-                    ]);
                 } else {
-                    return response()->json(['message' => 'Domínio não encontrados'], 400);
+                    return response()->json(['message' => 'Sem permissão para editar este domínio'], 400);
                 }
             } else {
-                return response()->json(['message' => 'Sem permissão para editar este domínio'], 400);
+                //hash nao ok
+                return response()->json(['message' => 'Domínio não encontrado'], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar Domínio (DomainsController - edit)');
@@ -315,9 +330,9 @@ class DomainsController extends Controller
                                         $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
                                     } else if (current($record[0]) == 'TXT') {
                                         $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
-                                    } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
-                                        //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
-                                        return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
+//                                    } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
+//                                        //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
+//                                        return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
                                     } else {
                                         $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
                                     }
