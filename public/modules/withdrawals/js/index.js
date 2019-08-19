@@ -41,7 +41,7 @@ function updateWithdrawalsTable(link = null) {
                     data += "<td>" + value.date_request + "</td>";
                     data += "<td>" + value.date_release + "</td>";
                     data += "<td>" + value.value + "</td>";
-                    data += '<td class="shipping-status" width="70%" style="width:100px;">';
+                    data += '<td class="shipping-status">';
                     if (value.status == 1) {
                         data += '<span class="badge badge-warning">Pendente</span>';
                     } else if (value.status == 2) {
@@ -57,6 +57,7 @@ function updateWithdrawalsTable(link = null) {
 
                     $("#withdrawals-table-data").append(data);
                     cont++;
+                    $('table').addClass('table-striped')
                 });
                 pagination(response);
             }

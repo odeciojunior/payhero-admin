@@ -21,10 +21,10 @@
                         <td class='table-title' >Informação</td>
                         <td class='table-title' >Status</td>
                         <td class='table-title display-sm-none display-m-none' style='text-align:center' >Pré-Selecionado</td>
-                        <td class='table-title text-center' >Opções</td>
+                        <td class='table-title text-center options-column-width'>Opções</td>
                     </tr>
                 </thead>
-                <tbody id='dados-tabela-frete'>
+                <tbody id='dados-tabela-frete' class='min-row-height'>
                     {{-- js carregando dados --}}
                 </tbody>
             </table>

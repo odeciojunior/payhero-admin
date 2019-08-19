@@ -17,12 +17,12 @@
                         <td class='table-title' >Nome</td>
                         <td class='table-title' >Descrição</td>
                         <td class='table-title' >Link</td>
-                        <td class='table-title col-2' >Preço</td>
+                        <td class='table-title' >Preço</td>
                         <td class='table-title' >Status</td>
-                        <td class='table-title text-center col-2' >Opções</td>
+                        <td class='table-title text-center options-column-width' >Opções</td>
                     </tr>
                 </thead>
-                <tbody id='data-table-plan'>
+                <tbody id='data-table-plan' class='min-row-height'>
                     {{-- js carregando dados --}}
                 </tbody>
             </table>

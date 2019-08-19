@@ -16,10 +16,10 @@
                         <td class='table-title' >Código</td>
                         <td class='table-title' >Plataforma</td>
                         <td class='table-title' >Status</td>
-                        <td class='table-title text-center' >Opções</td>
+                        <td class='table-title options-column-width text-center'>Opções</td>
                     </tr>
                 </thead>
-                <tbody id='data-table-pixel'>
+                <tbody id='data-table-pixel' class='min-row-height'>
                     {{-- js carregando dados --}}
                 </tbody>
             </table>
