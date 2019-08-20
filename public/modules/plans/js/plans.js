@@ -56,7 +56,7 @@ $(function () {
                     $('#price').mask('#.###,#0', {reverse: true});
                     var qtd_products = '1';
 
-                    var div_products = $('#products_div_' + qtd_products).parent();
+                    var div_products = $('#products_div_' + qtd_products).parent().clone();
 
                     /**
                      * Add new product in array

@@ -254,7 +254,7 @@ class Site extends Base {
       return false;
     }
 
-    // let loadingType = 'default';
+    let loadingType = 'default';
     $BODY.animsition({
       inClass: 'fade-in',
       inDuration: 800,

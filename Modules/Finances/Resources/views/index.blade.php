@@ -214,9 +214,9 @@
                                         <table id='transfersTable' class="table table-striped table-condensed unify">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col" class='headCenter'>Razão</th>
-                                                    <th scope="col" class='headCenter'>Data</th>
-                                                    <th scope="col" class='headCenter'>Valor</th>
+                                                    <th scope="col" class='headCenter col-4'>Razão</th>
+                                                    <th scope="col" class='headCenter col-3'>Data</th>
+                                                    <th scope="col" class='headCenter col-7'>Valor</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table-transfers-body" class="custom-t-body">
@@ -285,7 +285,7 @@
     <!-- Modal Detalhes -->
     <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-simple modal-sidebar modal-lg">
-            <div class="modal-content p-20 " style="width: 500px;">
+            <div class="modal-content p-20 " style="">
                 <div class="header-modal">
                     <div class="row justify-content-between align-items-center" style="width: 100%;">
                         <div class="col-lg-2"> &nbsp;</div>

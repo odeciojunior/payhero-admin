@@ -1,5 +1,5 @@
 <div class='container-fluid'>
-    <table class='table table-bordered table-striped table-hover table-responsive'>
+    <table class='table table-bordered table-striped table-hover table-responsive' style='overflow-x: auto !important;'>
         <tbody>
             <tr>
                 <th style='width:40%;' class='text-center'>Nome:</th>
