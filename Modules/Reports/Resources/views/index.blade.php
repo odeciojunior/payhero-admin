@@ -21,7 +21,7 @@
         @if(isset($userProjects) && $userProjects->count() > 0)
             <div class="page-content container">
                 <div class="row align-items-center">
-                    <div class="col-3">
+                    <div class="col-sm-12 col-m-3 col-lg-3">
                         <div class="">
                             <select id='project' class="form-control select-pad">
                                 @foreach($projects as $project)
@@ -30,14 +30,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-9 align-items-baseline">
-                        <div class="row justify-content-end align-items-center">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text px-1 px-md-2" style="background-color: none; border: none; margin-right: 10px;">
-                                    <i class="material-icons gradient"> calendar_today </i>
-                                </div>
-                                <input id="date-filter" type="text" name="daterange" class="form-control pull-right select-pad" value="">
+                    <div class="col-sm-12 col-m-3 col-lg-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text px-1 px-md-2" style="background-color: none; border: none;">
+                                <i class="material-icons gradient"> calendar_today </i>
                             </div>
+                            <input id="date-filter" type="text" name="daterange" class="form-control pull-right select-pad" value="">
                         </div>
                     </div>
                 </div>
@@ -58,30 +56,30 @@
                                 <div class="card shadow">
                                     <div class="wrap">
                                         <div class="row justify-content-between gutter_top">
-                                            <div class="col-lg-2">
+                                            <div class="col-6 col-sm-6 col-md-2 col-lg-2">
                                                 <h6 class="label-price relatorios"> Receita gerada </h6>
                                                 <h4 id='revenue-generated' class="number green">0</h4>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-6 col-sm-6 col-md-2 col-lg-2">
                                                 <h6 class="label-price relatorios"> Aprovadas </h6>
                                                 <h4 id='qtd-aproved' class="number green">0<i class="fas fa-check"></i>
                                                 </h4>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-6 col-sm-6 col-md-2 col-lg-2">
                                                 <h6 class="label-price relatorios"> Aguardando Pagamento </h6>
                                                 <h4 id='qtd-pending' class="number blue-800">0<i class="fas fa-check"></i>
                                                 </h4>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-6 col-sm-6 col-md-2 col-lg-2">
                                                 <h6 class="label-price relatorios"> Canceladas </h6>
                                                 <h4 id='qtd-canceled' class="number red">0<i class="fas fa-check"></i>
                                                 </h4>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-6 col-sm-6 col-md-2 col-lg-2">
                                                 <h6 class="label-price relatorios"> Recusadas </h6>
                                                 <h4 id='qtd-recusadas' class="number red">0</h4>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-6 col-sm-6 col-md-2 col-lg-2">
                                                 <h6 class="label-price relatorios"> Reembolsos </h6>
                                                 <h4 id='qtd-reembolso' class="number purple">0</h4>
                                             </div>
@@ -96,7 +94,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12 gutter_top" class="ct-chart" id="ecommerceChartView">
+                            <div class="col-lg-12 gutter_top display-xsm-none display-sm-none" class="ct-chart" id="ecommerceChartView">
                                 <div class="card card-shadow">
                                     <div class="card-header card-header-transparent py-20">
                                         <!--div class="btn-group dropdown"-->
@@ -133,7 +131,7 @@
                                     </div>
                                     <div class="custom-table min-250">
                                         <div class="row">
-                                            <div class="col-lg-12 ">
+                                            <div class="col-6 col-md-12 col-lg-12 ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-6">
@@ -145,7 +143,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12 ">
+                                            <div class="col-6 col-md-12 col-lg-12 ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-6">
@@ -168,7 +166,7 @@
                                     </div>
                                     <div class="custom-table min-250">
                                         <div class="row">
-                                            <div class="col-lg-12 ">
+                                            <div class="col-6 col-md-12 col-lg-12  ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-4">
@@ -183,7 +181,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12 ">
+                                            <div class="col-6 col-md-12 col-lg-12  ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-4">
@@ -209,7 +207,7 @@
                                     </div>
                                     <div class="custom-table">
                                         <div class="row">
-                                            <div class="col-lg-12 ">
+                                            <div class="col-6 col-md-12 col-lg-12  ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-4">
@@ -227,7 +225,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12 ">
+                                            <div class="col-6 col-md-12 col-lg-12  ">
                                                 <div class="data-holder b-bottom">
                                                     <div class="row wrap justify-content-between">
                                                         <div class="col-lg-4">
@@ -250,46 +248,45 @@
                                 </div>
                             </div>
                             {{--                            <div class='col-lg-12 gutter_top'>--}}
-                                <div class='col-lg-8'>
-                                    <div class="card shadow ">
-                                        <div class="card-header">
-                                            <h4> Mais Vendidos </h4>
-                                        </div>
-                                        <div style=' max-height: 150px; overflow-y: auto; height: 150px;'>
-                                            <div class=" card-body data-holder">
-                                                {{--                                            <div class="row">--}}
-                                                {{--                                            <div class="col-12">--}}
-                                                <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
-                                                    {{--<thead>
-                                                        <th class="table-title">Foto</th>
-                                                        <th class="table-title">Nome</th>
-                                                        <th class="table-title">Quantidade</th>
-                                                    </thead>--}}
-                                                    <tbody id="origins-table-itens">
-                                                        {{-- js carrega... --}}
-                                                    </tbody>
-                                                </table>
-                                                {{--                                            </div>--}}
-                                                {{--                                            </div>--}}
-                                                <br/>
-                                            </div>
+                            <div class='col-lg-8'>
+                                <div class="card shadow ">
+                                    <div class="card-header">
+                                        <h4> Mais Vendidos </h4>
+                                    </div>
+                                    <div style=' max-height: 150px; overflow-y: auto; height: 150px;'>
+                                        <div class=" card-body data-holder">
+                                            {{--                                            <div class="row">--}}
+                                            {{--                                            <div class="col-12">--}}
+                                            <table class="table-vendas-itens table table-striped" style="width:100%;margin: auto; margin-top:15px">
+                                                {{--<thead>
+                                                    <th class="table-title">Foto</th>
+                                                    <th class="table-title">Nome</th>
+                                                    <th class="table-title">Quantidade</th>
+                                                </thead>--}}
+                                                <tbody id="origins-table-itens">
+                                                    {{-- js carrega... --}}
+                                                </tbody>
+                                            </table>
+                                            {{--                                            </div>--}}
+                                            {{--                                            </div>--}}
+                                            <br/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-lg-4'>
-                                    <div class='card shadow'>
-                                        <div class='card-header'>
-                                            <h4>Ticket Médio</h4>
-                                        </div>
-                                        <div style='height: 150px; '>
-                                            <div class='card-body custom-table min-250'>
-                                                <div class='row'>
-                                                    <div class='col-lg-12 text-center'>
-                                                        <div class='data-holder text-center'>
-                                                            <div class='row wrap justify-content-between text-center'>
-                                                                <div class='col-lg-12 text-center'>
-                                                                    <span class='money-td green h3' id='ticket-medio'>0</span>
-                                                                </div>
+                            </div>
+                            <div class='col-lg-4'>
+                                <div class='card shadow'>
+                                    <div class='card-header'>
+                                        <h4>Ticket Médio</h4>
+                                    </div>
+                                    <div style='height: 150px; '>
+                                        <div class='card-body custom-table min-250'>
+                                            <div class='row'>
+                                                <div class='col-lg-12 text-center'>
+                                                    <div class='data-holder text-center'>
+                                                        <div class='row wrap justify-content-between text-center'>
+                                                            <div class='col-lg-12 text-center'>
+                                                                <span class='money-td green h3' id='ticket-medio'>0</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -298,6 +295,7 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             <div class="col-lg-12 mt-10">
                                 <div class="card shadow">
                                     <div class="card-header">

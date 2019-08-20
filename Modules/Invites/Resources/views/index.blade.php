@@ -23,7 +23,7 @@
             </div>
             <div class="card shadow" id='card-table-invite' data-plugin="matchHeight" style='display:none;'>
                 <div class="tab-pane active" id="tab_convites_enviados" role="tabpanel">
-                    <table class="table table-striped">
+                    <table class="table table-striped unify">
                         <thead class="text-center">
                             <th class="text-left">Convite</th>
                             <th class="text-center">Email convidado</th>

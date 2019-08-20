@@ -27,9 +27,9 @@
                     <button class='btn btn-primary' id='bt_add_record'>Adicionar</button>
                 </div>
             </div>
-            @if(!$haveEnterA )
+            @if(!$haveEnterA && $project->shopify_id == null)
                 <p class='info mt-12' style='font-size: 10px;'>
-                    <i class='icon wb-info-circle' aria-hidden='true'></i><strong> Vocẽ não possui nenhuma entrada do tipo "A" registrada com o seu dominio, você precisa criar uma entrada "A" com seu domínio apontando para o IP do servidor para seu site continuar funcionando normalmente. </strong>
+                    <i class='icon wb-info-circle' aria-hidden='true'></i><strong> Caso você possua um site hospedado em algum servidor com este domínio, você precisa criar uma entrada A com seu domínio apontando para o IP do servidor para seu site continuar funcionando normalmente. </strong>
                 </p>
             @endif
         </form>
@@ -55,15 +55,17 @@
                     </thead>
                     <tbody id="new_registers">
                         @foreach($registers as $register)
+                            @if($register['system_flag'] == 0)
                                 <tr data-save='1'>
                                     <td class='col-2'>{{ $register['type']}}</td>
                                     <td class='col-2'>{{ $register['name'] }}</td>
                                     {{--<td class='col-6' style='overflow-x:scroll'>{{ $register['content'] }}</td>--}}
                                     <td class='col-6'>{{ $register['content'] }}</td>
                                     <td class='col-2 text-center align-middle'>
-                                        <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro" >Remover</button>
+                                        <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro" {!! ($register['system_flag'] == 1) ? 'disabled' : '' !!}>Remover</button>
                                     </td>
                                 </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
