@@ -21,7 +21,7 @@ use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
 use Vinkla\Hashids\Facades\Hashids;
 
-class PostBackPagarmeController extends Controller
+class PostBackMercadoPagoController extends Controller
 {
     public function postBackListener(Request $request)
     {
@@ -31,12 +31,12 @@ class PostBackPagarmeController extends Controller
         $postBackLogModel = new PostbackLog();
 
         $postBackLogModel->create([
-                                      'origin'      => 2,
+                                      'origin'      => 4,
                                       'data'        => json_encode($requestData),
-                                      'description' => 'pagarme',
+                                      'description' => 'mercado-pago',
                                   ]);
 
-        if (isset($requestData['event']) && $requestData['event'] == 'transaction_status_changed') {
+        if (isset($requestData['type']) && $requestData['type'] == 'payment') {
 
             $saleModel        = new Sale();
             $transactionModel = new Transaction();
@@ -45,13 +45,23 @@ class PostBackPagarmeController extends Controller
             $planModel        = new Plan();
             $planSaleModel    = new PlanSale();
 
-            $sale = $saleModel->find(Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
+            $sale = $saleModel->where('gateway_id', $requestData['data']['id'])->first();
 
             if (empty($sale)) {
-                Log::warning('VENDA NÃO ENCONTRADA!!!' . Hashids::decode($requestData['transaction']['metadata']['sale_id'])[0]);
+                Log::warning('VENDA NÃO ENCONTRADA!!!' . @$requestData['data']['id']);
+
+                $postBackLogModel->create([
+                    'origin'      => 4,
+                    'data'        => json_encode($requestData),
+                    'description' => 'mercado-pago',
+                ]);
 
                 return response()->json(['message' => 'sale not found'], 200);
             }
+
+            $paymentInfo = $mp->get('/v1/payments/' . @$requestData['data']['id']);
+
+            Log::warning('venda atualizada no mercado pago:  ' . print_r($paymentInfo, true));
 
             if ($requestData['transaction']['status'] == $sale->gateway_status) {
                 return response()->json(['message' => 'success'], 200);

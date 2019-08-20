@@ -211,7 +211,7 @@
                                                 <br> <strong>"Private app name"</strong> é o nome do novo aplicativo, para não confundir, sugerimos que ultilize "cloudfox".
                                                 <br> <strong>"Emergency developer email"</strong> é o email para emergências, preencha-o corretamente.
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-4-1.png' style='width:100%'>
-                                       </span>
+                                            </span>
                                             </div>
                                         </div>
                                     </div>
