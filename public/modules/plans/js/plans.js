@@ -276,12 +276,14 @@ $(function () {
                  */
                 $(".edit-plan").unbind('click');
                 $(".edit-plan").on('click', function () {
+                    // $("#modal_add_size").addClass('modal-lg');
+                    loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
                     var plan = $(this).attr('plan');
-                    $("#modal-title").html("Editar Plano<br><hr>");
-                    // $("#modal_add_size").addClass('modal-lg');
-                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+                    $("#modal-title").html("Editar Plano");
+                    // $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
                     var data = {planId: plan, project: projectId};
+
                     $.ajax({
                         method: "GET",
                         url: "/plans/" + plan + "/edit",
@@ -291,12 +293,14 @@ $(function () {
                         },
                         error: function error() {
                             //
+                            loadingOnScreenRemove()
                         }, success: function success(response) {
                             $("#btn-modal").addClass('btn-update');
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $("#modal-add-body").html(response);
                             $('.products_amount').mask('0#');
+                            loadingOnScreenRemove()
 
                             $(document).on('click', '.btnDelete', function (event) {
                                 event.preventDefault();

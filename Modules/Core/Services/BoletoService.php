@@ -68,10 +68,18 @@ class BoletoService
 
                     $subTotal = 0;
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+
                     if ($iof == 0) {
                         $iof = '';
                     } else {
                         $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                    }
+                    if ($discount == 0 || $discount == null) {
+                        $discount = '';
+                    }
+                    if ($discount != '') {
+                        $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
                     }
                     $clientNameExploded = explode(' ', $clientName);
 
@@ -110,7 +118,6 @@ class BoletoService
                             $checkout->increment('sms_sent_amount');
                         }
 
-
                         $data           = [
                             "name"                  => $clientNameExploded[0],
                             "boleto_link"           => $boleto->boleto_link,
@@ -120,6 +127,7 @@ class BoletoService
                             "shipment_value"        => $boleto->shipment_value,
                             "subtotal"              => strval($subTotal),
                             "iof"                   => $iof,
+                            'discount'              => $discount,
                             "project_logo"          => $project->logo,
                             "project_contact"       => $project->contact,
                             "products"              => $products,
@@ -153,6 +161,7 @@ class BoletoService
                                         ->with('clientModel', 'plansSales.plan.products')->get();
 
             foreach ($boletoWaitionPayment as $boleto) {
+
                 try {
                     $sendEmail     = new SendgridService();
                     $checkoutModel = new Checkout();
@@ -164,10 +173,18 @@ class BoletoService
                     $data        = [];
                     $subTotal    = 0;
                     $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+
                     if ($iof == 0) {
                         $iof = '';
                     } else {
                         $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                    }
+                    if ($discount == 0 || $discount == null) {
+                        $discount = '';
+                    }
+                    if ($discount != '') {
+                        $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
                     }
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
@@ -203,6 +220,7 @@ class BoletoService
                             "shipment_value"        => $boleto->shipment_value,
                             "subtotal"              => strval($subTotal),
                             "iof"                   => $iof,
+                            'discount'              => $discount,
                             "project_logo"          => $project->logo,
                             "project_contact"       => $project->contact,
                             "products"              => $products,
@@ -252,10 +270,18 @@ class BoletoService
                     $data        = [];
                     $subTotal    = 0;
                     $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+
                     if ($iof == 0) {
                         $iof = '';
                     } else {
                         $iof = substr_replace($iof, ',', strlen($iof) - 2, 0);
+                    }
+                    if ($discount == 0 || $discount == null) {
+                        $discount = '';
+                    }
+                    if ($discount != '') {
+                        $discount = substr_replace($discount, ',', strlen($discount) - 2, 0);
                     }
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
@@ -291,6 +317,7 @@ class BoletoService
                             "shipment_value"        => $boleto->shipment_value,
                             "subtotal"              => strval($subTotal),
                             "iof"                   => $iof,
+                            'discount'              => $discount,
                             "project_logo"          => $project->logo,
                             "project_contact"       => $project->contact,
                             "products"              => $products,
@@ -415,8 +442,8 @@ class BoletoService
 
             $date        = Carbon::now()->toDateString();
             $data        = [];
-            $boletosPaid = $saleModel->select(\DB::raw('count(*) as count'),\DB::raw('sum(transaction.value) as value'), 'owner')
-                                     ->leftJoin('transactions as transaction','transaction.sale', 'sales.id')
+            $boletosPaid = $saleModel->select(\DB::raw('count(*) as count'), \DB::raw('sum(transaction.value) as value'), 'owner')
+                                     ->leftJoin('transactions as transaction', 'transaction.sale', 'sales.id')
                                      ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
                                      ->groupBy('sales.owner')->get();
 
@@ -441,7 +468,7 @@ class BoletoService
                         "name"              => $user->name,
                         'boleto_count'      => strval($boleto->count),
                         'message'           => $message,
-                        'messageHeader'     => $messageHeader, 
+                        'messageHeader'     => $messageHeader,
                         'transaction_value' => "R$ " . number_format(intval($boleto['value']) / 100, 2, ',', '.'),
                     ];
 
@@ -480,6 +507,5 @@ class BoletoService
                             ]);
         }
     }
-
 }
 
