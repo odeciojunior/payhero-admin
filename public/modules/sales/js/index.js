@@ -99,7 +99,7 @@ $(document).ready(function () {
                     dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.client + "</td>";
                     dados += "<td><img src='/modules/global/img/cartoes/" + value.brand + ".png'  style='width: 60px'></td>";
 
-                    dados += "<td><span class='badge badge-" + statusArray[value.status-1] + "'>Aprovada</span></td>";
+                    dados += "<td><span class='badge badge-" + statusArray[value.status-1] + "'>"+ value.status_translate +"</span></td>";
 
                     // if (value.status == '1') {
                     //     dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
@@ -110,6 +110,7 @@ $(document).ready(function () {
                     // } else if (value.status == '5') {
                     //     dados += "<td><span class='badge badge-pendente'>Cancelada</span></td>";
                     // }
+
                     dados += "<td class='display-sm-none display-m-none'>" + value.start_date + "</td>";
                     dados += "<td class='display-sm-none'>" + value.end_date + "</td>";
                     dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";

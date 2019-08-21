@@ -45,7 +45,11 @@ class Sale extends Model
     /**
      * @var array
      */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -83,6 +87,19 @@ class Sale extends Model
         'start_date',
         'status',
         'total_paid_value',
+    ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'status' => [
+            1  => 'approved',
+            2  => 'pending',
+            3  => 'refused',
+            4  => 'charge_back',
+            5  => 'canceled',
+            10 => 'system_error',
+        ],
     ];
 
     /**

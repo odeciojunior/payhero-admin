@@ -22,6 +22,7 @@ use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleUpdateRequest;
 use Modules\Sales\Transformers\SalesResource;
+use Modules\Sales\Transformers\TransactionResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SalesController extends Controller
@@ -42,7 +43,7 @@ class SalesController extends Controller
             foreach ($userProjects as $userProject) {
                 if ($userProject->projectId != null) {
                     $projects[] = [
-                        'id'   => $userProject->projectId->id,
+                        'id'   => Hashids::encode($userProject->projectId->id),
                         'nome' => $userProject->projectId->name,
                     ];
                 }
@@ -201,13 +202,110 @@ class SalesController extends Controller
     {
         try {
 
-            $companyModel  = new Company();
-            $saleModel     = new Sale();
-            $planSaleModel = new PlanSale();
-            $planModel     = new Plan();
-            $clientModel   = new Client();
+            $companyModel     = new Company();
+            $saleModel        = new Sale();
+            $planSaleModel    = new PlanSale();
+            $planModel        = new Plan();
+            $clientModel      = new Client();
+            $transactionModel = new Transaction();
 
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id')->toArray();
+            $data = $request->all();
+
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                                          ->pluck('id')
+                                          ->toArray();
+
+
+
+
+
+            $transactions = $transactionModel->with([
+                                                        'sale',
+                                                        'sale.projectModel',
+                                                        'sale.clientModel',
+                                                        'sale.plansSales',
+                                                        'sale.plansSales.plan',
+                                                        'sale.plansSales.plan.products',
+                                                        'sale.plansSales.plan.projectId',
+                                                    ])
+                                             ->whereHas('sale', function($querySale) {
+                                                 $querySale->where('status', '!=', 3);
+                                                 $querySale->where('status', '!=', 5);
+                                                 $querySale->where('status', '!=', 10);
+                                                 $querySale->where(function($query) {
+                                                     $query->where('owner', auth()->user()->id);
+                                                     $query->orWhere('affiliate', auth()->user()->id);
+                                                 });
+                                             })
+                                             ->whereIn('company', $userCompanies);
+
+            if (!empty($data["projeto"])) {
+                $projectId = current(Hashids::decode($data["projeto"])) ;
+                $transactions->whereHas('sale', function($querySale) use ($projectId) {
+                    $querySale->where('project', $projectId);
+                });
+            }
+
+            if (!empty($data["transaction"])) {
+                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $data["transaction"])));
+
+                $transactions->whereHas('sale', function($querySale) use ($saleId) {
+                    $querySale->where('id', $saleId);
+                });
+            }
+
+            if (!empty($data["comprador"])) {
+                $customers = $clientModel->where('name', 'LIKE', '%' . $data["comprador"] . '%')->pluck('id');
+                $transactions->whereHas('sale', function($querySale) use ($customers) {
+                    $querySale->whereIn('client', $customers);
+                });
+            }
+
+            if (!empty($data["forma"])) {
+                $forma = $data["forma"];
+                $transactions->whereHas('sale', function($querySale) use ($forma) {
+                    $querySale->where('payment_method', $forma);
+                });
+            }
+
+            if (!empty($data["status"])) {
+                $status = $data["status"];
+                $transactions->whereHas('sale', function($querySale) use ($status) {
+                    $querySale->where('status', $status);
+                });
+            }
+
+            if (!empty($data["data_inicial"]) && !empty($data["data_final"])) {
+                $data_inicial = $data["data_inicial"];
+                $data_final   = $data["data_final"];
+                $transactions->whereHas('sale', function($querySale) use ($data_inicial, $data_final) {
+                    $querySale->whereBetween('start_date', [$data_inicial, date('Y-m-d', strtotime($data_final . ' + 1 day'))]);
+                });
+            } else {
+
+                if (!empty($data["data_inicial"])) {
+                    $data_inicial = $data["data_inicial"];
+                    $transactions->whereHas('sale', function($querySale) use ($data_inicial) {
+                        $querySale->whereDate('start_date', '>=', $data_inicial);
+                    });
+                }
+
+                if (!empty($data["data_final"])) {
+                    $data_final = $data["data_final"];
+                    $transactions->whereHas('sale', function($querySale) use ($data_final) {
+                        $querySale->whereDate('end_date', '<', date('Y-m-d', strtotime($data_final . ' + 1 day')));
+                    });
+                }
+            }
+
+            return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
+
+
+
+
+
+/*
+
 
             $sales = $saleModel
                 ->with([
@@ -216,7 +314,15 @@ class SalesController extends Controller
                                $query->whereIn('company', $userCompanies);
                            },
                        ])
-                ->where([['owner', auth()->user()->id], ['status', '!=', 3], ['status', '!=', 5], ['status', '!=', 10]]);
+                ->where([
+                            ['status', '!=', 3],
+                            ['status', '!=', 5],
+                            ['status', '!=', 10],
+                        ])
+                ->where(function($query) {
+                    $query->where('owner', auth()->user()->id);
+                    $query->orWhere('affiliate', auth()->user()->id);
+                });
 
             if ($request->projeto != '') {
                 $plans    = $planModel->where('project', $request->projeto)->pluck('id');
@@ -255,6 +361,8 @@ class SalesController extends Controller
             }
 
             return SalesResource::collection($sales->orderBy('id', 'DESC')->paginate(10));
+
+            */
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);
