@@ -19,7 +19,7 @@
             <table id='tabela-dominios' class='table text-left table-dominios table-striped unify' style='width:100%'>
                 <thead>
                     <tr>
-                        <td class='table-title text-center col-6' >Nome</td>
+                        <td class='table-title text-center' >Nome</td>
                         <td class='table-title options-column-width text center col-6'>Status</td>
                         <td class='table-title options-column-width text-center col-2'>Opções</td>
                     </tr>
