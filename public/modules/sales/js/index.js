@@ -83,6 +83,13 @@ $(document).ready(function () {
                 $('#dados_tabela').html('');
                 $('#tabela_vendas').addClass('table-striped');
 
+                var statusArray = new Array(
+                    ['success'],
+                    ['pendente'],
+                    ['danger'],
+                    ['pendente']
+                );
+
                 $.each(response.data, function (index, value) {
                     dados = '';
                     dados += '<tr>';
@@ -91,15 +98,19 @@ $(document).ready(function () {
                     dados += "<td>" + value.product + "</td>";
                     dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.client + "</td>";
                     dados += "<td><img src='/modules/global/img/cartoes/" + value.brand + ".png'  style='width: 60px'></td>";
-                    if (value.status == '1') {
-                        dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
-                    } else if (value.status == '2') {
-                        dados += "<td><span class='badge badge-pendente'>Pendente</span></td>";
-                    } else if (value.status == '4') {
-                        dados += "<td><span class='badge badge-danger'>Estornada</span></td>";
-                    } else if (value.status == '5') {
-                        dados += "<td><span class='badge badge-pendente'>Cancelada</span></td>";
-                    }
+
+                    dados += "<td><span class='badge badge-" + statusArray[value.status-1] + "'>"+ value.status_translate +"</span></td>";
+
+                    // if (value.status == '1') {
+                    //     dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
+                    // } else if (value.status == '2') {
+                    //     dados += "<td><span class='badge badge-pendente'>Pendente</span></td>";
+                    // } else if (value.status == '4') {
+                    //     dados += "<td><span class='badge badge-danger'>Estornada</span></td>";
+                    // } else if (value.status == '5') {
+                    //     dados += "<td><span class='badge badge-pendente'>Cancelada</span></td>";
+                    // }
+
                     dados += "<td class='display-sm-none display-m-none'>" + value.start_date + "</td>";
                     dados += "<td class='display-sm-none'>" + value.end_date + "</td>";
                     dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
