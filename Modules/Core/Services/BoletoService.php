@@ -63,10 +63,9 @@ class BoletoService
 
                     $clientName  = $boleto->clientModel->name;
                     $clientEmail = $boleto->clientModel->email;
-                    $products    = [];
                     $data        = [];
 
-                    $subTotal = 0;
+                    $subTotal = $boleto->present()->getSubTotal();
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
                     $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
 
@@ -85,59 +84,48 @@ class BoletoService
 
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    foreach ($boleto->plansSales as $plansSale) {
-                        $plan    = Plan::find($plansSale['plan']);
-                        $project = Project::find($plan['project']);
-                        $domain  = Domain::where('project_id', $project->id)->first();
 
-                        $subTotal += str_replace('.', '', $plan['price']) * $plansSale["amount"];
-                        foreach ($plansSale->getRelation('plan')->products as $product) {
-                            $productArray               = [];
-                            $productArray["photo"]      = $product->photo;
-                            $productArray["name"]       = $product->name;
-                            $productArray["name"]       = $product->name;
-                            $productArray["amount"]     = $plansSale->amount;
-                            $productArray["plan_value"] = $plansSale->plan_value;
-                            $products[]                 = $productArray;
-                        }
-                        $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                        $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                        $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                        $boletoDigitableLine     = [];
-                        $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
-                        $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                        $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
+                    $products = $boleto->present()->getProducts();
+                    $project  = Project::find($boleto->project);
+                    $domain   = Domain::where('project_id', $project->id)->first();
 
-                        $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->clientModel->telephone);
+                    $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                    $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                    $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                    $boletoDigitableLine     = [];
+                    $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
+                    $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                    $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
 
-                        $linkShortenerService = new LinkShortenerService();
-                        $link                 = $linkShortenerService->shorten($boleto->boleto_link);
-                        if (!empty($link) && !empty($telephoneValidated)) {
-                            $zenviaSms = new ZenviaSmsService();
-                            $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
-                            $checkout->increment('sms_sent_amount');
-                        }
+                    $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->clientModel->telephone);
 
-                        $data           = [
-                            "name"                  => $clientNameExploded[0],
-                            "boleto_link"           => $boleto->boleto_link,
-                            "boleto_digitable_line" => $boletoDigitableLine,
-                            "boleto_due_date"       => $boleto->boleto_due_date,
-                            "total_paid_value"      => $boleto->total_paid_value,
-                            "shipment_value"        => $boleto->shipment_value,
-                            "subtotal"              => strval($subTotal),
-                            "iof"                   => $iof,
-                            'discount'              => $discount,
-                            "project_logo"          => $project->logo,
-                            "project_contact"       => $project->contact,
-                            "products"              => $products,
-                        ];
-                        $emailValidated = FoxUtils::validateEmail($clientEmail);
-                        if ($emailValidated) {
-                            $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
+                    $linkShortenerService = new LinkShortenerService();
+                    $link                 = $linkShortenerService->shorten($boleto->boleto_link);
+                    if (!empty($link) && !empty($telephoneValidated)) {
+                        $zenviaSms = new ZenviaSmsService();
+                        $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
+                        $checkout->increment('sms_sent_amount');
+                    }
 
-                            $checkout->increment('email_sent_amount');
-                        }
+                    $data           = [
+                        "name"                  => $clientNameExploded[0],
+                        "boleto_link"           => $boleto->boleto_link,
+                        "boleto_digitable_line" => $boletoDigitableLine,
+                        "boleto_due_date"       => $boleto->boleto_due_date,
+                        "total_paid_value"      => $boleto->total_paid_value,
+                        "shipment_value"        => $boleto->shipment_value,
+                        "subtotal"              => strval($subTotal),
+                        "iof"                   => $iof,
+                        'discount'              => $discount,
+                        "project_logo"          => $project->logo,
+                        "project_contact"       => $project->contact,
+                        "products"              => $products,
+                    ];
+                    $emailValidated = FoxUtils::validateEmail($clientEmail);
+                    if ($emailValidated) {
+                        $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
+
+                        $checkout->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boleto vencendo');
@@ -157,10 +145,10 @@ class BoletoService
     {
         try {
             $date                 = Carbon::now()->subDay('1')->toDateString();
-            $boletoWaitionPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
+            $boletoWaitingPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
                                         ->with('clientModel', 'plansSales.plan.products')->get();
 
-            foreach ($boletoWaitionPayment as $boleto) {
+            foreach ($boletoWaitingPayment as $boleto) {
 
                 try {
                     $sendEmail     = new SendgridService();
@@ -169,11 +157,11 @@ class BoletoService
                     $checkout    = $checkoutModel->where("id", $boleto->checkout)->first();
                     $clientName  = $boleto->clientModel->name;
                     $clientEmail = $boleto->clientModel->email;
-                    $products    = [];
                     $data        = [];
-                    $subTotal    = 0;
-                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
+                    $subTotal    = $boleto->present()->getSubTotal();
+
+                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
 
                     if ($iof == 0) {
                         $iof = '';
@@ -189,49 +177,38 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-                    foreach ($boleto->plansSales as $plansSale) {
-                        $plan    = Plan::find($plansSale['plan']);
-                        $project = Project::find($plan['project']);
-                        $domain  = Domain::where('project_id', $project->id)->first();
 
-                        $subTotal += str_replace('.', '', $plan['price']) * $plansSale["amount"];
-                        foreach ($plansSale->getRelation('plan')->products as $product) {
-                            $productArray               = [];
-                            $productArray["photo"]      = $product->photo;
-                            $productArray["name"]       = $product->name;
-                            $productArray["name"]       = $product->name;
-                            $productArray["amount"]     = $plansSale->amount;
-                            $productArray["plan_value"] = $plansSale->plan_value;
-                            $products[]                 = $productArray;
-                        }
-                        $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                        $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                        $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                        $boletoDigitableLine     = [];
-                        $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
-                        $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                        $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
-                        $data                    = [
-                            "name"                  => $clientNameExploded[0],
-                            "boleto_link"           => $boleto->boleto_link,
-                            "boleto_digitable_line" => $boletoDigitableLine,
-                            "boleto_due_date"       => $boleto->boleto_due_date,
-                            "total_paid_value"      => $boleto->total_paid_value,
-                            "shipment_value"        => $boleto->shipment_value,
-                            "subtotal"              => strval($subTotal),
-                            "iof"                   => $iof,
-                            'discount'              => $discount,
-                            "project_logo"          => $project->logo,
-                            "project_contact"       => $project->contact,
-                            "products"              => $products,
-                        ];
-                        $emailValidated          = FoxUtils::validateEmail($clientEmail);
+                    $products = $boleto->present()->getProducts();
+                    $project  = Project::find($boleto->project);
+                    $domain   = Domain::where('project_id', $project->id)->first();
 
-                        if ($emailValidated) {
-                            $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
+                    $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                    $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                    $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                    $boletoDigitableLine     = [];
+                    $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
+                    $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                    $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
+                    $data                    = [
+                        "name"                  => $clientNameExploded[0],
+                        "boleto_link"           => $boleto->boleto_link,
+                        "boleto_digitable_line" => $boletoDigitableLine,
+                        "boleto_due_date"       => $boleto->boleto_due_date,
+                        "total_paid_value"      => $boleto->total_paid_value,
+                        "shipment_value"        => $boleto->shipment_value,
+                        "subtotal"              => strval($subTotal),
+                        "iof"                   => $iof,
+                        'discount'              => $discount,
+                        "project_logo"          => $project->logo,
+                        "project_contact"       => $project->contact,
+                        "products"              => $products,
+                    ];
+                    $emailValidated          = FoxUtils::validateEmail($clientEmail);
 
-                            $checkout->increment('email_sent_amount', 1);
-                        }
+                    if ($emailValidated) {
+                        $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
+
+                        $checkout->increment('email_sent_amount', 1);
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boletos par e-mail no foreach - Já separamos seu pedido');

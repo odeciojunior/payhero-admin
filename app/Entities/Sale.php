@@ -4,6 +4,8 @@ namespace App\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\SalePresenter;
 
 /**
  * @property integer $id
@@ -42,6 +44,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     use FoxModelTrait;
+    use PresentableTrait;
     /**
      * @var array
      */
@@ -51,6 +54,10 @@ class Sale extends Model
      * @var string
      */
     protected $keyType = 'integer';
+    /**
+     * @var string
+     */
+    protected $presenter = SalePresenter::class;
     /**
      * @var array
      */
