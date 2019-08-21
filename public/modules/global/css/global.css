@@ -18,7 +18,7 @@
 
 @media screen and (min-width: 1201px) {
     .display-xlg-none {
-        display: none;
+        display: none !important;
     }
 
     .min-row-height tr{
@@ -39,7 +39,7 @@
 
 @media screen and (min-width: 992px) and (max-width: 1200px) {
     .display-lg-none {
-        display: none;
+        display: none !important;
     }
 
     .min-row-height tr{
@@ -61,7 +61,7 @@
 
 @media screen and (min-width: 815px) and (max-width: 991px) {
     .display-m-none {
-        display: none;
+        display: none !important;
     }
 
     .min-row-height tr{
@@ -90,7 +90,7 @@
 }
 @media screen and (min-width: 768px) and (max-width: 814px) {
     .display-sm-none {
-        display: none;
+        display: none !important;
     }
 
     .min-row-height tr{

@@ -565,9 +565,9 @@ $(document).ready(function () {
             if ($('#nome_registro').val() != '' && $('#valor_registro').val() != '') {
 
                 if ($('#new_registers_table').html() == undefined) {
-                    $('#divCustomDomain').html("<table id='new_registers_table' class='table table-hover table-bordered table-stripped' style='table-layout: fixed;'>" + "<thead>" + "<tr>" + "<th class='col-2'>Tipo</th>" + "<th class='col-2'>Nome</th>" + "<th class='col-6'>Conteúdo</th>" + "<th class='col-2'></th>" + "</tr>" + "</thead>" + "<tbody id='new_registers'>" + "</tbody>" + "</table>");
+                    $('#divCustomDomain').html("<table id='new_registers_table' class='table table-hover table-bordered table-stripped unify' style='table-layout: fixed;'>" + "<thead>" + "<tr>" + "<th class='col-2'>Tipo</th>" + "<th class='col-2'>Nome</th>" + "<th class='col-6'>Conteúdo</th>" + "<th class='col-2'></th>" + "</tr>" + "</thead>" + "<tbody id='new_registers'>" + "</tbody>" + "</table>");
                 }
-                $("#new_registers").after("<tr class='alert-info' data-row='" + $("#new_registers_table tr").length + "' data-save='0'>" + "<td>" + $("#tipo_registro").val() + "</td>" + "<td>" + $("#nome_registro").val() + "</td>" + "<td>" + $("#valor_registro").val() + "</td>" + "<td hidden='hidden'>" + $("#valor_prioridade").val() + "</td>" + "<td class='col-2 text-center align-middle'>" + "<button type='button' data-row='" + $("#new_registers_table tr").length + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button>" + "</td></tr>");
+                $("#new_registers").after("<tr class='alert-info' data-row='" + $("#new_registers_table tr").length + "' data-save='0'>" + "<td>" + $("#tipo_registro").val() + "</td>" + "<td>" + $("#nome_registro").val() + "</td>" + "<td>" + $("#valor_registro").val() + "</td>" + "<td hidden='hidden'>" + $("#valor_prioridade").val() + "</td>" + "<td class='col-12 text-center align-middle'>" + "<button type='button' data-row='" + $("#new_registers_table tr").length + "' class='btn btn-danger remove-record' onclick='deleteRow(this)'>Remover</button>" + "</td></tr>");
                 $('#nome_registro').val('');
                 $('#valor_registro').val('');
             } else {

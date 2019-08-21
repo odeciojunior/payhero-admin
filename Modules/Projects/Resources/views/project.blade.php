@@ -115,13 +115,13 @@
                                aria-controls="tab-fretes" role="tab">Frete
                             </a>
                         </li>
-{{--                        @if($project->shopify_id == '')--}}
-                            <li class="nav-item" role="presentation">
-                                <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
-                                    Planos
-                                </a>
-                            </li>
-{{--                        @endif--}}
+                        {{--                        @if($project->shopify_id == '')--}}
+                        <li class="nav-item" role="presentation">
+                            <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
+                                Planos
+                            </a>
+                        </li>
+                        {{--                        @endif--}}
                         {{--<li class="nav-item" role="presentation">--}}
                         {{--<a id='tab-partners' class="nav-link" data-toggle="tab" href="#tab_partners"--}}
                         {{--aria-controls="tab_partners" role="tab">Parceiros--}}
@@ -220,7 +220,10 @@
                                 <div id="modal-add-body" class="modal-body" style='min-height: 100px'>
                                 </div>
                                 <div class="modal-footer">
-                                    <button id="btn-modal" type="button" class="btn btn-success" data-dismiss="modal">
+                                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
+                                        Fechar
+                                    </a>
+                                    <button id="btn-modal" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success" data-dismiss="modal">
                                         <i class="material-icons btn-fix"> save </i> Salvar
                                     </button>
                                 </div>
@@ -244,8 +247,8 @@
                                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                                 </div>
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                                    <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                                    <button id="bt_excluir" type="button" class="btn btn-danger" style="width: 20%;">Excluir</button>
+                                    <button id='bt_cancel'  type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                                    <button id="bt_excluir" type="button" class="col-4 btn btn-danger" style="width: 20%;">Excluir</button>
                                 </div>
                             </div>
                         </div>
