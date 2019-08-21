@@ -214,9 +214,9 @@
                                         <table id='transfersTable' class="table table-striped table-condensed unify">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col" class='headCenter col-4'>Razão</th>
-                                                    <th scope="col" class='headCenter col-4'>Data</th>
-                                                    <th scope="col" class='headCenter col-4'>Valor</th>
+                                                    <th scope="col" class='headCenter' style='width:33%'>Razão</th>
+                                                    <th scope="col" class='headCenter' style='width:33%'>Data</th>
+                                                    <th scope="col" class='headCenter' style='width:34%'>Valor</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table-transfers-body" class="custom-t-body">
