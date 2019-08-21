@@ -152,7 +152,7 @@
                                             <tbody id="withdrawals-table-data" class="custom-t-body">
                                             </tbody>
                                         </table>
-                                        <ul id="withdrawals-pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                                        <ul id="pagination-withdrawals" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                                             {{-- js carrega... --}}
                                         </ul>
                                     </div>
@@ -215,14 +215,14 @@
                                             <thead>
                                                 <tr>
                                                     <th scope="col" class='headCenter col-4'>Razão</th>
-                                                    <th scope="col" class='headCenter col-3'>Data</th>
-                                                    <th scope="col" class='headCenter col-7'>Valor</th>
+                                                    <th scope="col" class='headCenter col-4'>Data</th>
+                                                    <th scope="col" class='headCenter col-4'>Valor</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table-transfers-body" class="custom-t-body">
                                             </tbody>
                                         </table>
-                                        <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                                        <ul id="pagination-transfers" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                                             {{-- js carrega... --}}
                                         </ul>
                                     </div>
