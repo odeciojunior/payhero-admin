@@ -36,7 +36,9 @@ class SalesController extends Controller
             $userProjectModel = new UserProject();
             $saleModel        = new Sale();
 
-            $userProjects = $userProjectModel->with('projectId')->where('user', auth()->user()->id)->get();
+            $userProjects = $userProjectModel->with('projectId')
+                                             ->where('user', auth()->user()->id)
+                                             ->get();
 
             $projects = [];
 
@@ -300,75 +302,16 @@ class SalesController extends Controller
 
             return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
 
-
-
-
-
-/*
-
-
-            $sales = $saleModel
-                ->with([
-                           'clientModel', 'plansSales', 'plansSales.plan', 'plansSales.plan.products', 'plansSales.plan.projectId',
-                           'transactions' => function($query) use ($userCompanies) {
-                               $query->whereIn('company', $userCompanies);
-                           },
-                       ])
-                ->where([
-                            ['status', '!=', 3],
-                            ['status', '!=', 5],
-                            ['status', '!=', 10],
-                        ])
-                ->where(function($query) {
-                    $query->where('owner', auth()->user()->id);
-                    $query->orWhere('affiliate', auth()->user()->id);
-                });
-
-            if ($request->projeto != '') {
-                $plans    = $planModel->where('project', $request->projeto)->pluck('id');
-                $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
-                $sales->whereIn('id', $salePlan);
-            }
-
-            if ($request->transaction != '') {
-                $saleId = current(Hashids::connection('sale_id')->decode(str_replace('#', '', $request->transaction)));
-                $sales->where('id', $saleId);
-            }
-
-            if ($request->comprador != '') {
-                $customers = $clientModel->where('name', 'LIKE', '%' . $request->comprador . '%')->pluck('id');
-                $sales->whereIn('client', $customers);
-            }
-
-            if ($request->forma != '') {
-                $sales->where('payment_method', $request->forma);
-            }
-
-            if ($request->status != '') {
-                $sales->where('status', $request->status);
-            }
-
-            if ($request->data_inicial != '' && $request->data_final != '') {
-                $sales->whereBetween('start_date', [$request->data_inicial, date('Y-m-d', strtotime($request->data_final . ' + 1 day'))]);
-            } else {
-                if ($request->data_inicial != '') {
-                    $sales->whereDate('start_date', '>=', $request->data_inicial);
-                }
-
-                if ($request->data_final != '') {
-                    $sales->whereDate('end_date', '<', date('Y-m-d', strtotime($request->data_final . ' + 1 day')));
-                }
-            }
-
-            return SalesResource::collection($sales->orderBy('id', 'DESC')->paginate(10));
-
-            */
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function getCsvSales(Request $request)
     {
 
