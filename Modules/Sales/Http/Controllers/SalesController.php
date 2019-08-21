@@ -217,10 +217,6 @@ class SalesController extends Controller
                                           ->pluck('id')
                                           ->toArray();
 
-
-
-
-
             $transactions = $transactionModel->with([
                                                         'sale',
                                                         'sale.projectModel',
