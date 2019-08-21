@@ -53,7 +53,7 @@ $(function () {
 
                     $("#table-transfers-body").html(data);
 
-                    paginationTransfersTable(response);
+                    pagination(response,'transfers',updateTransfersTable);
                 }
                 $('.detalhes_venda').on('click', function () {
                     var sale = $(this).attr('sale');

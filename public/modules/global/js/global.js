@@ -259,6 +259,7 @@ function pagination(response, model, callback) {
             callback('?page=' + response.meta.last_page);
         });
     }
+    $('table').addClass('table-striped')
 
 }
 
