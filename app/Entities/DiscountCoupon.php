@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,6 +22,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class DiscountCoupon extends Model
 {
     use SoftDeletes;
+    use FoxModelTrait;
+    /**
+     * @var array
+     */
+    private $enum = [
+        'status' => [
+            1 => 'active',
+            2 => 'disabled',
+        ],
+    ];
     /**
      * @var array
      */

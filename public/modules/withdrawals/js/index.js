@@ -1,3 +1,10 @@
+var statusWithdrawals = {
+    1: 'warning',
+    2: 'primary',
+    3: 'success',
+    4: 'danger'
+}
+
 updateWithdrawalsTable();
 
 $("#extract_company_select").on("change", function () {
@@ -41,16 +48,7 @@ function updateWithdrawalsTable(link = null) {
                     data += "<td>" + value.date_release + "</td>";
                     data += "<td>" + value.value + "</td>";
                     data += '<td class="shipping-status">';
-                    if (value.status == 1) {
-                        data += '<span class="badge badge-warning">Pendente</span>';
-                    } else if (value.status == 2) {
-                        data += '<span class="badge badge-primary">Aprovado</span>';
-                    } else if (value.status == 3) {
-                        data += '<span class="badge badge-success">Transferido</span>';
-                    } else {
-                        data += '<span class="badge badge-danger">Recusado</span>';
-
-                    }
+                    data += '<span class="badge badge-' + statusWithdrawals[value.status] + '">' + value.status_translated + '</span>';
                     data += '</td>';
                     data += '</tr>';
 

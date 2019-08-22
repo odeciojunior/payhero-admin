@@ -1,3 +1,8 @@
+var statusCupons = {
+    1: "success",
+    2: "danger",
+}
+
 $(function () {
     var projectId = $("#project-id").val();
 
@@ -133,12 +138,7 @@ $(function () {
                         data += '<td class="shipping-value">' + value.value + '</td>';
                         data += '<td class="shipping-zip-code-origin">' + value.code + '</td>';
                         data += '<td class="shipping-status" style="vertical-align: middle;">';
-                        if (value.status === 1) {
-                            data += '<span class="badge badge-success mr-10">Ativo</span>';
-                        } else {
-                            data += '<span class="badge badge-danger">Desativado</span>';
-                        }
-
+                        data += '<span class="badge badge-' + statusCupons[value.status] + '">' + value.status_translated + '</span>';
                         data += '</td>';
 
                         data += "<td style='text-align:center;'>"
@@ -148,7 +148,7 @@ $(function () {
                         data += '</tr>';
                         $("#data-table-coupon").append(data);
                     });
-                    pagination(response,'coupons',atualizarCoupon);
+                    pagination(response, 'coupons', atualizarCoupon);
                 }
 
                 $(".details-coupon").unbind('click');

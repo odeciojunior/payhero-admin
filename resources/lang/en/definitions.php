@@ -39,6 +39,57 @@ return [
             "approved"  => "Aprovado",
             "refused"   => "Recusado",
         ],
+        "pixel"                    => [
+            "status" => [
+                "active"   => "ativo",
+                "disabled" => "desativo",
+            ],
+        ],
+        "discount_coupon"          => [
+            "status" => [
+                "active"   => "ativo",
+                "disabled" => "desativo",
+            ],
+        ],
+        "shipping"                 => [
+            "status"       => [
+                "active"   => "ativo",
+                "disabled" => "desativo",
+            ],
+            "pre_selected" => [
+                "yes" => "sim",
+                "no"  => "não",
+            ],
+        ],
+        "plan"                     => [
+            "status" => [
+                "active"   => "ativo",
+                "disabled" => "desativo",
+            ],
+        ],
+        "withdrawals"              => [
+            "status" => [
+                "pending"    => "Pendente",
+                "approved"   => "Aprovado",
+                "transfered" => "Transferido",
+                "refused"    => "Recusado",
+            ],
+        ],
+        "invitation"               => [
+            "status" => [
+                "accepted" => "Aceito",
+                "pending"  => "Pendente",
+                "expired"  => "Expirado",
+            ],
+        ],
+        "checkout"               => [
+            "status" => [
+                'accessed'       => 'Acessado',
+                'abandoned cart' => 'Não recuperado',
+                'recovered'      => 'Recuperado',
+                'sale finalized' => 'Venda finalizada',
+            ],
+        ],
         "sale"                     => [
             "status" => [
                 "pending"      => "Pendente",

@@ -1,3 +1,8 @@
+var statusRecovery = {
+    'Recuperado': 'success',
+    'Não recuperado': 'danger',
+}
+
 $(document).ready(function () {
 
     atualizar();
@@ -43,11 +48,7 @@ $(document).ready(function () {
                     dados += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
                     dados += "<td>" + value.email_status + "</td>";
                     dados += "<td>" + value.sms_status + "</td>";
-                    if (value.recovery_status == 'Recuperado') {
-                        dados += "<td><span class='badge badge-success'>" + value.recovery_status + "</span></td>";
-                    } else {
-                        dados += "<td><span class='badge badge-danger'>" + value.recovery_status + "</span></td>";
-                    }
+                    dados += "<td><span class='badge badge-" + statusRecovery[value.recovery_status] + "'>" + value.recovery_status + "</span></td>";
                     dados += "<td>" + value.value + "</td>";
                     dados += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
                     dados += "<td class='display-sm-none' align='center'> <a role='button' class='copy_link' style='cursor:pointer;' link='" + value.link + "'><i class='material-icons gradient'>file_copy</i></a></td>";
@@ -77,7 +78,7 @@ $(document).ready(function () {
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
                 }
-                pagination(response);
+                pagination(response,'salesRecovery',atualizar);
 
                 var id_venda = '';
 
@@ -129,80 +130,5 @@ $(document).ready(function () {
                 });
             }
         });
-    }
-
-    function pagination(response) {
-
-        $("#pagination").html("");
-
-        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
-
-        if (response.meta.last_page === 1) {
-            return false;
-        }
-
-        $("#pagination").append(primeira_pagina);
-
-        if (response.meta.current_page == '1') {
-            $("#primeira_pagina").attr('disabled', true);
-            $("#primeira_pagina").addClass('nav-btn');
-            $("#primeira_pagina").addClass('active');
-        }
-
-        $('#primeira_pagina').on("click", function () {
-            atualizar('?page=1');
-        });
-
-        for (x = 3; x > 0; x--) {
-
-            if (response.meta.current_page - x <= 1) {
-                continue;
-            }
-
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-            $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
-                atualizar('?page=' + $(this).html());
-            });
-        }
-
-        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-
-            $("#pagination").append(pagina_atual);
-
-            $("#pagina_atual").attr('disabled', true);
-            $("#pagina_atual").addClass('nav-btn');
-            $("#pagina_atual").addClass('active');
-        }
-
-        for (x = 1; x < 4; x++) {
-
-            if (response.meta.current_page + x >= response.meta.last_page) {
-                continue;
-            }
-
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
-            $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
-                atualizar('?page=' + $(this).html());
-            });
-        }
-
-        if (response.meta.last_page != '1') {
-            var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-
-            $("#pagination").append(ultima_pagina);
-
-            if (response.meta.current_page == response.meta.last_page) {
-                $("#ultima_pagina").attr('disabled', true);
-                $("#ultima_pagina").addClass('nav-btn');
-                $("#ultima_pagina").addClass('active');
-            }
-
-            $('#ultima_pagina').on("click", function () {
-                atualizar('?page=' + response.meta.last_page);
-            });
-        }
     }
 });

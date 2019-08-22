@@ -47,7 +47,6 @@ class DomainsController extends Controller
 
                 if (Gate::allows('index', [$project])) {
                     $domains = $domainModel->with(['project'])->where('project_id', $projectId);
-
                     return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
                 } else {
                     return response()->json([
@@ -330,9 +329,9 @@ class DomainsController extends Controller
                                         $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
                                     } else if (current($record[0]) == 'TXT') {
                                         $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
-//                                    } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
-//                                        //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
-//                                        return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
+                                        //                                    } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
+                                        //                                        //dominio já será adicionado com o ip do shopify, nao permitir que seja inserido outro record "A"
+                                        //                                        return response()->json(['message' => 'Erro ao tentar cadastrar subdomínio'], 400);
                                     } else {
                                         $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]));
                                     }

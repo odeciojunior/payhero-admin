@@ -2,6 +2,7 @@
 
 namespace Modules\Domains\Transformers;
 
+use Illuminate\Support\Facades\Lang;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -20,7 +21,7 @@ class DomainResource extends Resource
             'id'                => Hashids::encode($this->id),
             'domain'            => $this->name,
             'status'            => $this->status,
-            'status_translated' => $this->getEnum('status', $this->status, true),
+            'status_translated' => Lang::get('definitions.enum.status.' . $this->getEnum('status', $this->status)),
         ];
     }
 

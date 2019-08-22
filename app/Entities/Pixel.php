@@ -48,6 +48,15 @@ class Pixel extends Model
         'purchase_boleto',
         'purchase_card',
     ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'status' => [
+            1 => 'active',
+            2 => 'disabled',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

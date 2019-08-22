@@ -153,7 +153,7 @@
                     <!-- End Modal -->
                 </div>
 
-                <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                     {{-- js carrega... --}}
                 </ul>
             @else

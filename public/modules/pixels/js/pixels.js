@@ -1,3 +1,8 @@
+var statusPixel = {
+    1: "success",
+    2: "danger",
+}
+
 function _defineProperty(obj, key, value) {
     if (key in obj) {
         Object.defineProperty(obj, key, {value: value, enumerable: true, configurable: true, writable: true});
@@ -135,23 +140,16 @@ $(function () {
                 } else {
                     $.each(response.data, function (index, value) {
                         data = '';
-                        data += '<tr class="">';
-                        data += '<td class="" >' + value.name + '</td>';
-                        data += '<td class="" >' + value.code + '</td>';
-                        data += '<td class="" >' + value.platform + '</td>';
-                        data += '<td class="" >';
-                        if (value.status == 1) {
-                            data += '<span class="badge badge-success">Ativo</span>';
-                        } else {
-                            data += '<span class="badge badge-danger">Desativado</span>';
-                        }
-                        data += '</td>';
-
+                        data += '<tr >';
+                        data += '<td >' + value.name + '</td>';
+                        data += '<td >' + value.code + '</td>';
+                        data += '<td >' + value.platform + '</td>';
+                        data += '<td ><span class="badge badge-' + statusPixel[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td style='text-align:center'>"
                         data += "<a role='button' class='mg-responsive details-pixel pointer'   pixel='" + value.id + "'  data-target='#modal-content' data-toggle='modal'         type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>"
                         data += "<a role='button' class='mg-responsive edit-pixel    pointer'   pixel='" + value.id + "'  data-target='#modal-content' data-toggle='modal'         type='a'><i class='material-icons gradient'>edit</i></a>"
                         data += "<a role='button' class='mg-responsive delete-pixel  pointer'   pixel='" + value.id + "'  data-toggle='modal'          data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>";
-                        "</td>";
+                        data += "</td>";
 
                         data += '</tr>';
                         $("#data-table-pixel").append(data);
@@ -159,7 +157,7 @@ $(function () {
                     });
                 }
 
-                pagination(response,'pixels',atualizarPixel);
+                pagination(response, 'pixels', atualizarPixel);
 
                 // details pixel
                 $(".details-pixel").unbind('click');

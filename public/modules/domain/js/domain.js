@@ -2,6 +2,14 @@ function deleteRow(element) {
     $(element).closest('tr').remove();
 }
 
+var statusDomain = {
+    1 : 'warning',
+    2 : 'warning',
+    3 : 'success',
+    4 : 'danger'
+}
+
+
 var globalDomain = void 0;
 var fromNew = 'false';
 var newDomain = '';
@@ -515,14 +523,7 @@ $(document).ready(function () {
         var dados = '';
         dados += '<tr>';
         dados += '<td class="text-center">' + value.domain + '</td>';
-        dados += '<td>';
-        if (value.status === 3) {
-            dados += '<span class="badge badge-success">' + value.status_translated + '</span>';
-        } else {
-            dados += '<span class="badge badge-danger">' + value.status_translated + '</span>';
-        }
-
-        dados += '</td>';
+        dados += '<td><span class="badge badge-'+statusDomain[value.status]+'">' + value.status_translated + '</span></td>';
         dados += "<td style='text-align:center;'>"
         dados += "<a role='button' class='mg-responsive details-domain pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>"
         dados += "<a role='button' class='mg-responsive edit-domain    pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"
