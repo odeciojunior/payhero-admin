@@ -1,11 +1,11 @@
 var statusShipping = {
     1: "success",
-    2: "danger",
+    0: "danger",
 }
 
 var activeShipping = {
     1: "success",
-    2: "primary",
+    0: "primary",
 }
 
 $(document).ready(function () {

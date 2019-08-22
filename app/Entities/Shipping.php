@@ -51,11 +51,12 @@ class Shipping extends Model
     private $enum = [
         'status'       => [
             1 => 'active',
-            2 => 'disabled',
+            0 => 'disabled',
+            '' => 'disabled'
         ],
         'pre_selected' => [
             1 => 'yes',
-            2 => 'no',
+            0 => 'no',
         ],
     ];
 
