@@ -284,7 +284,7 @@
     <!-- End Modal -->
     <!-- Modal Detalhes -->
     <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-simple modal-sidebar modal-lg">
+        <div class="modal-dialog modal-simple modal-sidebar">
             <div class="modal-content p-20 " style="">
                 <div class="header-modal">
                     <div class="row justify-content-between align-items-center" style="width: 100%;">
