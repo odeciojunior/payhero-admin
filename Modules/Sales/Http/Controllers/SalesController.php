@@ -73,13 +73,11 @@ class SalesController extends Controller
 
             $saleModel        = new Sale();
             $planSaleModel    = new PlanSale();
-            $planModel        = new Plan();
             $clientModel      = new Client();
             $deliveryModel    = new Delivery();
             $checkoutModel    = new Checkout();
             $companyModel     = new Company();
             $transactionModel = new Transaction();
-            $planModel        = new Plan();
 
             if (!empty($requestData['sale_id'])) {
                 $sale = $saleModel->with([
@@ -104,19 +102,8 @@ class SalesController extends Controller
                 $client              = $clientModel->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
-                $plansSales = $planSaleModel->with('plan', 'plan.products')->where('sale', $sale->id)
-                                            ->get();
-
-                $plans = [];
-                $total = 0;
-
-                foreach ($plansSales as $key => $planSale) {
-                    $plans[$key]['name']   = $planModel->find($planSale['plan'])->name;
-                    $plans[$key]['amount'] = $planSale['amount'];
-                    $plans[$key]['value']  = $planSale['plan_value'];
-                    $plans[$key]['photo']  = isset($planSale->getRelation('plan')->products[0]) ? $planSale->getRelation('plan')->products[0]->photo : null;
-                    $total                 += preg_replace("/[^0-9]/", "", $planSale['plan_value']) * $planSale['amount'];
-                }
+                $total    = 0;
+                $products = $sale->present()->getProducts();
 
                 $discount = '0,00';
                 $subTotal = $total;
@@ -164,7 +151,7 @@ class SalesController extends Controller
                 $whatsAppMsg = 'Olá ' . $client->name;
                 $details     = view('sales::details', [
                     'sale'           => $sale,
-                    'plans'          => $plans,
+                    'products'       => $products,
                     'client'         => $client,
                     'delivery'       => $delivery,
                     'checkout'       => $checkout,
@@ -238,7 +225,7 @@ class SalesController extends Controller
                                              ->whereIn('company', $userCompanies);
 
             if (!empty($data["projeto"])) {
-                $projectId = current(Hashids::decode($data["projeto"])) ;
+                $projectId = current(Hashids::decode($data["projeto"]));
                 $transactions->whereHas('sale', function($querySale) use ($projectId) {
                     $querySale->where('project', $projectId);
                 });
@@ -297,7 +284,6 @@ class SalesController extends Controller
             }
 
             return TransactionResource::collection($transactions->orderBy('id', 'DESC')->paginate(10));
-
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - getSales');
             report($e);
