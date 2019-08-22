@@ -27,7 +27,6 @@ class CheckoutPresenter extends Presenter
                 $products[]        = $product;
             }
         }
-        dd($products);
         return $products;
     }
 }
