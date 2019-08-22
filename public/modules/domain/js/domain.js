@@ -3,12 +3,11 @@ function deleteRow(element) {
 }
 
 var statusDomain = {
-    1 : 'warning',
-    2 : 'warning',
-    3 : 'success',
-    4 : 'danger'
+    1: 'warning',
+    2: 'warning',
+    3: 'success',
+    4: 'danger'
 }
-
 
 var globalDomain = void 0;
 var fromNew = 'false';
@@ -146,7 +145,7 @@ $(document).ready(function () {
                     });
                 }
 
-                pagination(response,'domain',updateDomains);
+                pagination(response, 'domain', updateDomains);
 
                 $(".details-domain").unbind('click');
                 $(".details-domain").on('click', function () {
@@ -523,7 +522,7 @@ $(document).ready(function () {
         var dados = '';
         dados += '<tr>';
         dados += '<td class="text-center">' + value.domain + '</td>';
-        dados += '<td><span class="badge badge-'+statusDomain[value.status]+'">' + value.status_translated + '</span></td>';
+        dados += '<td><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
         dados += "<td style='text-align:center;'>"
         dados += "<a role='button' class='mg-responsive details-domain pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i> </a>"
         dados += "<a role='button' class='mg-responsive edit-domain    pointer'       status='" + value.status + "' domain='" + value.id + "' data-target='#modal-content' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"
@@ -587,9 +586,14 @@ $(document).ready(function () {
 
     function addPriorityField() {
         if ($('#valor_prioridade').html() == undefined) {
-            $('#valor_registro').parent('.form-group').remove();
-            $('#nome_registro').parent('.form-group').remove();
-            $('#tipo_registro').parent('.form-group').after('<div class="form-group mx-sm-3 mb-3 col-md-3">' + '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' + ' <div class="form-group mx-sm-3 mb-3 col-md-3">' + '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>' + '<div class="form-group mx-sm-3 mb-3 col-md-2">' + '<input id="valor_prioridade" class="input-pad" data-mask="0#" placeholder="Prioridade"></div>');
+            $('#valor_registro').parent().remove();
+            $('#nome_registro').parent().remove();
+            $('#tipo_registro').parent().after('<div class="col-sm-12 col-md-5 col-lg-3 mb-3">' +
+                '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
+                '<div class="col-sm-12 col-md-5 col-lg-3 mb-3">' +
+                '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>' +
+                '<div class="col-sm-12 col-md-2 col-lg-2 mb-3">' +
+                '<input id="valor_prioridade" class="input-pad" data-mask="0#" placeholder="Prioridade"></div>');
         }
         $('#valor_prioridade').mask('0#');
     }
@@ -597,8 +601,11 @@ $(document).ready(function () {
     function removePriorityField() {
         console.log($('#valor_registro').html());
         if ($('#valor_prioridade').html() != undefined) {
-            $('#valor_registro, #valor_prioridade, #nome_registro').parent('.form-group').remove();
-            $('#tipo_registro').parent('.form-group').after('<div class="form-group mx-sm-3 mb-3 col-md-4">' + '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' + '<div class="form-group mx-sm-3 mb-3 col-md-4">' + '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>');
+            $('#valor_registro, #valor_prioridade, #nome_registro').parent().remove();
+            $('#tipo_registro').parent().after('<div class="col-sm-12 col-md-6 col-lg-4 mb-3">' +
+                '<input id="nome_registro" class="input-pad" placeholder="Nome"></div>' +
+                '<div class="col-sm-12 col-md-6 col-lg-4 mb-3">' +
+                '<input id="valor_registro" class="input-pad" placeholder="Valor"></div>');
         }
     }
 
