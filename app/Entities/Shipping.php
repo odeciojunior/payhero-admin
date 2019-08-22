@@ -45,6 +45,19 @@ class Shipping extends Model
         'value',
         'zip_code_origin',
     ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'status'       => [
+            1 => 'active',
+            2 => 'disabled',
+        ],
+        'pre_selected' => [
+            1 => 'yes',
+            2 => 'no',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

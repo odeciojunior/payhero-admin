@@ -93,7 +93,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <ul id="pagination" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
+                        <ul id="pagination-salesRecovery" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                             {{-- js carrega... --}}
                         </ul>
                     </div>

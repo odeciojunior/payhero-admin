@@ -1,3 +1,9 @@
+var statusInvite = {
+    1 : 'success',
+    2 : 'danger',
+    3 : 'warning',
+}
+
 $(document).ready(function () {
     updateInvites();
 
@@ -59,11 +65,7 @@ $(document).ready(function () {
                         dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (cont += 1) + '</button></td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">';
-                        if (value.status === 'pending') {
-                            dados += '<span class="badge badge-primary text-center">Pendente</span>';
-                        } else {
-                            dados += '<span class="badge badge-success text-center">Aceito</span>';
-                        }
+                        dados += '<span class="badge badge-' + statusInvite[value.status] + ' text-center">' + value.status_translated + '</span>';
                         dados += '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';

@@ -76,6 +76,15 @@ class Plan extends Model
         'shopify_id',
         'shopify_variant_id',
     ];
+    /**
+     * @var array
+     */
+    private $enum = [
+        'status' => [
+            1 => 'active',
+            2 => 'disabled',
+        ],
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

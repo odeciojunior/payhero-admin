@@ -2,6 +2,7 @@
 
 namespace Modules\Pixels\Transformers;
 
+use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -20,6 +21,7 @@ class PixelsResource extends Resource
             'code'     => $this->code,
             'platform' => $this->platform,
             'status'   => $this->status,
+            'status_translated' => Lang::get('definitions.enum.pixel.status.' . $this->getEnum('status', $this->status)),
         ];
     }
 }

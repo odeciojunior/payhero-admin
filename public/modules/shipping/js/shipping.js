@@ -1,3 +1,13 @@
+var statusShipping = {
+    1: "success",
+    2: "danger",
+}
+
+var activeShipping = {
+    1: "success",
+    2: "primary",
+}
+
 $(document).ready(function () {
 
     var projectId = $("#project-id").val();
@@ -203,22 +213,15 @@ $(document).ready(function () {
                         dados += '<td class="shipping-name " style="vertical-align: middle;">' + value.name + '</td>';
                         dados += '<td class="shipping-type " style="vertical-align: middle;">' + value.value + '</td>';
                         dados += '<td class="shipping-information " style="vertical-align: middle;">' + value.information + '</td>';
-                        dados += '<td class="shipping-status " style="vertical-align: middle;">';
-                        if (value.status === 1) {
-                            dados += '<span class="badge badge-success">Ativo</span>';
-                        } else {
-                            dados += '<span class="badge badge-danger">Desativado</span>';
-                        }
 
+                        dados += '<td class="shipping-status " style="vertical-align: middle;">';
+                        dados += '<span class="badge badge-' + statusShipping[value.status] + '">' + value.status_translated + '</span>';
                         dados += '</td>';
 
                         dados += '<td class="shipping-pre-selected text-center display-sm-none display-m-none" style="vertical-align: middle;">';
-                        if (value.pre_selected === 1) {
-                            dados += '<span class="badge badge-success">Sim</span>';
-                        } else {
-                            dados += '<span class="badge badge-primary"> Não </span>';
-                        }
+                        dados += '<span class="badge badge-' + activeShipping[value.pre_selected] + '">' + value.pre_selected_translated + '</span>';
                         dados += '</td>';
+                        
                         dados += "<td style='text-align:center'>"
                         dados += "<a role='button' class='pointer detalhes-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>"
                         dados += "<a role='button' class='pointer editar-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>"

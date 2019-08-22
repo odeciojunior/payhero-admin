@@ -1,3 +1,8 @@
+var statusPlan = {
+    1: "success",
+    2: "danger",
+}
+
 $(function () {
     var projectId = $("#project-id").val();
 
@@ -85,7 +90,7 @@ $(function () {
                     $(".btn-save").unbind('click');
                     $(".btn-save").on('click', function () {
                         var hasNoValue;
-                        $('.products_amount').each(function() {
+                        $('.products_amount').each(function () {
                             if ($(this).val() == '' || $(this).val() == 0) {
                                 hasNoValue = true;
                             }
@@ -195,19 +200,12 @@ $(function () {
                     $.each(response.data, function (index, value) {
                         data = '';
                         data += '<tr>';
-                        data += '<td id=""     class=""                                                     style="vertical-align: middle;">' + value.name + '</td>';
-                        data += '<td id=""     class=""                                                     style="vertical-align: middle;">' + value.description + '</td>';
-                        data += '<td id="link" class="display-sm-none display-m-none"                       style="vertical-align: middle;">' + value.code + '</td>';
-                        data += '<td id=""     class="display-lg-none display-xlg-none"                     style="vertical-align: middle;"><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
-                        data += '<td id=""     class=""                                                     style="vertical-align: middle;">' + value.price + '</td>';
-                        data += '<td id=""     class="">';
-                        if (value.status === 1) {
-                            data += '<span class="badge badge-success mr-10">Ativo</span>';
-                        } else {
-                            data += '<span class="badge badge-danger">Desativado</span>';
-                        }
-
-                        data += '</td>';
+                        data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.name + '</td>';
+                        data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.description + '</td>';
+                        data += '<td id="link" class="display-sm-none display-m-none"   style="vertical-align: middle;">' + value.code + '</td>';
+                        data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
+                        data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.price + '</td>';
+                        data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td style='text-align:center' class='mg-responsive'>"
                         data += "<a class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'                                                 ><i class='material-icons gradient'>remove_red_eye</i></a>"
                         data += "<a class='mg-responsive pointer edit-plan'                     plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><i class='material-icons gradient'>edit</i></a>"
@@ -337,7 +335,7 @@ $(function () {
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
                                 var hasNoValue;
-                                $('.products_amount').each(function() {
+                                $('.products_amount').each(function () {
                                     if ($(this).val() == '' || $(this).val() == 0) {
                                         hasNoValue = true;
                                     }
