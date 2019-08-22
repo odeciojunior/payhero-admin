@@ -47,6 +47,7 @@ class DomainsController extends Controller
 
                 if (Gate::allows('index', [$project])) {
                     $domains = $domainModel->with(['project'])->where('project_id', $projectId);
+
                     return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
                 } else {
                     return response()->json([
@@ -622,7 +623,6 @@ class DomainsController extends Controller
         $domain = $domainModel->with(['project'])->where('id', current(Hashids::decode($domainId)))->first();
 
         if (Gate::allows('edit', [$domain->project])) {
-
             $newNameServers = [];
             foreach ($cloudFlareService->getZones() as $zone) {
                 if ($zone->name == $domain->name) {
