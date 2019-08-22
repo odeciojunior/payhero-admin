@@ -157,12 +157,11 @@ class SalesRecoveryService
      */
     public function getSalesCheckoutDetails(Checkout $checkout)
     {
-        $logModel          = new CheckoutLog();
-        $checkoutPlanModel = new CheckoutPlan();
-        $domainModel       = new Domain();
-        $log               = $logModel->where('id_log_session', $checkout->id_log_session)
-                                      ->orderBy('id', 'DESC')->first();
-        $telephone         = FoxUtils::prepareCellPhoneNumber($log->telephone);
+        $logModel    = new CheckoutLog();
+        $domainModel = new Domain();
+        $log         = $logModel->where('id_log_session', $checkout->id_log_session)
+                                ->orderBy('id', 'DESC')->first();
+        $telephone   = FoxUtils::prepareCellPhoneNumber($log->telephone);
         if (!empty($telephone)) {
             $log->telephone = $telephone;
         } else {
@@ -187,22 +186,8 @@ class SalesRecoveryService
         }
 
         $checkout->is_mobile = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
-
-        $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.productsPlans.getProduct')
-                                           ->where('checkout', $checkout->id)
-                                           ->get();
-
-        $plans = [];
-        $total = 0;
-        foreach ($checkoutPlans as $checkoutPlan) {
-            foreach ($checkoutPlan->getRelation('plan')->productsPlans as $key => $productPlan) {
-                $plans[$key]['name']   = $productPlan->getProduct->name;
-                $plans[$key]['value']  = $checkoutPlan->getRelation('plan')->price;
-                $plans[$key]['photo']  = $productPlan->getProduct->photo;
-                $plans[$key]['amount'] = $checkoutPlan->amount;
-                $total                 += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->getRelation('plan')->price)) * intval($checkoutPlan->amount);
-            }
-        }
+        $products            = $checkout->present()->getProducts();
+        $total               = $checkout->present()->getTotal();
 
         $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
         if (!empty($domain)) {
@@ -220,7 +205,7 @@ class SalesRecoveryService
             'status'        => $status,
             'hours'         => $checkout['hours'],
             'date'          => $checkout['date'],
-            'plans'         => $plans,
+            'products'      => $products,
             'total'         => number_format(intval($total) / 100, 2, ',', '.'),
             'link'          => $link,
         ]);
@@ -283,22 +268,8 @@ class SalesRecoveryService
         } else {
             $status = 'Expirado';
         }
-
-        $checkoutPlans = $checkoutPlanModel->with('plan', 'plan.products')
-                                           ->where('checkout', $checkout->id)
-                                           ->get();
-
-        $plans = [];
-        $total = 0;
-        foreach ($checkoutPlans as $checkoutPlan) {
-            foreach ($checkoutPlan->getRelation('plan')->products as $key => $product) {
-                $plans[$key]['name']   = $checkoutPlan->getRelation('plan')->name;
-                $plans[$key]['value']  = $checkoutPlan->getRelation('plan')->price;
-                $plans[$key]['photo']  = $product->photo;
-                $plans[$key]['amount'] = $checkoutPlan->amount;
-                $total                 += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->getRelation('plan')->price)) * intval($checkoutPlan->amount);
-            }
-        }
+        $products = $checkout->present()->getProducts();
+        $total    = $checkout->present()->getTotal();
 
         $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
         if (!empty($domain)) {
@@ -316,7 +287,7 @@ class SalesRecoveryService
             'status'        => $status,
             'hours'         => $checkout['hours'],
             'date'          => $checkout['date'],
-            'plans'         => $plans,
+            'products'      => $products,
             'total'         => number_format(intval($total) / 100, 2, ',', '.'),
             'link'          => $link,
         ]);

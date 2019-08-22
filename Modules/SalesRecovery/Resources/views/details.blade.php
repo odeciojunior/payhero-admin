@@ -12,34 +12,33 @@
 <div class="clearfix"></div>
 <div class="card shadow pr-20 pl-20 p-10">
     <div class="row">
-        <div class="col-lg-6"><p class="table-title"> Produto </p></div>
-        <div class="col-lg-2 text-right"><p class="text-muted"> Qtde </p></div>
-        <div class="col-lg-4 text-right"><p class="text-muted"> Valor </p></div>
+        <div class="col-lg-3"><p class="table-title"> Produto </p></div>
+        <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
     </div>
-    <div class='row align-items-baseline justify-content-between mb-15'>
-        @foreach($plans as $plan)
+    @foreach($products as $product)
+        <div class='row align-items-baseline justify-content-between mb-15'>
             <div class="col-lg-2">
-                <img src='{{$plan['photo'] ?? asset('modules/global/img/produto.png')}}' width='50px' style='border-radius: 6px;'>
+                <img src='{{$product['photo'] ?? asset('modules/global/img/produto.png')}}' width='50px' style='border-radius: 6px;'>
             </div>
-            <div class='col-lg-4'>
-                <h4 class='table-title'>{{$plan['name']}}</h4>
+            <div class='col-lg-5'>
+                <h4 class='table-title'>{{$product['name']}}</h4>
             </div>
-            <div class='col-lg-2 text-right'>
-                <p class='sm-text text-muted'>{{$plan['amount']}}x</p>
+            <div class='col-lg-3 text-right'>
+                <p class='sm-text text-muted'>{{$product['amount']}}x</p>
             </div>
-            <div class='col-lg-4 text-right'>
-                <p class='sm-text text-muted'>
-                    {{number_format($plan['value'], 2, ',', '.')}}
-                </p>
-            </div>
-        @endforeach
-    </div>
+            {{--            <div class='col-lg-4 text-right'>--}}
+            {{--                <p class='sm-text text-muted'>--}}
+            {{--                    {{number_format($plan['value'], 2, ',', '.')}}--}}
+            {{--                </p>--}}
+            {{--            </div>--}}
+        </div>
+    @endforeach
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
         <div class="col-lg-6">
             <h4 class="table-title"> Total </h4>
         </div>
         <div class="col-lg-6 text-right">
-            <h4 class="table-title"> {{$total}} </h4>
+            <h4 class="table-title"> R${{$total}} </h4>
         </div>
     </div>
 </div>

@@ -3,6 +3,8 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\CheckoutPresenter;
 
 /**
  * @property integer $id
@@ -36,11 +38,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Checkout extends Model
 {
+    use PresentableTrait;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
     protected $keyType = 'integer';
+    /**
+     * @var string
+     */
+    protected $presenter = CheckoutPresenter::class;
     /**
      * @var array
      */

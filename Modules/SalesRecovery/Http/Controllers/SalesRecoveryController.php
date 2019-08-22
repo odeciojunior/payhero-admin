@@ -96,12 +96,10 @@ class SalesRecoveryController extends Controller
 
             if ($request->has('checkout') && !empty($request->input('checkout'))) {
                 $checkoutId = current(Hashids::decode($request->input('checkout')));
-
                 $checkout = $checkoutModel->find($checkoutId);
                 if (!empty($checkout)) {
                     $details = $salesRecoveryService->getSalesCheckoutDetails($checkout);
                 } else {
-
                     $details = $salesRecoveryService->getSalesCartOrBoletoDetails($checkoutId);
                 }
             }
