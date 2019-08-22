@@ -147,8 +147,7 @@ class CloudFlareService
      */
     public function getZones(string $name = '')
     {
-        $zones = $this->zones->listZones($name);
-
+        $zones = $this->zones->listZones($name,'',1,1000);
         return $zones->result;
     }
 
