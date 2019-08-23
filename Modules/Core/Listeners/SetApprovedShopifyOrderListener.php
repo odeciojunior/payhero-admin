@@ -5,6 +5,7 @@ namespace Modules\Core\Listeners;
 use App\Entities\Plan;
 use App\Entities\PlanSale;
 use App\Entities\Product;
+use App\Entities\ProductPlan;
 use App\Entities\ShopifyIntegration;
 use Modules\Core\Events\SaleApprovedEvent;
 use Exception;
@@ -29,6 +30,7 @@ class SetApprovedShopifyOrderListener
         $shopifyIntegrationModel = new ShopifyIntegration();
         $planSaleModel           = new PlanSale();
         $planModel               = new Plan();
+        $productPlanModel        = new ProductPlan();
 
         if ($event->sale->payment_method == 1) {
             $shopifyIntegration = $shopifyIntegrationModel->where('project', $event->project->id)->first();
@@ -47,22 +49,25 @@ class SetApprovedShopifyOrderListener
 
                 $plansSale = $planSaleModel->where('sale', $event->sale->id)->get();
 
-                $plans = null;
-                foreach ($plansSale->plan()->get() as $plan) {
+                $plans = [];
+                foreach ($plansSale as $planSale) {
 
+                    $plan    = $planModel->find($planSale->plan);
                     $plans[] = [
-                        "id"           => $plan->name,
+                        "id"           => $plan->id,
+                        'name'         => $plan->name,
                         "price"        => $plan->price,
                         "product_name" => $plan->name,
+                        'quantity'     => $planSale->amount,
                     ];
                 }
 
                 $products = $event->sale->present()->getProducts();
 
-                if ($event->sale->shopify_discount != '') {
-                    $plans->first()->price = preg_replace("/[^0-9]/", "", $plans->first()->price) - (intval(preg_replace("/[^0-9]/", "", $event->sale->shopify_discount) / $products[0]['amount']));
-                    $plans->first()->price = $plans[0]['price'] / 100;
-                    substr_replace($plans->first()->price, '.', strlen($plans->first()->price) - 2, 0);
+                if (!empty($event->sale->shopify_discount)) {
+                    $plans[0]['price'] = preg_replace("/[^0-9]/", "", $plans[0]['price']) - (intval(preg_replace("/[^0-9]/", "", $event->sale->shopify_discount) / $products[0]['amount']));
+                    $plans[0]['price'] = $plans[0]['price'] / 100;
+                    substr_replace($plans[0]['price'], '.', strlen($plans[0]['price']) - 2, 0);
                 }
 
                 $totalValue = 0;
@@ -81,24 +86,24 @@ class SetApprovedShopifyOrderListener
                         $productPrice = 0;
                         if ($firstProduct) {
                             if ($product['amount'] > 1) {
-                                $productPrice = intval($totalValue / $plan->productsPlans()
-                                                                          ->where('product', $product['id'])
-                                                                          ->first()->amount);
+                                $productAmount = $productPlanModel->where('product', $product['id'])
+                                                                  ->first()->amount;
+                                $productPrice  = intval($totalValue / $productAmount);
                             } else {
                                 $productPrice = $totalValue;
                             }
                             $productPrice = substr_replace($productPrice, '.', strlen($productPrice) - 2, 0);
                             $firstProduct = false;
                         }
+                        $productAmounts = $productPlanModel->where('product', $product['id'])
+                                                           ->first()->amount;
 
                         $items[] = [
                             "grams"             => 500,
                             "id"                => $plan['id'],
                             "price"             => $productPrice,
                             "product_id"        => $product['shopify_id'],
-                            "quantity"          => $plan['quantity'] * $plan->productsPlans()
-                                                                            ->where('product', $product['id'])
-                                                                            ->first()->amount,
+                            "quantity"          => $plan['quantity'] * $productAmounts,
                             "requires_shipping" => true,
                             "sku"               => $plan['name'],
                             "title"             => $plan['name'],
