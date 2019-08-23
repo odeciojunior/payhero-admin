@@ -5,30 +5,43 @@ namespace Modules\Core\Services;
 use App\Entities\Sale;
 use Illuminate\Support\Facades\Log;
 
-class HotZappService {
-
+class HotZappService
+{
+    /**
+     * @var
+     */
     private $link;
 
-    function __construct($link){
+    /**
+     * HotZappService constructor.
+     * @param $link
+     */
+    function __construct($link)
+    {
 
         $this->link = $link;
     }
 
-    function newBoleto(Sale $sale, $plans) {
+    /**
+     * @param Sale $sale
+     * @param $plans
+     */
+    function newBoleto(Sale $sale, $plans)
+    {
 
         $data = [
             'transaction_id'        => @$sale->id,
-            'name'                  => @$sale->client()->name,
-            'phone'                 => @$sale->client()->cellphone,
-            'email'                 => @$sale->client()->email,
-            'address'               => @$sale->delivery()->street,
-            'address_number'        => @$sale->delivery()->number,
-            'address_district'      => @$sale->delivery()->neighborhood,
-            'address_zip_code'      => @$sale->delivery()->zip_code,
-            'address_city'          => @$sale->delivery()->city,
-            'address_state'         => @$sale->delivery()->state,
+            'name'                  => @$sale->client()->first()->name,
+            'phone'                 => @$sale->client()->first()->cellphone,
+            'email'                 => @$sale->client()->first()->email,
+            'address'               => @$sale->delivery()->first()->street,
+            'address_number'        => @$sale->delivery()->first()->number,
+            'address_district'      => @$sale->delivery()->first()->neighborhood,
+            'address_zip_code'      => @$sale->delivery()->first()->zip_code,
+            'address_city'          => @$sale->delivery()->first()->city,
+            'address_state'         => @$sale->delivery()->first()->state,
             'address_country'       => 'BR',
-            'doc'                   => @$sale->client()->document,
+            'doc'                   => @$sale->client()->first()->document,
             'cms_vendor'            => '',
             'total_price'           => @$sale->total_paid_value,
             'receiver_type'         => '',
@@ -46,24 +59,28 @@ class HotZappService {
         ];
 
         self::sendPost($data);
-
     }
 
-    function boletoPaid(Sale $sale, $plans) {
+    /**
+     * @param Sale $sale
+     * @param $plans
+     */
+    function boletoPaid(Sale $sale, $plans)
+    {
 
         $data = [
             'transaction_id'        => @$sale->id,
-            'name'                  => @$sale->client()->name,
-            'phone'                 => @$sale->client()->cellphone,
-            'email'                 => @$sale->client()->email,
-            'address'               => @$sale->delivery()->street,
-            'address_number'        => @$sale->delivery()->number,
-            'address_district'      => @$sale->delivery()->neighborhood,
-            'address_zip_code'      => @$sale->delivery()->zip_code,
-            'address_city'          => @$sale->delivery()->city,
-            'address_state'         => @$sale->delivery()->state,
+            'name'                  => @$sale->client()->first()->name,
+            'phone'                 => @$sale->client()->first()->cellphone,
+            'email'                 => @$sale->client()->first()->email,
+            'address'               => @$sale->delivery()->first()->street,
+            'address_number'        => @$sale->delivery()->first()->number,
+            'address_district'      => @$sale->delivery()->first()->neighborhood,
+            'address_zip_code'      => @$sale->delivery()->first()->zip_code,
+            'address_city'          => @$sale->delivery()->first()->city,
+            'address_state'         => @$sale->delivery()->first()->state,
             'address_country'       => 'BR',
-            'doc'                   => @$sale->client()->document,
+            'doc'                   => @$sale->client()->first()->document,
             'cms_vendor'            => '',
             'total_price'           => @$sale->total_paid_value,
             'receiver_type'         => '',
@@ -80,24 +97,28 @@ class HotZappService {
         ];
 
         self::sendPost($data);
-
     }
 
-    function creditCardRefused(Sale $sale, $plans) {
+    /**
+     * @param Sale $sale
+     * @param $plans
+     */
+    function creditCardRefused(Sale $sale, $plans)
+    {
 
         $data = [
             'transaction_id'        => @$sale->id,
-            'name'                  => @$sale->client()->name,
-            'phone'                 => @$sale->client()->cellphone,
-            'email'                 => @$sale->client()->email,
-            'address'               => @$sale->delivery()->street,
-            'address_number'        => @$sale->delivery()->number,
-            'address_district'      => @$sale->delivery()->neighborhood,
-            'address_zip_code'      => @$sale->delivery()->zip_code,
-            'address_city'          => @$sale->delivery()->city,
-            'address_state'         => @$sale->delivery()->state,
+            'name'                  => @$sale->client()->first()->name,
+            'phone'                 => @$sale->client()->first()->cellphone,
+            'email'                 => @$sale->client()->first()->email,
+            'address'               => @$sale->delivery()->first()->street,
+            'address_number'        => @$sale->delivery()->first()->number,
+            'address_district'      => @$sale->delivery()->first()->neighborhood,
+            'address_zip_code'      => @$sale->delivery()->first()->zip_code,
+            'address_city'          => @$sale->delivery()->first()->city,
+            'address_state'         => @$sale->delivery()->first()->state,
             'address_country'       => 'BR',
-            'doc'                   => @$sale->client()->document,
+            'doc'                   => @$sale->client()->first()->document,
             'cms_vendor'            => '',
             'total_price'           => @$sale->total_paid_value,
             'receiver_type'         => '',
@@ -115,24 +136,28 @@ class HotZappService {
         ];
 
         self::sendPost($data);
-
     }
 
-    function creditCardPaid(Sale $sale, $plans) {
+    /**
+     * @param Sale $sale
+     * @param $plans
+     */
+    function creditCardPaid(Sale $sale, $plans)
+    {
 
         $data = [
-            'transaction_id'        => @$venda->id,
-            'name'                  => @$sale->client()->name,
-            'phone'                 => @$sale->client()->cellphone,
-            'email'                 => @$sale->client()->email,
-            'address'               => @$sale->delivery()->street,
-            'address_number'        => @$sale->delivery()->number,
-            'address_district'      => @$sale->delivery()->neighborhood,
-            'address_zip_code'      => @$sale->delivery()->zip_code,
-            'address_city'          => @$sale->delivery()->city,
-            'address_state'         => @$sale->delivery()->state,
+            'transaction_id'        => @$sale->id,
+            'name'                  => @$sale->client()->first()->name,
+            'phone'                 => @$sale->client()->first()->cellphone,
+            'email'                 => @$sale->client()->first()->email,
+            'address'               => @$sale->delivery()->first()->street,
+            'address_number'        => @$sale->delivery()->first()->number,
+            'address_district'      => @$sale->delivery()->first()->neighborhood,
+            'address_zip_code'      => @$sale->delivery()->first()->zip_code,
+            'address_city'          => @$sale->delivery()->first()->city,
+            'address_state'         => @$sale->delivery()->first()->state,
             'address_country'       => 'BR',
-            'doc'                   => @$sale->client()->document,
+            'doc'                   => @$sale->client()->first()->document,
             'cms_vendor'            => '',
             'total_price'           => @$sale->total_paid_value,
             'receiver_type'         => '',
@@ -149,32 +174,33 @@ class HotZappService {
         ];
 
         self::sendPost($data);
-
     }
 
-    private function sendPost($data){
+    /**
+     * @param $data
+     */
+    private function sendPost($data)
+    {
 
         $curl = curl_init();
 
         curl_setopt_array($curl,
-            array(
-                CURLOPT_URL => $this->link,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_HTTPHEADER => 
-                array(
-                    'Content-Type: application/json'
-                ),
-            )
+                          [
+                              CURLOPT_URL            => $this->link,
+                              CURLOPT_RETURNTRANSFER => true,
+                              CURLOPT_CUSTOMREQUEST  => "POST",
+                              CURLOPT_POSTFIELDS     => json_encode($data),
+                              CURLOPT_HTTPHEADER     =>
+                                  [
+                                      'Content-Type: application/json',
+                                  ],
+                          ]
         );
 
         $response = curl_exec($curl);
 
         curl_close($curl);
-
     }
-
 }
 
 

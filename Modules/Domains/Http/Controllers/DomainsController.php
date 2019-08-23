@@ -631,15 +631,19 @@ class DomainsController extends Controller
 
         if (Gate::allows('edit', [$domain->project])) {
             $newNameServers = [];
+            $domainHost     = ' ';
             foreach ($cloudFlareService->getZones() as $zone) {
                 if ($zone->name == $domain->name) {
                     foreach ($zone->name_servers as $new_name_server) {
                         $newNameServers[] = $new_name_server;
                     }
+                    if($zone->original_registrar != ''){
+                        $domainHost = "(" . $zone->original_registrar . ")";
+                    }
                 }
             }
 
-            return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers]], 200);
+            return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers, 'domainHost' => $domainHost]], 200);
         } else {
             return response()->json(['message' => 'Sem permissão para visualizar o domínio'], 400);
         }

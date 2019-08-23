@@ -152,7 +152,7 @@ $(document).ready(function () {
                     resetFooter();
                     hideElements('.modal-footer');
                     loadOnModal('#modal-add-body');
-                    dnsDomains($(this).attr('domain'));
+                    dnsDomains($(this).attr('domain'), $(this).attr('status'));
                 });
 
                 $(".edit-domain").unbind('click');
@@ -222,7 +222,7 @@ $(document).ready(function () {
         });
     }
 
-    function dnsDomains(domain) {
+    function dnsDomains(domain, status) {
         $('#btn-modal').hide();
         $.ajax({
             method: "GET",
@@ -252,7 +252,11 @@ $(document).ready(function () {
             }),
             success: function success(response) {
                 loadingOnScreenRemove();
-                modalVerify(response);
+                if (status == 3) {
+                    modalVerified(response)
+                } else {
+                    modalVerify(response);
+                }
 
                 $('.btn-verifyDomain').on('click', function () {
                     loadOnModal('#modal-add-body');
@@ -538,10 +542,37 @@ $(document).ready(function () {
         $('#modal-title').html('Verificação');
         $('#modal-add-body').children().hide('slow');
         $('#modal-add-body').html('');
-        $('#modal-add-body').append('<div class="swal2-icon swal2-info swal2-animate-info-icon" style="display: flex;">i</div>' + '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' + '<h4 align="center">Agora falta pouco</h4>' + '<h4 align="center">Você só precisa adicionar essas novas entradas <strong>DNS</strong> onde você registrou seu dominio. Logo apos clique em <strong style="color:green">verificar</strong>!</h4>' + '<div id="tableDomain" style="width:100%">' + '<table class="table table-striped">' + '<thead></thead>' + '<tbody id="tableDomainBody">' + '</tbody>' + '</table>' + '</div>' + '<div style="width:100%;text-align:center;padding-top:3%">' + '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 25px">Verificar</button>' + '</div>').show('slow');
+        $('#modal-add-body').append('<div class="swal2-icon swal2-info swal2-animate-info-icon" style="display: flex;">i</div>' +
+            '<h3 align="center"><strong>Domínio cadastrado</strong></h3>' +
+            '<h4 align="center">Agora falta pouco</h4>' +
+            '<h4 align="center">Você só precisa adicionar essas novas entradas <strong>DNS</strong>' +
+            ' onde você registrou seu dominio' + responseDomain.data["domainHost"] + '. Logo apos clique em <strong style="color:green">verificar</strong>!</h4>' +
+            '<div id="tableDomain" style="width:100%">' +
+            '<table class="table table-striped">' + '<thead></thead>' +
+            '<tbody id="tableDomainBody">' +
+            '</tbody></table></div>' +
+            '<div style="width:100%;text-align:center;padding-top:3%">' +
+            '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 25px">Verificar</button>' +
+            '</div>').show('slow');
         $.each(responseDomain.data['zones'], function (index, value) {
             $('#tableDomainBody').append('<tr>' + '<td class="table-title"><b>Novo servidor DNS :</b></td>' + '<td>' + value + '</td>' + '</tr>');
         });
+        $('#modal-add-body').show('slow');
+    }
+
+    function modalVerified(responseDomain) {
+        hideElements('.modal-footer');
+        $('#modal-title').html('Verificação');
+        $('#modal-add-body').children().hide('slow');
+        $('#modal-add-body').html('');
+        $('#modal-add-body').append('<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>' +
+            '<h3 align="center"><strong>Domínio verificado</strong></h3>' +
+            '<h4 align="center">Tudo pronto</h4>' +
+            '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
+            '<h6 align="center">Caso tenha problemas ou modifique algo no domínio, ultilize o botão abaixo para verificar se está tudo certo</h6>'+
+            '<div style="width:100%;text-align:center;padding-top:3%">' +
+            '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 25px">Verificar</button>' +
+            '</div>').show('slow');
         $('#modal-add-body').show('slow');
     }
 

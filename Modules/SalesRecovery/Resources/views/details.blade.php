@@ -26,11 +26,6 @@
             <div class='col-lg-3 text-right'>
                 <p class='sm-text text-muted'>{{$product['amount']}}x</p>
             </div>
-            {{--            <div class='col-lg-4 text-right'>--}}
-            {{--                <p class='sm-text text-muted'>--}}
-            {{--                    {{number_format($plan['value'], 2, ',', '.')}}--}}
-            {{--                </p>--}}
-            {{--            </div>--}}
         </div>
     @endforeach
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
@@ -83,6 +78,10 @@
         <span class="table-title gray"> IP: {{$checkout->ip}}  </span>
         <br>
         <span class="table-title gray "> Dispositivo: {{$checkout->is_mobile}} </span>
+        <br>
+        <span class="table-title gray "> Sistema: {{$checkout->operational_system}} </span>
+        <br>
+        <span class="table-title gray "> Navegador: {{$checkout->browser}} </span>
         <br>
         <h4> Conversão </h4>
         <span class="table-title gray"> SRC: {{$checkout->src}}  </span>

@@ -37,19 +37,7 @@ class TesteController extends Controller
      */
     public function __construct()
     {
-        if (getenv('MERCADO_PAGO_PRODUCTION') == 'true') {
-            try {
-                $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
-            } catch (Exception $e) {
-                report($e);
-            }
-        } else {
-            try {
-                $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_SANDBOX'));
-            } catch (Exception $e) {
-                report($e);
-            }
-        }
+        ///
     }
 
     public function updateAllMxPriority()
@@ -90,7 +78,7 @@ class TesteController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-    public function index()
+    public function indexx()
     {
         $this->updateAllMxPriority();
         dd('aaa');
@@ -278,6 +266,41 @@ class TesteController extends Controller
         }
 
         return response()->json(['message' => 'success'], 200);
+    }
+
+    public function index()
+    {
+
+        /*$dataValue = [
+            'type' => 'payment',
+
+            'data' => [
+                'id' => '113923781',
+            ],
+        ];
+
+        return redirect()->route('dev.cloudfox.com.br/postback/mercadopago', compact('data', $dataValue));*/
+    }
+
+
+    public function julioFunction(){
+
+        $plans = Plan::whereNotNull('shopify_variant_id')->get();
+
+        foreach($plans as $plan){
+
+            $product = $plan->products->first();
+            
+            if(!empty($product)){
+                $product->update([
+                    'shopify_id'         => $plan->shopify_id,
+                    'shopify_variant_id' => $plan->shopify_variant_id,
+                ]); 
+
+            }
+        }
+
+        dd('heyy');
     }
 }
 

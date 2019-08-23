@@ -6,7 +6,10 @@ Route::group(['middleware' => ['web','VerifyShopifyPostback'], 'prefix' => 'post
 
     Route::post('/ebanx', 'PostBackEbanxController@postBackListener');
 
+    Route::post('/mercadopago', 'PostBackMercadoPagoController@postBackListener');
+
     Route::post('/shopify/{project_id}/tracking', 'PostBackShopifyController@postBackTracking');
+
     Route::post('/shopify/{project_id}', 'PostBackShopifyController@postBackListener');
 
 });

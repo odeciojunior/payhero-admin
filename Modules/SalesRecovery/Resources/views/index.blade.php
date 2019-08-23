@@ -18,7 +18,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-3">
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad">
-                                {{--                            <option value="">Todos projetos</option>--}}
+                                {{--<option value="">Todos projetos</option>--}}
                                 @foreach($projects as $project)
                                     <option value="{{Hashids::encode($project['id'])}}">{{$project['nome']}}</option>
                                 @endforeach
@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                             <label for="start_date">Data inicial</label>
-                            <input name='start_date' id="start_date" class="form-control input-pad" type="date">
+                            <input name='start_date' id="start_date" timezone='' class="form-control input-pad"  type="date">
                         </div>
                         <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                             <label for="end_date">Data final</label>

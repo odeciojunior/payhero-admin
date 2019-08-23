@@ -10,7 +10,7 @@
     </div>
     <div class="page-content container">
         <div class="row">
-            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer">
                 <div class="card" onclick="window.location.href='/apps/hotzapp/'">
                     @if($hotzappIngrations >0)
                         <a href="/apps/hotzapp/" class="add-btn added"><i class="icon wb-check" aria-hidden="true"></i>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer">
                 <div class="card" onclick="window.location.href='/apps/shopify'">
                     @if($shopifyIntegrations >0)
                         <a href="/apps/shopify" class="add-btn added"><i class="icon wb-check" aria-hidden="true"></i></a>
