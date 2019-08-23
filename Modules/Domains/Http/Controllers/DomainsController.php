@@ -326,8 +326,14 @@ class DomainsController extends Controller
                                                     ->count() == 0) {
                                     //nao existe a record
 
+                                    if (is_numeric(current($record[3]))) {
+                                        $priority = current($record[3]);
+                                    } else {
+                                        $priority = 1;
+                                    }
+
                                     if (current($record[0]) == 'MX') {
-                                        $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, current($record[3]));
+                                        $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false, $priority);
                                     } else if (current($record[0]) == 'TXT') {
                                         $cloudRecordId = $cloudFlareService->addRecord(current($record[0]), $subdomain, current($record[2]), 0, false);
                                         //                                    } else if ((current($record[0]) == 'A') && ($domain->name == $subdomain) && (!empty($domain->project->shopify_id))) {
@@ -345,6 +351,7 @@ class DomainsController extends Controller
                                                                                     'name'                 => $subdomain,
                                                                                     'content'              => current($record[2]),
                                                                                     'system_flag'          => 0,
+                                                                                    'priority'             => $priority,
                                                                                 ]);
 
                                         DB::commit();
