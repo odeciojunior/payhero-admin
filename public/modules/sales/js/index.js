@@ -85,9 +85,9 @@ $(document).ready(function () {
 
                 var statusArray = {
                     1: 'success',
-                    2: 'pendente',
+                    6: 'pendente',
                     4: 'danger',
-                    6: 'primary'
+                    2: 'primary'
                 };
 
                 $.each(response.data, function (index, value) {

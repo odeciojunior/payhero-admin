@@ -21,7 +21,7 @@
         @if(isset($userProjects) && $userProjects->count() > 0)
             <div class="page-content container">
                 <div class="row align-items-center">
-                    <div class="col-sm-12 col-m-3 col-lg-3">
+                    <div class="col-sm-6 col-m-3 col-lg-3">
                         <div class="">
                             <select id='project' class="form-control select-pad">
                                 @foreach($projects as $project)
@@ -30,7 +30,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-m-3 col-lg-3">
+                    <div class="offset-lg-5 offset-m-3 col-sm-6 col-m-3 col-lg-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text px-1 px-md-2" style="background-color: none; border: none;">
                                 <i class="material-icons gradient"> calendar_today </i>
