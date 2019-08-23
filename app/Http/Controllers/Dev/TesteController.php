@@ -37,7 +37,7 @@ class TesteController extends Controller
      */
     public function __construct()
     {
-        //
+        ///
     }
 
     public function updateAllMxPriority()
@@ -280,6 +280,25 @@ class TesteController extends Controller
         ];
 
         return redirect()->route('dev.cloudfox.com.br/postback/mercadopago', compact('data', $dataValue));*/
+    }
+
+
+    public function julioFunction(){
+
+        $plans = Plan::whereNotNull('shopify_variant_id')->get();
+
+        foreach($plans as $plan){
+
+            $product = $plan->products->first();
+            
+            if(!empty($product)){
+                $product->update([
+                    'shopify_id'         => $plan->shopify_id,
+                    'shopify_variant_id' => $plan->shopify_variant_id,
+                ]); 
+
+            }
+        }
     }
 }
 

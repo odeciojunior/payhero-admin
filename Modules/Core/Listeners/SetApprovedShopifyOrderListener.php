@@ -47,8 +47,10 @@ class SetApprovedShopifyOrderListener
 
                 $plansSale = $planSaleModel->where('sale', $event->sale->id)->get();
 
-                $plans = null;
-                foreach ($plansSale->plan()->get() as $plan) {
+                $plans = [];
+                foreach ($plansSale as $planSale) {
+
+                    $plan = $planModel->find($planSale->plan);
 
                     $plans[] = [
                         "id"           => $plan->name,
