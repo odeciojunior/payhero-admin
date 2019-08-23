@@ -16,6 +16,7 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarFrete();
     });
+
     atualizarFrete();
 
     function changeType() {
