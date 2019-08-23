@@ -9,6 +9,7 @@ use App\Entities\Company;
 use App\Entities\Project;
 use App\Entities\PlanSale;
 use App\Entities\Transaction;
+use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -23,7 +24,7 @@ class SalesResource extends Resource
         } else {
             $this->flag = 'boleto';
         }
- 
+
         return [
             'sale_code'  => '#' . Hashids::connection('sale_id')->encode($this->id),
             'id'         => Hashids::connection('sale_id')->encode($this->id),
@@ -34,7 +35,7 @@ class SalesResource extends Resource
                                                                                               ->getRelation('plan')->name,
             'client'     => $this->getRelation('clientModel')->name,
             'method'     => $this->payment_method,
-            'status'     => $this->status,
+            'status'     => Lang::get('definitions.enum.sale.status.' . $this->getEnum('status', $this->status)),
             'start_date' => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',
             'end_date'   => $this->end_date ? with(new Carbon($this->end_date))->format('d/m/Y H:i:s') : '',
             'total_paid' => ($this->dolar_quotation == '' ? 'R$ ' : 'US$ ') . substr_replace(@$this->getRelation('transactions')[0]->value, ',', strlen(@$this->getRelation('transactions')[0]->value) - 2, 0),
