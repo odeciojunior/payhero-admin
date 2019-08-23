@@ -43,8 +43,7 @@ use Modules\Core\Presenters\SalePresenter;
  */
 class Sale extends Model
 {
-    use FoxModelTrait;
-    use PresentableTrait;
+    use FoxModelTrait, PresentableTrait;
     /**
      * @var array
      */
@@ -105,6 +104,7 @@ class Sale extends Model
             3  => 'refused',
             4  => 'charge_back',
             5  => 'canceled',
+            6  => 'in_process',
             10 => 'system_error',
         ],
     ];

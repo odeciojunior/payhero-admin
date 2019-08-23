@@ -82,7 +82,7 @@ return [
                 "expired"  => "Expirado",
             ],
         ],
-        "checkout"               => [
+        "checkout"                 => [
             "status" => [
                 'accessed'       => 'Acessado',
                 'abandoned cart' => 'Não recuperado',
@@ -92,11 +92,12 @@ return [
         ],
         "sale"                     => [
             "status" => [
-                "pending"      => "Pendente",
-                "charge_back"  => "Chargeback",
                 "approved"     => "Aprovado",
-                "refused"      => "Recusado",
                 "canceled"     => "Cancelado",
+                "charge_back"  => "Chargeback",
+                'in_process'   => "Em análise",
+                "pending"      => "Pendente",
+                "refused"      => "Recusado",
                 "system_error" => "Erro de sistema",
             ],
         ],
