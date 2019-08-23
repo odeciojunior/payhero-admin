@@ -36,6 +36,7 @@ class DomainRecord extends Model
         'name',
         'content',
         'system_flag',
+        'priority',
         'created_at',
         'updated_at',
     ];

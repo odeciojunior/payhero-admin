@@ -5,7 +5,7 @@ var statusShipping = {
 
 var activeShipping = {
     1: "success",
-    0: "primary",
+    0: "danger",
 }
 
 $(document).ready(function () {
@@ -16,6 +16,7 @@ $(document).ready(function () {
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarFrete();
     });
+
     atualizarFrete();
 
     function changeType() {

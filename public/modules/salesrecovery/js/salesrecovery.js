@@ -3,6 +3,16 @@ var statusRecovery = {
     'Não recuperado': 'danger',
 }
 
+function setSend(sendNumber) {
+    if (sendNumber == 1) {
+        return 'enviado';
+    } else if (sendNumber > 1) {
+        return 'enviados';
+    } else{
+        return '';
+    }
+}
+
 $(document).ready(function () {
 
     atualizar();
@@ -46,8 +56,8 @@ $(document).ready(function () {
                     dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.date + "</td>";
                     dados += "<td>" + value.project + "</td>";
                     dados += "<td class='display-sm-none display-m-none'>" + value.client + "</td>";
-                    dados += "<td>" + value.email_status + "</td>";
-                    dados += "<td>" + value.sms_status + "</td>";
+                    dados += "<td>" + value.email_status + " " + setSend(value.email_status) + "</td>";
+                    dados += "<td>" + value.sms_status + " " + setSend(value.sms_status) + "</td>";
                     dados += "<td><span class='badge badge-" + statusRecovery[value.recovery_status] + "'>" + value.recovery_status + "</span></td>";
                     dados += "<td>" + value.value + "</td>";
                     dados += "<td class='display-sm-none' align='center'> <a href='" + value.whatsapp_link + "', '', $client['telephone']); !!}' target='_blank'><img style='height:24px' src='https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-4-1.png'></a></td>";
@@ -78,7 +88,7 @@ $(document).ready(function () {
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
                 }
-                pagination(response,'salesRecovery',atualizar);
+                pagination(response, 'salesRecovery', atualizar);
 
                 var id_venda = '';
 
