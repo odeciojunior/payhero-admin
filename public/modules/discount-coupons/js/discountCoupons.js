@@ -1,6 +1,6 @@
 var statusCupons = {
     1: "success",
-    2: "danger",
+    0: "danger",
 }
 
 $(function () {

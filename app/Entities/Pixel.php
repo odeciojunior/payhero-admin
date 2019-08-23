@@ -54,7 +54,7 @@ class Pixel extends Model
     private $enum = [
         'status' => [
             1 => 'active',
-            2 => 'disabled',
+            0 => 'disabled',
         ],
     ];
 

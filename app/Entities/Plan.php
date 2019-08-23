@@ -81,8 +81,8 @@ class Plan extends Model
      */
     private $enum = [
         'status' => [
+            0 => 'disabled',
             1 => 'active',
-            2 => 'disabled',
         ],
     ];
 

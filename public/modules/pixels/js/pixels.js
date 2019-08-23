@@ -1,6 +1,6 @@
 var statusPixel = {
     1: "success",
-    2: "danger",
+    0: "danger",
 }
 
 function _defineProperty(obj, key, value) {
