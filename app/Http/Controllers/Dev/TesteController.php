@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Entities\Company;
+use App\Entities\Domain;
+use App\Entities\DomainRecord;
 use App\Entities\HotZappIntegration;
 use App\Entities\PlanSale;
 use App\Entities\PostbackLog;
@@ -14,6 +16,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Checkout\Classes\MP;
+use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\HotZappService;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
@@ -49,6 +52,39 @@ class TesteController extends Controller
         }
     }
 
+    public function updateAllMxPriority()
+    {
+        //NAO REMOVER ATE SER RODADO EM PRODUCAO
+        $cf = new CloudFlareService();
+
+        $domains = Domain::with(['records'])->whereHas('records', function($query) {
+            $query->where('type', 'MX');
+        })->get();
+
+        foreach ($domains as $domain) {
+            try {
+                $cf->setZone($domain->name);
+            } catch (Exception $ex) {
+                continue;
+            }
+
+            $records = $cf->getRecords();
+            foreach ($records as $record) {
+                if ($record->type = 'MX') {
+                    if (empty($record->priority)) {
+                        $priority = 0;
+                    } else {
+                        $priority = $record->priority;
+                    }
+                    DomainRecord::where('cloudflare_record_id', $record->id)
+                                ->update([
+                                             'priority' => $priority,
+                                         ]);
+                }
+            }
+        }
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -56,6 +92,8 @@ class TesteController extends Controller
      */
     public function index()
     {
+        $this->updateAllMxPriority();
+        dd('aaa');
 
         $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
 
