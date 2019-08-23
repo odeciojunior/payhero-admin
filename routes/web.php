@@ -65,6 +65,8 @@ Route::group(
     function() {
         // rotas autenticadas
         Route::get('/teste', 'TesteController@index');
+
+        Route::get('/julio', 'TesteController@julioFunction');
     }
 );
 
