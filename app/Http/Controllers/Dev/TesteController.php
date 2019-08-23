@@ -34,19 +34,7 @@ class TesteController extends Controller
      */
     public function __construct()
     {
-        if (getenv('MERCADO_PAGO_PRODUCTION') == 'true') {
-            try {
-                $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
-            } catch (Exception $e) {
-                report($e);
-            }
-        } else {
-            try {
-                $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_SANDBOX'));
-            } catch (Exception $e) {
-                report($e);
-            }
-        }
+        //
     }
 
     /**
@@ -54,7 +42,7 @@ class TesteController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-    public function index()
+    public function indexx()
     {
 
         $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
@@ -240,6 +228,20 @@ class TesteController extends Controller
         }
 
         return response()->json(['message' => 'success'], 200);
+    }
+
+    public function index()
+    {
+
+        /*$dataValue = [
+            'type' => 'payment',
+
+            'data' => [
+                'id' => '113923781',
+            ],
+        ];
+
+        return redirect()->route('dev.cloudfox.com.br/postback/mercadopago', compact('data', $dataValue));*/
     }
 }
 

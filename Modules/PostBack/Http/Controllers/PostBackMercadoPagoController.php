@@ -2,26 +2,26 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
+use App\Entities\Client;
 use App\Entities\Company;
+use App\Entities\Delivery;
 use App\Entities\HotZappIntegration;
 use App\Entities\Plan;
 use App\Entities\PlanSale;
 use App\Entities\PostbackLog;
+use App\Entities\Project;
 use App\Entities\Sale;
-use App\Entities\ShopifyIntegration;
 use App\Entities\Transaction;
 use App\Entities\Transfer;
 use App\Entities\User;
+use Modules\Core\Events\SaleApprovedEvent;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Checkout\Classes\MP;
-use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\MercadoPagoService;
-use Slince\Shopify\Client;
-use Slince\Shopify\PublicAppCredential;
 
 class PostBackMercadoPagoController extends Controller
 {
@@ -56,7 +56,6 @@ class PostBackMercadoPagoController extends Controller
      */
     public function postBackListener(Request $request)
     {
-
         $requestData = $request->all();
 
         $postBackLogModel = new PostbackLog();
@@ -75,6 +74,9 @@ class PostBackMercadoPagoController extends Controller
             $userModel        = new User();
             $planModel        = new Plan();
             $planSaleModel    = new PlanSale();
+            $projectModel     = new Project();
+            $deliveryModel    = new Delivery();
+            $clientModel      = new Client();
 
             $sale = $saleModel->where('gateway_id', $requestData['data']['id'])->first();
 
@@ -90,9 +92,9 @@ class PostBackMercadoPagoController extends Controller
                 return response()->json(['message' => 'sale not found'], 200);
             }
 
-            $paymentInfo = $this->mp->get('/v1/payments/' . @$requestData['data']['id']);
+//            $paymentInfo = $this->mp->get('/v1/payments/' . @$requestData['data']['id']);
 
-            if (isset($paymentInfo->error) && !empty($paymentInfo->error)) {
+           /* if (isset($paymentInfo->error) && !empty($paymentInfo->error)) {
                 Log::warning(MercadoPagoService::getErrorMessage(@$paymentInfo->error->causes[0]->code));
             }
 
@@ -100,11 +102,11 @@ class PostBackMercadoPagoController extends Controller
 
             if ($paymentInfo->response->status == $sale->gateway_status) {
                 return response()->json(['message' => 'success'], 200);
-            }
+            }*/
 
             $transactions = $transactionModel->where('sale', $sale->id)->get();
 
-            if ($paymentInfo->response->status == 'approved') {
+            if ($requestData['data']['status'] == 'approved') {
 
                 date_default_timezone_set('America/Sao_Paulo');
 
@@ -140,59 +142,12 @@ class PostBackMercadoPagoController extends Controller
 
                 $plansSale = $planSaleModel->where('sale', $sale->id)->first();
 
-                $plan = $planModel->find($plansSale->plan);
+                $plan     = $planModel->find($plansSale->plan);
+                $project  = $projectModel->find($sale->project);
+                $delivery = $deliveryModel->find($sale->delivery);
+                $client   = $clientModel->find($sale->client);
 
-                if ($sale->shopify_order != '') {
-
-                    $shopifyIntegrationModel = new ShopifyIntegration();
-
-                    $shopifyIntegration = $shopifyIntegrationModel->where('project', $plan->project)->first();
-
-                    try {
-                        $credential = new PublicAppCredential($shopifyIntegration['token']);
-
-                        $client = new Client($credential, $shopifyIntegration['url_store'], [
-                            'metaCacheDir' => './tmp',
-                        ]);
-
-                        $client->getTransactionManager()->create($sale->shopify_order, [
-                            "kind" => "capture",
-                        ]);
-                    } catch (Exception $e) {
-                        Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale->id);
-                        report($e);
-                    }
-                }
-
-                try {
-                    $hotZappIntegrationModel = new HotZappIntegration();
-
-                    $hotzappIntegration = $hotZappIntegrationModel->where('project_id', $plan->project)->first();
-
-                    if (!empty($hotzappIntegration)) {
-
-                        $hotZappService = new HotZappService($hotzappIntegration->link);
-
-                        $plansSale = $planSaleModel->where('sale', $sale->id)->get();
-
-                        $plans = [];
-                        foreach ($plansSale as $planSale) {
-
-                            $plan = $planModel->find($planSale->plan);
-
-                            $plans[] = [
-                                "price"        => $plan->price,
-                                "quantity"     => $planSale->amount,
-                                "product_name" => $plan->name,
-                            ];
-                        }
-
-                        $hotZappService->boletoPaid($sale, $plans);
-                    }
-                } catch (Exception $e) {
-                    Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
-                    report($e);
-                }
+                event(new SaleApprovedEvent($plan, $sale, $project, $delivery, $client));
             } else {
 
                 if ($paymentInfo->response->status == 'chargedback') {

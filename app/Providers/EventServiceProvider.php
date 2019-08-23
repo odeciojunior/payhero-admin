@@ -38,6 +38,13 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Core\Events\ReleasedBalanceEvent'         => [
             'Modules\Core\Listeners\ReleasedBalanceNotifyUserListener',
         ],
+        'Modules\Core\Events\SaleApprovedEvent'            => [
+//            'Modules\Core\Listeners\NotifyUsersApprovedSaleListener',
+//            'Modules\Core\Listeners\PusherNotificationApprovedSaleListener',
+            'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
+//            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
+        ],
+
     ];
 
     /**
