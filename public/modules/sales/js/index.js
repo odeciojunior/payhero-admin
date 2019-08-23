@@ -83,14 +83,15 @@ $(document).ready(function () {
                 $('#dados_tabela').html('');
                 $('#tabela_vendas').addClass('table-striped');
 
-                var statusArray = new Array(
-                    ['success'],
-                    ['pendente'],
-                    ['danger'],
-                    ['pendente']
-                );
+                var statusArray = {
+                    1: 'success',
+                    2: 'pendente',
+                    4: 'danger',
+                    6: 'primary'
+                };
 
                 $.each(response.data, function (index, value) {
+                    console.log(value.status_translate);
                     dados = '';
                     dados += '<tr>';
                     dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.sale_code + "</td>";
@@ -99,7 +100,7 @@ $(document).ready(function () {
                     dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.client + "</td>";
                     dados += "<td><img src='/modules/global/img/cartoes/" + value.brand + ".png'  style='width: 60px'></td>";
 
-                    dados += "<td><span class='badge badge-" + statusArray[value.status-1] + "'>"+ value.status_translate +"</span></td>";
+                    dados += "<td><span class='badge badge-" + statusArray[value.status] + "'>" + value.status_translate + "</span></td>";
 
                     // if (value.status == '1') {
                     //     dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
@@ -121,7 +122,7 @@ $(document).ready(function () {
                 if (response.data == '') {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
-                pagination(response,'sales',atualizar);
+                pagination(response, 'sales', atualizar);
 
                 $('.detalhes_venda').unbind('click');
 

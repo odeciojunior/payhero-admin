@@ -74,6 +74,7 @@
                                     <option value="1">Aprovado</option>
                                     <option value="2">Aguardando pagamento</option>
                                     <option value="4">Estornada</option>
+                                    <option value="6">Em análise</option>
                                 </select>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -85,7 +86,7 @@
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="comprador">Transação</label>
                                 <input name='transaction' id="transaction" class="input-pad" placeholder="transação">
-                            </div>        
+                            </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
                                 <label for="data_inicial">Data inicial</label>
                                 <input name='start_date' id="data_inicial" class="form-control input-pad" type="date">
@@ -125,7 +126,6 @@
                                 </tr>
                             </thead>
                             <tbody id="dados_tabela">
-
                                 {{-- js carrega... --}}
                             </tbody>
                         </table>
