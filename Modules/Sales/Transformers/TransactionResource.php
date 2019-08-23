@@ -25,7 +25,6 @@ class TransactionResource extends Resource
         } else {
             $flag = 'boleto';
         }
-
         return [
             'sale_code'        => '#' . Hashids::connection('sale_id')->encode($sale->id),
             'id'               => Hashids::connection('sale_id')->encode($sale->id),
@@ -33,7 +32,7 @@ class TransactionResource extends Resource
             'product'          => (count($sale->getRelation('plansSales')) > 1) ? 'Carrinho' : $sale->getRelation('plansSales')
                                                                                                     ->first()
                                                                                                     ->getRelation('plan')->name,
-            'client'           => $sale->getRelation('clientModel')->name,
+            'client'           => $sale->clientModel()->first()->name,
             'method'           => $sale->payment_method,
             'status'           => $sale->status,
             'status_translate' => Lang::get('definitions.enum.sale.status.' . $sale->getEnum('status', $sale->status)),

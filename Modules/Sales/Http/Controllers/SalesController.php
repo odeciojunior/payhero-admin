@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -102,11 +103,11 @@ class SalesController extends Controller
                 $client              = $clientModel->find($sale->client);
                 $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
 
-                $total    = 0;
                 $products = $sale->present()->getProducts();
 
                 $discount = '0,00';
-                $subTotal = $total;
+                $subTotal = $sale->present()->getSubTotal();
+                $total    = $subTotal;
 
                 $total += preg_replace("/[^0-9]/", "", $sale->shipment_value);
                 if (preg_replace("/[^0-9]/", "", $sale->shopify_discount) > 0) {
@@ -149,7 +150,8 @@ class SalesController extends Controller
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
                 $whatsAppMsg = 'Olá ' . $client->name;
-                $details     = view('sales::details', [
+
+                $details = view('sales::details', [
                     'sale'           => $sale,
                     'products'       => $products,
                     'client'         => $client,

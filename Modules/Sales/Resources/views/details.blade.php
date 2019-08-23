@@ -13,6 +13,8 @@
             <span class='badge badge-danger'>Recusada</span>
         @elseif($sale->status == 4)
             <span class='badge badge-danger'>Estornada</span>
+        @elseif($sale->status == 6)
+            <span class='badge badge-primary'>Em análise</span>
         @else
             <span class='badge badge-primary'>{{$sale->status}}</span>
         @endif
