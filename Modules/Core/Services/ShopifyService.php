@@ -808,20 +808,22 @@ class ShopifyService
                                   'price'       => $variant->getPrice(),
                                   'status'      => '1',
                               ]);
-                Log::warning('UPDATE plan criado' );
+                Log::warning('UPDATE plan criado');
 
                 $productPlan = $plan->productsPlans->first();
                 $product     = $productModel->find($productPlan->product);
 
                 $product->update([
-                                     'name'        => substr($storeProduct->getTitle(), 0, 100),
-                                     'description' => $description,
-                                     'weight'      => $variant->getWeight(),
-                                     'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                           ->getCost(),
+                                     'name'               => substr($storeProduct->getTitle(), 0, 100),
+                                     'description'        => $description,
+                                     'weight'             => $variant->getWeight(),
+                                     'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
+                                                                  ->getCost(),
+                                     'shopify_id'         => $storeProduct->getId(),
+                                     'shopify_variant_id' => $variant->getId(),
                                  ]);
 
-                Log::warning('UPDATE product criado' );
+                Log::warning('UPDATE product criado');
 
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {
@@ -852,19 +854,19 @@ class ShopifyService
                 //plano nao existe, cria o plano, produto e produtosplanos
 
                 $product = $productModel->create([
-                                                     'user'        => $userId,
-                                                     'name'        => substr($storeProduct->getTitle(), 0, 100),
-                                                     'description' => $description,
-                                                     'guarantee'   => '0',
-                                                     'format'      => 1,
-                                                     'category'    => '11',
-                                                     'cost'        => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                                           ->getCost(),
-                                                     'shopify'     => true,
-                                                     'price'       => '',
+                                                     'user'               => $userId,
+                                                     'name'               => substr($storeProduct->getTitle(), 0, 100),
+                                                     'description'        => $description,
+                                                     'guarantee'          => '0',
+                                                     'format'             => 1,
+                                                     'category'           => '11',
+                                                     'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
+                                                                                  ->getCost(),
+                                                     'shopify'            => true,
+                                                     'price'              => '',
                                                      'shopify_id'         => $storeProduct->getId(),
                                                      'shopify_variant_id' => $variant->getId(),
-                                                ]);
+                                                 ]);
                 Log::warning('product criado - ' . print_r($product, true));
 
                 $plan = $planModel->create([
