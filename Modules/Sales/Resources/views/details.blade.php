@@ -25,10 +25,9 @@
     <div class="row">
         <div class="col-lg-3"><p class="table-title"> Produto </p></div>
         <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
-{{--        <div class="col-lg-3 text-right"><p class="text-muted"> Valor </p></div>--}}
     </div>
     @foreach($products as $product)
-    <div class="row align-items-baseline justify-content-between mb-15">
+        <div class="row align-items-baseline justify-content-between mb-15">
             <div class="col-lg-2">
                 <img src="{{$product['photo'] ?? asset('modules/global/img/produto.png')  }}" width="50px;" style="border-radius:6px;">
             </div>
@@ -38,10 +37,7 @@
             <div class="col-lg-3 text-right">
                 <p class="sm-text text-muted"> {{$product['amount']}}x </p>
             </div>
-{{--            <div class="col-lg-3 text-right">--}}
-{{--                <p class="sm-text text-muted"> R${{number_format($plan['value'], 2, ',', '.')}} </p>--}}
-{{--            </div>--}}
-    </div>
+        </div>
     @endforeach
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
         <div class="col-lg-6 align-items-center">
@@ -138,16 +134,6 @@
         <input type='text' class='input-value-trackingcode my-10' style='display:none;' value='{{isset($delivery->tracking_code)? $delivery->tracking_code:''}}'>
         <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'>Salvar</button>
         <button type='button' class='btn-cancel-tracking mb-10' style='display: none;'>Cancelar</button>
-        {{--        <div id='btn-edit-trackingcode' class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align is-hide' data-name='edit'>--}}
-        {{--            <div class='icondemo vertical-align-middle'>--}}
-        {{--                <a class='edit'><i class='icon wb-edit' aria-hidden='true'></i></a>--}}
-        {{--            </div>--}}
-        {{--        </div>--}}
-        {{--        <div id='btn-sent-tracking-user' class='col-xl-1 col-lg-2 col-md-3 col-4 icondemo-wrap vertical-align' data-name='inbox' @if(!empty($delivery->tracking_code)) style='display: block;' @else style='display: none;' @endif>--}}
-        {{--            <div class='icondemo vertical-align-middle'>--}}
-        {{--                <a class=''><i class='icon wb-inbox' aria-hidden='true'></i></a>--}}
-        {{--            </div>--}}
-        {{--        </div>--}}
         <br>
         <span class="table-title gray"> Endereço: {{$delivery->street}}, {{$delivery->number}}</span>
         <br>
@@ -166,18 +152,17 @@
         @endif
         @if($sale->payment_method == 2)
             <span class="table-title gray">Link para o boleto: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$sale->boleto_link ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
-            {{--            <span class="table-title gray"> <a href="{{$sale->boleto_link ?? ''}}" class="gradient"> Link para o boleto </a></span>--}}
             <br>
-            {{--            <span class="table-title gray"> Linha Digitável:<br> {{$sale->boleto_digitable_line ?? ''}}</span>--}}
             <span class="table-title gray">Linha Digitável: <a role='button' class='copy_link' style='cursor:pointer;' digitable-line='{{$sale->boleto_digitable_line ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
-
             <br>
             <span class="table-title gray"> Vencimento: {{  with(new \Carbon\Carbon($sale->boleto_due_date))->format('d/m/Y ')?? ''}}</span>
             <br>
         @endif
         <span class="table-title gray"> IP: {{$checkout->ip ?? ''}}</span>
         <br>
-        <span class="table-title gray "> Dispositivo: - </span>
+        <span class="table-title gray "> Dispositivo: {{$checkout->operational_system}} </span>
+        <br>
+        <span class="table-title gray "> Navegador: {{$checkout->browser}} </span>
         <br>
         <h4> Conversão </h4>
         <span class="table-title gray"> SRC: {{$checkout->src}}  </span>
