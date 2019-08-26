@@ -46,7 +46,7 @@ class TesteController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-    public function indexx()
+    public function index()
     {
 
         $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
@@ -234,7 +234,7 @@ class TesteController extends Controller
         return response()->json(['message' => 'success'], 200);
     }
 
-    public function index()
+    public function indexx()
     {
 
         /*$dataValue = [
