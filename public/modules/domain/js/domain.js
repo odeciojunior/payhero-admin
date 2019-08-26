@@ -326,7 +326,7 @@ $(document).ready(function () {
                 modalEdit(response, fromSave);
 
                 //adiciona ip do usuario no campo do nome
-                if (newDomain != '' && !$('#shopify').data('shopfy')) {
+                if (newDomain != '' && !$('#shopify').data('shopify')) {
                     $('#nome_registro').val(newDomain);
                 }
 
