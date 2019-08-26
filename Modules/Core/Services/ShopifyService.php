@@ -794,61 +794,85 @@ class ShopifyService
             } catch (\Exception $e) {
                 //
             }
-            $plan = $planModel->with('productsPlans')
-                              ->where('project', $projectId)
+
+            $product = $productModel->with('productsPlans')
+                            //   ->where('project', $projectId)
                               ->where('shopify_id', $storeProduct->getId())
                               ->where('shopify_variant_id', $variant->getId())
                               ->first();
-            if ($plan) {
+
+            if ($product) {
                 //plano ja existe, atualiza o plano, produto, produtoplanos
 
-                $plan->update([
-                                  'name'        => substr($storeProduct->getTitle(), 0, 100),
-                                  'description' => $description,
-                                  'price'       => $variant->getPrice(),
-                                  'status'      => '1',
-                              ]);
-                Log::warning('UPDATE plan criado');
-
-                $productPlan = $plan->productsPlans->first();
-                $product     = $productModel->find($productPlan->product);
-
                 $product->update([
-                                     'name'               => substr($storeProduct->getTitle(), 0, 100),
-                                     'description'        => $description,
-                                     'weight'             => $variant->getWeight(),
-                                     'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
-                                                                  ->getCost(),
-                                     'shopify_id'         => $storeProduct->getId(),
-                                     'shopify_variant_id' => $variant->getId(),
-                                 ]);
+                                'name'               => substr($storeProduct->getTitle(), 0, 100),
+                                'description'        => $description,
+                                'weight'             => $variant->getWeight(),
+                                'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
+                                                            ->getCost(),
+                                'shopify_id'         => $storeProduct->getId(),
+                                'shopify_variant_id' => $variant->getId(),
+                ]);
 
-                Log::warning('UPDATE product criado');
+                $productPlan = $productPlanModel->where('product', $product->id)
+                                                ->where('amount' , 1)
+                                                ->first();
 
-                if (count($storeProduct->getVariants()) > 1) {
-                    foreach ($storeProduct->getImages() as $image) {
+                if($productPlan){
 
-                        foreach ($image->getVariantIds() as $variantId) {
-                            if ($variantId == $variant->getId()) {
+                    $plan = $productModel->find($productPlan->plan);
 
-                                if ($image->getSrc() != '') {
-                                    $product->update([
-                                                         'photo' => $image->getSrc(),
-                                                     ]);
-                                } else {
+                    $plan->update([
+                        'name'        => substr($storeProduct->getTitle(), 0, 100),
+                        'description' => $description,
+                        'price'       => $variant->getPrice(),
+                        'status'      => '1',
+                    ]);
 
-                                    $product->update([
-                                                         'photo' => $storeProduct->getImage()->getSrc(),
-                                                     ]);
+                    Log::warning('plano atualizado');
+
+                    if (count($storeProduct->getVariants()) > 1) {
+                        foreach ($storeProduct->getImages() as $image) {
+
+                            foreach ($image->getVariantIds() as $variantId) {
+                                if ($variantId == $variant->getId()) {
+
+                                    if ($image->getSrc() != '') {
+                                        $product->update([
+                                                            'photo' => $image->getSrc(),
+                                                        ]);
+                                    } else {
+
+                                        $product->update([
+                                                            'photo' => $storeProduct->getImage()->getSrc(),
+                                                        ]);
+                                    }
                                 }
                             }
                         }
-                    }
-                } else {
+                    } else {
 
-                    $product->update([
-                                         'photo' => $storeProduct->getImage()->getSrc(),
-                                     ]);
+                        $product->update([
+                                            'photo' => $storeProduct->getImage()->getSrc(),
+                                        ]);
+                    }
+                }
+                else{
+                    $plan = $planModel->create([
+                        'shopify_id'         => $storeProduct->getId(),
+                        'shopify_variant_id' => $variant->getId(),
+                        'project'            => $projectId,
+                        'name'               => substr($storeProduct->getTitle(), 0, 100),
+                        'description'        => $description,
+                        'code'               => '',
+                        'price'              => $variant->getPrice(),
+                        'status'             => '1',
+                    ]);
+
+                    $productPlan = $productPlanModel->create([
+                        'product' => $product->id,
+                        'plan'    => $plan->id,
+                    ]);
                 }
             } else {
                 //plano nao existe, cria o plano, produto e produtosplanos
@@ -867,7 +891,6 @@ class ShopifyService
                                                      'shopify_id'         => $storeProduct->getId(),
                                                      'shopify_variant_id' => $variant->getId(),
                                                  ]);
-                Log::warning('product criado - ' . print_r($product, true));
 
                 $plan = $planModel->create([
                                                'shopify_id'         => $storeProduct->getId(),
@@ -879,8 +902,6 @@ class ShopifyService
                                                'price'              => $variant->getPrice(),
                                                'status'             => '1',
                                            ]);
-
-                Log::warning('plano criado - ' . print_r($plan, true));
 
                 $productPlanModel->create([
                                               'product' => $product->id,

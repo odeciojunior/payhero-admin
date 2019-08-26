@@ -78,7 +78,7 @@ class TesteController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-    public function indexx()
+    public function index()
     {
         $this->updateAllMxPriority();
         dd('aaa');
@@ -268,7 +268,7 @@ class TesteController extends Controller
         return response()->json(['message' => 'success'], 200);
     }
 
-    public function index()
+    public function indexx()
     {
 
         /*$dataValue = [
