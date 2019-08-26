@@ -52,13 +52,14 @@ class FoxUtils
     public static function prepareCellPhoneNumber($phoneNumber)
     {
         $number = preg_replace("/[^0-9]/", "", $phoneNumber);
-
         if (strlen($number) == 11) {
+            $number = substr_replace($number, '55', 0, 0);
             return $number;
         } else if (strlen($number) == 10) {
             $subNumber = substr($number, 2, 1);
             if ($subNumber != 2 && $subNumber != 3 && $subNumber != 4 && $subNumber != 5) {
-                $number = substr_replace($number, '9', 3, 0);
+                $number = substr_replace($number, '55', 0, 0);
+                $number = substr_replace($number, '9', 4, 0);
 
                 return $number;
             }
