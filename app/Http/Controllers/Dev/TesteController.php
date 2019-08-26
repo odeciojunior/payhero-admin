@@ -40,48 +40,14 @@ class TesteController extends Controller
         ///
     }
 
-    public function updateAllMxPriority()
-    {
-        //NAO REMOVER ATE SER RODADO EM PRODUCAO
-        $cf = new CloudFlareService();
-
-        $domains = Domain::with(['records'])->whereHas('records', function($query) {
-            $query->where('type', 'MX');
-        })->get();
-
-        foreach ($domains as $domain) {
-            try {
-                $cf->setZone($domain->name);
-            } catch (Exception $ex) {
-                continue;
-            }
-
-            $records = $cf->getRecords();
-            foreach ($records as $record) {
-                if ($record->type = 'MX') {
-                    if (empty($record->priority)) {
-                        $priority = 0;
-                    } else {
-                        $priority = $record->priority;
-                    }
-                    DomainRecord::where('cloudflare_record_id', $record->id)
-                                ->update([
-                                             'priority' => $priority,
-                                         ]);
-                }
-            }
-        }
-    }
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
-    public function indexx()
+    public function index()
     {
-        $this->updateAllMxPriority();
-        dd('aaa');
 
         $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
 
@@ -268,7 +234,7 @@ class TesteController extends Controller
         return response()->json(['message' => 'success'], 200);
     }
 
-    public function index()
+    public function indexx()
     {
 
         /*$dataValue = [
@@ -301,6 +267,15 @@ class TesteController extends Controller
         }
 
         dd('heyy');
+    }
+
+    /**
+     * Funcao utilizada pelo tg
+     */
+    public function tgFunction()
+    {
+        //nada
+
     }
 }
 
