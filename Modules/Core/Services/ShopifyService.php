@@ -872,6 +872,7 @@ class ShopifyService
                     $productPlan = $productPlanModel->create([
                         'product' => $product->id,
                         'plan'    => $plan->id,
+                        'amount'  => 1
                     ]);
                 }
             } else {
