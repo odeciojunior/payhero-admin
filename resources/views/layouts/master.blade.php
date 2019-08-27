@@ -53,8 +53,10 @@
 
     <!-- Scripts -->
     @if(env('APP_ENV', 'production') == 'production')
-        {{--  <script src="https://browser.sentry-cdn.com/5.6.0/bundle.min.js" integrity="sha384-9aGOmRDrtIQRcZmYbrNQmfS1dW44OCMtOlQ3JFUYCdCpxTJQ8vK+//K35AKgZh96" crossorigin="anonymous"></script>  --}}
         <script src="{{ asset('modules/global/js-extra/sentry-bundle.min.js') }}"></script>
+        <script>
+            Sentry.init({dsn: 'https://4b81ab6a91684acd888b817f34bd755b@sentry.io/1542991'});
+        </script>
     @endif
 
     <script src="{{ asset('modules/global/adminremark/global/vendor/jquery/jquery.min.js') }}"></script>
@@ -105,11 +107,6 @@
 @stack('scripts')
 
 @if(env('APP_ENV', 'production') == 'production')
-
-    <script>
-        Sentry.init({dsn: 'https://86728bcdb6544260b6d4a9648e4aeb08@sentry.io/1526015'});
-    </script>
-
      <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/q35ubavq';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
 
      <script>
