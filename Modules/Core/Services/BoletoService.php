@@ -400,15 +400,24 @@ class BoletoService
     public function verifyBoletoPaid()
     {
         try {
-            $userModel = new User();
-            $saleModel = new Sale();
+            $userModel        = new User();
+            $saleModel        = new Sale();
+            $transactionModel = new Transaction();
 
-            $date        = Carbon::now()->toDateString();
-            $data        = [];
-            $boletosPaid = $saleModel->select(\DB::raw('count(*) as count'), \DB::raw('sum(transaction.value) as value'), 'owner')
-                                     ->leftJoin('transactions as transaction', 'transaction.sale', 'sales.id')
-                                     ->where([['sales.payment_method', '=', '2'], ['sales.status', '=', '1'], [DB::raw("(DATE_FORMAT(sales.end_date,'%Y-%m-%d'))"), $date]])
-                                     ->groupBy('sales.owner')->get();
+            $date = Carbon::now()->toDateString();
+            $data = [];
+
+            $sql         = 'SELECT s.owner
+                            , count(s.owner) as count
+                            , SUM(t.value) as value
+                            FROM sales s
+                            INNER JOIN transactions t ON t.sale = s.id AND t.company IS NOT NULL
+                            WHERE s.payment_method = 2
+                            AND s.status = 1
+                            AND date(s.end_date) = CURRENT_DATE
+                            GROUP BY s.owner';
+
+            $boletosPaid = DB::select($sql);
 
             foreach ($boletosPaid as $boleto) {
                 try {
@@ -432,7 +441,7 @@ class BoletoService
                         'boleto_count'      => strval($boleto->count),
                         'message'           => $message,
                         'messageHeader'     => $messageHeader,
-                        'transaction_value' => "R$ " . number_format(intval($boleto['value']) / 100, 2, ',', '.'),
+                        'transaction_value' => "R$ " . number_format(intval($boleto->value) / 100, 2, ',', '.'),
                     ];
 
                     if ($emailValidated) {
