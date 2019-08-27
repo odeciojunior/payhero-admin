@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Services\SalesRecovery;
+namespace Modules\Core\Services;
 
 use App\Entities\Checkout;
 use App\Entities\CheckoutPlan;
@@ -218,6 +218,7 @@ class SalesRecoveryService
      */
     public function getSalesCartOrBoletoDetails(int $saleId)
     {
+
         $salesModel        = new Sale();
         $checkoutModel     = new Checkout();
         $domainModel       = new Domain();
@@ -293,3 +294,5 @@ class SalesRecoveryService
         ]);
     }
 }
+
+

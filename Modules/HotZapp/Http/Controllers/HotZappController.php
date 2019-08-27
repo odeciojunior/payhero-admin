@@ -87,6 +87,7 @@ class HotZappController extends Controller
                                                                        'boleto_paid'         => $data['boleto_paid'],
                                                                        'credit_card_refused' => $data['credit_card_refused'],
                                                                        'credit_card_paid'    => $data['credit_card_paid'],
+                                                                       'abandoned_cart'      => $data['abandoned_cart'],
                                                                        'project_id'          => $data['project_id'],
                                                                        'user_id'             => auth()->user()->id,
                                                                    ]);
@@ -169,19 +170,22 @@ class HotZappController extends Controller
             $data['boleto_paid'] = 0;
         }
         if (empty($data['credit_card_paid'])) {
-
             $data['credit_card_paid'] = 0;
         }
         if (empty($data['credit_card_refused'])) {
-
             $data['credit_card_refused'] = 0;
         }
+        if (empty($data['abandoned_cart'])) {
+            $data['abandoned_cart'] = 0;
+        }
+
         $integrationUpdated = $hotzappIntegration->update([
                                                               'link'                => $data['link'],
                                                               'boleto_generated'    => $data['boleto_generated'],
                                                               'boleto_paid'         => $data['boleto_paid'],
                                                               'credit_card_refused' => $data['credit_card_refused'],
                                                               'credit_card_paid'    => $data['credit_card_paid'],
+                                                              'abandoned_cart'      => $data['abandoned_cart'],
                                                           ]);
         if ($integrationUpdated) {
             return response()->json([

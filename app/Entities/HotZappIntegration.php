@@ -21,16 +21,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class HotZappIntegration extends Model
 {
     use SoftDeletes;
+
     /**
      * The table associated with the model.
      * @var string
      */
     protected $table = 'hotzapp_integrations';
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
@@ -42,6 +45,7 @@ class HotZappIntegration extends Model
         'boleto_paid',
         'credit_card_refused',
         'credit_card_paid',
+        'abandoned_cart',
         'created_at',
         'updated_at',
         'deleted_at',
