@@ -85,13 +85,13 @@ $(document).ready(function () {
 
                 var statusArray = {
                     1: 'success',
-                    6: 'pendente',
+                    6: 'primary',
                     4: 'danger',
-                    2: 'primary'
+                    3: 'danger',
+                    2: 'pendente'
                 };
 
                 $.each(response.data, function (index, value) {
-                    console.log(value.status_translate);
                     dados = '';
                     dados += '<tr>';
                     dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.sale_code + "</td>";
@@ -199,7 +199,7 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error(response) {
-                console.log(response);
+
             },
             success: function success(response) {
                 downloadFile(response, 'export.xlsx');
