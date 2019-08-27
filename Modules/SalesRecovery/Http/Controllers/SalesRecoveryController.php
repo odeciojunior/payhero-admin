@@ -14,7 +14,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\SalesRecovery\SalesRecoveryService;
+use Modules\Core\Services\SalesRecoveryService;
 use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
 use Vinkla\Hashids\Facades\Hashids;
 

@@ -58,6 +58,18 @@
             </div>
             <div class="col-6">
                 <div class="switch-holder">
+                    <label for="token" class='mb-10'>Carrinho abandonado:</label>
+                    <br>
+                    <label class="switch">
+                        <input type="checkbox" @if($integration->abandoned_cart == '1') value="1" checked="" @else value="0" @endif name="abandoned_cart" id="abandoned_cart" class='check' value='0'>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-20">
+            <div class="col-6">
+                <div class="switch-holder">
                     <label for="token" class='mb-10'>Cartão de crédito Recusado:</label>
                     <br>
                     <label class="switch">

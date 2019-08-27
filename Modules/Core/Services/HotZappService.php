@@ -177,6 +177,44 @@ class HotZappService
     }
 
     /**
+     * @param Sale $sale
+     * @param $plans
+     */
+    function abandonedCart(Sale $sale, $plans)
+    {
+
+        $data = [
+            'transaction_id'        => @$sale->id,
+            'name'                  => @$sale->client()->first()->name,
+            'phone'                 => @$sale->client()->first()->cellphone,
+            'email'                 => @$sale->client()->first()->email,
+            'address'               => @$sale->delivery()->first()->street,
+            'address_number'        => @$sale->delivery()->first()->number,
+            'address_district'      => @$sale->delivery()->first()->neighborhood,
+            'address_zip_code'      => @$sale->delivery()->first()->zip_code,
+            'address_city'          => @$sale->delivery()->first()->city,
+            'address_state'         => @$sale->delivery()->first()->state,
+            'address_country'       => 'BR',
+            'doc'                   => @$sale->client()->first()->document,
+            'cms_vendor'            => '',
+            'total_price'           => @$sale->total_paid_value,
+            'receiver_type'         => '',
+            'cms_aff'               => '',
+            'aff'                   => '',
+            'aff_name'              => '',
+            'billet_url'            => '',
+            'transaction_error_msg' => '',
+            'paid_at'               => '',
+            'payment_method'        => 'credit',
+            'financial_status'      => 'paid',
+            'risk_level'            => '',
+            'line_items'            => $plans,
+        ];
+
+        self::sendPost($data);
+    }
+
+    /**
      * @param $data
      */
     private function sendPost($data)
