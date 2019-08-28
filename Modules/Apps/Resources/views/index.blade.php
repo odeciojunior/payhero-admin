@@ -57,7 +57,7 @@
             </div>
             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                 <div class="card" onclick="window.location.href='/apps/convertax'" style='width:300px;'>
-                    @if($shopifyIntegrations >0)
+                    @if($convertaxIntegrations >0)
                         <a href="/apps/convertax" class="add-btn added"><i class="icon wb-check" aria-hidden="true"></i>
                         </a>
                     @else
