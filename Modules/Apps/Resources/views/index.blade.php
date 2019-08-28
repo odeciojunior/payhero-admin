@@ -11,6 +11,21 @@
     <div class="page-content container">
         <div class="row">
             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer">
+                <div class="card" onclick="window.location.href='/apps/notazz/'">
+                    @if($notazzIntegrations >0)
+                        <a href="/apps/notazz/" class="add-btn added"><i class="icon wb-check" aria-hidden="true"></i>
+                        </a>
+                    @else
+                        <a href="/apps/notazz/" class="add-btn"><i class="icon wb-plus" aria-hidden="true"></i></a>
+                    @endif
+                    <img class="card-img-top" src="{!! asset('modules/global/img/notazz.png') !!}" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">Notazz</h5>
+                        <p class="card-text sm">Integre seus projetos com a Notazz </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer">
                 <div class="card" onclick="window.location.href='/apps/hotzapp/'">
                     @if($hotzappIngrations >0)
                         <a href="/apps/hotzapp/" class="add-btn added"><i class="icon wb-check" aria-hidden="true"></i>

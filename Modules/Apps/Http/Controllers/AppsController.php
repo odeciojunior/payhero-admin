@@ -3,6 +3,7 @@
 namespace Modules\Apps\Http\Controllers;
 
 use App\Entities\HotZappIntegration;
+use App\Entities\NotazzIntegration;
 use App\Entities\ShopifyIntegration;
 use Illuminate\Http\Request;
 use App\Entities\Transaction;
@@ -22,9 +23,16 @@ class AppsController extends Controller
     {
         $hotzappIntegrationModel = new HotZappIntegration();
         $shopifyIntegration      = new ShopifyIntegration();
-        $hotzappIngrations       = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->count();
-        $shopifyIntegrations     = $shopifyIntegration->where('user', auth()->user()->id)->count();
+        $notazzIntegration       = new NotazzIntegration();
 
-        return view('apps::index', ['hotzappIngrations' => $hotzappIngrations, 'shopifyIntegrations' => $shopifyIntegrations]);
+        $hotzappIngrations   = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->count();
+        $shopifyIntegrations = $shopifyIntegration->where('user', auth()->user()->id)->count();
+        $notazzIntegrations  = $notazzIntegration->where('user_id', auth()->user()->id)->count();
+
+        return view('apps::index', [
+            'hotzappIngrations'   => $hotzappIngrations,
+            'shopifyIntegrations' => $shopifyIntegrations,
+            'notazzIntegrations'  => $notazzIntegrations,
+        ]);
     }
 }
