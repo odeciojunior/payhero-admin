@@ -713,7 +713,7 @@ class ShopifyService
                         e.preventDefault();
                          $('[data-fox=cart_form]').attr('action', '/cart');
                         $('[data-fox=cart_form]').submit();
-                      });
+                    });
                     
                     $('[data-fox=cart_form]').submit(function(){
                         var discount=0;
@@ -819,9 +819,9 @@ class ShopifyService
                                                 ->orderBy('id', 'ASC')
                                                 ->first();
 
-                if ($productPlan) {
+                if (!empty($productPlan)) {
 
-                    $plan = $productModel->find($productPlan->plan);
+                    $plan = $planModel->find($productPlan->plan);
 
                     $plan->update([
                                       'name'        => substr($storeProduct->getTitle(), 0, 100),
