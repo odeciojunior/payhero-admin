@@ -189,49 +189,47 @@
                 </div>
             </div>
         </div>
-        {{--FIM CONFIGURAÇÕES AVANÇADAS--}}
-        <div class='col-12 row' style='margin:auto; padding-top:50px'>
-            <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOneShopify" aria-expanded="true" aria-controls="collapseOne">
-                <h3 style='position:absolute; bottom: 0px;'>Configurações Shopify
-                    <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
-                </h3>
-            </div>
-        </div>
-        {{-- COMEÇO CONFIGURAÇÕES SHOPIFY --}}
-        <div class='mt-30 mb-15'>
-            <div id='collapseOneShopify' class='collapse'>
-                <div class='row justify-content-center mx-30'>
-                        <label for='undo-integration'></label>
-                        @if($project->shopify_id)
-                            <div class="col-md-4 mb-10 mt-10">
-                                @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1 )
-                                    <a id="bt-change-shopify-integration" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                        <i class="material-icons gray"> sync </i>
-                                        <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
-                                    </a>
-                                @elseif($project->shopifyIntegrations->first()->status == 1)
-                                    <i class="icon wb-alert-circle  gray"> </i>
-                                    <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
-                                @endif
-                            </div>
-                            <div class='col-md-4 mt-10'>
-                                <a id="bt-shopify-sincronization-product" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                    <i class="material-icons gray"> sync </i>
-                                    <span class="gray"> Sincronizar produtos com shopify </span>
-                                </a>
-                            </div>
-                            <div class='col-md-4 mt-10'>
-                                <a id="bt-shopify-sincronization-template" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                    <i class="material-icons gray"> sync </i>
-                                    <span class="gray"> Sincronizar template com shopify </span>
-                                </a>
-                            </div>
-                        @else
-
-                        @endif
+        @if($project->shopify_id)
+            {{--FIM CONFIGURAÇÕES AVANÇADAS--}}
+            <div class='col-12 row' style='margin:auto; padding-top:50px'>
+                <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOneShopify" aria-expanded="true" aria-controls="collapseOne">
+                    <h3 style='position:absolute; bottom: 0px;'>Configurações Shopify
+                        <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
+                    </h3>
                 </div>
             </div>
-        </div>
+            {{-- COMEÇO CONFIGURAÇÕES SHOPIFY --}}
+            <div class='mt-30 mb-15'>
+                <div id='collapseOneShopify' class='collapse'>
+                    <div class='row justify-content-center mx-30'>
+                        <label for='undo-integration'></label>
+                        <div class="col-md-4 mb-10 mt-10">
+                            @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1 )
+                                <a id="bt-change-shopify-integration" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                    <i class="material-icons gray"> sync </i>
+                                    <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
+                                </a>
+                            @elseif($project->shopifyIntegrations->first()->status == 1)
+                                <i class="icon wb-alert-circle  gray"> </i>
+                                <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
+                            @endif
+                        </div>
+                        <div class='col-md-4 mt-10'>
+                            <a id="bt-shopify-sincronization-product" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                <i class="material-icons gray"> sync </i>
+                                <span class="gray"> Sincronizar produtos com shopify </span>
+                            </a>
+                        </div>
+                        <div class='col-md-4 mt-10'>
+                            <a id="bt-shopify-sincronization-template" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                <i class="material-icons gray"> sync </i>
+                                <span class="gray"> Sincronizar template com shopify </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         {{-- FIM CONFIGURAÇÕES SHOPIFY--}}
         <div class="mt-30">
             <div class="row">
