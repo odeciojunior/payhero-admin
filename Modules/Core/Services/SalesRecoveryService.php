@@ -161,16 +161,19 @@ class SalesRecoveryService
         $domainModel = new Domain();
         $log         = $logModel->where('id_log_session', $checkout->id_log_session)
                                 ->orderBy('id', 'DESC')->first();
-        $telephone   = FoxUtils::prepareCellPhoneNumber($log->telephone);
-        if (!empty($telephone)) {
-            $log->telephone = $telephone;
+        if (!empty($log->telephone)) {
+            $telephone = FoxUtils::prepareCellPhoneNumber($log->telephone);
+            if (!empty($telephone)) {
+                $log->telephone = $telephone;
+            } else {
+                $log->telephone = 'Numero Inválido';
+            }
         } else {
-            $log->telephone = 'Numero Inválido';
+            $log->telephone = 'Numero inválido';
         }
 
         $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
         $checkout['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
-        $checkout->is_mobile    = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
         $checkout->src          = ($checkout->src == 'null') ? '' : $checkout->src;
         $checkout->utm_source   = ($checkout->utm_source == 'null') ? '' : $checkout->utm_source;
         $checkout->utm_medium   = ($checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;

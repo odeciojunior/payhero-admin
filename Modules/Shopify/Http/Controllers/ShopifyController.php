@@ -2,19 +2,17 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
-use App\Entities\Domain;
-use App\Entities\Shipping;
-use Exception;
 use App\Entities\Company;
 use App\Entities\Project;
-use Illuminate\Http\Request;
+use App\Entities\Shipping;
+use App\Entities\ShopifyIntegration;
 use App\Entities\UserProject;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use App\Entities\ShopifyIntegration;
-use Modules\Core\Services\DomainService;
-use Modules\Core\Services\ShopifyService;
 use Modules\Core\Events\ShopifyIntegrationEvent;
+use Modules\Core\Services\ShopifyService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyController extends Controller
@@ -229,7 +227,16 @@ class ShopifyController extends Controller
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
-                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                    ->with([
+                               'domains',
+                               'shopifyIntegrations',
+                               'plans',
+                               'plans.productsPlans',
+                               'plans.productsPlans.getProduct',
+                               'pixels', 'discountCoupons',
+                               'zenviaSms',
+                               'shippings',
+                           ])
                     ->find($projectId);
 
                 //puxa todos os produtos
@@ -312,6 +319,130 @@ class ShopifyController extends Controller
             report($e);
 
             return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function synchronizeProducts(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+            $projectId   = current(Hashids::decode($requestData['project_id']));
+
+            $shopifyModel = new ShopifyIntegration();
+            if (!empty($projectId)) {
+                $shopifyIntegration = $shopifyModel->where('project', $projectId)->first();
+
+                event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
+
+                return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], 200);
+            } else {
+                return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], 400);
+            }
+        } catch (Exception $e) {
+            Log::critical('Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts');
+            report($e);
+
+            return response()->json(['message' => 'Problema ao sincronizar produtos do shopify, tente novamente mais tarde'], 400);
+        }
+    }
+
+    public function synchronizeTemplates(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+
+            $projectModel            = new Project();
+            $shopifyIntegrationModel = new ShopifyIntegration();
+
+            $projectId = current(Hashids::decode($requestData['project_id']));
+
+            if (!empty($projectId)) {
+                $project = $projectModel->with([
+                                                   'domains',
+                                                   'shopifyIntegrations',
+                                                   'plans',
+                                                   'plans.productsPlans',
+                                                   'plans.productsPlans.getProduct',
+                                                   'pixels', 'discountCoupons',
+                                                   'zenviaSms',
+                                                   'shippings',
+                                               ])
+                                        ->find($projectId);
+
+                // procura dominio aprovado
+                $domain = $project->domains->where('status', 3)->first();
+
+                if (!empty($domain)) {
+                    if (!empty($project->shopify_id)) {
+                        try {
+
+                            foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setThemeByRole('main');
+                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                if ($htmlCart) {
+                                    //template normal
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                } else {
+                                    //template ajax
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                }
+
+                                //inserir o javascript para o trackeamento (src, utm)
+                                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                if ($htmlBody) {
+                                    //template do layout
+                                    $shopifyIntegration->update([
+                                                                    'layout_theme_html' => $htmlBody,
+                                                                ]);
+
+                                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                }
+
+                                $shopifyIntegration->update([
+                                                                'status' => $shopifyIntegration->getEnum('status', 'approved'),
+                                                            ]);
+                            }
+
+                            return response()->json(['message' => 'Sincronização do template com o shopify concluida com sucesso!'], 200);
+                        } catch (Exception $e) {
+                            //throwl
+                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+                        }
+                    } else {
+                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                    }
+                } else {
+                    return response()->json(['message' => 'Você não tem nenhum dominio aprovado'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Projeto não encontrado'], 400);
+            }
+        } catch (Exception $e) {
+            Log::critical('Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts');
+            report($e);
+
+            return response()->json(['message' => 'Problema ao sincronizar template do shopify, tente novamente mais tarde'], 400);
         }
     }
 }

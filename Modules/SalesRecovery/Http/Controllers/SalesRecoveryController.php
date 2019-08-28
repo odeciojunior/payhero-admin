@@ -3,22 +3,20 @@
 namespace Modules\SalesRecovery\Http\Controllers;
 
 use App\Entities\Checkout;
-use App\Entities\CheckoutPlan;
-use App\Entities\Domain;
-use App\Entities\Log as CheckoutLog;
 use App\Entities\Project;
-use App\Entities\Sale;
 use App\Entities\UserProject;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\SalesRecoveryService;
-use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
+use Illuminate\View\View;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 
-//use Modules\SalesRecovery\Transformers\CarrinhosAbandonadosResource;
 
 /**
  * Class SalesRecoveryController
@@ -27,7 +25,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class SalesRecoveryController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -52,11 +50,10 @@ class SalesRecoveryController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function getRecoveryData(Request $request)
     {
-
         try {
             $salesRecoveryService = new SalesRecoveryService();
 
@@ -70,9 +67,7 @@ class SalesRecoveryController extends Controller
                 $endDate = date('Y-m-d', strtotime($request->end_date . ' + 1 day'));
             }
 
-            $abandonedCarts = $salesRecoveryService->verifyType($request->input('type'), $projectId, $request->start_date, $endDate);
-
-            return $abandonedCarts;
+            return $salesRecoveryService->verifyType($request->input('type'), $projectId, $request->start_date, $endDate);
         } catch
         (Exception $e) {
             Log::warning('Erro ao buscar dados de recuperação de vendas');
@@ -82,38 +77,38 @@ class SalesRecoveryController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function getDetails(Request $request)
     {
         try {
-            $checkoutModel = new Checkout();
-
-            $saleModel            = new Sale();
+            $checkoutModel        = new Checkout();
             $salesRecoveryService = new SalesRecoveryService();
             $details              = null;
 
             if ($request->has('checkout') && !empty($request->input('checkout'))) {
                 $checkoutId = current(Hashids::decode($request->input('checkout')));
-                $checkout = $checkoutModel->find($checkoutId);
+                $checkout   = $checkoutModel->find($checkoutId);
                 if (!empty($checkout)) {
                     $details = $salesRecoveryService->getSalesCheckoutDetails($checkout);
                 } else {
                     $details = $salesRecoveryService->getSalesCartOrBoletoDetails($checkoutId);
                 }
-            }
 
-            if ($details == null) {
-                return response()->json(['message' => 'Ocorreu algum erro']);
+                if ($details == null) {
+                    return response()->json(['message' => 'Ocorreu algum erro']);
+                } else {
+                    return response()->json($details->render());
+                }
+            } else {
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde']);
             }
-
-            return response()->json($details->render());
         } catch (Exception $e) {
             Log::warning('Erro ao buscar detalhes do carrinho abandonado');
             report($e);
 
-            return response()->json(['message' => 'Ocorreu algum erro']);
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde']);
         }
     }
 }

@@ -247,13 +247,13 @@
                                     <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
                                 </div>
                                 <div class="modal-footer d-flex align-items-center justify-content-center">
-                                    <button id='bt_cancel'  type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                                    <button id='bt_cancel' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
                                     <button id="bt_excluir" type="button" class="col-4 btn btn-danger" style="width: 20%;">Excluir</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @if($project->shopify_id)
+                    @if($project->shopify_id)
                     <!-- Modal para fazer-desfazer integração com shopify -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog  modal-dialog-centered  modal-simple">

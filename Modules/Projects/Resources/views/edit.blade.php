@@ -101,13 +101,13 @@
                         <span id='contact-error'></span>
                     </div>
                 </div>
-                <div class='col-12 row' style='margin:auto; padding-top:50px'>
-                    <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <h3 style='position:absolute; bottom: 0px;'>Configurações Avançadas
-                            <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
-                        </h3>
-                    </div>
-                </div>
+            </div>
+        </div>
+        <div class='col-12 row' style='margin:auto; padding-top:50px'>
+            <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <h3 style='position:absolute; bottom: 0px;'>Configurações Avançadas
+                    <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
+                </h3>
             </div>
         </div>
         {{--COMEÇO CONFIGURAÇÕES AVANÇADAS--}}
@@ -168,8 +168,6 @@
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Oferecer a opção de pagamento com boleto no checkout
                         </p>
                     </div>
-                </div>
-                <div class='row'>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='boleto_redirect'>Boleto (Redirecionamento página obrigado)</label>
                         <input id='boleto_redirect' name='boleto_redirect' value='{{$project->boleto_redirect}}' class='input-pad' type='text' placeholder='URL' maxlength='60'>
@@ -179,7 +177,6 @@
                         <label for='card_redirect'>Cartão (Redirecionamento página obrigado)</label>
                         <input id='card_redirect' name='card_redirect' value='{{$project->card_redirect}}' class='input-pad' type='text' placeholder='URL' maxlength='60'>
                         <span id='input-pad-error' class='text-danger'></span>
-
                     </div>
                     <div class='form-group col-md-4 col-sm-12 col-xs-12'>
                         <label for='analyzing_redirect'>Em Analise (Redirecionamento página obrigado)</label>
@@ -193,6 +190,49 @@
             </div>
         </div>
         {{--FIM CONFIGURAÇÕES AVANÇADAS--}}
+        <div class='col-12 row' style='margin:auto; padding-top:50px'>
+            <div id='toggler' class='col-12' data-toggle="collapse" data-target="#collapseOneShopify" aria-expanded="true" aria-controls="collapseOne">
+                <h3 style='position:absolute; bottom: 0px;'>Configurações Shopify
+                    <u style='font-size:15px; color:blue;cursor:pointer;' id='showMore'>exibir mais</u>
+                </h3>
+            </div>
+        </div>
+        {{-- COMEÇO CONFIGURAÇÕES SHOPIFY --}}
+        <div class='mt-30 mb-15'>
+            <div id='collapseOneShopify' class='collapse'>
+                <div class='row justify-content-center mx-30'>
+                        <label for='undo-integration'></label>
+                        @if($project->shopify_id)
+                            <div class="col-md-4 mb-10 mt-10">
+                                @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1 )
+                                    <a id="bt-change-shopify-integration" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                        <i class="material-icons gray"> sync </i>
+                                        <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
+                                    </a>
+                                @elseif($project->shopifyIntegrations->first()->status == 1)
+                                    <i class="icon wb-alert-circle  gray"> </i>
+                                    <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
+                                @endif
+                            </div>
+                            <div class='col-md-4 mt-10'>
+                                <a id="bt-shopify-sincronization-product" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                    <i class="material-icons gray"> sync </i>
+                                    <span class="gray"> Sincronizar produtos com shopify </span>
+                                </a>
+                            </div>
+                            <div class='col-md-4 mt-10'>
+                                <a id="bt-shopify-sincronization-template" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                    <i class="material-icons gray"> sync </i>
+                                    <span class="gray"> Sincronizar template com shopify </span>
+                                </a>
+                            </div>
+                        @else
+
+                        @endif
+                </div>
+            </div>
+        </div>
+        {{-- FIM CONFIGURAÇÕES SHOPIFY--}}
         <div class="mt-30">
             <div class="row">
                 <div class="col-4">
@@ -201,22 +241,6 @@
                         <span class="gray"> Deletar projeto</span>
                     </a>
                 </div>
-                @if($project->shopify_id)
-                    <div class="col-5">
-                        @if($project->shopify_id && $project->shopifyIntegrations->first()->status != 1 )
-                            <a id="bt-change-shopify-integration" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"> {{ $project->shopifyIntegrations()->first()->status == 2 ? 'Desfazer integração ' : 'Integrar' }} com shopify </span>
-                            </a>
-                        @elseif($project->shopifyIntegrations->first()->status == 1)
-                            <i class="icon wb-alert-circle  gray"> </i>
-                            <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
-                        @endif
-                    </div>
-                @else
-                    <div class='col-5'>
-                    </div>
-                @endif
                 <div class="col-3">
                     <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;"> Atualizar</button>
                 </div>

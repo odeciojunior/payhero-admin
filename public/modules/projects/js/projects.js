@@ -345,7 +345,82 @@ $(function () {
 
                 });
 
+                /**
+                 * Sincroniza produtos do shopify
+                 */
+                $("#bt-shopify-sincronization-product").on('click', function (event) {
+                    event.preventDefault();
+
+                    $("#modal-change-shopify-integration-title").html('Sincronizar produtos');
+                    $("#modal-change-shopify-integration-text").html('Sincronizar produtos');
+
+                    $("#bt-modal-change-shopify-integration").unbind('click');
+                    $("#bt-modal-change-shopify-integration").on('click', function () {
+                        $("#bt-close-modal-change-shopify-integration").click();
+                        loadingOnScreen();
+
+                        $.ajax({
+                            method: 'POST',
+                            url: '/apps/shopify/synchronize/products',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                project_id: projectId
+                            },
+                            error: function (response) {
+                                loadingOnScreenRemove();
+                                alertCustom('error', response.responseJSON.message);
+                                window.location.reload();
+                            },
+                            success: function (response) {
+                                loadingOnScreenRemove();
+                                alertCustom('success', response.message);
+                            }
+                        });
+                    });
+
+                });
+
+                /**
+                 * Sincroniza template do shopify
+                 */
+                $("#bt-shopify-sincronization-template").on('click', function (event) {
+                    event.preventDefault();
+
+                    $("#modal-change-shopify-integration-title").html('Sincronizar template');
+                    $("#modal-change-shopify-integration-text").html('Sincronizar template');
+
+                    $("#bt-modal-change-shopify-integration").unbind('click');
+                    $("#bt-modal-change-shopify-integration").on('click', function () {
+                        $("#bt-close-modal-change-shopify-integration").click();
+                        loadingOnScreen();
+
+                        $.ajax({
+                            method: 'POST',
+                            url: '/apps/shopify/synchronize/templates',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                project_id: projectId
+                            },
+                            error: function (response) {
+                                loadingOnScreenRemove();
+                                alertCustom('error', response.responseJSON.message);
+                                window.location.reload();
+                            },
+                            success: function (response) {
+                                loadingOnScreenRemove();
+                                alertCustom('success', response.message);
+                            }
+                        });
+                    });
+
+                });
+
             }
+
         });
     }
 

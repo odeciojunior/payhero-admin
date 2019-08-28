@@ -1,7 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function()
-{
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function() {
     Route::Resource('/', 'ShopifyController')->only('index', 'store');
 
     Route::post('/undointegration', [
@@ -14,6 +13,15 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'apps/shopify', 'name
         'as'   => 'shopify.reintegration',
     ]);
 
+    Route::post('/synchronize/products', [
+        'uses' => 'ShopifyController@synchronizeProducts',
+        'as'   => 'shopify.synchronize.product',
+    ]);
+
+    Route::post('/synchronize/templates', [
+        'uses' => 'ShopifyController@synchronizeTemplates',
+        'as'   => 'shopify.synchronize.template',
+    ]);
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'api/apps/shopify', 'namespace' => 'Modules\Shopify\Http\Controllers'], function() {
@@ -29,6 +37,5 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/apps/shopify', 'names
     Route::post('/sincronizarintegracao', [
         'uses' => 'ShopifyApiController@sincronizarIntegracao',
     ]);
-
 });
 
