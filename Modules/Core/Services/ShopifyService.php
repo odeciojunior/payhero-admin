@@ -819,7 +819,7 @@ class ShopifyService
                                                 ->orderBy('id', 'ASC')
                                                 ->first();
 
-                if ($productPlan) {
+                if (!empty($productPlan)) {
 
                     $plan = $planModel->find($productPlan->plan);
 
