@@ -66,7 +66,7 @@ $(function () {
                         p.on('load', function () {
 
                             var img = document.getElementById('previewimage');
-                            var x1, x2, y1, y2; 
+                            var x1, x2, y1, y2;
 
                             if (img.naturalWidth > img.naturalHeight) {
                                 y1 = Math.floor(img.naturalHeight / 100 * 10);
@@ -284,7 +284,6 @@ $(function () {
                     });
 
                 });
-
             }
         });
     }
