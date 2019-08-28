@@ -78,22 +78,25 @@ class PostBackShopifyController extends Controller
                         }
                     }
                 } else {
+                    Log::warning('Shopify atualizar código de rastreio - venda não encontrada');
                     //venda nao encontrada
                     return response()->json([
-                                                'message' => 'error',
-                                            ], 400);
+                                                'message' => 'sale not found',
+                                            ], 200);
                 }
             } else {
+                Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
                 //projeto nao existe
                 return response()->json([
-                                            'message' => 'error',
-                                        ], 400);
+                                            'message' => 'project not found',
+                                        ], 200);
             }
         } else {
+            Log::warning('Shopify atualizar código de rastreio - projeto não encontrado');
             //projectid errado
             return response()->json([
-                                        'message' => 'error',
-                                    ], 400);
+                                        'message' => 'project not found',
+                                    ], 200);
         }
     }
 
@@ -123,8 +126,6 @@ class PostBackShopifyController extends Controller
             //hash ok
             $project = $projectModel->find($projectId);
 
-            // Log::warning($projectId);
-
             if (!$project) {
                 Log::warning('projeto não encontrado no retorno do shopify, projeto = ' . $request->project_id);
 
@@ -148,12 +149,9 @@ class PostBackShopifyController extends Controller
                                         ], 400);
             }
 
-            //foreach ($requestData['variants'] as $variant) {
             $variant = current($requestData['variants']);
 
             $shopifyService->importShopifyProduct($projectId, $userProject->user, $variant['product_id']);
-
-            //}
 
             return response()->json([
                                         'message' => 'success',
@@ -167,6 +165,4 @@ class PostBackShopifyController extends Controller
     }
 }
 
-
-//32507
 
