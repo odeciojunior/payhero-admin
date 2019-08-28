@@ -235,13 +235,13 @@
         {{-- FIM CONFIGURAÇÕES SHOPIFY--}}
         <div class="mt-30">
             <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                     <a id="bt-delete-project" role="button" class="pointer align-items-center" data-toggle="modal" data-target="#modal-delete" style="float: left;">
                         <i class="material-icons gray"> delete </i>
                         <span class="gray"> Deletar projeto</span>
                     </a>
                 </div>
-                <div class="col-3">
+                <div class="col-6">
                     <button id="bt-update-project" type="button" class="btn btn-success" style="float: right;"> Atualizar</button>
                 </div>
             </div>

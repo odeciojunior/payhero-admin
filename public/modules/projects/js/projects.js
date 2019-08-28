@@ -352,7 +352,7 @@ $(function () {
                     event.preventDefault();
 
                     $("#modal-change-shopify-integration-title").html('Sincronizar produtos');
-                    $("#modal-change-shopify-integration-text").html('Sincronizar produtos');
+                    $("#modal-change-shopify-integration-text").html('Sincronizar produtos da sua loja shopify com o CloudFox');
 
                     $("#bt-modal-change-shopify-integration").unbind('click');
                     $("#bt-modal-change-shopify-integration").on('click', function () {
@@ -389,7 +389,7 @@ $(function () {
                     event.preventDefault();
 
                     $("#modal-change-shopify-integration-title").html('Sincronizar template');
-                    $("#modal-change-shopify-integration-text").html('Sincronizar template');
+                    $("#modal-change-shopify-integration-text").html('Seu você alterar o tema da sua loja, para o checkout continuar funcionando apenas sincronize o template novamente');
 
                     $("#bt-modal-change-shopify-integration").unbind('click');
                     $("#bt-modal-change-shopify-integration").on('click', function () {
