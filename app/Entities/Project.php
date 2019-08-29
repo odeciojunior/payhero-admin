@@ -83,6 +83,7 @@ class Project extends Model
         'card_redirect',
         'analyzing_redirect',
         'boleto',
+        'support_phone',
         'deleted_at',
     ];
     /**

@@ -48,7 +48,6 @@ class ConvertaXController extends Controller
             Log::warning('Erro ao tentar redirecionar para tela de adicionar integração (ConvertaXController - create)');
             report($e);
         }
-        //        return view('convertax::create');
     }
 
     /**
@@ -158,7 +157,6 @@ class ConvertaXController extends Controller
             Log::warning('Erro ao tentar acessar tela editar Integração ConvertaX (ConvertaXController - edit)');
             report($e);
         }
-        //        return view('convertax::edit');
     }
 
     /**

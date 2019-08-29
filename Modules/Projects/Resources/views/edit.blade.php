@@ -100,6 +100,15 @@
                         </p>
                         <span id='contact-error'></span>
                     </div>
+                    <div class="form-group col-12">
+                        <label for="contact">Telefone para suporte</label>
+                        <input name="support_phone" value="{{$project->support_phone}}" type="text" class="input-pad" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000" >
+                        <span id='contact-error' class='text-danger'></span>
+                        <p class='info pt-5' style='font-size: 10px;'>
+                            <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte
+                        </p>
+                        <span id='contact-error'></span>
+                    </div>
                 </div>
             </div>
         </div>

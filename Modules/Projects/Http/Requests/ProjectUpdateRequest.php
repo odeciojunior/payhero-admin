@@ -37,7 +37,7 @@ class ProjectUpdateRequest extends FormRequest
             "ratioImage"                 => "nullable",
             "photo"                      => 'nullable',
             "logo"                       => 'nullable',
-
+            "support_phone"              => 'nullable',
         ];
     }
 

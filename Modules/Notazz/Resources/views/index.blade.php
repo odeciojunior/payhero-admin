@@ -116,6 +116,6 @@
 
 
     @push('scripts')
-        <script src="/modules/hotzapp/js/index.js"></script>
+        <script src="/modules/notazz/js/index.js"></script>
     @endpush
 @endsection
