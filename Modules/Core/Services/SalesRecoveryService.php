@@ -35,13 +35,11 @@ class SalesRecoveryService
             $status        = [3, 5]; // expired
 
             return $this->getSaleExpiredOrRefused($projectId, $dateStart, $dateEnd, $paymentMethod, $status);
-        } else if ($type == 3) {
+        } else {
             $paymentMethod = 1; // cartao
             $status        = [3]; // refused
 
             return $this->getSaleExpiredOrRefused($projectId, $dateStart, $dateEnd, $paymentMethod, $status);
-        } else {
-            return $this->getAllTypes();
         }
     }
 
@@ -148,7 +146,7 @@ class SalesRecoveryService
 
     /**
      * @param Checkout $checkout
-     * @return Factory|View
+     * @return array|Factory|View
      * @throws \Exception
      */
     public function getSalesCheckoutDetails(Checkout $checkout)
@@ -157,25 +155,24 @@ class SalesRecoveryService
         $domainModel = new Domain();
         $log         = $logModel->where('id_log_session', $checkout->id_log_session)
                                 ->orderBy('id', 'DESC')->first();
+        $whatsAppMsg = 'Olá ' . $log->name;
+
         if (!empty($log->telephone)) {
-            $telephone = FoxUtils::prepareCellPhoneNumber($log->telephone);
-            if (!empty($telephone)) {
-                $log->telephone = $telephone;
-            } else {
-                $log->telephone = 'Numero Inválido';
-            }
+            $log['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg;
+            $log->telephone       = FoxUtils::getTelephone($log->telephone);
         } else {
             $log->telephone = 'Numero inválido';
         }
 
         $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
         $checkout['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
-        $checkout->src          = ($checkout->src == 'null') ? '' : $checkout->src;
-        $checkout->utm_source   = ($checkout->utm_source == 'null') ? '' : $checkout->utm_source;
-        $checkout->utm_medium   = ($checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
-        $checkout->utm_campaign = ($checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
-        $checkout->utm_term     = ($checkout->utm_term == 'null') ? '' : $checkout->utm_term;
-        $checkout->utm_content  = ($checkout->utm_content == 'null') ? '' : $checkout->utm_content;
+        $checkout['total']      = number_format($checkout->present()->getTotal() / 100, 2, ',', '.');
+        $checkout->src          = ($checkout->src == 'null' || $checkout->src == null) ? '' : $checkout->src;
+        $checkout->utm_source   = ($checkout->utm_source == 'null' || $checkout->utm_source == null) ? '' : $checkout->utm_source;
+        $checkout->utm_medium   = ($checkout->utm_medium == 'null' || $checkout->utm_medium == null) ? '' : $checkout->utm_medium;
+        $checkout->utm_campaign = ($checkout->utm_campaign == 'null' || $checkout->utm_campaign == null) ? '' : $checkout->utm_campaign;
+        $checkout->utm_term     = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
+        $checkout->utm_content  = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
 
         $status = '';
         if ($checkout->status == 'abandoned cart') {
@@ -184,30 +181,29 @@ class SalesRecoveryService
             $status = 'Recuperado';
         }
 
-        $checkout->is_mobile = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
-        $products            = $checkout->present()->getProducts();
-        $total               = $checkout->present()->getTotal();
+        $checkout->browser            = ($checkout->browser == 'null' || $checkout->browser == null) ? '' : $checkout->browser;
+        $checkout->operational_system = ($checkout->operational_system == 'null' || $checkout->operational_system == null) ? '' : $checkout->operational_system;
+        $checkout->is_mobile          = $checkout->is_mobile == 1 ? 'Dispositivo: Celular' : 'Dispositivo: Computador';
 
-        $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
+        $products = $checkout->present()->getProducts();
+
+        $domain = $domainModel->where([
+                                          ['status', 3],
+                                          ['project_id', $checkout->project],
+                                      ])->first();
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
         } else {
             $link = 'Dominio removido';
         }
 
-        $whatsAppMsg = 'Olá ' . $log->name;
-
-        return view('salesrecovery::details', [
-            'checkout'      => $checkout,
-            'client'        => $log,
-            'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg,
-            'status'        => $status,
-            'hours'         => $checkout['hours'],
-            'date'          => $checkout['date'],
-            'products'      => $products,
-            'total'         => number_format(intval($total) / 100, 2, ',', '.'),
-            'link'          => $link,
-        ]);
+        return [
+            'checkout' => $checkout,
+            'client'   => $log,
+            'products' => $products,
+            'status'   => $status,
+            'link'     => $link,
+        ];
     }
 
     /**
@@ -227,9 +223,12 @@ class SalesRecoveryService
         $client   = $sale->clientModel()->first();
 
         if (!empty($client->telephone)) {
-            $client->telephone = FoxUtils::getTelephone($client->telephone);
+            $client->telephone       = FoxUtils::getTelephone($client->telephone);
+            $whatsAppMsg             = 'Olá ' . $client->name;
+            $client['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg;
         } else {
-            $client->telephone = 'Numero Inválido';
+            $client['whatsapp_link'] = '';
+            $client->telephone       = 'Numero Inválido';
         }
 
         $checkout['hours']      = with(new Carbon($sale->created_at))->format('H:i:s');
@@ -241,6 +240,9 @@ class SalesRecoveryService
         $checkout->utm_campaign = ($checkout->utm_campaign == 'null' || $checkout->utm_campaign == null) ? '' : $checkout->utm_campaign;
         $checkout->utm_term     = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
         $checkout->utm_content  = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
+
+        $checkout->browser            = ($checkout->browser == 'null' || $checkout->browser == null) ? '' : $checkout->browser;
+        $checkout->operational_system = ($checkout->operational_system == 'null' || $checkout->operational_system == null) ? '' : $checkout->operational_system;
 
         $checkout->is_mobile = $checkout->is_mobile == 1 ? 'Dispositivo: Celular' : 'Dispositivo: Computador';
 
@@ -282,10 +284,7 @@ class SalesRecoveryService
 
         $products = $sale->present()->getProducts();
 
-        $whatsAppMsg      = 'Olá ' . $client->name;
         $client->document = FoxUtils::getDocument($client->document);
-
-        $client['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg;
 
         $delivery->zip_code = FoxUtils::getCep($delivery->zip_code);
 

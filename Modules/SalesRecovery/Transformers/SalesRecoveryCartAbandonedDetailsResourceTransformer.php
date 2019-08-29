@@ -3,8 +3,9 @@
 namespace Modules\SalesRecovery\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
+use League\Fractal\TransformerAbstract;
 
-class SalesRecoverydetailsResourceTransformer extends Resource
+class SalesRecoveryCartAbandonedDetailsResourceTransformer extends Resource
 {
     /**
      * @param $request
@@ -17,10 +18,9 @@ class SalesRecoverydetailsResourceTransformer extends Resource
             'checkout' => $this['checkout'],
             'client'   => $this['client'],
             'products' => $this['products'],
-            'delivery' => $this['delivery'],
             'status'   => $this['status'],
             'link'     => $this['link'],
-            'method' => 'boletoCartao'
+            'method'   => 'cartAbandoned',
 
         ];
     }
