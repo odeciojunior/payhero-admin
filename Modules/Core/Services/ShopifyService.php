@@ -713,7 +713,7 @@ class ShopifyService
                         e.preventDefault();
                          $('[data-fox=cart_form]').attr('action', '/cart');
                         $('[data-fox=cart_form]').submit();
-                      });
+                    });
                     
                     $('[data-fox=cart_form]').submit(function(){
                         var discount=0;
@@ -819,9 +819,9 @@ class ShopifyService
                                                 ->orderBy('id', 'ASC')
                                                 ->first();
 
-                if ($productPlan) {
+                if (!empty($productPlan)) {
 
-                    $plan = $productModel->find($productPlan->plan);
+                    $plan = $planModel->find($productPlan->plan);
 
                     $plan->update([
                                       'name'        => substr($storeProduct->getTitle(), 0, 100),
@@ -879,7 +879,6 @@ class ShopifyService
                                   ]);
                 }
             } else {
-                //plano nao existe, cria o plano, produto e produtosplanos
 
                 $product = $productModel->create([
                                                      'user'               => $userId,
@@ -895,7 +894,6 @@ class ShopifyService
                                                      'shopify_id'         => $storeProduct->getId(),
                                                      'shopify_variant_id' => $variant->getId(),
                                                  ]);
-                //                Log::warning('product criado - ' . print_r($product, true));
 
                 $plan = $planModel->create([
                                                'shopify_id'         => $storeProduct->getId(),
@@ -912,15 +910,11 @@ class ShopifyService
                                   'code' => Hashids::encode($plan->id),
                               ]);
 
-                //                Log::warning('plano criado - ' . print_r($plan, true));
-
                 $productPlanModel->create([
                                               'product' => $product->id,
                                               'plan'    => $plan->id,
                                               'amount'  => '1',
                                           ]);
-
-                //                Log::warning('productoplano criado - ' . print_r($productPlanModel, true));
 
                 if (count($storeProduct->getVariants()) > 1) {
                     foreach ($storeProduct->getImages() as $image) {

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Checkout\Classes\MP;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\ShopifyService;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
 use App\Entities\Plan;
@@ -48,6 +49,8 @@ class TesteController extends Controller
      */
     public function index()
     {
+        $this->tgFunction();
+        dd('tg');
 
         $this->mp = new MP(getenv('MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION'));
 
@@ -236,6 +239,7 @@ class TesteController extends Controller
 
     public function indexx()
     {
+        $this->tgFunction();
 
         /*$dataValue = [
             'type' => 'payment',
@@ -275,6 +279,29 @@ class TesteController extends Controller
     public function tgFunction()
     {
         //nada
+
+        //$shopifyService = new ShopifyService('lipo-duo.myshopify.com', 'd7a27718b291b2e835d2e7d6c3a4787e');
+
+//                $shopifyService->createShopWebhook([
+//                                             "topic"   => "orders/updated",
+//                                             "address" => 'https://app.cloudfox.net/postback/shopify/YKV603kndgw8ymD/tracking',
+//                                             "format"  => "json",
+//                                         ]);
+
+
+        //$shopifyService->deleteShopWebhook('688952344673');
+        //dd($shopifyService->getShopWebhook());
+
+
+//        $shopifyService->createShopWebhook([
+//                                     "topic"   => "orders/updated",
+//                                     "address" => 'https://eca0ccd1.ngrok.io/postback/shopify/da6pVgdQ63k7BW0/tracking',
+//                                     "format"  => "json",
+//                                 ]);
+
+        dd('aa');
+
+
 
     }
 }

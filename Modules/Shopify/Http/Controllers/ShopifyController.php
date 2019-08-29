@@ -433,7 +433,7 @@ class ShopifyController extends Controller
                         return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
                     }
                 } else {
-                    return response()->json(['message' => 'Você não tem nenhum dominio aprovado'], 400);
+                    return response()->json(['message' => 'Você não tem nenhum domínio configurado'], 400);
                 }
             } else {
                 return response()->json(['message' => 'Projeto não encontrado'], 400);

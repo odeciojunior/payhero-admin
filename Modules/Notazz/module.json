@@ -1,0 +1,14 @@
+{
+    "name": "Notazz",
+    "alias": "notazz",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Notazz\\Providers\\NotazzServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
