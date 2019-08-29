@@ -3,10 +3,8 @@
 namespace Modules\Core\Services;
 
 use App\Entities\Checkout;
-use App\Entities\CheckoutPlan;
 use App\Entities\Domain;
 use App\Entities\Log as CheckoutLog;
-use App\Entities\Log;
 use App\Entities\Sale;
 use App\Entities\UserProject;
 use Carbon\Carbon;
@@ -14,7 +12,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Modules\Core\Services\FoxUtils;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
 
@@ -26,8 +24,9 @@ class SalesRecoveryService
      * @param $dateStart
      * @param $dateEnd
      * @return AnonymousResourceCollection|string
+     * Verifica tipo de recuperação
      */
-    public function verifyType(int $type, int $projectId = null, string $dateStart = null, string $dateEnd = null)
+    public function verifyType($type, $projectId = null, $dateStart = null, $dateEnd = null)
     {
         if ($type == 1) {
             return $this->getAbandonedCart($projectId, $dateStart, $dateEnd);
@@ -59,7 +58,7 @@ class SalesRecoveryService
      * @param $dateStart
      * @param $dateEnd
      * @return AnonymousResourceCollection
-     * Carrinho abandonado e recuperado
+     * Carrinho abandonado
      */
     public function getAbandonedCart(int $projectId = null, string $dateStart = null, string $dateEnd = null)
     {
@@ -89,9 +88,7 @@ class SalesRecoveryService
             }
         }
 
-        $abandonedCarts->orderBy('id', 'DESC');
-
-        return SalesRecoveryResource::collection($abandonedCarts->paginate(10));
+        return SalesRecoveryResource::collection($abandonedCarts->orderBy('id', 'DESC')->paginate(10));
     }
 
     /**
@@ -101,6 +98,7 @@ class SalesRecoveryService
      * @param $paymentMethod
      * @param $status
      * @return AnonymousResourceCollection
+     *  Monta Tabela quando for boleto expirado
      */
     public function getSaleExpiredOrRefused(int $projectId = null, string $dateStart = null, string $dateEnd = null, int $paymentMethod, array $status)
     {
@@ -145,9 +143,7 @@ class SalesRecoveryService
             }
         }
 
-        $salesExpired->orderBy('id', 'DESC');
-
-        return SalesRecoveryCardRefusedResource::collection($salesExpired->paginate(10));
+        return SalesRecoveryCardRefusedResource::collection($salesExpired->orderBy('sales.id', 'desc')->paginate(10));
     }
 
     /**
@@ -215,42 +211,38 @@ class SalesRecoveryService
     }
 
     /**
-     * @param int $saleId
-     * @return Factory|View
-     * @throws \Exception
+     * @param Sale $sale
+     * @return array
+     * @throws PresenterException
+     * Modal detalhes quando for cartão recusado ou boleto
      */
-    public function getSalesCartOrBoletoDetails(int $saleId)
+    public function getSalesCartOrBoletoDetails(Sale $sale)
     {
+        $checkoutModel = new checkout();
+        $logModel      = new CheckoutLog();
+        $domainModel   = new Domain();
 
-        $salesModel        = new Sale();
-        $checkoutModel     = new Checkout();
-        $domainModel       = new Domain();
-        $checkoutPlanModel = new CheckoutPlan();
-        $logModel          = new Log();
+        $checkout = $checkoutModel->find($sale->checkout);
+        $delivery = $sale->delivery()->first();
+        $client   = $sale->clientModel()->first();
 
-        $sale      = $salesModel->with(['clientModel', 'delivery'])->find($saleId);
-        $client    = $sale->getRelation('clientModel');
-        $telephone = FoxUtils::prepareCellPhoneNumber($client->telephone);
-        if (!empty($telephone)) {
-            $client->telephone = $telephone;
+        if (!empty($client->telephone)) {
+            $client->telephone = FoxUtils::getTelephone($client->telephone);
         } else {
             $client->telephone = 'Numero Inválido';
         }
-        $client->street   = $sale->getRelation('delivery')->street;
-        $client->zip_code = $sale->getRelation('delivery')->zip_code;
-        $client->city     = $sale->getRelation('delivery')->city;
-        $client->state    = $sale->getRelation('delivery')->state;
 
-        $checkout               = $checkoutModel->where('id', $sale->checkout)->first();
-        $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
-        $checkout['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
-        $checkout->is_mobile    = ($checkout->is_mobile == 1) ? 'Mobile' : 'Computador';
-        $checkout->src          = ($checkout->src == 'null') ? '' : $checkout->src;
-        $checkout->utm_source   = ($checkout->utm_source == 'null') ? '' : $checkout->utm_source;
-        $checkout->utm_medium   = ($checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
-        $checkout->utm_campaign = ($checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
-        $checkout->utm_term     = ($checkout->utm_term == 'null') ? '' : $checkout->utm_term;
-        $checkout->utm_content  = ($checkout->utm_content == 'null') ? '' : $checkout->utm_content;
+        $checkout['hours']      = with(new Carbon($sale->created_at))->format('H:i:s');
+        $checkout['date']       = with(new Carbon($sale->created_at))->format('d/m/Y');
+        $checkout['total']      = number_format($checkout->present()->getTotal() / 100, 2, ',', '.');
+        $checkout->src          = ($checkout->src == 'null' || $checkout->src == null) ? '' : $checkout->src;
+        $checkout->utm_source   = ($checkout->utm_source == 'null' || $checkout->utm_source == null) ? '' : $checkout->utm_source;
+        $checkout->utm_medium   = ($checkout->utm_medium == 'null' || $checkout->utm_medium == null) ? '' : $checkout->utm_medium;
+        $checkout->utm_campaign = ($checkout->utm_campaign == 'null' || $checkout->utm_campaign == null) ? '' : $checkout->utm_campaign;
+        $checkout->utm_term     = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
+        $checkout->utm_content  = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
+
+        $checkout->is_mobile = $checkout->is_mobile == 1 ? 'Dispositivo: Celular' : 'Dispositivo: Computador';
 
         if ($sale->payment_method == 2) {
             $client->error = 'Não pago até a data do vencimento';
@@ -267,34 +259,44 @@ class SalesRecoveryService
             }
         }
 
-        if ($sale->payment_method == 1) {
-            $status = 'Recusado';
+        if ($checkout->status != 'recovered') {
+            if ($sale->payment_method == 1) {
+                $status = 'Recusado';
+            } else {
+                $status = 'Expirado';
+            }
         } else {
-            $status = 'Expirado';
+            $status = 'Recuperado';
         }
-        $products = $checkout->present()->getProducts();
-        $total    = $checkout->present()->getTotal();
 
-        $domain = $domainModel->where([['status', 3], ['project_id', $checkout->project]])->first();
+        $domain = $domainModel->where([
+                                          ['status', 3],
+                                          ['project_id', $sale->project],
+                                      ])->first();
+
         if (!empty($domain)) {
             $link = "https://checkout." . $domain->name . "/recovery/" . $checkout->id_log_session;
         } else {
             $link = 'Dominio removido';
         }
 
-        $whatsAppMsg = 'Olá ' . $client->name;
+        $products = $sale->present()->getProducts();
 
-        return view('salesrecovery::details', [
-            'checkout'      => $checkout,
-            'client'        => $client,
-            'whatsapp_link' => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg,
-            'status'        => $status,
-            'hours'         => $checkout['hours'],
-            'date'          => $checkout['date'],
-            'products'      => $products,
-            'total'         => number_format(intval($total) / 100, 2, ',', '.'),
-            'link'          => $link,
-        ]);
+        $whatsAppMsg      = 'Olá ' . $client->name;
+        $client->document = FoxUtils::getDocument($client->document);
+
+        $client['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg;
+
+        $delivery->zip_code = FoxUtils::getCep($delivery->zip_code);
+
+        return [
+            'checkout' => $checkout,
+            'client'   => $client,
+            'products' => $products,
+            'delivery' => $delivery,
+            'status'   => $status,
+            'link'     => $link,
+        ];
     }
 }
 

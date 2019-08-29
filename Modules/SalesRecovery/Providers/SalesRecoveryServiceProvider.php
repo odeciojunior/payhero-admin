@@ -8,12 +8,6 @@ use Illuminate\Database\Eloquent\Factory;
 class SalesRecoveryServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Boot the application events.
      * @return void
      */
@@ -32,7 +26,7 @@ class SalesRecoveryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**

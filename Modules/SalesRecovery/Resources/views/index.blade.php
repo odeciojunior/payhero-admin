@@ -12,16 +12,16 @@
             <h1 class="page-title">Recuperação de vendas</h1>
         </div>
         <div class="page-content container">
-            @if(count($projects) > 0 )
+            <div id='project-not-empty' style='display:none'>
                 <div id="" class="card shadow p-20">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-3">
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad">
                                 {{--<option value="">Todos projetos</option>--}}
-                                @foreach($projects as $project)
-                                    <option value="{{Hashids::encode($project['id'])}}">{{$project['nome']}}</option>
-                                @endforeach
+                                {{--  @foreach($projects as $project)
+                                      <option value="{{Hashids::encode($project['id'])}}">{{$project['nome']}}</option>
+                                  @endforeach--}}
                             </select>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-3">
@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                             <label for="start_date">Data inicial</label>
-                            <input name='start_date' id="start_date" timezone='' class="form-control input-pad"  type="date">
+                            <input name='start_date' id="start_date" timezone='' class="form-control input-pad" type="date">
                         </div>
                         <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                             <label for="end_date">Data final</label>
@@ -84,6 +84,88 @@
                                     </div>
                                 </div>
                                 <div class="modal-body">
+                                    <div class="transition-details">
+                                        <p id='date-as-hours' class="sm-text text-muted">
+                                        </p>
+                                        <div class="status d-inline">
+                                            <span class="badge mr-5" id='status-checkout'></span>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="card shadow pr-20 pl-20 p-10">
+                                        <div class="row">
+                                            <div class="col-lg-3"><p class="table-title"> Produto </p></div>
+                                            <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
+                                        </div>
+                                        {{-- Tabela produtos JS insere dados--}}
+                                        <div id='table-product'>
+                                        </div>
+                                        <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
+                                            <div class="col-lg-6">
+                                                <h4 class="table-title"> Total </h4>
+                                            </div>
+                                            <div class="col-lg-6 text-right">
+                                                <h4 id='total-value' class="table-title"></h4>
+                                            </div>
+                                        </div>
+                                        {{-- Fim tabela produtos--}}
+                                    </div>
+                                    <div class="nav-tabs-horizontal">
+                                        <div class="nav nav-tabs nav-tabs-line text-center" id="nav-tab" role="tablist">
+                                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" style="width:50%;">Cliente</a>
+                                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" style="width:50%;">Detalhes</a>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content p-10" id="nav-tabContent">
+                                        <!-- CLIENTE -->
+                                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                            <h4> Dados Pessoais </h4>
+                                            <span id='client-name' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='client-telephone' class='table-title gray'></span>
+                                            <a id='client-whatsapp' target='_blank'>
+                                                <img src="{!! asset('modules/global/img/whatsapplogo.png') !!}" width="25px">
+                                            </a>
+                                            <br>
+                                            <span id='client-email' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='client-document' class="table-title gray"></span>
+                                            <h4> Entrega </h4>
+                                            <span id="client-street" class="table-title gray"> </span>
+                                            <br>
+                                            <span id='client-zip-code' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='client-city-state' class="table-title gray"></span>
+                                        </div>
+                                        <!-- DETALHES  -->
+                                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                            <h4> Dados Gerais </h4>
+                                            <span id='sale-motive' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='link-sale' class="table-title gray"></span>
+                                            <br>
+                                            <span id='checkout-ip' class="table-title gray">   </span>
+                                            <br>
+                                            <span id='checkout-is-mobile' class="table-title gray "> </span>
+                                            <br>
+                                            <span id='checkout-operational-system' class="table-title gray "> </span>
+                                            <br>
+                                            <span id='checkout-browser' class="table-title gray "> </span>
+                                            <br>
+                                            <h4> Conversão </h4>
+                                            <span id='checkout-src' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='checkout-utm-source' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='checkout-utm-medium' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='checkout-utm-campaign' class="table-title gray"></span>
+                                            <br>
+                                            <span id='checkout-utm-term' class="table-title gray"> </span>
+                                            <br>
+                                            <span id='checkout-utm-content' class="table-title gray"> </span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -98,18 +180,16 @@
                         </ul>
                     </div>
                 </div>
-            @else
-                @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-                @endpush
-
-                <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/img/emptyprojetos.svg') !!}" width="250px">
-                    <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
-                    <p class="desc gray">Que tal criar um primeiro projeto para começar a vender? </p>
-                    <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>
-                </div>
-            @endif
+            </div>
+            {{-- Quando não tem projeto cadastrado  --}}
+            <div id='project-empty' class="content-error text-center" style='display:none'>
+                <link rel="stylesheet" href="modules/global/css/empty.css">
+                <img src="modules/global/img/emptyprojetos.svg" width="250px">
+                <h1 class="big gray">Você ainda não tem nenhum projeto!</h1>
+                <p class="desc gray">Que tal criar um primeiro projeto para começar a vender? </p>
+                <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>
+            </div>
+            {{-- FIM projeto nao existem projetos--}}
         </div>
     </div>
     @push('scripts')

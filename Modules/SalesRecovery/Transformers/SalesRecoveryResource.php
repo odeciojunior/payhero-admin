@@ -2,7 +2,6 @@
 
 namespace Modules\SalesRecovery\Transformers;
 
-use App\Entities\Project;
 use Carbon\Carbon;
 use App\Entities\Log;
 use App\Entities\Plan;

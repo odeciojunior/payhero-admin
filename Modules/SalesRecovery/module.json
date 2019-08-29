@@ -1,16 +1,14 @@
 {
-    "name": "SalesRecovery",
-    "alias": "salesrecovery",
+    "name"       : "SalesRecovery",
+    "alias"      : "salesrecovery",
     "description": "",
-    "keywords": [],
-    "active": 1,
-    "order": 0,
-    "providers": [
+    "keywords"   : [],
+    "active"     : 1,
+    "order"      : 0,
+    "providers"  : [
         "Modules\\SalesRecovery\\Providers\\SalesRecoveryServiceProvider"
     ],
-    "aliases": {},
-    "files": [
-        "start.php"
-    ],
-    "requires": []
+    "aliases"    : {},
+    "files"      : [],
+    "requires"   : []
 }

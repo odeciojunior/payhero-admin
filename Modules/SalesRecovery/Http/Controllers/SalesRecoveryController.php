@@ -17,7 +17,6 @@ use Illuminate\View\View;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 
-
 /**
  * Class SalesRecoveryController
  * @package Modules\SalesRecovery\Http\Controllers
@@ -29,52 +28,9 @@ class SalesRecoveryController extends Controller
      */
     public function index()
     {
-        $userProjectModel = new UserProject();
-        $projectModel     = new Project();
-
-        $userProjects = $userProjectModel->where('user', auth()->user()->id)->get()->toArray();
-        $projects     = [];
-
-        foreach ($userProjects as $userProject) {
-            $project = $projectModel->find($userProject['project']);
-            if (!empty($project['id'])) {
-                $projects[] = [
-                    'id'   => $project['id'],
-                    'nome' => $project['name'],
-                ];
-            }
-        }
-
-        return view('salesrecovery::index', compact('projects'));
+        return view('salesrecovery::index');
     }
-
-    /**
-     * @param Request $request
-     * @return AnonymousResourceCollection
-     */
-    public function getRecoveryData(Request $request)
-    {
-        try {
-            $salesRecoveryService = new SalesRecoveryService();
-
-            $projectId = null;
-            if (!empty($request->project)) {
-                $projectId = current(Hashids::decode($request->input('project')));
-            }
-
-            $endDate = null;
-            if (!empty($request->end_date)) {
-                $endDate = date('Y-m-d', strtotime($request->end_date . ' + 1 day'));
-            }
-
-            return $salesRecoveryService->verifyType($request->input('type'), $projectId, $request->start_date, $endDate);
-        } catch
-        (Exception $e) {
-            Log::warning('Erro ao buscar dados de recuperação de vendas');
-            report($e);
-        }
-    }
-
+    
     /**
      * @param Request $request
      * @return JsonResponse

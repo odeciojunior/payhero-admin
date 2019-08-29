@@ -123,7 +123,7 @@
                     </a>
                 </li>
                 <li class="site-menu-item">
-                    <a href="{!! route('recovery') !!}">
+                    <a href="{{ route('recovery.index') }}">
                         <span class="site-menu-title">Recuperação</span>
                     </a>
                 </li>
