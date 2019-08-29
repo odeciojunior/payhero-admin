@@ -218,7 +218,6 @@ class ProjectsController extends Controller
         try {
 
             $requestValidated = $request->validated();
-
             $projectModel        = new Project();
             $userProjectModel    = new UserProject();
             $digitalOceanService = app(DigitalOceanFileService::class);
@@ -235,6 +234,7 @@ class ProjectsController extends Controller
 
                     $requestValidated['cookie_duration'] = 60;
                     $requestValidated['status']          = 1;
+//                    $requestValidated['support_phone']   = preg_replace("/[^0-9]/", "", $requestValidated['support_phone']);
 
                     $projectUpdate = $project->update($requestValidated);
                     if ($projectUpdate) {
