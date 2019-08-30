@@ -34,23 +34,19 @@ class FinancesController extends Controller
     }
 
     /**
-     * @param $company_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getBalances($company_id)
+    public function getBalances()
     {
         $companyModel     = new Company();
         $transactionModel = new Transaction();
-        //$projectModel     = new Project();
 
         $antecipableBalance = 0;
         $pendingBalance     = 0;
 
-        $company = $companyModel->whereHas('usersProjects', function($query) {
-            $query->where('user', auth()->user()->id);
-        })->find(current(Hashids::decode($company_id)));
+        $company = $companyModel->where('user_id', auth()->user()->id)->first();
 
-        if ($company) {
+        if (!empty($company)) {
             $pendingTransactions = $transactionModel->where('company', $company->id)
                                                     ->where('status', 'paid')
                                                     ->whereDate('release_date', '>', Carbon::today()->toDateString())
@@ -96,7 +92,7 @@ class FinancesController extends Controller
                                         'currency'            => $company->country == 'usa' ? '$' : 'R$',
                                     ]);
         } else {
-            return response()->json(['message' => 'Balanço não encontrado.'], 400);
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente!'], 400);
         }
     }
 }

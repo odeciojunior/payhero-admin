@@ -36,13 +36,19 @@ $(document).ready(function () {
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
 
         $.ajax({
-            url: "/finances/getbalances/" + $("#transfers_company_select").val(),
+            url: "/finances/getbalances/",
             type: "GET",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
-            error: function error() {
-                //
+            error: function error(response) {
+                if (response.status === 422) {
+                    for (error in response.errors) {
+                        alertCustom('error', String(response.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', response.message);
+                }
             },
             success: function success(response) {
                 $('.saldoPendente').html('<span class="currency">R$</span><span class="pending-balance">0,00</span>');
