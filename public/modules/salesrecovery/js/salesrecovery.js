@@ -134,13 +134,11 @@ $(document).ready(function () {
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
                 }
-                console.log(response.data);
                 pagination(response, 'salesRecovery', atualizar);
 
                 $('.details-cart-recovery').unbind('click');
 
                 $('.details-cart-recovery').on('click', function () {
-                    console.log($(this).data('venda'));
 
                     var sale = $(this).data('venda');
 
@@ -166,10 +164,9 @@ $(document).ready(function () {
                             $("#table-product").html('');
 
                             if (!isEmpty(response.data)) {
-                                console.log(response.data);
+
                                 $("#date-as-hours").html(`${response.data.checkout.date} às ${response.data.checkout.hours}`);
                                 $("#status-checkout").addClass('badge-' + statusRecovery[response.data.status]).html(response.data.status);
-                                $('#modal_detalhes').modal('show');
 
                                 /**
                                  * Produtos
@@ -196,15 +193,25 @@ $(document).ready(function () {
                                     $("#table-product").html(div);
                                 });
                                 $("#total-value").html("R$ " + response.data.checkout.total);
-                                $("#client-name").html('Nome: ' + response.data.client.name);
-                                $("#client-telephone").html('Nome: ' + response.data.client.telephone);
-                                $("#client-whatsapp").attr('href', response.data.client.whatsapp_link);
-                                $("#client-email").html('E-mail: ' + response.data.client.email);
-                                $("#client-document").html('CPF: ' + response.data.client.document);
-                                $("#client-street").html('Endereço: ' + response.data.delivery.street);
-                                $("#client-zip-code").html('CEP: ' + response.data.delivery.zip_code);
-                                $("#client-city-state").html('Cidade: ' + response.data.delivery.city + '/' + response.data.delivery.state);
-                                $("#sale-motive").html('Motivo: ' + response.data.client.error);
+                                /**
+                                 * Fim Produtos
+                                 */
+
+                                /**
+                                 * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
+                                 */
+                                $("#client-name").html('Nome: ' + (response.data.client.name.length === 0 ? '' : response.data.client.name));
+                                $("#client-telephone").html('Nome: ' + (response.data.client.telephone === 0 ? '' : response.data.client.telephone));
+                                $("#client-whatsapp").attr('href', (response.data.client.whatsapp_link === 0 ? '' : response.data.client.whatsapp_link));
+                                $("#client-email").html('E-mail: ' + (response.data.client.email === 0 ? '' : response.data.client.email));
+                                $("#client-document").html('CPF: ' + (response.data.client.document === 0 ? '' : response.data.client.document));
+                                if (response.data.method === 'boletoCartao') {
+                                    $("#client-street").html('Endereço: ' + response.data.delivery.street);
+                                    $("#client-zip-code").html('CEP: ' + response.data.delivery.zip_code);
+                                    $("#client-city-state").html('Cidade: ' + response.data.delivery.city + '/' + response.data.delivery.state);
+                                    $("#sale-motive").html('Motivo: ' + (response.data.client.error === 0 ? '' : response.data.client.error));
+
+                                }
 
                                 if (!isEmpty(response.data.link)) {
                                     $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + response.data.link + '"><i class="material-icons gradient" style="font-size:17px;">file_copy</i> </a> ');
@@ -215,7 +222,13 @@ $(document).ready(function () {
                                 $("#checkout-ip").html('IP: ' + response.data.checkout.ip);
 
                                 $("#checkout-is-mobile").html(response.data.checkout.is_mobile);
+                                /**
+                                 * Fim dados do Cliente
+                                 */
 
+                                /**
+                                 * Dados do checkout - UTM
+                                 */
                                 $("#checkout-operational-system").html('Sistema: ' + response.data.checkout.operational_system);
                                 $("#checkout-browser").html('Navegador: ' + response.data.checkout.browser);
                                 $("#checkout-src").html('SRC: ' + response.data.checkout.src);
@@ -224,19 +237,28 @@ $(document).ready(function () {
                                 $("#checkout-utm-campaign").html('UTM Campaign: ' + response.data.checkout.utm_campaign);
                                 $("#checkout-utm-term").html('UTM Term: ' + response.data.checkout.utm_term);
                                 $("#checkout-utm-content").html('UTM Content: ' + response.data.checkout.utm_content);
+                                /**
+                                 * Fim dados do checkout
+                                 */
+
+
+
+
+                                $('#modal_detalhes').modal('show');
+
+                                $(".copy_link").on("click", function () {
+                                    var temp = $("<input>");
+                                    $("#nav-tabContent").append(temp);
+                                    temp.val($(this).attr('link')).select();
+                                    document.execCommand("copy");
+                                    temp.remove();
+                                    alertCustom('success', 'Link copiado!');
+                                });
 
                             } else {
 
                             }
 
-                            $(".copy_link").on("click", function () {
-                                var temp = $("<input>");
-                                $("#nav-tabContent").append(temp);
-                                temp.val($(this).attr('link')).select();
-                                document.execCommand("copy");
-                                temp.remove();
-                                alertCustom('success', 'Link copiado!');
-                            });
                         }
                     });
                 });

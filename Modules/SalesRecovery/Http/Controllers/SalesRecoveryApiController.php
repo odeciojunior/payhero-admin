@@ -13,6 +13,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\SalesRecoveryService;
+use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoveryIndexResourceTransformer;
 use Vinkla\Hashids\Facades\Hashids;
@@ -75,7 +76,7 @@ class SalesRecoveryApiController extends Controller
 
     /**
      * @param Request $request
-     * @return SalesRecoverydetailsResourceTransformer
+     * @return SalesRecoveryCartAbandonedDetailsResourceTransformer|SalesRecoverydetailsResourceTransformer
      */
     public function getDetails(Request $request)
     {
@@ -88,22 +89,24 @@ class SalesRecoveryApiController extends Controller
                 $saleId = current(Hashids::decode($request->input('checkout')));
                 $sale   = $saleModel->find($saleId);
                 if (!empty($sale)) {
-                    $data = $salesRecoveryService->getSalesCartOrBoletoDetails($sale);
 
-                    return SalesRecoverydetailsResourceTransformer::make($data);
+                    return SalesRecoverydetailsResourceTransformer::make($salesRecoveryService->getSalesCartOrBoletoDetails($sale));
                 } else {
                     $checkout = $checkoutModel->find($saleId);
-
-                    $salesRecoveryService->getSalesCheckoutDetails($checkout);
+                    if (!empty($checkout)) {
+                        return SalesRecoveryCartAbandonedDetailsResourceTransformer::make($salesRecoveryService->getSalesCheckoutDetails($checkout));
+                    } else{
+                        return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
+                    }
                 }
             } else {
-                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde']);
+                return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar detalhes do carrinho abandonado');
             report($e);
 
-            return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde']);
+            return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
         }
     }
 }
