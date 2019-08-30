@@ -18,7 +18,6 @@ class HotZappService
      */
     function __construct($link)
     {
-
         $this->link = $link;
     }
 
@@ -28,12 +27,11 @@ class HotZappService
      */
     function newBoleto(Sale $sale, $plans)
     {
-
         $data = [
             'transaction_id'        => @$sale->id,
-            'name'                  => @$sale->client()->first()->name,
-            'phone'                 => @$sale->client()->first()->cellphone,
-            'email'                 => @$sale->client()->first()->email,
+            'name'                  => @$sale->clientModel()->name, 
+            'phone'                 => @$sale->clientModel()->cellphone,
+            'email'                 => @$sale->clientModel()->email,
             'address'               => @$sale->delivery()->first()->street,
             'address_number'        => @$sale->delivery()->first()->number,
             'address_district'      => @$sale->delivery()->first()->neighborhood,
@@ -41,7 +39,7 @@ class HotZappService
             'address_city'          => @$sale->delivery()->first()->city,
             'address_state'         => @$sale->delivery()->first()->state,
             'address_country'       => 'BR',
-            'doc'                   => @$sale->client()->first()->document,
+            'doc'                   => @$sale->clientModel()->document,
             'cms_vendor'            => '',
             'total_price'           => @$sale->total_paid_value,
             'receiver_type'         => '',

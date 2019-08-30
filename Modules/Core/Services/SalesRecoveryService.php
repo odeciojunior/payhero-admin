@@ -112,6 +112,8 @@ class SalesRecoveryService
                 $join->on('plan_sale.sale', '=', 'sales.id');
             })->leftJoin('checkouts as checkout', function($join) {
                 $join->on('sales.checkout', '=', 'checkout.id');
+            })->leftJoin('clients as client', function($join) {
+                $join->on('sales.client', '=', 'client.id');
             })->whereIn('sales.status', $status)->where([
                                                             ['sales.payment_method', $paymentMethod],
                                                         ])->with([
@@ -122,6 +124,7 @@ class SalesRecoveryService
                                                                                ->first();
                                                                      },
                                                                  ]);
+
         if (!empty($projectId)) {
             $salesExpired->where('sales.project', $projectId);
         } else {

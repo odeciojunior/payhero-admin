@@ -27,6 +27,8 @@ class ReleasedBalanceNotifyUserListener
     public function handle(ReleasedBalanceEvent $event)
     {
         try {
+            $userModel = new User();
+
             $transfers = $event->transfer;
 
             $transfers = $transfers->groupBy('user')->map(function($row) {
@@ -34,9 +36,8 @@ class ReleasedBalanceNotifyUserListener
             });
             $message   = '';
             foreach ($transfers as $user_id => $value) {
-                $userModel = new User();
                 $user      = $userModel->find($user_id);
-                $message   = 'O valor de R$' . number_format(intval($value) / 100, 2, ',', '.') . ' foi transferido para sua conta.';
+                $message   = 'O valor de R$' . number_format(intval($value) / 100, 2, ',', '.') . ' foi acrescentado ao saldo disponível.';
                 $user->notify(new ReleasedBalanceNotification($message));
             }
         } catch (Exception $e) {
