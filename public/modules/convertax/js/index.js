@@ -45,7 +45,7 @@ $(document).ready(function () {
 
                     $(".btn-save").unbind('click');
                     $(".btn-save").on('click', function () {
-                        if ($('#link').val() == '') {
+                        if ($('#link').val() == '' || $('#value').val() == '') {
                             alertCustom('error', 'Dados informados inválidos');
                             return false;
                         }
@@ -62,7 +62,7 @@ $(document).ready(function () {
                             cache: false,
                             data: form_data,
                             error: function error(response) {
-                                alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
+                                alertCustom('error', response.responseJSON.message);
                             },
                             success: function success(response) {
                                 updateIntegrations();
@@ -74,6 +74,7 @@ $(document).ready(function () {
             }
         });
     });
+
     function updateIntegrations() {
         $.ajax({
             method: "GET",
