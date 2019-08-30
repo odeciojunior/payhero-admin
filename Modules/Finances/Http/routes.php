@@ -12,7 +12,7 @@ Route::group(
         Route::get('/', 'FinancesController@index')->name('finances');
         Route::get('/testFinances', 'FinancesTestController@index')->name('financesTeste');
 
-        Route::get('/getbalances/{company_id}', 'FinancesController@getBalances')->name('finances.balances');
+        Route::get('/getbalances', 'FinancesController@getBalances')->name('finances.balances');
     }
 
 );
