@@ -177,22 +177,21 @@ class PlansController extends Controller
                     $plan = $planModel->where('id', $planId)->first();
                     $plan->update($requestData);
 
-                    $productPlans = $productPlan->where('plan', $plan->id)->get()->toArray();
+                    $productPlans = $productPlan->where('plan', $plan->id)->get();
                     if (count($productPlans) > 0) {
-                        foreach ($productPlans as $productPlanArray) {
-                            $productPlan->find($productPlanArray['id'])->delete();
+                        foreach ($productPlans as $productPlan) {
+                            $productPlan->forceDelete();
                         }
                     }
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         foreach ($requestData['products'] as $keyProduct => $product) {
                             foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
                                 if ($keyProduct == $keyAmount) {
-                                    $dataProductPlan = [
+                                    $productPlan->create([
                                         'product' => $product,
                                         'plan'    => $plan->id,
                                         'amount'  => $productAmount,
-                                    ];
-                                    $productPlan->create($dataProductPlan);
+                                    ]);
                                 }
                             }
                         }
@@ -248,7 +247,7 @@ class PlansController extends Controller
                         }
                         if (count($plan->productsPlans) > 0) {
                             foreach ($plan->productsPlans as $productPlan) {
-                                $productPlan->delete();
+                                $productPlan->forceDelete();
                             }
                         }
                         $planDeleted = $plan->delete();

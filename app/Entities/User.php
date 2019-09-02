@@ -60,6 +60,7 @@ class User extends Authenticable
     use Notifiable;
     use HasRoles;
     use FoxModelTrait;
+
     /**
      * @var array
      */
