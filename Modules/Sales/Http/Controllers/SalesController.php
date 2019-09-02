@@ -35,12 +35,17 @@ class SalesController extends Controller
     {
         try {
             $userProjectModel = new UserProject();
-            $saleModel        = new Sale();
+            $transactionModel = new Transaction();
+            $companyModel     = new Company();
 
             $userProjects = $userProjectModel->with('projectId')
                                              ->where('user', auth()->user()->id)
                                              ->get();
 
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                                                                    ->pluck('id')
+                                                                    ->toArray();
+   
             $projects = [];
 
             foreach ($userProjects as $userProject) {
@@ -54,7 +59,7 @@ class SalesController extends Controller
 
             return view('sales::index', [
                 'projetos'     => $projects,
-                'sales_amount' => $saleModel->where('owner', auth()->user()->id)->get()->count(),
+                'sales_amount' => $transactionModel->whereIn('company', $userCompanies)->get()->count(),
             ]);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - index');
@@ -131,11 +136,19 @@ class SalesController extends Controller
                 $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company', $userCompanies)
                                                   ->first();
 
-                if ($transaction) {
-                    $value = $transaction->value;
-                } else {
-                    $value = '000';
+                $transactionConvertax = $transactionModel->where('sale', $sale->id)
+                                                         ->where('company', 29)
+                                                         ->first();
+
+                if(!empty($transactionConvertax)){
+                    $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
                 }
+                else{
+                    $convertaxValue = '0,00';
+                }
+
+                $value = $transaction->value;
+
                 $comission = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($value, ',', strlen($value) - 2, 0);
 
                 $taxa     = 0;
@@ -152,20 +165,21 @@ class SalesController extends Controller
                 $whatsAppMsg = 'Olá ' . $client->name;
 
                 $details = view('sales::details', [
-                    'sale'           => $sale,
-                    'products'       => $products,
-                    'client'         => $client,
-                    'delivery'       => $delivery,
-                    'checkout'       => $checkout,
-                    'total'          => number_format(intval($total) / 100, 2, ',', '.'),
-                    'subTotal'       => number_format(intval($subTotal) / 100, 2, ',', '.'),
-                    'discount'       => number_format(intval($discount) / 100, 2, ',', '.'),
-                    'shipment_value' => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'whatsapp_link'  => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg,
-                    'comission'      => $comission,
-                    'taxa'           => number_format($taxa / 100, 2, ',', '.'),
-                    'taxaReal'       => $taxaReal,
-                    'transaction'    => $transaction,
+                    'sale'            => $sale,
+                    'products'        => $products,
+                    'client'          => $client,
+                    'delivery'        => $delivery,
+                    'checkout'        => $checkout,
+                    'total'           => number_format(intval($total) / 100, 2, ',', '.'),
+                    'subTotal'        => number_format(intval($subTotal) / 100, 2, ',', '.'),
+                    'discount'        => number_format(intval($discount) / 100, 2, ',', '.'),
+                    'shipment_value'  => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
+                    'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg,
+                    'comission'       => $comission,
+                    'convertax_value' => $convertaxValue,
+                    'taxa'            => number_format($taxa / 100, 2, ',', '.'),
+                    'taxaReal'        => $taxaReal,
+                    'transaction'     => $transaction,
                 ]);
 
                 return response()->json($details->render());
@@ -206,6 +220,7 @@ class SalesController extends Controller
                                           ->pluck('id')
                                           ->toArray();
 
+
             $transactions = $transactionModel->with([
                                                         'sale',
                                                         'sale.projectModel',
@@ -216,13 +231,7 @@ class SalesController extends Controller
                                                         'sale.plansSales.plan.projectId',
                                                     ])
                                              ->whereHas('sale', function($querySale) {
-                                                 $querySale->where('status', '!=', 3);
-                                                 $querySale->where('status', '!=', 5);
-                                                 $querySale->where('status', '!=', 10);
-                                                 $querySale->where(function($query) {
-                                                     $query->where('owner', auth()->user()->id);
-                                                     $query->orWhere('affiliate', auth()->user()->id);
-                                                 });
+                                                 $querySale->whereNotIn('status',[ 3, 5 , 10]);
                                              })
                                              ->whereIn('company', $userCompanies);
 

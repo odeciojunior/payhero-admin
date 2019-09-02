@@ -57,4 +57,19 @@ class SalePresenter extends Presenter
         }
         return $productsSale;
     }
+
+    public function getHotzappPlansList(){
+
+        $plans = [];
+
+        foreach ($this->plansSales as $planSale) {
+            $plans[] = [
+                "price"        => $planSale->plan()->first()->price,
+                "quantity"     => $planSale->amount,
+                "product_name" => $planSale->plan()->first()->name,
+            ];
+        }
+        return $plans;
+    }
+
 }

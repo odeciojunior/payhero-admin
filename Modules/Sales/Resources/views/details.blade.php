@@ -88,11 +88,19 @@
         <div class='col-lg-4 text-right'>
             <span class='text-muted ft-12'>{{$taxaReal ?? ''}}</span>
         </div>
+        @if($convertax_value != '0,00')
+            <div class='col-lg-8'>
+                <span class='text-muted ft-12'>App ConvertaX: </span>
+            </div>
+            <div class='col-lg-4 text-right'>
+                <span class='text-muted ft-12'>{{$convertax_value ?? ''}}</span>
+            </div>
+        @endif
         <div class='col-lg-6'>
             <h4 class='table-title'>Comissão: </h4>
         </div>
         <div class='col-lg-6 text-right'>
-            <h4 class='table-title'>{{$comission?? ''}}</h4>
+            <h4 class='table-title'>{{$comission ?? ''}}</h4>
         </div>
     </div>
 </div>

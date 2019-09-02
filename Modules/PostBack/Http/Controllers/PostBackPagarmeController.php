@@ -2,24 +2,25 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use App\Entities\Company;
-use App\Entities\HotZappIntegration;
-use App\Entities\Plan;
-use App\Entities\PlanSale;
-use App\Entities\PostbackLog;
-use App\Entities\Sale;
-use App\Entities\ShopifyIntegration;
-use App\Entities\Transaction;
-use App\Entities\Transfer;
-use App\Entities\User;
 use Carbon\Carbon;
+use App\Entities\Plan;
+use App\Entities\Sale;
+use App\Entities\User;
+use App\Entities\Company;
+use App\Entities\PlanSale;
+use App\Entities\Transfer;
+use Slince\Shopify\Client;
 use Illuminate\Http\Request;
+use App\Entities\PostbackLog;
+use App\Entities\Transaction;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\HotZappService;
-use Slince\Shopify\Client;
-use Slince\Shopify\PublicAppCredential;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Entities\HotZappIntegration;
+use App\Entities\ShopifyIntegration;
+use App\Entities\ConvertaxIntegration;
+use Slince\Shopify\PublicAppCredential;
+use Modules\Core\Services\HotZappService;
 
 class PostBackPagarmeController extends Controller
 {
@@ -121,29 +122,21 @@ class PostBackPagarmeController extends Controller
 
                 try {
                     $hotZappIntegrationModel = new HotZappIntegration();
-
                     $hotzappIntegration = $hotZappIntegrationModel->where('project_id', $plan->project)->first();
 
                     if (!empty($hotzappIntegration)) {
-
                         $hotZappService = new HotZappService($hotzappIntegration->link);
-
-                        $plansSale = $planSaleModel->where('sale', $sale->id)->get();
-
-                        $plans = [];
-                        foreach ($plansSale as $planSale) {
-
-                            $plan = $planModel->find($planSale->plan);
-
-                            $plans[] = [
-                                "price"        => $plan->price,
-                                "quantity"     => $planSale->amount,
-                                "product_name" => $plan->name,
-                            ];
-                        }
-
-                        $hotZappService->newBoleto($sale, $plans);
+                        $hotZappService->newBoleto($sale);
                     }
+
+                    $convertaxIntegrationModel = new ConvertaxIntegration();
+                    $convertaxIntegration = $convertaxIntegrationModel->where('project_id', $plan->project)->first();
+
+                    if (!empty($convertaxIntegration)) {
+                        $hotZappService = new HotZappService($convertaxIntegration->link);
+                        $hotZappService->newBoleto($sale);
+                    }
+
                 } catch (\Exception $e) {
                     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
                     report($e);
