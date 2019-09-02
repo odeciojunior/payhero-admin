@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Modules\Core\Services\SalesRecoveryService;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
@@ -53,17 +54,36 @@ class SalesRecoveryApiController extends Controller
         try {
             $salesRecoveryService = new SalesRecoveryService();
 
-            $projectId = null;
-            if ($request->has('project') && !empty($request->input('project'))) {
-                $projectId = current(Hashids::decode($request->input('project')));
-            }
+            $requestValidate = Validator::make($request->all(), [
+                'project'     => 'required|string',
+                'type'        => 'required|string',
+                'start_date'  => 'nullable',
+                'end_date'    => 'nullable',
+                'client_name' => 'nullable|string',
+            ]);
 
-            $endDate = null;
-            if ($request->has('end_date') && !empty($request->input('end_date'))) {
-                $endDate = date('Y-m-d', strtotime($request->input('end_date') . ' + 1 day'));
-            }
+            if ($requestValidate->fails()) {
+                return response()->json([
+                                            'message' => 'Erro ao listar projetos, tente novamente mais tarde',
+                                        ], 400);
+            } else {
+                $projectId = null;
+                if ($request->has('project') && !empty($request->input('project'))) {
+                    $projectId = current(Hashids::decode($request->input('project')));
+                }
 
-            return $salesRecoveryService->verifyType($request->input('type'), $projectId, $request->input('start_date'), $endDate);
+                $client = null;
+                if ($request->has('client_name') && !empty($request->input('client_name'))) {
+                    $client = $request->input('client_name');
+                }
+
+                $endDate = null;
+                if ($request->has('end_date') && !empty($request->input('end_date'))) {
+                    $endDate = date('Y-m-d', strtotime($request->input('end_date') . ' + 1 day'));
+                }
+
+                return $salesRecoveryService->verifyType($request->input('type'), $projectId, $request->input('start_date'), $endDate, $client);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados de recuperação de vendas');
             report($e);
@@ -95,7 +115,7 @@ class SalesRecoveryApiController extends Controller
                     $checkout = $checkoutModel->find($saleId);
                     if (!empty($checkout)) {
                         return SalesRecoveryCartAbandonedDetailsResourceTransformer::make($salesRecoveryService->getSalesCheckoutDetails($checkout));
-                    } else{
+                    } else {
                         return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
                     }
                 }

@@ -125,6 +125,7 @@ class FoxUtils
 
             return '';
         }
+        return '';
     }
 
     public static function getCep($zipCode)

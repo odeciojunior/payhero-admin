@@ -54,7 +54,7 @@ class SalesRecoveryCardRefusedResource extends Resource
             'recovery_status' => $status,
             'value'           => number_format($this->value, 2, ',', '.'),
             'link'            => $link,
-            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . $client->telephone . '&text=' . $whatsAppMsg,
+            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . $client->telephone . '&text=' . $whatsAppMsg,
         ];
     }
 }

@@ -32,13 +32,17 @@
                                 <option value="3">Cartão Recusado</option>
                             </select>
                         </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                             <label for="start_date">Data inicial</label>
                             <input name='start_date' id="start_date" timezone='' class="form-control input-pad" type="date">
                         </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                             <label for="end_date">Data final</label>
                             <input name='end_date' id="end_date" class="form-control input-pad" type="date">
+                        </div>
+                        <div class="col-5 col-sm-4 col-md-4">
+                            <label for="client-name">Nome do Cliente</label>
+                            <input name='cliente-name' id="client-name" value='' class="form-control input-pad" type="text">
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-2 mt-30 text-right float-right">
                             <button id="bt_filtro" class="btn btn-primary col-12">

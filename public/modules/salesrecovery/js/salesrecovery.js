@@ -74,9 +74,9 @@ $(document).ready(function () {
 
         /*$('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");*/
         if (link == null) {
-            link = 'api/recovery/getrecoverydata?project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
+            link = 'api/recovery/getrecoverydata?project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val() + '&client_name=' + $("#client-name").val();
         } else {
-            link = 'api/recovery/getrecoverydata' + link + '&project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val();
+            link = 'api/recovery/getrecoverydata' + link + '&project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val() + '&client_name=' + $("#client-name").val();
         }
 
         $.ajax({
@@ -85,14 +85,15 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function error() {
+            error: function error(response) {
                 if (response.status === 422) {
                     for (error in response.errors) {
                         alertCustom('error', String(response.errors[error]));
                     }
                 } else {
-                    alertCustom('error', response.message);
+                    alertCustom('error', response.responseJSON.message);
                 }
+
             },
             success: function success(response) {
 
