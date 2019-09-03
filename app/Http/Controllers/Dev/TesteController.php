@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Checkout\Classes\MP;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\NotazzService;
 use Modules\Core\Services\ShopifyService;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
@@ -40,7 +41,6 @@ class TesteController extends Controller
     {
         ///
     }
-
 
     /**
      * @param Request $request
@@ -240,7 +240,6 @@ class TesteController extends Controller
     public function indexx()
     {
         $this->tgFunction();
-
         /*$dataValue = [
             'type' => 'payment',
 
@@ -252,21 +251,20 @@ class TesteController extends Controller
         return redirect()->route('dev.cloudfox.com.br/postback/mercadopago', compact('data', $dataValue));*/
     }
 
-
-    public function julioFunction(){
+    public function julioFunction()
+    {
 
         $plans = Plan::whereNotNull('shopify_variant_id')->get();
 
-        foreach($plans as $plan){
+        foreach ($plans as $plan) {
 
             $product = $plan->products->first();
-            
-            if(!empty($product)){
-                $product->update([
-                    'shopify_id'         => $plan->shopify_id,
-                    'shopify_variant_id' => $plan->shopify_variant_id,
-                ]); 
 
+            if (!empty($product)) {
+                $product->update([
+                                     'shopify_id'         => $plan->shopify_id,
+                                     'shopify_variant_id' => $plan->shopify_variant_id,
+                                 ]);
             }
         }
 
@@ -280,29 +278,31 @@ class TesteController extends Controller
     {
         //nada
 
+        $nservice  = new NotazzService();
+        $saleModel = new Sale();
+
+        $sale = $saleModel->with(['projectModel', 'projectModel.notazzIntegration'])->find(3366);
+
+        $nservice->createInvoice($sale->projectModel->notazzIntegration->id, $sale->id, 1);
+
         //$shopifyService = new ShopifyService('lipo-duo.myshopify.com', 'd7a27718b291b2e835d2e7d6c3a4787e');
 
-//                $shopifyService->createShopWebhook([
-//                                             "topic"   => "orders/updated",
-//                                             "address" => 'https://app.cloudfox.net/postback/shopify/YKV603kndgw8ymD/tracking',
-//                                             "format"  => "json",
-//                                         ]);
-
+        //                $shopifyService->createShopWebhook([
+        //                                             "topic"   => "orders/updated",
+        //                                             "address" => 'https://app.cloudfox.net/postback/shopify/YKV603kndgw8ymD/tracking',
+        //                                             "format"  => "json",
+        //                                         ]);
 
         //$shopifyService->deleteShopWebhook('688952344673');
         //dd($shopifyService->getShopWebhook());
 
-
-//        $shopifyService->createShopWebhook([
-//                                     "topic"   => "orders/updated",
-//                                     "address" => 'https://eca0ccd1.ngrok.io/postback/shopify/da6pVgdQ63k7BW0/tracking',
-//                                     "format"  => "json",
-//                                 ]);
+        //        $shopifyService->createShopWebhook([
+        //                                     "topic"   => "orders/updated",
+        //                                     "address" => 'https://eca0ccd1.ngrok.io/postback/shopify/da6pVgdQ63k7BW0/tracking',
+        //                                     "format"  => "json",
+        //                                 ]);
 
         dd('aa');
-
-
-
     }
 }
 
