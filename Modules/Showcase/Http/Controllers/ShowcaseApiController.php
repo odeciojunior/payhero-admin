@@ -2,11 +2,9 @@
 
 namespace Modules\Showcase\Http\Controllers;
 
-use App\Entities\User;
 use App\Empresa;
 use App\Projeto;
 use App\Afiliado;
-use App\Entities\UserProjeto;
 use Illuminate\Http\Request;
 use App\SolicitacaoAfiliacao;
 use Illuminate\Http\Response;

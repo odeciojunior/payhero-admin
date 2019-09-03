@@ -4,7 +4,6 @@ namespace Modules\ConvertaX\Http\Controllers;
 
 use App\Entities\ConvertaxIntegration;
 use App\Entities\Project;
-use App\Entities\UserProject;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

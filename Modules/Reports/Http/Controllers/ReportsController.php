@@ -2,22 +2,22 @@
 
 namespace Modules\Reports\Http\Controllers;
 
-use App\Entities\Plan;
 use DateTime;
 use Exception;
 use Carbon\Carbon;
+use Matrix\Builder;
+use App\Entities\Plan;
 use App\Entities\Sale;
 use App\Entities\Company;
 use App\Entities\Project;
 use Illuminate\Http\Request;
-use App\Entities\UserProject;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use JMS\Serializer\Tests\Fixtures\Discriminator\Car;
-use Matrix\Builder;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Date;
+use Modules\Core\Entities\UserProject;
+use JMS\Serializer\Tests\Fixtures\Discriminator\Car;
 use Modules\Reports\Transformers\SalesByOriginResource;
 
 class ReportsController extends Controller

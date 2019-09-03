@@ -3,7 +3,7 @@
 namespace Modules\Core\Events;
 
 use App\Entities\Sale;
-use App\Entities\User;
+use Modules\Core\Entities\User;
 use Illuminate\Queue\SerializesModels;
 
 class ResetPasswordEvent

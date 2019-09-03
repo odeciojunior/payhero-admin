@@ -4,7 +4,6 @@ namespace Modules\Pixels\Http\Controllers;
 
 use App\Pixel;
 use App\Projeto;
-use App\Entities\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

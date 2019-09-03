@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Entities\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;

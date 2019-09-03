@@ -3,21 +3,16 @@
 namespace Modules\Dashboard\Http\Controllers;
 
 use Carbon\Carbon;
-use Pusher\Pusher;
-use PagarMe\Client;
-use App\Entities\Plan;
-use App\Entities\Sale;
-use Cknow\Money\Money;
-use App\Entities\Company;
-use App\Entities\Project;
-use App\Entities\Checkout;
-use App\Entities\PlanSale;
 use Illuminate\Http\Request;
-use App\Entities\Transaction;
-use App\Entities\UserProject;
 use Illuminate\Http\Response;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Sale;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\Transaction;
 
 /**
  * Class DashboardController
@@ -30,12 +25,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $companyModel = new Company();
-
-        $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
-
         return view('dashboard::dashboard', [
-            'companies' => $companies,
+            'companies' => auth()->user()->companies()->get()->toArray(),
         ]);
     }
 
@@ -55,37 +46,37 @@ class DashboardController extends Controller
 
         $company = $companyModel->find($request->company);
 
-        $pendingTransactions = $transactionModel->where('company', $request->company)
+        $pendingTransactions = $transactionModel->where('company_id', $request->company)
                                                 ->where('status', 'paid')
                                                 ->whereDate('release_date', '>', Carbon::today()->toDateString())
-                                                ->get()->toArray();
+                                                ->get();
 
         if (count($pendingTransactions)) {
             foreach ($pendingTransactions as $pendingTransaction) {
-                $pendingBalance += $pendingTransaction['value'];
+                $pendingBalance += $pendingTransaction->value;
             }
         }
 
-        $anticipatedTransactions = $transactionModel->where('company', $request->company)
+        $anticipatedTransactions = $transactionModel->where('company_id', $request->company)
                                                     ->where('status', 'anticipated')
                                                     ->whereDate('release_date', '>', Carbon::today()->toDateString())
-                                                    ->get()->toArray();
+                                                    ->get();
 
         if (count($anticipatedTransactions)) {
             foreach ($anticipatedTransactions as $anticipatedTransaction) {
-                $pendingBalance += $anticipatedTransaction['value'] - $anticipatedTransaction['antecipable_value'];
+                $pendingBalance += $anticipatedTransaction->value - $anticipatedTransaction->antecipable_value;
             }
         }
 
-        $antecipableTransactions = $transactionModel->where('company', $request->company)
+        $antecipableTransactions = $transactionModel->where('company_id', $request->company)
                                                     ->where('status', 'paid')
                                                     ->whereDate('release_date', '>', Carbon::today())
                                                     ->whereDate('antecipation_date', '<=', Carbon::today())
-                                                    ->get()->toArray();
+                                                    ->get();
 
         if (count($antecipableTransactions)) {
             foreach ($antecipableTransactions as $antecipableTransaction) {
-                $antecipableBalance += $antecipableTransaction['antecipable_value'];
+                $antecipableBalance += $antecipableTransaction->antecipable_value;
             }
         }
 
@@ -101,42 +92,5 @@ class DashboardController extends Controller
                                 ]);
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
-    public function lastSales(Request $request)
-    {
-
-        $saleModel     = new Sale();
-        $planSaleModel = new PlanSale();
-        $planModel     = new Plan();
-        $projectModel  = new Project();
-
-        $requestData = $request->all();
-
-        $sales = $saleModel->select('id', 'start_date', 'total_paid_value', 'payment_form', 'ip')
-                           ->where([
-                                       ['owner', auth()->user()->id],
-                                       ['gateway_status', '!=', 'refused'],
-                                   ])->orderBy('id', 'DESC')
-                           ->limit(10)->get()->toArray();
-
-        foreach ($sales as &$sale) {
-
-            $planSale = $planSaleModel->where('sale', $sale['id'])->first();
-
-            $plan = $planModel->find($planSale->plan);
-
-            $project = $projectModel->find($plan['project']);
-
-            $sale['project'] = $project['name'];
-
-            $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y H:i:s');
-        }
-
-        return response()->json($sales);
-    }
 }
 

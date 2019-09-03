@@ -3,9 +3,9 @@
 namespace App\Listeners\Modules\Core\Listeners;
 
 use App\Entities\Notification;
-use App\Entities\User;
-use App\Events\Modules\Core\Events\SaleApprovedEvent;
+use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\Log;
+use App\Events\Modules\Core\Events\SaleApprovedEvent;
 use Modules\Notifications\Notifications\SaleApprovedNotification;
 
 class NotifyUsersApprovedSaleListener

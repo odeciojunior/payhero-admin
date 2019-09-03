@@ -2,23 +2,23 @@
 
 namespace Modules\Projects\Http\Controllers;
 
-use App\Entities\Shipping;
 use Exception;
-use App\Entities\Project;
 use App\Entities\Carrier;
+use App\Entities\Project;
+use App\Entities\Shipping;
 use Illuminate\Http\Request;
-use App\Entities\UserProject;
 use App\Entities\DomainRecord;
 use App\Entities\ExtraMaterial;
-use Illuminate\Support\Facades\Gate;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 use App\Entities\ShopifyIntegration;
+use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
-use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\ShopifyService;
+use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;

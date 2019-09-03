@@ -3,7 +3,6 @@
 namespace Modules\Affiliates\Http\Controllers;
 
 use App\Entities\Plan;
-use App\Entities\User;
 use App\Entities\Pixel;
 use App\Entities\Domain;
 use App\Entities\Project;
@@ -11,7 +10,6 @@ use App\Entities\Campaign;
 use App\Entities\PlanSale;
 use App\Entities\Affiliate;
 use Illuminate\Http\Request;
-use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use App\Entities\AffiliateLink;
 use Illuminate\Routing\Controller;

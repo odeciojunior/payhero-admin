@@ -2,13 +2,11 @@
 
 namespace Modules\Sms\Http\Controllers;
 
-use App\Entities\User;
 use App\Plano;
 use App\Projeto;
 use DateTimeZone;
 use App\ZenviaSms;
 use App\MensagemSms;
-use App\Entities\UserProjeto;
 use Zenvia\Model\Sms;
 use App\CompraUsuario;
 use Zenvia\Model\SmsFacade;

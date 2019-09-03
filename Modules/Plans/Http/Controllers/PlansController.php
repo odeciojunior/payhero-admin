@@ -8,7 +8,6 @@ use App\Entities\PlanGift;
 use App\Entities\Product;
 use App\Entities\ProductPlan;
 use App\Entities\Project;
-use App\Entities\UserProject;
 use App\Entities\ZenviaSms;
 use Auth;
 use Exception;

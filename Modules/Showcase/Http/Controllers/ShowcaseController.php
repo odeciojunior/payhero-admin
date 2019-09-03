@@ -3,11 +3,9 @@
 namespace Modules\Showcase\Http\Controllers;
 
 use App\Entities\Plan;
-use App\Entities\User;
 use App\Entities\Project;
 use App\Entities\Affiliate;
 use Illuminate\Http\Request;
-use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use App\Entities\AffiliateRequest;
 use Illuminate\Routing\Controller;

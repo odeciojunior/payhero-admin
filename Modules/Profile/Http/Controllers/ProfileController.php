@@ -3,16 +3,15 @@
 namespace Modules\Profile\Http\Controllers;
 
 use Exception;
-use App\Entities\User;
-use App\Entities\UserDocument;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Modules\Profile\Http\Requests\ProfileIndexRequest;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
+use Modules\Core\Entities\UserDocument;
 use Modules\Profile\Transformers\UserResource;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Profile\Http\Requests\ProfileIndexRequest;
 use Modules\Profile\Http\Requests\ProfileUpdateRequest;
 use Modules\Profile\Http\Requests\ProfilePasswordRequest;
 use Modules\Profile\Http\Requests\ProfileUploadDocumentRequest;

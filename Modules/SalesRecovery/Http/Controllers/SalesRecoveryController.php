@@ -4,7 +4,6 @@ namespace Modules\SalesRecovery\Http\Controllers;
 
 use App\Entities\Checkout;
 use App\Entities\Project;
-use App\Entities\UserProject;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;

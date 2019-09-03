@@ -8,7 +8,6 @@ use App\Entities\Domain;
 use App\Entities\Log as CheckoutLog;
 use App\Entities\Log;
 use App\Entities\Sale;
-use App\Entities\UserProject;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

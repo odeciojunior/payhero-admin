@@ -3,7 +3,6 @@
 namespace Modules\Projects\Http\Controllers;
 
 use App\Projeto;
-use App\Entities\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

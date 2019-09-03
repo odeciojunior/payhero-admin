@@ -2,16 +2,16 @@
 
 namespace Modules\Register\Http\Controllers;
 
-use App\Entities\Company;
 use Carbon\Carbon;
-use App\Entities\User;
+use App\Entities\Company;
 use App\Entities\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Modules\Core\Services\FoxUtils;
-use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Register\Http\Requests\RegisterRequest;
 

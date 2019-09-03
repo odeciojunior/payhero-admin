@@ -2,13 +2,11 @@
 
 namespace Modules\Partners\Http\Controllers;
 
-use App\Entities\User;
 use App\Projeto;
 use App\Convite;
 use App\Empresa;
 use App\Parceiro;
 use Carbon\Carbon;
-use App\Entities\UserProjeto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;

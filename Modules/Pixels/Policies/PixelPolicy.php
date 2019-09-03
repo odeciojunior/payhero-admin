@@ -2,9 +2,9 @@
 
 namespace Modules\Pixels\Policies;
 
-use App\Entities\Project;
-use App\Entities\User;
-use App\Entities\UserProject;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PixelPolicy

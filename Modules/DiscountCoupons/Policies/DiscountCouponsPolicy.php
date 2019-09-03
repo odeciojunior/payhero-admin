@@ -2,7 +2,7 @@
 
 namespace Modules\DiscountCoupons\Policies;
 
-use App\Entities\User;
+use Modules\Core\Entities\UserProject;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DiscountCouponsPolicy
