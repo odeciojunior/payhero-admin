@@ -3,12 +3,11 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
- * @property integer $product
- * @property integer $plan
+ * @property integer $product_id
+ * @property integer $plan_id
  * @property int $amount
  * @property string $created_at
  * @property string $updated_at
@@ -18,47 +17,38 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ProductPlan extends Model
 {
-    use SoftDeletes;
+    /**
+     * The table associated with the model.
+     * 
+     * @var string
+     */
+    protected $table = 'products_plans';
+
+    /**
+     * The "type" of the auto-incrementing ID.
+     * 
+     * @var string
+     */
+    protected $keyType = 'integer';
 
     /**
      * @var array
      */
-    protected $dates = ['deleted_at'];
-    /**
-     * The table associated with the model.
-     * @var string
-     */
-    protected $table = 'products_plans';
-    /**
-     * The "type" of the auto-incrementing ID.
-     * @var string
-     */
-    protected $keyType = 'integer';
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'product',
-        'plan',
-        'amount',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ['product_id', 'plan_id', 'amount', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan', 'plan');
+        return $this->belongsTo('App\Entities\Plan');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function getProduct()
+    public function product()
     {
-        return $this->belongsTo('App\Entities\Product', 'product');
+        return $this->belongsTo('App\Entities\Product');
     }
 }

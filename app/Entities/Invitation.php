@@ -2,7 +2,6 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_invited
  * @property int $company
  * @property string $email_invited
- * @property string $status
+ * @property int $status
  * @property string $register_date
  * @property string $expiration_date
  * @property string $parameter
@@ -24,35 +23,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Invitation extends Model
 {
-    use FoxModelTrait;
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'invite',
-        'user_invited',
-        'company',
-        'email_invited',
-        'status',
-        'register_date',
-        'expiration_date',
-        'parameter',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-    private $enum = [
-        'status' => [
-            1 => 'accepted',
-            2 => 'pending',
-            3 => 'expired',
-        ],
-    ];
+    protected $fillable = ['invite', 'user_invited', 'company', 'email_invited', 'status', 'register_date', 'expiration_date', 'parameter', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -68,5 +49,13 @@ class Invitation extends Model
     public function user()
     {
         return $this->belongsTo('App\Entities\User', 'user_invited');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Entities\User', 'invite');
     }
 }

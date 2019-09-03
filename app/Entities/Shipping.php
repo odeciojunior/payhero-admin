@@ -2,9 +2,7 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -18,47 +16,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $pre_selected
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  * @property Project $project
+ * @property Sale[] $sales
  */
 class Shipping extends Model
 {
-    use FoxModelTrait, SoftDeletes;
-    /**
-     * @var array
-     */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'information',
-        'name',
-        'pre_selected',
-        'project',
-        'status',
-        'type',
-        'value',
-        'zip_code_origin',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'status'       => [
-            1 => 'active',
-            0 => 'disabled',
-            '' => 'disabled'
-        ],
-        'pre_selected' => [
-            1 => 'yes',
-            0 => 'no',
-        ],
-    ];
+    protected $fillable = ['project', 'name', 'information', 'value', 'type', 'zip_code_origin', 'status', 'pre_selected', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -69,10 +43,10 @@ class Shipping extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale', 'shipping');
+        return $this->hasMany('App\Entities\Sale');
     }
 }

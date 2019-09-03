@@ -38,6 +38,6 @@ class Gift extends Model
      */
     public function planGifts()
     {
-        return $this->hasMany('App\Entities\PlanGift', 'gift');
+        return $this->hasMany('App\Entities\PlanGift');
     }
 }

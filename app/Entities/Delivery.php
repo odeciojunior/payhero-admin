@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property int $carrier
+ * @property int $carrier_id
+ * @property string $receiver_name
  * @property string $zip_code
  * @property string $country
  * @property string $state
@@ -24,42 +25,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $deleted_at
  * @property Carrier $carrier
  * @property Sale[] $sales
+ * @property TrackingHistory[] $trackingHistories
  */
 class Delivery extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'carrier',
-        'zip_code',
-        'country',
-        'state',
-        'city',
-        'neighborhood',
-        'street',
-        'number',
-        'complement',
-        'id_order_carrier',
-        'status_carrier',
-        'tracking_code',
-        'type',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ['carrier_id', 'receiver_name', 'zip_code', 'country', 'state', 'city', 'neighborhood', 'street', 'number', 'complement', 'id_order_carrier', 'status_carrier', 'tracking_code', 'type', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function carrier()
     {
-        return $this->belongsTo('App\Entities\Carrier', 'carrier');
+        return $this->belongsTo('App\Entities\Carrier');
     }
 
     /**
@@ -67,7 +54,7 @@ class Delivery extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale', 'delivery');
+        return $this->hasMany('App\Entities\Sale');
     }
 
     /**

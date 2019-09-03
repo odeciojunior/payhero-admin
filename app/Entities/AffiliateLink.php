@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $affiliate
- * @property integer $campaign
- * @property integer $plan
+ * @property integer $affiliate_id
+ * @property integer $campaign_id
+ * @property integer $plan_id
  * @property string $parameter
  * @property integer $clicks_amount
  * @property string $created_at
@@ -30,14 +30,14 @@ class AffiliateLink extends Model
     /**
      * @var array
      */
-    protected $fillable = ['affiliate', 'campaign', 'plan', 'parameter', 'clicks_amount', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['affiliate_id', 'campaign_id', 'plan_id', 'parameter', 'clicks_amount', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function affiliate()
     {
-        return $this->belongsTo('App\Entities\Affiliate', 'affiliate');
+        return $this->belongsTo('App\Entities\Affiliate');
     }
 
     /**
@@ -45,7 +45,7 @@ class AffiliateLink extends Model
      */
     public function campaign()
     {
-        return $this->belongsTo('App\Entities\Campaign', 'campaign');
+        return $this->belongsTo('App\Entities\Campaign');
     }
 
     /**
@@ -53,6 +53,6 @@ class AffiliateLink extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan', 'plan');
+        return $this->belongsTo('App\Entities\Plan');
     }
 }

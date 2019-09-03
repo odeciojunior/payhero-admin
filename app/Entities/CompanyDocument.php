@@ -2,7 +2,6 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,34 +16,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CompanyDocument extends Model
 {
-    use FoxModelTrait;
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'company_id',
-        'document_url',
-        'document_type_enum',
-        'status',
-        'created_at',
-        'updated_at',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'status' => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-    ];
+    protected $fillable = ['company_id', 'document_url', 'document_type_enum', 'status', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $affiliate
+ * @property integer $affiliate_id
  * @property string $description
  * @property string $created_at
  * @property string $updated_at
@@ -27,14 +27,14 @@ class Campaign extends Model
     /**
      * @var array
      */
-    protected $fillable = ['affiliate', 'description', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['affiliate_id', 'description', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function affiliate()
     {
-        return $this->belongsTo('App\Entities\Affiliate', 'affiliate');
+        return $this->belongsTo('App\Entities\Affiliate');
     }
 
     /**
@@ -42,7 +42,7 @@ class Campaign extends Model
      */
     public function affiliateLinks()
     {
-        return $this->hasMany('App\Entities\AffiliateLink', 'campaign');
+        return $this->hasMany('App\Entities\AffiliateLink');
     }
 
     /**

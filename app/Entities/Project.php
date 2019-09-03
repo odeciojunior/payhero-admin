@@ -2,13 +2,11 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $carrier
+ * @property int $carrier_id
  * @property string $photo
  * @property string $visibility
  * @property boolean $status
@@ -28,18 +26,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $logo
- * @property string $url_redirect
  * @property boolean $boleto
+ * @property string $boleto_redirect
+ * @property string $card_redirect
+ * @property string $analyzing_redirect
+ * @property string $support_phone
  * @property Carrier $carrier
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Checkout[] $checkouts
  * @property ClientsCookie[] $clientsCookies
+ * @property ConvertaxIntegration[] $convertaxIntegrations
  * @property DiscountCoupon[] $discountCoupons
  * @property Domain[] $domains
  * @property ExtraMaterial[] $extraMaterials
  * @property Gift[] $gifts
+ * @property HotzappIntegration[] $hotzappIntegrations
  * @property Layout[] $layouts
+ * @property NotazzIntegration[] $notazzIntegrations
  * @property Pixel[] $pixels
  * @property Plan[] $plans
  * @property Sale[] $sales
@@ -50,57 +54,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
-    use FoxModelTrait;
-    use SoftDeletes;
     /**
      * @var array
      */
-    protected $dates = ['deleted_at'];
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'carrier',
-        'photo',
-        'visibility',
-        'status',
-        'name',
-        'description',
-        'invoice_description',
-        'percentage_affiliates',
-        'url_page',
-        'automatic_affiliation',
-        'shopify_id',
-        'installments_amount',
-        'installments_interest_free',
-        'cookie_duration',
-        'url_cookies_checkout',
-        'contact',
-        'created_at',
-        'updated_at',
-        'logo',
-        'boleto_redirect',
-        'card_redirect',
-        'analyzing_redirect',
-        'boleto',
-        'support_phone',
-        'deleted_at',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'status' => [
-            1 => 'approved',
-        ],
-    ];
+    protected $fillable = ['carrier_id', 'photo', 'visibility', 'status', 'name', 'description', 'invoice_description', 'percentage_affiliates', 'url_page', 'automatic_affiliation', 'shopify_id', 'installments_amount', 'installments_interest_free', 'cookie_duration', 'url_cookies_checkout', 'contact', 'created_at', 'updated_at', 'deleted_at', 'logo', 'boleto', 'boleto_redirect', 'card_redirect', 'analyzing_redirect', 'support_phone'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function carrier()
     {
-        return $this->belongsTo('App\Entities\Carrier', 'carrier');
+        return $this->belongsTo('App\Entities\Carrier');
     }
 
     /**
@@ -108,7 +72,7 @@ class Project extends Model
      */
     public function affiliateRequests()
     {
-        return $this->hasMany('App\Entities\AffiliateRequest', 'project');
+        return $this->hasMany('App\Entities\AffiliateRequest');
     }
 
     /**
@@ -116,7 +80,7 @@ class Project extends Model
      */
     public function affiliates()
     {
-        return $this->hasMany('App\Entities\Affiliate', 'project');
+        return $this->hasMany('App\Entities\Affiliate');
     }
 
     /**
@@ -124,7 +88,7 @@ class Project extends Model
      */
     public function checkouts()
     {
-        return $this->hasMany('App\Entities\Checkout', 'project');
+        return $this->hasMany('App\Entities\Checkout');
     }
 
     /**
@@ -132,7 +96,15 @@ class Project extends Model
      */
     public function clientsCookies()
     {
-        return $this->hasMany('App\Entities\ClientsCookie', 'project');
+        return $this->hasMany('App\Entities\ClientsCookie');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function convertaxIntegrations()
+    {
+        return $this->hasMany('App\Entities\ConvertaxIntegration');
     }
 
     /**
@@ -140,7 +112,7 @@ class Project extends Model
      */
     public function discountCoupons()
     {
-        return $this->hasMany('App\Entities\DiscountCoupon', 'project');
+        return $this->hasMany('App\Entities\DiscountCoupon');
     }
 
     /**
@@ -156,7 +128,7 @@ class Project extends Model
      */
     public function extraMaterials()
     {
-        return $this->hasMany('App\Entities\ExtraMaterial', 'project');
+        return $this->hasMany('App\Entities\ExtraMaterial');
     }
 
     /**
@@ -170,6 +142,14 @@ class Project extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function hotzappIntegrations()
+    {
+        return $this->hasMany('App\Entities\HotzappIntegration');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function layouts()
     {
         return $this->hasMany('App\Entities\Layout', 'project');
@@ -178,9 +158,17 @@ class Project extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function notazzIntegrations()
+    {
+        return $this->hasMany('App\Entities\NotazzIntegration');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function pixels()
     {
-        return $this->hasMany('App\Entities\Pixel', 'project');
+        return $this->hasMany('App\Entities\Pixel');
     }
 
     /**
@@ -188,7 +176,7 @@ class Project extends Model
      */
     public function plans()
     {
-        return $this->hasMany('App\Entities\Plan', 'project');
+        return $this->hasMany('App\Entities\Plan');
     }
 
     /**
@@ -196,7 +184,7 @@ class Project extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale', 'project');
+        return $this->hasMany('App\Entities\Sale');
     }
 
     /**
@@ -212,7 +200,7 @@ class Project extends Model
      */
     public function shopifyIntegrations()
     {
-        return $this->hasMany('App\Entities\ShopifyIntegration', 'project');
+        return $this->hasMany('App\Entities\ShopifyIntegration');
     }
 
     /**
@@ -220,12 +208,7 @@ class Project extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UserProject', 'project');
-    }
-
-    public function users()
-    {
-        return $this->belongsToMany('App\Entities\User', 'users_projects', 'project', 'user');
+        return $this->hasMany('App\Entities\UsersProject');
     }
 
     /**
@@ -233,6 +216,6 @@ class Project extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('App\Entities\ZenviaSms', 'project');
+        return $this->hasMany('App\Entities\ZenviaSm');
     }
 }

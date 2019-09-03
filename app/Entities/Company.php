@@ -2,13 +2,11 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $user
+ * @property int $user_id
  * @property string $fantasy_name
  * @property string $company_document
  * @property string $zip_code
@@ -29,92 +27,30 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $business_website
  * @property string $support_email
  * @property string $support_telephone
+ * @property integer $balance
+ * @property boolean $bank_document_status
+ * @property boolean $address_document_status
+ * @property boolean $contract_document_status
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
  * @property User $user
  * @property Affiliate[] $affiliates
+ * @property Anticipation[] $anticipations
+ * @property CompanyDocument[] $companyDocuments
  * @property HotzappIntegration[] $hotzappIntegrations
  * @property Invitation[] $invitations
- * @property Plan[] $plans
  * @property Transaction[] $transactions
+ * @property Transfer[] $transfers
  * @property UsersProject[] $usersProjects
+ * @property Withdrawal[] $withdrawals
  */
 class Company extends Model
 {
-    use SoftDeletes;
-    use FoxModelTrait;
     /**
      * @var array
      */
-    protected $dates = ['deleted_at'];
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'user_id',
-        'fantasy_name',
-        'company_document',
-        'zip_code',
-        'country',
-        'state',
-        'city',
-        'street',
-        'complement',
-        'neighborhood',
-        'agency',
-        'bank',
-        'number',
-        'agency_digit',
-        'account',
-        'account_digit',
-        'statement_descriptor',
-        'shortened_descriptor',
-        'business_website',
-        'support_email',
-        'support_telephone',
-        'balance',
-        'bank_document_status',
-        'address_document_status',
-        'contract_document_status',
-        'created_at',
-        'deleted_at',
-        'updated_at',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'document_type'            => [
-            1 => 'bank_document_status',
-            2 => 'address_document_status',
-            3 => 'contract_document_status',
-        ],
-        'bank_document_status'     => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-        'address_document_status'  => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved', 
-            4 => 'refused',
-        ],
-        'contract_document_status' => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-        'status'                   => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-    ];
+    protected $fillable = ['user_id', 'fantasy_name', 'company_document', 'zip_code', 'country', 'state', 'city', 'street', 'complement', 'neighborhood', 'agency', 'bank', 'number', 'agency_digit', 'account', 'account_digit', 'statement_descriptor', 'shortened_descriptor', 'business_website', 'support_email', 'support_telephone', 'balance', 'bank_document_status', 'address_document_status', 'contract_document_status', 'created_at', 'deleted_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -129,7 +65,23 @@ class Company extends Model
      */
     public function affiliates()
     {
-        return $this->hasMany('App\Entities\Affiliate', 'company');
+        return $this->hasMany('App\Entities\Affiliate');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function anticipations()
+    {
+        return $this->hasMany('App\Entities\Anticipation');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function companyDocuments()
+    {
+        return $this->hasMany('App\Entities\CompanyDocument');
     }
 
     /**
@@ -151,17 +103,17 @@ class Company extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function plans()
+    public function transactions()
     {
-        return $this->hasMany('App\Entities\Plan', 'company');
+        return $this->hasMany('App\Entities\Transaction');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactions()
+    public function transfers()
     {
-        return $this->hasMany('App\Entities\Transaction', 'company');
+        return $this->hasMany('App\Entities\Transfer');
     }
 
     /**
@@ -169,6 +121,14 @@ class Company extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UserProject', 'company');
+        return $this->hasMany('App\Entities\UsersProject');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function withdrawals()
+    {
+        return $this->hasMany('App\Entities\Withdrawal');
     }
 }

@@ -2,12 +2,7 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
-use Laravel\Passport\HasApiTokens;
-use Modules\Core\Events\ResetPasswordEvent;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticable;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
@@ -15,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property string $email
  * @property string $password
  * @property string $remember_token
- * @property string $celphone
+ * @property string $cellphone
  * @property string $document
  * @property string $zip_code
  * @property string $country
@@ -26,6 +21,9 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property string $number
  * @property string $complement
  * @property string $photo
+ * @property string $date_birth
+ * @property boolean $address_document_status
+ * @property boolean $personal_document_status
  * @property string $score
  * @property int $sms_zenvia_amount
  * @property string $percentage_rate
@@ -33,100 +31,44 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property string $foxcoin
  * @property string $email_amount
  * @property string $call_amount
+ * @property string $updated_at
+ * @property string $created_at
+ * @property string $deleted_at
  * @property int $boleto_antecipation_money_days
  * @property int $credit_card_antecipation_money_days
  * @property int $release_money_days
  * @property int $percentage_antecipable
  * @property int $antecipation_tax
- * @property string $updated_at
- * @property string $created_at
- * @property string $deleted_at
  * @property AffiliateRequest[] $affiliateRequests
  * @property Affiliate[] $affiliates
  * @property Company[] $companies
+ * @property ConvertaxIntegration[] $convertaxIntegrations
+ * @property HotzappIntegration[] $hotzappIntegrations
  * @property Invitation[] $invitations
  * @property Invitation[] $invitations
+ * @property NotazzIntegration[] $notazzIntegrations
  * @property Product[] $products
  * @property Sale[] $sales
  * @property ShopifyIntegration[] $shopifyIntegrations
  * @property SmsMessage[] $smsMessages
  * @property Transfer[] $transfers
- * @property UserShopping[] $userShoppings'
+ * @property UserDocument[] $userDocuments
+ * @property UserShopping[] $userShoppings
  * @property UsersProject[] $usersProjects
  */
-class User extends Authenticable
+class User extends Model
 {
-    use HasApiTokens;
-    use Notifiable;
-    use HasRoles;
-    use FoxModelTrait;
-
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'remember_token',
-        'cellphone',
-        'document',
-        'zip_code',
-        'country',
-        'state',
-        'city',
-        'neighborhood',
-        'street',
-        'number',
-        'complement',
-        'photo',
-        'date_birth',
-        'address_document_status',
-        'personal_document_status',
-        'score',
-        'sms_zenvia_amount',
-        'percentage_rate',
-        'transaction_rate',
-        'foxcoin',
-        'email_amount',
-        'call_amount',
-        'boleto_antecipation_money_days',
-        'credit_card_antecipation_money_days',
-        'release_money_days',
-        'percentage_antecipable',
-        'antecipation_tax',
-        'updated_at',
-        'created_at',
-        'deleted_at',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'document_type'            => [
-            1 => 'personal_document',
-            2 => 'address_document',
-        ],
-        'address_document_status'  => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-        'personal_document_status' => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-    ];
+    protected $fillable = ['name', 'email', 'password', 'remember_token', 'cellphone', 'document', 'zip_code', 'country', 'state', 'city', 'neighborhood', 'street', 'number', 'complement', 'photo', 'date_birth', 'address_document_status', 'personal_document_status', 'score', 'sms_zenvia_amount', 'percentage_rate', 'transaction_rate', 'foxcoin', 'email_amount', 'call_amount', 'updated_at', 'created_at', 'deleted_at', 'boleto_antecipation_money_days', 'credit_card_antecipation_money_days', 'release_money_days', 'percentage_antecipable', 'antecipation_tax'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function affiliateRequests()
     {
-        return $this->hasMany('App\Entities\AffiliateRequest', 'user');
+        return $this->hasMany('App\Entities\AffiliateRequest');
     }
 
     /**
@@ -134,7 +76,7 @@ class User extends Authenticable
      */
     public function affiliates()
     {
-        return $this->hasMany('App\Entities\Affiliate', 'user');
+        return $this->hasMany('App\Entities\Affiliate');
     }
 
     /**
@@ -148,6 +90,22 @@ class User extends Authenticable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function convertaxIntegrations()
+    {
+        return $this->hasMany('App\Entities\ConvertaxIntegration');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function hotzappIntegrations()
+    {
+        return $this->hasMany('App\Entities\HotzappIntegration');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function invitations()
     {
         return $this->hasMany('App\Entities\Invitation', 'user_invited');
@@ -156,9 +114,25 @@ class User extends Authenticable
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function invitations()
+    {
+        return $this->hasMany('App\Entities\Invitation', 'invite');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notazzIntegrations()
+    {
+        return $this->hasMany('App\Entities\NotazzIntegration');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function products()
     {
-        return $this->hasMany('App\Entities\Product', 'user');
+        return $this->hasMany('App\Entities\Product');
     }
 
     /**
@@ -166,7 +140,7 @@ class User extends Authenticable
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale', 'owner');
+        return $this->hasMany('App\Entities\Sale', 'owner_id');
     }
 
     /**
@@ -174,7 +148,7 @@ class User extends Authenticable
      */
     public function shopifyIntegrations()
     {
-        return $this->hasMany('App\Entities\ShopifyIntegration', 'user');
+        return $this->hasMany('App\Entities\ShopifyIntegration');
     }
 
     /**
@@ -190,7 +164,15 @@ class User extends Authenticable
      */
     public function transfers()
     {
-        return $this->hasMany('App\Entities\Transfer', 'user');
+        return $this->hasMany('App\Entities\Transfer');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userDocuments()
+    {
+        return $this->hasMany('App\Entities\UserDocument');
     }
 
     /**
@@ -206,16 +188,6 @@ class User extends Authenticable
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UserProject', 'user');
-    }
-
-    public function projects()
-    {
-        return $this->belongsToMany('App\Entities\User', 'users_projects', 'user', 'project');
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        event(new ResetPasswordEvent($token, $this));
+        return $this->hasMany('App\Entities\UsersProject');
     }
 }

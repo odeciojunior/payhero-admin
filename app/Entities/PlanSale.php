@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $plan
- * @property integer $sale
+ * @property integer $plan_id
+ * @property integer $sale_id
  * @property string $plan_value
  * @property string $amount
  * @property string $created_at
@@ -35,14 +35,14 @@ class PlanSale extends Model
     /**
      * @var array
      */
-    protected $fillable = ['plan', 'sale', 'plan_value', 'amount', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['plan_id', 'sale_id', 'plan_value', 'amount', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan', 'plan');
+        return $this->belongsTo('App\Entities\Plan');
     }
 
     /**
@@ -50,6 +50,6 @@ class PlanSale extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('App\Entities\Sale', 'sale');
+        return $this->belongsTo('App\Entities\Sale');
     }
 }

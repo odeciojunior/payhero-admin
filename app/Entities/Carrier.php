@@ -2,7 +2,6 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,12 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property string $deleted_at
  * @property Delivery[] $deliveries
- * @property Plan[] $plans
  * @property Project[] $projects
  */
 class Carrier extends Model
 {
-    use FoxModelTrait;
     /**
      * @var array
      */
@@ -29,15 +26,7 @@ class Carrier extends Model
      */
     public function deliveries()
     {
-        return $this->hasMany('App\Entities\Delivery', 'carrier');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function plans()
-    {
-        return $this->hasMany('App\Entities\Plan', 'carrier');
+        return $this->hasMany('App\Entities\Delivery');
     }
 
     /**
@@ -45,6 +34,6 @@ class Carrier extends Model
      */
     public function projects()
     {
-        return $this->hasMany('App\Entities\Project', 'carrier');
+        return $this->hasMany('App\Entities\Project');
     }
 }

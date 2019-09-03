@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property int $user
- * @property int $project
+ * @property int $user_id
+ * @property int $project_id
  * @property string $status
  * @property string $created_at
  * @property string $updated_at
@@ -27,14 +27,14 @@ class AffiliateRequest extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'project', 'status', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['user_id', 'project_id', 'status', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project', 'project');
+        return $this->belongsTo('App\Entities\Project');
     }
 
     /**
@@ -42,6 +42,6 @@ class AffiliateRequest extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'user');
+        return $this->belongsTo('App\Entities\User');
     }
 }

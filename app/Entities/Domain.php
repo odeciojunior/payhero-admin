@@ -2,50 +2,27 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $project
+ * @property int $project_id
+ * @property string $cloudflare_domain_id
  * @property string $name
- * @property string $status
+ * @property int $status
  * @property string $sendgrid_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property Project $project_id
+ * @property Project $project
+ * @property DomainsRecord[] $domainsRecords
  */
 class Domain extends Model
 {
-    use SoftDeletes;
-    use FoxModelTrait;
-    protected $dates = ['deleted_at'];
     /**
      * @var array
      */
-    protected $fillable = [
-        'project_id',
-        'cloudflare_domain_id',
-        'name',
-        'status',
-        'sendgrid_id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'status' => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-    ];
+    protected $fillable = ['project_id', 'cloudflare_domain_id', 'name', 'status', 'sendgrid_id', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -58,8 +35,8 @@ class Domain extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function records()
+    public function domainsRecords()
     {
-        return $this->hasMany('App\Entities\DomainRecord');
+        return $this->hasMany('App\Entities\DomainsRecord');
     }
 }

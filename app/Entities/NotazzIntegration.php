@@ -3,7 +3,6 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -21,21 +20,15 @@ class NotazzIntegration extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'project_id',
-        'user_id',
-        'token_webhook',
-        'token_api',
-        'token_logistics',
-        'created_at',
-        'updated_at',
-    ];
+    protected $fillable = ['project_id', 'user_id', 'token_webhook', 'token_api', 'token_logistics', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

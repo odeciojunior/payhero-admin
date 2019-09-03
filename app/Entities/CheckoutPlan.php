@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $checkout
- * @property integer $plan
+ * @property integer $checkout_id
+ * @property integer $plan_id
  * @property string $amount
  * @property string $created_at
  * @property string $updated_at
@@ -27,14 +27,14 @@ class CheckoutPlan extends Model
     /**
      * @var array
      */
-    protected $fillable = ['checkout', 'plan', 'amount', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['checkout_id', 'plan_id', 'amount', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function checkout()
     {
-        return $this->belongsTo('App\Entities\Checkout', 'checkout');
+        return $this->belongsTo('App\Entities\Checkout');
     }
 
     /**
@@ -42,6 +42,6 @@ class CheckoutPlan extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan', 'plan');
+        return $this->belongsTo('App\Entities\Plan');
     }
 }

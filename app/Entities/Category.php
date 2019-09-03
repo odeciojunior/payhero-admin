@@ -32,6 +32,6 @@ class Category extends Model
      */
     public function products()
     {
-        return $this->hasMany('App\Entities\Product', 'category');
+        return $this->hasMany('App\Entities\Product');
     }
 }

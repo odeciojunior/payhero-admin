@@ -2,58 +2,43 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $transaction
- * @property int $user
+ * @property integer $transaction_id
+ * @property int $user_id
+ * @property int $company_id
  * @property string $value
  * @property string $type
+ * @property int $type_enum
+ * @property string $reason
  * @property string $created_at
  * @property string $updated_at
  * @property Transaction $transaction
  * @property User $user
+ * @property Company $company
  */
 class Transfer extends Model
 {
-    use FoxModelTrait;
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'transaction',
-        'user',
-        'company_id',
-        'value',
-        'type',
-        'type_enum',
-        'reason',
-        'created_at',
-        'updated_at',
-    ];
-    /**
-     * @var array
-     */
-    private $enum = [
-        'type_enum' => [
-            1 => 'in',
-            2 => 'out',
-        ],
-    ];
+    protected $fillable = ['transaction_id', 'user_id', 'company_id', 'value', 'type', 'type_enum', 'reason', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transaction()
     {
-        return $this->belongsTo('App\Entities\Transaction', 'transaction');
+        return $this->belongsTo('App\Entities\Transaction');
     }
 
     /**
@@ -61,6 +46,14 @@ class Transfer extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'user');
+        return $this->belongsTo('App\Entities\User');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo('App\Entities\Company');
     }
 }

@@ -2,15 +2,13 @@
 
 namespace App\Entities;
 
-use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
- * @property int $user
- * @property int $project
- * @property int $company
+ * @property int $user_id
+ * @property int $project_id
+ * @property int $company_id
  * @property string $type
  * @property string $remuneration_value
  * @property boolean $access_permission
@@ -25,59 +23,46 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class UserProject extends Model
 {
-    use SoftDeletes, FoxModelTrait;
-    /**
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
     /**
      * The table associated with the model.
+     * 
      * @var string
      */
     protected $table = 'users_projects';
+
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'user',
-        'project',
-        'company',
-        'type',
-        'remuneration_value',
-        'access_permission',
-        'edit_permission',
-        'status',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ['user_id', 'project_id', 'company_id', 'type', 'remuneration_value', 'access_permission', 'edit_permission', 'status', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function companyId()
+    public function company()
     {
-        return $this->belongsTo('App\Entities\Company', 'company');
+        return $this->belongsTo('App\Entities\Company');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function projectId()
+    public function project()
     {
-        return $this->belongsTo('App\Entities\Project', 'project');
+        return $this->belongsTo('App\Entities\Project');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function userId()
+    public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'user');
+        return $this->belongsTo('App\Entities\User');
     }
 }

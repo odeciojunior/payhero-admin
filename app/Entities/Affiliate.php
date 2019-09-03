@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property int $user
- * @property int $project
- * @property int $company
+ * @property int $user_id
+ * @property int $project_id
+ * @property int $company_id
  * @property string $percentage
  * @property string $created_at
  * @property string $updated_at
@@ -33,14 +33,14 @@ class Affiliate extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user', 'project', 'company', 'percentage', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['user_id', 'project_id', 'company_id', 'percentage', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company', 'company');
+        return $this->belongsTo('App\Entities\Company');
     }
 
     /**
@@ -48,7 +48,7 @@ class Affiliate extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project', 'project');
+        return $this->belongsTo('App\Entities\Project');
     }
 
     /**
@@ -56,7 +56,7 @@ class Affiliate extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'user');
+        return $this->belongsTo('App\Entities\User');
     }
 
     /**
@@ -64,7 +64,7 @@ class Affiliate extends Model
      */
     public function affiliateLinks()
     {
-        return $this->hasMany('App\Entities\AffiliateLink', 'affiliate');
+        return $this->hasMany('App\Entities\AffiliateLink');
     }
 
     /**
@@ -72,7 +72,7 @@ class Affiliate extends Model
      */
     public function campaigns()
     {
-        return $this->hasMany('App\Entities\Campaign', 'affiliate');
+        return $this->hasMany('App\Entities\Campaign');
     }
 
     /**
@@ -80,7 +80,7 @@ class Affiliate extends Model
      */
     public function clientsCookies()
     {
-        return $this->hasMany('App\Entities\ClientsCookie', 'affiliate');
+        return $this->hasMany('App\Entities\ClientsCookie');
     }
 
     /**
@@ -88,6 +88,6 @@ class Affiliate extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale', 'affiliate');
+        return $this->hasMany('App\Entities\Sale');
     }
 }

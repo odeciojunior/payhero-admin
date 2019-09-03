@@ -3,12 +3,11 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
- * @property integer $category
- * @property int $user
+ * @property integer $category_id
+ * @property int $user_id
  * @property string $name
  * @property string $description
  * @property string $guarantee
@@ -18,60 +17,39 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $height
  * @property string $width
  * @property string $weight
- * @property string $digital_product_url
- * @property string $shopify_id
- * @property string $shopify_variant_id
  * @property boolean $shopify
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property string $digital_product_url
+ * @property string $price
+ * @property string $shopify_id
+ * @property string $shopify_variant_id
  * @property Category $category
  * @property User $user
+ * @property PlanSaleProduct[] $planSaleProducts
  * @property ProductsPlan[] $productsPlans
  */
 class Product extends Model
 {
-    use SoftDeletes;
-    /**
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'category',
-        'user',
-        'name',
-        'description',
-        'guarantee',
-        'format',
-        'cost',
-        'photo',
-        'height',
-        'width',
-        'weight',
-        'shopify',
-        'digital_product_url',
-        'price',
-        'shopify_id',
-        'shopify_variant_id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $fillable = ['category_id', 'user_id', 'name', 'description', 'guarantee', 'format', 'cost', 'photo', 'height', 'width', 'weight', 'shopify', 'created_at', 'updated_at', 'deleted_at', 'digital_product_url', 'price', 'shopify_id', 'shopify_variant_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function category()
     {
-        return $this->belongsTo('App\Entities\Category', 'category');
+        return $this->belongsTo('App\Entities\Category');
     }
 
     /**
@@ -79,7 +57,15 @@ class Product extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'user');
+        return $this->belongsTo('App\Entities\User');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function planSaleProducts()
+    {
+        return $this->hasMany('App\Entities\PlanSaleProduct');
     }
 
     /**
@@ -87,11 +73,6 @@ class Product extends Model
      */
     public function productsPlans()
     {
-        return $this->hasMany('App\Entities\ProductPlan', 'product');
-    }
-
-    public function plans()
-    {
-        return $this->belongsToMany('App\Entities\Plan', 'products_plans', 'product', 'plan');
+        return $this->hasMany('App\Entities\ProductsPlan');
     }
 }

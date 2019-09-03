@@ -3,14 +3,15 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use Modules\Core\Presenters\CheckoutPresenter;
 
 /**
  * @property integer $id
- * @property int $project
- * @property string $id_log_session
+ * @property int $project_id
+ * @property string $created_at
  * @property string $status
+ * @property string $operational_system
+ * @property string $browser
+ * @property string $id_log_session
  * @property string $ip
  * @property string $city
  * @property string $state
@@ -21,7 +22,8 @@ use Modules\Core\Presenters\CheckoutPresenter;
  * @property string $currency
  * @property string $lat
  * @property string $lon
- * @property string $created_at
+ * @property string $src
+ * @property boolean $is_mobile
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $utm_source
@@ -29,64 +31,33 @@ use Modules\Core\Presenters\CheckoutPresenter;
  * @property string $utm_campaign
  * @property string $utm_term
  * @property string $utm_content
- * @property string $src
- * @property string $operational_system
- * @property string $browser
+ * @property int $email_sent_amount
+ * @property int $sms_sent_amount
  * @property Project $project
  * @property CheckoutPlan[] $checkoutPlans
+ * @property Log[] $logs
  * @property Sale[] $sales
  */
 class Checkout extends Model
 {
-    use PresentableTrait;
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
-    /**
-     * @var string
-     */
-    protected $presenter = CheckoutPresenter::class;
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'project',
-        'id_log_session',
-        'status',
-        'ip',
-        'city',
-        'state',
-        'state_name',
-        'zip_code',
-        'country',
-        'parameter',
-        'currency',
-        'lat',
-        'lon',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'utm_source',
-        'utm_medium',
-        'utm_campaign',
-        'utm_term',
-        'utm_content',
-        'src',
-        'is_mobile',
-        'email_sent_amount',
-        'sms_sent_amount',
-        'operational_system',
-        'browser',
-    ];
+    protected $fillable = ['project_id', 'created_at', 'status', 'operational_system', 'browser', 'id_log_session', 'ip', 'city', 'state', 'state_name', 'zip_code', 'country', 'parameter', 'currency', 'lat', 'lon', 'src', 'is_mobile', 'updated_at', 'deleted_at', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'email_sent_amount', 'sms_sent_amount'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function projectModel()
+    public function project()
     {
-        return $this->belongsTo('App\Entities\Project', 'project');
+        return $this->belongsTo('App\Entities\Project');
     }
 
     /**
@@ -94,7 +65,15 @@ class Checkout extends Model
      */
     public function checkoutPlans()
     {
-        return $this->hasMany('App\Entities\CheckoutPlan', 'checkout');
+        return $this->hasMany('App\Entities\CheckoutPlan');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function logs()
+    {
+        return $this->hasMany('App\Entities\Log');
     }
 
     /**
@@ -102,6 +81,6 @@ class Checkout extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale', 'checkout');
+        return $this->hasMany('App\Entities\Sale');
     }
 }

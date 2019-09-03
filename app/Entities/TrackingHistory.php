@@ -31,6 +31,6 @@ class TrackingHistory extends Model
      */
     public function delivery()
     {
-        return $this->belongsTo('App\Delivery');
+        return $this->belongsTo('App\Entities\Delivery');
     }
 }

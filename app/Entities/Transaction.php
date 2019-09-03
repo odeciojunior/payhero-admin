@@ -3,12 +3,11 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property integer $id
- * @property integer $sale
- * @property int $company
+ * @property integer $sale_id
+ * @property int $company_id
  * @property string $value
  * @property string $type
  * @property string $status
@@ -24,42 +23,29 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $percentage_antecipable
  * @property Company $company
  * @property Sale $sale
+ * @property AntecipatedTransaction[] $antecipatedTransactions
  * @property Transfer[] $transfers
  */
 class Transaction extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
+     * 
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
-    protected $fillable = [
-        'sale',
-        'company',
-        'value',
-        'type',
-        'status',
-        'release_date',
-        'created_at',
-        'updated_at',
-        'antecipation_date',
-        'antecipable_value',
-        'antecipable_tax',
-        'currency',
-        'percentage_rate',
-        'transaction_rate',
-        'percentage_antecipable',
-    ];
+    protected $fillable = ['sale_id', 'company_id', 'value', 'type', 'status', 'release_date', 'created_at', 'updated_at', 'antecipation_date', 'antecipable_value', 'antecipable_tax', 'currency', 'percentage_rate', 'transaction_rate', 'percentage_antecipable'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company', 'company');
+        return $this->belongsTo('App\Entities\Company');
     }
 
     /**
@@ -67,7 +53,15 @@ class Transaction extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('App\Entities\Sale', 'sale');
+        return $this->belongsTo('App\Entities\Sale');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function antecipatedTransactions()
+    {
+        return $this->hasMany('App\Entities\AntecipatedTransaction');
     }
 
     /**
@@ -75,14 +69,6 @@ class Transaction extends Model
      */
     public function transfers()
     {
-        return $this->hasMany('App\Entities\Transfer', 'transaction');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function anticipations()
-    {
-        return $this->belongsToMany('App\Entities\Transaction', 'antecipated_transactions', 'transaction_id', 'anticipation_id');
+        return $this->hasMany('App\Entities\Transfer');
     }
 }

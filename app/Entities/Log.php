@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property integer $checkout_id
  * @property string $id_log_session
  * @property string $plan
  * @property string $event
@@ -38,6 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $error
  * @property string $created_at
  * @property string $updated_at
+ * @property Checkout $checkout
  */
 class Log extends Model
 {
@@ -51,6 +53,13 @@ class Log extends Model
     /**
      * @var array
      */
-    protected $fillable = ['id_log_session', 'plan', 'event', 'user_agent', 'access_hour', 'horary', 'operational_system', 'browser', 'forward', 'reference', 'name', 'email', 'document', 'telephone', 'zip_code', 'street', 'number', 'neighborhood', 'city', 'state', 'shipment_value', 'cupon_value', 'total_value', 'card_number', 'card_name', 'card_document', 'card_month', 'card_year', 'installments', 'error', 'created_at', 'updated_at'];
+    protected $fillable = ['checkout_id', 'id_log_session', 'plan', 'event', 'user_agent', 'access_hour', 'horary', 'operational_system', 'browser', 'forward', 'reference', 'name', 'email', 'document', 'telephone', 'zip_code', 'street', 'number', 'neighborhood', 'city', 'state', 'shipment_value', 'cupon_value', 'total_value', 'card_number', 'card_name', 'card_document', 'card_month', 'card_year', 'installments', 'error', 'created_at', 'updated_at'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function checkout()
+    {
+        return $this->belongsTo('App\Entities\Checkout');
+    }
 }
