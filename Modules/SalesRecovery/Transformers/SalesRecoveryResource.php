@@ -25,7 +25,7 @@ class SalesRecoveryResource extends Resource
         if ($this->status == 'abandoned cart') {
             $status = 'Não recuperado';
         } else {
-            $status = 'Recuperado';
+            $status = 'Recuperado'; 
         }
 
         $value         = 0;
@@ -37,8 +37,6 @@ class SalesRecoveryResource extends Resource
 
         $domain = Domain::where('project_id', $this->project)->first();
         $link   = "https://checkout." . $domain['name'] . "/recovery/" . $this->id_log_session;
-
-        $whatsAppMsg = 'Olá ' . $this->name;
 
         if ($this->email_sent_amount == null || $this->email_sent_amount == 0) {
             $emailSentAmount = 'Não enviado';
@@ -52,8 +50,6 @@ class SalesRecoveryResource extends Resource
             $smsSentAmount = $this->sms_sent_amount;
         }
 
-        $this->telephone = FoxUtils::prepareCellPhoneNumber($this->telephone);
-
         return [
             'id'              => Hashids::encode($this->id),
             'date'            => with(new Carbon($this->created_at))->format('d/m/Y H:i:s'),
@@ -64,7 +60,8 @@ class SalesRecoveryResource extends Resource
             'recovery_status' => $status,
             'value'           => number_format(intval(preg_replace("/[^0-9]/", "", $value)) / 100, 2, ',', '.'),
             'link'            => $link,
-            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . $this->telephone . '&text=' . $whatsAppMsg,
+            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber($this->telephone) . '&text=Olá ' . explode(' ', $this->name)[0],
         ];
     }
+
 }

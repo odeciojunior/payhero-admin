@@ -3,6 +3,8 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ClientPresenter;
 
 /**
  * @property integer $id
@@ -14,13 +16,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property Sale[] $sales
+ * @property Sale[] $sales 
  */
 class Client extends Model
 {
+    use PresentableTrait;
+
+    protected $presenter = ClientPresenter::class;
+
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
     protected $keyType = 'integer';

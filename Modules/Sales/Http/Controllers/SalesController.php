@@ -162,7 +162,6 @@ class SalesController extends Controller
                     $taxaReal = ($total / 100) * $transaction->percentage_rate + 100;
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
-                $whatsAppMsg = 'Olá ' . $client->name;
 
                 $details = view('sales::details', [
                     'sale'            => $sale,
@@ -174,7 +173,7 @@ class SalesController extends Controller
                     'subTotal'        => number_format(intval($subTotal) / 100, 2, ',', '.'),
                     'discount'        => number_format(intval($discount) / 100, 2, ',', '.'),
                     'shipment_value'  => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg,
+                    'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=Olá ' . $client->present()->getFirstName(),
                     'comission'       => $comission,
                     'convertax_value' => $convertaxValue,
                     'taxa'            => number_format($taxa / 100, 2, ',', '.'),
@@ -532,7 +531,7 @@ class SalesController extends Controller
             report($e);
         }
     }
-}
 
+}
 
 

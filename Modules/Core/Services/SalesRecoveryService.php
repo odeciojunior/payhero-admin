@@ -181,7 +181,7 @@ class SalesRecoveryService
         $domainModel = new Domain();
         $log         = $logModel->where('id_log_session', $checkout->id_log_session)
                                 ->orderBy('id', 'DESC')->first();
-        $whatsAppMsg = 'Olá ' . $log->name;
+        $whatsAppMsg = 'Olá ' . explode(' ', $log->name)[0];
 
         if (!empty($log->telephone)) {
             $log['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $log->telephone) . '&text=' . $whatsAppMsg;
@@ -250,7 +250,7 @@ class SalesRecoveryService
 
         if (!empty($client->telephone)) {
             $client->telephone       = FoxUtils::getTelephone($client->telephone);
-            $whatsAppMsg             = 'Olá ' . $client->name;
+            $whatsAppMsg             = 'Olá ' . $client->present()->getFirstName();
             $client['whatsapp_link'] = "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=' . $whatsAppMsg;
         } else {
             $client['whatsapp_link'] = '';

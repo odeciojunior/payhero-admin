@@ -41,9 +41,6 @@ class SalesRecoveryCardRefusedResource extends Resource
             $emailStatus = ($this->email_sent_amount == null) ? 'Não enviado' : $this->email_sent_amount;
         }
 
-        $whatsAppMsg       = 'Olá ' . $client->name;
-        $client->telephone = FoxUtils::prepareCellPhoneNumber($client->telephone);
-
         return [
             'id'              => Hashids::encode($this->id),
             'date'            => with(new Carbon($this->created_at))->format('d/m/Y H:i:s'),
@@ -54,7 +51,7 @@ class SalesRecoveryCardRefusedResource extends Resource
             'recovery_status' => $status,
             'value'           => number_format($this->value, 2, ',', '.'),
             'link'            => $link,
-            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . $client->telephone . '&text=' . $whatsAppMsg,
+            'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber($client->telephone) . '&text=Olá ' . $client->present()->getFirstName(),
         ];
     }
 }
