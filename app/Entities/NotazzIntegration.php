@@ -19,6 +19,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class NotazzIntegration extends Model
 {
+    use SoftDeletes;
+    /**
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -35,6 +40,7 @@ class NotazzIntegration extends Model
         'token_logistics',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     /**
