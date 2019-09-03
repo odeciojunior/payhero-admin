@@ -243,8 +243,6 @@ $(document).ready(function () {
                                  */
 
 
-
-
                                 $('#modal_detalhes').modal('show');
 
                                 $(".copy_link").on("click", function () {

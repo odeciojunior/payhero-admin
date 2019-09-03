@@ -18,10 +18,6 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-3">
                             <label for="project">Projeto</label>
                             <select name='select_project' id="project" class="form-control select-pad">
-                                {{--<option value="">Todos projetos</option>--}}
-                                {{--  @foreach($projects as $project)
-                                      <option value="{{Hashids::encode($project['id'])}}">{{$project['nome']}}</option>
-                                  @endforeach--}}
                             </select>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-3">
@@ -198,8 +194,10 @@
             {{-- FIM projeto nao existem projetos--}}
         </div>
     </div>
+
     @push('scripts')
-        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
+
+    <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
 
     @endpush
 
