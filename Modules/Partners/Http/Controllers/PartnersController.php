@@ -2,22 +2,21 @@
 
 namespace Modules\Partners\Http\Controllers;
 
-use App\Entities\User;
+use Exception;
 use App\Entities\Company;
 use App\Entities\Invitation;
-use Exception;
 use Illuminate\Http\Request;
-use App\Entities\UserProject;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Partners\Http\Requests\PartnersStoreRequest;
-use Modules\Partners\Http\Requests\PartnersUpdateRequest;
-use Modules\Partners\Transformers\PartnersResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Helpers\StringHelper;
 use Yajra\DataTables\Facades\DataTables;
+use Modules\Partners\Transformers\PartnersResource;
+use Modules\Partners\Http\Requests\PartnersStoreRequest;
+use Modules\Partners\Http\Requests\PartnersUpdateRequest;
 
 class PartnersController extends Controller
 {

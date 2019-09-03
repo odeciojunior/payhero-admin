@@ -50,6 +50,6 @@ class DiscountCoupon extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 }

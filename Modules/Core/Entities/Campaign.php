@@ -44,7 +44,7 @@ class Campaign extends Model
      */
     public function affiliate()
     {
-        return $this->belongsTo('App\Entities\Affiliate');
+        return $this->belongsTo('Modules\Core\Entities\Affiliate');
     }
 
     /**
@@ -52,7 +52,7 @@ class Campaign extends Model
      */
     public function affiliateLinks()
     {
-        return $this->hasMany('App\Entities\AffiliateLink');
+        return $this->hasMany('Modules\Core\Entities\AffiliateLink');
     }
 
     /**
@@ -60,6 +60,6 @@ class Campaign extends Model
      */
     public function pixels()
     {
-        return $this->hasMany('App\Entities\Pixel', 'campaign');
+        return $this->hasMany('Modules\Core\Entities\Pixel', 'campaign');
     }
 }

@@ -89,7 +89,7 @@ class Checkout extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
     /**
@@ -97,7 +97,7 @@ class Checkout extends Model
      */
     public function checkoutPlans()
     {
-        return $this->hasMany('App\Entities\CheckoutPlan');
+        return $this->hasMany('Modules\Core\Entities\CheckoutPlan');
     }
 
     /**
@@ -105,7 +105,7 @@ class Checkout extends Model
      */
     public function logs()
     {
-        return $this->hasMany('App\Entities\Log');
+        return $this->hasMany('Modules\Core\Entities\Log');
     }
 
     /**
@@ -113,6 +113,6 @@ class Checkout extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale');
+        return $this->hasMany('Modules\Core\Entities\Sale');
     }
 }

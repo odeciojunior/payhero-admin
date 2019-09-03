@@ -2,22 +2,22 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Checkout;
-use App\Entities\Company;
-use App\Entities\Domain;
-use App\Entities\Plan;
-use App\Entities\Project;
-use App\Entities\Sale;
-use App\Entities\Transaction;
-use App\Entities\User;
-use Modules\Core\Events\BoletoPaidEvent;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
+use Pusher\Pusher;
+use App\Entities\Plan;
+use App\Entities\Sale;
+use App\Entities\Domain;
+use App\Entities\Company;
+use App\Entities\Project;
+use App\Entities\Checkout;
+use App\Entities\Transaction;
+use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\Notifications\Notifications\boletoCompensatedNotification;
-use Pusher\Pusher;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Events\BoletoPaidEvent;
+use Modules\Notifications\Notifications\boletoCompensatedNotification;
 
 class BoletoService
 {

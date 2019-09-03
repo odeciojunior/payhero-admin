@@ -44,7 +44,7 @@ class Gift extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project', 'project');
+        return $this->belongsTo('Modules\Core\Entities\Project', 'project');
     }
 
     /**
@@ -52,6 +52,6 @@ class Gift extends Model
      */
     public function planGifts()
     {
-        return $this->hasMany('App\Entities\PlanGift');
+        return $this->hasMany('Modules\Core\Entities\PlanGift');
     }
 }

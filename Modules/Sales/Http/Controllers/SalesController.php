@@ -2,29 +2,29 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use App\Entities\Checkout;
-use App\Entities\Client;
-use App\Entities\Company;
-use App\Entities\Delivery;
-use App\Entities\Plan;
-use App\Entities\PlanSale;
-use App\Entities\Sale;
-use App\Entities\Shipping;
-use App\Entities\Transaction;
-use App\Entities\UserProject;
-use App\Http\Controllers\Controller;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Lang;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
-use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Sales\Exports\Reports\SaleReportExport;
-use Modules\Sales\Http\Requests\SaleUpdateRequest;
-use Modules\Sales\Transformers\SalesResource;
-use Modules\Sales\Transformers\TransactionResource;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Delivery;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\Shipping;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Lang;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\UserProject;
+use Modules\Sales\Transformers\SalesResource;
+use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Sales\Http\Requests\SaleUpdateRequest;
+use Modules\Sales\Exports\Reports\SaleReportExport;
+use Modules\Sales\Transformers\TransactionResource;
 
 class SalesController extends Controller
 {
@@ -38,7 +38,7 @@ class SalesController extends Controller
             $transactionModel = new Transaction();
             $companyModel     = new Company();
 
-            $userProjects = $userProjectModel->with('projectId')
+            $userProjects = $userProjectModel->with('project')
                                              ->where('user', auth()->user()->id)
                                              ->get();
 
@@ -88,7 +88,7 @@ class SalesController extends Controller
             if (!empty($requestData['sale_id'])) {
                 $sale = $saleModel->with([
                                              'transactions' => function($query) {
-                                                 $query->where('company', '!=', null)->first();
+                                                 $query->where('company_id', '!=', null)->first();
                                              },
                                          ])->find(current(Hashids::connection('sale_id')
                                                                  ->decode($requestData['sale_id'])));
@@ -122,8 +122,8 @@ class SalesController extends Controller
                     $discount = '0,00';
                 }
 
-                $delivery               = $deliveryModel->find($sale['delivery']);
-                $checkout               = $checkoutModel->find($sale['checkout']);
+                $delivery               = $deliveryModel->find($sale['delivery_id']);
+                $checkout               = $checkoutModel->find($sale['checkout_id']);
                 $checkout->src          = ($checkout->src == null || $checkout->src == 'null') ? '' : $checkout->src;
                 $checkout->source       = ($checkout->source == null || $checkout->source == 'null') ? '' : $checkout->source;
                 $checkout->utm_medium   = ($checkout->utm_medium == null || $checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
@@ -133,11 +133,11 @@ class SalesController extends Controller
                 $sale->shipment_value   = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-                $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company', $userCompanies)
+                $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company_id', $userCompanies)
                                                   ->first();
 
-                $transactionConvertax = $transactionModel->where('sale', $sale->id)
-                                                         ->where('company', 29)
+                $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
+                                                         ->where('company_id', 29)
                                                          ->first();
 
                 if(!empty($transactionConvertax)){
@@ -222,12 +222,12 @@ class SalesController extends Controller
 
             $transactions = $transactionModel->with([
                                                         'sale',
-                                                        'sale.projectModel',
-                                                        'sale.clientModel',
+                                                        'sale.project',
+                                                        'sale.client',
                                                         'sale.plansSales',
                                                         'sale.plansSales.plan',
                                                         'sale.plansSales.plan.products',
-                                                        'sale.plansSales.plan.projectId',
+                                                        'sale.plansSales.plan.project',
                                                     ])
                                              ->whereHas('sale', function($querySale) {
                                                  $querySale->whereNotIn('status',[ 3, 5 , 10]);
@@ -236,7 +236,7 @@ class SalesController extends Controller
 
             if (!empty($data["projeto"])) {
                 $projectId = current(Hashids::decode($data["projeto"]));
-                $transactions->whereHas('sale', function($querySale) use ($projectId) {
+                $transactions->whereHas('sale_id', function($querySale) use ($projectId) {
                     $querySale->where('project', $projectId);
                 });
             }
@@ -318,9 +318,7 @@ class SalesController extends Controller
             $checkoutModel = new Checkout();
             $shippingModel = new Shipping();
 
-            //$sales = Sale::where('owner',\Auth::user()->id)->orWhere('affiliate',\Auth::user()->id);
             $sales = $saleModel->where('owner', auth()->user()->id);
-            //->where('status', '!=', '3');
 
             if (!empty($dataRequest['select_project'])) {
                 $plans    = $planModel->where('project', $dataRequest['select_project'])->pluck('id');

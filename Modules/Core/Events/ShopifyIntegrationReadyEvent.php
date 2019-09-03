@@ -3,7 +3,7 @@
 namespace Modules\Core\Events;
 
 use App\Entities\Project;
-use App\Entities\User;
+use Modules\Core\Entities\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;

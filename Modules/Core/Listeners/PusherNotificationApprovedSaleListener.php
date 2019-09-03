@@ -2,11 +2,11 @@
 
 namespace App\Listeners\Modules\Core\Listeners;
 
-use App\Entities\User;
-use App\Events\Modules\Core\Events\SaleApprovedEvent;
 use Exception;
+use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\PusherService;
+use App\Events\Modules\Core\Events\SaleApprovedEvent;
 
 class PusherNotificationApprovedSaleListener
 {

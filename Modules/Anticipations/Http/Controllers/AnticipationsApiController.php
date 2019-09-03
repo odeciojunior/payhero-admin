@@ -2,18 +2,18 @@
 
 namespace Modules\Anticipations\Http\Controllers;
 
-use App\Entities\AnticipatedTransaction;
-use App\Entities\Anticipation;
-use App\Entities\Company;
-use App\Entities\Transaction;
-use App\Entities\Transfer;
-use App\Http\Controllers\Controller;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Transfer;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\Controller;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Anticipation;
+use Modules\Core\Entities\AnticipatedTransaction;
 
 class AnticipationsApiController extends Controller
 {
@@ -220,18 +220,4 @@ class AnticipationsApiController extends Controller
         }
     }
 
-    public function edit()
-    {
-
-    }
-
-    public function update()
-    {
-
-    }
-
-    public function destroy()
-    {
-
-    }
 }

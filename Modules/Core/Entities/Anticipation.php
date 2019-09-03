@@ -47,7 +47,7 @@ class Anticipation extends Model
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company');
+        return $this->belongsTo('Modules\Core\Entities\Company');
     }
 
     /**
@@ -55,6 +55,6 @@ class Anticipation extends Model
      */
     public function antecipatedTransactions()
     {
-        return $this->hasMany('App\Entities\AntecipatedTransaction');
+        return $this->hasMany('Modules\Core\Entities\AntecipatedTransaction');
     }
 }

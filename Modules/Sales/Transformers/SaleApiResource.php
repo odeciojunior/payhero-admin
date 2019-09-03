@@ -2,18 +2,18 @@
 
 namespace Modules\Sales\Transformers;
 
-use App\Entities\Checkout;
+use Carbon\Carbon;
+use App\Entities\Plan;
 use App\Entities\Client;
 use App\Entities\Company;
-use App\Entities\Plan;
-use App\Entities\PlanSale;
 use App\Entities\Project;
+use App\Entities\Checkout;
+use App\Entities\PlanSale;
 use App\Entities\Shipping;
 use App\Entities\Transaction;
-use App\Entities\User;
-use Carbon\Carbon;
-use Illuminate\Http\Resources\Json\Resource;
+use Modules\Core\Entities\User;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Http\Resources\Json\Resource;
 
 class SaleApiResource extends Resource
 {

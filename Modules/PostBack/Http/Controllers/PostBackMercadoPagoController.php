@@ -2,25 +2,25 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
+use Exception;
+use Carbon\Carbon;
+use App\Entities\Plan;
+use App\Entities\Sale;
 use App\Entities\Client;
 use App\Entities\Company;
-use App\Entities\Delivery;
-use App\Entities\HotZappIntegration;
-use App\Entities\Plan;
-use App\Entities\PlanSale;
-use App\Entities\PostbackLog;
 use App\Entities\Project;
-use App\Entities\Sale;
-use App\Entities\Transaction;
+use App\Entities\Delivery;
+use App\Entities\PlanSale;
 use App\Entities\Transfer;
-use App\Entities\User;
-use Modules\Core\Events\SaleApprovedEvent;
-use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
+use App\Entities\PostbackLog;
+use App\Entities\Transaction;
+use Modules\Core\Entities\User;
+use Modules\Checkout\Classes\MP;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Checkout\Classes\MP;
+use App\Entities\HotZappIntegration;
+use Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Services\MercadoPagoService;
 
 class PostBackMercadoPagoController extends Controller

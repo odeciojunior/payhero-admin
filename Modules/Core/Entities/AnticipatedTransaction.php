@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Anticipation $anticipation
  * @property Transaction $transaction
  */
-class AntecipatedTransaction extends Model
+class AnticipatedTransaction extends Model
 {
 
     use SoftDeletes;
@@ -47,7 +47,7 @@ class AntecipatedTransaction extends Model
      */
     public function anticipation()
     {
-        return $this->belongsTo('App\Entities\Anticipation');
+        return $this->belongsTo('Modules\Core\Entities\Anticipation');
     }
 
     /**
@@ -55,6 +55,6 @@ class AntecipatedTransaction extends Model
      */
     public function transaction()
     {
-        return $this->belongsTo('App\Entities\Transaction');
+        return $this->belongsTo('Modules\Core\Entities\Transaction');
     }
 }

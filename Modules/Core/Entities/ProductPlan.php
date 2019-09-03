@@ -52,7 +52,7 @@ class ProductPlan extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan');
+        return $this->belongsTo('Modules\Core\Entities\Plan');
     }
 
     /**
@@ -60,6 +60,6 @@ class ProductPlan extends Model
      */
     public function product()
     {
-        return $this->belongsTo('App\Entities\Product');
+        return $this->belongsTo('Modules\Core\Entities\Product');
     }
 }

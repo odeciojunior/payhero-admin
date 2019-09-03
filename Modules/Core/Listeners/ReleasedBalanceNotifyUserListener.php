@@ -2,8 +2,8 @@
 
 namespace Modules\Core\Listeners;
 
-use App\Entities\User;
 use Exception;
+use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;

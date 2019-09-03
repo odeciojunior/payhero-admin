@@ -90,7 +90,7 @@ class Company extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User');
+        return $this->belongsTo('Modules\Core\Entities\User');
     }
 
     /**
@@ -98,7 +98,7 @@ class Company extends Model
      */
     public function affiliates()
     {
-        return $this->hasMany('App\Entities\Affiliate');
+        return $this->hasMany('Modules\Core\Entities\Affiliate');
     }
 
     /**
@@ -106,7 +106,7 @@ class Company extends Model
      */
     public function anticipations()
     {
-        return $this->hasMany('App\Entities\Anticipation');
+        return $this->hasMany('Modules\Core\Entities\Anticipation');
     }
 
     /**
@@ -114,7 +114,7 @@ class Company extends Model
      */
     public function companyDocuments()
     {
-        return $this->hasMany('App\Entities\CompanyDocument');
+        return $this->hasMany('Modules\Core\Entities\CompanyDocument');
     }
 
     /**
@@ -122,7 +122,7 @@ class Company extends Model
      */
     public function hotzappIntegrations()
     {
-        return $this->hasMany('App\Entities\HotzappIntegration', 'company');
+        return $this->hasMany('Modules\Core\Entities\HotzappIntegration', 'company');
     }
 
     /**
@@ -130,7 +130,7 @@ class Company extends Model
      */
     public function invitations()
     {
-        return $this->hasMany('App\Entities\Invitation', 'company');
+        return $this->hasMany('Modules\Core\Entities\Invitation', 'company');
     }
 
     /**
@@ -138,7 +138,7 @@ class Company extends Model
      */
     public function transactions()
     {
-        return $this->hasMany('App\Entities\Transaction');
+        return $this->hasMany('Modules\Core\Entities\Transaction');
     }
 
     /**
@@ -146,7 +146,7 @@ class Company extends Model
      */
     public function transfers()
     {
-        return $this->hasMany('App\Entities\Transfer');
+        return $this->hasMany('Modules\Core\Entities\Transfer');
     }
 
     /**
@@ -154,7 +154,7 @@ class Company extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UsersProject');
+        return $this->hasMany('Modules\Core\Entities\UsersProject');
     }
 
     /**
@@ -162,6 +162,6 @@ class Company extends Model
      */
     public function withdrawals()
     {
-        return $this->hasMany('App\Entities\Withdrawal');
+        return $this->hasMany('Modules\Core\Entities\Withdrawal');
     }
 }

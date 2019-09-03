@@ -52,7 +52,7 @@ class Affiliate extends Model
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company');
+        return $this->belongsTo('Modules\Core\Entities\Company');
     }
 
     /**
@@ -60,7 +60,7 @@ class Affiliate extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
     /**
@@ -68,7 +68,7 @@ class Affiliate extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User');
+        return $this->belongsTo('Modules\Core\Entities\User');
     }
 
     /**
@@ -76,7 +76,7 @@ class Affiliate extends Model
      */
     public function affiliateLinks()
     {
-        return $this->hasMany('App\Entities\AffiliateLink');
+        return $this->hasMany('Modules\Core\Entities\AffiliateLink');
     }
 
     /**
@@ -84,7 +84,7 @@ class Affiliate extends Model
      */
     public function campaigns()
     {
-        return $this->hasMany('App\Entities\Campaign');
+        return $this->hasMany('Modules\Core\Entities\Campaign');
     }
 
     /**
@@ -92,7 +92,7 @@ class Affiliate extends Model
      */
     public function clientsCookies()
     {
-        return $this->hasMany('App\Entities\ClientsCookie');
+        return $this->hasMany('Modules\Core\Entities\ClientsCookie');
     }
 
     /**
@@ -100,6 +100,6 @@ class Affiliate extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale');
+        return $this->hasMany('Modules\Core\Entities\Sale');
     }
 }

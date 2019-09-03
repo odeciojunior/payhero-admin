@@ -4,14 +4,14 @@ namespace Modules\Authentication\Http\Controllers;
 
 use DB;
 use GuzzleHttp\Client;
-use App\Entities\User;
 use Lcobucci\JWT\Parser;
 use App\OauthAccessToken;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class AuthenticationApiController

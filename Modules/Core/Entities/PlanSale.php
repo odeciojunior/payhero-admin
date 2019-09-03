@@ -54,7 +54,7 @@ class PlanSale extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan');
+        return $this->belongsTo('Modules\Core\Entities\Plan');
     }
 
     /**
@@ -62,6 +62,6 @@ class PlanSale extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('App\Entities\Sale');
+        return $this->belongsTo('Modules\Core\Entities\Sale');
     }
 }

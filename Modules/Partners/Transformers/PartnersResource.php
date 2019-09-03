@@ -2,7 +2,6 @@
 
 namespace Modules\Partners\Transformers;
 
-use App\Entities\User;
 use League\Fractal\TransformerAbstract;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;

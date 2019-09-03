@@ -57,6 +57,6 @@ class DomainRecord extends Model
      */
     public function domain()
     {
-        return $this->belongsTo('App\Entities\Domain');
+        return $this->belongsTo('Modules\Core\Entities\Domain');
     }
 }

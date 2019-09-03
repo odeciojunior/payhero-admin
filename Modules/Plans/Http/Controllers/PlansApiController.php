@@ -6,7 +6,6 @@ use App\Plano;
 use App\Brinde;
 use App\Produto;
 use Carbon\Carbon;
-use App\Entities\UserProjeto;
 use App\PlanoBrinde;
 use App\ProdutoPlano;
 use Illuminate\Http\Request;

@@ -61,7 +61,7 @@ class Plan extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
     /**
@@ -69,7 +69,7 @@ class Plan extends Model
      */
     public function affiliateLinks()
     {
-        return $this->hasMany('App\Entities\AffiliateLink');
+        return $this->hasMany('Modules\Core\Entities\AffiliateLink');
     }
 
     /**
@@ -77,7 +77,7 @@ class Plan extends Model
      */
     public function checkoutPlans()
     {
-        return $this->hasMany('App\Entities\CheckoutPlan');
+        return $this->hasMany('Modules\Core\Entities\CheckoutPlan');
     }
 
     /**
@@ -85,7 +85,7 @@ class Plan extends Model
      */
     public function planGifts()
     {
-        return $this->hasMany('App\Entities\PlanGift');
+        return $this->hasMany('Modules\Core\Entities\PlanGift');
     }
 
     /**
@@ -93,7 +93,7 @@ class Plan extends Model
      */
     public function plansSales()
     {
-        return $this->hasMany('App\Entities\PlansSale');
+        return $this->hasMany('Modules\Core\Entities\PlansSale');
     }
 
     /**
@@ -101,7 +101,7 @@ class Plan extends Model
      */
     public function productsPlans()
     {
-        return $this->hasMany('App\Entities\ProductsPlan');
+        return $this->hasMany('Modules\Core\Entities\ProductsPlan');
     }
 
     /**
@@ -109,7 +109,7 @@ class Plan extends Model
      */
     public function smsMessages()
     {
-        return $this->hasMany('App\Entities\SmsMessage', 'plan');
+        return $this->hasMany('Modules\Core\Entities\SmsMessage', 'plan');
     }
 
     /**
@@ -117,6 +117,6 @@ class Plan extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('App\Entities\ZenviaSm');
+        return $this->hasMany('Modules\Core\Entities\ZenviaSm');
     }
 }

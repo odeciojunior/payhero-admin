@@ -3,7 +3,7 @@
 namespace Modules\Companies\Policies;
 
 use App\Entities\Company;
-use App\Entities\User;
+use Modules\Core\Entities\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CompanyPolicy

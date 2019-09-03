@@ -50,7 +50,7 @@ class AffiliateLink extends Model
      */
     public function affiliate()
     {
-        return $this->belongsTo('App\Entities\Affiliate');
+        return $this->belongsTo('Modules\Core\Entities\Affiliate');
     }
 
     /**
@@ -58,7 +58,7 @@ class AffiliateLink extends Model
      */
     public function campaign()
     {
-        return $this->belongsTo('App\Entities\Campaign');
+        return $this->belongsTo('Modules\Core\Entities\Campaign');
     }
 
     /**
@@ -66,6 +66,6 @@ class AffiliateLink extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan');
+        return $this->belongsTo('Modules\Core\Entities\Plan');
     }
 }

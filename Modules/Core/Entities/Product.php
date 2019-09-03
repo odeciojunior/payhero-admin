@@ -73,7 +73,7 @@ class Product extends Model
      */
     public function category()
     {
-        return $this->belongsTo('App\Entities\Category');
+        return $this->belongsTo('Modules\Core\Entities\Category');
     }
 
     /**
@@ -81,7 +81,7 @@ class Product extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User');
+        return $this->belongsTo('Modules\Core\Entities\User');
     }
 
     /**
@@ -89,7 +89,7 @@ class Product extends Model
      */
     public function planSaleProducts()
     {
-        return $this->hasMany('App\Entities\PlanSaleProduct');
+        return $this->hasMany('Modules\Core\Entities\PlanSaleProduct');
     }
 
     /**
@@ -97,6 +97,6 @@ class Product extends Model
      */
     public function productsPlans()
     {
-        return $this->hasMany('App\Entities\ProductsPlan');
+        return $this->hasMany('Modules\Core\Entities\ProductsPlan');
     }
 }

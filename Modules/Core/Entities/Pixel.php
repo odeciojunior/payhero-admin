@@ -50,7 +50,7 @@ class Pixel extends Model
      */
     public function campaign()
     {
-        return $this->belongsTo('App\Entities\Campaign', 'campaign');
+        return $this->belongsTo('Modules\Core\Entities\Campaign', 'campaign');
     }
 
     /**
@@ -58,6 +58,6 @@ class Pixel extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 }

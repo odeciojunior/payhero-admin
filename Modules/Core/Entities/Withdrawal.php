@@ -50,6 +50,6 @@ class Withdrawal extends Model
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company');
+        return $this->belongsTo('Modules\Core\Entities\Company');
     }
 }

@@ -68,7 +68,7 @@ class Delivery extends Model
      */
     public function carrier()
     {
-        return $this->belongsTo('App\Entities\Carrier');
+        return $this->belongsTo('Modules\Core\Entities\Carrier');
     }
 
     /**
@@ -76,7 +76,7 @@ class Delivery extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale');
+        return $this->hasMany('Modules\Core\Entities\Sale');
     }
 
     /**
@@ -84,6 +84,6 @@ class Delivery extends Model
      */
     public function trackingHistories()
     {
-        return $this->hasMany('App\Entities\TrackingHistory');
+        return $this->hasMany('Modules\Core\Entities\TrackingHistory');
     }
 }

@@ -45,7 +45,7 @@ class CheckoutPlan extends Model
      */
     public function checkout()
     {
-        return $this->belongsTo('App\Entities\Checkout');
+        return $this->belongsTo('Modules\Core\Entities\Checkout');
     }
 
     /**
@@ -53,6 +53,6 @@ class CheckoutPlan extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan');
+        return $this->belongsTo('Modules\Core\Entities\Plan');
     }
 }

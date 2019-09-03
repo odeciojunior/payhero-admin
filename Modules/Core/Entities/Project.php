@@ -94,7 +94,7 @@ class Project extends Model
      */
     public function carrier()
     {
-        return $this->belongsTo('App\Entities\Carrier');
+        return $this->belongsTo('Modules\Core\Entities\Carrier');
     }
 
     /**
@@ -102,7 +102,7 @@ class Project extends Model
      */
     public function affiliateRequests()
     {
-        return $this->hasMany('App\Entities\AffiliateRequest');
+        return $this->hasMany('Modules\Core\Entities\AffiliateRequest');
     }
 
     /**
@@ -110,7 +110,7 @@ class Project extends Model
      */
     public function affiliates()
     {
-        return $this->hasMany('App\Entities\Affiliate');
+        return $this->hasMany('Modules\Core\Entities\Affiliate');
     }
 
     /**
@@ -118,7 +118,7 @@ class Project extends Model
      */
     public function checkouts()
     {
-        return $this->hasMany('App\Entities\Checkout');
+        return $this->hasMany('Modules\Core\Entities\Checkout');
     }
 
     /**
@@ -126,7 +126,7 @@ class Project extends Model
      */
     public function clientsCookies()
     {
-        return $this->hasMany('App\Entities\ClientsCookie');
+        return $this->hasMany('Modules\Core\Entities\ClientsCookie');
     }
 
     /**
@@ -134,7 +134,7 @@ class Project extends Model
      */
     public function convertaxIntegrations()
     {
-        return $this->hasMany('App\Entities\ConvertaxIntegration');
+        return $this->hasMany('Modules\Core\Entities\ConvertaxIntegration');
     }
 
     /**
@@ -142,7 +142,7 @@ class Project extends Model
      */
     public function discountCoupons()
     {
-        return $this->hasMany('App\Entities\DiscountCoupon');
+        return $this->hasMany('Modules\Core\Entities\DiscountCoupon');
     }
 
     /**
@@ -150,7 +150,7 @@ class Project extends Model
      */
     public function domains()
     {
-        return $this->hasMany('App\Entities\Domain');
+        return $this->hasMany('Modules\Core\Entities\Domain');
     }
 
     /**
@@ -158,7 +158,7 @@ class Project extends Model
      */
     public function extraMaterials()
     {
-        return $this->hasMany('App\Entities\ExtraMaterial');
+        return $this->hasMany('Modules\Core\Entities\ExtraMaterial');
     }
 
     /**
@@ -166,7 +166,7 @@ class Project extends Model
      */
     public function gifts()
     {
-        return $this->hasMany('App\Entities\Gift', 'project');
+        return $this->hasMany('Modules\Core\Entities\Gift', 'project');
     }
 
     /**
@@ -174,7 +174,7 @@ class Project extends Model
      */
     public function hotzappIntegrations()
     {
-        return $this->hasMany('App\Entities\HotzappIntegration');
+        return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
     }
 
     /**
@@ -182,7 +182,7 @@ class Project extends Model
      */
     public function layouts()
     {
-        return $this->hasMany('App\Entities\Layout', 'project');
+        return $this->hasMany('Modules\Core\Entities\Layout', 'project');
     }
 
     /**
@@ -190,7 +190,7 @@ class Project extends Model
      */
     public function notazzIntegrations()
     {
-        return $this->hasMany('App\Entities\NotazzIntegration');
+        return $this->hasMany('Modules\Core\Entities\NotazzIntegration');
     }
 
     /**
@@ -198,7 +198,7 @@ class Project extends Model
      */
     public function pixels()
     {
-        return $this->hasMany('App\Entities\Pixel');
+        return $this->hasMany('Modules\Core\Entities\Pixel');
     }
 
     /**
@@ -206,7 +206,7 @@ class Project extends Model
      */
     public function plans()
     {
-        return $this->hasMany('App\Entities\Plan');
+        return $this->hasMany('Modules\Core\Entities\Plan');
     }
 
     /**
@@ -214,7 +214,7 @@ class Project extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale');
+        return $this->hasMany('Modules\Core\Entities\Sale');
     }
 
     /**
@@ -222,7 +222,7 @@ class Project extends Model
      */
     public function shippings()
     {
-        return $this->hasMany('App\Entities\Shipping', 'project');
+        return $this->hasMany('Modules\Core\Entities\Shipping', 'project');
     }
 
     /**
@@ -230,7 +230,7 @@ class Project extends Model
      */
     public function shopifyIntegrations()
     {
-        return $this->hasMany('App\Entities\ShopifyIntegration');
+        return $this->hasMany('Modules\Core\Entities\ShopifyIntegration');
     }
 
     /**
@@ -238,7 +238,7 @@ class Project extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UsersProject');
+        return $this->hasMany('Modules\Core\Entities\UsersProject');
     }
 
     /**
@@ -246,6 +246,6 @@ class Project extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('App\Entities\ZenviaSm');
+        return $this->hasMany('Modules\Core\Entities\ZenviaSm');
     }
 }

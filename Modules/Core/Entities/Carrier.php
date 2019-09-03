@@ -36,7 +36,7 @@ class Carrier extends Model
      */
     public function deliveries()
     {
-        return $this->hasMany('App\Entities\Delivery');
+        return $this->hasMany('Modules\Core\Entities\Delivery');
     }
 
     /**
@@ -44,6 +44,6 @@ class Carrier extends Model
      */
     public function projects()
     {
-        return $this->hasMany('App\Entities\Project');
+        return $this->hasMany('Modules\Core\Entities\Project');
     }
 }

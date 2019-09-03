@@ -56,7 +56,7 @@ class Invitation extends Model
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company', 'company');
+        return $this->belongsTo('Modules\Core\Entities\Company', 'company');
     }
 
     /**
@@ -64,7 +64,7 @@ class Invitation extends Model
      */
     public function userInvited()
     {
-        return $this->belongsTo('App\Entities\User', 'user_invited');
+        return $this->belongsTo('Modules\Core\Entities\User', 'user_invited');
     }
 
     /**
@@ -72,6 +72,6 @@ class Invitation extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'invite');
+        return $this->belongsTo('Modules\Core\Entities\User', 'invite');
     }
 }

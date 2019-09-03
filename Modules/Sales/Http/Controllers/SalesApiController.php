@@ -2,18 +2,18 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use App\Entities\Plan;
-use App\Entities\PlanSale;
-use App\Entities\Project;
-use App\Entities\Sale;
-use App\Entities\User;
 use Exception;
+use App\Entities\Plan;
+use App\Entities\Sale;
+use App\Entities\Project;
+use App\Entities\PlanSale;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Sales\Transformers\SaleApiResource;
 use Modules\Sales\Transformers\SalesResource;
+use Modules\Sales\Transformers\SaleApiResource;
 
 class SalesApiController extends Controller
 {

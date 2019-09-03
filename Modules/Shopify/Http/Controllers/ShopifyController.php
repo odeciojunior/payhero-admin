@@ -2,18 +2,18 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
+use Exception;
 use App\Entities\Company;
 use App\Entities\Project;
 use App\Entities\Shipping;
-use App\Entities\ShopifyIntegration;
-use App\Entities\UserProject;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Events\ShopifyIntegrationEvent;
-use Modules\Core\Services\ShopifyService;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Entities\ShopifyIntegration;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\ShopifyService;
+use Modules\Core\Events\ShopifyIntegrationEvent;
 
 class ShopifyController extends Controller
 {

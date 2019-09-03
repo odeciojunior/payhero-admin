@@ -40,6 +40,6 @@ class UserDocument extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User');
+        return $this->belongsTo('Modules\Core\Entities\User');
     }
 }

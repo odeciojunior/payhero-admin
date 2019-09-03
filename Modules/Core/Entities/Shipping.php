@@ -55,7 +55,7 @@ class Shipping extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project', 'project');
+        return $this->belongsTo('Modules\Core\Entities\Project', 'project');
     }
 
     /**
@@ -63,6 +63,6 @@ class Shipping extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale');
+        return $this->hasMany('Modules\Core\Entities\Sale');
     }
 }

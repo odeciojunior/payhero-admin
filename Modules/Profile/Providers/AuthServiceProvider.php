@@ -2,9 +2,9 @@
 
 namespace Modules\Profile\Providers;
 
-use App\Entities\User;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\User;
 use Modules\Profile\Policies\ProfilePolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {

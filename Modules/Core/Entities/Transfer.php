@@ -48,7 +48,7 @@ class Transfer extends Model
      */
     public function transaction()
     {
-        return $this->belongsTo('App\Entities\Transaction');
+        return $this->belongsTo('Modules\Core\Entities\Transaction');
     }
 
     /**
@@ -56,7 +56,7 @@ class Transfer extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User');
+        return $this->belongsTo('Modules\Core\Entities\User');
     }
 
     /**
@@ -64,6 +64,6 @@ class Transfer extends Model
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company');
+        return $this->belongsTo('Modules\Core\Entities\Company');
     }
 }

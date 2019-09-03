@@ -102,7 +102,7 @@ class Sale extends Model
      */
     public function checkout()
     {
-        return $this->belongsTo('App\Entities\Checkout');
+        return $this->belongsTo('Modules\Core\Entities\Checkout');
     }
 
     /**
@@ -110,7 +110,7 @@ class Sale extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
     /**
@@ -118,7 +118,7 @@ class Sale extends Model
      */
     public function shipping()
     {
-        return $this->belongsTo('App\Entities\Shipping');
+        return $this->belongsTo('Modules\Core\Entities\Shipping');
     }
 
     /**
@@ -126,7 +126,7 @@ class Sale extends Model
      */
     public function affiliate()
     {
-        return $this->belongsTo('App\Entities\Affiliate');
+        return $this->belongsTo('Modules\Core\Entities\Affiliate');
     }
 
     /**
@@ -134,7 +134,7 @@ class Sale extends Model
      */
     public function client()
     {
-        return $this->belongsTo('App\Entities\Client');
+        return $this->belongsTo('Modules\Core\Entities\Client');
     }
 
     /**
@@ -142,7 +142,7 @@ class Sale extends Model
      */
     public function delivery()
     {
-        return $this->belongsTo('App\Entities\Delivery');
+        return $this->belongsTo('Modules\Core\Entities\Delivery');
     }
 
     /**
@@ -150,7 +150,7 @@ class Sale extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Entities\User', 'owner_id');
+        return $this->belongsTo('Modules\Core\Entities\User', 'owner_id');
     }
 
     /**
@@ -158,7 +158,7 @@ class Sale extends Model
      */
     public function plansSales()
     {
-        return $this->hasMany('App\Entities\PlansSale');
+        return $this->hasMany('Modules\Core\Entities\PlansSale');
     }
 
     /**
@@ -166,6 +166,6 @@ class Sale extends Model
      */
     public function transactions()
     {
-        return $this->hasMany('App\Entities\Transaction');
+        return $this->hasMany('Modules\Core\Entities\Transaction');
     }
 }

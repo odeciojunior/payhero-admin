@@ -61,7 +61,7 @@ class Transaction extends Model
      */
     public function company()
     {
-        return $this->belongsTo('App\Entities\Company');
+        return $this->belongsTo('Modules\Core\Entities\Company');
     }
 
     /**
@@ -69,7 +69,7 @@ class Transaction extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('App\Entities\Sale');
+        return $this->belongsTo('Modules\Core\Entities\Sale');
     }
 
     /**
@@ -77,7 +77,7 @@ class Transaction extends Model
      */
     public function antecipatedTransactions()
     {
-        return $this->hasMany('App\Entities\AntecipatedTransaction');
+        return $this->hasMany('Modules\Core\Entities\AntecipatedTransaction');
     }
 
     /**
@@ -85,6 +85,6 @@ class Transaction extends Model
      */
     public function transfers()
     {
-        return $this->hasMany('App\Entities\Transfer');
+        return $this->hasMany('Modules\Core\Entities\Transfer');
     }
 }

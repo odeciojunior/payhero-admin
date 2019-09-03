@@ -42,7 +42,7 @@ class Domain extends Model
      */
     public function project()
     {
-        return $this->belongsTo('App\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
     /**
@@ -50,6 +50,6 @@ class Domain extends Model
      */
     public function domainsRecords()
     {
-        return $this->hasMany('App\Entities\DomainsRecord');
+        return $this->hasMany('Modules\Core\Entities\DomainsRecord');
     }
 }

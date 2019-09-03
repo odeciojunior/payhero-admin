@@ -36,7 +36,7 @@ class PlanGift extends Model
      */
     public function gift()
     {
-        return $this->belongsTo('App\Entities\Gift');
+        return $this->belongsTo('Modules\Core\Entities\Gift');
     }
 
     /**
@@ -44,6 +44,6 @@ class PlanGift extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('App\Entities\Plan');
+        return $this->belongsTo('Modules\Core\Entities\Plan');
     }
 }

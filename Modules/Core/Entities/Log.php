@@ -63,6 +63,6 @@ class Log extends Model
      */
     public function checkout()
     {
-        return $this->belongsTo('App\Entities\Checkout');
+        return $this->belongsTo('Modules\Core\Entities\Checkout');
     }
 }

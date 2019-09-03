@@ -2,7 +2,11 @@
 
 namespace Modules\Core\Entities;
 
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticable;
 
 /**
  * @property int $id
@@ -56,8 +60,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property UserShopping[] $userShoppings
  * @property UsersProject[] $usersProjects
  */
-class User extends Model
-{
+class User extends Authenticable
+{ 
+
+    use Notifiable;
+    use HasRoles;
+    use SoftDeletes;
+
     /**
      * @var array
      */
@@ -102,7 +111,7 @@ class User extends Model
      */
     public function affiliateRequests()
     {
-        return $this->hasMany('App\Entities\AffiliateRequest');
+        return $this->hasMany('Modules\Core\Entities\AffiliateRequest');
     }
 
     /**
@@ -110,7 +119,7 @@ class User extends Model
      */
     public function affiliates()
     {
-        return $this->hasMany('App\Entities\Affiliate');
+        return $this->hasMany('Modules\Core\Entities\Affiliate');
     }
 
     /**
@@ -118,7 +127,7 @@ class User extends Model
      */
     public function companies()
     {
-        return $this->hasMany('App\Entities\Company');
+        return $this->hasMany('Modules\Core\Entities\Company');
     }
 
     /**
@@ -126,7 +135,7 @@ class User extends Model
      */
     public function convertaxIntegrations()
     {
-        return $this->hasMany('App\Entities\ConvertaxIntegration');
+        return $this->hasMany('Modules\Core\Entities\ConvertaxIntegration');
     }
 
     /**
@@ -134,7 +143,7 @@ class User extends Model
      */
     public function hotzappIntegrations()
     {
-        return $this->hasMany('App\Entities\HotzappIntegration');
+        return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
     }
 
     /**
@@ -142,7 +151,7 @@ class User extends Model
      */
     public function invitations()
     {
-        return $this->hasMany('App\Entities\Invitation', 'user_invited');
+        return $this->hasMany('Modules\Core\Entities\Invitation', 'user_invited');
     }
 
     /**
@@ -150,7 +159,7 @@ class User extends Model
      */
     public function invites()
     {
-        return $this->hasMany('App\Entities\Invitation', 'invite');
+        return $this->hasMany('Modules\Core\Entities\Invitation', 'invite');
     }
 
     /**
@@ -158,7 +167,7 @@ class User extends Model
      */
     public function notazzIntegrations()
     {
-        return $this->hasMany('App\Entities\NotazzIntegration');
+        return $this->hasMany('Modules\Core\Entities\NotazzIntegration');
     }
 
     /**
@@ -166,7 +175,7 @@ class User extends Model
      */
     public function products()
     {
-        return $this->hasMany('App\Entities\Product');
+        return $this->hasMany('Modules\Core\Entities\Product');
     }
 
     /**
@@ -174,7 +183,7 @@ class User extends Model
      */
     public function sales()
     {
-        return $this->hasMany('App\Entities\Sale', 'owner_id');
+        return $this->hasMany('Modules\Core\Entities\Sale', 'owner_id');
     }
 
     /**
@@ -182,7 +191,7 @@ class User extends Model
      */
     public function shopifyIntegrations()
     {
-        return $this->hasMany('App\Entities\ShopifyIntegration');
+        return $this->hasMany('Modules\Core\Entities\ShopifyIntegration');
     }
 
     /**
@@ -190,7 +199,7 @@ class User extends Model
      */
     public function smsMessages()
     {
-        return $this->hasMany('App\Entities\SmsMessage', 'user');
+        return $this->hasMany('Modules\Core\Entities\SmsMessage', 'user');
     }
 
     /**
@@ -198,7 +207,7 @@ class User extends Model
      */
     public function transfers()
     {
-        return $this->hasMany('App\Entities\Transfer');
+        return $this->hasMany('Modules\Core\Entities\Transfer');
     }
 
     /**
@@ -206,7 +215,7 @@ class User extends Model
      */
     public function userDocuments()
     {
-        return $this->hasMany('App\Entities\UserDocument');
+        return $this->hasMany('Modules\Core\Entities\UserDocument');
     }
 
     /**
@@ -214,7 +223,7 @@ class User extends Model
      */
     public function userShoppings()
     {
-        return $this->hasMany('App\Entities\UserShopping', 'client');
+        return $this->hasMany('Modules\Core\Entities\UserShopping', 'client');
     }
 
     /**
@@ -222,6 +231,6 @@ class User extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('App\Entities\UsersProject');
+        return $this->hasMany('Modules\Core\Entities\UsersProject');
     }
 }

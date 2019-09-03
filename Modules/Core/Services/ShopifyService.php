@@ -2,23 +2,23 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Project;
-use App\Entities\ShopifyIntegration;
-use App\Entities\User;
 use Exception;
 use App\Entities\Plan;
-use Illuminate\Support\Facades\Log;
-use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use PHPHtmlParser\Dom;
 use App\Entities\Product;
+use App\Entities\Project;
 use Slince\Shopify\Client;
 use App\Entities\ProductPlan;
+use Modules\Core\Entities\User;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Selector\Parser;
+use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Entities\ShopifyIntegration;
 use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\PublicAppCredential;
+use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 
 class ShopifyService
 {
