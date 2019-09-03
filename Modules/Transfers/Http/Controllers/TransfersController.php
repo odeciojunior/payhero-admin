@@ -2,12 +2,12 @@
 
 namespace Modules\Transfers\Http\Controllers;
 
-use App\Entities\Transfer;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Transfer;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Transfers\Transformers\TransfersResource;
 
@@ -23,12 +23,12 @@ class TransfersController extends Controller
             $transfersModel = new Transfer();
 
             $transfers = $transfersModel
-                ->select('transfers.*', 'transaction.sale', 'transaction.company', 'transaction.currency', 'transaction.status',
+                ->select('transfers.*', 'transaction.sale_id', 'transaction.company_id', 'transaction.currency', 'transaction.status',
                           'transaction.antecipable_value', 'antecipatedtransaction.anticipation_id', 'antecipatedtransaction.created_at as anticipationCreatedAt')
-                ->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction')
-                ->leftJoin('antecipated_transactions as antecipatedtransaction', 'antecipatedtransaction.transaction_id', 'transfers.transaction')
+                ->leftJoin('transactions as transaction', 'transaction.id', 'transfers.transaction_id')
+                ->leftJoin('antecipated_transactions as antecipatedtransaction', 'antecipatedtransaction.transaction_id', 'transfers.transaction_id')
                 ->where('transfers.company_id', current(Hashids::decode($request->company)))
-                ->orWhere('transaction.company', current(Hashids::decode($request->company)))
+                ->orWhere('transaction.company_id', current(Hashids::decode($request->company)))
                 ->orderBy('id', 'DESC');
 
             return TransfersResource::collection($transfers->paginate(10));

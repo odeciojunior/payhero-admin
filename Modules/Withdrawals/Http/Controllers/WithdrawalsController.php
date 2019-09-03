@@ -3,15 +3,15 @@
 namespace Modules\Withdrawals\Http\Controllers;
 
 use Exception;
-use App\Entities\Company;
-use App\Entities\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\BankService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
 

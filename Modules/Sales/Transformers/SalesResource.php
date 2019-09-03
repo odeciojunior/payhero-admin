@@ -30,10 +30,8 @@ class SalesResource extends Resource
             'id'         => Hashids::connection('sale_id')->encode($this->id),
             'project'    => $this->getRelation('plansSales')->first()->getRelation('plan')
                                  ->getRelation('projectId')->name,
-            'product'    => (count($this->getRelation('plansSales')) > 1) ? 'Carrinho' : $this->getRelation('plansSales')
-                                                                                              ->first()
-                                                                                              ->getRelation('plan')->name,
-            'client'     => $this->getRelation('clientModel')->name,
+            'product'    => (count($this->plansSales) > 1) ? 'Carrinho' : $this->plansSales->plan->name,
+            'client'     => $this->client->name,
             'method'     => $this->payment_method,
             'status'     => Lang::get('definitions.enum.sale.status.' . $this->getEnum('status', $this->status)),
             'start_date' => $this->start_date ? with(new Carbon($this->start_date))->format('d/m/Y H:i:s') : '',

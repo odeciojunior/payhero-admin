@@ -2,16 +2,15 @@
 
 namespace Modules\Finances\Http\Controllers;
 
-use App\Entities\Project;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Gate;
 use PagarMe\Client;
-use App\Entities\Company;
 use Illuminate\Http\Request;
-use App\Entities\Transaction;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Company;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\Transaction;
 
 /**
  * Class FinancesController
@@ -47,37 +46,37 @@ class FinancesController extends Controller
         $company = $companyModel->where('user_id', auth()->user()->id)->first();
 
         if (!empty($company)) {
-            $pendingTransactions = $transactionModel->where('company', $company->id)
+            $pendingTransactions = $transactionModel->where('company_id', $company->id)
                                                     ->where('status', 'paid')
                                                     ->whereDate('release_date', '>', Carbon::today()->toDateString())
-                                                    ->get()->toArray();
+                                                    ->get();
 
             if (count($pendingTransactions)) {
                 foreach ($pendingTransactions as $pendingTransaction) {
-                    $pendingBalance += $pendingTransaction['value'];
+                    $pendingBalance += $pendingTransaction->value;
                 }
             }
 
-            $anticipableTransactions = $transactionModel->where('company', $company->id)
+            $anticipableTransactions = $transactionModel->where('company_id', $company->id)
                                                         ->where('status', 'anticipated')
                                                         ->whereDate('release_date', '>', Carbon::today()
                                                                                                ->toDateString())
-                                                        ->get()->toArray();
+                                                        ->get();
 
             if (count($anticipableTransactions)) {
                 foreach ($anticipableTransactions as $anticipableTransaction) {
-                    $pendingBalance += $anticipableTransaction['value'] - $anticipableTransaction['antecipable_value'];
+                    $pendingBalance += $anticipableTransaction->value - $anticipableTransaction->antecipable_value;
                 }
             }
 
-            $antecipableTransactions = $transactionModel->where('company', $company->id)->where('status', 'paid')
+            $antecipableTransactions = $transactionModel->where('company_id', $company->id)->where('status', 'paid')
                                                         ->whereDate('release_date', '>', Carbon::today())
                                                         ->whereDate('antecipation_date', '<=', Carbon::today())
-                                                        ->get()->toArray();
+                                                        ->get();
 
             if (count($antecipableTransactions)) {
                 foreach ($antecipableTransactions as $antecipableTransaction) {
-                    $antecipableBalance += $antecipableTransaction['antecipable_value'];
+                    $antecipableBalance += $antecipableTransaction->antecipable_value;
                 }
             }
 

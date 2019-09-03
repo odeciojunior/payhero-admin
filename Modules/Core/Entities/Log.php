@@ -44,8 +44,6 @@ use Illuminate\Database\Eloquent\Model;
 class Log extends Model
 {
 
-    use SoftDeletes;
-
     /**
      * The "type" of the auto-incrementing ID.
      * 

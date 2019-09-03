@@ -2,8 +2,6 @@
 
 namespace Modules\SalesRecovery\Transformers;
 
-use App\Entities\CheckoutPlan;
-use App\Entities\Plan;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,9 +18,9 @@ class SalesRecoveryCardRefusedResource extends Resource
      */
     public function toArray($request)
     {
-        $client  = $this->getRelation('clientModel');
-        $project = $this->getRelation('projectModel');
-        $domain  = $project->getRelation('domains')->first();
+        $client  = $this->client;
+        $project = $this->project;
+        $domain  = $project->domains->first();
 
         $status = 'Recuperado';
         if ($this->payment_method == 1) {

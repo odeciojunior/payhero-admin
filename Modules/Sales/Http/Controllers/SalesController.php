@@ -39,7 +39,7 @@ class SalesController extends Controller
             $companyModel     = new Company();
 
             $userProjects = $userProjectModel->with('project')
-                                             ->where('user', auth()->user()->id)
+                                             ->where('user_id', auth()->user()->id)
                                              ->get();
 
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
@@ -59,7 +59,7 @@ class SalesController extends Controller
 
             return view('sales::index', [
                 'projetos'     => $projects,
-                'sales_amount' => $transactionModel->whereIn('company', $userCompanies)->get()->count(),
+                'sales_amount' => $transactionModel->whereIn('company_id', $userCompanies)->get()->count(),
             ]);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - index');
@@ -205,10 +205,9 @@ class SalesController extends Controller
     public function getSales(Request $request)
     {
         try {
-
             $companyModel     = new Company();
             $saleModel        = new Sale();
-            $planSaleModel    = new PlanSale();
+            $planSaleModel    = new PlanSale(); 
             $planModel        = new Plan();
             $clientModel      = new Client();
             $transactionModel = new Transaction();
@@ -218,7 +217,6 @@ class SalesController extends Controller
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
                                           ->pluck('id')
                                           ->toArray();
-
 
             $transactions = $transactionModel->with([
                                                         'sale',
@@ -232,12 +230,12 @@ class SalesController extends Controller
                                              ->whereHas('sale', function($querySale) {
                                                  $querySale->whereNotIn('status',[ 3, 5 , 10]);
                                              })
-                                             ->whereIn('company', $userCompanies);
+                                             ->whereIn('company_id', $userCompanies);
 
             if (!empty($data["projeto"])) {
                 $projectId = current(Hashids::decode($data["projeto"]));
                 $transactions->whereHas('sale_id', function($querySale) use ($projectId) {
-                    $querySale->where('project', $projectId);
+                    $querySale->where('project_id', $projectId);
                 });
             }
 

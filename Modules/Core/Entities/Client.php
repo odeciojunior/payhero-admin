@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ClientPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -20,7 +22,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Client extends Model
 {
 
-    use SoftDeletes;
+    use SoftDeletes, PresentableTrait;
+
+    protected $presenter = ClientPresenter::class;
 
     /**
      * The "type" of the auto-incrementing ID.

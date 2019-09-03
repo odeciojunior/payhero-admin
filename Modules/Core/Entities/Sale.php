@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\SalePresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -51,7 +53,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Sale extends Model
 {
 
-    use SoftDeletes;
+    use SoftDeletes, PresentableTrait;
+
+    protected $presenter = SalePresenter::class;
 
     /**
      * The "type" of the auto-incrementing ID.
@@ -110,7 +114,7 @@ class Sale extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo('Modules\Core\Entities\Project', 'project_id');
     }
 
     /**
@@ -158,7 +162,7 @@ class Sale extends Model
      */
     public function plansSales()
     {
-        return $this->hasMany('Modules\Core\Entities\PlansSale');
+        return $this->hasMany('Modules\Core\Entities\PlanSale');
     }
 
     /**

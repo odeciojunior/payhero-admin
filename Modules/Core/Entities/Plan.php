@@ -119,4 +119,13 @@ class Plan extends Model
     {
         return $this->hasMany('Modules\Core\Entities\ZenviaSm');
     }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function products()
+    {
+        return $this->belongsToMany('Modules\Core\Entities\Product', 'products_plans', 'plan_id', 'product_id');
+    }
+
 }

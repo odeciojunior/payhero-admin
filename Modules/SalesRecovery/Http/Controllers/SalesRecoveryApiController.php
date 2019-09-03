@@ -3,13 +3,13 @@
 namespace Modules\SalesRecovery\Http\Controllers;
 
 use Exception;
-use App\Entities\Sale;
-use App\Entities\Project;
-use App\Entities\Checkout;
 use Illuminate\Http\Request;
+use Modules\Core\Entities\Sale;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Checkout;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +30,7 @@ class SalesRecoveryApiController extends Controller
             $userProjectModel = new UserProject();
             $projectModel     = new Project();
 
-            $userProjects = $userProjectModel->where('user', auth()->user()->id)->pluck('project');
+            $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
 
             $projects = $projectModel->whereIn('id', $userProjects)->get();
 

@@ -3,12 +3,11 @@
 namespace Modules\SalesRecovery\Transformers;
 
 use Carbon\Carbon;
-use App\Entities\Log;
-use App\Entities\Plan;
-use App\Entities\Domain;
-use App\Entities\CheckoutPlan;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Domain;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\CheckoutPlan;
 use Illuminate\Http\Resources\Json\Resource;
 
 class SalesRecoveryResource extends Resource
@@ -29,9 +28,9 @@ class SalesRecoveryResource extends Resource
         }
 
         $value         = 0;
-        $plannCheckout = CheckoutPlan::where('checkout', $this->id)->get()->toArray();
+        $plannCheckout = CheckoutPlan::where('checkout_id', $this->id)->get()->toArray();
         foreach ($plannCheckout as $planCheckout) {
-            $plan  = Plan::find($planCheckout['plan']);
+            $plan  = Plan::find($planCheckout['plan_id']);
             $value += str_replace('.', '', $plan['price']) * $planCheckout['amount'];
         }
 
@@ -53,7 +52,7 @@ class SalesRecoveryResource extends Resource
         return [
             'id'              => Hashids::encode($this->id),
             'date'            => with(new Carbon($this->created_at))->format('d/m/Y H:i:s'),
-            'project'         => $this->projectModel->name,
+            'project'         => $this->project->name,
             'client'          => $this->name,
             'email_status'    => $emailSentAmount,
             'sms_status'      => $smsSentAmount,

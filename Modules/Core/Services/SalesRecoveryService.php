@@ -2,20 +2,21 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Checkout;
-use App\Entities\Client;
-use App\Entities\Domain;
-use App\Entities\Log as CheckoutLog;
-use App\Entities\Log;
-use App\Entities\Sale;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Domain;
+use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Services\FoxUtils;
+use Illuminate\Contracts\View\Factory;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\Log as CheckoutLog;
 use Laracasts\Presenter\Exceptions\PresenterException;
-use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 use Modules\SalesRecovery\Transformers\SalesRecoveryResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 
 class SalesRecoveryService
 {
@@ -64,23 +65,23 @@ class SalesRecoveryService
     {
         $checkoutModel     = new Checkout();
         $userProjectsModel = new UserProject();
-        $logModel          = new Log();
+        $logModel          = new CheckoutLog();
 
-        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project','checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
+        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id','checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
                                         ->leftjoin('logs', function($join) {
                                             $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
                                         })
                                         ->whereIn('status', ['recovered', 'abandoned cart']);
 
         if (!empty($projectId)) {
-            $abandonedCarts->where('project', $projectId); 
+            $abandonedCarts->where('project_id', $projectId); 
         } else {
             $userProjects = $userProjectsModel->where([
-                                                          ['user', auth()->user()->id],
+                                                          ['user_id', auth()->user()->id],
                                                           ['type', 'producer'],
-                                                      ])->pluck('project')->toArray();
+                                                      ])->pluck('project_id')->toArray();
 
-            $abandonedCarts->whereIn('project', $userProjects)->with(['projectModel']);
+            $abandonedCarts->whereIn('project_id', $userProjects)->with(['project']);
         }
         if (!empty($client)) {
             $abandonedCarts->where('name', 'like', '%' . $client . '%');
@@ -120,17 +121,17 @@ class SalesRecoveryService
             ->select('sales.*', 'checkout.email_sent_amount', 'checkout.sms_sent_amount',
                      'checkout.id_log_session', DB::raw('(plan_sale.amount * plan_sale.plan_value ) AS value'))
             ->leftJoin('plans_sales as plan_sale', function($join) {
-                $join->on('plan_sale.sale', '=', 'sales.id');
+                $join->on('plan_sale.sale_id', '=', 'sales.id');
             })->leftJoin('checkouts as checkout', function($join) {
-                $join->on('sales.checkout', '=', 'checkout.id');
+                $join->on('sales.checkout_id', '=', 'checkout.id');
             })->leftJoin('clients as client', function($join) {
-                $join->on('sales.client', '=', 'client.id');
+                $join->on('sales.client_id', '=', 'client.id');
             })->whereIn('sales.status', $status)->where([
                                                             ['sales.payment_method', $paymentMethod],
                                                         ])->with([
-                                                                     'projectModel',
-                                                                     'clientModel',
-                                                                     'projectModel.domains' => function($query) {
+                                                                     'project',
+                                                                     'client',
+                                                                     'project.domains' => function($query) {
                                                                          $query->where('status', 3)//dominio aprovado
                                                                                ->first();
                                                                      },
@@ -139,19 +140,19 @@ class SalesRecoveryService
         if (!empty($client)) {
             $clientSearch = $clientModel->where('name', 'like', '%' . $client . '%')->first();
             if (!empty($clientSearch)) {
-                $salesExpired->where('sales.client', $clientSearch->id);
+                $salesExpired->where('sales.client_id', $clientSearch->id);
             }
         }
 
         if (!empty($projectId)) {
-            $salesExpired->where('sales.project', $projectId);
+            $salesExpired->where('sales.project_id', $projectId);
         } else {
             $userProjects = $userProjectsModel->where([
-                                                          ['user', auth()->user()->id],
+                                                          ['user_id', auth()->user()->id],
                                                           ['type', 'producer'],
-                                                      ])->pluck('project')->toArray();
+                                                      ])->pluck('project_id')->toArray();
 
-            $salesExpired->whereIn('sales.project', $userProjects);
+            $salesExpired->whereIn('sales.project_id', $userProjects);
         }
 
         if (!empty($dateStart) && !empty($dateEnd)) {
