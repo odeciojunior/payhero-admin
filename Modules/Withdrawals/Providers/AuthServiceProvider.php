@@ -2,9 +2,9 @@
 
 namespace Modules\Withdrawals\Providers;
 
-use App\Entities\Withdrawal;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\Withdrawal;
 use Modules\Withdrawals\Policies\WithdrawalPolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {

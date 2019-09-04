@@ -27,7 +27,7 @@ class WithdrawalResource extends Resource
             'date_release'        => isset($this->release_date) ? date("d/m/Y", strtotime($this->release_date)) : '',
             'value'               => 'R$ ' . number_format(intval($this->value) / 100, 2, ',', '.'),
             'status'              => $this->status,
-            'status_translated'   => Lang::get('definitions.enum.withdrawals.status.' . $this->getEnum('status', $this->status)),
+            'status_translated'   => Lang::get('definitions.enum.withdrawals.status.' . $this->present()->getStatus($this->status)), 
         ];
     }
 }

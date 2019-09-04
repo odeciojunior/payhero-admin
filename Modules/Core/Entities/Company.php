@@ -3,7 +3,9 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Core\Presenters\CompanyPresenter;
 
 /**
  * @property int $id
@@ -49,7 +51,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Company extends Model
 {
 
-    use SoftDeletes;
+    use SoftDeletes, PresentableTrait;
+
+    protected $presenter = CompanyPresenter::class;
 
     /**
      * @var array

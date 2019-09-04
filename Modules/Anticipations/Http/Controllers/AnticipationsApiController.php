@@ -17,15 +17,6 @@ use Modules\Core\Entities\AnticipatedTransaction;
 
 class AnticipationsApiController extends Controller
 {
-    public function index()
-    {
-
-    }
-
-    public function create()
-    {
-
-    }
 
     /**
      * @param Request $request
@@ -44,7 +35,7 @@ class AnticipationsApiController extends Controller
 
                 if (!empty($company)) {
 
-                    $antecipableTransactions = $transactionModel->where('company', $company->id)
+                    $antecipableTransactions = $transactionModel->where('company_id', $company->id)
                                                                 ->where('status', 'paid')
                                                                 ->whereDate('release_date', '>', Carbon::today())
                                                                 ->whereDate('antecipation_date', '<=', Carbon::today())
@@ -106,7 +97,7 @@ class AnticipationsApiController extends Controller
                                              ]);
 
                             $transferModel->create([
-                                                       'user'       => $user->id,
+                                                       'user_id'       => $user->id,
                                                        'company_id' => $company->id,
                                                        'value'      => preg_replace('/\D/', '', intval($pendingBalance - preg_replace('/\D/', '', $taxValue))),
                                                        'type'       => 'in',
@@ -164,7 +155,7 @@ class AnticipationsApiController extends Controller
                 $company = $companyModel->find($companyId);
 
                 if (!empty($company)) {
-                    $antecipableTransactions = $transactionModel->where('company', $company->id)
+                    $antecipableTransactions = $transactionModel->where('company_id', $company->id)
                                                                 ->where('status', 'paid')
                                                                 ->whereDate('release_date', '>', Carbon::today())
                                                                 ->whereDate('antecipation_date', '<=', Carbon::today())
@@ -216,7 +207,8 @@ class AnticipationsApiController extends Controller
                                         ], 400);
             }
         } catch (Exception $e) {
-
+            Log::warning('Erro ao calcular antecipação ');
+            report($e);
         }
     }
 

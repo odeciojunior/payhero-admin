@@ -83,9 +83,9 @@ class WithdrawalsController extends Controller
 
         if (Gate::allows('edit', [$company])) {
 
-            if (!$company->bank_document_status == $companyModel->getEnum('bank_document_status', 'approved') ||
-                !$company->address_document_status == $companyModel->getEnum('address_document_status', 'approved') ||
-                !$company->contract_document_status == $companyModel->getEnum('contract_document_status', 'approved')) {
+            if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
+                !$company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') ||
+                !$company->contract_document_status == $companyModel->present()->getContractDocumentStatus('approved')) {
                 return response()->json([
                                             'message' => 'error',
                                             'data'    => [
@@ -121,7 +121,7 @@ class WithdrawalsController extends Controller
                                          'agency_digit'  => $company->agency_digit,
                                          'account'       => $company->account,
                                          'account_digit' => $company->account_digit,
-                                         'status'        => $companyModel->getEnum('bank_document_status', 'pending'),
+                                         'status'        => $companyModel->present()->getStatus('pending'),
                                      ]);
 
             return response()->json([
@@ -150,8 +150,8 @@ class WithdrawalsController extends Controller
         if (Gate::allows('edit', [$company])) {
 
             $user = $userModel->where('id', auth()->user()->id)->first();
-            if ($user->address_document_status != $userModel->getEnum('address_document_status', 'approved') ||
-                $user->personal_document_status != $userModel->getEnum('personal_document_status', 'approved')) {
+            if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
+                $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
 
                 return response()->json([
                                             'message' => 'success',
@@ -161,9 +161,9 @@ class WithdrawalsController extends Controller
                                         ], 200);
             }
 
-            if ($company->bank_document_status == $companyModel->getEnum('bank_document_status', 'approved') &&
-                $company->address_document_status == $companyModel->getEnum('address_document_status', 'approved') &&
-                $company->contract_document_status == $companyModel->getEnum('contract_document_status', 'approved')) {
+            if ($company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') &&
+                $company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') &&
+                $company->contract_document_status == $companyModel->present()->getContractDocumentStatus('approved')) {
                 return response()->json([
                                             'message' => 'success',
                                             'data'    => [
@@ -185,7 +185,6 @@ class WithdrawalsController extends Controller
                                         ], 200);
             }
         } else {
-
             return response()->json([
                                         'message' => 'Sem permissão para visualizar dados da conta',
                                     ], 403);

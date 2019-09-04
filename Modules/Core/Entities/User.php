@@ -5,6 +5,8 @@ namespace Modules\Core\Entities;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\UserPresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
@@ -66,6 +68,9 @@ class User extends Authenticable
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
+    use PresentableTrait;
+
+    protected $presenter = UserPresenter::class;
 
     /**
      * @var array

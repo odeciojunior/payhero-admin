@@ -2,8 +2,8 @@
 
 namespace Modules\Companies\Policies;
 
-use App\Entities\Company;
 use Modules\Core\Entities\User;
+use Modules\Core\Entities\Company;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CompanyPolicy

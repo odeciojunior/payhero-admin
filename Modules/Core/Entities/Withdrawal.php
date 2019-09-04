@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\WithdrawalPresenter;
 
 /**
  * @property integer $id
@@ -21,6 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Withdrawal extends Model
 {
+    use PresentableTrait;
+
+    protected $presenter = WithdrawalPresenter::class;
+
     /**
      * The "type" of the auto-incrementing ID.
      * 

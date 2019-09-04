@@ -45,14 +45,14 @@ class SalesController extends Controller
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
                                                                     ->pluck('id')
                                                                     ->toArray();
-   
+
             $projects = [];
 
             foreach ($userProjects as $userProject) {
-                if ($userProject->projectId != null) {
+                if ($userProject->project != null) {
                     $projects[] = [
-                        'id'   => Hashids::encode($userProject->projectId->id),
-                        'nome' => $userProject->projectId->name,
+                        'id'   => Hashids::encode($userProject->project->id),
+                        'nome' => $userProject->project->name,
                     ];
                 }
             }
@@ -234,7 +234,7 @@ class SalesController extends Controller
 
             if (!empty($data["projeto"])) {
                 $projectId = current(Hashids::decode($data["projeto"]));
-                $transactions->whereHas('sale_id', function($querySale) use ($projectId) {
+                $transactions->whereHas('sale', function($querySale) use ($projectId) {
                     $querySale->where('project_id', $projectId);
                 });
             }

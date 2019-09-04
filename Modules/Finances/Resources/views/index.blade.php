@@ -191,7 +191,6 @@
                                                 </div>
                                             </div>
                                             <div class="col-12">
-                                                <span class="text-muted"> <small> Exibindo resultados de 16 de junho a 16 de julho </small> </span>
                                             </div>
                                         </div>
                                     </div>
