@@ -27,6 +27,7 @@ class NotazzIntegration extends Model
     protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
+     *
      * @var string
      */
     protected $keyType = 'integer';

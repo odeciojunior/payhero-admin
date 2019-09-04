@@ -18,8 +18,7 @@
             </div>
         </div>
         <div class="page-content container">
-            <form method="post" action="/products" enctype="multipart/form-data">
-                @csrf
+            <form id='my-form-add-product'>
                 <div class="panel pt-30 p-30" data-plugin="matchHeight">
                     <nav>
                         <div class="nav nav-tabs nav-tabs-line" id="nav-tab" role="tablist">
@@ -39,8 +38,10 @@
                                         <input name="product_photo" type="file" class="form-control" id="photo" style="display:none">
                                         <label for="name">Selecione uma imagem</label>
                                         <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/img/produto.png') }}" style="max-height: 300px; max-width: 300px;">
-                                        <input type="hidden" name="photo_x1"> <input type="hidden" name="photo_y1">
-                                        <input type="hidden" name="photo_w"> <input type="hidden" name="photo_h">
+                                        <input type="hidden" name="photo_x1" value=''>
+                                        <input type="hidden" name="photo_y1" value=''>
+                                        <input type="hidden" name="photo_w" value=''>
+                                        <input type="hidden" name="photo_h" value=''>
                                         <p class="info mt-5" style="font-size:10px;">
                                             <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato JPG, JPEG, ou PNG.
                                             <br> Dimensões ideais: 300 x 300 pixels.
@@ -58,17 +59,11 @@
                                     <div class="row">
                                         <div class="form-group col-lg-12">
                                             <label for="name">Nome</label>
-                                            <input name="name" type="text" class="input-pad" id="name" placeholder="O nome do seu produto" required="">
-                                            @error('name')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <input name="name" type="text" class="input-pad" id="name" value='' placeholder="O nome do seu produto" required="">
                                         </div>
                                         <div class="form-group col-lg-12">
                                             <label for="description">Descrição</label>
                                             <textarea style="height: 100px;" name="description" type="text" class="input-pad" id="description" placeholder="Fale um pouco sobre seu produto" required=""></textarea>
-                                            @error('description')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
                                             <p> Máximo 30 caracteres. </p>
                                         </div>
                                         <div class="form-group col-lg-6">
@@ -86,20 +81,17 @@
                                         </div>
                                         <div class="form-group col-lg-6">
                                             <label for="category">Categoria</label>
-                                            <select name="category" class="form-control select-pad">
+                                            <select name="category" class="form-control select-pad" id='select-categories'>
                                                 <option value="">Selecione</option>
-                                                @foreach($categories as $category)
-                                                    <option value="{!! $category['id'] !!}">{!! $category['name'] !!}</option>
-                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group col-lg-6">
                                             <label for="cost">Custo</label>
-                                            <input name="cost" type="text" class="input-pad money" id="cost" placeholder="Digite o custo" autocomplete="off">
+                                            <input name="cost" type="text" class="input-pad money" id="cost" value='' placeholder="Digite o custo" autocomplete="off">
                                         </div>
                                         <div class="form-group col-lg-6">
                                             <label for="price">Preço</label>
-                                            <input name="price" type="text" class="input-pad money" placeholder="Digite o preço" autocomplete="off">
+                                            <input name="price" type="text" class="input-pad money" value='' placeholder="Digite o preço" autocomplete="off">
                                         </div>
                                         <div id="div_next_step" class="form-group col-lg-12 text-right">
                                             <button id="next_step" type="button" class="btn btn-success">Prosseguir<i class="icon wb-chevron-right" aria-hidden="true"></i>
@@ -122,15 +114,15 @@
                                         </div>
                                         <div class="form-group col-lg-4">
                                             <label for="width">Altura (cm)</label>
-                                            <input name="width" type="text" class="input-pad" id="width" placeholder="Ex: 150cm" data-mask="0#">
+                                            <input name="width" type="text" class="input-pad" id="width" value='' placeholder="Ex: 150cm" data-mask="0#">
                                         </div>
                                         <div class="form-group col-lg-4">
                                             <label for="height">Largura (cm)</label>
-                                            <input name="height" type="text" class="input-pad" id="height" placeholder="Ex: 135cm" data-mask="0#">
+                                            <input name="height" type="text" class="input-pad" id="height" value='' placeholder="Ex: 135cm" data-mask="0#">
                                         </div>
                                         <div class="form-group col-lg-4">
                                             <label for="weight">Peso (g)</label>
-                                            <input name="weight" type="text" class="input-pad" id="weight" placeholder="Ex: 950g" data-mask="0#">
+                                            <input name="weight" type="text" class="input-pad" id="weight" value='' placeholder="Ex: 950g" data-mask="0#">
                                         </div>
                                         <div class="form-group col-lg-6">
                                             <label for="shipping">Transportadora:</label>
@@ -155,14 +147,16 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
 
     @push('scripts')
-        <script src="{!! asset('modules/products/js/products.js') !!}"></script>
-        <script src="{!! asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') !!}"></script>
-        <script src="{!! asset('modules/global/adminremark/global/js/Plugin/dropify.js') !!}"></script>
+        <script src="{{ asset('modules/products/js/create.js') }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/vendor/dropify/dropify.min.js') }}"></script>
+        <script src="{{ asset('modules/global/adminremark/global/js/Plugin/dropify.js') }}"></script>
     @endpush
 
 @endsection

@@ -8,6 +8,8 @@ use App\Entities\DomainRecord;
 use App\Entities\HotZappIntegration;
 use App\Entities\PlanSale;
 use App\Entities\PostbackLog;
+use App\Entities\Product;
+use App\Entities\ProductPlan;
 use App\Entities\Sale;
 use App\Entities\ShopifyIntegration;
 use App\Entities\Transaction;
@@ -242,6 +244,7 @@ class TesteController extends Controller
     public function indexx()
     {
         $this->tgFunction();
+
         /*$dataValue = [
             'type' => 'payment',
 
@@ -336,6 +339,28 @@ class TesteController extends Controller
         //                                 ]);
 
         dd('aa');
+    }
+
+    public function joaoLucasFunction()
+    {
+        /*$productsModel    = new Product();
+        $productPlanModel = new ProductPlan();
+        $planModel        = new Plan();
+
+        $products = $productsModel->WhereNotNull('shopify_id')->whereNull('project_id')->get();
+        foreach ($products as $product) {
+            $productPlan = $productPlanModel->where('product', $product->id)->first();
+            if (!empty($productPlan)) {
+
+                $plan = $planModel->find($productPlan->plan);
+
+                $product->update(
+                    [
+                        'project_id' => $plan->project,
+                    ]
+                );
+            }
+        }*/
     }
 }
 
