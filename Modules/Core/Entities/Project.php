@@ -88,6 +88,18 @@ class Project extends Model
         'updated_at', 
         'deleted_at', 
     ];
+    /**
+     * @var array
+     */
+    protected $appends = ['formatted_created_at'];
+
+    /**
+     * @return mixed
+     */
+    public function getFormattedCreatedAtAttribute()
+    {
+        return $this->created_at->format('d/m/Y');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -247,5 +259,13 @@ class Project extends Model
     public function zenviaSms()
     {
         return $this->hasMany('Modules\Core\Entities\ZenviaSm');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function notazzIntegration()
+    {
+        return $this->hasOne('App\Entities\NotazzIntegration');
     }
 }

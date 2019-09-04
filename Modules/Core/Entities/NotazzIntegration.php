@@ -21,10 +21,12 @@ class NotazzIntegration extends Model
 {
 
     use SoftDeletes;
-
+    /**
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
@@ -33,13 +35,14 @@ class NotazzIntegration extends Model
      * @var array
      */
     protected $fillable = [
-        'project_id', 
-        'user_id', 
-        'token_webhook', 
-        'token_api', 
-        'token_logistics', 
-        'created_at', 
-        'updated_at'
+        'project_id',
+        'user_id',
+        'token_webhook',
+        'token_api',
+        'token_logistics',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
