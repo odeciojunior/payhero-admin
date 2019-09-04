@@ -3,16 +3,12 @@
 namespace Modules\Projects\Http\Controllers;
 
 use Exception;
-use App\Entities\Carrier;
-use App\Entities\Project;
-use App\Entities\Shipping;
 use Illuminate\Http\Request;
-use App\Entities\DomainRecord;
-use App\Entities\ExtraMaterial;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Shipping;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Entities\ShopifyIntegration;
 use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\UserProject;
@@ -35,7 +31,7 @@ class ProjectsController extends Controller
             $projectModel = new Project();
 
             $projects = $projectModel->whereHas('usersProjects', function($query) {
-                $query->where('user', auth()->user()->id);
+                $query->where('user_id', auth()->user()->id);
             })->get();
 
             return view('projects::index', [

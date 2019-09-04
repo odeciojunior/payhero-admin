@@ -6,15 +6,15 @@ use DateTime;
 use Exception;
 use Carbon\Carbon;
 use Matrix\Builder;
-use App\Entities\Plan;
-use App\Entities\Sale;
-use App\Entities\Company;
-use App\Entities\Project;
 use Illuminate\Http\Request;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Sale;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Modules\Core\Entities\UserProject;
 use JMS\Serializer\Tests\Fixtures\Discriminator\Car;
@@ -27,17 +27,18 @@ class ReportsController extends Controller
      */
     public function index()
     {
+
         try {
             $userProjectModel = new UserProject();
 
             $user         = auth()->user();
-            $userProjects = $userProjectModel->with(['projectId'])->where('user', $user->id)->get();
+            $userProjects = $userProjectModel->with('project')->where('user_id', $user->id)->get();
 
             if (isset($userProjects) && $userProjects->count() > 0) {
                 $projects = [];
                 foreach ($userProjects as $userProject) {
-                    if (isset($userProject->projectId)) {
-                        $projects [] = $userProject->projectId;
+                    if (isset($userProject->project)) {
+                        $projects [] = $userProject->project;
                     }
                 }
 
@@ -74,23 +75,23 @@ class ReportsController extends Controller
             $requestEndDate   = $request->input('endDate');
             if ($projectId) {
                 $userProject = $userProjectModel->where([
-                                                            ['user', auth()->user()->id],
+                                                            ['user_id', auth()->user()->id],
                                                             ['type', 'producer'],
-                                                            ['project', $projectId],
+                                                            ['project_id', $projectId],
                                                         ])->first();
 
                 if ($userProject) {
                     $sales = $salesModel
                         ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
                         ->leftJoin('transactions as transaction', function($join) use ($userProject) {
-                            $join->where('transaction.company', $userProject->company);
+                            $join->where('transaction.company_id', $userProject->company);
                             $join->whereIn('transaction.status', ['paid', 'transfered', 'anticipated']);
-                            $join->on('transaction.sale', '=', 'sales.id');
+                            $join->on('transaction.sale_id', '=', 'sales.id');
                         })
                         ->leftJoin('checkouts as checkout', function($join) {
-                            $join->on('sales.checkout', 'checkout.id');
+                            $join->on('sales.checkout_id', 'checkout.id');
                         })
-                        ->where([['sales.project', $projectId], ['sales.owner', auth()->user()->id]]);
+                        ->where([['sales.project_id', $projectId], ['sales.owner_id', auth()->user()->id]]);
 
                     if (!empty($requestStartDate) && !empty($requestEndDate)) {
                         $sales->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
@@ -110,9 +111,9 @@ class ReportsController extends Controller
                     $itens = $salesModel
                         ->select(\DB::raw('count(*) as count'), 'plan_sale.plan')
                         ->leftJoin('plans_sales as plan_sale', function($join) {
-                            $join->on('plan_sale.sale', '=', 'sales.id');
+                            $join->on('plan_sale.sale_id', '=', 'sales.id');
                         })
-                        ->where('sales.status', 1)->where('project', $projectId);
+                        ->where('sales.status', 1)->where('project_id', $projectId);
 
                     if (!empty($requestStartDate) && !empty($requestEndDate)) {
                         $itens->whereBetween('sales.start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
@@ -126,7 +127,7 @@ class ReportsController extends Controller
                         }
                     }
 
-                    $itens = $itens->groupBy('plan_sale.plan')->orderBy('count', 'desc')->limit(3)->get()->toArray();
+                    $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
                     $plans = [];
                     foreach ($itens as $key => $iten) {
                         $plan                      = $planModel->with('products')->find($iten['plan']);
@@ -145,8 +146,8 @@ class ReportsController extends Controller
                                                             DB::raw('SUM(CASE WHEN sales.status = 4 THEN 1 ELSE 0 END) AS contSalesChargeBack'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 5 THEN 1 ELSE 0 END) AS contSalesCanceled'),
                                                         ])
-                                               ->where('owner', auth()->user()->id)
-                                               ->where('project', $projectId);
+                                               ->where('owner_id', auth()->user()->id)
+                                               ->where('project_id', $projectId);
                     if ($requestStartDate != '' && $requestEndDate != '') {
                         $salesDetails->whereBetween('start_date', [$requestStartDate, date('Y-m-d', strtotime($requestEndDate . ' + 1 day'))]);
                     } else {
@@ -298,13 +299,13 @@ class ReportsController extends Controller
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as sales_amount, SUM(transaction.value) as value, checkout.' . $request->origin . ' as origin'))
                 ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                    $join->on('transaction.sale', '=', 'sales.id');
-                    $join->whereIn('transaction.company', $userCompanies);
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->whereIn('transaction.company_id', $userCompanies);
                 })
                 ->leftJoin('checkouts as checkout', function($join) {
-                    $join->on('checkout.id', '=', 'sales.checkout');
+                    $join->on('checkout.id', '=', 'sales.checkout_id');
                 })
-                ->where('sales.project', current(Hashids::decode($request->project_id)))
+                ->where('sales.project_id', current(Hashids::decode($request->project_id)))
                 ->where('sales.status', 1)
                 ->whereBetween('start_date', [$request->start_date, date('Y-m-d', strtotime($request->end_date . ' + 1 day'))])
                 ->whereNotIn('checkout.' . $request->origin, ['', 'null'])
@@ -394,11 +395,11 @@ class ReportsController extends Controller
         $orders = $saleModel
             ->select(\DB::raw('count(*) as count, HOUR(sales.start_date) as hour, SUM(transaction.value) as value, sales.payment_method'))
             ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                $join->on('transaction.sale', '=', 'sales.id');
-                $join->whereIn('transaction.company', $userCompanies);
+                $join->on('transaction.sale_id', '=', 'sales.id');
+                $join->whereIn('transaction.company_id', $userCompanies);
             })
-            ->where('sales.owner', \Auth::user()->id)
-            ->where('sales.project', $projectId)
+            ->where('sales.owner_id', \Auth::user()->id)
+            ->where('sales.project_id', $projectId)
             //                       ->where('sales.status', 1)
             ->whereDate('sales.start_date', $data['startDate'])
             ->groupBy('hour', 'sales.payment_method')
@@ -460,11 +461,11 @@ class ReportsController extends Controller
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                    $join->on('transaction.sale', '=', 'sales.id');
-                    $join->whereIn('transaction.company', $userCompanies);
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner', auth()->user()->id)
-                ->where('sales.project', $projectId)
+                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.project_id', $projectId)
                 //                           ->where('sales.status', 1)
                 ->whereBetween('start_date', [$data['startDate'], date('Y-m-d', strtotime($data['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
@@ -536,11 +537,11 @@ class ReportsController extends Controller
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                    $join->on('transaction.sale', '=', 'sales.id');
-                    $join->whereIn('transaction.company', $userCompanies);
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner', auth()->user()->id)
-                ->where('sales.project', $projectId)
+                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
                 ->get()->toArray();
@@ -612,11 +613,11 @@ class ReportsController extends Controller
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                    $join->on('transaction.sale', '=', 'sales.id');
-                    $join->whereIn('transaction.company', $userCompanies);
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner', auth()->user()->id)
-                ->where('sales.project', $projectId)
+                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
                 ->get()->toArray();
@@ -690,11 +691,11 @@ class ReportsController extends Controller
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                    $join->on('transaction.sale', '=', 'sales.id');
-                    $join->whereIn('transaction.company', $userCompanies);
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner', auth()->user()->id)
-                ->where('sales.project', $projectId)
+                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
                 ->get()->toArray();
@@ -761,11 +762,11 @@ class ReportsController extends Controller
             $orders = $saleModel
                 ->select(\DB::raw('count(*) as count, DATE(sales.start_date) as date, SUM(transaction.value) as value, sales.payment_method'))
                 ->leftJoin('transactions as transaction', function($join) use ($userCompanies) {
-                    $join->on('transaction.sale', '=', 'sales.id');
-                    $join->whereIn('transaction.company', $userCompanies);
+                    $join->on('transaction.sale_id', '=', 'sales.id');
+                    $join->whereIn('transaction.company_id', $userCompanies);
                 })
-                ->where('sales.owner', auth()->user()->id)
-                ->where('sales.project', $projectId)
+                ->where('sales.owner_id', auth()->user()->id)
+                ->where('sales.project_id', $projectId)
                 ->whereBetween('start_date', [$date['startDate'], date('Y-m-d', strtotime($date['endDate'] . ' + 1 day'))])
                 ->groupBy('date', 'sales.payment_method')
                 ->get()->toArray();

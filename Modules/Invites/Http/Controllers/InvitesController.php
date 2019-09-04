@@ -4,8 +4,8 @@ namespace Modules\Invites\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Entities\SiteInvitationRequest;
-use  App\Entities\HubsmartInvitationRequest;
+use Modules\Core\Entities\SiteInvitationRequest;
+use Modules\Core\Entities\HubsmartInvitationRequest;
 
 /**
  * Class InvitesController

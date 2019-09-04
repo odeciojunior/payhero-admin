@@ -3,6 +3,8 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\InvitePresenter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -18,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property Company $company
+ * @property Company $company_id
  * @property User $user
  * @property User $user
  */
@@ -26,6 +28,9 @@ class Invitation extends Model
 {
 
     use SoftDeletes;
+    use PresentableTrait;
+
+    protected $presenter = InvitePresenter::class;
 
     /**
      * The "type" of the auto-incrementing ID.
@@ -40,7 +45,7 @@ class Invitation extends Model
     protected $fillable = [
         'invite', 
         'user_invited', 
-        'company', 
+        'company_id', 
         'email_invited', 
         'status', 
         'register_date', 

@@ -2,15 +2,15 @@
 
 namespace Modules\Invites\Http\Controllers;
 
-use App\Entities\Invitation;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\EmailService;
 use Modules\Core\Services\FoxUtils;
-use Modules\Invites\Transformers\InviteResource;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Invitation;
+use Modules\Core\Services\EmailService;
+use Modules\Invites\Transformers\InviteResource;
 
 class InvitesApiController extends Controller
 {
@@ -44,7 +44,7 @@ class InvitesApiController extends Controller
 
                 if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
                     try {
-                        $invite = $invitationModel->where([['email_invited', $request->input('email')], ['company', $company]])
+                        $invite = $invitationModel->where([['email_invited', $request->input('email')], ['company_id', $company]])
                                                   ->first();
 
                         $sendgridService = new EmailService();
@@ -63,8 +63,8 @@ class InvitesApiController extends Controller
                                 if (!$invite) {
                                     $data = [
                                         'invite'        => auth()->user()->id,
-                                        'status'        => $invitationModel->getEnum('status', 'pending'),
-                                        'company'       => current(Hashids::decode($request->input('company'))),
+                                        'status'        => $invitationModel->present()->getStatus('pending'),
+                                        'company_id'    => current(Hashids::decode($request->input('company'))),
                                         'email_invited' => $request->input('email'),
                                         'parameter'     => $request->input('company'),
                                     ];

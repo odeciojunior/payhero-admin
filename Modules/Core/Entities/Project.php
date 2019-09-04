@@ -238,7 +238,7 @@ class Project extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('Modules\Core\Entities\UsersProject');
+        return $this->hasMany('Modules\Core\Entities\UserProject');
     }
 
     /**

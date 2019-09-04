@@ -3,12 +3,12 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
-use App\Entities\Company;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Companies\Transformers\CompanyResource;
 
