@@ -84,7 +84,7 @@ class ReportsController extends Controller
                     $sales = $salesModel
                         ->select('sales.*', 'transaction.value', 'checkout.is_mobile')
                         ->leftJoin('transactions as transaction', function($join) use ($userProject) {
-                            $join->where('transaction.company_id', $userProject->company);
+                            $join->where('transaction.company_id', $userProject->company_id);
                             $join->whereIn('transaction.status', ['paid', 'transfered', 'anticipated']);
                             $join->on('transaction.sale_id', '=', 'sales.id');
                         })
@@ -107,9 +107,8 @@ class ReportsController extends Controller
                     $sales     = $sales->get();
                     $contSales = $sales->count();
 
-                    // itens
                     $itens = $salesModel
-                        ->select(\DB::raw('count(*) as count'), 'plan_sale.plan')
+                        ->select(\DB::raw('count(*) as count'), 'plan_sale.plan_id')
                         ->leftJoin('plans_sales as plan_sale', function($join) {
                             $join->on('plan_sale.sale_id', '=', 'sales.id');
                         })
@@ -130,7 +129,7 @@ class ReportsController extends Controller
                     $itens = $itens->groupBy('plan_sale.plan_id')->orderBy('count', 'desc')->limit(3)->get()->toArray();
                     $plans = [];
                     foreach ($itens as $key => $iten) {
-                        $plan                      = $planModel->with('products')->find($iten['plan']);
+                        $plan                      = $planModel->with('products')->find($iten['plan_id']);
                         $plans[$key]['name']       = $plan->name . ' - ' . $plan->description;
                         $plans[$key]['photo']      = $plan->products[0]->photo;
                         $plans[$key]['quantidade'] = $iten['count'];
@@ -139,7 +138,6 @@ class ReportsController extends Controller
 
                     // calculos dashboard
                     $salesDetails = $salesModel->select([
-
                                                             DB::raw('SUM(CASE WHEN sales.status = 1 THEN 1 ELSE 0 END) AS contSalesAproved'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 2 THEN 1 ELSE 0 END) AS contSalesPending'),
                                                             DB::raw('SUM(CASE WHEN sales.status = 3 THEN 1 ELSE 0 END) AS contSalesRecused'),
@@ -176,7 +174,7 @@ class ReportsController extends Controller
                     $contDesktop           = 0;
                     $ticketMedio           = 0;
 
-                    if ($userProject->companyId->country == 'usa') {
+                    if ($userProject->company->country == 'usa') {
                         $currency = '$';
                     } else {
                         $currency = 'R$';
@@ -238,7 +236,6 @@ class ReportsController extends Controller
                     if ($totalPaidValueAproved != 0) {
                         $totalPercentPaidCredit = number_format((intval($totalValueCreditCard) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
                         $totalPercentPaidBoleto = number_format((intval($totalValueBoleto) * 100) / intval($totalPaidValueAproved), 2, ',', ' . ');
-
                         $ticketMedio = number_format(intval(preg_replace("/[^0-9]/", "", $totalPaidValueAproved) / $countSalesAproved) / 100, 2, ',', '.');
                     }
                 }

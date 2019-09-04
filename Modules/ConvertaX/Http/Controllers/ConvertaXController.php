@@ -2,13 +2,14 @@
 
 namespace Modules\ConvertaX\Http\Controllers;
 
-use App\Entities\ConvertaxIntegration;
-use App\Entities\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\ConvertaxIntegration;
 
 class ConvertaXController extends Controller
 {
@@ -30,10 +31,10 @@ class ConvertaXController extends Controller
         try {
             $userProjectModel = new UserProject();
             $projects         = [];
-            $userProjects     = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+            $userProjects     = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->projectId;
+                    $projects[] = $userProject->project;
                 }
 
                 return view('convertax::create', ['projects' => $projects]);
@@ -106,8 +107,7 @@ class ConvertaXController extends Controller
             return response()->json([
                                         'message' => 'Ocorreu um erro ao realizar a integração',
                                     ], 400);
-        } catch
-        (Exception $e) {
+        } catch (Exception $e) {
             Log::warning('Erro ao realizar integração  ConvertaXController - store');
             report($e);
         }
@@ -139,9 +139,9 @@ class ConvertaXController extends Controller
 
                 $projectId    = current(Hashids::decode($id));
                 $integration  = $convertaxIntegrationModel->where('project_id', $projectId)->first();
-                $userProjects = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+                $userProjects = $userProjectModel->where('user', auth()->user()->id)->with('project')->get();
                 foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->projectId;
+                    $projects[] = $userProject->project;
                 }
 
                 if ($integration) {
@@ -244,11 +244,11 @@ class ConvertaXController extends Controller
 
         $projects              = [];
         $projectsIntegrated    = [];
-        $userProjects          = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+        $userProjects          = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
         $convertaxIntegrations = $convertaxIntegration->where('user_id', auth()->user()->id)->get();
 
         foreach ($userProjects as $userProject) {
-            $projects[] = $userProject->projectId;
+            $projects[] = $userProject->project;
         }
 
         foreach ($convertaxIntegrations as $convertaxIntegration) {

@@ -35,8 +35,8 @@ class UserResource extends Resource
             'date_birth'                  => $this->date_birth,
             'personal_document_status'    => $this->personal_document_status,
             'address_document_status'     => $this->address_document_status,
-            'personal_document_translate' => $this->getEnum('personal_document_status', $this->personal_document_status, true),
-            'address_document_translate'  => $this->getEnum('address_document_status', $this->address_document_status, true),
+            'personal_document_translate' => $this->present()->getPersonalDocumentStatus($this->personal_document_status),
+            'address_document_translate'  => $this->present()->getPersonalDocumentStatus($this->address_document_status),
         ];
     }
 }

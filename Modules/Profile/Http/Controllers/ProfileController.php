@@ -32,7 +32,7 @@ class ProfileController extends Controller
             $user = auth()->user();
 
             if (Gate::allows('view', [$user])) {
-                $userResource = new UserResource($user);
+                $userResource = new UserResource($user); 
 
                 return view('profile::index', [
                     'user' => json_decode(json_encode($userResource)),
@@ -150,6 +150,7 @@ class ProfileController extends Controller
     public function uploadDocuments(ProfileUploadDocumentRequest $request)
     {
         try {
+
             $user = auth()->user();
 
             if (Gate::allows('uploadDocuments', [$user])) {
@@ -173,22 +174,22 @@ class ProfileController extends Controller
                                           'status'             => null,
                                       ]);
 
-                if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'personal_document')) {
+                if (($dataForm["document_type"] ?? '') == $user->present()->getDocumentType('personal_document')) {
                     $user->update([
-                                      'personal_document_status' => $user->getEnum('personal_document_status', 'analyzing'),
+                                      'personal_document_status' => $user->present()->getPersonalDocumentStatus('analyzing'),
                                   ]);
                 }
 
-                if (($dataForm["document_type"] ?? '') == $user->getEnum('document_type', 'address_document')) {
+                if (($dataForm["document_type"] ?? '') == $user->present()->getDocumentType('address_document')) {
                     $user->update([
-                                      'address_document_status' => $user->getEnum('address_document_status', 'analyzing'),
+                                      'address_document_status' => $user->present()->getAddressDocumentStatus('analyzing'),
                                   ]);
                 }
 
                 return response()->json([
                                             'message'                     => 'Arquivo enviado com sucesso.',
-                                            'personal_document_translate' => $user->getEnum('personal_document_status', $user->personal_document_status, true),
-                                            'address_document_translate'  => $user->getEnum('address_document_status', $user->address_document_status, true),
+                                            'personal_document_translate' => $user->present()->getPersonalDocumentStatus($user->personal_document_status),
+                                            'address_document_translate'  => $user->present()->getAddressDocumentStatus($user->address_document_status),
                                         ], 200);
             } else {
                 return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);

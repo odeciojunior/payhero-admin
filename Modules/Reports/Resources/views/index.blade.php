@@ -25,7 +25,7 @@
                         <div class="">
                             <select id='project' class="form-control select-pad">
                                 @foreach($projects as $project)
-                                    <option value='{{$project->id_code}}'>{{$project->name}}</option>
+                                    <option value='{{Hashids::encode($project->id)}}'>{{$project->name}}</option>
                                 @endforeach
                             </select>
                         </div>

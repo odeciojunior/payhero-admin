@@ -2,23 +2,22 @@
 
 namespace Modules\Companies\Http\Controllers;
 
-use App\Entities\CompanyDocument;
 use Exception;
-use App\Entities\Company;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
-use Modules\Companies\Http\Requests\CompanyCreateFormRequest;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
+use Modules\Core\Services\BankService;
+use Yajra\DataTables\Facades\DataTables;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Companies\Transformers\CompanyResource;
 use Modules\Companies\Http\Requests\CompanyCreateRequest;
 use Modules\Companies\Http\Requests\CompanyUpdateRequest;
+use Modules\Companies\Http\Requests\CompanyCreateFormRequest;
 use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
-use Modules\Core\Services\BankService;
-use Modules\Core\Services\DigitalOceanFileService;
-use Vinkla\Hashids\Facades\Hashids;
-use Yajra\DataTables\Facades\DataTables;
-use Modules\Companies\Transformers\CompanyResource;
 
 /**
  * Class CompaniesController
@@ -90,7 +89,6 @@ class CompaniesController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao criar form de cadastro da empresa (CompaniesController - getCreateForm)');
             report($e);
-
             return response()->json('erro', 400);
         }
     }
@@ -112,7 +110,7 @@ class CompaniesController extends Controller
             if (Gate::allows('edit', [$company])) {
                 $banks = $bankService->getBanks('BR');
 
-                $companyResource = new CompanyResource($company);
+                $companyResource = new CompanyResource($company); 
 
                 if ($company->country == 'usa') {
                     return view('companies::edit_usa', [
@@ -133,7 +131,6 @@ class CompaniesController extends Controller
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
-
             return response()->json('erro', 400);
         }
     }
@@ -154,7 +151,7 @@ class CompaniesController extends Controller
 
             if (Gate::allows('update', [$company])) {
                 if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
-                    $company->bank_document_status = $companyModel->getEnum('bank_document_status', 'pending');
+                    $company->bank_document_status = $companyModel->present()->getBankDocumentStatus('pending');
                 }
                 $requestData = array_filter($requestData);
 
@@ -241,21 +238,21 @@ class CompaniesController extends Controller
                                                   'status'             => null,
                                               ]);
 
-                if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'bank_document_status')) {
+                if (($dataForm["document_type"] ?? '') == $company->present()->getDocumentType('bank_document_status')) {
                     $company->update([
-                                         'bank_document_status' => $company->getEnum('bank_document_status', 'analyzing'),
+                                         'bank_document_status' => $company->present()->getBankDocumentStatus('analyzing'),
                                      ]);
                 }
 
-                if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'address_document_status')) {
+                if (($dataForm["document_type"] ?? '') == $company->present()->getDocumentType('address_document_status')) {
                     $company->update([
-                                         'address_document_status' => $company->getEnum('address_document_status', 'analyzing'),
+                                         'address_document_status' => $company->present()->getAddressDocumentStatus('analyzing'),
                                      ]);
                 }
 
-                if (($dataForm["document_type"] ?? '') == $company->getEnum('document_type', 'contract_document_status')) {
+                if (($dataForm["document_type"] ?? '') == $company->present()->getDocumentType('contract_document_status')) {
                     $company->update([
-                                         'contract_document_status' => $company->getEnum('contract_document_status', 'analyzing'),
+                                         'contract_document_status' => $company->present()->getContractDocumentStatus('analyzing'),
                                      ]);
                 }
 
@@ -264,15 +261,15 @@ class CompaniesController extends Controller
                                             'data'    => [
                                                 'bank_document_translate'     => [
                                                     'status'  => $company->bank_document_status,
-                                                    'message' => $company->getEnum('bank_document_status', $company->bank_document_status, true),
+                                                    'message' => $company->present()->getBankDocumentStatus($company->bank_document_status),
                                                 ],
                                                 'address_document_translate'  => [
                                                     'status'  => $company->address_document_status,
-                                                    'message' => $company->getEnum('address_document_status', $company->address_document_status, true),
+                                                    'message' => $company->present()->getAddressDocumentStatus($company->address_document_status),
                                                 ],
                                                 'contract_document_translate' => [
                                                     'status'  => $company->contract_document_status,
-                                                    'message' => $company->getEnum('contract_document_status', $company->contract_document_status, true),
+                                                    'message' => $company->present()->getContractDocumentStatus($company->contract_document_status),
                                                 ],
                                             ],
                                         ], 200);

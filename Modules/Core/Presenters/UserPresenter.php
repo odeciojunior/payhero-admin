@@ -65,7 +65,28 @@ class UserPresenter extends Presenter
             }
             return '';
         }
+    }
 
+    public function getDocumentType($type){
+
+        if(is_numeric($type)){
+            switch ($type) {
+                case 1:
+                    return 'personal_document';
+                case 2:
+                    return 'address_document';
+            }
+            return '';
+        }
+        else{
+            switch ($type) {
+                case 'personal_document':
+                    return 1;
+                case 'address_document':
+                    return 2;
+            }
+            return '';
+        }
     }
 
 }

@@ -2,14 +2,14 @@
 
 namespace Modules\HotZapp\Http\Controllers;
 
-use App\Entities\HotZappIntegration;
-use App\Entities\Project;
-use App\Entities\UserProject;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Entities\HotzappIntegration;
 
 class HotZappController extends Controller
 {
@@ -31,10 +31,10 @@ class HotZappController extends Controller
         try {
             $userProjectModel = new UserProject();
             $projects         = [];
-            $userProjects     = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+            $userProjects     = $userProjectModel->where('user', auth()->user()->id)->with('project')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->projectId;
+                    $projects[] = $userProject->project;
                 }
 
                 return view('hotzapp::create', ['projects' => $projects]);
@@ -132,9 +132,9 @@ class HotZappController extends Controller
 
                 $projectId    = current(Hashids::decode($id));
                 $integration  = $hotzappIntegrationModel->where('project_id', $projectId)->first();
-                $userProjects = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+                $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
                 foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->projectId;
+                    $projects[] = $userProject->project;
                 }
 
                 if ($integration) {
@@ -232,11 +232,11 @@ class HotZappController extends Controller
 
         $projects            = [];
         $projectsIntegrated  = [];
-        $userProjects        = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+        $userProjects        = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
         $hotzappIntegrations = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
 
         foreach ($userProjects as $userProject) {
-            $projects[] = $userProject->projectId;
+            $projects[] = $userProject->project;
         }
 
         foreach ($hotzappIntegrations as $hotzappIntegration) {
