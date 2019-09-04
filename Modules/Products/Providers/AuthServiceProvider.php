@@ -2,7 +2,7 @@
 
 namespace Modules\Products\Providers;
 
-use App\Entities\Product;
+use Modules\Core\Entities\Product;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Modules\Products\Policies\ProductPolicy;
 
@@ -25,7 +25,6 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -35,7 +34,6 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Get the services provided by the provider.
-     *
      * @return array
      */
     public function provides()

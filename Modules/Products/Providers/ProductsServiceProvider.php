@@ -9,14 +9,12 @@ class ProductsServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
-     *
      * @var bool
      */
     protected $defer = false;
 
     /**
      * Boot the application events.
-     *
      * @return void
      */
     public function boot()
@@ -30,52 +28,49 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
     {
         $this->app->register(AuthServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**
      * Register config.
-     *
      * @return void
      */
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('products.php'),
-        ], 'config');
+                             __DIR__ . '/../Config/config.php' => config_path('products.php'),
+                         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'products'
+            __DIR__ . '/../Config/config.php', 'products'
         );
     }
 
     /**
      * Register views.
-     *
      * @return void
      */
     public function registerViews()
     {
         $viewPath = resource_path('views/modules/products');
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . '/../Resources/views';
 
         $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+                             $sourcePath => $viewPath,
+                         ], 'views');
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
+        $this->loadViewsFrom(array_merge(array_map(function($path) {
             return $path . '/modules/products';
         }, \Config::get('view.paths')), [$sourcePath]), 'products');
     }
 
     /**
      * Register translations.
-     *
      * @return void
      */
     public function registerTranslations()
@@ -85,7 +80,7 @@ class ProductsServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'products');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'products');
+            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'products');
         }
     }
 
@@ -95,14 +90,13 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
+        if (!app()->environment('production')) {
             app(Factory::class)->load(__DIR__ . '/../Database/factories');
         }
     }
 
     /**
      * Get the services provided by the provider.
-     *
      * @return array
      */
     public function provides()

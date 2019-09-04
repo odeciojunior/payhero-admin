@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -55,43 +56,45 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
-
-    use SoftDeletes;
-
+    use FoxModelTrait, SoftDeletes;
+    /**
+     * @var array
+     */
+    protected $appends = ['formatted_created_at', 'id_code'];
+    /**
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
     /**
      * @var array
      */
     protected $fillable = [
-        'carrier_id', 
-        'photo', 
-        'visibility', 
-        'status', 
-        'name', 
-        'description', 
-        'invoice_description', 
-        'percentage_affiliates', 
-        'url_page', 
-        'automatic_affiliation', 
-        'shopify_id', 
-        'installments_amount', 
-        'installments_interest_free', 
-        'cookie_duration', 
-        'url_cookies_checkout', 
-        'contact', 
-        'logo', 
-        'boleto', 
-        'boleto_redirect', 
-        'card_redirect', 
-        'analyzing_redirect', 
+        'carrier_id',
+        'photo',
+        'visibility',
+        'status',
+        'name',
+        'description',
+        'invoice_description',
+        'percentage_affiliates',
+        'url_page',
+        'automatic_affiliation',
+        'shopify_id',
+        'installments_amount',
+        'installments_interest_free',
+        'cookie_duration',
+        'url_cookies_checkout',
+        'contact',
+        'logo',
+        'boleto',
+        'boleto_redirect',
+        'card_redirect',
+        'analyzing_redirect',
         'support_phone',
-        'created_at', 
-        'updated_at', 
-        'deleted_at', 
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
-    /**
-     * @var array
-     */
-    protected $appends = ['formatted_created_at'];
 
     /**
      * @return mixed
@@ -250,7 +253,7 @@ class Project extends Model
      */
     public function usersProjects()
     {
-        return $this->hasMany('Modules\Core\Entities\UsersProject');
+        return $this->hasMany('Modules\Core\Entities\UserProject');
     }
 
     /**

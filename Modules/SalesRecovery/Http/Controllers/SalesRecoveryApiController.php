@@ -3,9 +3,9 @@
 namespace Modules\SalesRecovery\Http\Controllers;
 
 use Exception;
-use App\Entities\Sale;
-use App\Entities\Project;
-use App\Entities\Checkout;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Checkout;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;

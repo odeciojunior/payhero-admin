@@ -67,6 +67,7 @@ Route::group(
         Route::get('/teste', 'TesteController@index');
 
         Route::get('/julio', 'TesteController@julioFunction');
+        Route::get('/joao', 'TesteController@joaoLucasFunction');
     }
 );
 
