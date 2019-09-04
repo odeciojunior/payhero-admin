@@ -13,6 +13,8 @@ use App\Entities\ShopifyIntegration;
 use App\Entities\Transaction;
 use App\Entities\Transfer;
 use Carbon\Carbon;
+use DOMDocument;
+use DOMXPath;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Checkout\Classes\MP;
@@ -271,6 +273,25 @@ class TesteController extends Controller
         dd('heyy');
     }
 
+    public function parseToArray($xpath, $class)
+    {
+//        $xpathquery = "//a[@class='" . $class . "']";
+        $xpathquery = "//a";
+        $elements   = $xpath->query($xpathquery);
+
+        if (!is_null($elements)) {
+            $resultarray = [];
+            foreach ($elements as $element) {
+                $nodes = $element->childNodes;
+                foreach ($nodes as $node) {
+                    $resultarray[] = $node->nodeValue;
+                }
+            }
+
+            return $resultarray;
+        }
+    }
+
     /**
      * Funcao utilizada pelo tg
      */
@@ -278,12 +299,24 @@ class TesteController extends Controller
     {
         //nada
 
+        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
+
+        $shopifyService->setThemeByRole('main');
+        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
+        if ($htmlBody) {
+            //template do layout
+
+            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
+        }
+
+        /*
         $nservice  = new NotazzService();
         $saleModel = new Sale();
 
         $sale = $saleModel->with(['projectModel', 'projectModel.notazzIntegration'])->find(3366);
 
         $nservice->createInvoice($sale->projectModel->notazzIntegration->id, $sale->id, 1);
+        */
 
         //$shopifyService = new ShopifyService('lipo-duo.myshopify.com', 'd7a27718b291b2e835d2e7d6c3a4787e');
 
