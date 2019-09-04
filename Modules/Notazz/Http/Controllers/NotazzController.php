@@ -5,6 +5,7 @@ namespace Modules\Notazz\Http\Controllers;
 use App\Entities\NotazzIntegration;
 use App\Entities\Project;
 use App\Entities\UserProject;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -30,8 +31,9 @@ class NotazzController extends Controller
     {
         try {
             $userProjectModel = new UserProject();
-            $projects         = [];
-            $userProjects     = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
+
+            $projects     = [];
+            $userProjects = $userProjectModel->with('projectId')->where('user', auth()->user()->id)->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
                     $projects[] = $userProject->projectId;
@@ -145,9 +147,43 @@ class NotazzController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->all();
+        try {
 
-        $notazzIntegrationModel = new NotazzIntegration();
+            $notazzIntegrationModel = new NotazzIntegration();
+
+            $integrationId = current(Hashids::decode($id));
+
+            if ($integrationId) {
+                //hash ok
+
+                $dataRequest = $request->all();
+
+                $integrationNotazz = $notazzIntegrationModel->find($integrationId);
+
+                $integrationNotazz->update([
+                                               'token_webhook'   => $dataRequest['token_webhook'],
+                                               'token_api'       => $dataRequest['token_api'],
+                                               'token_logistics' => $dataRequest['token_logistics'],
+                                           ]);
+
+                return response()->json([
+                                            'message' => 'Integração atualizada com sucesso.',
+                                        ], 200);
+            } else {
+                //hash error
+
+                return response()->json([
+                                            'message' => 'Integração não encontrada',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao atualizar integraçeõs da Notazz (NotazzController - update)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Integração não encontrada',
+                                    ], 400);
+        }
     }
 
     /**
@@ -157,31 +193,72 @@ class NotazzController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
+        try {
+            $notazzIntegrationModel = new NotazzIntegration();
+
+            $projectId = current(Hashids::decode($id));
+
+            if ($projectId) {
+                //hash ok
+
+                $integration = $notazzIntegrationModel->where('project_id', $projectId)->first();
+                if ($integration) {
+
+                    $integrationDeleted = $integration->delete();
+                    if ($integrationDeleted) {
+                        //integracao removida
+
+                        return response()->json([
+                                                    'message' => 'Integração removida com sucesso.',
+                                                ], 200);
+                    } else {
+                        //erro ao remover integracao
+                        return response()->json([
+                                                    'message' => 'Erro ao remover integração',
+                                                ], 400);
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'Integração não encontrada',
+                                            ], 400);
+                }
+            } else {
+                //hash error
+                return response()->json([
+                                            'message' => 'Integração não encontrada',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar integraçeõs da Notazz (NotazzController - getIntegrations)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Integração não encontrada',
+                                    ], 400);
+        }
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getIntegrations()
     {
-        $notazzIntegrationModel = new NotazzIntegration();
-        $projectModel           = new Project();
-        $userProjectModel       = new UserProject();
+        try {
+            $notazzIntegrationModel = new NotazzIntegration();
 
-        $projects           = [];
-        $projectsIntegrated = [];
-        $userProjects       = $userProjectModel->where('user', auth()->user()->id)->with('projectId')->get();
-        $notazzIntegrations = $notazzIntegrationModel->where('user_id', auth()->user()->id)->get();
+            $notazzIntegrations = $notazzIntegrationModel->with(['project', 'project.usersProjects'])
+                                                         ->whereHas('project.usersProjects', function($query) {
+                                                             $query->where('user', auth()->user()->id);
+                                                         })->get();
 
-        foreach ($userProjects as $userProject) {
-            $projects[] = $userProject->projectId;
+            $integrations = $notazzIntegrations->toArray();
+
+            return view('notazz::include', ['integrations' => $integrations]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao buscar integraçeõs da Notazz (NotazzController - getIntegrations)');
+            report($e);
+
+            return view('notazz::include', ['integrations' => $integrations]);
         }
-
-        foreach ($notazzIntegrations as $notazzIntegration) {
-            $project = $projectModel->find($notazzIntegration->project_id);
-            if ($project) {
-                $projectsIntegrated[] = $project;
-            }
-        }
-
-        return view('notazz::include', ['projects' => $projects, 'projectsIntegrated' => $projectsIntegrated]);
     }
 }

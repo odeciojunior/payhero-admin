@@ -13,11 +13,14 @@ use App\Entities\ShopifyIntegration;
 use App\Entities\Transaction;
 use App\Entities\Transfer;
 use Carbon\Carbon;
+use DOMDocument;
+use DOMXPath;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Checkout\Classes\MP;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\NotazzService;
 use Modules\Core\Services\ShopifyService;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
@@ -40,7 +43,6 @@ class TesteController extends Controller
     {
         ///
     }
-
 
     /**
      * @param Request $request
@@ -240,7 +242,6 @@ class TesteController extends Controller
     public function indexx()
     {
         $this->tgFunction();
-
         /*$dataValue = [
             'type' => 'payment',
 
@@ -252,25 +253,43 @@ class TesteController extends Controller
         return redirect()->route('dev.cloudfox.com.br/postback/mercadopago', compact('data', $dataValue));*/
     }
 
-
-    public function julioFunction(){
+    public function julioFunction()
+    {
 
         $plans = Plan::whereNotNull('shopify_variant_id')->get();
 
-        foreach($plans as $plan){
+        foreach ($plans as $plan) {
 
             $product = $plan->products->first();
-            
-            if(!empty($product)){
-                $product->update([
-                    'shopify_id'         => $plan->shopify_id,
-                    'shopify_variant_id' => $plan->shopify_variant_id,
-                ]); 
 
+            if (!empty($product)) {
+                $product->update([
+                                     'shopify_id'         => $plan->shopify_id,
+                                     'shopify_variant_id' => $plan->shopify_variant_id,
+                                 ]);
             }
         }
 
         dd('heyy');
+    }
+
+    public function parseToArray($xpath, $class)
+    {
+//        $xpathquery = "//a[@class='" . $class . "']";
+        $xpathquery = "//a";
+        $elements   = $xpath->query($xpathquery);
+
+        if (!is_null($elements)) {
+            $resultarray = [];
+            foreach ($elements as $element) {
+                $nodes = $element->childNodes;
+                foreach ($nodes as $node) {
+                    $resultarray[] = $node->nodeValue;
+                }
+            }
+
+            return $resultarray;
+        }
     }
 
     /**
@@ -280,29 +299,43 @@ class TesteController extends Controller
     {
         //nada
 
+        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
+
+        $shopifyService->setThemeByRole('main');
+        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
+        if ($htmlBody) {
+            //template do layout
+
+            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
+        }
+
+        /*
+        $nservice  = new NotazzService();
+        $saleModel = new Sale();
+
+        $sale = $saleModel->with(['projectModel', 'projectModel.notazzIntegration'])->find(3366);
+
+        $nservice->createInvoice($sale->projectModel->notazzIntegration->id, $sale->id, 1);
+        */
+
         //$shopifyService = new ShopifyService('lipo-duo.myshopify.com', 'd7a27718b291b2e835d2e7d6c3a4787e');
 
-//                $shopifyService->createShopWebhook([
-//                                             "topic"   => "orders/updated",
-//                                             "address" => 'https://app.cloudfox.net/postback/shopify/YKV603kndgw8ymD/tracking',
-//                                             "format"  => "json",
-//                                         ]);
-
+        //                $shopifyService->createShopWebhook([
+        //                                             "topic"   => "orders/updated",
+        //                                             "address" => 'https://app.cloudfox.net/postback/shopify/YKV603kndgw8ymD/tracking',
+        //                                             "format"  => "json",
+        //                                         ]);
 
         //$shopifyService->deleteShopWebhook('688952344673');
         //dd($shopifyService->getShopWebhook());
 
-
-//        $shopifyService->createShopWebhook([
-//                                     "topic"   => "orders/updated",
-//                                     "address" => 'https://eca0ccd1.ngrok.io/postback/shopify/da6pVgdQ63k7BW0/tracking',
-//                                     "format"  => "json",
-//                                 ]);
+        //        $shopifyService->createShopWebhook([
+        //                                     "topic"   => "orders/updated",
+        //                                     "address" => 'https://eca0ccd1.ngrok.io/postback/shopify/da6pVgdQ63k7BW0/tracking',
+        //                                     "format"  => "json",
+        //                                 ]);
 
         dd('aa');
-
-
-
     }
 }
 

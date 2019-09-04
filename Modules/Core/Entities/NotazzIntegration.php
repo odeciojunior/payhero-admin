@@ -21,7 +21,10 @@ class NotazzIntegration extends Model
 {
 
     use SoftDeletes;
-
+    /**
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
     /**
      * The "type" of the auto-incrementing ID.
      *

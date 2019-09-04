@@ -8,7 +8,7 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function error() {
+            error: function error(response) {
                 $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
             },
@@ -65,7 +65,7 @@ $(document).ready(function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            error: function error() {
+            error: function error(response) {
                 loadingOnScreenRemove();
                 alertCustom('error', 'Ocorreu algum erro');
             },
@@ -88,7 +88,7 @@ $(document).ready(function () {
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function error() {
+                        error: function error(response) {
                             //
                         }, success: function success(response) {
                             $("#bt_integration").addClass('btn-update');

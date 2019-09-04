@@ -318,10 +318,23 @@ class ShopifyService
      */
     public function updateThemeTemplate($html)
     {
+        preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
+        foreach ($tokens[0] as $key => $item) {
+            $from = '/' . preg_quote($item[0], '/') . '/';
+            $html = preg_replace($from, 'foxx', $html, 1);
+        }
+
+        preg_match_all("/<!--(.*)-->/Uis", $html, $tokensC, PREG_OFFSET_CAPTURE);
+        foreach ($tokensC[0] as $key => $item) {
+            $from = '/' . preg_quote($item[0], '/') . '/';
+            $html = preg_replace($from, 'foox', $html, 1);
+        }
+
         $dom = new Dom;
 
         $dom->setOptions([
                              'strict'             => false,
+                             'cleanupInput'       => false,
                              'preserveLineBreaks' => true,
                              'removeScripts'      => false,
                          ]);
@@ -367,7 +380,21 @@ class ShopifyService
         $divFoxScriptUtm->addChild($script);
         $body->addChild($divFoxScriptUtm);
 
-        return $dom->root->outerHtml();
+        //return $dom->root->outerHtml();
+
+        $html = $dom->root->outerHtml();
+
+        foreach ($tokens[0] as $key => $item) {
+            $from = '/' . preg_quote('foxx', '/') . '/';
+            $html = preg_replace($from, $item[0], $html, 1);
+        }
+
+        foreach ($tokensC[0] as $key => $item) {
+            $from = '/' . preg_quote('foox', '/') . '/';
+            $html = preg_replace($from, $item[0], $html, 1);
+        }
+
+        return $html;
     }
 
     /**
