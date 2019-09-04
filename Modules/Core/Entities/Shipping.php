@@ -37,7 +37,7 @@ class Shipping extends Model
      * @var array
      */
     protected $fillable = [
-        'project', 
+        'project_id',
         'name', 
         'information', 
         'value', 
