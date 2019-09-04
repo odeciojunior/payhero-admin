@@ -2,8 +2,8 @@
 
 namespace Modules\Core\Events;
 
-use App\Entities\ShopifyIntegration;
 use Illuminate\Queue\SerializesModels;
+use Modules\Core\Entities\ShopifyIntegration;
 
 class ShopifyIntegrationEvent
 {

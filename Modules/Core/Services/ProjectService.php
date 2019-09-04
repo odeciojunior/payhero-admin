@@ -2,11 +2,14 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\DomainRecord;
-use App\Entities\Project;
-use App\Entities\ShopifyIntegration;
 use Exception;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Services\ShopifyService;
+use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Exceptions\Services\ServiceException;
 
 /**

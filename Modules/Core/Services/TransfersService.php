@@ -2,14 +2,14 @@
 
 namespace Modules\Core\Services;
 
-use Carbon\Carbon;
-use App\Entities\Company;
-use App\Entities\Transfer;
-use App\Entities\Transaction;
 use Exception;
-use Modules\Core\Events\ReleasedBalanceEvent;
+use Carbon\Carbon;
 use Modules\Core\Sms\SmsService;
+use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Events\ReleasedBalanceEvent;
 
 class TransfersService
 {

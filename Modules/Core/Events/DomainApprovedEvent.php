@@ -2,9 +2,8 @@
 
 namespace Modules\Core\Events;
 
-use App\Entities\Domain;
-use App\Entities\Project;
-use App\Entities\User;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Project;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,10 +13,12 @@ class DomainApprovedEvent
      * @var Project
      */
     public $project;
+
     /**
      * @var Domain
      */
     public $domain;
+
     /**
      * @var array
      */

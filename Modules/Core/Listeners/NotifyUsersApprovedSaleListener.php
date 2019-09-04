@@ -2,9 +2,9 @@
 
 namespace App\Listeners\Modules\Core\Listeners;
 
-use App\Entities\Notification;
 use Modules\Core\Entities\User;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Notification;
 use App\Events\Modules\Core\Events\SaleApprovedEvent;
 use Modules\Notifications\Notifications\SaleApprovedNotification;
 

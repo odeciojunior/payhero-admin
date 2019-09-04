@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Sale;
 use Illuminate\Support\Facades\Log;
 
 class LinkShortenerService

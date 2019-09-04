@@ -4,13 +4,15 @@ namespace Modules\Core\Services;
 
 use Exception;
 use Carbon\Carbon;
-use App\Entities\Plan;
-use App\Entities\Domain;
-use App\Entities\Project;
-use App\Entities\Checkout;
+use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
-use App\Entities\Log as CheckoutLog;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Services\FoxUtils;
+use Modules\Core\Services\SendgridService;
+use Modules\Core\Services\ZenviaSmsService;
+use Modules\Core\Entities\Log as CheckoutLog;
 use Modules\Core\Services\LinkShortenerService;
 
 class CartRecoveryService

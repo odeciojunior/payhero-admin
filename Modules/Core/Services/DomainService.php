@@ -2,12 +2,14 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Domain;
-use App\Entities\ShopifyIntegration;
-use Modules\Core\Events\DomainApprovedEvent;
 use Exception;
+use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Services\ShopifyService;
+use Modules\Core\Services\SendgridService;
+use Modules\Core\Events\DomainApprovedEvent;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Entities\ShopifyIntegration;
 
 class DomainService
 {

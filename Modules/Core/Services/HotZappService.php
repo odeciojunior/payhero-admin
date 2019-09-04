@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Sale;
+use Modules\Core\Entities\Sale;
 
 class HotZappService
 {

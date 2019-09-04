@@ -2,11 +2,11 @@
 
 namespace Modules\Core\Listeners;
 
-use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use Modules\Core\Services\PusherService;
+use Illuminate\Support\Facades\Notification;
+use Modules\Core\Events\ShopifyIntegrationReadyEvent;
 use Modules\Notifications\Notifications\SendPushShopifyIntegrationReadyNotification;
 
 class NotifyUserShopifyIntegrationReadyListener

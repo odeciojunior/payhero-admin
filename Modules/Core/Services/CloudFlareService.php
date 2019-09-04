@@ -2,21 +2,20 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Domain;
-use App\Entities\DomainRecord;
-use Cloudflare\API\Auth\APIKey;
-use Cloudflare\API\Endpoints\Crypto;
-use Cloudflare\API\Endpoints\DNS;
-use Cloudflare\API\Adapter\Guzzle;
-use Cloudflare\API\Endpoints\SSL;
-use Cloudflare\API\Endpoints\TLS;
-use Cloudflare\API\Endpoints\User;
-use Cloudflare\API\Endpoints\Zones;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 use Exception;
 use GuzzleHttp\Client;
 use PHPHtmlParser\Dom;
+use Illuminate\Http\Response;
+use Cloudflare\API\Auth\APIKey;
+use Cloudflare\API\Endpoints\DNS;
+use Cloudflare\API\Endpoints\SSL;
+use Cloudflare\API\Endpoints\TLS;
+use Cloudflare\API\Adapter\Guzzle;
+use Cloudflare\API\Endpoints\User;
+use Cloudflare\API\Endpoints\Zones;
+use Illuminate\Support\Facades\Log;
+use Cloudflare\API\Endpoints\Crypto;
+use Modules\Core\Entities\DomainRecord;
 
 /**
  * Class CloudFlareService
@@ -28,6 +27,7 @@ class CloudFlareService
     const checkoutIp  = '104.248.122.89';
     const sacIp       = '104.248.122.89';
     const affiliateIp = '104.248.122.89';
+
     /**
      * @var APIKey
      */

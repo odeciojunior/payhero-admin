@@ -2,28 +2,19 @@
 
 namespace Modules\Core\Listeners;
 
-use App\Entities\Plan;
-use App\Entities\PlanSale;
-use App\Entities\Product;
-use App\Entities\ProductPlan;
-use App\Entities\ShopifyIntegration;
-use Modules\Core\Events\SaleApprovedEvent;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Slince\Shopify\Client;
+use Modules\Core\Entities\Plan;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\ProductPlan;
 use Slince\Shopify\PublicAppCredential;
+use Modules\Core\Events\SaleApprovedEvent;
 use Slince\Shopify\Client as ShopifyClient;
+use Modules\Core\Entities\ShopifyIntegration;
 
 class SetApprovedShopifyOrderListener
 {
-    /**
-     * Create the event listener.
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     public function handle(SaleApprovedEvent $event)
     {

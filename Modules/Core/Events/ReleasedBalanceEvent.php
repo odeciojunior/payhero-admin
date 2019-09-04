@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Events;
 
-use App\Entities\Transfer;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 

@@ -8,12 +8,10 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\Sale;
-use App\Entities\ZenviaSms;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Zenvia\Model\Sms;
 use Zenvia\Model\SmsFacade;
+use Illuminate\Support\Facades\Log;
 
 class ZenviaSmsService
 {

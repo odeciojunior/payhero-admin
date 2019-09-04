@@ -2,10 +2,8 @@
 
 namespace Modules\Core\Services;
 
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Container\Container as App;
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 use Modules\Core\Exceptions\Services\ServiceException;
 
 /**
@@ -13,7 +11,6 @@ use Modules\Core\Exceptions\Services\ServiceException;
  * @package Modules\Core\Services
  */
 class BankService {
-
 
     /**
      * @param $countryCode
@@ -31,7 +28,6 @@ class BankService {
         }
     }
 
-
     /**
      * @param $countryCode
      * @return array
@@ -43,10 +39,8 @@ class BankService {
                 return $bank['name'];
             }
         }
-
         return null;
     }
-
 
     /**
      * @return array

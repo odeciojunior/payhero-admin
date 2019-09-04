@@ -2,23 +2,14 @@
 
 namespace Modules\Core\Listeners;
 
-use App\Entities\Domain;
-use App\Entities\Plan;
+use Modules\Core\Entities\Domain;
 use Illuminate\Queue\InteractsWithQueue;
+use Modules\Core\Services\SendgridService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
-use Modules\Core\Services\SendgridService;
 
 class TrackingCodeUpdatedSendEmailClientListener
 {
-    /**
-     * Create the event listener.
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * @param TrackingCodeUpdatedEvent $event

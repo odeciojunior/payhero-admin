@@ -2,7 +2,7 @@
 
 namespace Modules\Core\Events;
 
-use App\Entities\Sale;
+use Modules\Core\Entities\Sale;
 use Illuminate\Queue\SerializesModels;
 
 class TrackingCodeUpdatedEvent

@@ -2,7 +2,6 @@
 
 namespace Modules\Core\Events;
 
-use App\Entities\Sale;
 use Modules\Core\Entities\User;
 use Illuminate\Queue\SerializesModels;
 

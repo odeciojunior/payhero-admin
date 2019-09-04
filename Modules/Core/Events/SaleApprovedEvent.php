@@ -2,11 +2,11 @@
 
 namespace Modules\Core\Events;
 
-use App\Entities\Client;
-use App\Entities\Delivery;
-use App\Entities\Plan;
-use App\Entities\Project;
-use App\Entities\Sale;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Delivery;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
 

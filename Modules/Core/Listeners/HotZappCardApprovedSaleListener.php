@@ -2,9 +2,6 @@
 
 namespace App\Listeners\Modules\Core\Listeners;
 
-use App\Entities\HotZappIntegration;
-use App\Entities\Plan;
-use App\Entities\PlanSale;
 use App\Events\Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Services\HotZappService;
 use Exception;
@@ -68,4 +65,8 @@ class HotZappCardApprovedSaleListener
             report($e);
         }
     }
+
 }
+
+
+

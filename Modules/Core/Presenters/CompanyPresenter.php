@@ -104,11 +104,11 @@ class CompanyPresenter extends Presenter
         if(is_numeric($status)){
             switch ($status) {
                 case 1:
-                    return 'pending';
+                    return 'pendente';
                 case 2:
                     return 'analyzing'; 
                 case 3: 
-                    return 'approved';
+                    return 'aprovado';
                 case 4:
                     return 'refused';
             }

@@ -2,8 +2,6 @@
 
 namespace Modules\Core\Listeners;
 
-use App\Entities\Domain;
-use App\Entities\Plan;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Core\Events\ResetPasswordEvent;

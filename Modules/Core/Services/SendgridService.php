@@ -2,11 +2,11 @@
 
 namespace Modules\Core\Services;
 
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
-use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 use SendGrid;
+use Exception;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+use SebastianBergmann\CodeCoverage\Report\Xml\Report;
 
 /**
  * Class SendgridService
