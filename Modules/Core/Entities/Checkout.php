@@ -2,8 +2,12 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\CheckoutPresenter;
+use Modules\Core\Presenters\SalePresenter;
 
 /**
  * @property integer $id
@@ -41,47 +45,47 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Checkout extends Model
 {
-
-    use SoftDeletes;
-
+    use FoxModelTrait, SoftDeletes, PresentableTrait;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
+    /**
+     * @var string
+     */
+    protected $presenter = CheckoutPresenter::class;
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id', 
-        'status', 
-        'operational_system', 
-        'browser', 
-        'id_log_session', 
-        'ip', 
-        'city', 
+        'project_id',
+        'status',
+        'operational_system',
+        'browser',
+        'id_log_session',
+        'ip',
+        'city',
         'state',
-        'state_name', 
-        'zip_code', 
-        'country', 
-        'parameter', 
-        'currency', 
-        'lat', 
-        'lon', 
-        'src', 
-        'is_mobile', 
-        'utm_source', 
-        'utm_medium', 
-        'utm_campaign', 
-        'utm_term', 
-        'utm_content', 
-        'email_sent_amount', 
+        'state_name',
+        'zip_code',
+        'country',
+        'parameter',
+        'currency',
+        'lat',
+        'lon',
+        'src',
+        'is_mobile',
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_term',
+        'utm_content',
+        'email_sent_amount',
         'sms_sent_amount',
         'created_at',
-        'updated_at', 
-        'deleted_at', 
+        'updated_at',
+        'deleted_at',
     ];
 
     /**

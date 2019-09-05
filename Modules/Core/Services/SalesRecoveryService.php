@@ -67,14 +67,14 @@ class SalesRecoveryService
         $userProjectsModel = new UserProject();
         $logModel          = new CheckoutLog();
 
-        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id','checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
+        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
                                         ->leftjoin('logs', function($join) {
                                             $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
                                         })
                                         ->whereIn('status', ['recovered', 'abandoned cart']);
 
         if (!empty($projectId)) {
-            $abandonedCarts->where('project_id', $projectId); 
+            $abandonedCarts->where('project_id', $projectId);
         } else {
             $userProjects = $userProjectsModel->where([
                                                           ['user_id', auth()->user()->id],
@@ -244,9 +244,9 @@ class SalesRecoveryService
         $logModel      = new CheckoutLog();
         $domainModel   = new Domain();
 
-        $checkout = $checkoutModel->find($sale->checkout);
+        $checkout = $checkoutModel->find($sale->checkout_id);
         $delivery = $sale->delivery()->first();
-        $client   = $sale->clientModel()->first();
+        $client   = $sale->client()->first();
 
         if (!empty($client->telephone)) {
             $client->telephone       = FoxUtils::getTelephone($client->telephone);
