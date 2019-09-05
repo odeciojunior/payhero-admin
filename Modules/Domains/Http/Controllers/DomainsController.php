@@ -2,17 +2,17 @@
 
 namespace Modules\Domains\Http\Controllers;
 
-use App\Entities\Company;
-use App\Entities\DomainRecord;
 use Cloudflare\API\Endpoints\SSL;
 use Exception;
-use App\Entities\Domain;
-use App\Entities\Project;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Entities\Project;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DomainService;
 use Modules\Core\Services\SendgridService;
@@ -398,7 +398,7 @@ class DomainsController extends Controller
     }
 
     /**
-     * @param $id
+     * @param DomainDestroyRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(DomainDestroyRequest $request)

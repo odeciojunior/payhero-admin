@@ -2,8 +2,8 @@
 
 namespace Modules\Projects\Providers;
 
-use App\Entities\Project;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\Project;
 use Modules\Projects\Policies\ProjectPolicy;
 
 class AuthServiceProvider extends ServiceProvider

@@ -3,11 +3,15 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ShippingPresenter;
 
 /**
  * @property integer $id
- * @property int $project
+ * @property int $project_id
  * @property string $name
  * @property string $information
  * @property string $value
@@ -23,43 +27,41 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Shipping extends Model
 {
-
     use SoftDeletes;
-
+    use PresentableTrait;
+    protected $presenter = ShippingPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'project', 
-        'name', 
-        'information', 
-        'value', 
-        'type', 
-        'zip_code_origin', 
-        'status', 
-        'pre_selected', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'project_id',
+        'name',
+        'information',
+        'value',
+        'type',
+        'zip_code_origin',
+        'status',
+        'pre_selected',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project', 'project');
+        return $this->belongsTo('Modules\Core\Entities\Project', 'project_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function sales()
     {

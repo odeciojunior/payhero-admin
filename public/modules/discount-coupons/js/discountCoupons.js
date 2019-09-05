@@ -58,7 +58,7 @@ $(function () {
                 $(".btn-save").on('click', function () {
 
                     var formData = new FormData(document.getElementById('form-register-coupon'));
-                    formData.append("project", projectId);
+                    formData.append("project_id", projectId);
                     loadingOnScreen();
                     $.ajax({
                         method: "POST",
@@ -213,7 +213,7 @@ $(function () {
                             $(".btn-update").unbind('click');
                             $(".btn-update").on('click', function () {
                                 var formData = new FormData(document.getElementById('form-update-coupon'));
-                                formData.append("project", projectId);
+                                formData.append("project_id", projectId);
                                 loadingOnScreen();
                                 $.ajax({
                                     method: "POST",

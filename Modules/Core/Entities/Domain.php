@@ -4,6 +4,8 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\DomainPresenter;
 
 /**
  * @property int $id
@@ -22,7 +24,9 @@ class Domain extends Model
 {
 
     use SoftDeletes;
+    use PresentableTrait;
 
+    protected $presenter = DomainPresenter::class;
     /**
      * @var array
      */
@@ -50,6 +54,6 @@ class Domain extends Model
      */
     public function domainsRecords()
     {
-        return $this->hasMany('Modules\Core\Entities\DomainsRecord');
+        return $this->hasMany('Modules\Core\Entities\DomainRecord');
     }
 }

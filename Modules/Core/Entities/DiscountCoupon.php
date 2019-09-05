@@ -4,6 +4,8 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\DiscountCouponsPresenter;
 
 /**
  * @property integer $id
@@ -22,7 +24,9 @@ class DiscountCoupon extends Model
 {
 
     use SoftDeletes;
+    use PresentableTrait;
 
+    protected $presenter = DiscountCouponsPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * 

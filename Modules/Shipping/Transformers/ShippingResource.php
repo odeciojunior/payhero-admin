@@ -23,9 +23,9 @@ class ShippingResource extends Resource
             'type'                    => $this->type == 'static' ? 'Estático' : ($this->type == 'sedex' ? 'SEDEX - Calculado automaticamente' : 'PAC - Calculado automaticamente'),
             'zip_code_origin'         => $this->zip_code_origin,
             'status'                  => $this->status,
-            'status_translated'       => Lang::get('definitions.enum.shipping.status.' . $this->getEnum('status', $this->status)),
+            'status_translated'       => Lang::get('definitions.enum.shipping.status.' . $this->present()->getStatus($this->status)),
             'pre_selected'            => $this->pre_selected,
-            'pre_selected_translated' => Lang::get('definitions.enum.shipping.pre_selected.' . $this->getEnum('pre_selected', $this->pre_selected)),
+            'pre_selected_translated' => Lang::get('definitions.enum.shipping.pre_selected.' . $this->present()->getStatus($this->pre_selected)),
         ];
     }
 }

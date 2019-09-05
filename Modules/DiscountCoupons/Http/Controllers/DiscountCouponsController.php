@@ -2,13 +2,13 @@
 
 namespace Modules\DiscountCoupons\Http\Controllers;
 
-use App\Entities\DiscountCoupon;
-use App\Entities\Project;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Project;
 use Modules\DiscountCoupons\Http\Requests\DiscountCouponsStoreRequest;
 use Modules\DiscountCoupons\Http\Requests\DiscountCouponsUpdateRequest;
 use Modules\DiscountCoupons\Transformers\DiscountCouponsResource;
@@ -32,7 +32,7 @@ class DiscountCouponsController extends Controller
 
                 if (Gate::allows('edit', [$project])) {
                     $coupons = $discountCouponsModel->whereHas('project', function($query) use ($projectId) {
-                        $query->where('project', $projectId);
+                        $query->where('project_id', $projectId);
                     });
 
                     return DiscountCouponsResource::collection($coupons->orderBy('id', 'DESC')->paginate(5));
@@ -81,11 +81,11 @@ class DiscountCouponsController extends Controller
             $discountCouponsModel = new DiscountCoupon();
             $projectModel         = new Project();
 
-            $requestData            = $request->validated();
-            $requestData["project"] = current(Hashids::decode($requestData['project']));
-            $requestData['value']   = preg_replace("/[^0-9]/", "", $requestData['value']);
+            $requestData               = $request->validated();
+            $requestData["project_id"] = current(Hashids::decode($requestData['project_id']));
+            $requestData['value']      = preg_replace("/[^0-9]/", "", $requestData['value']);
 
-            $project = $projectModel->find($requestData["project"]);
+            $project = $projectModel->find($requestData["project_id"]);
 
             if (Gate::allows('edit', [$project])) {
                 $discountCouponSaved = $discountCouponsModel->create($requestData);
@@ -201,7 +201,7 @@ class DiscountCouponsController extends Controller
 
             if (Gate::allows('edit', [$project])) {
 
-                unset($requestValidated['project']);
+                unset($requestValidated['project_id']);
                 $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
 
                 $couponUpdated = $coupon->update($requestValidated);

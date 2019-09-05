@@ -2,13 +2,13 @@
 
 namespace Modules\Shipping\Http\Controllers;
 
-use App\Entities\Project;
-use App\Entities\Shipping;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Shipping;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
 use Modules\Shipping\Http\Requests\ShippingUpdateConfigResource;
 use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
@@ -33,7 +33,7 @@ class ShippingController extends Controller
                 $project = $projectModel->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
-                    $shippings = $shippingModel->where('project', $projectId);
+                    $shippings = $shippingModel->where('project_id', $projectId);
 
                     return ShippingResource::collection($shippings->orderBy('id', 'DESC')->paginate(5));
                 } else {
@@ -84,9 +84,9 @@ class ShippingController extends Controller
             $shippingValidated = $request->validated();
 
             if ($shippingValidated) {
-                $shippingValidated['project'] = current(Hashids::decode($shippingValidated['project']));
+                $shippingValidated['project_id'] = current(Hashids::decode($shippingValidated['project_id']));
 
-                $project = $projectModel->find($shippingValidated['project']);
+                $project = $projectModel->find($shippingValidated['project_id']);
 
                 if (Gate::allows('edit', [$project])) {
                     if ($shippingValidated['value'] == null || preg_replace("/[^0-9]/", "", $shippingValidated['value']) == 0) {
@@ -100,7 +100,7 @@ class ShippingController extends Controller
                     }
                     if ($shippingValidated['pre_selected']) {
                         $shippings = $shippingModel->where([
-                                                               'project'      => $shippingValidated['project'],
+                                                               'project_id'   => $shippingValidated['project_id'],
                                                                'pre_selected' => 1,
                                                            ])->first();
                         if ($shippings) {
@@ -132,12 +132,11 @@ class ShippingController extends Controller
         try {
 
             $shippingModel = new Shipping();
-
             if ($request->input('freteId')) {
                 $shippingId = current(Hashids::decode($request->input('freteId')));
+                $shipping   = $shippingModel->with(['project'])->find($shippingId);
 
-                $shipping = $shippingModel->with(['project'])->find($shippingId);
-                $project  = $shipping->getRelation('project');
+                $project = $shipping->getRelation('project');
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -222,7 +221,7 @@ class ShippingController extends Controller
                     }
                     if ($requestValidated['pre_selected'] && !$shipping->pre_selected) {
                         $s = $shippingModel->where([
-                                                       ['project', $shipping->project],
+                                                       ['project_id', $shipping->project_id],
                                                        ['id', '!=', $shipping->id],
                                                        ['pre_selected', 1],
                                                    ])->first();
@@ -236,23 +235,23 @@ class ShippingController extends Controller
 
                     if (!$requestValidated['pre_selected'] && !$shipping->pre_selected) {
                         $sp = $shippingModel->where([
-                                                        ['project', $shipping->project],
+                                                        ['project_id', $shipping->project_id],
                                                         ['pre_selected', 1],
                                                     ])->get();
 
                         if (count($sp) == 0) {
-                            $shipp = $shippingModel->where('project', $shipping->project)->first();
+                            $shipp = $shippingModel->where('project_id', $shipping->project_id)->first();
                             $shipp->update(['pre_selected' => 1]);
                         }
                     }
 
                     $mensagem = "Frete atualizado com sucesso!";
                     if ($shippingUpdated) {
-                        $shippings = $shippingModel->where([['project', $shipping->project], ['status', 1]])
+                        $shippings = $shippingModel->where([['project_id', $shipping->project_id], ['status', 1]])
                                                    ->get();
 
                         if (count($shippings) == 0) {
-                            $sh = $shippingModel->where(['project' => $shipping->project])->first();
+                            $sh = $shippingModel->where(['project_id' => $shipping->project_id])->first();
 
                             $sh->update(['status' => 1]);
                             $mensagem = 'É obrigatório deixar um frete ativado';
@@ -308,7 +307,7 @@ class ShippingController extends Controller
                         if ($shipping->pre_selected) {
                             $shippingPreSelected = $shippingModel
                                 ->where([
-                                            ['project', $shipping->project],
+                                            ['project_id', $shipping->project_id],
                                             ['id', '!=', $shipping->id],
                                         ])->first();
 
