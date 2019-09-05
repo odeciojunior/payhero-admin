@@ -201,8 +201,8 @@ $(document).ready(function () {
                                 /**
                                  * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
                                  */
-                                $("#client-name").html('Nome: ' + (response.data.client.name.length === 0 ? '' : response.data.client.name));
-                                $("#client-telephone").html('Nome: ' + (response.data.client.telephone === 0 ? '' : response.data.client.telephone));
+                                $("#client-name-details").html('Nome: ' + (response.data.client.name.length === 0 ? '' : response.data.client.name));
+                                $("#client-telephone").html('Telefone: ' + (response.data.client.telephone === 0 ? '' : response.data.client.telephone));
                                 $("#client-whatsapp").attr('href', (response.data.client.whatsapp_link === 0 ? '' : response.data.client.whatsapp_link));
                                 $("#client-email").html('E-mail: ' + (response.data.client.email === 0 ? '' : response.data.client.email));
                                 $("#client-document").html('CPF: ' + (response.data.client.document === 0 ? '' : response.data.client.document));
@@ -260,10 +260,11 @@ $(document).ready(function () {
                 });
 
                 function clearFields() {
+                    $("#status-checkout").removeClass('badge-success badge-danger');
                     $("#date-as-hours").html('');
                     $("#table-product").html('');
                     $("#total-value").html('');
-                    $("#client-name").html('');
+                    $("#client-name-details").html('');
                     $("#client-telephone").html('');
                     $("#client-whatsapp").attr('href', '');
                     $("#client-email").html('');

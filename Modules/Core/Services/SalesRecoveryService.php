@@ -54,9 +54,10 @@ class SalesRecoveryService
     }
 
     /**
-     * @param $projectId
-     * @param $dateStart
-     * @param $dateEnd
+     * @param int|null $projectId
+     * @param string|null $dateStart
+     * @param string|null $dateEnd
+     * @param null $client
      * @return AnonymousResourceCollection
      * Carrinho abandonado
      */
@@ -64,7 +65,6 @@ class SalesRecoveryService
     {
         $checkoutModel     = new Checkout();
         $userProjectsModel = new UserProject();
-        $logModel          = new CheckoutLog();
 
         $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
                                         ->leftjoin('logs', function($join) {
@@ -80,20 +80,20 @@ class SalesRecoveryService
                                                           ['type', 'producer'],
                                                       ])->pluck('project_id')->toArray();
 
-            $abandonedCarts->whereIn('project_id', $userProjects)->with(['project']);
+            $abandonedCarts->whereIn('checkouts.project_id', $userProjects)->with(['project']);
         }
         if (!empty($client)) {
             $abandonedCarts->where('name', 'like', '%' . $client . '%');
         }
 
         if (!empty($dateStart) && !empty($dateEnd)) {
-            $abandonedCarts->whereBetween('created_at', [$dateStart, $dateEnd]);
+            $abandonedCarts->whereBetween('checkouts.created_at', [$dateStart, $dateEnd]);
         } else {
             if (!empty($dateStart)) {
-                $abandonedCarts->whereDate('created_at', '>=', $dateStart);
+                $abandonedCarts->whereDate('checkouts.created_at', '>=', $dateStart);
             }
             if (!empty($dateEnd)) {
-                $abandonedCarts->whereDate('created_at', '<', $dateEnd);
+                $abandonedCarts->whereDate('checkouts.created_at', '<', $dateEnd);
             }
         }
 
