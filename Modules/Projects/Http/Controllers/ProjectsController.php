@@ -11,7 +11,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
@@ -40,6 +39,8 @@ class ProjectsController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
             report($e);
+
+            return redirect()->back()->with('error', 'Ocorreu um tente novamente mais tarde');
         }
     }
 
@@ -55,6 +56,8 @@ class ProjectsController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar pagina de criar Projeto (ProjectController - create)');
             report($e);
+
+            return redirect()->back()->with('error', 'Erro ao tentar acessar tela de cadastro de projeto');
         }
     }
 
