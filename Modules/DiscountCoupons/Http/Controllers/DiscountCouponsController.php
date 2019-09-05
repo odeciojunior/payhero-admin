@@ -2,13 +2,13 @@
 
 namespace Modules\DiscountCoupons\Http\Controllers;
 
-use App\Entities\DiscountCoupon;
-use App\Entities\Project;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\DiscountCoupon;
+use Modules\Core\Entities\Project;
 use Modules\DiscountCoupons\Http\Requests\DiscountCouponsStoreRequest;
 use Modules\DiscountCoupons\Http\Requests\DiscountCouponsUpdateRequest;
 use Modules\DiscountCoupons\Transformers\DiscountCouponsResource;
@@ -32,7 +32,7 @@ class DiscountCouponsController extends Controller
 
                 if (Gate::allows('edit', [$project])) {
                     $coupons = $discountCouponsModel->whereHas('project', function($query) use ($projectId) {
-                        $query->where('project', $projectId);
+                        $query->where('project_id', $projectId);
                     });
 
                     return DiscountCouponsResource::collection($coupons->orderBy('id', 'DESC')->paginate(5));

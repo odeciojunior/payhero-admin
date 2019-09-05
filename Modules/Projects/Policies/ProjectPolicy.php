@@ -2,10 +2,10 @@
 
 namespace Modules\Projects\Policies;
 
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\UserProject;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\User;
+use Modules\Core\Entities\UserProject;
 
 class ProjectPolicy
 {
@@ -27,8 +27,8 @@ class ProjectPolicy
      */
     public function index(User $user, Project $project)
     {
-        $userProject = UserProject::where('user', $user->id)
-                                  ->where('project', $project->id)
+        $userProject = UserProject::where('user_id', $user->id)
+                                  ->where('project_id', $project->id)
                                   ->first();
         if ($userProject) {
             return true;
@@ -39,13 +39,13 @@ class ProjectPolicy
 
     /**
      * @param User $user
-     * @param Company $company
+     * @param Project $project
      * @return bool
      */
     public function show(User $user, Project $project)
     {
-        $userProject = UserProject::where('user', $user->id)
-                                  ->where('project', $project->id)
+        $userProject = UserProject::where('user_id', $user->id)
+                                  ->where('project_id', $project->id)
                                   ->first();
         if ($userProject) {
             return true;
@@ -61,8 +61,8 @@ class ProjectPolicy
      */
     public function edit(User $user, Project $project)
     {
-        $userProject = UserProject::where('user', $user->id)
-                                  ->where('project', $project->id)
+        $userProject = UserProject::where('user_id', $user->id)
+                                  ->where('project_id', $project->id)
                                   ->first();
         if ($userProject) {
             return true;
@@ -78,8 +78,8 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project)
     {
-        $userProject = UserProject::where('user', $user->id)
-                                  ->where('project', $project->id)
+        $userProject = UserProject::where('user_id', $user->id)
+                                  ->where('project_id', $project->id)
                                   ->first();
         if ($userProject) {
             return true;
@@ -95,8 +95,8 @@ class ProjectPolicy
      */
     public function destroy(User $user, Project $project)
     {
-        $userProject = UserProject::where('user', $user->id)
-                                  ->where('project', $project->id)
+        $userProject = UserProject::where('user_id', $user->id)
+                                  ->where('project_id', $project->id)
                                   ->first();
         if ($userProject) {
             return true;
