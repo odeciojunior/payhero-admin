@@ -2,12 +2,6 @@
 
 namespace Modules\Plans\Http\Controllers;
 
-use App\Entities\Gift;
-use App\Entities\Plan;
-use App\Entities\PlanGift;
-use App\Entities\Product;
-use App\Entities\ProductPlan;
-use App\Entities\Project;
 use App\Entities\ZenviaSms;
 use Auth;
 use Exception;
@@ -19,6 +13,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\Project;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
@@ -48,11 +46,11 @@ class PlansController extends Controller
                     if (Gate::allows('edit', [$project])) {
                         //se pode editar o projeto pode visualizar os planos dele
                         $plans = $planModel->with([
-                                                      'projectId.domains' => function($query) use ($projectId) {
+                                                      'project.domains' => function($query) use ($projectId) {
                                                           $query->where([['project_id', $projectId], ['status', 3]])
                                                                 ->first();
                                                       },
-                                                  ])->where('project', $projectId);
+                                                  ])->where('project_id', $projectId);
 
                         return PlansResource::collection($plans->orderBy('id', 'DESC')->paginate(5));
                     } else {
@@ -92,11 +90,11 @@ class PlansController extends Controller
             $productPlan  = new ProductPlan();
             $projectModel = new Project();
 
-            $requestData            = $request->validated();
-            $requestData['project'] = current(Hashids::decode($requestData['project']));
-            $requestData['status']  = 1;
+            $requestData               = $request->validated();
+            $requestData['project_id'] = current(Hashids::decode($requestData['project_id']));
+            $requestData['status']     = 1;
 
-            $projectId = $requestData['project'];
+            $projectId = $requestData['project_id'];
 
             if ($projectId) {
                 //hash ok
@@ -187,10 +185,10 @@ class PlansController extends Controller
                             foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
                                 if ($keyProduct == $keyAmount) {
                                     $productPlan->create([
-                                        'product' => $product,
-                                        'plan'    => $plan->id,
-                                        'amount'  => $productAmount,
-                                    ]);
+                                                             'product' => $product,
+                                                             'plan'    => $plan->id,
+                                                             'amount'  => $productAmount,
+                                                         ]);
                                 }
                             }
                         }
@@ -233,12 +231,11 @@ class PlansController extends Controller
 
                 if ($planId) {
                     //hash Ok
-                    $plan = $planModel->with(['productsPlans', 'plansSales', 'projectId'])
+                    $plan = $planModel->with(['productsPlans', 'plansSales', 'project'])
                                       ->where('id', $planId)
                                       ->first();
 
-                    $project = $plan->projectId;
-
+                    $project = $plan->project;
                     if (Gate::allows('edit', [$project])) {
 
                         if (count($plan->plansSales) > 0) {
@@ -277,7 +274,8 @@ class PlansController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @return Factory|JsonResponse|View
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function show(Request $request, $id)
     {
@@ -286,6 +284,7 @@ class PlansController extends Controller
             $projectModel = new Project();
 
             $projectId = current(Hashids::decode($request->input('project')));
+
             if ($projectId) {
                 //hash ok
                 $project = $projectModel->find($projectId);
@@ -295,7 +294,7 @@ class PlansController extends Controller
                     if (!empty($id)) {
                         $planId = current(Hashids::decode($id));
                         $plan   = $planModel->with([
-                                                       'products', 'projectId.domains' => function($query) use ($projectId) {
+                                                       'productsPlans.product', 'project.domains' => function($query) use ($projectId) {
                                 $query->where([['project_id', $projectId], ['status', 3]])
                                       ->first();
                             },
@@ -304,7 +303,6 @@ class PlansController extends Controller
                         $plan->code = isset($plan->projectId->domains[0]->name) ? 'https://checkout.' . $plan->projectId->domains[0]->name . '/' . $plan->code : 'Dominio não configurado';
 
                         if (empty($plan)) {
-
                             return response()->json([
                                                         'message' => 'error',
                                                     ], 200);
@@ -364,14 +362,15 @@ class PlansController extends Controller
                 if (Gate::allows('edit', [$project])) {
 
                     if (!empty($project->shopify_id)) {
-                        $products = $productModel->where('user', auth()->user()->id)
+                        $products = $productModel->where('user_id', auth()->user()->id)
                                                  ->where('shopify', 1)
-                                                 ->whereHas('productsPlans.plan', function($queryPlan) use($projectId) {
-                                                     $queryPlan->where('project', $projectId);
+                                                 ->whereHas('productsPlans.plan', function($queryPlan) use ($projectId) {
+                                                     $queryPlan->where('project_id', $projectId);
                                                  })
                                                  ->get();
+
                     } else {
-                        $products = $productModel->where('user', auth()->user()->id)
+                        $products = $productModel->where('user_id', auth()->user()->id)
                                                  ->where('shopify', 0)
                                                  ->get();
                     }
@@ -432,20 +431,19 @@ class PlansController extends Controller
             $projectId = current(Hashids::decode($request->input('project')));
             if ($projectId) {
                 $project = $projectModel->find($projectId);
-
                 if (Gate::allows('edit', [$project])) {
 
                     $planId = Hashids::decode($request->input('planId'))[0];
                     $plan   = $planModel->find($planId);
                     if ($plan) {
-
                         if (!empty($project->shopify_id)) {
-                            $products = $productModel->where('user', auth()->user()->id)->where('shopify', 1)->get();
+                            $products = $productModel->where('user_id', auth()->user()->id)->where('shopify', 1)->get();
                         } else {
-                            $products = $productModel->where('user', auth()->user()->id)->where('shopify', 0)->get();
+                            $products = $productModel->where('user_id', auth()->user()->id)->where('shopify', 0)->get();
                         }
 
-                        $productPlans = $productPlan->where('plan', $plan->id)->get()->toArray();
+                        $productPlans = $productPlan->where('plan_id', $plan->id)->get()->toArray();
+                        dd($productPlans);
 
                         return view('plans::edit', [
                             'plan'         => $plan,

@@ -4,6 +4,8 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\PlanPresenter;
 
 /**
  * @property integer $id
@@ -29,31 +31,29 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Plan extends Model
 {
-
     use SoftDeletes;
-
+    use PresentableTrait;
+    protected $presenter = PlanPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id', 
-        'name', 
-        'description', 
-        'code', 
-        'price', 
-        'status', 
-        'shopify_id', 
-        'shopify_variant_id', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'project_id',
+        'name',
+        'description',
+        'code',
+        'price',
+        'status',
+        'shopify_id',
+        'shopify_variant_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -93,7 +93,7 @@ class Plan extends Model
      */
     public function plansSales()
     {
-        return $this->hasMany('Modules\Core\Entities\PlansSale');
+        return $this->hasMany('Modules\Core\Entities\PlanSale');
     }
 
     /**
@@ -101,7 +101,7 @@ class Plan extends Model
      */
     public function productsPlans()
     {
-        return $this->hasMany('Modules\Core\Entities\ProductsPlan');
+        return $this->hasMany('Modules\Core\Entities\ProductPlan');
     }
 
     /**
@@ -117,7 +117,7 @@ class Plan extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('Modules\Core\Entities\ZenviaSm');
+        return $this->hasMany('Modules\Core\Entities\ZenviaSms');
     }
 
     /**
@@ -127,5 +127,4 @@ class Plan extends Model
     {
         return $this->belongsToMany('Modules\Core\Entities\Product', 'products_plans', 'plan_id', 'product_id');
     }
-
 }

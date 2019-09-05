@@ -2,14 +2,14 @@
 
 namespace Modules\Products\Http\Controllers;
 
-use App\Entities\ProductPlan;
 use Exception;
-use App\Entities\Product;
-use App\Entities\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Category;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlan;
 use Modules\Products\Http\Requests\UpdateProductRequest;
 use Vinkla\Hashids\Facades\Hashids;
 use Intervention\Image\Facades\Image;
@@ -69,10 +69,10 @@ class ProductsController extends Controller
         try {
             if (isset($request->nome)) {
                 $productsSearch = $this->productModel->where('name', 'LIKE', '%' . $request->nome . '%')
-                                                     ->where('user', auth()->user()->id)
+                                                     ->where('user_id', auth()->user()->id)
                                                      ->where('shopify', 0);
             } else {
-                $productsSearch = $this->productModel->where('user', auth()->user()->id)->where('shopify', 0);
+                $productsSearch = $this->productModel->where('user_id', auth()->user()->id)->where('shopify', 0);
             }
 
             $products = $productsSearch->orderBy('id', 'DESC')->paginate(12);
@@ -256,7 +256,7 @@ class ProductsController extends Controller
 
                 if (Gate::allows('destroy', [$product])) {
 
-                    $productPlan = $this->productsPlansModel->where('product', $product->id)->count();
+                    $productPlan = $this->productsPlansModel->where('product_id', $product->id)->count();
                     if ($productPlan == 0) {
                         $this->getDigitalOceanFileService()->deleteFile($product->photo);
                         $product->delete();

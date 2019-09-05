@@ -101,7 +101,7 @@ $(function () {
                         }
 
                         var formData = new FormData(document.getElementById('form-register-plan'));
-                        formData.append("project", projectId);
+                        formData.append("project_id", projectId);
                         loadingOnScreen();
                         $.ajax({
                             method: "POST",
@@ -345,7 +345,7 @@ $(function () {
                                 }
 
                                 var formData = new FormData(document.getElementById('form-update-plan'));
-                                formData.append("project", projectId);
+                                formData.append("project_id", projectId);
                                 loadingOnScreen();
                                 $.ajax({
                                     method: "POST",

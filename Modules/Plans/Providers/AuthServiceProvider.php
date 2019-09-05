@@ -2,8 +2,8 @@
 
 namespace Modules\Plans\Providers;
 
-use App\Entities\Plan;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\Plan;
 use Modules\Plans\Policies\PlanPolicy;
 
 class AuthServiceProvider extends ServiceProvider

@@ -1,5 +1,5 @@
 <div class='container-fluid'>
-    <table class='table table-bordered table-striped table-hover table-responsive' style='overflow-x: auto !important;'>
+    <table class='table table-bordered table-striped table-hover' style='overflow-x: auto !important;'>
         <tbody>
             <tr>
                 <th style='width:40%;' class='text-center'>Nome:</th>
@@ -37,7 +37,7 @@
         </tr>
         @foreach($plan->productsPlans as $productPlan)
             <tr>
-                <td>{{$productPlan->getProduct->name}}</td>
+                <td>{{$productPlan->product->name}}</td>
                 <td>{{$productPlan->amount}}</td>
             </tr>
         @endforeach
