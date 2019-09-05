@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,12 +26,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Shipping extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, FoxModelTrait;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
     protected $keyType = 'integer';
+    /**
+     * @var array
+     */
+    protected $appends = ['id_code'];
     /**
      * @var array
      */

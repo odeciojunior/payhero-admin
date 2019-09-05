@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,43 +51,47 @@ use Modules\Core\Presenters\CompanyPresenter;
  */
 class Company extends Model
 {
-
-    use SoftDeletes, PresentableTrait;
-
+    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    /**
+     * @var string
+     */
     protected $presenter = CompanyPresenter::class;
-
+    /**
+     * @var array
+     */
+    protected $appends = ['id_code'];
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id', 
-        'fantasy_name', 
-        'company_document', 
-        'zip_code', 
-        'country', 
-        'state', 
-        'city', 
-        'street', 
-        'complement', 
-        'neighborhood', 
-        'agency', 
-        'bank', 
-        'number', 
-        'agency_digit', 
-        'account', 
-        'account_digit', 
-        'statement_descriptor', 
-        'shortened_descriptor', 
-        'business_website', 
-        'support_email', 
-        'support_telephone', 
-        'balance', 
-        'bank_document_status', 
-        'address_document_status', 
-        'contract_document_status', 
-        'created_at', 
-        'deleted_at', 
-        'updated_at'
+        'user_id',
+        'fantasy_name',
+        'company_document',
+        'zip_code',
+        'country',
+        'state',
+        'city',
+        'street',
+        'complement',
+        'neighborhood',
+        'agency',
+        'bank',
+        'number',
+        'agency_digit',
+        'account',
+        'account_digit',
+        'statement_descriptor',
+        'shortened_descriptor',
+        'business_website',
+        'support_email',
+        'support_telephone',
+        'balance',
+        'bank_document_status',
+        'address_document_status',
+        'contract_document_status',
+        'created_at',
+        'deleted_at',
+        'updated_at',
     ];
 
     /**
