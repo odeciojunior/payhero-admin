@@ -9,7 +9,6 @@ use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Services\FoxUtils;
 use Illuminate\Contracts\View\Factory;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Log as CheckoutLog;
@@ -200,6 +199,19 @@ class SalesRecoveryService
         $checkout->utm_term     = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
         $checkout->utm_content  = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
 
+        if (empty($delivery['city'])) {
+            $delivery['city'] = '';
+        }
+        if (empty($delivery['street'])) {
+            $delivery['street'] = '';
+        }
+        if (empty($delivery['zip_code'])) {
+            $delivery['zip_code'] = '';
+        }
+        if (empty($delivery['state'])) {
+            $delivery['state'] = '';
+        }
+
         $status = '';
         if ($checkout->status == 'abandoned cart') {
             $status = 'Não recuperado';
@@ -227,6 +239,7 @@ class SalesRecoveryService
             'checkout' => $checkout,
             'client'   => $log,
             'products' => $products,
+            'delivery' => $delivery,
             'status'   => $status,
             'link'     => $link,
         ];

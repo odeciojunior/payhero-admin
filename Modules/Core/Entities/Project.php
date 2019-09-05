@@ -4,6 +4,9 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -105,7 +108,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function carrier()
     {
@@ -113,7 +116,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function affiliateRequests()
     {
@@ -121,7 +124,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function affiliates()
     {
@@ -129,7 +132,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function checkouts()
     {
@@ -137,7 +140,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function clientsCookies()
     {
@@ -145,7 +148,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function convertaxIntegrations()
     {
@@ -153,7 +156,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function discountCoupons()
     {
@@ -161,7 +164,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function domains()
     {
@@ -169,7 +172,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function extraMaterials()
     {
@@ -177,15 +180,15 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function gifts()
     {
-        return $this->hasMany('Modules\Core\Entities\Gift', 'project');
+        return $this->hasMany('Modules\Core\Entities\Gift');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function hotzappIntegrations()
     {
@@ -193,7 +196,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function layouts()
     {
@@ -201,15 +204,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function notazzIntegrations()
-    {
-        return $this->hasMany('Modules\Core\Entities\NotazzIntegration');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function pixels()
     {
@@ -217,7 +212,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function plans()
     {
@@ -225,7 +220,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function sales()
     {
@@ -233,15 +228,15 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function shippings()
     {
-        return $this->hasMany('Modules\Core\Entities\Shipping', 'project');
+        return $this->hasMany('Modules\Core\Entities\Shipping');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function shopifyIntegrations()
     {
@@ -249,7 +244,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function usersProjects()
     {
@@ -257,7 +252,7 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function zenviaSms()
     {
@@ -265,10 +260,10 @@ class Project extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function notazzIntegration()
     {
-        return $this->hasOne('App\Entities\NotazzIntegration');
+        return $this->hasOne('Modules\Core\Entities\NotazzIntegration');
     }
 }

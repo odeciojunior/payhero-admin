@@ -17,6 +17,7 @@ class SalesRecoveryCartAbandonedDetailsResourceTransformer extends Resource
             'checkout' => $this['checkout'],
             'client'   => $this['client'],
             'products' => $this['products'],
+            'delivery' => $this['delivery'],
             'status'   => $this['status'],
             'link'     => $this['link'],
             'method'   => 'cartAbandoned',
