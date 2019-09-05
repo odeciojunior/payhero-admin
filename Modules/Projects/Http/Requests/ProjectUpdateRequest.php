@@ -26,7 +26,7 @@ class ProjectUpdateRequest extends FormRequest
             "boleto_redirect"            => "nullable",
             "card_redirect"              => "nullable",
             "analyzing_redirect"         => "nullable",
-            "company"                    => "nullable",
+            "company_id"                 => "nullable",
             "installments_amount"        => "nullable",
             "installments_interest_free" => "nullable",
             "boleto"                     => "nullable",

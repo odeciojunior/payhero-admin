@@ -111,9 +111,9 @@ class PlansController extends Controller
                             foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
                                 if ($keyProduct == $keyAmount) {
                                     $dataProductPlan = [
-                                        'product' => $product,
-                                        'plan'    => $plan->id,
-                                        'amount'  => $productAmount,
+                                        'product_id' => $product,
+                                        'plan_id'    => $plan->id,
+                                        'amount'     => $productAmount,
                                     ];
                                     $productPlan->create($dataProductPlan);
                                 }
@@ -158,7 +158,7 @@ class PlansController extends Controller
 
             $requestData = $request->validated();
 
-            $projectId = current(Hashids::decode($requestData['project']));
+            $projectId = current(Hashids::decode($requestData['project_id']));
 
             if ($projectId) {
                 //hash ok
@@ -167,14 +167,14 @@ class PlansController extends Controller
 
                 if (Gate::allows('edit', [$project])) {
 
-                    unset($requestData['project']);
+                    unset($requestData['project_id']);
                     $planId               = Hashids::decode($id)[0];
                     $requestData['price'] = $this->getValue($requestData['price']);
 
                     $plan = $planModel->where('id', $planId)->first();
                     $plan->update($requestData);
 
-                    $productPlans = $productPlan->where('plan', $plan->id)->get();
+                    $productPlans = $productPlan->where('plan_id', $plan->id)->get();
                     if (count($productPlans) > 0) {
                         foreach ($productPlans as $productPlan) {
                             $productPlan->forceDelete();
@@ -185,9 +185,9 @@ class PlansController extends Controller
                             foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
                                 if ($keyProduct == $keyAmount) {
                                     $productPlan->create([
-                                                             'product' => $product,
-                                                             'plan'    => $plan->id,
-                                                             'amount'  => $productAmount,
+                                                             'product_id' => $product,
+                                                             'plan_id'    => $plan->id,
+                                                             'amount'     => $productAmount,
                                                          ]);
                                 }
                             }
@@ -368,7 +368,6 @@ class PlansController extends Controller
                                                      $queryPlan->where('project_id', $projectId);
                                                  })
                                                  ->get();
-
                     } else {
                         $products = $productModel->where('user_id', auth()->user()->id)
                                                  ->where('shopify', 0)
@@ -443,7 +442,6 @@ class PlansController extends Controller
                         }
 
                         $productPlans = $productPlan->where('plan_id', $plan->id)->get()->toArray();
-                        dd($productPlans);
 
                         return view('plans::edit', [
                             'plan'         => $plan,

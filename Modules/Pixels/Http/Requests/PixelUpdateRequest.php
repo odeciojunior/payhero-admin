@@ -16,7 +16,7 @@ class PixelUpdateRequest extends FormRequest
             'name'            => 'required|max:100|string',
             'code'            => 'required|string',
             'platform'        => 'required',
-            'project'         => 'nullable',
+            'project_id'      => 'nullable',
             'campaign'        => 'nullable',
             'status'          => 'nullable',
             'checkout'        => 'nullable',

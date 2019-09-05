@@ -184,11 +184,10 @@ class ProjectsController extends Controller
             $idProject = current(Hashids::decode($id));
             $project   = $projectModel->with([
                                                  'usersProjects' => function($query) use ($user, $idProject) {
-                                                     $query->where('user', $user->id)
-                                                           ->where('project', $idProject)->first();
+                                                     $query->where('user_id', $user->id)
+                                                           ->where('project_id', $idProject)->first();
                                                  },
                                              ])->find($idProject);
-
             if (Gate::allows('edit', [$project])) {
                 $view = view('projects::edit', [
                     'companies' => $user->companies,
@@ -275,15 +274,13 @@ class ProjectsController extends Controller
                             report($e);
                         }
 
-                        $userProject = $userProjectModel->where([
-                                                                    ['user', auth()->user()->id],
-                                                                    ['project', $project->id],
-                                                                ])->first();
-
-                        $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
-
-                        if ($userProject->company != $requestValidated['company']) {
-                            $userProject->update(['company' => $requestValidated['company']]);
+                        $userProject                    = $userProjectModel->where([
+                                                                                       ['user_id', auth()->user()->id],
+                                                                                       ['project_id', $project->id],
+                                                                                   ])->first();
+                        $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
+                        if ($userProject->company_id != $requestValidated['company_id']) {
+                            $userProject->update(['company_id' => $requestValidated['company_id']]);
                         }
 
                         return response()->json(['message' => 'Projeto atualizado!'], 200);

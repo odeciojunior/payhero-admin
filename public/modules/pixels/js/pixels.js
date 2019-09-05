@@ -68,7 +68,7 @@ $(function () {
                 $(".btn-save").unbind('click');
                 $(".btn-save").on('click', function () {
                     var formData = new FormData(document.getElementById('form-register-pixel'));
-                    formData.append('project', projectId);
+                    formData.append('project_id', projectId);
                     formData.append('checkout', $("#checkout").val());
                     formData.append('purchase_card', $("#purchase_card").val());
                     formData.append('purchase_boleto', $("#purchase_boleto").val());

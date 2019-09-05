@@ -70,9 +70,9 @@ class PixelsController extends Controller
                 return response()->json('erro');
             }
 
-            $validator['project'] = current(Hashids::decode($validator['project']));
+            $validator['project_id'] = current(Hashids::decode($validator['project_id']));
 
-            $project = $projectModel->find($validator['project']);
+            $project = $projectModel->find($validator['project_id']);
 
             if (Gate::allows('edit', [$project])) {
                 $pixel = $pixelModel->create($validator);

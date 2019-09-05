@@ -133,7 +133,7 @@
                     </div>
                     <div class='form-group col-6 col-xs-12'>
                         <label for='company'>Empresa responsável</label>
-                        <select id='companies' name='company' class="form-control select-pad">
+                        <select id='companies' name='company_id' class="form-control select-pad">
                             @foreach($companies as $company)
                                 <option value='{{$company->id_code}}' {{$company->id_code == Hashids::encode($project->usersProjects[0]->company)? 'selected' : ''}}>{{$company->fantasy_name}}</option>
                             @endforeach
