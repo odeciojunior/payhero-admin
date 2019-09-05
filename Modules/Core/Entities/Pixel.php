@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PixelPresenter;
@@ -10,7 +11,7 @@ use Modules\Core\Presenters\PixelPresenter;
 /**
  * @property int $id
  * @property int $project_id
- * @property integer $campaign
+ * @property integer $campaign_id
  * @property string $name
  * @property string $code
  * @property string $platform
@@ -26,39 +27,39 @@ use Modules\Core\Presenters\PixelPresenter;
  */
 class Pixel extends Model
 {
-
-    use SoftDeletes;
-    use PresentableTrait;
-
+    use SoftDeletes, PresentableTrait;
+    /**
+     * @var string
+     */
     protected $presenter = PixelPresenter::class;
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id', 
-        'campaign', 
-        'name', 
-        'code', 
-        'platform', 
-        'status', 
-        'checkout', 
-        'purchase_boleto', 
-        'purchase_card', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'project_id',
+        'campaign_id',
+        'name',
+        'code',
+        'platform',
+        'status',
+        'checkout',
+        'purchase_boleto',
+        'purchase_card',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function campaign()
     {
-        return $this->belongsTo('Modules\Core\Entities\Campaign', 'campaign');
+        return $this->belongsTo('Modules\Core\Entities\Campaign');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
