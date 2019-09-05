@@ -14,7 +14,7 @@ class PlanStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project'         => 'required',
+            'project_id'      => 'required',
             'name'            => 'required|max:50',
             'price'           => 'required',
             'description'     => 'required|max:50',

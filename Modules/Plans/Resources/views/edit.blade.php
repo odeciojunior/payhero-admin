@@ -41,7 +41,7 @@
                                     {{--<select id="product_{{ $key + 1 }}" name="product_{{ $key + 1 }}" class="form-control">--}}
                                     <select id="product_1" name="products[]" class="form-control">
                                         @foreach($products as $product)
-                                            <option value="{{ $product['id'] }}" {!! ($product['id'] == $productPlan['product']) ? 'selected' : '' !!}>{{ $product['name'] }}</option>
+                                            <option value="{{ $product['id'] }}" {{($product['id'] == $productPlan['product_id']) ? 'selected' : '' }}>{{ $product['name'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -2,17 +2,14 @@
 
 namespace Modules\Products\Http\Controllers;
 
-use Modules\Core\Entities\ProductPlan;
 use Exception;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\Category;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Category;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlan;
 use Illuminate\View\View;
 use Modules\Products\Http\Requests\UpdateProductRequest;
 use Vinkla\Hashids\Facades\Hashids;

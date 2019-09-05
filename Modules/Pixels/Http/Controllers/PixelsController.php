@@ -2,12 +2,12 @@
 
 namespace Modules\Pixels\Http\Controllers;
 
-use App\Entities\Pixel;
-use App\Entities\Project;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Pixel;
+use Modules\Core\Entities\Project;
 use Modules\Pixels\Http\Requests\PixelStoreRequest;
 use Modules\Pixels\Http\Requests\PixelUpdateRequest;
 use Modules\Pixels\Transformers\PixelsResource;
@@ -30,9 +30,8 @@ class PixelsController extends Controller
 
                 $projectId = current(Hashids::decode($request->input('project')));
                 $project   = $projectModel->find($projectId);
-
                 if (Gate::allows('edit', [$project])) {
-                    $pixels = $pixelModel->where('project', $projectId);
+                    $pixels = $pixelModel->where('project_id', $projectId);
 
                     return PixelsResource::collection($pixels->orderBy('id', 'DESC')->paginate(5));
                 } else {
@@ -71,9 +70,9 @@ class PixelsController extends Controller
                 return response()->json('erro');
             }
 
-            $validator['project'] = current(Hashids::decode($validator['project']));
+            $validator['project_id'] = current(Hashids::decode($validator['project_id']));
 
-            $project = $projectModel->find($validator['project']);
+            $project = $projectModel->find($validator['project_id']);
 
             if (Gate::allows('edit', [$project])) {
                 $pixel = $pixelModel->create($validator);

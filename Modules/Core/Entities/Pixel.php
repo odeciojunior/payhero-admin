@@ -6,6 +6,8 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\PixelPresenter;
 
 /**
  * @property int $id
@@ -26,7 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Pixel extends Model
 {
-    use SoftDeletes, FoxModelTrait;
+    use SoftDeletes, FoxModelTrait, PresentableTrait;
     /**
      * @var array
      */
@@ -50,7 +52,7 @@ class Pixel extends Model
      */
     public function campaign()
     {
-        return $this->belongsTo('Modules\Core\Entities\Campaign', 'campaign');
+        return $this->belongsTo('Modules\Core\Entities\Campaign');
     }
 
     /**

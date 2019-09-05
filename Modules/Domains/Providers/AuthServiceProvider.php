@@ -2,8 +2,8 @@
 
 namespace Modules\Domains\Providers;
 
-use App\Entities\Domain;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\Domain;
 use Modules\Domains\Policies\DomainPolicy;
 
 class AuthServiceProvider extends ServiceProvider

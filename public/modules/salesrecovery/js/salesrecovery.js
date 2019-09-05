@@ -1,25 +1,3 @@
-var statusRecovery = {
-    'Recuperado': 'success',
-    'Não recuperado': 'danger',
-    'Recusado': 'danger',
-    'Expirado': 'danger',
-
-};
-
-function setSend(sendNumber) {
-    if (sendNumber == 1) {
-        return 'enviado';
-    } else if (sendNumber > 1) {
-        return 'enviados';
-    } else {
-        return '';
-    }
-}
-
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
-}
-
 $(document).ready(function () {
 
     getProjects();
@@ -72,7 +50,6 @@ $(document).ready(function () {
 
         loadOnTable('#table_data', '#carrinhoAbandonado');
 
-        /*$('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");*/
         if (link == null) {
             link = 'api/recovery/getrecoverydata?project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val() + '&client_name=' + $("#client-name").val();
         } else {
@@ -138,7 +115,6 @@ $(document).ready(function () {
                 pagination(response, 'salesRecovery', atualizar);
 
                 $('.details-cart-recovery').unbind('click');
-
                 $('.details-cart-recovery').on('click', function () {
 
                     var sale = $(this).data('venda');
@@ -297,5 +273,74 @@ $(document).ready(function () {
                 });
             }
         });
+
+    }
+
+    /**
+     * Helper Functions
+     */
+
+    /**
+     * Adiciona class ao badge da modal e da tabela
+     * @type {{Recuperado: string, Recusado: string, "Não recuperado": string, Expirado: string}}
+     */
+    var statusRecovery = {
+        "Recuperado": "success",
+        "Não recuperado": "danger",
+        "Recusado": "danger",
+        "Expirado": "danger",
+
+    };
+    /**
+     * @param sendNumber
+     * @returns {string}
+     */
+    function setSend(sendNumber) {
+        if (sendNumber === 1) {
+            return 'enviado';
+        } else if (sendNumber > 1) {
+            return 'enviados';
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Verifica se algum valor esta vazio
+     * @param obj
+     * @returns {boolean}
+     */
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    /**
+     * Limpa os campos da modal
+     */
+    function clearFields() {
+        $("#status-checkout").removeClass('badge-success badge-danger');
+        $("#date-as-hours").html('');
+        $("#table-product").html('');
+        $("#total-value").html('');
+        $("#client-name-details").html('');
+        $("#client-telephone").html('');
+        $("#client-whatsapp").attr('href', '');
+        $("#client-email").html('');
+        $("#client-document").html('');
+        $("#client-street").html('');
+        $("#client-zip-code").html('');
+        $("#client-city-state").html('');
+        $("#sale-motive").html('');
+        $("#link-sale").html('');
+        $("#checkout-ip").html('');
+        $("#checkout-is-mobile").html('');
+        $("#checkout-operational-system").html('');
+        $("#checkout-browser").html('');
+        $("#checkout-src").html('');
+        $("#checkout-utm-source").html('');
+        $("#checkout-utm-medium").html('');
+        $("#checkout-utm-campaign").html('');
+        $("#checkout-utm-term").html('');
+        $("#checkout-utm-content").html('');
     }
 });

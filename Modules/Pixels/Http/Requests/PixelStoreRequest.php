@@ -13,7 +13,7 @@ class PixelStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project'         => 'required',
+            'project_id'      => 'required',
             'campaign'        => 'nullable',
             'name'            => 'required|max:100',
             'code'            => 'required',

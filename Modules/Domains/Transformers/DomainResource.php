@@ -13,7 +13,7 @@ class DomainResource extends Resource
     /**
      * @param \Illuminate\Http\Request $request
      * @return array
-     * @throws \Cloudflare\API\Endpoints\EndpointException
+     * @throws \Cloudflare\API\Endpoints\EndpointException]
      */
     public function toArray($request) {
 
@@ -21,7 +21,7 @@ class DomainResource extends Resource
             'id'                => Hashids::encode($this->id),
             'domain'            => $this->name,
             'status'            => $this->status,
-            'status_translated' => Lang::get('definitions.enum.status.' . $this->getEnum('status', $this->status)),
+            'status_translated' => Lang::get('definitions.enum.domain.status.' . $this->present()->getStatus($this->status)),
         ];
     }
 

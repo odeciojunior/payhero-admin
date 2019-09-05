@@ -11,7 +11,6 @@ class DiscountCouponsPolicy
 
     /**
      * Create a new policy instance.
-     *
      * @return void
      */
     public function __construct()
@@ -26,8 +25,8 @@ class DiscountCouponsPolicy
      */
     public function show(User $user, Project $project)
     {
-        $userProject = UserProject::where('user', $user->id)
-                                  ->where('project', $project->id)
+        $userProject = UserProject::where('user_id', $user->id)
+                                  ->where('project_id', $project->id)
                                   ->first();
         if ($userProject) {
             return true;

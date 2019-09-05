@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ShippingPresenter;
 
 /**
  * @property integer $id
@@ -26,7 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Shipping extends Model
 {
-    use SoftDeletes, FoxModelTrait;
+    use SoftDeletes, FoxModelTrait, PresentableTrait;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -39,6 +41,8 @@ class Shipping extends Model
     /**
      * @var array
      */
+
+    protected $presenter = ShippingPresenter::class;
     protected $fillable = [
         'project_id',
         'name',

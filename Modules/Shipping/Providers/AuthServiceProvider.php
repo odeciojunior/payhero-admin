@@ -2,8 +2,8 @@
 
 namespace Modules\Shipping\Providers;
 
-use App\Entities\Shipping;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\Shipping;
 use Modules\Shipping\Policies\ShippingPolicy;
 
 class AuthServiceProvider extends ServiceProvider

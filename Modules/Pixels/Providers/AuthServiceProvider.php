@@ -2,8 +2,8 @@
 
 namespace Modules\Pixels\Providers;
 
-use App\Entities\Pixel;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\Pixel;
 use Modules\Pixels\Policies\PixelPolicy;
 
 class AuthServiceProvider extends ServiceProvider

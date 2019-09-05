@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\PlanPresenter;
 
 /**
  * @property integer $id
@@ -33,6 +35,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Plan extends Model
 {
     use SoftDeletes;
+    use PresentableTrait;
+    protected $presenter = PlanPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -116,7 +120,7 @@ class Plan extends Model
      */
     public function zenviaSms()
     {
-        return $this->hasMany('Modules\Core\Entities\ZenviaSm');
+        return $this->hasMany('Modules\Core\Entities\ZenviaSms');
     }
 
     /**

@@ -13,12 +13,12 @@ class DiscountCouponsUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'project' => 'nullable',
-            'name'    => 'required|string|max:100',
-            'type'    => 'required',
-            'value'   => 'required|string|max:30',
-            'code'    => 'required|string|max:30',
-            'status'  => 'nullable',
+            'project_id' => 'nullable',
+            'name'       => 'required|string|max:100',
+            'type'       => 'required',
+            'value'      => 'required|string|max:30',
+            'code'       => 'required|string|max:30',
+            'status'     => 'nullable',
         ];
     }
 

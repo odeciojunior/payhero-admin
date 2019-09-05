@@ -2,8 +2,8 @@
 
 namespace Modules\DiscountCoupons\Providers;
 
-use App\Entities\DiscountCoupon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Modules\Core\Entities\DiscountCoupon;
 use Modules\DiscountCoupons\Policies\DiscountCouponsPolicy;
 
 class AuthServiceProvider extends ServiceProvider

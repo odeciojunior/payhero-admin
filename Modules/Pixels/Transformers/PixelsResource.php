@@ -21,7 +21,7 @@ class PixelsResource extends Resource
             'code'     => $this->code,
             'platform' => $this->platform,
             'status'   => $this->status,
-            'status_translated' => Lang::get('definitions.enum.pixel.status.' . $this->getEnum('status', $this->status)),
+            'status_translated' => Lang::get('definitions.enum.pixel.status.' . $this->present()->getStatus($this->status)),
         ];
     }
 }

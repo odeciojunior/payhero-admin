@@ -134,7 +134,7 @@ $(document).ready(function () {
                 $(".btn-save").unbind('click');
                 $(".btn-save").click(function () {
                     var formData = new FormData(document.getElementById('form-add-shipping'));
-                    formData.append("project", projectId);
+                    formData.append("project_id", projectId);
                     loadingOnScreen();
 
                     $.ajax({
@@ -308,7 +308,7 @@ $(document).ready(function () {
                                 $(".btn-update").unbind('click');
                                 $(".btn-update").on('click', function () {
                                     var formData = new FormData(document.getElementById('form-update-shipping'));
-                                    formData.append("project", projectId);
+                                    formData.append("project_id", projectId);
                                     loadingOnScreen();
                                     $.ajax({
                                         method: "POST",
