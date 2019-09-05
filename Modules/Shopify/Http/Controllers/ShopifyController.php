@@ -2,54 +2,71 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
+use Auth;
 use Exception;
-use App\Entities\Company;
-use App\Entities\Project;
-use App\Entities\Shipping;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Entities\ShopifyIntegration;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 
+/**
+ * Class ShopifyController
+ * @package Modules\Shopify\Http\Controllers
+ */
 class ShopifyController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|RedirectResponse|View
      */
     public function index()
     {
-        $companyModel            = new Company();
-        $projectModel            = new Project();
-        $shopifyIntegrationModel = new ShopifyIntegration();
+        try {
 
-        $companies = $companyModel->where('user_id', \Auth::user()->id)->get()->toArray();
+            $companyModel            = new Company();
+            $projectModel            = new Project();
+            $shopifyIntegrationModel = new ShopifyIntegration();
 
-        $shopifyIntegrations = $shopifyIntegrationModel->where('user', \Auth::user()->id)->get();
+            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
 
-        $projects = [];
+            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->id)->get();
 
-        foreach ($shopifyIntegrations as $shopifyIntegration) {
+            $projects = [];
 
-            $project = $projectModel->find($shopifyIntegration->project);
+            foreach ($shopifyIntegrations as $shopifyIntegration) {
 
-            if ($project) {
-                $projects[] = $project;
+                $project = $projectModel->find($shopifyIntegration->project_id);
+
+                if (!empty($project)) {
+                    $projects[] = $project;
+                }
             }
-        }
 
-        return view('shopify::index', [
-            'companies' => $companies,
-            'projects'  => $projects,
-        ]);
+            return view('shopify::index', [
+                'companies' => $companies,
+                'projects'  => $projects,
+            ]);
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar aplicativo integração shopify (ShopifyController - index)');
+            report($e);
+
+            return redirect()->back();
+        }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -87,7 +104,7 @@ class ShopifyController extends Controller
                 if (empty($shopifyService->getClient())) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 report($e);
 
                 return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
@@ -141,7 +158,7 @@ class ShopifyController extends Controller
             event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
 
             return response()->json(['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'], 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::critical('Erro ao realizar integração com loja do shopify | ShopifyController@store');
             report($e);
 
@@ -151,7 +168,7 @@ class ShopifyController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function undoIntegration(Request $request)
     {
@@ -213,7 +230,7 @@ class ShopifyController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function reIntegration(Request $request)
     {
@@ -324,7 +341,7 @@ class ShopifyController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function synchronizeProducts(Request $request)
     {

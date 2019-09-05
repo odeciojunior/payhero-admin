@@ -2,6 +2,7 @@
 
 namespace Modules\Projects\Http\Controllers;
 
+use Throwable;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -9,13 +10,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
-use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Shipping;
-use Throwable;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;

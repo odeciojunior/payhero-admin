@@ -13,7 +13,7 @@ $(document).ready(function () {
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(response) {
-                if (response.message == 'Nenhum projeto encontrado') {
+                if (response.message === 'Nenhum projeto encontrado') {
                     var route = '/projects/create';
                     $('#modal-project').modal('show');
                     $('#modal-project-title').text("Oooppsssss!");
@@ -62,7 +62,13 @@ $(document).ready(function () {
                             cache: false,
                             data: form_data,
                             error: function error(response) {
-                                alertCustom('error', response.responseJSON.message);
+                                if (response.status === 422) {
+                                    for (error in response.errors) {
+                                        alertCustom('error', String(response.errors[error]));
+                                    }
+                                } else {
+                                    alertCustom('error', response.responseJSON.message);
+                                }
                             },
                             success: function success(response) {
                                 updateIntegrations();
@@ -154,15 +160,17 @@ $(document).ready(function () {
 
                                         return error;
                                     }(function (response) {
-                                        if (response.status == '422') {
+                                        if (response.status === 422) {
                                             for (error in response.responseJSON.errors) {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
+                                        } else {
+                                            alertCustom('error', String(response.responseJSON.errors[error]));
                                         }
                                     }),
                                     success: function success(response) {
                                         updateIntegrations();
-                                        alertCustom("success", response.message);
+                                        alertCustom("success", response.responseJSON.message);
                                     }
                                 });
                             });
@@ -192,10 +200,12 @@ $(document).ready(function () {
 
                             return error;
                         }(function (response) {
-                            if (response.status == '422') {
+                            if (response.status === 422) {
                                 for (error in response.responseJSON.errors) {
                                     alertCustom('error', String(response.responseJSON.errors[error]));
                                 }
+                            } else {
+                                alertCustom('error', String(response.responseJSON.errors[error]));
                             }
                         }),
                         success: function success(response) {
