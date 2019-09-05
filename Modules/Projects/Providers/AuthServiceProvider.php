@@ -2,7 +2,7 @@
 
 namespace Modules\Projects\Providers;
 
-use App\Entities\Project;
+use Modules\Core\Entities\Project;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Modules\Projects\Policies\ProjectPolicy;
 

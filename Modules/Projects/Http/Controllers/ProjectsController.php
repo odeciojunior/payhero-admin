@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Gate;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
-use Modules\Core\Services\ShopifyService;
-use Modules\Core\Services\SendgridService;
-use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
@@ -160,11 +157,15 @@ class ProjectsController extends Controller
                 } else {
                     return redirect()->route('projects.index');
                 }
+            } else {
+                return redirect()->route('projects.index');
             }
         } catch (Exception $e) {
-            dd($e);
+
             Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');
             report($e);
+
+            return redirect()->route('projects.index');
         }
     }
 
@@ -213,7 +214,7 @@ class ProjectsController extends Controller
     {
         try {
 
-            $requestValidated = $request->validated();
+            $requestValidated    = $request->validated();
             $projectModel        = new Project();
             $userProjectModel    = new UserProject();
             $digitalOceanService = app(DigitalOceanFileService::class);
@@ -230,7 +231,7 @@ class ProjectsController extends Controller
 
                     $requestValidated['cookie_duration'] = 60;
                     $requestValidated['status']          = 1;
-//                    $requestValidated['support_phone']   = preg_replace("/[^0-9]/", "", $requestValidated['support_phone']);
+                    //                    $requestValidated['support_phone']   = preg_replace("/[^0-9]/", "", $requestValidated['support_phone']);
 
                     $projectUpdate = $project->update($requestValidated);
                     if ($projectUpdate) {
