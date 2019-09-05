@@ -81,11 +81,11 @@ class DiscountCouponsController extends Controller
             $discountCouponsModel = new DiscountCoupon();
             $projectModel         = new Project();
 
-            $requestData            = $request->validated();
-            $requestData["project"] = current(Hashids::decode($requestData['project']));
-            $requestData['value']   = preg_replace("/[^0-9]/", "", $requestData['value']);
+            $requestData               = $request->validated();
+            $requestData["project_id"] = current(Hashids::decode($requestData['project_id']));
+            $requestData['value']      = preg_replace("/[^0-9]/", "", $requestData['value']);
 
-            $project = $projectModel->find($requestData["project"]);
+            $project = $projectModel->find($requestData["project_id"]);
 
             if (Gate::allows('edit', [$project])) {
                 $discountCouponSaved = $discountCouponsModel->create($requestData);
@@ -201,7 +201,7 @@ class DiscountCouponsController extends Controller
 
             if (Gate::allows('edit', [$project])) {
 
-                unset($requestValidated['project']);
+                unset($requestValidated['project_id']);
                 $requestValidated['value'] = preg_replace("/[^0-9]/", "", $requestValidated['value']);
 
                 $couponUpdated = $coupon->update($requestValidated);

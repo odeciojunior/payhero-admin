@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class CuponsDescontoResource extends Resource
+class DiscountCouponsResource extends Resource
 {
     public function toArray($request)
     {
@@ -18,7 +18,7 @@ class CuponsDescontoResource extends Resource
             'value'  => $this->type == 0 ? $this->value : number_format(intval($this->value) / 100, 2, ',', '.'), 
             'code'   => $this->code,
             'status' => $this->status,
-            'status_translated' => Lang::get('definitions.enum.discount_coupon.status.' . $this->getEnum('status', $this->status)),
+            'status_translated' => Lang::get('definitions.enum.discount_coupon.status.' . $this->present()->getStatus($this->status)),
         ];
     }
 }

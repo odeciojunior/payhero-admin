@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
-class DiscountCouponsResource extends Resource
+class CuponsDescontoResource extends Resource
 {
     public function toArray($request)
     {
