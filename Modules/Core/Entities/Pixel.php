@@ -2,13 +2,15 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
  * @property int $project_id
- * @property integer $campaign
+ * @property integer $campaign_id
  * @property string $name
  * @property string $code
  * @property string $platform
@@ -24,29 +26,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Pixel extends Model
 {
-
-    use SoftDeletes;
-
+    use SoftDeletes, FoxModelTrait;
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id', 
-        'campaign', 
-        'name', 
-        'code', 
-        'platform', 
-        'status', 
-        'checkout', 
-        'purchase_boleto', 
-        'purchase_card', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'project_id',
+        'campaign_id',
+        'name',
+        'code',
+        'platform',
+        'status',
+        'checkout',
+        'purchase_boleto',
+        'purchase_card',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function campaign()
     {
@@ -54,7 +54,7 @@ class Pixel extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {

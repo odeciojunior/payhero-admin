@@ -9,7 +9,7 @@
                     <label for="company">Selecione seu projeto</label>
                     <select class="select-pad" id="project_id" name="project_id" disabled>
                         @foreach($projects as $project)
-                            <option value="{!! $project['id'] !!}" {{ ($project->id == $integration->project_id) ? 'selected' : '' }}>{!! $project['name'] !!}</option>
+                            <option value="{{ $project->id_code }}" {{ ($project->id_code == Hashids::encode($integration->project_id)) ? 'selected' : '' }}>{{ $project->name}}</option>
                         @endforeach
                     </select>
                 </div>

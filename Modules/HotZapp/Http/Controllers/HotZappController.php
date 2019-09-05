@@ -2,15 +2,23 @@
 
 namespace Modules\HotZapp\Http\Controllers;
 
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\View\View;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\HotzappIntegration;
 
+/**
+ * Class HotZappController
+ * @package Modules\HotZapp\Http\Controllers
+ */
 class HotZappController extends Controller
 {
     /**
@@ -31,10 +39,12 @@ class HotZappController extends Controller
         try {
             $userProjectModel = new UserProject();
             $projects         = [];
-            $userProjects     = $userProjectModel->where('user', auth()->user()->id)->with('project')->get();
+            $userProjects     = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
             if ($userProjects->count() > 0) {
                 foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->project;
+                    if (!empty($userProject->project)) {
+                        $projects[] = $userProject->project;
+                    }
                 }
 
                 return view('hotzapp::create', ['projects' => $projects]);
@@ -47,107 +57,126 @@ class HotZappController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao tentar redirecionar para tela de adicionar integração (HotZappController - create)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 222);
         }
     }
 
     /**
-     * Store a newly created resource in storage.
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
         try {
             $data                    = $request->all();
             $hotzappIntegrationModel = new HotzappIntegration();
-            $integration             = $hotzappIntegrationModel->where('project_id', $data['project_id'])->first();
-            if ($integration) {
+
+            $projectId = current(Hashids::decode($data['project_id']));
+            if (!empty($projectId)) {
+                $integration = $hotzappIntegrationModel->where('project_id', $projectId)->first();
+                if ($integration) {
+                    return response()->json([
+                                                'message' => 'Projeto já integrado',
+                                            ], 400);
+                }
+                if (empty($data['boleto_generated'])) {
+                    $data['boleto_generated'] = 0;
+                }
+                if (empty($data['boleto_paid'])) {
+                    $data['boleto_paid'] = 0;
+                }
+                if (empty($data['credit_card_paid'])) {
+
+                    $data['credit_card_paid'] = 0;
+                }
+                if (empty($data['credit_card_refused'])) {
+
+                    $data['credit_card_refused'] = 0;
+                }
+
+                $integrationCreated = $hotzappIntegrationModel->create([
+                                                                           'link'                => $data['link'],
+                                                                           'boleto_generated'    => $data['boleto_generated'],
+                                                                           'boleto_paid'         => $data['boleto_paid'],
+                                                                           'credit_card_refused' => $data['credit_card_refused'],
+                                                                           'credit_card_paid'    => $data['credit_card_paid'],
+                                                                           'abandoned_cart'      => $data['abandoned_cart'],
+                                                                           'project_id'          => $projectId,
+                                                                           'user_id'             => auth()->user()->id,
+                                                                       ]);
+
+                if ($integrationCreated) {
+                    return response()->json([
+                                                'message' => 'Integração criada com sucesso!',
+                                            ], 200);
+                } else {
+
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro ao realizar a integração',
+                                            ], 400);
+                }
+            } else {
+
                 return response()->json([
-                                            'message' => 'Projeto já integrado',
+                                            'message' => 'Ocorreu um erro ao realizar a integração',
                                         ], 400);
             }
-            if (empty($data['boleto_generated'])) {
-                $data['boleto_generated'] = 0;
-            }
-            if (empty($data['boleto_paid'])) {
-                $data['boleto_paid'] = 0;
-            }
-            if (empty($data['credit_card_paid'])) {
-
-                $data['credit_card_paid'] = 0;
-            }
-            if (empty($data['credit_card_refused'])) {
-
-                $data['credit_card_refused'] = 0;
-            }
-
-            $integrationCreated = $hotzappIntegrationModel->create([
-                                                                       'link'                => $data['link'],
-                                                                       'boleto_generated'    => $data['boleto_generated'],
-                                                                       'boleto_paid'         => $data['boleto_paid'],
-                                                                       'credit_card_refused' => $data['credit_card_refused'],
-                                                                       'credit_card_paid'    => $data['credit_card_paid'],
-                                                                       'abandoned_cart'      => $data['abandoned_cart'],
-                                                                       'project_id'          => $data['project_id'],
-                                                                       'user_id'             => auth()->user()->id,
-                                                                   ]);
-            if ($integrationCreated) {
-                return response()->json([
-                                            'message' => 'Integração criada com sucesso!',
-                                        ], 200);
-            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao realizar integração  HotZappController - store');
+            report($e);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro ao realizar a integração',
                                     ], 400);
-        } catch
-        (Exception $e) {
-            Log::warning('Erro ao realizar integração  HotZappController - store');
-            report($e);
         }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Response
+     * @return Factory|View
      */
-    public function show($id)
+    public function show()
     {
         return view('hotzapp::show');
     }
 
     /**
-     * @param Request $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return Factory|JsonResponse|View
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         try {
-            if (isset($id)) {
+            if (!empty($id)) {
                 $hotzappIntegrationModel = new HotzappIntegration();
-                $userProjectModel        = new UserProject();
-                $projects                = [];
+                $projectModel            = new Project();
 
-                $projectId    = current(Hashids::decode($id));
-                $integration  = $hotzappIntegrationModel->where('project_id', $projectId)->first();
-                $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
-                foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->project;
-                }
+                $projectId   = current(Hashids::decode($id));
+                $integration = $hotzappIntegrationModel->where('project_id', $projectId)->first();
+                $projects    = $projectModel->present()->getProjects();
 
                 if ($integration) {
                     return view('hotzapp::edit', ['projects' => $projects, 'integration' => $integration]);
+                } else {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                            ], 400);
                 }
-            }
+            } else {
 
-            return response()->json([
-                                        'message' => 'Erro',
-                                    ], 400);
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                        ], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar Integração HotZapp (HotZappController - edit)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde!',
+                                    ], 400);
         }
     }
 
@@ -220,24 +249,25 @@ class HotZappController extends Controller
                                         'message' => 'Erro ao tentar remover Integração',
                                     ], 400);
         } catch (Exception $e) {
+            Log::warning('Erro ao tentar remover Integração HotZapp (HotZappController - destroy)');
+            report($e);
 
+            return response()->json([
+                                        'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
+                                    ], 400);
         }
     }
 
+    /**
+     * @return Factory|View
+     */
     public function getIntegrations()
     {
         $hotzappIntegrationModel = new HotzappIntegration();
         $projectModel            = new Project();
-        $userProjectModel        = new UserProject();
 
-        $projects            = [];
         $projectsIntegrated  = [];
-        $userProjects        = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
         $hotzappIntegrations = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
-
-        foreach ($userProjects as $userProject) {
-            $projects[] = $userProject->project;
-        }
 
         foreach ($hotzappIntegrations as $hotzappIntegration) {
             $project = $projectModel->find($hotzappIntegration->project_id);
@@ -246,6 +276,6 @@ class HotZappController extends Controller
             }
         }
 
-        return view('hotzapp::include', ['projects' => $projects, 'projectsIntegrated' => $projectsIntegrated]);
+        return view('hotzapp::include', ['projectsIntegrated' => $projectsIntegrated]);
     }
 }
