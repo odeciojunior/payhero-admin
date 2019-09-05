@@ -29,6 +29,7 @@ use Modules\Core\Presenters\PixelPresenter;
 class Pixel extends Model
 {
     use SoftDeletes, FoxModelTrait, PresentableTrait;
+    protected $presenter = PixelPresenter::class;
     /**
      * @var array
      */

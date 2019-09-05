@@ -18,8 +18,7 @@ class PlansResource extends Resource
             'price'             => 'R$ ' . number_format(intval(preg_replace("/[^0-9]/", "", $this->price)) / 100, 2, ',', '.'),
             'status'            => isset($this->projectId->domains[0]->name) ? 1 : 0,
             'status_code'       => $this->status,
-            'status_translated' => Lang::get('definitions.enum.plan.status.' . $this->present()
-                                                                                    ->getStatus($this->status)),
+            'status_translated' => !empty($this->projectId->domains[0]->name) ? 'ativo' : 'desativado',
         ];
     }
 }

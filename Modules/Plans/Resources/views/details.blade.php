@@ -21,7 +21,7 @@
             <tr>
                 <th style='width:40%;' class='text-center'>Status:</th>
                 <td class='text-left'>
-                    @if(!empty($plan->projectId->domains[0]->name))
+                    @if(!empty($plan->project->domains[0]->name))
                         <span class='badge badge-success text-left'>Ativo</span>
                     @else
                         <span class='badge badge-danger'>Desativado</span>

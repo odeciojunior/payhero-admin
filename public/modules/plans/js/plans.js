@@ -205,7 +205,7 @@ $(function () {
                         data += '<td id="link" class="display-sm-none display-m-none"   style="vertical-align: middle;">' + value.code + '</td>';
                         data += '<td id=""     class="display-lg-none display-xlg-none" style="vertical-align: middle;"><a class="material-icons pointer gradient" onclick="copyToClipboard(\'#link\')"> file_copy</a></td>';
                         data += '<td id=""     class=""                                 style="vertical-align: middle;">' + value.price + '</td>';
-                        data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status_code] + '">' + value.status_translated + '</span></td>';
+                        data += '<td id=""     class=""                                                                ><span class="badge badge-' + statusPlan[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td style='text-align:center' class='mg-responsive'>"
                         data += "<a class='mg-responsive pointer details-plan'    plan='" + value.id + "'  role='button'                                                 ><i class='material-icons gradient'>remove_red_eye</i></a>"
                         data += "<a class='mg-responsive pointer edit-plan'       plan='" + value.id + "'  role='button'data-toggle='modal' data-target='#modal-content' ><i class='material-icons gradient'>edit</i></a>"
