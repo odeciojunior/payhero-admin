@@ -12,22 +12,26 @@ class DomainPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'accepted';
-                case 2:
                     return 'pending';
+                case 2:
+                    return 'analyzing';
                 case 3:
-                    return 'expired';
+                    return 'approved';
+                case 4:
+                    return 'refused';
             }
 
             return '';
         } else {
             switch ($status) {
-                case 'accepted':
-                    return 1;
                 case 'pending':
+                    return 1;
+                case 'analyzing':
                     return 2;
-                case 'expired':
+                case 'approved':
                     return 3;
+                case 'refused':
+                    return 4;
             }
 
             return '';

@@ -12,22 +12,42 @@ class ShippingPresenter extends Presenter
         if (is_numeric($status)) {
             switch ($status) {
                 case 1:
-                    return 'accepted';
-                case 2:
-                    return 'pending';
-                case 3:
-                    return 'expired';
+                    return 'active';
+                case 0:
+                    return 'disabled';
             }
 
             return '';
         } else {
             switch ($status) {
-                case 'accepted':
+                case 'active':
                     return 1;
-                case 'pending':
-                    return 2;
-                case 'expired':
-                    return 3;
+                case 'disabled':
+                    return 0;
+            }
+
+            return '';
+        }
+    }
+
+    public function getPreSelectedStatus($status)
+    {
+
+        if (is_numeric($status)) {
+            switch ($status) {
+                case 1:
+                    return 'yes';
+                case 0:
+                    return 'no';
+            }
+
+            return '';
+        } else {
+            switch ($status) {
+                case 'yes':
+                    return 1;
+                case 'no':
+                    return 0;
             }
 
             return '';
