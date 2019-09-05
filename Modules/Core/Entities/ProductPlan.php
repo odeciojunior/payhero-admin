@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -18,37 +19,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ProductPlan extends Model
 {
-
     use SoftDeletes;
-
     /**
      * The table associated with the model.
-     * 
      * @var string
      */
     protected $table = 'products_plans';
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'product_id', 
-        'plan_id', 
-        'amount', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'product_id',
+        'plan_id',
+        'amount',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function plan()
     {
@@ -56,7 +51,7 @@ class ProductPlan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function product()
     {

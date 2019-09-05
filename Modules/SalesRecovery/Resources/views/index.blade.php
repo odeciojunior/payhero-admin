@@ -122,7 +122,7 @@
                                         <!-- CLIENTE -->
                                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                             <h4> Dados Pessoais </h4>
-                                            <span id='client-name' class="table-title gray"> </span>
+                                            <span id='client-name-details' class="table-title gray"> </span>
                                             <br>
                                             <span id='client-telephone' class='table-title gray'></span>
                                             <a id='client-whatsapp' target='_blank'>

@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -16,24 +17,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Category extends Model
 {
-
-    use SoftDeletes;
+    use FoxModelTrait, SoftDeletes;
 
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
+    /**
+     * @var array
+     */
+    protected $appends = ['id_code'];
     /**
      * @var array
      */
     protected $fillable = [
-        'name', 
-        'description', 
-        'created_at', 
-        'updated_at', 
+        'name',
+        'description',
+        'created_at',
+        'updated_at',
         'deleted_at'
     ];
 

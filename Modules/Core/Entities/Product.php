@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,39 +34,48 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Product extends Model
 {
-
-    use SoftDeletes;
-
+    use SoftDeletes, FoxModelTrait;
+    /**
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+    /**
+     * @var array
+     */
+    protected $appends = ['id_code'];
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'category_id', 
-        'user_id', 
-        'name', 
-        'description', 
-        'guarantee', 
-        'format', 
-        'cost', 
-        'photo', 
-        'height', 
-        'width', 
-        'weight', 
-        'shopify', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at', 
-        'digital_product_url', 
-        'price', 
-        'shopify_id', 
-        'shopify_variant_id'
+        'category_id',
+        'user_id',
+        'name',
+        'description',
+        'guarantee',
+        'format',
+        'cost',
+        'photo',
+        'height',
+        'width',
+        'weight',
+        'shopify',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'digital_product_url',
+        'price',
+        'shopify_id',
+        'shopify_variant_id',
+        'project_id',
     ];
 
     /**

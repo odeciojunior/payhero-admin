@@ -1,25 +1,3 @@
-var statusRecovery = {
-    'Recuperado': 'success',
-    'Não recuperado': 'danger',
-    'Recusado': 'danger',
-    'Expirado': 'danger',
-
-};
-
-function setSend(sendNumber) {
-    if (sendNumber == 1) {
-        return 'enviado';
-    } else if (sendNumber > 1) {
-        return 'enviados';
-    } else {
-        return '';
-    }
-}
-
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
-}
-
 $(document).ready(function () {
 
     getProjects();
@@ -72,7 +50,6 @@ $(document).ready(function () {
 
         loadOnTable('#table_data', '#carrinhoAbandonado');
 
-        /*$('#table_data').html("<tr class='text-center'><td colspan='11'> Carregando...</td></tr>");*/
         if (link == null) {
             link = 'api/recovery/getrecoverydata?project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val() + '&client_name=' + $("#client-name").val();
         } else {
@@ -138,12 +115,12 @@ $(document).ready(function () {
                 pagination(response, 'salesRecovery', atualizar);
 
                 $('.details-cart-recovery').unbind('click');
-
                 $('.details-cart-recovery').on('click', function () {
 
                     var sale = $(this).data('venda');
 
                     $('#modal-title').html('Detalhes Carrinho Abandonado' + '<br><hr>');
+                    clearFields();
 
                     $.ajax({
                         method: "POST",
@@ -165,7 +142,6 @@ $(document).ready(function () {
                             $("#table-product").html('');
 
                             if (!isEmpty(response.data)) {
-
                                 $("#date-as-hours").html(`${response.data.checkout.date} às ${response.data.checkout.hours}`);
                                 $("#status-checkout").addClass('badge-' + statusRecovery[response.data.status]).html(response.data.status);
 
@@ -201,18 +177,15 @@ $(document).ready(function () {
                                 /**
                                  * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
                                  */
-                                $("#client-name").html('Nome: ' + (response.data.client.name.length === 0 ? '' : response.data.client.name));
-                                $("#client-telephone").html('Nome: ' + (response.data.client.telephone === 0 ? '' : response.data.client.telephone));
+                                $("#client-name-details").html('Nome: ' + (response.data.client.name.length === 0 ? '' : response.data.client.name));
+                                $("#client-telephone").html('Telefone: ' + (response.data.client.telephone === 0 ? '' : response.data.client.telephone));
                                 $("#client-whatsapp").attr('href', (response.data.client.whatsapp_link === 0 ? '' : response.data.client.whatsapp_link));
                                 $("#client-email").html('E-mail: ' + (response.data.client.email === 0 ? '' : response.data.client.email));
                                 $("#client-document").html('CPF: ' + (response.data.client.document === 0 ? '' : response.data.client.document));
-                                if (response.data.method === 'boletoCartao') {
-                                    $("#client-street").html('Endereço: ' + response.data.delivery.street);
-                                    $("#client-zip-code").html('CEP: ' + response.data.delivery.zip_code);
-                                    $("#client-city-state").html('Cidade: ' + response.data.delivery.city + '/' + response.data.delivery.state);
-                                    $("#sale-motive").html('Motivo: ' + (response.data.client.error === 0 ? '' : response.data.client.error));
-
-                                }
+                                $("#client-street").html('Endereço: ' + response.data.delivery.street);
+                                $("#client-zip-code").html('CEP: ' + response.data.delivery.zip_code);
+                                $("#client-city-state").html('Cidade: ' + response.data.delivery.city + '/' + response.data.delivery.state);
+                                $("#sale-motive").html('Motivo: ' + (response.data.client.error === 0 ? '' : response.data.client.error));
 
                                 if (!isEmpty(response.data.link)) {
                                     $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + response.data.link + '"><i class="material-icons gradient" style="font-size:17px;">file_copy</i> </a> ');
@@ -262,6 +235,33 @@ $(document).ready(function () {
                     });
                 });
 
+                function clearFields() {
+                    $("#status-checkout").removeClass('badge-success badge-danger');
+                    $("#date-as-hours").html('');
+                    $("#table-product").html('');
+                    $("#total-value").html('');
+                    $("#client-name-details").html('');
+                    $("#client-telephone").html('');
+                    $("#client-whatsapp").attr('href', '');
+                    $("#client-email").html('');
+                    $("#client-document").html('');
+                    $("#client-street").html('');
+                    $("#client-zip-code").html('');
+                    $("#client-city-state").html('');
+                    $("#sale-motive").html('');
+                    $("#link-sale").html('');
+                    $("#checkout-ip").html('');
+                    $("#checkout-is-mobile").html('');
+                    $("#checkout-operational-system").html('');
+                    $("#checkout-browser").html('');
+                    $("#checkout-src").html('');
+                    $("#checkout-utm-source").html('');
+                    $("#checkout-utm-medium").html('');
+                    $("#checkout-utm-campaign").html('');
+                    $("#checkout-utm-term").html('');
+                    $("#checkout-utm-content").html('');
+                }
+
                 $('.estornar_venda').unbind('click');
 
                 $('.estornar_venda').on('click', function () {
@@ -273,5 +273,74 @@ $(document).ready(function () {
                 });
             }
         });
+
+    }
+
+    /**
+     * Helper Functions
+     */
+
+    /**
+     * Adiciona class ao badge da modal e da tabela
+     * @type {{Recuperado: string, Recusado: string, "Não recuperado": string, Expirado: string}}
+     */
+    var statusRecovery = {
+        "Recuperado": "success",
+        "Não recuperado": "danger",
+        "Recusado": "danger",
+        "Expirado": "danger",
+
+    };
+    /**
+     * @param sendNumber
+     * @returns {string}
+     */
+    function setSend(sendNumber) {
+        if (sendNumber === 1) {
+            return 'enviado';
+        } else if (sendNumber > 1) {
+            return 'enviados';
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Verifica se algum valor esta vazio
+     * @param obj
+     * @returns {boolean}
+     */
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    /**
+     * Limpa os campos da modal
+     */
+    function clearFields() {
+        $("#status-checkout").removeClass('badge-success badge-danger');
+        $("#date-as-hours").html('');
+        $("#table-product").html('');
+        $("#total-value").html('');
+        $("#client-name-details").html('');
+        $("#client-telephone").html('');
+        $("#client-whatsapp").attr('href', '');
+        $("#client-email").html('');
+        $("#client-document").html('');
+        $("#client-street").html('');
+        $("#client-zip-code").html('');
+        $("#client-city-state").html('');
+        $("#sale-motive").html('');
+        $("#link-sale").html('');
+        $("#checkout-ip").html('');
+        $("#checkout-is-mobile").html('');
+        $("#checkout-operational-system").html('');
+        $("#checkout-browser").html('');
+        $("#checkout-src").html('');
+        $("#checkout-utm-source").html('');
+        $("#checkout-utm-medium").html('');
+        $("#checkout-utm-campaign").html('');
+        $("#checkout-utm-term").html('');
+        $("#checkout-utm-content").html('');
     }
 });

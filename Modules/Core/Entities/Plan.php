@@ -3,6 +3,9 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\PlanPresenter;
@@ -57,7 +60,7 @@ class Plan extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
@@ -65,7 +68,7 @@ class Plan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function affiliateLinks()
     {
@@ -73,7 +76,7 @@ class Plan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function checkoutPlans()
     {
@@ -81,7 +84,7 @@ class Plan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function planGifts()
     {
@@ -89,7 +92,7 @@ class Plan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function plansSales()
     {
@@ -97,7 +100,7 @@ class Plan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function productsPlans()
     {
@@ -105,7 +108,7 @@ class Plan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function smsMessages()
     {
@@ -113,7 +116,7 @@ class Plan extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function zenviaSms()
     {
@@ -121,7 +124,7 @@ class Plan extends Model
     }
 
     /**
-     * @return BelongsToMany
+     * @return BelongsToMany|BelongsToMany
      */
     public function products()
     {

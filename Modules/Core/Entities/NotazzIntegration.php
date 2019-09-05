@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -19,7 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class NotazzIntegration extends Model
 {
-
     use SoftDeletes;
     /**
      * @var array
@@ -30,7 +30,6 @@ class NotazzIntegration extends Model
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
@@ -46,7 +45,7 @@ class NotazzIntegration extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
@@ -54,7 +53,7 @@ class NotazzIntegration extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {

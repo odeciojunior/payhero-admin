@@ -9,7 +9,6 @@ use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Domain;
 use Illuminate\Support\Facades\DB;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Services\FoxUtils;
 use Illuminate\Contracts\View\Factory;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\Log as CheckoutLog;
@@ -55,9 +54,10 @@ class SalesRecoveryService
     }
 
     /**
-     * @param $projectId
-     * @param $dateStart
-     * @param $dateEnd
+     * @param int|null $projectId
+     * @param string|null $dateStart
+     * @param string|null $dateEnd
+     * @param null $client
      * @return AnonymousResourceCollection
      * Carrinho abandonado
      */
@@ -65,36 +65,35 @@ class SalesRecoveryService
     {
         $checkoutModel     = new Checkout();
         $userProjectsModel = new UserProject();
-        $logModel          = new CheckoutLog();
 
-        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id','checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
+        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
                                         ->leftjoin('logs', function($join) {
                                             $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
                                         })
                                         ->whereIn('status', ['recovered', 'abandoned cart']);
 
         if (!empty($projectId)) {
-            $abandonedCarts->where('project_id', $projectId); 
+            $abandonedCarts->where('project_id', $projectId);
         } else {
             $userProjects = $userProjectsModel->where([
                                                           ['user_id', auth()->user()->id],
                                                           ['type', 'producer'],
                                                       ])->pluck('project_id')->toArray();
 
-            $abandonedCarts->whereIn('project_id', $userProjects)->with(['project']);
+            $abandonedCarts->whereIn('checkouts.project_id', $userProjects)->with(['project']);
         }
         if (!empty($client)) {
             $abandonedCarts->where('name', 'like', '%' . $client . '%');
         }
 
         if (!empty($dateStart) && !empty($dateEnd)) {
-            $abandonedCarts->whereBetween('created_at', [$dateStart, $dateEnd]);
+            $abandonedCarts->whereBetween('checkouts.created_at', [$dateStart, $dateEnd]);
         } else {
             if (!empty($dateStart)) {
-                $abandonedCarts->whereDate('created_at', '>=', $dateStart);
+                $abandonedCarts->whereDate('checkouts.created_at', '>=', $dateStart);
             }
             if (!empty($dateEnd)) {
-                $abandonedCarts->whereDate('created_at', '<', $dateEnd);
+                $abandonedCarts->whereDate('checkouts.created_at', '<', $dateEnd);
             }
         }
 
@@ -200,6 +199,19 @@ class SalesRecoveryService
         $checkout->utm_term     = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
         $checkout->utm_content  = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
 
+        if (empty($delivery['city'])) {
+            $delivery['city'] = '';
+        }
+        if (empty($delivery['street'])) {
+            $delivery['street'] = '';
+        }
+        if (empty($delivery['zip_code'])) {
+            $delivery['zip_code'] = '';
+        }
+        if (empty($delivery['state'])) {
+            $delivery['state'] = '';
+        }
+
         $status = '';
         if ($checkout->status == 'abandoned cart') {
             $status = 'Não recuperado';
@@ -227,6 +239,7 @@ class SalesRecoveryService
             'checkout' => $checkout,
             'client'   => $log,
             'products' => $products,
+            'delivery' => $delivery,
             'status'   => $status,
             'link'     => $link,
         ];
@@ -244,9 +257,9 @@ class SalesRecoveryService
         $logModel      = new CheckoutLog();
         $domainModel   = new Domain();
 
-        $checkout = $checkoutModel->find($sale->checkout);
+        $checkout = $checkoutModel->find($sale->checkout_id);
         $delivery = $sale->delivery()->first();
-        $client   = $sale->clientModel()->first();
+        $client   = $sale->client()->first();
 
         if (!empty($client->telephone)) {
             $client->telephone       = FoxUtils::getTelephone($client->telephone);
