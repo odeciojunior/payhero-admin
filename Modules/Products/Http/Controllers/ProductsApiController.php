@@ -2,29 +2,32 @@
 
 namespace Modules\Products\Http\Controllers;
 
-use Illuminate\Support\Facades\Gate;
-use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Category;
-use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Products\Http\Requests\UpdateProductRequest;
 use Modules\Products\Http\Requests\CreateProductRequest;
 use Modules\Products\Transformers\CreateProductResource;
 use Modules\Products\Transformers\EditProductResource;
 use Modules\Products\Transformers\GetTypeProductsResource;
 use Modules\Products\Transformers\ProductsResource;
 use Exception;
+use Intervention\Image\Facades\Image;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Products\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Gate;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class ProductsApiController
+ * @package Modules\Products\Http\Controllers
+ */
 class ProductsApiController extends Controller
 {
     /**
