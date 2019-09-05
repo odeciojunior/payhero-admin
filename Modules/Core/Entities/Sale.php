@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
@@ -52,53 +53,48 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Sale extends Model
 {
-
-    use SoftDeletes, PresentableTrait;
-
+    use FoxModelTrait, SoftDeletes, PresentableTrait;
     protected $presenter = SalePresenter::class;
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'owner_id', 
-        'affiliate_id', 
-        'client_id', 
-        'delivery_id', 
-        'shipping_id', 
-        'project_id', 
-        'checkout_id', 
-        'payment_form', 
-        'payment_method', 
-        'total_paid_value', 
-        'shipment_value', 
-        'start_date', 
-        'end_date', 
-        'gateway_id', 
-        'status', 
-        'gateway_status', 
-        'installments_amount', 
-        'installments_value', 
-        'flag', 
-        'boleto_link', 
-        'boleto_digitable_line', 
-        'boleto_due_date', 
-        'cupom_code', 
-        'shopify_order', 
-        'iof', 
-        'shopify_discount', 
-        'dolar_quotation', 
-        'first_confirmation', 
-        'created_at', 
-        'deleted_at', 
-        'updated_at'
+        'owner_id',
+        'affiliate_id',
+        'client_id',
+        'delivery_id',
+        'shipping_id',
+        'project_id',
+        'checkout_id',
+        'payment_form',
+        'payment_method',
+        'total_paid_value',
+        'shipment_value',
+        'start_date',
+        'end_date',
+        'gateway_id',
+        'status',
+        'gateway_status',
+        'installments_amount',
+        'installments_value',
+        'flag',
+        'boleto_link',
+        'boleto_digitable_line',
+        'boleto_due_date',
+        'cupom_code',
+        'shopify_order',
+        'iof',
+        'shopify_discount',
+        'dolar_quotation',
+        'first_confirmation',
+        'created_at',
+        'deleted_at',
+        'updated_at',
     ];
 
     /**

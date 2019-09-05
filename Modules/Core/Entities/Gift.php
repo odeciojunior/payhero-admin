@@ -2,12 +2,15 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $project
+ * @property int $project_id
  * @property string $description
  * @property string $title
  * @property string $photo
@@ -21,34 +24,40 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Gift extends Model
 {
-
-    use SoftDeletes;
-
+    use FoxModelTrait, SoftDeletes;
+    /**
+     * @var array
+     */
+    protected $appends = ['id_code'];
+    /**
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /**
      * @var array
      */
     protected $fillable = [
-        'project', 
-        'description', 
-        'title', 
-        'photo', 
-        'link', 
-        'type', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'project_id',
+        'description',
+        'title',
+        'photo',
+        'link',
+        'type',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project', 'project');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function planGifts()
     {

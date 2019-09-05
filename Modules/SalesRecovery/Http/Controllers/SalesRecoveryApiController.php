@@ -82,7 +82,12 @@ class SalesRecoveryApiController extends Controller
                     $endDate = date('Y-m-d', strtotime($request->input('end_date') . ' + 1 day'));
                 }
 
-                return $salesRecoveryService->verifyType($request->input('type'), $projectId, $request->input('start_date'), $endDate, $client);
+                $startDate = null;
+                if ($request->has('start_date') && !empty($request->input('start_date'))) {
+                    $startDate = date('Y-m-d', strtotime($request->input('start_date')));
+                }
+
+                return $salesRecoveryService->verifyType($request->input('type'), $projectId, $startDate, $endDate, $client);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao buscar dados de recuperação de vendas');

@@ -27,8 +27,7 @@ use Modules\Core\Presenters\ShippingPresenter;
  */
 class Shipping extends Model
 {
-    use SoftDeletes;
-    use PresentableTrait;
+    use SoftDeletes, PresentableTrait;
     protected $presenter = ShippingPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
@@ -57,7 +56,7 @@ class Shipping extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project', 'project_id');
+        return $this->belongsTo('Modules\Core\Entities\Project');
     }
 
     /**

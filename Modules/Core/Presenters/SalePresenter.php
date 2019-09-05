@@ -42,6 +42,7 @@ class SalePresenter extends Presenter
         foreach ($this->plansSales as $planSale) {
             $subTotal += preg_replace("/[^0-9]/", "", $planSale->plan()->first()->price) * $planSale->amount;
         }
+
         return $subTotal;
     }
 
@@ -50,15 +51,17 @@ class SalePresenter extends Presenter
         $productsSale = [];
         foreach ($this->plansSales as $planSale) {
             foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
-                $product = $productPlan->getProduct()->first()->toArray();
+                $product           = $productPlan->product()->first()->toArray();
                 $product['amount'] = $productPlan->amount * $planSale->amount;
                 $productsSale[]    = $product;
             }
         }
+
         return $productsSale;
     }
 
-    public function getHotzappPlansList(){
+    public function getHotzappPlansList()
+    {
 
         $plans = [];
 
@@ -69,12 +72,14 @@ class SalePresenter extends Presenter
                 "product_name" => $planSale->plan()->first()->name,
             ];
         }
+
         return $plans;
     }
 
-    public function getStatus($status){
+    public function getStatus($status)
+    {
 
-        if(is_numeric($status)){
+        if (is_numeric($status)) {
             switch ($status) {
                 case 1:
                     return 'approved';
@@ -91,9 +96,9 @@ class SalePresenter extends Presenter
                 case 10:
                     return 'system_error';
             }
+
             return '';
-        }
-        else{
+        } else {
             switch ($status) {
                 case 'approved':
                     return 1;
@@ -110,8 +115,8 @@ class SalePresenter extends Presenter
                 case 'system_error':
                     return 10;
             }
+
             return '';
         }
     }
-
 }
