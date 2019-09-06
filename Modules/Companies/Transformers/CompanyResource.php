@@ -2,6 +2,7 @@
 
 namespace Modules\Companies\Transformers;
 
+use Illuminate\Support\Facades\Lang;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -42,9 +43,9 @@ class CompanyResource extends Resource
             'bank_document_status'        => $this->bank_document_status,
             'address_document_status'     => $this->address_document_status,
             'contract_document_status'    => $this->contract_document_status,
-            'bank_document_translate'     => $this->present()->getBankDocumentStatus($this->bank_document_status),
-            'address_document_translate'  => $this->present()->getAddressDocumentStatus($this->address_document_status),
-            'contract_document_translate' => $this->present()->getContractDocumentStatus($this->contract_document_status),
+            'bank_document_translate'     => Lang::get('definitions.enum.status.' . $this->present()->getBankDocumentStatus($this->bank_document_status)),
+            'address_document_translate'  => Lang::get('definitions.enum.status.' . $this->present()->getAddressDocumentStatus($this->address_document_status)),
+            'contract_document_translate' => Lang::get('definitions.enum.status.' . $this->present()->getContractDocumentStatus($this->contract_document_status)),
         ];
     }
 }

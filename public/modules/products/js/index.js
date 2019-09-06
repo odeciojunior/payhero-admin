@@ -12,7 +12,7 @@ $(document).ready(function () {
     function getTypeProducts() {
         $.ajax({
             method: 'GET',
-            url: 'api/products',
+            url: '/api/products',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -95,9 +95,9 @@ $(document).ready(function () {
 
     function updateProducts(link = null) {
         if (link == null) {
-            link = 'api/products/getproducts?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
+            link = '/api/products/getproducts?shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
         } else {
-            link = 'api/products/getproducts' + link + '&shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
+            link = '/api/products/getproducts' + link + '&shopify=' + $("#type-products").val() + '&project=' + $('#select-projects').val();
         }
 
         $.ajax({

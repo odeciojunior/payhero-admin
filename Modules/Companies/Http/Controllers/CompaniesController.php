@@ -6,8 +6,10 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\CompanyDocument;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Services\BankService;
@@ -261,15 +263,15 @@ class CompaniesController extends Controller
                                             'data'    => [
                                                 'bank_document_translate'     => [
                                                     'status'  => $company->bank_document_status,
-                                                    'message' => $company->present()->getBankDocumentStatus($company->bank_document_status),
+                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()->getBankDocumentStatus($company->bank_document_status)),
                                                 ],
                                                 'address_document_translate'  => [
                                                     'status'  => $company->address_document_status,
-                                                    'message' => $company->present()->getAddressDocumentStatus($company->address_document_status),
+                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()->getAddressDocumentStatus($company->address_document_status)),
                                                 ],
                                                 'contract_document_translate' => [
                                                     'status'  => $company->contract_document_status,
-                                                    'message' => $company->present()->getContractDocumentStatus($company->contract_document_status),
+                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()->getContractDocumentStatus($company->contract_document_status)),
                                                 ],
                                             ],
                                         ], 200);
