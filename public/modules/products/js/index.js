@@ -29,20 +29,17 @@ $(document).ready(function () {
                 if (response.data.productOriginal === "0" && response.data.shopify === "0") {
                     $(".products-is-empty").show();
                 } else {
-                    if (response.data.productOriginal === "1") {
-                        $("#type-products").append($('<option>', {
-                            value: '0',
-                            text: 'Meus Produtos'
-                        }));
 
-                    }
-                    if (response.data.shopify === "1") {
-                        $("#type-products").append($('<option>', {
-                            value: '1',
-                            text: 'Produtos Shopify'
-                        }));
+                    $("#type-products").append($('<option>', {
+                        value: '0',
+                        text: 'Meus Produtos'
+                    }));
 
-                    }
+                    $("#type-products").append($('<option>', {
+                        value: '1',
+                        text: 'Produtos Shopify'
+                    }));
+
                     if ($("#type-products").val() === "1") {
                         $("#select-projects").html('');
 
@@ -80,6 +77,11 @@ $(document).ready(function () {
                     updateProducts();
 
                     $('#type-products').on('change', function () {
+                        if ($(this).val() == 1) {
+                            $("#div-create").hide();
+                        } else if ($(this).val() == 0) {
+                            $("#div-create").show();
+                        }
                         updateProducts();
                     });
 
@@ -157,6 +159,7 @@ $(document).ready(function () {
                     $("#pagination-products").html('');
 
                     $(".products-is-empty").show();
+                    $(".product-is-empty-cla").show();
 
                 }
 

@@ -2,8 +2,11 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\ShopifyIntegrationPresenter;
 
 /**
  * @property int $id
@@ -26,27 +29,29 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class ShopifyIntegration extends Model
 {
-
-    use SoftDeletes;
-
+    use SoftDeletes, FoxModelTrait, PresentableTrait;
+    /**
+     * @var string
+     */
+    protected $presenter = ShopifyIntegrationPresenter::class;
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id', 
-        'project_id', 
-        'token', 
-        'shared_secret', 
-        'url_store', 
-        'theme_type', 
-        'theme_name', 
-        'theme_file', 
-        'theme_html', 
-        'layout_theme_html', 
+        'user_id',
+        'project_id',
+        'token',
+        'shared_secret',
+        'url_store',
+        'theme_type',
+        'theme_name',
+        'theme_file',
+        'theme_html',
+        'layout_theme_html',
         'status',
-        'created_at', 
-        'updated_at', 
-        'deleted_at', 
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**

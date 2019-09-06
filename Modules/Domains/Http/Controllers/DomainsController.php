@@ -116,7 +116,8 @@ class DomainsController extends Controller
                                                                       'project_id' => $projectId,
                                                                       'name'       => $requestData['name'],
                                                                       'domain_ip'  => $domainIp,
-                                                                      'status'     => $domainModel->getEnum('status', 'pending'),
+                                                                      'status'     => $domainModel->present()
+                                                                                                  ->getStatus('pending'),
                                                                   ]);
 
                             if ($domainCreated) {

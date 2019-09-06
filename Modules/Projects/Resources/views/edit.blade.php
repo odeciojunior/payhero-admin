@@ -102,7 +102,7 @@
                     </div>
                     <div class="form-group col-12">
                         <label for="contact">Telefone para suporte</label>
-                        <input name="support_phone" value="{{$project->support_phone}}" type="text" class="input-pad" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000" >
+                        <input name="support_phone" value="{{$project->support_phone}}" type="text" class="input-pad" id="support_phone" placeholder="Telefone" data-mask="(00) 00000-0000">
                         <span id='contact-error' class='text-danger'></span>
                         <p class='info pt-5' style='font-size: 10px;'>
                             <i class='icon wb-info-circle' aria-hidden='true'></i> Telefone para suporte
@@ -223,18 +223,20 @@
                                 <span class="gray"> Integração com o shopify em andamento, aguarde. </span>
                             @endif
                         </div>
-                        <div class='col-md-4 mt-10'>
-                            <a id="bt-shopify-sincronization-product" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"> Sincronizar produtos com shopify </span>
-                            </a>
-                        </div>
-                        <div class='col-md-4 mt-10'>
-                            <a id="bt-shopify-sincronization-template" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
-                                <i class="material-icons gray"> sync </i>
-                                <span class="gray"> Sincronizar template com shopify </span>
-                            </a>
-                        </div>
+                        @if($project->shopifyIntegrations()->first()->status != 3)
+                            <div class='col-md-4 mt-10'>
+                                <a id="bt-shopify-sincronization-product" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                    <i class="material-icons gray"> sync </i>
+                                    <span class="gray"> Sincronizar produtos com shopify </span>
+                                </a>
+                            </div>
+                            <div class='col-md-4 mt-10'>
+                                <a id="bt-shopify-sincronization-template" role="button" integration-status="{{ $project->shopifyIntegrations()->first()->status }}" class="pointer align-items-center" data-toggle="modal" data-target="#modal-change-shopify-integration">
+                                    <i class="material-icons gray"> sync </i>
+                                    <span class="gray"> Sincronizar template com shopify </span>
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

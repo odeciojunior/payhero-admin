@@ -2,8 +2,8 @@
 
 namespace Modules\Notifications\Notifications;
 
-use App\Entities\Project;
-use App\Entities\User;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -15,7 +15,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class UserShopifyIntegrationStoreNotification extends Notification
 {
-
     /**
      * @var User
      */

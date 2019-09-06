@@ -26,33 +26,37 @@ class UserProject extends Model
 {
     /**
      * The table associated with the model.
-     * 
      * @var string
      */
     protected $table = 'users_projects';
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
+    /**
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
     /**
      * @var array
      */
     protected $fillable = [
-        'user_id', 
-        'project_id', 
-        'company_id', 
-        'type', 
-        'remuneration_value', 
-        'access_permission', 
-        'edit_permission', 
-        'status', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'user_id',
+        'project_id',
+        'company_id',
+        'type',
+        'remuneration_value',
+        'access_permission',
+        'edit_permission',
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**

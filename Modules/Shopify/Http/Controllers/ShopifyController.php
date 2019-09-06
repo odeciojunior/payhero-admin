@@ -2,19 +2,19 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
-use Auth;
 use Exception;
+use Modules\Core\Entities\Domain;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Project;
-use Modules\Core\Entities\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
@@ -125,37 +125,61 @@ class ShopifyController extends Controller
                                                      'installments_amount'        => '12',
                                                      'installments_interest_free' => '1',
                                                  ]);
-            $shippingModel->create([
-                                       'project_id'   => $project->id,
-                                       'name'         => 'Frete gratis',
-                                       'information'  => 'de 15 até 30 dias',
-                                       'value'        => '0,00',
-                                       'type'         => 'static',
-                                       'status'       => '1',
-                                       'pre_selected' => '1',
-                                   ]);
+            if (!empty($project)) {
+                $shippingModel->create([
+                                           'project_id'   => $project->id,
+                                           'name'         => 'Frete gratis',
+                                           'information'  => 'de 15 até 30 dias',
+                                           'value'        => '0,00',
+                                           'type'         => 'static',
+                                           'status'       => '1',
+                                           'pre_selected' => '1',
+                                       ]);
+                if (!empty($shippingModel)) {
+                    $shopifyIntegration = $shopifyIntegrationModel->create([
+                                                                               'token'         => $dados['token'],
+                                                                               'shared_secret' => '',
+                                                                               'url_store'     => $urlStore . '.myshopify.com',
+                                                                               'user_id'       => auth()->user()->id,
+                                                                               'project_id'    => $project->id,
+                                                                               'status'        => 1,
+                                                                           ]);
+                    if (!empty($shopifyIntegration)) {
+                        $companyId = current(Hashids::decode($dados['company']));
 
-            $shopifyIntegration = $shopifyIntegrationModel->create([
-                                                                       'token'         => $dados['token'],
-                                                                       'shared_secret' => '',
-                                                                       'url_store'     => $urlStore . '.myshopify.com',
-                                                                       'user'          => auth()->user()->id,
-                                                                       'project_id'    => $project->id,
-                                                                       'status'        => 1,
-                                                                   ]);
+                        $userProjectModel->create([
+                                                      'user_id'              => auth()->user()->id,
+                                                      'project_id'           => $project->id,
+                                                      'company_id'           => $companyId,
+                                                      'type'                 => 'producer',
+                                                      'shipment_responsible' => true,
+                                                      'permissao_acesso'     => true,
+                                                      'permissao_editar'     => true,
+                                                      'status'               => 'active',
+                                                  ]);
+                        if (!empty($userProjectModel)) {
+                            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
+                        } else {
+                            $shippingModel->delete();
+                            $shopifyIntegration->delete();
+                            $project->delete();
 
-            $userProjectModel->create([
-                                          'user_id'              => auth()->user()->id,
-                                          'project_id'           => $project->id,
-                                          'company_id'           => $dados['company'],
-                                          'type'                 => 'producer',
-                                          'shipment_responsible' => true,
-                                          'permissao_acesso'     => true,
-                                          'permissao_editar'     => true,
-                                          'status'               => 'active',
-                                      ]);
+                            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                        }
+                    } else {
+                        $shippingModel->delete();
+                        $project->delete();
 
-            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
+                        return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                    }
+                } else {
+                    $project->delete();
+
+                    return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+            }
 
             return response()->json(['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'], 200);
         } catch (Exception $e) {
@@ -182,7 +206,7 @@ class ShopifyController extends Controller
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
-                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.product', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.product', 'pixels', 'discountCoupons', 'shippings'])
                     ->find($projectId);
 
                 if (!empty($project->shopify_id)) {
@@ -204,7 +228,8 @@ class ShopifyController extends Controller
                             $shopify->deleteShopWebhook();
 
                             $shopifyIntegration->update([
-                                                            'status' => $shopifyIntegration->getEnum('status', 'disabled'),
+                                                            'status' => $shopifyIntegration->present()
+                                                                                           ->getStatus('disabled'),
                                                         ]);
                         }
 
@@ -240,6 +265,7 @@ class ShopifyController extends Controller
             $projectId               = current(Hashids::decode($requestData['project_id']));
             $projectModel            = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
+            $domainModel             = new Domain();
 
             if ($projectId) {
                 //id decriptado
@@ -251,7 +277,6 @@ class ShopifyController extends Controller
                                'plans.productsPlans',
                                'plans.productsPlans.product',
                                'pixels', 'discountCoupons',
-                               'zenviaSms',
                                'shippings',
                            ])
                     ->find($projectId);
@@ -263,7 +288,7 @@ class ShopifyController extends Controller
                 }
 
                 //procura por um dominio aprovado
-                $domain = $project->domains->where('status', 3)->first();
+                $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
 
                 if (!empty($domain)) {
                     //primeiro dominio valido
@@ -352,10 +377,13 @@ class ShopifyController extends Controller
             $shopifyModel = new ShopifyIntegration();
             if (!empty($projectId)) {
                 $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
+                if (!empty($shopifyIntegration)) {
+                    event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
 
-                event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
-
-                return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], 200);
+                    return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], 200);
+                } else {
+                    return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], 400);
+                }
             } else {
                 return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], 400);
             }
@@ -367,6 +395,10 @@ class ShopifyController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function synchronizeTemplates(Request $request)
     {
         try {
@@ -374,6 +406,7 @@ class ShopifyController extends Controller
 
             $projectModel            = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
+            $domainModel             = new Domain();
 
             $projectId = current(Hashids::decode($requestData['project_id']));
 
@@ -385,13 +418,12 @@ class ShopifyController extends Controller
                                                    'plans.productsPlans',
                                                    'plans.productsPlans.product',
                                                    'pixels', 'discountCoupons',
-                                                   'zenviaSms',
                                                    'shippings',
                                                ])
                                         ->find($projectId);
 
                 // procura dominio aprovado
-                $domain = $project->domains->where('status', 3)->first();
+                $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
 
                 if (!empty($domain)) {
                     if (!empty($project->shopify_id)) {

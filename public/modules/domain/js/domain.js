@@ -91,12 +91,13 @@ $(document).ready(function () {
 
                             return error;
                         }(function (response) {
+                            console.log(response);
                             if (response.status === 422) {
                                 for (error in response.responseJSON.errors) {
-                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                                    alertCustom('error', response.responseJSON.errors[error]);
                                 }
                             } else {
-                                alertCustom('error', String(response.responseJSON.message));
+                                alertCustom('error', response.responseJSON.message);
                             }
                             $('#modal-content').modal('hide');
                         }),
@@ -104,8 +105,8 @@ $(document).ready(function () {
                             globalDomain = response.data['id_code'];
                             fromNew = 'true';
                             // modalDomainEdit esta em função do globalDomain
-                            var responseDomains = response;
-                            modalDomainEdit(responseDomains, true);
+                            // let responseDomains = response;
+                            modalDomainEdit(response, true);
                             updateDomains();
                         }
                     });
@@ -569,7 +570,7 @@ $(document).ready(function () {
             '<h3 align="center"><strong>Domínio verificado</strong></h3>' +
             '<h4 align="center">Tudo pronto</h4>' +
             '<h4 align="center">O checkout transparente e o servidor de email já estão configurados apenas aguardando suas vendas.</h4>' +
-            '<h6 align="center">Caso tenha problemas ou modifique algo no domínio, ultilize o botão abaixo para verificar se está tudo certo</h6>'+
+            '<h6 align="center">Caso tenha problemas ou modifique algo no domínio, ultilize o botão abaixo para verificar se está tudo certo</h6>' +
             '<div style="width:100%;text-align:center;padding-top:3%">' +
             '<button class="btn btn-success btn-verifyDomain" domain="' + responseDomain.data['id_code'] + '" style="font-size: 25px">Verificar</button>' +
             '</div>').show('slow');

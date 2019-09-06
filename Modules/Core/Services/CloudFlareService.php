@@ -2,8 +2,12 @@
 
 namespace Modules\Core\Services;
 
+use Cloudflare\API\Endpoints\EndpointException;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Contracts\Foundation\Application;
+use Modules\Core\Entities\Domain;
 use PHPHtmlParser\Dom;
 use Illuminate\Http\Response;
 use Cloudflare\API\Auth\APIKey;
@@ -16,6 +20,7 @@ use Cloudflare\API\Endpoints\Zones;
 use Illuminate\Support\Facades\Log;
 use Cloudflare\API\Endpoints\Crypto;
 use Modules\Core\Entities\DomainRecord;
+use stdClass;
 
 /**
  * Class CloudFlareService
@@ -27,7 +32,6 @@ class CloudFlareService
     const checkoutIp  = '104.248.122.89';
     const sacIp       = '104.248.122.89';
     const affiliateIp = '104.248.122.89';
-
     /**
      * @var APIKey
      */
@@ -74,7 +78,7 @@ class CloudFlareService
     private $domainRecordModel;
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     * @return Application|mixed|SendgridService
      */
     private function getSendgridService()
     {
@@ -86,7 +90,7 @@ class CloudFlareService
     }
 
     /**
-     * @return DomainRecord|\Illuminate\Contracts\Foundation\Application|mixed
+     * @return DomainRecord|Application|mixed
      */
     private function getDomainRecordModel()
     {
@@ -120,7 +124,7 @@ class CloudFlareService
     /**
      * @param string $domain
      * @return $this
-     * @throws \Cloudflare\API\Endpoints\EndpointException
+     * @throws EndpointException
      */
     public function zone(string $domain)
     {
@@ -132,7 +136,7 @@ class CloudFlareService
     /**
      * @param string $domain
      * @return string
-     * @throws \Cloudflare\API\Endpoints\EndpointException
+     * @throws EndpointException
      */
     public function setZone(string $domain)
     {
@@ -147,13 +151,14 @@ class CloudFlareService
      */
     public function getZones(string $name = '')
     {
-        $zones = $this->zones->listZones($name,'',1,1000);
+        $zones = $this->zones->listZones($name, '', 1, 1000);
+
         return $zones->result;
     }
 
     /**
      * @param string $zone
-     * @return \stdClass
+     * @return stdClass
      */
     public function addZone(string $zone)
     {
@@ -272,7 +277,7 @@ class CloudFlareService
     /**
      * @param string $domain
      * @return bool
-     * @throws \Cloudflare\API\Endpoints\EndpointException
+     * @throws EndpointException
      */
     public function activationCheck(string $domain)
     {
@@ -292,7 +297,7 @@ class CloudFlareService
      * @param string $domain
      * @param string|null $ipAddress
      * @return bool
-     * @throws \Cloudflare\API\Endpoints\EndpointException
+     * @throws EndpointException
      */
     public function integrationWebsite(int $domainModelId, string $domain, $ipAddress)
     {
@@ -408,9 +413,10 @@ class CloudFlareService
     }
 
     /**
-     * @param $domain
+     * @param int $domainModelId
+     * @param string $domain
      * @return bool
-     * @throws \Cloudflare\API\Endpoints\EndpointException
+     * @throws EndpointException
      */
     public function integrationShopify(int $domainModelId, string $domain)
     {
@@ -538,7 +544,7 @@ class CloudFlareService
      * @param $url
      * @param $meta
      * @return bool
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function checkHtmlMetadata($url, $metaName, $metaContent)
     {

@@ -226,12 +226,13 @@ $(document).ready(function () {
 
     $(".delete-product").on('click', function (event) {
         event.preventDefault();
-        loadingOnScreen();
 
         var product = $('.delete-product').attr('product');
         $("#bt_excluir").unbind('click');
         $("#bt_excluir").on('click', function () {
             $("#close-modal-delete").click();
+            loadingOnScreen();
+
             $.ajax({
                 method: 'DELETE',
                 url: '/api/products/' + product,

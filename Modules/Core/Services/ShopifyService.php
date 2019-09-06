@@ -3,18 +3,31 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Laracasts\Presenter\Exceptions\PresenterException;
 use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\Product;
-use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\ShopifyIntegration;
 use PHPHtmlParser\Dom;
+use Modules\Core\Entities\Product;
+use PHPHtmlParser\Exceptions\ChildNotFoundException;
+use PHPHtmlParser\Exceptions\CircularException;
+use PHPHtmlParser\Exceptions\CurlException;
+use PHPHtmlParser\Exceptions\NotLoadedException;
+use PHPHtmlParser\Exceptions\StrictException;
+use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 use Slince\Shopify\Client;
+use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\User;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
+use Slince\Shopify\Manager\Asset\Asset;
+use Slince\Shopify\Manager\InventoryItem\InventoryItem;
+use Slince\Shopify\Manager\ProductImage\Image;
+use Slince\Shopify\Manager\ProductVariant\Variant;
+use Slince\Shopify\Manager\Webhook\Webhook;
+use Slince\Shopify\Theme\Theme;
 use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\PublicAppCredential;
@@ -43,8 +56,8 @@ class ShopifyService
 
     /**
      * ShopifyService constructor.
-     * @param $urlStore
-     * @param $token
+     * @param string $urlStore
+     * @param string $token
      */
     public function __construct(string $urlStore, string $token)
     {
@@ -66,7 +79,7 @@ class ShopifyService
     }
 
     /**
-     * @param $cacheDir
+     * @param string $cacheDir
      * @return $this
      */
     public function cacheDir(string $cacheDir)
@@ -77,8 +90,7 @@ class ShopifyService
     }
 
     /**
-     * @param $cacheDir
-     * @return $this
+     * @return Client
      */
     public function getClient()
     {
@@ -134,7 +146,7 @@ class ShopifyService
     }
 
     /**
-     * @return \Slince\Shopify\Theme\Theme[]
+     * @return Theme[]
      */
     public function getAllThemes()
     {
@@ -166,7 +178,7 @@ class ShopifyService
 
     /**
      * @param string $role
-     * @return \Slince\Shopify\Theme\Theme|null
+     * @return Theme|null
      */
     public function getThemeByRole(string $role)
     {
@@ -182,7 +194,7 @@ class ShopifyService
 
     /**
      * @param string $themeId
-     * @return \Slince\Shopify\Theme\Theme|null
+     * @return Theme|null
      */
     public function getThemeById(string $themeId)
     {
@@ -197,7 +209,7 @@ class ShopifyService
     }
 
     /**
-     * @return \Slince\Shopify\Manager\Asset\Asset[]|null
+     * @return Asset[]|null
      */
     public function getAllTemplates()
     {
@@ -290,7 +302,7 @@ class ShopifyService
      * @param string $value
      * @param bool $ajax
      * @return bool
-     * @throws \PHPHtmlParser\Exceptions\CircularException
+     * @throws CircularException
      */
     public function insertUtmTracking(string $templateKeyName, string $value)
     {
@@ -314,7 +326,7 @@ class ShopifyService
     /**
      * @param $html
      * @return string
-     * @throws \PHPHtmlParser\Exceptions\CircularException
+     * @throws CircularException
      */
     public function updateThemeTemplate($html)
     {
@@ -400,7 +412,7 @@ class ShopifyService
     /**
      * @param $htmlCart
      * @return mixed|string
-     * @throws \PHPHtmlParser\Exceptions\CircularException
+     * @throws CircularException
      */
     public function updateCartTemplateAjax($htmlCart, $domain)
     {
@@ -578,8 +590,12 @@ class ShopifyService
 
     /**
      * @param $htmlCart
-     * @param null $domain
      * @return bool
+     * @throws CircularException
+     * @throws ChildNotFoundException
+     * @throws CurlException
+     * @throws NotLoadedException
+     * @throws StrictException
      */
     public function checkCartTemplate($htmlCart)
     {
@@ -608,8 +624,14 @@ class ShopifyService
 
     /**
      * @param $htmlCart
-     * @return mixed|string
-     * @throws \PHPHtmlParser\Exceptions\CircularException
+     * @param null $domain
+     * @return mixed|string|string[]|null
+     * @throws ChildNotFoundException
+     * @throws CircularException
+     * @throws CurlException
+     * @throws NotLoadedException
+     * @throws StrictException
+     * @throws UnknownChildTypeException
      */
     public function updateCartTemplate($htmlCart, $domain = null)
     {
@@ -818,7 +840,7 @@ class ShopifyService
                 if ($variant->getOption3() != '') {
                     $description .= ' - ' . $variant->getOption3();
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 //
             }
 
@@ -839,6 +861,7 @@ class ShopifyService
                                                                   ->getCost(),
                                      'shopify_id'         => $storeProduct->getId(),
                                      'shopify_variant_id' => $variant->getId(),
+                                     'project_id'         => $projectId,
                                  ]);
 
                 $productPlan = $productPlanModel->where('product_id', $product->id)
@@ -888,7 +911,7 @@ class ShopifyService
                     $plan = $planModel->create([
                                                    'shopify_id'         => $storeProduct->getId(),
                                                    'shopify_variant_id' => $variant->getId(),
-                                                   'project'            => $projectId,
+                                                   'project_id'         => $projectId,
                                                    'name'               => substr($storeProduct->getTitle(), 0, 100),
                                                    'description'        => $description,
                                                    'code'               => '',
@@ -896,11 +919,11 @@ class ShopifyService
                                                    'status'             => '1',
                                                ]);
 
-                    $productPlan = $productPlanModel->create([
-                                                                 'product_id' => $product->id,
-                                                                 'plan_id'    => $plan->id,
-                                                                 'amount'     => 1,
-                                                             ]);
+                    $productPlanModel->create([
+                                                  'product_id' => $product->id,
+                                                  'plan_id'    => $plan->id,
+                                                  'amount'     => 1,
+                                              ]);
                     $plan->update([
                                       'code' => Hashids::encode($plan->id),
                                   ]);
@@ -920,6 +943,7 @@ class ShopifyService
                                                      'price'              => '',
                                                      'shopify_id'         => $storeProduct->getId(),
                                                      'shopify_variant_id' => $variant->getId(),
+                                                     'project_id'         => $projectId,
                                                  ]);
 
                 $plan = $planModel->create([
@@ -977,6 +1001,7 @@ class ShopifyService
     /**
      * @param $projectId
      * @param $userId
+     * @throws PresenterException
      */
     public function importShopifyStore($projectId, $userId)
     {
@@ -985,8 +1010,9 @@ class ShopifyService
         $shopifyIntegrationModel = new ShopifyIntegration();
 
         $shopifyIntegrationModel->where('project_id', $projectId)->update([
-                                                                           'status' => $shopifyIntegrationModel->getEnum('status', 'pending'),
-                                                                       ]);
+                                                                              'status' => $shopifyIntegrationModel->present()
+                                                                                                                  ->getStatus('pending'),
+                                                                          ]);
 
         $storeProducts = $this->getShopProducts();
 
@@ -1001,8 +1027,9 @@ class ShopifyService
         if (!empty($project) && !empty($user)) {
             event(new ShopifyIntegrationReadyEvent($user, $project));
             $shopifyIntegrationModel->where('project_id', $projectId)->update([
-                                                                               'status' => $shopifyIntegrationModel->getEnum('status', 'approved'),
-                                                                           ]);
+                                                                                  'status' => $shopifyIntegrationModel->present()
+                                                                                                                      ->getStatus('approved'),
+                                                                              ]);
         }
     }
 
@@ -1123,7 +1150,7 @@ class ShopifyService
 
     /**
      * @param $shopifyItemId
-     * @return array|\Slince\Shopify\Manager\InventoryItem\InventoryItem
+     * @return array|InventoryItem
      */
     public function getShopInventoryItem($shopifyItemId)
     {
@@ -1137,7 +1164,7 @@ class ShopifyService
 
     /**
      * @param array $data
-     * @return \Slince\Shopify\Manager\Webhook\Webhook|null
+     * @return Webhook|null
      */
     public function createShopWebhook($data = [])
     {
@@ -1150,7 +1177,7 @@ class ShopifyService
 
     /**
      * @param null $webhookId
-     * @return array|\Slince\Shopify\Manager\Webhook\Webhook|\Slince\Shopify\Manager\Webhook\Webhook[]
+     * @return array|Webhook|Webhook[]
      */
     public function getShopWebhook($webhookId = null)
     {
@@ -1167,7 +1194,7 @@ class ShopifyService
 
     /**
      * @param null $webhookId
-     * @return array|bool|\Slince\Shopify\Manager\Webhook\Webhook[]
+     * @return array|bool|Webhook[]
      */
     public function deleteShopWebhook($webhookId = null)
     {
@@ -1189,7 +1216,7 @@ class ShopifyService
 
     /**
      * @param null $variantId
-     * @return Slince\Shopify\Manager\ProductVariant\Variant|null
+     * @return Variant|null
      */
     public function getProductVariant($variantId = null)
     {
@@ -1204,7 +1231,7 @@ class ShopifyService
 
     /**
      * @param null $productId
-     * @return Slince\Shopify\Manager\Product\Product|null
+     * @return \Slince\Shopify\Manager\Product\Product|null
      */
     public function getProduct($productId = null)
     {
@@ -1218,8 +1245,9 @@ class ShopifyService
     }
 
     /**
+     * @param null $productId
      * @param null $imageId
-     * @return Slince\Shopify\Manager\ProductImage\Image|null
+     * @return Image|null
      */
     public function getImage($productId = null, $imageId = null)
     {
