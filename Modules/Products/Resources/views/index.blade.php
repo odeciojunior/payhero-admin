@@ -30,8 +30,8 @@
                 <div class="content-error text-center">
                     <img src="{!! asset('modules/global/img/emptyprodutos.svg') !!}" width="250px">
                     <h1 class="big gray">Zero produtos por aqui!</h1>
-                    <p class="desc gray"> Vamos adicionar seu primeiro produto? </p>
-                    <a href="/products/create" class="btn btn-primary gradient">Novo Produto</a>
+                    {{--<p class="desc gray"> Vamos adicionar seu primeiro produto? </p>
+                    <a href="/products/create" class="btn btn-primary gradient">Novo Produto</a>--}}
                 </div>
             </div>
         </div>

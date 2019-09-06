@@ -8,13 +8,17 @@ $(document).ready(function () {
 
     function verify() {
         let ver = true;
-        if ($('#name').val() == '') {
+        if ($('#name').val().length === 0) {
             alertCustom("error", "O campo Nome é obrigatório");
             ver = false;
+            $("#nav-basic-tab").click();
+            $('#name').focus();
         }
-        if ($("#description") == '') {
+        if ($("#description").val().length === 0) {
             alertCustom("error", "O campo Descrição é obrigatório");
             ver = false;
+            $("#nav-basic-tab").click();
+            $("#description").focus();
         }
         return ver;
     }
@@ -60,9 +64,9 @@ $(document).ready(function () {
 
     $("#my-form-add-product").submit(function (event) {
         event.preventDefault();
-        loadingOnScreen();
 
-        if (verify) {
+        if (verify()) {
+            loadingOnScreen();
             let myForm = document.getElementById('my-form-add-product');
             let formData = new FormData(myForm);
             $.ajax({

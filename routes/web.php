@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +69,4 @@ Route::group(
         Route::get('/joao', 'TesteController@joaoLucasFunction');
     }
 );
-
-
-//Auth::routes();
 

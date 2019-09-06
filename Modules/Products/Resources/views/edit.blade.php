@@ -45,7 +45,7 @@
                                             <input type="hidden" name="photo_w" value=''>
                                             <input type="hidden" name="photo_h" value=''>
                                             <p class="info mt-5" style="font-size:10px;">
-                                                <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato EditProductResourceJPG, JPEG, ou PNG.
+                                                <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato (JPG, JPEG, ou PNG).
                                                 <br> Dimensões ideais: 300 x 300 pixels.
                                             </p>
                                         </div>

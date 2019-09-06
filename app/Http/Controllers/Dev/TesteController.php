@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers\Dev;
 
-use App\Entities\Company;
-use App\Entities\Domain;
-use App\Entities\DomainRecord;
-use App\Entities\HotZappIntegration;
-use App\Entities\PlanSale;
-use App\Entities\PostbackLog;
-use App\Entities\Product;
-use App\Entities\ProductPlan;
-use App\Entities\Sale;
-use App\Entities\ShopifyIntegration;
-use App\Entities\Transaction;
-use App\Entities\Transfer;
-use Carbon\Carbon;
-use DOMDocument;
-use DOMXPath;
-use Exception;
-use Illuminate\Support\Facades\Log;
-use Modules\Checkout\Classes\MP;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Entities\HotZappIntegration;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\CloudFlareService;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\NotazzService;
 use Modules\Core\Services\ShopifyService;
+use Modules\Checkout\Classes\MP;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
-use App\Entities\Plan;
-use App\Entities\User;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Exception;
+use Carbon\Carbon;
+use DOMDocument;
+use DOMXPath;
 
 class TesteController extends Controller
 {
@@ -244,7 +244,6 @@ class TesteController extends Controller
     public function indexx()
     {
         $this->tgFunction();
-
         /*$dataValue = [
             'type' => 'payment',
 
@@ -278,7 +277,7 @@ class TesteController extends Controller
 
     public function parseToArray($xpath, $class)
     {
-//        $xpathquery = "//a[@class='" . $class . "']";
+        //        $xpathquery = "//a[@class='" . $class . "']";
         $xpathquery = "//a";
         $elements   = $xpath->query($xpathquery);
 
@@ -349,14 +348,14 @@ class TesteController extends Controller
 
         $products = $productsModel->WhereNotNull('shopify_id')->whereNull('project_id')->get();
         foreach ($products as $product) {
-            $productPlan = $productPlanModel->where('product', $product->id)->first();
+            $productPlan = $productPlanModel->where('product_id', $product->id)->first();
             if (!empty($productPlan)) {
 
-                $plan = $planModel->find($productPlan->plan);
+                $plan = $planModel->find($productPlan->plan_id);
 
                 $product->update(
                     [
-                        'project_id' => $plan->project,
+                        'project_id' => $plan->project_id,
                     ]
                 );
             }
