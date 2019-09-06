@@ -106,18 +106,24 @@ class PlansController extends Controller
                     $requestData['price'] = $this->getValue($requestData['price']);
                     if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
                         $plan = $planModel->create($requestData);
-                        $plan->update(['code' => $plan->id_code]);
-                        foreach ($requestData['products'] as $keyProduct => $product) {
-                            foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
-                                if ($keyProduct == $keyAmount) {
-                                    $dataProductPlan = [
-                                        'product_id' => $product,
-                                        'plan_id'    => $plan->id,
-                                        'amount'     => $productAmount,
-                                    ];
-                                    $productPlan->create($dataProductPlan);
+                        if (!empty($plan)) {
+                            $plan->update(['code' => $plan->id_code]);
+                            foreach ($requestData['products'] as $keyProduct => $product) {
+                                foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
+                                    if ($keyProduct == $keyAmount) {
+                                        $dataProductPlan = [
+                                            'product_id' => $product,
+                                            'plan_id'    => $plan->id,
+                                            'amount'     => $productAmount,
+                                        ];
+                                        $productPlan->create($dataProductPlan);
+                                    }
                                 }
                             }
+                        } else {
+                            return response()->json([
+                                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                                    ], 400);
                         }
                     }
 

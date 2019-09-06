@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -34,8 +35,14 @@ use Modules\Core\Presenters\PlanPresenter;
  */
 class Plan extends Model
 {
-    use SoftDeletes;
-    use PresentableTrait;
+    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    /**
+     * @var array
+     */
+    protected $appends = ['id_code'];
+    /**
+     * @var string
+     */
     protected $presenter = PlanPresenter::class;
     /**
      * The "type" of the auto-incrementing ID.
