@@ -13,7 +13,7 @@ $(document).ready(function () {
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(response) {
-                if (response.message == 'Nenhum projeto encontrado') {
+                if (response.message === 'Nenhum projeto encontrado') {
                     var route = '/projects/create';
                     $('#modal-project').modal('show');
                     $('#modal-project-title').text("Oooppsssss!");
@@ -98,7 +98,6 @@ $(document).ready(function () {
                     $.ajax({
                         method: "GET",
                         url: "/apps/hotzapp/" + project + "/edit",
-                        data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -164,6 +163,7 @@ $(document).ready(function () {
                         }
                     });
                 });
+
                 $(".delete-integration").unbind('click');
                 $('.delete-integration').on('click', function (e) {
                     e.preventDefault();

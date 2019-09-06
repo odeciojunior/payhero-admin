@@ -4,6 +4,7 @@ namespace Modules\Profile\Http\Controllers;
 
 use Exception;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
@@ -188,8 +189,8 @@ class ProfileController extends Controller
 
                 return response()->json([
                                             'message'                     => 'Arquivo enviado com sucesso.',
-                                            'personal_document_translate' => $user->present()->getPersonalDocumentStatus($user->personal_document_status),
-                                            'address_document_translate'  => $user->present()->getAddressDocumentStatus($user->address_document_status),
+                                            'personal_document_translate' => Lang::get('definitions.enum.personal_document_status.' .$user->present()->getPersonalDocumentStatus($user->personal_document_status)),
+                                            'address_document_translate'  => Lang::get('definitions.enum.personal_document_status.' .$user->present()->getAddressDocumentStatus($user->address_document_status)),
                                         ], 200);
             } else {
                 return response()->json(['message' => 'Sem permissão para enviar o arquivo.'], 403);

@@ -12,9 +12,11 @@ class SalesRecoveryIndexResourceTransformer extends Resource
      */
     public function toArray($request)
     {
-        return [
-            'id'   => $this->id_code,
-            'name' => $this->name,
-        ];
+        if (!empty($this->id_code)) {
+            return [
+                'id'   => $this->id_code,
+                'name' => $this->name,
+            ];
+        }
     }
 }

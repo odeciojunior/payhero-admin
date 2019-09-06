@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Entities;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -51,68 +53,61 @@ use Illuminate\Foundation\Auth\User as Authenticable;
  * @property ConvertaxIntegration[] $convertaxIntegrations
  * @property HotzappIntegration[] $hotzappIntegrations
  * @property Invitation[] $invitations
- * @property Invitation[] $invitations
  * @property NotazzIntegration[] $notazzIntegrations
  * @property Product[] $products
  * @property Sale[] $sales
  * @property ShopifyIntegration[] $shopifyIntegrations
- * @property SmsMessage[] $smsMessages
  * @property Transfer[] $transfers
  * @property UserDocument[] $userDocuments
- * @property UserShopping[] $userShoppings
- * @property UsersProject[] $usersProjects
  */
 class User extends Authenticable
-{ 
-
-    use Notifiable;
-    use HasRoles;
-    use SoftDeletes;
-    use PresentableTrait;
-
+{
+    use Notifiable, HasRoles, SoftDeletes, PresentableTrait;
+    /**
+     * @var string
+     */
     protected $presenter = UserPresenter::class;
-
     /**
      * @var array
      */
     protected $fillable = [
-        'name', 
-        'email', 
-        'password', 
-        'remember_token', 
-        'cellphone', 
-        'document', 
-        'zip_code', 
-        'country', 
-        'state', 
-        'city', 
-        'neighborhood', 
-        'street', 
-        'number', 
-        'complement', 
-        'photo', 
-        'date_birth', 
-        'address_document_status', 
-        'personal_document_status', 
-        'score', 
-        'sms_zenvia_amount', 
-        'percentage_rate', 
-        'transaction_rate', 
-        'foxcoin', 
-        'email_amount', 
-        'call_amount', 
-        'boleto_antecipation_money_days', 
-        'credit_card_antecipation_money_days', 
-        'release_money_days', 
-        'percentage_antecipable', 
+        'name',
+        'email',
+        'password',
+        'remember_token',
+        'cellphone',
+        'document',
+        'zip_code',
+        'country',
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+        'number',
+        'complement',
+        'photo',
+        'date_birth',
+        'address_document_status',
+        'personal_document_status',
+        'score',
+        'sms_zenvia_amount',
+        'percentage_rate',
+        'transaction_rate',
+        'foxcoin',
+        'email_amount',
+        'call_amount',
+        'boleto_antecipation_money_days',
+        'credit_card_antecipation_money_days',
+        'release_money_days',
+        'percentage_antecipable',
         'antecipation_tax',
-        'created_at', 
-        'updated_at', 
-        'deleted_at', 
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function affiliateRequests()
     {
@@ -120,7 +115,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function affiliates()
     {
@@ -128,7 +123,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function companies()
     {
@@ -136,7 +131,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function convertaxIntegrations()
     {
@@ -144,7 +139,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function hotzappIntegrations()
     {
@@ -152,7 +147,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function invitations()
     {
@@ -160,7 +155,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function invites()
     {
@@ -168,7 +163,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function notazzIntegrations()
     {
@@ -176,7 +171,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function products()
     {
@@ -184,7 +179,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function sales()
     {
@@ -192,7 +187,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function shopifyIntegrations()
     {
@@ -200,7 +195,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function smsMessages()
     {
@@ -208,7 +203,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function transfers()
     {
@@ -216,7 +211,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function userDocuments()
     {
@@ -224,7 +219,7 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function userShoppings()
     {
@@ -232,10 +227,18 @@ class User extends Authenticable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function usersProjects()
     {
         return $this->hasMany('Modules\Core\Entities\UsersProject');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function projects()
+    {
+        return $this->belongsToMany('Modules\Core\Entities\Projects', 'users_projects', 'user_id', 'project_id');
     }
 }

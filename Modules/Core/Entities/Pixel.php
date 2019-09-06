@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,10 +28,7 @@ use Modules\Core\Presenters\PixelPresenter;
  */
 class Pixel extends Model
 {
-    use SoftDeletes, PresentableTrait;
-    /**
-     * @var string
-     */
+    use SoftDeletes, FoxModelTrait, PresentableTrait;
     protected $presenter = PixelPresenter::class;
     /**
      * @var array

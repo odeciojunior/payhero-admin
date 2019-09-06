@@ -21,7 +21,7 @@ $(document).ready(function () {
                         alertCustom('error', String(response.errors[error]));
                     }
                 } else {
-                    alertCustom('error', response.message);
+                    alertCustom('error', response.responseJSON.message);
                 }
             },
             success: function (response) {
@@ -135,7 +135,7 @@ $(document).ready(function () {
                                     alertCustom('error', String(response.errors[error]));
                                 }
                             } else {
-                                alertCustom('error', response.message);
+                                alertCustom('error', response.responseJSON.message);
                             }
                         },
                         success: function success(response) {

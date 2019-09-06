@@ -55,7 +55,6 @@ class ProductsApiController extends Controller
     public function index(Request $request)
     {
         try {
-
             $productsModel = new Product();
             $projectModel  = new Project();
 

@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,8 +28,7 @@ use Modules\Core\Presenters\ShippingPresenter;
  */
 class Shipping extends Model
 {
-    use SoftDeletes, PresentableTrait;
-    protected $presenter = ShippingPresenter::class;
+    use SoftDeletes, FoxModelTrait, PresentableTrait;
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -37,6 +37,12 @@ class Shipping extends Model
     /**
      * @var array
      */
+    protected $appends = ['id_code'];
+    /**
+     * @var array
+     */
+
+    protected $presenter = ShippingPresenter::class;
     protected $fillable = [
         'project_id',
         'name',

@@ -16,12 +16,11 @@ class DomainResource extends Resource
      * @throws \Cloudflare\API\Endpoints\EndpointException]
      */
     public function toArray($request) {
-
         return [
             'id'                => Hashids::encode($this->id),
             'domain'            => $this->name,
             'status'            => $this->status,
-            'status_translated' => Lang::get('definitions.enum.domain.status.' . $this->present()->getStatus($this->status)),
+            'status_translated' => Lang::get('definitions.enum.status.' . $this->present()->getStatus($this->status)),
         ];
     }
 

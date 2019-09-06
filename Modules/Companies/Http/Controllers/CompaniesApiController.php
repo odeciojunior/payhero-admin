@@ -3,12 +3,18 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Throwable;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\Companies\Transformers\CompanyResource;
 
@@ -19,7 +25,8 @@ use Modules\Companies\Transformers\CompanyResource;
 class CompaniesApiController extends Controller
 {
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -28,12 +35,11 @@ class CompaniesApiController extends Controller
         $companies = $companyModel->with('user')
                                   ->where('user_id', auth()->user()->id)
                                   ->paginate(15);
-
         return CompanyResource::collection($companies);
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create()
     {
@@ -43,7 +49,7 @@ class CompaniesApiController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|CompanyResource
+     * @return JsonResponse|CompanyResource
      */
     public function store(Request $request)
     {
@@ -53,7 +59,7 @@ class CompaniesApiController extends Controller
     /**
      * @param Request $request
      * @return mixed
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function getCreateForm(Request $request)
     {
@@ -62,7 +68,7 @@ class CompaniesApiController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit($id)
     {
@@ -71,7 +77,7 @@ class CompaniesApiController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(Request $request)
     {
@@ -80,7 +86,7 @@ class CompaniesApiController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function delete($id)
     {

@@ -7,7 +7,7 @@
                     <label for="company">Selecione seu projeto</label>
                     <select class="select-pad" id="project_id" name="project_id">
                         @foreach($projects as $project)
-                            <option value="{!! $project['id'] !!}">{!! $project['name'] !!}</option>
+                            <option value="{{$project['id_code']}}">{{$project['name']}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-20"> 
+        <div class="row mt-20">
             <div class="col-6">
                 <div class="switch-holder">
                     <label for="token" class='mb-10'>Cartão de crédito pago:</label>

@@ -2,30 +2,34 @@
 
 namespace App\Http\Controllers\Dev;
 
-use DOMXPath;
-use Exception;
-use DOMDocument;
-use Carbon\Carbon;
-use Slince\Shopify\Client;
-use Illuminate\Http\Request;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\User;
-use Modules\Checkout\Classes\MP;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Product;
-use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Entities\HotZappIntegration;
 use Modules\Core\Entities\PlanSale;
-use App\Http\Controllers\Controller;
 use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
-use Modules\Core\Entities\Transaction;
-use Slince\Shopify\PublicAppCredential;
-use Modules\Core\Services\NotazzService;
-use Modules\Core\Services\HotZappService;
-use Modules\Core\Services\ShopifyService;
-use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\User;
+use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\HotZappService;
+use Modules\Core\Services\NotazzService;
+use Modules\Core\Services\ShopifyService;
+use Modules\Checkout\Classes\MP;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Slince\Shopify\Client;
+use Slince\Shopify\PublicAppCredential;
+use Exception;
+use Carbon\Carbon;
+use DOMDocument;
+use DOMXPath;
 
 class TesteController extends Controller
 {
@@ -240,7 +244,6 @@ class TesteController extends Controller
     public function indexx()
     {
         $this->tgFunction();
-
         /*$dataValue = [
             'type' => 'payment',
 
@@ -274,7 +277,7 @@ class TesteController extends Controller
 
     public function parseToArray($xpath, $class)
     {
-//        $xpathquery = "//a[@class='" . $class . "']";
+        //        $xpathquery = "//a[@class='" . $class . "']";
         $xpathquery = "//a";
         $elements   = $xpath->query($xpathquery);
 

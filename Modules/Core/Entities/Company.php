@@ -52,7 +52,13 @@ use Modules\Core\Presenters\CompanyPresenter;
 class Company extends Model
 {
     use SoftDeletes, PresentableTrait, FoxModelTrait;
+    /**
+     * @var string
+     */
     protected $presenter = CompanyPresenter::class;
+    /**
+     * @var array
+     */
     protected $appends = ['id_code'];
     /**
      * @var array

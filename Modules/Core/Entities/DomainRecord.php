@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -20,40 +21,35 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class DomainRecord extends Model
 {
-
-    use SoftDeletes;
-
+    //    use SoftDeletes;
     /**
      * The table associated with the model.
-     * 
      * @var string
      */
     protected $table = 'domains_records';
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'domain_id', 
-        'cloudflare_record_id', 
-        'type', 
-        'name', 
-        'content', 
-        'system_flag', 
-        'priority', 
-        'created_at', 
-        'updated_at'
+        'domain_id',
+        'cloudflare_record_id',
+        'type',
+        'name',
+        'content',
+        'system_flag',
+        'priority',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function domain()
     {

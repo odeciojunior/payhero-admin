@@ -2,14 +2,18 @@
 
 namespace Modules\ConvertaX\Http\Controllers;
 
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\UserProject;
+use Illuminate\View\View;
 use Modules\Core\Entities\ConvertaxIntegration;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\UserProject;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ConvertaXController extends Controller
 {
@@ -23,30 +27,29 @@ class ConvertaXController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Response
+     * @return Factory|JsonResponse|View
      */
     public function create()
     {
         try {
-            $userProjectModel = new UserProject();
-            $projects         = [];
-            $userProjects     = $userProjectModel->where('user_id', auth()->user()->id)->with('project')->get();
-            if ($userProjects->count() > 0) {
-                foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->project;
-                }
+            $projectModel = new Project();
+            $projects     = $projectModel->present()->getProjects();
 
+            if ($projects->count() > 0) {
                 return view('convertax::create', ['projects' => $projects]);
             } else {
 
                 return response()->json([
                                             'message' => 'Nenhum projeto encontrado',
-                                        ], 222);
+                                        ], 200);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar redirecionar para tela de adicionar integração (ConvertaXController - create)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Nenhum projeto encontrado',
+                                    ], 400);
         }
     }
 
@@ -61,55 +64,67 @@ class ConvertaXController extends Controller
             $data                      = $request->all();
             $convertaxIntegrationModel = new ConvertaxIntegration();
 
-            $integration = $convertaxIntegrationModel->where('project_id', $data['project_id'])->first();
-            if ($integration) {
+            $projectId = current(Hashids::decode($data['project_id']));
+            if (!empty($projectId)) {
+                $integration = $convertaxIntegrationModel->where('project_id', $projectId)->first();
+                if ($integration) {
+                    return response()->json([
+                                                'message' => 'Projeto já integrado',
+                                            ], 400);
+                }
+                if (empty($data['boleto_generated'])) {
+                    $data['boleto_generated'] = 0;
+                }
+                if (empty($data['boleto_paid'])) {
+                    $data['boleto_paid'] = 0;
+                }
+                if (empty($data['credit_card_paid'])) {
+
+                    $data['credit_card_paid'] = 0;
+                }
+                if (empty($data['credit_card_refused'])) {
+
+                    $data['credit_card_refused'] = 0;
+                }
+                if (empty($data['abandoned_cart'])) {
+
+                    $data['abandoned_cart'] = 0;
+                }
+
+                $data['value'] = preg_replace('/[.,]/', '', $data['value']);
+
+                $integrationCreated = $convertaxIntegrationModel->create([
+                                                                             'link'                => $data['link'],
+                                                                             'value'               => $data['value'],
+                                                                             'boleto_generated'    => $data['boleto_generated'],
+                                                                             'boleto_paid'         => $data['boleto_paid'],
+                                                                             'credit_card_refused' => $data['credit_card_refused'],
+                                                                             'credit_card_paid'    => $data['credit_card_paid'],
+                                                                             'abandoned_cart'      => $data['abandoned_cart'],
+                                                                             'project_id'          => $projectId,
+                                                                             'user_id'             => auth()->user()->id,
+                                                                         ]);
+                if (!empty($integrationCreated)) {
+                    return response()->json([
+                                                'message' => 'Integração criada com sucesso!',
+                                            ], 200);
+                } else {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro ao realizar a integração',
+                                            ], 400);
+                }
+            } else {
                 return response()->json([
-                                            'message' => 'Projeto já integrado',
+                                            'message' => 'Ocorreu um erro ao realizar a integração',
                                         ], 400);
             }
-            if (empty($data['boleto_generated'])) {
-                $data['boleto_generated'] = 0;
-            }
-            if (empty($data['boleto_paid'])) {
-                $data['boleto_paid'] = 0;
-            }
-            if (empty($data['credit_card_paid'])) {
-
-                $data['credit_card_paid'] = 0;
-            }
-            if (empty($data['credit_card_refused'])) {
-
-                $data['credit_card_refused'] = 0;
-            }
-            if (empty($data['abandoned_cart'])) {
-
-                $data['abandoned_cart'] = 0;
-            }
-            $data['value']      = preg_replace('/[.,]/', '', $data['value']);
-
-            $integrationCreated = $convertaxIntegrationModel->create([
-                                                                         'link'                => $data['link'],
-                                                                         'value'               => $data['value'],
-                                                                         'boleto_generated'    => $data['boleto_generated'],
-                                                                         'boleto_paid'         => $data['boleto_paid'],
-                                                                         'credit_card_refused' => $data['credit_card_refused'],
-                                                                         'credit_card_paid'    => $data['credit_card_paid'],
-                                                                         'abandoned_cart'      => $data['abandoned_cart'],
-                                                                         'project_id'          => $data['project_id'],
-                                                                         'user_id'             => auth()->user()->id,
-                                                                     ]);
-            if ($integrationCreated) {
-                return response()->json([
-                                            'message' => 'Integração criada com sucesso!',
-                                        ], 200);
-            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao realizar integração  ConvertaXController - store');
+            report($e);
 
             return response()->json([
                                         'message' => 'Ocorreu um erro ao realizar a integração',
                                     ], 400);
-        } catch (Exception $e) {
-            Log::warning('Erro ao realizar integração  ConvertaXController - store');
-            report($e);
         }
     }
 
@@ -133,28 +148,32 @@ class ConvertaXController extends Controller
         try {
             if (isset($id)) {
                 $convertaxIntegrationModel = new ConvertaxIntegration();
+                $projectModel              = new Project();
 
-                $userProjectModel = new UserProject();
-                $projects         = [];
+                $projectId   = current(Hashids::decode($id));
+                $integration = $convertaxIntegrationModel->where('project_id', $projectId)->first();
 
-                $projectId    = current(Hashids::decode($id));
-                $integration  = $convertaxIntegrationModel->where('project_id', $projectId)->first();
-                $userProjects = $userProjectModel->where('user', auth()->user()->id)->with('project')->get();
-                foreach ($userProjects as $userProject) {
-                    $projects[] = $userProject->project;
-                }
+                $projects = $projectModel->present()->getProjects();
 
-                if ($integration) {
+                if (!empty($integration)) {
                     return view('convertax::edit', ['projects' => $projects, 'integration' => $integration]);
+                } else {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                            ], 400);
                 }
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                        ], 400);
             }
-
-            return response()->json([
-                                        'message' => 'Erro',
-                                    ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar Integração ConvertaX (ConvertaXController - edit)');
             report($e);
+
+            return response()->json([
+                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                    ], 400);
         }
     }
 
@@ -166,47 +185,64 @@ class ConvertaXController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $convertaxIntegrationModel = new ConvertaxIntegration();
+        try {
 
-        $data          = $request->all();
-        $data['value'] = preg_replace('/[.,]/', '', $data['value']);
+            $convertaxIntegrationModel = new ConvertaxIntegration();
 
-        $integrationId        = current(Hashids::decode($id));
-        $convertaxIntegration = $convertaxIntegrationModel->find($integrationId);
-        if (empty($data['boleto_generated'])) {
-            $data['boleto_generated'] = 0;
-        }
-        if (empty($data['boleto_paid'])) {
-            $data['boleto_paid'] = 0;
-        }
-        if (empty($data['credit_card_paid'])) {
-            $data['credit_card_paid'] = 0;
-        }
-        if (empty($data['credit_card_refused'])) {
-            $data['credit_card_refused'] = 0;
-        }
-        if (empty($data['abandoned_cart'])) {
-            $data['abandoned_cart'] = 0;
-        }
+            $data          = $request->all();
+            $data['value'] = preg_replace('/[.,]/', '', $data['value']);
 
-        $integrationUpdated = $convertaxIntegration->update([
-                                                                'link'                => $data['link'],
-                                                                'value'               => $data['value'],
-                                                                'boleto_generated'    => $data['boleto_generated'],
-                                                                'boleto_paid'         => $data['boleto_paid'],
-                                                                'credit_card_refused' => $data['credit_card_refused'],
-                                                                'credit_card_paid'    => $data['credit_card_paid'],
-                                                                'abandoned_cart'      => $data['abandoned_cart'],
-                                                            ]);
-        if ($integrationUpdated) {
+            $integrationId        = current(Hashids::decode($id));
+            $convertaxIntegration = $convertaxIntegrationModel->find($integrationId);
+            if (!empty($convertaxIntegration)) {
+                if (empty($data['boleto_generated'])) {
+                    $data['boleto_generated'] = 0;
+                }
+                if (empty($data['boleto_paid'])) {
+                    $data['boleto_paid'] = 0;
+                }
+                if (empty($data['credit_card_paid'])) {
+                    $data['credit_card_paid'] = 0;
+                }
+                if (empty($data['credit_card_refused'])) {
+                    $data['credit_card_refused'] = 0;
+                }
+                if (empty($data['abandoned_cart'])) {
+                    $data['abandoned_cart'] = 0;
+                }
+
+                $integrationUpdated = $convertaxIntegration->update([
+                                                                        'link'                => $data['link'],
+                                                                        'value'               => $data['value'],
+                                                                        'boleto_generated'    => $data['boleto_generated'],
+                                                                        'boleto_paid'         => $data['boleto_paid'],
+                                                                        'credit_card_refused' => $data['credit_card_refused'],
+                                                                        'credit_card_paid'    => $data['credit_card_paid'],
+                                                                        'abandoned_cart'      => $data['abandoned_cart'],
+                                                                    ]);
+
+                if ($integrationUpdated) {
+                    return response()->json([
+                                                'message' => 'Integração atualizada com sucesso!',
+                                            ], 200);
+                } else {
+                    return response()->json([
+                                                'message' => 'Ocorreu um erro ao atualizar a integração',
+                                            ], 400);
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Ocorreu um erro ao atualizar a integração',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar atualizar integração com convertaX (ConvertaXController - update)');
+            report($e);
+
             return response()->json([
-                                        'message' => 'Integração atualizada com sucesso!',
-                                    ], 200);
+                                        'message' => 'Ocorreu um erro ao atualizar a integração',
+                                    ], 400);
         }
-
-        return response()->json([
-                                    'message' => 'Ocorreu um erro ao atualizar a integração',
-                                ], 400);
     }
 
     /**

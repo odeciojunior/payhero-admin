@@ -4,21 +4,24 @@ namespace Modules\SalesRecovery\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use Modules\Core\Entities\Sale;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Checkout;
-use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\UserProject;
 use Illuminate\Support\Facades\Validator;
-use Modules\Core\Services\SalesRecoveryService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Vinkla\Hashids\Facades\Hashids;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Services\SalesRecoveryService;
 use Modules\SalesRecovery\Transformers\SalesRecoveryIndexResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
 
+/**
+ * Class SalesRecoveryApiController
+ * @package Modules\SalesRecovery\Http\Controllers
+ */
 class SalesRecoveryApiController extends Controller
 {
     /**
@@ -27,14 +30,16 @@ class SalesRecoveryApiController extends Controller
     public function index()
     {
         try {
-            $userProjectModel = new UserProject();
-            $projectModel     = new Project();
+            $projectModel = new Project();
 
-            $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
-
-            $projects = $projectModel->whereIn('id', $userProjects)->get();
-
-            return SalesRecoveryIndexResourceTransformer::collection($projects);
+            $projects = $projectModel->present()->getProjects();
+            if (!empty($projects)) {
+                return SalesRecoveryIndexResourceTransformer::collection($projects);
+            } else {
+                return response()->json([
+                                            'message' => 'Erro ao listar projetos, tente novamente mais tarde',
+                                        ], 400);
+            }
         } catch (Exception $e) {
             Log::warning('Erro ao listar projetos, tente novamente mais tarde');
             report($e);

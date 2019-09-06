@@ -13,7 +13,6 @@
                     <a data-toggle="modal" id='btn-integration-model' class="btn btn-floating btn-danger ml-10" style="position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-plus" aria-hidden="true"></i>
                     </a>
-
                     <a data-toggle="modal" data-target='#modal_explicacao' class="btn btn-floating" style="background-color:blue;position: relative;float: right;color: white;display: flex;text-align: center;align-items: center;justify-content: center;">
                         <i class="icon wb-help" aria-hidden="true"></i>
                     </a>
@@ -23,10 +22,10 @@
         <div class="page-content container">
             @if(count($projects) == 0)
                 @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+                    <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
                 @endpush
                 <div class="content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
+                    <img src="{{ asset('modules/global/img/emptyconvites.svg') }}" width="250px">
                     <h1 class="big gray">Nenhuma integração encontrada!</h1>
                     <p class="desc gray">Integre suas lojas Shopify com o checkout do Cloudfox!</p>
                 </div>
@@ -37,12 +36,12 @@
                 <div class="row">
                     @foreach($projects as $project)
                         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
-                            <a href="/projects/{!! Hashids::encode($project['id']) !!}" class="streched-link">
+                            <a href="/projects/{{$project['id_code'] }}" class="streched-link">
                                 <div class="card shadow">
-                                    <img class="card-img-top img-fluid w-full" src="{!! $project['photo'] !!}" onerror="this.onerror=null;this.src='{!! asset('modules/global/img/produto.png') !!}';" alt="{!! asset('modules/global/img/produto.png') !!}">
+                                    <img class="card-img-top img-fluid w-full" src="{{ $project['photo'] }}" onerror="this.onerror=null;this.src='{{ asset('modules/global/img/produto.png') }}';" alt="{{ asset('modules/global/img/produto.png') }}">
                                     <div class="card-body">
-                                        <h4 class="card-title"> {!! $project['name'] !!}</h4>
-                                        <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p>
+                                        <h4 class="card-title"> {{ $project['name'] }}</h4>
+                                        <p class="card-text sm">Criado em {{ $project->created_at->format('d/m/Y') }}</p>
                                     </div>
                                 </div>
                             </a>
@@ -86,7 +85,7 @@
                                                 <label for="company">Selecione sua empresa</label>
                                                 <select class="select-pad" id="company" name="company">
                                                     @foreach($companies as $company)
-                                                        <option value="{!! $company['id'] !!}">{!! $company['fantasy_name'] !!}</option>
+                                                        <option value="{{ $company['id_code'] }}">{{ $company['fantasy_name'] }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -128,103 +127,103 @@
                 </div>
         @endif
         <!-- End Modal -->
-                <!-- End Modal -->
-                <!-- Modal Explicação -->
-                <div class="modal fade modal-3d-flip-vertical" id="modal_explicacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content" id="conteudo_modal_explicacao">
-                            <div class="panel-group panel-group-continuous m-0" id="acordionHelp" aria-multiselectable="true" role="tablist">
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingFirst" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseFirst" aria-controls="exampleCollapseFirst" aria-expanded="false">
-                                            <strong>Primeiro passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseFirst" aria-labelledby="exampleHeadingFirst" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+            <!-- End Modal -->
+            <!-- Modal Explicação -->
+            <div class="modal fade modal-3d-flip-vertical" id="modal_explicacao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" id="conteudo_modal_explicacao">
+                        <div class="panel-group panel-group-continuous m-0" id="acordionHelp" aria-multiselectable="true" role="tablist">
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingFirst" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseFirst" aria-controls="exampleCollapseFirst" aria-expanded="false">
+                                        <strong>Primeiro passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseFirst" aria-labelledby="exampleHeadingFirst" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span> Crie uma loja no shopify: <a onclick='openInNewWindow("https://www.shopify.com/")' href='#'>https://www.shopify.com/</a><br>
                                              Caso já tenha sua loja, apenas efetue o <strong>login</strong>.
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingSecond" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseSecond" aria-controls="exampleCollapseSecond" aria-expanded="false">
-                                            <strong>Segundo passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingSecond" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseSecond" aria-controls="exampleCollapseSecond" aria-expanded="false">
+                                        <strong>Segundo passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseSecond" aria-labelledby="exampleHeadingSecond" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span>Após ter se autenticado no shopify, clique em "Apps" <strong class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-1.png' style='width:100%'>
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingThird" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseThird" aria-controls="exampleCollapseThird" aria-expanded="false">
-                                            <strong>Terceiro passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseThird" aria-labelledby="exampleHeadingThird" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingThird" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseThird" aria-controls="exampleCollapseThird" aria-expanded="false">
+                                        <strong>Terceiro passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseThird" aria-labelledby="exampleHeadingThird" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span>Ao carregar a página, identifique e clique no link "Manage private apps" <strong class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-2.png' style='width:100%'>
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingFourth" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseFourth" aria-controls="exampleCollapseFourth" aria-expanded="false">
-                                            <strong>Quarto passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseFourth" aria-labelledby="exampleHeadingFourth" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingFourth" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseFourth" aria-controls="exampleCollapseFourth" aria-expanded="false">
+                                        <strong>Quarto passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseFourth" aria-labelledby="exampleHeadingFourth" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span>Aguarde a nova página abrir, e clique no botão "Create a new private app" <strong class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-3.png' style='width:100%'>
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingFifth" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseFifth" aria-controls="exampleCollapseFifth" aria-expanded="false">
-                                            <strong>Quinto passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingFifth" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseFifth" aria-controls="exampleCollapseFifth" aria-expanded="false">
+                                        <strong>Quinto passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseFifth" aria-labelledby="exampleHeadingFifth" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span>Na nova página você deverá preencher alguns dados.
                                                 <br> <strong>"Private app name"</strong> é o nome do novo aplicativo, para não confundir, sugerimos que ultilize "cloudfox".
                                                 <br> <strong>"Emergency developer email"</strong> é o email para emergências, preencha-o corretamente.
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-4-1.png' style='width:100%'>
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingSixth" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseSixth" aria-controls="exampleCollapseSixth" aria-expanded="false">
-                                            <strong>Sexto passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseSixth" aria-labelledby="exampleHeadingSixth" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingSixth" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseSixth" aria-controls="exampleCollapseSixth" aria-expanded="false">
+                                        <strong>Sexto passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseSixth" aria-labelledby="exampleHeadingSixth" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span>Depois de inserir corretamente os dados acima, precisamos que você nos libere algumas permissões.
                                                 <br><strong>Fique bem atento, pois, as permissões listadas a seguir podem não estar em ordem, e se não forem liberadas, a integração não funcionará corretamente.</strong>
                                                 <ul>
@@ -237,58 +236,57 @@
                                                 </ul>
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-4-2.png' style='width:100%'>
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingSeventh" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseSeventh" aria-controls="exampleCollapseSeventh" aria-expanded="false">
-                                            <strong>Sétimo passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseSeventh" aria-labelledby="exampleHeadingSeventh" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingSeventh" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseSeventh" aria-controls="exampleCollapseSeventh" aria-expanded="false">
+                                        <strong>Sétimo passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseSeventh" aria-labelledby="exampleHeadingSeventh" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span>Confira os dados e clique em "save", o botão podera ser encontrado no final da página.
                                             <br> Uma janela de confirmação aparecerá para você<strong class='grad'>(selecione o botão como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-6.png' style='width:100%'>
                                             </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingEigth" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseEigth" aria-controls="exampleCollapseEigth" aria-expanded="false">
-                                            <strong>Oitavo passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseEigth" aria-labelledby="exampleHeadingEigth" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
-                                                <span>Agora você tem um novo app criado, para vincular com a nossa plataforma, clique no botão</span>
-                                                <a class="btn btn-floating btn-danger" style="margin:15px;color: white;display: flex;align-items: center;justify-content: center;">
-                                                    <i class="icon wb-plus" aria-hidden="true"></i></a>
-                                            </div>
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingEigth" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseEigth" aria-controls="exampleCollapseEigth" aria-expanded="false">
+                                        <strong>Oitavo passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseEigth" aria-labelledby="exampleHeadingEigth" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
+                                            <span>Agora você tem um novo app criado, para vincular com a nossa plataforma, clique no botão</span>
+                                            <a class="btn btn-floating btn-danger" style="margin:15px;color: white;display: flex;align-items: center;justify-content: center;">
+                                                <i class="icon wb-plus" aria-hidden="true"></i></a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel">
-                                    <div class="panel-heading" id="exampleHeadingNineth" role="tab">
-                                        <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseNineth" aria-controls="exampleCollapseNineth" aria-expanded="false">
-                                            <strong>Nono passo</strong>
-                                        </a>
-                                    </div>
-                                    <div class="panel-collapse collapse" id="exampleCollapseNineth" aria-labelledby="exampleHeadingNineth" role="tabpanel" style="" data-parent="#acordionHelp">
-                                        <div class="panel-body justify-content-center">
-                                            <div class="d-flex align-items-center">
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading" id="exampleHeadingNineth" role="tab">
+                                    <a class="panel-title collapsed" data-parent="#acordionHelp" data-toggle="collapse" href="#exampleCollapseNineth" aria-controls="exampleCollapseNineth" aria-expanded="false">
+                                        <strong>Nono passo</strong>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse" id="exampleCollapseNineth" aria-labelledby="exampleHeadingNineth" role="tabpanel" style="" data-parent="#acordionHelp">
+                                    <div class="panel-body justify-content-center">
+                                        <div class="d-flex align-items-center">
                                             <span>O campo "Token (password)" deve ser preenchido com o password do seu app<strong class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shoify-integration-step-7-1.png' style='width:100%'>
                                                 <br>O campo "URL da sua loja no Shopify" sera a URL da sua loja. (sem o "https://" nem mesmo o que vier após "myshopify.com")<strong class='grad'>(como indica imagem abaixo)</strong>
                                                 <img class='img-thumbnail thumbnail' src='https://cloudfox.nyc3.cdn.digitaloceanspaces.com/cloudfox/defaults/shopify-url.png' style='width:100%'>
                                            </span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -296,7 +294,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- End Modal -->
+            </div>
+            <!-- End Modal -->
         </div>
     </div>
 

@@ -15,6 +15,12 @@ return [
             "approved"  => "Aprovado",
             "refused"   => "Recusado",
         ],
+        "address_document_status"  => [
+            "pending"   => "Pendente",
+            "analyzing" => "Em análise",
+            "approved"  => "Aprovado",
+            "refused"   => "Recusado",
+        ],
         "status"                   => [
             "pending"   => "Pendente",
             "analyzing" => "Em análise",
@@ -31,18 +37,20 @@ return [
         "domain"                   => [
             "status" => [
                 "pending"   => "Pendente",
-                "analyzing" => "Analizando",
+                "analyzing" => "Em análise",
                 "approved"  => "Aprovado",
                 "refused"   => "Recusado",
+
             ],
         ],
-        "discount_coupon"          => [
+
+        "discount_coupon" => [
             "status" => [
                 "active"   => "Ativo",
                 "disabled" => "Desativo",
             ],
         ],
-        "shipping"                 => [
+        "shipping"        => [
             "status"       => [
                 "active"   => "Ativo",
                 "disabled" => "Desativo",
@@ -52,7 +60,7 @@ return [
                 "no"  => "Não",
             ],
         ],
-        "plan"                     => [
+        "plan"            => [
             "status" => [
                 "active"   => "Ativo",
                 "disabled" => "Desativo",
