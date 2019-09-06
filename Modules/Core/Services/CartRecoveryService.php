@@ -30,9 +30,8 @@ class CartRecoveryService
             $data                = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], ['created_at', '>', $formatted_dateStart], ['created_at', '<', $formatted_dateEnd]])
-                                      ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
+                                      ->with('project', 'checkoutPlans.plan.productsPlans.product')
                                       ->get();
-
             foreach ($abandonedCarts as $abandonedCart) {
                 $products = [];
 
@@ -40,8 +39,8 @@ class CartRecoveryService
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
                             $productArray           = [];
-                            $productArray["name"]   = $productPlan->getProduct->name;
-                            $productArray["photo"]  = $productPlan->getProduct->photo;
+                            $productArray["name"]   = $productPlan->product->name;
+                            $productArray["photo"]  = $productPlan->product->photo;
                             $productArray["amount"] = $productPlan->amount;
                             $products[]             = $productArray;
                         }
@@ -52,7 +51,7 @@ class CartRecoveryService
                                       ->first();
 
                     $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
-                    $project            = Project::find($abandonedCart['project']);
+                    $project            = Project::find($abandonedCart['project_id']);
                     $domain             = Domain::where('project_id', $project->id)->first();
 
                     $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
@@ -117,9 +116,8 @@ class CartRecoveryService
             $data = [];
 
             $abandonedCarts = Checkout::where([['status', '=', 'abandoned cart'], [DB::raw("(DATE_FORMAT(created_at,'%Y-%m-%d'))"), $date]])
-                                      ->with('projectModel', 'checkoutPlans.plan.productsPlans.getProduct')
+                                      ->with('project', 'checkoutPlans.plan.productsPlans.product')
                                       ->get();
-
             foreach ($abandonedCarts as $abandonedCart) {
                 try {
 
@@ -128,8 +126,8 @@ class CartRecoveryService
                     foreach ($abandonedCart->checkoutPlans as $checkoutPlan) {
                         foreach ($checkoutPlan->getRelation('plan')->productsPlans as $productPlan) {
                             $productArray           = [];
-                            $productArray["name"]   = $productPlan->getProduct->name;
-                            $productArray["photo"]  = $productPlan->getProduct->photo;
+                            $productArray["name"]   = $productPlan->product->name;
+                            $productArray["photo"]  = $productPlan->product->photo;
                             $productArray["amount"] = $productPlan->amount;
                             $products[]             = $productArray;
                         }
@@ -140,7 +138,7 @@ class CartRecoveryService
                                       ->first();
 
                     $telephoneValidated = FoxUtils::prepareCellPhoneNumber($log['telephone']);
-                    $project            = Project::find($abandonedCart['project']);
+                    $project            = Project::find($abandonedCart['project_id']);
                     $domain             = Domain::where('project_id', $project->id)->first();
 
                     $linkCheckout       = "https://checkout." . $domain['name'] . "/recovery/" . $log->id_log_session;
