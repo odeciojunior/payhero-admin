@@ -207,7 +207,7 @@ class DomainsController extends Controller
                 $domainProject = $domainModel->with(['project'])->find($domainId);
 
                 $domain = $domainModel->with([
-                                                 'records' => function($query) use ($domainProject) {
+                                                 'domainsRecords' => function($query) use ($domainProject) {
                                                      $query->where('system_flag', 0);
                                                      $query->orWhere(function($queryWhere) use ($domainProject) {
                                                          $queryWhere->where('type', 'A');
@@ -222,7 +222,7 @@ class DomainsController extends Controller
                     $companies = $companyModel->all();
 
                     $registers = [];
-                    foreach ($domain->records as $record) {
+                    foreach ($domain->domainsRecords as $record) {
 
                         if ($record->type == 'A' && $record->name == $domain->name) {
                             $haveEnterA = true;
@@ -637,7 +637,7 @@ class DomainsController extends Controller
                     foreach ($zone->name_servers as $new_name_server) {
                         $newNameServers[] = $new_name_server;
                     }
-                    if($zone->original_registrar != ''){
+                    if ($zone->original_registrar != '') {
                         $domainHost = "(" . $zone->original_registrar . ")";
                     }
                 }

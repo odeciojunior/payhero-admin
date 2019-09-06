@@ -2,7 +2,10 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\DomainPresenter;
@@ -22,27 +25,35 @@ use Modules\Core\Presenters\DomainPresenter;
  */
 class Domain extends Model
 {
-
-    use SoftDeletes;
-    use PresentableTrait;
-
+    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    /**
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+    /**
+     * @var string
+     */
     protected $presenter = DomainPresenter::class;
     /**
      * @var array
      */
     protected $fillable = [
-        'project_id', 
-        'cloudflare_domain_id', 
-        'name', 
-        'status', 
-        'sendgrid_id', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'project_id',
+        'cloudflare_domain_id',
+        'name',
+        'status',
+        'sendgrid_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
@@ -50,7 +61,7 @@ class Domain extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function domainsRecords()
     {
