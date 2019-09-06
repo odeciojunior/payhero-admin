@@ -152,7 +152,7 @@ class ProjectService
                                        'shopifyIntegrations',
                                        'plans',
                                        'plans.productsPlans',
-                                       'plans.productsPlans.getProduct',
+                                       'plans.productsPlans.product',
                                        'pixels',
                                        'discountCoupons',
                                        'zenviaSms',
@@ -173,8 +173,8 @@ class ProjectService
                         if (!empty($project->plans)) {
                             foreach ($project->plans as $plan) {
                                 foreach ($plan->productsPlans as $productsPlan) {
-                                    if (!empty($productsPlan->getProduct)) {
-                                        $productsPlan->getProduct->delete();
+                                    if (!empty($productsPlan->product)) {
+                                        $productsPlan->product->delete();
                                         $productsPlan->delete();
                                     }
                                 }
@@ -249,7 +249,7 @@ class ProjectService
                     }
                     //remover integração do shopify
                     $this->getShopifyIntegration()
-                         ->where('project', $project->id)
+                         ->where('project_id', $project->id)
                          ->delete();
 
                     $projectDeleted = $project->delete();

@@ -2,14 +2,15 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use App\Entities\Sale;
-use App\Entities\Project;
 use Illuminate\Http\Request;
 use App\Entities\PostbackLog;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ShopifyIntegration;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
@@ -51,7 +52,7 @@ class PostBackShopifyController extends Controller
 
                 $sale = $salesModel->with(['delivery', 'delivery.trackingHistories'])
                                    ->where('shopify_order', $shopifyOrder)
-                                   ->where('project', $project->id)
+                                   ->where('project_id', $project->id)
                                    ->first();
 
                 if ($sale) {
@@ -135,12 +136,12 @@ class PostBackShopifyController extends Controller
             }
 
             $userProject = $userProjectModel->where([
-                                                        ['project', $project->id],
+                                                        ['project_id', $project->id],
                                                         ['type', 'producer'],
                                                     ])->first();
 
             try {
-                $shopIntegration = $shopifyIntegrationModel->where('project', $project->id)->first();
+                $shopIntegration = $shopifyIntegrationModel->where('project_id', $project->id)->first();
 
                 $shopifyService = new ShopifyService($shopIntegration->url_store, $shopIntegration->token);
             } catch (\Exception $e) {

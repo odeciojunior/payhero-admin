@@ -28,15 +28,15 @@ class TransfersService
 
         foreach ($transactions as $transaction) {
             try {
-                $company = $companyModel->find($transaction->company);
+                $company = $companyModel->find($transaction->company_id);
 
                 $transfer = $transferModel->create([
-                                                       'transaction' => $transaction->id,
-                                                       'user'        => $company->user_id,
-                                                       'company_id'  => $company->id,
-                                                       'type_enum'   => $transferModel->getEnum('type_enum', 'in'),
-                                                       'value'       => $transaction->value,
-                                                       'type'        => 'in',
+                                                       'transaction_id' => $transaction->id,
+                                                       'user_id'        => $company->user_id,
+                                                       'company_id'     => $company->id,
+                                                       'type_enum'      => $transferModel->getEnum('type_enum', 'in'),
+                                                       'value'          => $transaction->value,
+                                                       'type'           => 'in',
                                                    ]);
 
                 $transaction->update([
@@ -65,12 +65,12 @@ class TransfersService
                 $company = $companyModel->find($transactionsAnticipated->company);
 
                 $transferAnticipted = $transferModel->create([
-                                                                 'transaction' => $transactionsAnticipated->id,
-                                                                 'user'        => $company->user_id,
-                                                                 'company_id'  => $company->id,
-                                                                 'type_enum'   => $transferModel->getEnum('type_enum', 'in'),
-                                                                 'value'       => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
-                                                                 'type'        => 'in',
+                                                                 'transaction_id' => $transactionsAnticipated->id,
+                                                                 'user_id'        => $company->user_id,
+                                                                 'company_id'     => $company->id,
+                                                                 'type_enum'      => $transferModel->getEnum('type_enum', 'in'),
+                                                                 'value'          => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
+                                                                 'type'           => 'in',
                                                              ]);
 
                 $transactionsAnticipated->update([

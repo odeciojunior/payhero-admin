@@ -126,7 +126,7 @@ class ShopifyController extends Controller
                                                      'installments_interest_free' => '1',
                                                  ]);
             $shippingModel->create([
-                                       'project'      => $project->id,
+                                       'project_id'   => $project->id,
                                        'name'         => 'Frete gratis',
                                        'information'  => 'de 15 até 30 dias',
                                        'value'        => '0,00',
@@ -140,14 +140,14 @@ class ShopifyController extends Controller
                                                                        'shared_secret' => '',
                                                                        'url_store'     => $urlStore . '.myshopify.com',
                                                                        'user'          => auth()->user()->id,
-                                                                       'project'       => $project->id,
+                                                                       'project_id'    => $project->id,
                                                                        'status'        => 1,
                                                                    ]);
 
             $userProjectModel->create([
-                                          'user'                 => auth()->user()->id,
-                                          'project'              => $project->id,
-                                          'company'              => $dados['company'],
+                                          'user_id'              => auth()->user()->id,
+                                          'project_id'           => $project->id,
+                                          'company_id'           => $dados['company'],
                                           'type'                 => 'producer',
                                           'shipment_responsible' => true,
                                           'permissao_acesso'     => true,
@@ -182,7 +182,7 @@ class ShopifyController extends Controller
             if ($projectId) {
                 //id decriptado
                 $project = $projectModel
-                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.getProduct', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
+                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.product', 'pixels', 'discountCoupons', 'zenviaSms', 'shippings'])
                     ->find($projectId);
 
                 if (!empty($project->shopify_id)) {
@@ -249,7 +249,7 @@ class ShopifyController extends Controller
                                'shopifyIntegrations',
                                'plans',
                                'plans.productsPlans',
-                               'plans.productsPlans.getProduct',
+                               'plans.productsPlans.product',
                                'pixels', 'discountCoupons',
                                'zenviaSms',
                                'shippings',
@@ -351,7 +351,7 @@ class ShopifyController extends Controller
 
             $shopifyModel = new ShopifyIntegration();
             if (!empty($projectId)) {
-                $shopifyIntegration = $shopifyModel->where('project', $projectId)->first();
+                $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
 
                 event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
 
@@ -383,7 +383,7 @@ class ShopifyController extends Controller
                                                    'shopifyIntegrations',
                                                    'plans',
                                                    'plans.productsPlans',
-                                                   'plans.productsPlans.getProduct',
+                                                   'plans.productsPlans.product',
                                                    'pixels', 'discountCoupons',
                                                    'zenviaSms',
                                                    'shippings',

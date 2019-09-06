@@ -4,22 +4,21 @@ namespace Modules\PostBack\Http\Controllers;
 
 use Exception;
 use Carbon\Carbon;
-use App\Entities\Plan;
-use App\Entities\Sale;
-use App\Entities\Client;
-use App\Entities\Company;
-use App\Entities\Project;
-use App\Entities\Delivery;
-use App\Entities\PlanSale;
-use App\Entities\Transfer;
 use Illuminate\Http\Request;
-use App\Entities\PostbackLog;
-use App\Entities\Transaction;
+use Modules\Core\Entities\Client;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Delivery;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\User;
 use Modules\Checkout\Classes\MP;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use App\Entities\HotZappIntegration;
 use Modules\Core\Events\SaleApprovedEvent;
 use Modules\Core\Services\MercadoPagoService;
 
@@ -92,19 +91,19 @@ class PostBackMercadoPagoController extends Controller
                 return response()->json(['message' => 'sale not found'], 200);
             }
 
-//            $paymentInfo = $this->mp->get('/v1/payments/' . @$requestData['data']['id']);
+            //            $paymentInfo = $this->mp->get('/v1/payments/' . @$requestData['data']['id']);
 
-           /* if (isset($paymentInfo->error) && !empty($paymentInfo->error)) {
-                Log::warning(MercadoPagoService::getErrorMessage(@$paymentInfo->error->causes[0]->code));
-            }
+            /* if (isset($paymentInfo->error) && !empty($paymentInfo->error)) {
+                 Log::warning(MercadoPagoService::getErrorMessage(@$paymentInfo->error->causes[0]->code));
+             }
 
-            Log::warning('venda atualizada no mercado pago:  ' . print_r($paymentInfo, true));
+             Log::warning('venda atualizada no mercado pago:  ' . print_r($paymentInfo, true));
 
-            if ($paymentInfo->response->status == $sale->gateway_status) {
-                return response()->json(['message' => 'success'], 200);
-            }*/
+             if ($paymentInfo->response->status == $sale->gateway_status) {
+                 return response()->json(['message' => 'success'], 200);
+             }*/
 
-            $transactions = $transactionModel->where('sale', $sale->id)->get();
+            $transactions = $transactionModel->where('sale_id', $sale->id)->get();
 
             if ($requestData['data']['status'] == 'approved') {
 
@@ -120,7 +119,7 @@ class PostBackMercadoPagoController extends Controller
 
                     if ($transaction->company != null) {
 
-                        $company = $companyModel->find($transaction->company);
+                        $company = $companyModel->find($transaction->company_id);
 
                         $user = $userModel->find($company['user_id']);
 
@@ -140,7 +139,7 @@ class PostBackMercadoPagoController extends Controller
                     }
                 }
 
-                $plansSale = $planSaleModel->where('sale', $sale->id)->first();
+                $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
 
                 $plan     = $planModel->find($plansSale->plan);
                 $project  = $projectModel->find($sale->project);
@@ -164,10 +163,10 @@ class PostBackMercadoPagoController extends Controller
                             $company = $companyModel->find($transaction->company);
 
                             $transferModel->create([
-                                                       'transaction' => $transaction->id,
-                                                       'user'        => $company->user_id,
-                                                       'value'       => $transaction->value,
-                                                       'type'        => 'out',
+                                                       'transaction_id' => $transaction->id,
+                                                       'user_id'        => $company->user_id,
+                                                       'value'          => $transaction->value,
+                                                       'type'           => 'out',
                                                    ]);
                             $company->update([
                                                  'balance' => $company->balance -= $transaction->value,

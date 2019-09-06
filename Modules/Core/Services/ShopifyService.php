@@ -3,19 +3,19 @@
 namespace Modules\Core\Services;
 
 use Exception;
-use App\Entities\Plan;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\Product;
+use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\ShopifyIntegration;
 use PHPHtmlParser\Dom;
-use App\Entities\Product;
-use App\Entities\Project;
 use Slince\Shopify\Client;
-use App\Entities\ProductPlan;
 use Modules\Core\Entities\User;
 use PHPHtmlParser\Dom\HtmlNode;
 use PHPHtmlParser\Dom\TextNode;
 use PHPHtmlParser\Selector\Parser;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Entities\ShopifyIntegration;
 use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Events\ShopifyIntegrationReadyEvent;
@@ -841,14 +841,14 @@ class ShopifyService
                                      'shopify_variant_id' => $variant->getId(),
                                  ]);
 
-                $productPlan = $productPlanModel->where('product', $product->id)
+                $productPlan = $productPlanModel->where('product_id', $product->id)
                                                 ->where('amount', 1)
                                                 ->orderBy('id', 'ASC')
                                                 ->first();
 
                 if (!empty($productPlan)) {
 
-                    $plan = $planModel->find($productPlan->plan);
+                    $plan = $planModel->find($productPlan->plan_id);
 
                     $plan->update([
                                       'name'        => substr($storeProduct->getTitle(), 0, 100),
@@ -897,9 +897,9 @@ class ShopifyService
                                                ]);
 
                     $productPlan = $productPlanModel->create([
-                                                                 'product' => $product->id,
-                                                                 'plan'    => $plan->id,
-                                                                 'amount'  => 1,
+                                                                 'product_id' => $product->id,
+                                                                 'plan_id'    => $plan->id,
+                                                                 'amount'     => 1,
                                                              ]);
                     $plan->update([
                                       'code' => Hashids::encode($plan->id),
@@ -908,12 +908,12 @@ class ShopifyService
             } else {
 
                 $product = $productModel->create([
-                                                     'user'               => $userId,
+                                                     'user_id'            => $userId,
                                                      'name'               => substr($storeProduct->getTitle(), 0, 100),
                                                      'description'        => $description,
                                                      'guarantee'          => '0',
                                                      'format'             => 1,
-                                                     'category'           => '11',
+                                                     'category_id'        => '11',
                                                      'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
                                                                                   ->getCost(),
                                                      'shopify'            => true,
@@ -925,7 +925,7 @@ class ShopifyService
                 $plan = $planModel->create([
                                                'shopify_id'         => $storeProduct->getId(),
                                                'shopify_variant_id' => $variant->getId(),
-                                               'project'            => $projectId,
+                                               'project_id'         => $projectId,
                                                'name'               => substr($storeProduct->getTitle(), 0, 100),
                                                'description'        => $description,
                                                'code'               => '',
@@ -938,9 +938,9 @@ class ShopifyService
                               ]);
 
                 $productPlanModel->create([
-                                              'product' => $product->id,
-                                              'plan'    => $plan->id,
-                                              'amount'  => '1',
+                                              'product_id' => $product->id,
+                                              'plan_id'    => $plan->id,
+                                              'amount'     => '1',
                                           ]);
 
                 if (count($storeProduct->getVariants()) > 1) {
@@ -984,7 +984,7 @@ class ShopifyService
         $userModel               = new User();
         $shopifyIntegrationModel = new ShopifyIntegration();
 
-        $shopifyIntegrationModel->where('project', $projectId)->update([
+        $shopifyIntegrationModel->where('project_id', $projectId)->update([
                                                                            'status' => $shopifyIntegrationModel->getEnum('status', 'pending'),
                                                                        ]);
 
@@ -1000,7 +1000,7 @@ class ShopifyService
         $user    = $userModel->find($userId);
         if (!empty($project) && !empty($user)) {
             event(new ShopifyIntegrationReadyEvent($user, $project));
-            $shopifyIntegrationModel->where('project', $projectId)->update([
+            $shopifyIntegrationModel->where('project_id', $projectId)->update([
                                                                                'status' => $shopifyIntegrationModel->getEnum('status', 'approved'),
                                                                            ]);
         }
