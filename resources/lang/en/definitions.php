@@ -41,30 +41,30 @@ return [
         ],
         "pixel"                    => [
             "status" => [
-                "active"   => "ativo",
-                "disabled" => "desativo",
+                "active"   => "Ativo",
+                "disabled" => "Desativado",
             ],
         ],
         "discount_coupon"          => [
             "status" => [
-                "active"   => "ativo",
-                "disabled" => "desativo",
+                "active"   => "Ativo",
+                "disabled" => "Desativado",
             ],
         ],
         "shipping"                 => [
             "status"       => [
-                "active"   => "ativo",
-                "disabled" => "desativo",
+                "active"   => "Ativo",
+                "disabled" => "Desativado",
             ],
             "pre_selected" => [
-                "yes" => "sim",
-                "no"  => "não",
+                "yes" => "Sim",
+                "no"  => "Não",
             ],
         ],
         "plan"                     => [
             "status" => [
-                "active"   => "ativo",
-                "disabled" => "desativo",
+                "active"   => "Ativo",
+                "disabled" => "Desativado",
             ],
         ],
         "withdrawals"              => [

@@ -21,7 +21,7 @@
                         <label for="status">Status</label>
                         <select name="status" type="text" class="form-control" id="status_pixel">
                             <option value="1">Ativo</option>
-                            <option value="0">Inativo</option>
+                            <option value="0">Desativado</option>
                         </select>
                     </div>
                 </div>

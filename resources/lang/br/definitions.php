@@ -31,7 +31,7 @@ return [
         "pixel"                    => [
             "status" => [
                 "active"   => "Ativo",
-                "disabled" => "Desativo",
+                "disabled" => "Desativado",
             ],
         ],
         "domain"                   => [
@@ -47,13 +47,13 @@ return [
         "discount_coupon" => [
             "status" => [
                 "active"   => "Ativo",
-                "disabled" => "Desativo",
+                "disabled" => "Desativado",
             ],
         ],
         "shipping"        => [
             "status"       => [
                 "active"   => "Ativo",
-                "disabled" => "Desativo",
+                "disabled" => "Desativado",
             ],
             "pre_selected" => [
                 "yes" => "Sim",
@@ -63,7 +63,7 @@ return [
         "plan"            => [
             "status" => [
                 "active"   => "Ativo",
-                "disabled" => "Desativo",
+                "disabled" => "Desativado",
             ],
         ],
     ],

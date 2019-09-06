@@ -54,18 +54,16 @@ class BoletoService
             $dateNow = Carbon::now()->toDateString();
 
             $boletoDueToday = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $dateNow]])
-                                  ->with('clientModel', 'plansSales.plan.products')
+                                  ->with('client', 'plansSales.plan.products')
                                   ->get();
-
             foreach ($boletoDueToday as $boleto) {
                 try {
                     $sendEmail     = new SendgridService();
                     $checkoutModel = new Checkout();
 
-                    $checkout = $checkoutModel->where("id", $boleto->checkout)->first();
-
-                    $clientName  = $boleto->clientModel->name;
-                    $clientEmail = $boleto->clientModel->email;
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    $clientName  = $boleto->client->name;
+                    $clientEmail = $boleto->client->email;
                     $data        = [];
 
                     $subTotal = $boleto->present()->getSubTotal();
@@ -89,7 +87,7 @@ class BoletoService
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                     $products = $boleto->present()->getProducts();
-                    $project  = Project::find($boleto->project);
+                    $project  = Project::find($boleto->project_id);
                     $domain   = Domain::where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
@@ -100,7 +98,7 @@ class BoletoService
                     $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
                     $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
 
-                    $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->clientModel->telephone);
+                    $telephoneValidated = FoxUtils::prepareCellPhoneNumber($boleto->client->telephone);
 
                     $linkShortenerService = new LinkShortenerService();
                     $link                 = $linkShortenerService->shorten($boleto->boleto_link);
@@ -149,17 +147,16 @@ class BoletoService
         try {
             $date                 = Carbon::now()->subDay('1')->toDateString();
             $boletoWaitingPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
-                                        ->with('clientModel', 'plansSales.plan.products')->get();
-
+                                        ->with('client', 'plansSales.plan.products')->get();
             foreach ($boletoWaitingPayment as $boleto) {
 
                 try {
                     $sendEmail     = new SendgridService();
                     $checkoutModel = new Checkout();
 
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout)->first();
-                    $clientName  = $boleto->clientModel->name;
-                    $clientEmail = $boleto->clientModel->email;
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    $clientName  = $boleto->client->name;
+                    $clientEmail = $boleto->client->email;
                     $data        = [];
                     $subTotal    = $boleto->present()->getSubTotal();
 
@@ -182,7 +179,7 @@ class BoletoService
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                     $products = $boleto->present()->getProducts();
-                    $project  = Project::find($boleto->project);
+                    $project  = Project::find($boleto->project_id);
                     $domain   = Domain::where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
@@ -236,14 +233,14 @@ class BoletoService
 
             $date    = Carbon::now()->subDay('2')->toDateString();
             $boletos = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
-                                 ->with('clientModel', 'plansSales.plan.products')->get();
+                                 ->with('client', 'plansSales.plan.products')->get();
             foreach ($boletos as $boleto) {
                 try {
                     $checkoutModel = new Checkout();
 
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout)->first();
-                    $clientName  = $boleto->clientModel->name;
-                    $clientEmail = $boleto->clientModel->email;
+                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    $clientName  = $boleto->client->name;
+                    $clientEmail = $boleto->client->email;
                     $data        = [];
                     $subTotal    = $boleto->present()->getSubTotal();
 
@@ -265,7 +262,7 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $boleto->present()->getProducts();
-                    $project                  = $projectModel->find($boleto->project);
+                    $project                  = $projectModel->find($boleto->project_id);
                     $domain                   = $domainModel->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
@@ -407,24 +404,21 @@ class BoletoService
             $saleModel        = new Sale();
             $transactionModel = new Transaction();
 
-            $date = Carbon::now()->toDateString();
-            $data = [];
-
-            $sql         = 'SELECT s.owner
-                            , count(s.owner) as count
+            $date        = Carbon::now()->toDateString();
+            $data        = [];
+            $sql         = 'SELECT s.owner_id
+                            , count(s.owner_id) as count
                             , SUM(t.value) as value
                             FROM sales s
-                            INNER JOIN transactions t ON t.sale = s.id AND t.company IS NOT NULL
+                            INNER JOIN transactions t ON t.sale_id = s.id AND t.company_id IS NOT NULL
                             WHERE s.payment_method = 2
                             AND s.status = 1
                             AND date(s.end_date) = CURRENT_DATE
-                            GROUP BY s.owner';
-
+                            GROUP BY s.owner_id';
             $boletosPaid = DB::select($sql);
-
             foreach ($boletosPaid as $boleto) {
                 try {
-                    $user = $userModel->find($boleto->owner);
+                    $user = $userModel->find($boleto->owner_id);
 
                     $emailValidated = FoxUtils::validateEmail($user->email);
                     $message        = '';

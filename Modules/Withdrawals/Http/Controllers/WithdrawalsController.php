@@ -68,10 +68,10 @@ class WithdrawalsController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function store(Request $request)
     {
-
         $data = $request->all();
 
         $withdrawalModel = new Withdrawal();
@@ -113,7 +113,6 @@ class WithdrawalsController extends Controller
                              ]);
             $withdrawalValue -= 380;
             $withdrawalModel->create([
-                                         'user'          => auth()->user()->id,
                                          'value'         => $withdrawalValue,
                                          'company_id'    => $company->id,
                                          'bank'          => $company->bank,

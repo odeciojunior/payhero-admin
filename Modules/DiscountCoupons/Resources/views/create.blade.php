@@ -31,7 +31,7 @@
                         <label for="status">Status</label>
                         <select name="status" class="form-control" id="status_cupom" required>
                             <option value="1">Ativo</option>
-                            <option value="0">Inativo</option>
+                            <option value="0">Desativado</option>
                         </select>
                     </div>
                 </div>

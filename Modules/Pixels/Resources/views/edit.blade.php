@@ -19,7 +19,7 @@
             <label for="status">Status</label>
             <select name="status" type="text" class="form-control select-pad" id="status">
                 <option value="1" {{ ($pixel->status == '1') ? 'selected' : '' }}>Ativo</option>
-                <option value="0" {{ ($pixel->status == '0') ? 'selected' : '' }}>Inativo</option>
+                <option value="0" {{ ($pixel->status == '0') ? 'selected' : '' }}>Desativado</option>
             </select>
         </div>
         <div class="form-group col-xl-12">

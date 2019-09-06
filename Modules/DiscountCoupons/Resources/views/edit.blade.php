@@ -33,7 +33,7 @@
                         <label for="status">Status</label>
                         <select name="status" class="form-control" id="status" required>
                             <option value="1" {!! ($coupon->status == '1') ? 'selected' : '' !!}>Ativo</option>
-                            <option value="0" {!! ($coupon->status == '0') ? 'selected' : '' !!}>Inativo</option>
+                            <option value="0" {!! ($coupon->status == '0') ? 'selected' : '' !!}>Desativado</option>
                         </select>
                     </div>
                 </div>
