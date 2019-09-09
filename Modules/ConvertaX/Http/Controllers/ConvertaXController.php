@@ -13,6 +13,7 @@ use Illuminate\View\View;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\UserProject;
+use Modules\Core\Services\ProjectService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ConvertaXController extends Controller
@@ -32,8 +33,9 @@ class ConvertaXController extends Controller
     public function create()
     {
         try {
-            $projectModel = new Project();
-            $projects     = $projectModel->present()->getProjects();
+            $projectService = new ProjectService();
+
+            $projects = $projectService->getMyProjects();
 
             if ($projects->count() > 0) {
                 return view('convertax::create', ['projects' => $projects]);
@@ -148,12 +150,12 @@ class ConvertaXController extends Controller
         try {
             if (isset($id)) {
                 $convertaxIntegrationModel = new ConvertaxIntegration();
-                $projectModel              = new Project();
+                $projectService            = new ProjectService();
 
                 $projectId   = current(Hashids::decode($id));
                 $integration = $convertaxIntegrationModel->where('project_id', $projectId)->first();
 
-                $projects = $projectModel->present()->getProjects();
+                $projects = $projectService->getMyProjects();
 
                 if (!empty($integration)) {
                     return view('convertax::edit', ['projects' => $projects, 'integration' => $integration]);

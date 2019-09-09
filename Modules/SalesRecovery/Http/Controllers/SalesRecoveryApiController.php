@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Modules\Core\Services\ProjectService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Checkout;
@@ -30,9 +31,9 @@ class SalesRecoveryApiController extends Controller
     public function index()
     {
         try {
-            $projectModel = new Project();
+            $projectService = new ProjectService();
 
-            $projects = $projectModel->present()->getProjects();
+            $projects = $projectService->getMyProjects();
             if (!empty($projects)) {
                 return SalesRecoveryIndexResourceTransformer::collection($projects);
             } else {
