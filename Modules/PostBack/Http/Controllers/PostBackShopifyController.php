@@ -60,13 +60,13 @@ class PostBackShopifyController extends Controller
                     foreach ($requestData['fulfillments'] as $fulfillment) {
 
                         if (!empty($fulfillment["tracking_number"])) {
-                            if ($sale->getRelation('delivery')->tracking_code != $fulfillment["tracking_number"]) {
+                            if ($sale->delivery->tracking_code != $fulfillment["tracking_number"]) {
 
-                                $sale->getRelation('delivery')->update([
+                                $sale->delivery->update([
                                                                            'tracking_code' => $fulfillment["tracking_number"],
                                                                        ]);
 
-                                $sale->getRelation('delivery')->trackingHistories()->create([
+                                $sale->delivery->trackingHistories()->create([
                                                                                                 'tracking_code' => $fulfillment["tracking_number"],
                                                                                             ]);
                                 event(new TrackingCodeUpdatedEvent($sale));
@@ -150,8 +150,8 @@ class PostBackShopifyController extends Controller
             }
 
             $variant = current($requestData['variants']);
-
-            $shopifyService->importShopifyProduct($projectId, $userProject->user, $variant['product_id']);
+ 
+            $shopifyService->importShopifyProduct($projectId, $userProject->user->id, $variant['product_id']);
 
             return response()->json([
                                         'message' => 'success',
