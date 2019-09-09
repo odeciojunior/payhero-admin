@@ -21,7 +21,7 @@ class ProjectPresenter extends Presenter
         return $projectModel->whereIn('id', $userProjects)->get();
     }
 
-    public function getEnum($status)
+    public function getStatus($status)
     {
         if (is_numeric($status)) {
             switch ($status) {
