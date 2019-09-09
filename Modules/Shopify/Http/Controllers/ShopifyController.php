@@ -71,16 +71,20 @@ class ShopifyController extends Controller
     public function store(Request $request)
     {
         try {
-            $dados = $request->all();
 
             $projectModel            = new Project();
             $userProjectModel        = new UserProject();
             $shopifyIntegrationModel = new ShopifyIntegration();
             $shippingModel           = new Shipping();
 
+            $dataRequest = $request->all();
+
+
             $shopifyIntegration = $shopifyIntegrationModel
-                ->where('token', $dados['token'])
+                ->where('token', $dataRequest['token'])
                 ->first();
+
+
 
             if ($shopifyIntegration) {
                 if ($shopifyIntegration->status == 1) {
@@ -92,14 +96,14 @@ class ShopifyController extends Controller
 
             try {
                 //tratamento parcial do dominio
-                $dados['url_store'] = str_replace("http://", "", $dados['url_store']);
-                $dados['url_store'] = str_replace("https://", "", $dados['url_store']);
-                $dados['url_store'] = 'http://' . $dados['url_store'];
-                $dados['url_store'] = parse_url($dados['url_store'], PHP_URL_HOST);
+                $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
+                $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
+                $dataRequest['url_store'] = 'http://' . $dataRequest['url_store'];
+                $dataRequest['url_store'] = parse_url($dataRequest['url_store'], PHP_URL_HOST);
 
-                $urlStore = str_replace('.myshopify.com', '', $dados['url_store']);
+                $urlStore = str_replace('.myshopify.com', '', $dataRequest['url_store']);
 
-                $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dados['token']);
+                $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dataRequest['token']);
 
                 if (empty($shopifyService->getClient())) {
                     return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
@@ -113,7 +117,7 @@ class ShopifyController extends Controller
             $shopifyName = $shopifyService->getShopName();
             $project     = $projectModel->create([
                                                      'name'                       => $shopifyName,
-                                                     'status'                     => $projectModel->getEnum('status', 'approved'),
+                                                     'status'                     => $projectModel->present()->getStatus('approved'),
                                                      'visibility'                 => 'private',
                                                      'percentage_affiliates'      => '0',
                                                      'description'                => $shopifyName,
@@ -137,7 +141,7 @@ class ShopifyController extends Controller
                                        ]);
                 if (!empty($shippingModel)) {
                     $shopifyIntegration = $shopifyIntegrationModel->create([
-                                                                               'token'         => $dados['token'],
+                                                                               'token'         => $dataRequest['token'],
                                                                                'shared_secret' => '',
                                                                                'url_store'     => $urlStore . '.myshopify.com',
                                                                                'user_id'       => auth()->user()->id,
@@ -145,7 +149,7 @@ class ShopifyController extends Controller
                                                                                'status'        => 1,
                                                                            ]);
                     if (!empty($shopifyIntegration)) {
-                        $companyId = current(Hashids::decode($dados['company']));
+                        $companyId = current(Hashids::decode($dataRequest['company']));
 
                         $userProjectModel->create([
                                                       'user_id'              => auth()->user()->id,
