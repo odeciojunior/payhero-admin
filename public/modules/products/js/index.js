@@ -134,7 +134,7 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         dados = '';
                         dados += '<div class="col-xl-3 col-md-6 d-flex align-items-stretch">';
-                        dados += '<div class="card shadow" style="cursor:pointer;">';
+                        dados += '<div class="card shadow" style="cursor:pointer;width:100%;">';
                         dados += '<img style="min-height: 200px;" class="card-img-top product-image" src="' + value.image + '"  ' +
                             'data-link=" + value.link + " alt="Imagem do produto" data-code="' + value.id + '">' +
                             '<div class="card-body">' +
