@@ -3,7 +3,6 @@
 namespace Modules\PostBack\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Entities\PostbackLog;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\PostbackLog;

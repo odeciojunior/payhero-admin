@@ -3,7 +3,6 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -15,8 +14,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TrackingHistory extends Model
 {
-
-    use SoftDeletes;
 
     /**
      * The "type" of the auto-incrementing ID.
