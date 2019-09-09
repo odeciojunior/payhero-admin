@@ -79,12 +79,9 @@ class ShopifyController extends Controller
 
             $dataRequest = $request->all();
 
-
             $shopifyIntegration = $shopifyIntegrationModel
                 ->where('token', $dataRequest['token'])
                 ->first();
-
-
 
             if ($shopifyIntegration) {
                 if ($shopifyIntegration->status == 1) {
@@ -117,7 +114,8 @@ class ShopifyController extends Controller
             $shopifyName = $shopifyService->getShopName();
             $project     = $projectModel->create([
                                                      'name'                       => $shopifyName,
-                                                     'status'                     => $projectModel->present()->getStatus('approved'),
+                                                     'status'                     => $projectModel->present()
+                                                                                                  ->getStatus('approved'),
                                                      'visibility'                 => 'private',
                                                      'percentage_affiliates'      => '0',
                                                      'description'                => $shopifyName,
@@ -309,7 +307,8 @@ class ShopifyController extends Controller
                                 if ($htmlCart) {
                                     //template normal
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('basic_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'sections/cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
@@ -319,7 +318,8 @@ class ShopifyController extends Controller
                                 } else {
                                     //template ajax
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'snippets/ajax-cart-template.liquid',
                                                                     'theme_html' => $htmlCart,

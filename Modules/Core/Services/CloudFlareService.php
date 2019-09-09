@@ -191,6 +191,30 @@ class CloudFlareService
     }
 
     /**
+     * @param string $zoneId
+     * @return bool
+     */
+    public function deleteZoneById(string $zoneId)
+    {
+        try {
+            $user = $this->adapter->delete('zones/' . $zoneId);
+
+            $body = json_decode($user->getBody());
+
+            if (isset($body->result->id)) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            // Log::warning('Erro ao remover dominio (dominio inexistente)');
+            // report($e);
+
+            return false;
+        }
+    }
+
+    /**
      * @param string|null $domain
      * @return mixed
      */

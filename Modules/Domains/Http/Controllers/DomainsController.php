@@ -414,12 +414,12 @@ class DomainsController extends Controller
 
             $domainId = current(Hashids::decode($requestData['id']));
 
-            $domain = $domainModel->with('records', 'project', 'project.shopifyIntegrations')
+            $domain = $domainModel->with('domainsRecords', 'project', 'project.shopifyIntegrations')
                                   ->find($domainId);
 
             if (Gate::allows('edit', [$domain->project])) {
 
-                if ($cloudFlareService->deleteZone($domain->name) || empty($cloudFlareService->getZones($domain->name))) {
+                if ($cloudFlareService->deleteZoneById($domain->cloudflare_domain_id) || empty($cloudFlareService->getZones($domain->name))) {
                     //zona deletada
                     $sendgridService->deleteLinkBrand($domain->name);
                     $sendgridService->deleteZone($domain->name);

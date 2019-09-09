@@ -2,9 +2,8 @@
 
 namespace Modules\Core\Services;
 
-use App\Entities\NotazzInvoice;
-use App\Entities\Sale;
 use Carbon\Carbon;
+use Modules\Core\Entities\NotazzInvoice;
 use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzService
@@ -93,6 +92,7 @@ class NotazzService
                                                          'sale',
                                                      ])
                                               ->where('status', $notazzInvoicesModel->present()->getStatus('pending'))
+                                              ->where('schedule', '<', Carbon::now())
                                               ->get();
 
         foreach ($notazzInvoices as $notazzInvoice) {

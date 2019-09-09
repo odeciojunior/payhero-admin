@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities;
+namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -65,6 +65,6 @@ class NotazzInvoice extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('App\Entities\Sale');
+        return $this->belongsTo('Modules\Core\Entities\Sale');
     }
 }
