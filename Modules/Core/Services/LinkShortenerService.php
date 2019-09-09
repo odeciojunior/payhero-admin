@@ -28,7 +28,7 @@ class LinkShortenerService
             $linkValidate = $this->http($apiCall);
 
             if ($linkValidate == '') {
-                Log::warning('Link URL invalido (ZenviaSmsService - sendSMS) - ' . $url);
+                Log::warning('Link URL invalido (LinkShortenerService - shorten) - ' . $url);
 
                 return $linkValidate;
             } else {

@@ -22,7 +22,7 @@ class HotZappService
 
     /**
      * @param Sale $sale
-     * @param $plans
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     function boletoPaid(Sale $sale)
     {
