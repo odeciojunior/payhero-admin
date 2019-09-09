@@ -31,13 +31,14 @@ class ReleasedBalanceNotifyUserListener
 
             $transfers = $event->transfer;
 
-            $transfers = $transfers->groupBy('user')->map(function($row) {
+            $transfers = $transfers->groupBy('user_id')->map(function($row) {
                 return $row->sum('value');
             });
-            $message   = '';
+
+            $message = '';
             foreach ($transfers as $user_id => $value) {
-                $user      = $userModel->find($user_id);
-                $message   = 'O valor de R$' . number_format(intval($value) / 100, 2, ',', '.') . ' foi acrescentado ao saldo disponível.';
+                $user    = $userModel->find($user_id);
+                $message = 'O valor de R$' . number_format(intval($value) / 100, 2, ',', '.') . ' foi acrescentado ao saldo disponível.';
                 $user->notify(new ReleasedBalanceNotification($message));
             }
         } catch (Exception $e) {

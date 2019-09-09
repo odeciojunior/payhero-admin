@@ -13,7 +13,7 @@ class TransferPresenter extends Presenter
             switch ($status) {
                 case 1:
                     return 'in';
-                case 0:
+                case 2:
                     return 'out';
             }
 
@@ -23,7 +23,7 @@ class TransferPresenter extends Presenter
                 case 'in':
                     return 1;
                 case 'out':
-                    return 0;
+                    return 2;
             }
 
             return '';

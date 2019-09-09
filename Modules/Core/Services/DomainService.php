@@ -96,7 +96,9 @@ class DomainService
 
     /**
      * @param null $domainId
+     * @param bool $reCheck
      * @return bool
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function verifyPendingDomains($domainId = null, $reCheck = false)
     {
@@ -108,9 +110,8 @@ class DomainService
                                        'project.shopifyIntegrations',
                                        'project.users',
                                    ]);
-
             if (!$reCheck) {
-                $domains->where('status', '!=', $this->getDomainModel()->getEnum('status', 'approved'));
+                $domains->where('status', '!=', $this->getDomainModel()->present()->getStatus('approved'));
             }
 
             if (!empty($domainId)) {
@@ -137,7 +138,7 @@ class DomainService
 
                     if ($responseValidateDomain && $responseValidateLink) {
                         $domain->update([
-                                            'status' => $this->getDomainModel()->getEnum('status', 'approved'),
+                                            'status' => $this->getDomainModel()->present()->getStatus('approved'),
                                         ]);
                         Log::warning('domains update command aqui 1');
                     }
@@ -161,8 +162,8 @@ class DomainService
 
                                     if ($shopify->checkCartTemplate($htmlCart)) {
                                         $domain->update([
-                                                            'status' => $this->getDomainModel()
-                                                                             ->getEnum('status', 'approved'),
+                                                            'status' => $this->getDomainModel()->present()
+                                                                             ->getStatus('approved'),
                                                         ]);
 
                                         return true;
@@ -173,7 +174,8 @@ class DomainService
 
                                         $shopifyIntegration->update([
                                                                         'theme_type' => $this->getShopifyIntegrationModel()
-                                                                                             ->getEnum('theme_type', 'basic_theme'),
+                                                                                             ->present()
+                                                                                             ->getThemeType('basic_theme'),
                                                                         'theme_name' => $shopify->getThemeName(),
                                                                         'theme_file' => 'sections/cart-template.liquid',
                                                                         'theme_html' => $htmlCart,
@@ -186,8 +188,8 @@ class DomainService
                                     Log::warning('domains update command tema ajax ...');
 
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $this->getShopifyIntegrationModel()
-                                                                                         ->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_type' => $this->getShopifyIntegrationModel()->present()
+                                                                                         ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'snippets/ajax-cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
@@ -217,7 +219,7 @@ class DomainService
 
                     //integracao no shopify funcionou? aprova o dominio
                     $domain->update([
-                                        'status' => $this->getDomainModel()->getEnum('status', 'approved'),
+                                        'status' => $this->getDomainModel()->present()->getStatus('approved'),
                                     ]);
 
                     event(new DomainApprovedEvent($domain, $domain->project, $domain->project->users));
@@ -225,7 +227,7 @@ class DomainService
                     Log::warning('domains update command final');
                 } else {
                     $domain->update([
-                                        'status' => $this->getDomainModel()->getEnum('status', 'pending'),
+                                        'status' => $this->getDomainModel()->present()->getStatus('pending'),
                                     ]);
                     Log::warning('domains update command final else');
 
@@ -236,9 +238,9 @@ class DomainService
             return true;
         } catch (Exception $e) {
             $domain->update([
-                                'status' => $this->getDomainModel()->getEnum('status', 'pending'),
+                                'status' => $this->getDomainModel()->present()->getStatus('pending'),
                             ]);
-            
+
             Log::warning('DomainService - Erro ao verificar dominios pendentes');
             report($e);
 
