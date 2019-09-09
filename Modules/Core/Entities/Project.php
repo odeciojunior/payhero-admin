@@ -270,10 +270,10 @@ class Project extends Model
     /**
      * @return HasMany
      */
-    public function zenviaSms()
+    /*public function zenviaSms()
     {
-        return $this->hasMany('Modules\Core\Entities\ZenviaSm');
-    }
+        return $this->hasMany('Modules\Core\Entities\ZenviaSms');
+    }*/
 
     /**
      * @return HasOne

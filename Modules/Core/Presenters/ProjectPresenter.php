@@ -11,7 +11,7 @@ class ProjectPresenter extends Presenter
     /**
      * @return mixed
      */
-    public function getProjects()
+    public function Modules\Core\
     {
         $projectModel     = new Project();
         $userProjectModel = new UserProject();

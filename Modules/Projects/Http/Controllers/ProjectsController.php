@@ -30,9 +30,9 @@ class ProjectsController extends Controller
     public function index()
     {
         try {
-            $projectModel = new Project();
+            $projectService = new ProjectService();
 
-            $projects = $projectModel->present()->getProjects();
+            $projects = $projectService->getMyProjects();
 
             return view('projects::index', [
                 'projects' => $projects,
