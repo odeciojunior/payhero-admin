@@ -3,10 +3,10 @@
 namespace Modules\Register\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Entities\Company;
-use App\Entities\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Invitation;
 use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Modules\Core\Services\FoxUtils;
