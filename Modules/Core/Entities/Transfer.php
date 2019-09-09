@@ -2,7 +2,11 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\TransferPresenter;
 
 /**
  * @property integer $id
@@ -21,30 +25,40 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Transfer extends Model
 {
+    use FoxModelTrait, PresentableTrait;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
+    /**
+     * @var string
+     */
+    protected $presenter = TransferPresenter::class;
+    /**
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
     /**
      * @var array
      */
     protected $fillable = [
-        'transaction_id', 
-        'user_id', 
-        'company_id', 
-        'value', 
-        'type', 
-        'type_enum', 
-        'reason', 
-        'created_at', 
-        'updated_at'
+        'transaction_id',
+        'user_id',
+        'company_id',
+        'value',
+        'type',
+        'type_enum',
+        'reason',
+        'created_at',
+        'updated_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function transaction()
     {
@@ -52,7 +66,7 @@ class Transfer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
@@ -60,7 +74,7 @@ class Transfer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {

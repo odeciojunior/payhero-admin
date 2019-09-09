@@ -34,7 +34,7 @@ class TransfersService
                                                        'transaction_id' => $transaction->id,
                                                        'user_id'        => $company->user_id,
                                                        'company_id'     => $company->id,
-                                                       'type_enum'      => $transferModel->getEnum('type_enum', 'in'),
+                                                       'type_enum'      => $transferModel->present()->getTypeEnum('in'),
                                                        'value'          => $transaction->value,
                                                        'type'           => 'in',
                                                    ]);
@@ -68,7 +68,7 @@ class TransfersService
                                                                  'transaction_id' => $transactionsAnticipated->id,
                                                                  'user_id'        => $company->user_id,
                                                                  'company_id'     => $company->id,
-                                                                 'type_enum'      => $transferModel->getEnum('type_enum', 'in'),
+                                                                 'type_enum'      => $transferModel->present()->getTypeEnum('in'),
                                                                  'value'          => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
                                                                  'type'           => 'in',
                                                              ]);
