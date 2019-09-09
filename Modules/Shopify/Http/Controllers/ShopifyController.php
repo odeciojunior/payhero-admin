@@ -340,7 +340,7 @@ class ShopifyController extends Controller
                                 }
 
                                 $shopifyIntegration->update([
-                                                                'status' => $shopifyIntegration->getEnum('status', 'approved'),
+                                                                'status' => $shopifyIntegration->present()->getStatus('approved'),
                                                             ]);
                             }
 
