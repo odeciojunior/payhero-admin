@@ -19,12 +19,13 @@ class SalesRecoveryResource extends Resource
      */
     public function toArray($request)
     {
+        $domainModel = new Domain();
 
         $status = '';
         if ($this->status == 'abandoned cart') {
             $status = 'Não recuperado';
         } else {
-            $status = 'Recuperado'; 
+            $status = 'Recuperado';
         }
 
         $value         = 0;
@@ -34,8 +35,15 @@ class SalesRecoveryResource extends Resource
             $value += str_replace('.', '', $plan['price']) * $planCheckout['amount'];
         }
 
-        $domain = Domain::where('project_id', $this->project)->first();
-        $link   = "https://checkout." . $domain['name'] . "/recovery/" . $this->id_log_session;
+        $domain = $domainModel->where([
+                                          ['project_id', $this->project_id],
+                                          ['status', $domainModel->present()->getStatus('approved')],
+                                      ])->first();
+        if (!empty($domain)) {
+            $link = "https://checkout." . $domain->name . "/recovery/" . $this->id_log_session;
+        } else {
+            $link = '';
+        }
 
         if ($this->email_sent_amount == null || $this->email_sent_amount == 0) {
             $emailSentAmount = 'Não enviado';
@@ -62,5 +70,4 @@ class SalesRecoveryResource extends Resource
             'whatsapp_link'   => "https://api.whatsapp.com/send?phone=" . FoxUtils::prepareCellPhoneNumber($this->telephone) . '&text=Olá ' . explode(' ', $this->name)[0],
         ];
     }
-
 }

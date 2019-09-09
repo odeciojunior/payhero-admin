@@ -191,19 +191,14 @@ class SalesRecoveryService
         $checkout->utm_term     = ($checkout->utm_term == 'null' || $checkout->utm_term == null) ? '' : $checkout->utm_term;
         $checkout->utm_content  = ($checkout->utm_content == 'null' || $checkout->utm_content == null) ? '' : $checkout->utm_content;
 
-        if (empty($delivery['city'])) {
-            $delivery['city'] = '';
-        }
-        if (empty($delivery['street'])) {
-            $delivery['street'] = '';
-        }
-        if (empty($delivery['zip_code'])) {
-            $delivery['zip_code'] = '';
-        }
-        if (empty($delivery['state'])) {
-            $delivery['state'] = '';
-        }
+        $delivery['city'] = $log->city;
 
+        $delivery['street'] = $log->street;
+
+        $delivery['zip_code'] = $log->zip_code;
+
+        $delivery['state'] = $log->state;
+        
         $status = '';
         if ($checkout->status == 'abandoned cart') {
             $status = 'Não recuperado';
@@ -226,6 +221,8 @@ class SalesRecoveryService
         } else {
             $link = 'Dominio removido';
         }
+        $checkout->id = '';
+        $log->id      = '';
 
         return [
             'checkout' => $checkout,

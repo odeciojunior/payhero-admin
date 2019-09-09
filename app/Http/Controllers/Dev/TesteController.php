@@ -341,7 +341,7 @@ class TesteController extends Controller
     }
 
     public function joaoLucasFunction()
-    {
+    {/*
         $productsModel    = new Product();
         $productPlanModel = new ProductPlan();
         $planModel        = new Plan();
@@ -361,7 +361,7 @@ class TesteController extends Controller
             }
         }
 
-        dd("hey");
+        dd("hey");*/
     }
 }
 

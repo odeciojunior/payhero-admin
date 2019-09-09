@@ -63,6 +63,7 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error(response) {
+                console.log(response);
                 if (response.status === 422) {
                     for (error in response.errors) {
                         alertCustom('error', String(response.errors[error]));
