@@ -330,46 +330,24 @@ class ShopifyService
      */
     public function updateThemeTemplate($html)
     {
-        preg_match_all("/({%)[\s\S]+?(%})/", $html, $tokens, PREG_OFFSET_CAPTURE);
-        foreach ($tokens[0] as $key => $item) {
-            $from = '/' . preg_quote($item[0], '/') . '/';
-            $html = preg_replace($from, 'foxx', $html, 1);
+
+        $startScriptPos = strpos($html, "<!-- start cloudfox utm script -->");
+        $endScriptPos   = strpos($html, "<!-- end cloudfox utm script -->");
+
+        if ($startScriptPos !== false) {
+            //script já existe, remove
+            $size = ($endScriptPos + 32) - $startScriptPos;
+
+            $html = substr_replace($html, '', $startScriptPos, $size);
         }
 
-        preg_match_all("/<!--(.*)-->/Uis", $html, $tokensC, PREG_OFFSET_CAPTURE);
-        foreach ($tokensC[0] as $key => $item) {
-            $from = '/' . preg_quote($item[0], '/') . '/';
-            $html = preg_replace($from, 'foox', $html, 1);
-        }
+        $strPos = strpos($html, '</body>');
 
-        $dom = new Dom;
-
-        $dom->setOptions([
-                             'strict'             => false,
-                             'cleanupInput'       => false,
-                             'preserveLineBreaks' => true,
-                             'removeScripts'      => false,
-                         ]);
-
-        $dom->load($html);
-
-        $body = $dom->find('body');
-        $body = $body[0];
-
-        //div FoxScript
-        $foxScriptUtm = new Selector('#foxScriptUtm', new Parser());
-        $divs         = $foxScriptUtm->find($body);
-        foreach ($divs as $div) {
-            $parent = $div->getParent();
-            $parent->removeChild($div->id());
-        }
-
-        $divFoxScriptUtm = new HtmlNode('div');
-
-        $divFoxScriptUtm->setAttribute('id', 'foxScriptUtm');
-
-        $script = new HtmlNode('script');
-        $script->addChild(new TextNode("var url_string = window.location.href;
+        $scriptFox = "<!-- start cloudfox utm script -->
+        <div id='foxScriptUtm'>
+        <script>
+    
+            var url_string = window.location.href;
             var url = new URL(url_string);
             var src = url.searchParams.get('src');
             var utm_source = url.searchParams.get('utm_source');
@@ -384,27 +362,15 @@ class ShopifyService
                 var cookieValue = 'src='+src+'|'+'utm_source='+utm_source+'|'+'utm_medium='+utm_medium+'|'+'utm_campaign='+utm_campaign+'|'+'utm_term='+utm_term+'|'+'utm_content='+utm_content;
                 var myDate = new Date();
                 myDate.setMonth(myDate.getMonth() + 12);
-                
-                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate; 
-            }")
-        );
 
-        $divFoxScriptUtm->addChild($script);
-        $body->addChild($divFoxScriptUtm);
+                document.cookie = cookieName +'=' + cookieValue + ';domain=.{{ shop.domain }};path=/;expires=' + myDate;
+            }
+    
+        </script>
+        </div>
+        <!-- end cloudfox utm script -->";
 
-        //return $dom->root->outerHtml();
-
-        $html = $dom->root->outerHtml();
-
-        foreach ($tokens[0] as $key => $item) {
-            $from = '/' . preg_quote('foxx', '/') . '/';
-            $html = preg_replace($from, $item[0], $html, 1);
-        }
-
-        foreach ($tokensC[0] as $key => $item) {
-            $from = '/' . preg_quote('foox', '/') . '/';
-            $html = preg_replace($from, $item[0], $html, 1);
-        }
+        $html = substr_replace($html, $scriptFox, $strPos, 0);
 
         return $html;
     }
