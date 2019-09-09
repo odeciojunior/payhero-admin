@@ -104,8 +104,12 @@ class SalesController extends Controller
                     $sale['flag'] = 'boleto';
                 }
 
-                $client              = $clientModel->find($sale->client);
-                $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
+                $client = $clientModel->find($sale->client_id);
+                if (!empty($client['telephone'])) {
+                    $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
+                } else {
+                    $client['telephone'] = '';
+                }
 
                 $products = $sale->present()->getProducts();
 
@@ -132,7 +136,7 @@ class SalesController extends Controller
                 $sale->shipment_value   = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-                $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company_id', $userCompanies)
+                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
                                                   ->first();
 
                 $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
