@@ -69,8 +69,15 @@ $(document).ready(function () {
                             });
                             $("#is-projects").show();
                             $("#select-projects").find('option:eq(0)').prop('selected', true);
+                            $(".product-is-empty-cla").hide();
+
                         } else {
                             $("#is-projects").hide();
+                        }
+
+                        if ($("#type-products").val() === "0") {
+                            $(".product-is-empty-cla").show();
+
                         }
                     });
 
@@ -159,7 +166,6 @@ $(document).ready(function () {
                     $("#pagination-products").html('');
 
                     $(".products-is-empty").show();
-                    $(".product-is-empty-cla").show();
 
                 }
 
