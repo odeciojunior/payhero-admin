@@ -141,10 +141,10 @@ class PostBackMercadoPagoController extends Controller
 
                 $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
 
-                $plan     = $planModel->find($plansSale->plan);
-                $project  = $projectModel->find($sale->project);
-                $delivery = $deliveryModel->find($sale->delivery);
-                $client   = $clientModel->find($sale->client);
+                $plan     = $planModel->find($plansSale->plan_id);
+                $project  = $projectModel->find($sale->project_id);
+                $delivery = $deliveryModel->find($sale->delivery_id);
+                $client   = $clientModel->find($sale->client_id);
 
                 event(new SaleApprovedEvent($plan, $sale, $project, $delivery, $client));
             } else {
@@ -160,7 +160,7 @@ class PostBackMercadoPagoController extends Controller
                     foreach ($transactions as $transaction) {
 
                         if ($transaction->status == 'transfered') {
-                            $company = $companyModel->find($transaction->company);
+                            $company = $companyModel->find($transaction->company_id);
 
                             $transferModel->create([
                                                        'transaction_id' => $transaction->id,

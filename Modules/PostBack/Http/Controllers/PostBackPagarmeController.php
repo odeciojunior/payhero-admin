@@ -3,22 +3,22 @@
 namespace Modules\PostBack\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Entities\Plan;
-use App\Entities\Sale;
-use App\Entities\Company;
-use App\Entities\PlanSale;
-use App\Entities\Transfer;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\ConvertaxIntegration;
+use Modules\Core\Entities\HotzappIntegration;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ShopifyIntegration;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Transfer;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
-use App\Entities\PostbackLog;
-use App\Entities\Transaction;
 use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Entities\HotZappIntegration;
-use App\Entities\ShopifyIntegration;
-use App\Entities\ConvertaxIntegration;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Services\HotZappService;
 
@@ -58,7 +58,7 @@ class PostBackPagarmeController extends Controller
                 return response()->json(['message' => 'success'], 200);
             }
 
-            $transactions = $transactionModel->where('sale', $sale->id)->get();
+            $transactions = $transactionModel->where('sale_id', $sale->id)->get();
 
             if ($requestData['transaction']['status'] == 'paid') {
 
@@ -74,7 +74,7 @@ class PostBackPagarmeController extends Controller
 
                     if ($transaction->company != null) {
 
-                        $company = $companyModel->find($transaction->company);
+                        $company = $companyModel->find($transaction->company_id);
 
                         $user = $userModel->find($company['user_id']);
 
@@ -94,15 +94,15 @@ class PostBackPagarmeController extends Controller
                     }
                 }
 
-                $plansSale = $planSaleModel->where('sale', $sale->id)->first();
+                $plansSale = $planSaleModel->where('sale_id', $sale->id)->first();
 
-                $plan = $planModel->find($plansSale->plan);
+                $plan = $planModel->find($plansSale->plan_id);
 
                 if ($sale->shopify_order != '') {
 
                     $shopifyIntegrationModel = new ShopifyIntegration();
 
-                    $shopifyIntegration = $shopifyIntegrationModel->where('project', $plan->project)->first();
+                    $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $plan->project_id)->first();
 
                     try {
                         $credential = new PublicAppCredential($shopifyIntegration['token']);
@@ -122,7 +122,7 @@ class PostBackPagarmeController extends Controller
 
                 try {
                     $hotZappIntegrationModel = new HotZappIntegration();
-                    $hotzappIntegration = $hotZappIntegrationModel->where('project_id', $plan->project)->first();
+                    $hotzappIntegration = $hotZappIntegrationModel->where('project_id', $plan->project_id)->first();
 
                     if (!empty($hotzappIntegration)) {
                         $hotZappService = new HotZappService($hotzappIntegration->link);
@@ -130,7 +130,7 @@ class PostBackPagarmeController extends Controller
                     }
 
                     $convertaxIntegrationModel = new ConvertaxIntegration();
-                    $convertaxIntegration = $convertaxIntegrationModel->where('project_id', $plan->project)->first();
+                    $convertaxIntegration = $convertaxIntegrationModel->where('project_id', $plan->project_id)->first();
 
                     if (!empty($convertaxIntegration)) {
                         $hotZappService = new HotZappService($convertaxIntegration->link);
@@ -154,7 +154,7 @@ class PostBackPagarmeController extends Controller
                     foreach ($transactions as $transaction) {
 
                         if ($transaction->status == 'transfered') {
-                            $company = $companyModel->find($transaction->company);
+                            $company = $companyModel->find($transaction->company_id);
 
                             $transferModel->create([
                                                        'transaction' => $transaction->id,
