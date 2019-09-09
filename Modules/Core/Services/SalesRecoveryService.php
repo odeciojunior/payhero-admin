@@ -46,14 +46,6 @@ class SalesRecoveryService
     }
 
     /**
-     * @return string
-     */
-    public function getAllTypes()
-    {
-        return ''; //TODO FALTA IMPLEMENTAR
-    }
-
-    /**
      * @param int|null $projectId
      * @param string|null $dateStart
      * @param string|null $dateEnd

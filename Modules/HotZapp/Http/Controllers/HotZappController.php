@@ -11,6 +11,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Services\ProjectService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Entities\HotzappIntegration;
@@ -151,11 +152,12 @@ class HotZappController extends Controller
         try {
             if (!empty($id)) {
                 $hotzappIntegrationModel = new HotzappIntegration();
-                $projectModel            = new Project();
+                $projectService          = new ProjectService();
+
+                $projects = $projectService->getMyProjects();
 
                 $projectId   = current(Hashids::decode($id));
                 $integration = $hotzappIntegrationModel->where('project_id', $projectId)->first();
-                $projects    = $projectModel->present()->getProjects();
 
                 if ($integration) {
                     return view('hotzapp::edit', ['projects' => $projects, 'integration' => $integration]);

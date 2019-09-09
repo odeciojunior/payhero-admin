@@ -3,6 +3,9 @@
 namespace App\Listeners\Modules\Core\Listeners;
 
 use App\Events\Modules\Core\Events\SaleApprovedEvent;
+use Modules\Core\Entities\HotzappIntegration;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\PlanSale;
 use Modules\Core\Services\HotZappService;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -40,12 +43,12 @@ class HotZappCardApprovedSaleListener
 
                 $hotZappService = new HotZappService($hotzappIntegration->link);
 
-                $plansSale = $planSaleModel->where('sale', $event->sale->id)->get();
+                $plansSale = $planSaleModel->where('sale_id', $event->sale->id)->get();
 
                 $plans = [];
                 foreach ($plansSale as $planSale) {
 
-                    $plan = $planModel->find($planSale->plan);
+                    $plan = $planModel->find($planSale->plan_id);
 
                     $plans[] = [
                         "price"        => $plan->price,

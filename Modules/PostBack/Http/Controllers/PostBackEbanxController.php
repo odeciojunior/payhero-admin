@@ -4,20 +4,20 @@ namespace Modules\PostBack\Http\Controllers;
 
 use \Ebanx\Config;
 use Carbon\Carbon;
-use App\Entities\Plan;
-use App\Entities\Sale;
-use App\Entities\Company;
-use App\Entities\PlanSale;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\PostbackLog;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\ShopifyIntegration;
 use Slince\Shopify\Client;
 use Illuminate\Http\Request;
-use App\Entities\PostbackLog;
-use App\Entities\Transaction;
+use Modules\Core\Entities\Transaction;
 use Illuminate\Http\Response;
 use Modules\Core\Entities\User;
 use Modules\Core\HotZapp\HotZapp;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use App\Entities\ShopifyIntegration;
 use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Transportadoras\Kapsula;
 use Modules\Core\Transportadoras\LiftGold;
@@ -77,7 +77,7 @@ class PostBackEbanxController extends Controller
             $companyModel     = new Company();
             $userModel        = new User();
 
-            $transactions = $transactionModel->where('sale', $sale->id)->get();
+            $transactions = $transactionModel->where('sale_id', $sale->id)->get();
 
             if ($response->payment->status == 'CA') {
                 if ($sale->payment_method == 2) {
@@ -109,7 +109,7 @@ class PostBackEbanxController extends Controller
 
                     if ($transaction->company != null) {
 
-                        $company = $companyModel->find($transaction->company);
+                        $company = $companyModel->find($transaction->company_id);
 
                         $user = $userModel->find($company['user_id']);
 
@@ -135,11 +135,11 @@ class PostBackEbanxController extends Controller
                     $planModel               = new Plan();
                     $shopifyIntegrationModel = new ShopifyIntegration();
 
-                    $plansSale = $planSaleModel->where('sale', $sale['id'])->first();
+                    $plansSale = $planSaleModel->where('sale_id', $sale['id'])->first();
 
-                    $plan = $planModel->find($plansSale->plan);
+                    $plan = $planModel->find($plansSale->plan_id);
 
-                    $shopifyIntegration = $shopifyIntegrationModel->where('project', $plan['project'])->first();
+                    $shopifyIntegration = $shopifyIntegrationModel->where('project_id', $plan['project_id'])->first();
 
                     try {
                         $credential = new PublicAppCredential($shopifyIntegration['token']);

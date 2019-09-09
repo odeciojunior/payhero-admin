@@ -14,6 +14,7 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Delivery;
 use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Services\ProjectService;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Lang;
@@ -34,25 +35,23 @@ class SalesController extends Controller
     public function index()
     {
         try {
-            $userProjectModel = new UserProject();
             $transactionModel = new Transaction();
             $companyModel     = new Company();
+            $projectService   = new ProjectService();
 
-            $userProjects = $userProjectModel->with('project')
-                                             ->where('user_id', auth()->user()->id)
-                                             ->get();
+            $myProjects = $projectService->getMyProjects();
 
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                                                                    ->pluck('id')
-                                                                    ->toArray();
+                                          ->pluck('id')
+                                          ->toArray();
 
             $projects = [];
 
-            foreach ($userProjects as $userProject) {
-                if ($userProject->project != null) {
+            foreach ($myProjects as $project) {
+                if ($project != null) {
                     $projects[] = [
-                        'id'   => Hashids::encode($userProject->project->id),
-                        'nome' => $userProject->project->name,
+                        'id'   => Hashids::encode($project->id),
+                        'nome' => $project->name,
                     ];
                 }
             }
@@ -105,8 +104,12 @@ class SalesController extends Controller
                     $sale['flag'] = 'boleto';
                 }
 
-                $client              = $clientModel->find($sale->client);
-                $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
+                $client = $clientModel->find($sale->client_id);
+                if (!empty($client['telephone'])) {
+                    $client['telephone'] = preg_replace("/[^0-9]/", "", $client['telephone']);
+                } else {
+                    $client['telephone'] = '';
+                }
 
                 $products = $sale->present()->getProducts();
 
@@ -133,17 +136,16 @@ class SalesController extends Controller
                 $sale->shipment_value   = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-                $transaction   = $transactionModel->where('sale', $sale->id)->whereIn('company_id', $userCompanies)
+                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
                                                   ->first();
 
                 $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
                                                          ->where('company_id', 29)
                                                          ->first();
 
-                if(!empty($transactionConvertax)){
+                if (!empty($transactionConvertax)) {
                     $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
-                }
-                else{
+                } else {
                     $convertaxValue = '0,00';
                 }
 
@@ -173,7 +175,8 @@ class SalesController extends Controller
                     'subTotal'        => number_format(intval($subTotal) / 100, 2, ',', '.'),
                     'discount'        => number_format(intval($discount) / 100, 2, ',', '.'),
                     'shipment_value'  => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=Olá ' . $client->present()->getFirstName(),
+                    'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=Olá ' . $client->present()
+                                                                                                                                                             ->getFirstName(),
                     'comission'       => $comission,
                     'convertax_value' => $convertaxValue,
                     'taxa'            => number_format($taxa / 100, 2, ',', '.'),
@@ -207,7 +210,7 @@ class SalesController extends Controller
         try {
             $companyModel     = new Company();
             $saleModel        = new Sale();
-            $planSaleModel    = new PlanSale(); 
+            $planSaleModel    = new PlanSale();
             $planModel        = new Plan();
             $clientModel      = new Client();
             $transactionModel = new Transaction();
@@ -228,7 +231,7 @@ class SalesController extends Controller
                                                         'sale.plansSales.plan.project',
                                                     ])
                                              ->whereHas('sale', function($querySale) {
-                                                 $querySale->whereNotIn('status',[ 3, 5 , 10]);
+                                                 $querySale->whereNotIn('status', [3, 5, 10]);
                                              })
                                              ->whereIn('company_id', $userCompanies);
 
@@ -527,7 +530,6 @@ class SalesController extends Controller
             report($e);
         }
     }
-
 }
 
 

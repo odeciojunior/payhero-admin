@@ -7,6 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DomainRecord;
+use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ShopifyService;
 use Modules\Core\Services\SendgridService;
 use Modules\Core\Services\CloudFlareService;
@@ -157,7 +158,6 @@ class ProjectService
                                        'plans.productsPlans.product',
                                        'pixels',
                                        'discountCoupons',
-                                       'zenviaSms',
                                        'shippings',
                                        'usersProjects',
                                    ])
@@ -272,5 +272,18 @@ class ProjectService
 
             throw new ServiceException('ProjectService - Erro ao remover projeto - ' . $e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMyProjects()
+    {
+        $projectModel     = new Project();
+        $userProjectModel = new UserProject();
+
+        $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
+
+        return $projectModel->whereIn('id', $userProjects)->get();
     }
 }

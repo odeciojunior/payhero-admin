@@ -19,18 +19,17 @@ class TrackingCodeUpdatedSendEmailClientListener
     {
         $sendGridService = new SendgridService();
         $domainModel     = new Domain();
-        $clientName      = $event->sale->clientModel->name;
-        $clientEmail     = $event->sale->clientModel->email;
-        $projectName     = $event->sale->projectModel->name;
-        $projectContact  = $event->sale->projectModel->contact;
+        $clientName      = $event->sale->client->name;
+        $clientEmail     = $event->sale->client->email;
 
+        $projectName     = $event->sale->project->name;
+        $projectContact  = $event->sale->project->contact;
         $clientNameExploded = explode(' ', $clientName);
-        $domain             = $domainModel->where('project_id', $event->sale->projectModel->id)->first();
+        $domain             = $domainModel->where('project_id', $event->sale->project->id)->first();
         $products           = $event->sale->present()->getProducts();
-
         $data = [
             'name'            => $clientNameExploded[0],
-            'project_logo'    => $event->sale->projectModel->logo,
+            'project_logo'    => $event->sale->project->logo,
             'tracking_code'   => $event->sale->delivery()->first()->tracking_code,
             'project_contact' => $projectContact,
             "products"        => $products,
