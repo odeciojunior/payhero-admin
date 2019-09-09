@@ -92,12 +92,12 @@ class NotazzService
         $notazzInvoices = $notazzInvoicesModel->with([
                                                          'sale',
                                                      ])
-                                              ->where('status', $notazzInvoicesModel->getEnum('status', 'pending'))
+                                              ->where('status', $notazzInvoicesModel->present()->getStatus('pending'))
                                               ->get();
 
         foreach ($notazzInvoices as $notazzInvoice) {
             $data = [
-                ''
+                '',
 
             ];
 
@@ -111,6 +111,7 @@ class NotazzService
      * @param int $invoiceType
      * @param null $invoiceSchedule
      * @return bool
+     * @throws \Laracasts\Presenter\Exceptions\PresenterException
      */
     public function createInvoice($notazzIntegrationId, $saleId, $invoiceType = 1, $invoiceSchedule = null)
     {
@@ -130,7 +131,8 @@ class NotazzService
                                                              'invoice_type'          => $invoiceType,
                                                              'notazz_id'             => null,
                                                              'external_id'           => Hashids::encode($saleId),
-                                                             'status'                => $notazzInvoiceModel->getEnum('status', 'pending'),
+                                                             'status'                => $notazzInvoiceModel->present()
+                                                                                                           ->getStatus('pending'),
                                                              'canceled_flag'         => false,
                                                              'schedule'              => $schedule,
                                                          ]);

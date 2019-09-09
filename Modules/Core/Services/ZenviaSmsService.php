@@ -13,6 +13,10 @@ use Zenvia\Model\Sms;
 use Zenvia\Model\SmsFacade;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class ZenviaSmsService
+ * @package Modules\Core\Services
+ */
 class ZenviaSmsService
 {
     private $zenviaSms;

@@ -11,6 +11,10 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Events\ReleasedBalanceEvent;
 
+/**
+ * Class TransfersService
+ * @package Modules\Core\Services
+ */
 class TransfersService
 {
     public function verifyTransactions()
@@ -68,7 +72,8 @@ class TransfersService
                                                                  'transaction_id' => $transactionsAnticipated->id,
                                                                  'user_id'        => $company->user_id,
                                                                  'company_id'     => $company->id,
-                                                                 'type_enum'      => $transferModel->present()->getTypeEnum('in'),
+                                                                 'type_enum'      => $transferModel->present()
+                                                                                                   ->getTypeEnum('in'),
                                                                  'value'          => $transactionsAnticipated->value - $transactionsAnticipated->antecipable_value,
                                                                  'type'           => 'in',
                                                              ]);

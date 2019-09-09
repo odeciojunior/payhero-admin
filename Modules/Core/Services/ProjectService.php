@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Exception;
+use Illuminate\Contracts\Foundation\Application;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DomainRecord;
@@ -58,7 +59,7 @@ class ProjectService
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return Application|mixed
      */
     function getShopifyIntegration()
     {
@@ -70,7 +71,7 @@ class ProjectService
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return Application|mixed
      */
     private function getCloudFlareService()
     {
@@ -82,7 +83,7 @@ class ProjectService
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|SendgridService
+     * @return Application|mixed|SendgridService
      */
     private function getSendgridService()
     {
@@ -94,7 +95,7 @@ class ProjectService
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return Application|mixed
      */
     private function getDomainRecordModel()
     {
@@ -106,7 +107,7 @@ class ProjectService
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return Application|mixed
      */
     function getProjectModel()
     {
@@ -119,6 +120,7 @@ class ProjectService
 
     /**
      * @param $projectId
+     * @return mixed
      * @throws ServiceException
      */
     public function hasSales($projectId)
@@ -240,7 +242,7 @@ class ProjectService
                                     $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
                                     $shopifyIntegration->delete();
                                 }
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 //throwl
 
                                 throw new ServiceException('ProjectService - delete - erro ao mudar template ' . $e->getMessage(), $e->getCode(), $e);

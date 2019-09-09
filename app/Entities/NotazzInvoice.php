@@ -4,7 +4,10 @@ namespace App\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
+use Modules\Core\Presenters\NotazzInvoicePresenter;
 
 /**
  * @property integer $id
@@ -19,10 +22,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $updated_at
  * @property Sale $sale
  */
+
+/**
+ * Class NotazzInvoice
+ * @package App\Entities
+ */
 class NotazzInvoice extends Model
 {
-    use FoxModelTrait;
-    use SoftDeletes;
+    use FoxModelTrait, SoftDeletes, PresentableTrait;
+    /**
+     * @var string
+     */
+    protected $presenter = NotazzInvoicePresenter::class;
     /**
      * @var array
      */
@@ -50,19 +61,7 @@ class NotazzInvoice extends Model
     ];
 
     /**
-     * @var array
-     */
-    private $enum = [
-        'status' => [
-            1 => 'pending',
-            2 => 'analyzing',
-            3 => 'approved',
-            4 => 'refused',
-        ],
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function sale()
     {
