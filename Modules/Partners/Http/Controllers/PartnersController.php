@@ -3,12 +3,13 @@
 namespace Modules\Partners\Http\Controllers;
 
 use Exception;
-use App\Entities\Company;
-use App\Entities\Invitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Invitation;
+use Modules\Core\Entities\User;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Mail;
 use Modules\Core\Entities\UserProject;
@@ -31,7 +32,7 @@ class PartnersController extends Controller
             if ($request->input('project')) {
                 $projectId = current(Hashids::decode($request->input('project')));
 
-                $partners = $userProjectModel->with('userId')->where('project', $projectId)
+                $partners = $userProjectModel->with('userId')->where('project_id', $projectId)
                                              ->where('type', '!=', 'producer')->get();
 
                 return PartnersResource::collection($partners);
@@ -56,7 +57,8 @@ class PartnersController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param PartnersStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(PartnersStoreRequest $request)
     {
