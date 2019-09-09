@@ -259,6 +259,15 @@ class Project extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany('Modules\Core\Entities\User', 'users_projects', 'project_id', 'user_id');
+    }
+
+
+    /**
      * @return HasMany
      */
     public function zenviaSms()
