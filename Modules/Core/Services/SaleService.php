@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Services;
 
+use Modules\Core\Entities\Sale;
+
 /**
  * Class SaleService
  * @package Modules\Core\Services
@@ -9,12 +11,13 @@ namespace Modules\Core\Services;
 class SaleService
 {
     /**
+     * @param Sale $sale
      * @return float|int
      */
-    public function getSubTotal()
+    public function getSubTotal(Sale $sale)
     {
         $subTotal = 0;
-        foreach ($this->plansSales as $planSale) {
+        foreach ($sale->plansSales as $planSale) {
             $subTotal += preg_replace("/[^0-9]/", "", $planSale->plan()->first()->price) * $planSale->amount;
         }
 
