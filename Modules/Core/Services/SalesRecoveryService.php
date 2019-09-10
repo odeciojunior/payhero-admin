@@ -100,7 +100,7 @@ class SalesRecoveryService
      * @param array $status
      * @param string|null $client
      * @return AnonymousResourceCollection
-     *  Monta Tabela quando for boleto expirado
+     *  Monta Tabela quando for boleto expirado ou cartão recusado
      */
     public function getSaleExpiredOrRefused(int $projectId = null, string $dateStart = null, string $dateEnd = null, int $paymentMethod, array $status, string $client = null)
     {

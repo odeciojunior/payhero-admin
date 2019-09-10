@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
+ * @property int $attempts
  * @property Checkout $checkout
  * @property Project $project
  * @property Shipping $shipping
@@ -95,6 +96,7 @@ class Sale extends Model
         'shopify_discount',
         'dolar_quotation',
         'first_confirmation',
+        'attempts',
         'created_at',
         'deleted_at',
         'updated_at',
