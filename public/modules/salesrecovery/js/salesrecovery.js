@@ -118,8 +118,10 @@ $(document).ready(function () {
                 $(".sale_status").hover(
                     function () {
                         $(this).css('cursor', 'pointer').text('Regerar');
+                        $(this).css("background", "#a100ff");
                     }, function () {
                         var status = $(this).attr('status');
+                        $(this).removeAttr("style");
                         $(this).text(status);
                     }
                 );
