@@ -52,7 +52,6 @@ class PagarmeService
      */
     public function boletoPayment($dueDate)
     {
-
         try {
             $transaction = $this->pagarmeClient->transactions()->create([
                                                                             'amount'                 => $this->totalValue,

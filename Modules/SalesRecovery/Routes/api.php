@@ -13,5 +13,7 @@ Route::group(
         Route::get('recovery/getrecoverydata', 'SalesRecoveryApiController@getRecoveryData');
 
         Route::post('recovery/details', 'SalesRecoveryApiController@getDetails');
+        Route::post('recovery/regenerateboleto', 'SalesRecoveryApiController@regenerateBoleto');
+
     }
 );

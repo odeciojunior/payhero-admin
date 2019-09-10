@@ -45,7 +45,6 @@ class PostBackNotazzController extends Controller
     {
         return view('postback::show');
     }
-
     /**
      * Show the form for editing the specified resource.
      * @param int $id

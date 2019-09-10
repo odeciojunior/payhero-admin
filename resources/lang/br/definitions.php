@@ -66,6 +66,17 @@ return [
                 "disabled" => "Desativado",
             ],
         ],
+        "sale"                     => [
+            "status" => [
+                "approved"     => "Aprovado",
+                "canceled"     => "Cancelado",
+                "charge_back"  => "Chargeback",
+                'in_process'   => "Em análise",
+                "pending"      => "Pendente",
+                "refused"      => "Recusado",
+                "system_error" => "Erro de sistema",
+            ],
+        ],
     ],
 
 ];

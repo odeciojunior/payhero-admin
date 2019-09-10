@@ -17,8 +17,7 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-3">
                             <label for="project">Projeto</label>
-                            <select name='select_project' id="project" class="form-control select-pad">
-                            </select>
+                            <select name='select_project' id="project" class="form-control select-pad"> </select>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-3">
                             <label for="type_recovery">Tipo de Recuperação</label>
@@ -70,6 +69,31 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- Modal regerar boleto-->
+                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                        <div class="modal-dialog modal-lg d-flex justify-content-center">
+                            <div class="modal-content w-450" id="conteudo_modal_add">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" style="font-weight: 700;">Regerar boleto</h4>
+                                </div>
+                                <div class="pt-10 pr-20 pl-20 modal_regerar_boleto_body">
+                                    <div class="form-group">
+                                        <label for="date">Data:</label>
+                                        <input name='date' id="date" class="form-control input-pad" value='' type="date">
+                                        <input type='hidden' name='saleId' id='saleId'>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="margin-top: 15px">
+                                    <button id="bt_send" type="button" class="btn btn-success">Regerar</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Modal -->
                     <!-- Modal detalhes da venda-->
                     <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-simple modal-sidebar modal-lg">
@@ -197,7 +221,7 @@
 
     @push('scripts')
 
-    <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
+        <script src="{{ asset('modules/salesrecovery/js/salesrecovery.js') }}"></script>
 
     @endpush
 

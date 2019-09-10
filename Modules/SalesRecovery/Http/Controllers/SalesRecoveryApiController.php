@@ -163,13 +163,13 @@ class SalesRecoveryApiController extends Controller
                 $saleModel   = new Sale();
                 $saleService = new SaleService();
 
-                $sale = $saleModel->find(current(Hashids::decode($validator['id'])));
+                $sale = $saleModel->find(current(Hashids::decode($request->input('id'))));
                 if (!empty($sale)) {
                     $totalPaidValue = $saleService->getSubTotal($sale);
                     $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
                     $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
 
-                    $boletoRegenerated = $pagarmeService->boletoPayment($validator['date']);
+                    $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
                     if ($boletoRegenerated['status'] == 'success') {
                         $message = 'Boleto regenerado com sucesso';
                         $status  = 200;
