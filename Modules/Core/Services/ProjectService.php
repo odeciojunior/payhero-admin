@@ -222,7 +222,7 @@ class ProjectService
 
                     foreach ($project->domains as $domain) {
 
-                        $this->getCloudFlareService()->deleteZone($domain->name);
+                        $this->getCloudFlareService()->deleteZoneById($domain->cloudflare_domain_id);
                         //zona deletada
                         $this->getSendgridService()->deleteLinkBrand($domain->name);
                         $this->getSendgridService()->deleteZone($domain->name);
