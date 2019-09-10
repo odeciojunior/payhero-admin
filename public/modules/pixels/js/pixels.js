@@ -39,7 +39,7 @@ $(function () {
                         alertCustom('error', String(response.responseJSON.errors[error]));
                     }
                 } else {
-                    alertCustom('error', String(response.responseJSON.errors[error]));
+                    alertCustom('error', String(response.responseJSON.message));
                 }
                 $("#modal-content").hide();
             },

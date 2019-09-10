@@ -209,9 +209,6 @@ class SalesController extends Controller
     {
         try {
             $companyModel     = new Company();
-            $saleModel        = new Sale();
-            $planSaleModel    = new PlanSale();
-            $planModel        = new Plan();
             $clientModel      = new Client();
             $transactionModel = new Transaction();
 
@@ -253,7 +250,7 @@ class SalesController extends Controller
             if (!empty($data["comprador"])) {
                 $customers = $clientModel->where('name', 'LIKE', '%' . $data["comprador"] . '%')->pluck('id');
                 $transactions->whereHas('sale', function($querySale) use ($customers) {
-                    $querySale->whereIn('client', $customers);
+                    $querySale->whereIn('client_id', $customers);
                 });
             }
 

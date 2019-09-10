@@ -2,7 +2,6 @@
 
 namespace Modules\PostBack\Http\Controllers;
 
-use Carbon\Carbon;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\HotzappIntegration;
@@ -13,17 +12,28 @@ use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
-use Slince\Shopify\Client;
-use Illuminate\Http\Request;
-use Modules\Core\Entities\User;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
-use Slince\Shopify\PublicAppCredential;
 use Modules\Core\Services\HotZappService;
+use Modules\Core\Entities\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controller;
+use Slince\Shopify\PublicAppCredential;
+use Slince\Shopify\Client;
+use Vinkla\Hashids\Facades\Hashids;
+use Carbon\Carbon;
+use Exception;
 
+/**
+ * Class PostBackPagarmeController
+ * @package Modules\PostBack\Http\Controllers
+ */
 class PostBackPagarmeController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function postBackListener(Request $request)
     {
 
@@ -114,7 +124,7 @@ class PostBackPagarmeController extends Controller
                         $client->getTransactionManager()->create($sale->shopify_order, [
                             "kind" => "capture",
                         ]);
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         Log::warning('erro ao alterar estado do pedido no shopify com a venda ' . $sale->id);
                         report($e);
                     }
@@ -122,22 +132,23 @@ class PostBackPagarmeController extends Controller
 
                 try {
                     $hotZappIntegrationModel = new HotZappIntegration();
-                    $hotzappIntegration = $hotZappIntegrationModel->where('project_id', $plan->project_id)->first();
+                    $hotzappIntegration      = $hotZappIntegrationModel->where('project_id', $plan->project_id)
+                                                                       ->first();
 
                     if (!empty($hotzappIntegration)) {
                         $hotZappService = new HotZappService($hotzappIntegration->link);
-                        $hotZappService->newBoleto($sale);
+                        $hotZappService->boletoPaid($sale);
                     }
 
                     $convertaxIntegrationModel = new ConvertaxIntegration();
-                    $convertaxIntegration = $convertaxIntegrationModel->where('project_id', $plan->project_id)->first();
+                    $convertaxIntegration      = $convertaxIntegrationModel->where('project_id', $plan->project_id)
+                                                                           ->first();
 
                     if (!empty($convertaxIntegration)) {
                         $hotZappService = new HotZappService($convertaxIntegration->link);
-                        $hotZappService->newBoleto($sale);
+                        $hotZappService->boletoPaid($sale);
                     }
-
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
                     report($e);
                 }
