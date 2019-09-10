@@ -153,7 +153,7 @@
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         <h4> Dados Gerais </h4>
         @if($sale->payment_method == 1)
-            <span class="table-title gray"> Bandeira: {{$sale->flag ?? ''}}</span>
+            <span class="table-title gray"> Bandeira: {{ ucfirst($sale->flag) ?? ''}}</span>
             <br>
             <span class="table-title gray"> Quantidade de parcelas: {{$sale->installments_amount ?? ''}}</span>
             <br>
@@ -172,6 +172,10 @@
         <br>
         <span class="table-title gray "> Navegador: {{$checkout->browser}} </span>
         <br>
+        @if($sale->payment_method == 1)
+            <span class="table-title gray"> Quantidade de tentativas: {{$sale->attempts ?? ''}}</span>
+            <br>
+        @endif
         <h4> Conversão </h4>
         <span class="table-title gray"> SRC: {{$checkout->src}}  </span>
         <br>
