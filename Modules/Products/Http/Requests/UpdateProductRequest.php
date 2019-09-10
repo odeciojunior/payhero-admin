@@ -13,7 +13,7 @@ class UpdateProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'required|max:20',
+            'name'          => 'required|max:30',
             'description'   => 'required|max:30',
             'format'        => 'nullable',
             'category'      => 'nullable',
