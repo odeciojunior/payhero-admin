@@ -13,8 +13,8 @@ class UpdateProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'required|max:30',
-            'description'   => 'required|max:50',
+            'name'          => 'required|max:30|string|regex:/^[\pL\s\-]+$/u',
+            'description'   => 'required|max:50|string|regex:/^[\pL\s\-]+$/u',
             'format'        => 'nullable',
             'category'      => 'nullable',
             'cost'          => 'nullable',
@@ -48,8 +48,10 @@ class UpdateProductRequest extends FormRequest
         return [
             'name.required'        => 'O nome do produto é obrigatório',
             'description.required' => 'A descrição do produto é obrigatória',
-            'description.max'      => 'O campo Descrição permite apenas 30 caracteres',
-            'name.max'             => 'O campo Nome permite apenas 20 caracteres',
+            'description.max'      => 'O campo Descrição permite apenas 50 caracteres',
+            'name.max'             => 'O campo Nome permite apenas 30 caracteres',
+            'name.regex'           => 'O nome contém caracteres invalidos',
+            'description.regex'     => 'A descrição contém caracteres invalidos',
 
         ];
     }

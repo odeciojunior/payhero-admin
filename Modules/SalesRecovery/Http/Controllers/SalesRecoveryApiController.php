@@ -9,7 +9,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\SaleService;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Checkout;
@@ -138,6 +140,61 @@ class SalesRecoveryApiController extends Controller
             report($e);
 
             return response()->json(['message' => 'Ocorreu algum erro, tente novamente mais tarde'], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function regenerateBoleto(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'saleId' => 'required|string',
+                'date'   => 'required|string',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                                            'message' => "Ocorreu um erro, tente novamente mais tarde",
+                                        ], 400);
+            } else {
+
+                $saleModel   = new Sale();
+                $saleService = new SaleService();
+
+                $sale = $saleModel->find(current(Hashids::decode($validator['id'])));
+                if (!empty($sale)) {
+                    $totalPaidValue = $saleService->getSubTotal();
+                    $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
+                    $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
+
+                    $boletoRegenerated = $pagarmeService->boletoPayment($validator['date']);
+                    if ($boletoRegenerated['status'] == 'success') {
+                        $message = 'Boleto regenerado com sucesso';
+                        $status  = 200;
+                    } else {
+                        $message = 'Ocorreu um erro tente novamente mais tarde';
+                        $status  = 400;
+                    }
+
+                    return response()->json([
+                                                'message' => $message,
+                                            ], $status);
+                } else {
+
+                    return response()->json([
+                                                'message' => "Ocorreu um erro, tente novamente mais tarde",
+                                            ], 400);
+                }
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar regenerar Boleto (saleRecoveryApiController - regenerateSale)');
+            report($e);
+
+            return response()->json([
+                                        'message' => "Ocorreu um erro, tente novamente mais tarde",
+                                    ], 400);
         }
     }
 }
