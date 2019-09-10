@@ -18,6 +18,7 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
+use Modules\Core\Services\ProductService;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansResource;
@@ -76,6 +77,68 @@ class PlansController extends Controller
             return response()->json([
                                         'message' => 'Erro ao tentar listar planos',
                                     ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function create(Request $request)
+    {
+        try {
+            $projectModel   = new Project();
+            $productService = new ProductService();
+
+            $projectId = current(Hashids::decode($request->input('project')));
+
+            if ($projectId) {
+                //hash ok
+                $project = $projectModel->find($projectId);
+
+                if (Gate::allows('edit', [$project])) {
+
+                    $products = $productService->getProductsMyProject($projectId);
+
+                    if (count($products) > 0) {
+
+                        $view = view('plans::create', [
+                            'products' => $products,
+                        ]);
+
+                        return response()->json([
+                                                    'message' => 'success',
+                                                    'data'    => [
+                                                        'view' => $view->render(),
+                                                    ],
+                                                ]);
+                    } else {
+
+                        return response()->json([
+                                                    'message' => 'error',
+                                                ], 200);
+                    }
+                } else {
+
+                    return response()->json([
+                                                'message' => 'error',
+                                            ], 200);
+                }
+            } else {
+                //hash errado
+
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 200);
+            }
+        } catch (Exception $e) {
+            Log::error('Erro ao tentar acessar tela de cadastro (PlansController - create)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'error',
+                                    ], 200);
         }
     }
 
@@ -147,6 +210,131 @@ class PlansController extends Controller
             return response()->json([
                                         'message' => 'Erro ao salvar plano',
                                     ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function show(Request $request, $id)
+    {
+        try {
+            $planModel    = new Plan();
+            $projectModel = new Project();
+
+            $projectId = current(Hashids::decode($request->input('project')));
+
+            if ($projectId) {
+                //hash ok
+                $project = $projectModel->find($projectId);
+
+                if (Gate::allows('edit', [$project])) {
+
+                    if (!empty($id)) {
+                        $planId = current(Hashids::decode($id));
+                        $plan   = $planModel->with([
+                                                       'productsPlans.product', 'project.domains' => function($query) use ($projectId) {
+                                $query->where([['project_id', $projectId], ['status', 3]])
+                                      ->first();
+                            },
+                                                   ])->find($planId);
+
+                        $plan->code = isset($plan->projectId->domains[0]->name) ? 'https://checkout.' . $plan->projectId->domains[0]->name . '/' . $plan->code : 'Dominio não configurado';
+
+                        if (empty($plan)) {
+                            return response()->json([
+                                                        'message' => 'error',
+                                                    ], 200);
+                        } else {
+                            $view = view('plans::details', ['plan' => $plan]);
+
+                            return response()->json([
+                                                        'message' => 'success',
+                                                        'data'    => [
+                                                            'view' => $view->render(),
+                                                        ],
+                                                    ], 200);
+                        }
+                    } else {
+                        return response()->json([
+                                                    'message' => 'error',
+                                                ], 200);
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'error',
+                                            ], 200);
+                }
+            } else {
+                //hash errado
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 200);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar detalhes do Plano (PlansController - show)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao buscar dados do plano!',
+                                    ], 400);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Factory|JsonResponse|View
+     */
+    public function edit(Request $request)
+    {
+        try {
+            $planModel      = new Plan();
+            $productPlan    = new ProductPlan();
+            $projectModel   = new Project();
+            $productService = new ProductService();
+
+            $projectId = current(Hashids::decode($request->input('project')));
+            if ($projectId) {
+                $project = $projectModel->find($projectId);
+                if (Gate::allows('edit', [$project])) {
+
+                    $planId = Hashids::decode($request->input('planId'))[0];
+                    $plan   = $planModel->find($planId);
+                    if ($plan) {
+                        $products = $productService->getProductsMyProject($projectId);
+
+                        $productPlans = $productPlan->where('plan_id', $plan->id)->get()->toArray();
+
+                        return view('plans::edit', [
+                            'plan'         => $plan,
+                            'products'     => $products,
+                            'productPlans' => $productPlans,
+                        ]);
+                    } else {
+                        return response()->json([
+                                                    'message' => 'error',
+                                                ], 200);
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'error',
+                                            ], 200);
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 200);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar tela editar pixel (PlansController - edit)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'error',
+                                    ], 200);
         }
     }
 
@@ -274,208 +462,6 @@ class PlansController extends Controller
             return response()->json([
                                         'message' => 'Erro ao buscar dados do plano!',
                                     ], 400);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function show(Request $request, $id)
-    {
-        try {
-            $planModel    = new Plan();
-            $projectModel = new Project();
-
-            $projectId = current(Hashids::decode($request->input('project')));
-
-            if ($projectId) {
-                //hash ok
-                $project = $projectModel->find($projectId);
-
-                if (Gate::allows('edit', [$project])) {
-
-                    if (!empty($id)) {
-                        $planId = current(Hashids::decode($id));
-                        $plan   = $planModel->with([
-                                                       'productsPlans.product', 'project.domains' => function($query) use ($projectId) {
-                                $query->where([['project_id', $projectId], ['status', 3]])
-                                      ->first();
-                            },
-                                                   ])->find($planId);
-
-                        $plan->code = isset($plan->projectId->domains[0]->name) ? 'https://checkout.' . $plan->projectId->domains[0]->name . '/' . $plan->code : 'Dominio não configurado';
-
-                        if (empty($plan)) {
-                            return response()->json([
-                                                        'message' => 'error',
-                                                    ], 200);
-                        } else {
-                            $view = view('plans::details', ['plan' => $plan]);
-
-                            return response()->json([
-                                                        'message' => 'success',
-                                                        'data'    => [
-                                                            'view' => $view->render(),
-                                                        ],
-                                                    ], 200);
-                        }
-                    } else {
-                        return response()->json([
-                                                    'message' => 'error',
-                                                ], 200);
-                    }
-                } else {
-                    return response()->json([
-                                                'message' => 'error',
-                                            ], 200);
-                }
-            } else {
-                //hash errado
-                return response()->json([
-                                            'message' => 'error',
-                                        ], 200);
-            }
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar detalhes do Plano (PlansController - show)');
-            report($e);
-
-            return response()->json([
-                                        'message' => 'Erro ao buscar dados do plano!',
-                                    ], 400);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function create(Request $request)
-    {
-        try {
-            $productModel = new Product();
-            $projectModel = new Project();
-
-            $projectId = current(Hashids::decode($request->input('project')));
-
-            if ($projectId) {
-                //hash ok
-                $project = $projectModel->find($projectId);
-
-                if (Gate::allows('edit', [$project])) {
-
-                    if (!empty($project->shopify_id)) {
-                        $products = $productModel->where('user_id', auth()->user()->id)
-                                                 ->where('shopify', 1)
-                                                 ->whereHas('productsPlans.plan', function($queryPlan) use ($projectId) {
-                                                     $queryPlan->where('project_id', $projectId);
-                                                 })
-                                                 ->get();
-                    } else {
-                        $products = $productModel->where('user_id', auth()->user()->id)
-                                                 ->where('shopify', 0)
-                                                 ->get();
-                    }
-
-                    if (count($products) > 0) {
-
-                        $view = view('plans::create', [
-                            'products' => $products,
-                        ]);
-
-                        return response()->json([
-                                                    'message' => 'success',
-                                                    'data'    => [
-                                                        'view' => $view->render(),
-                                                    ],
-                                                ]);
-                    } else {
-
-                        return response()->json([
-                                                    'message' => 'error',
-                                                ], 200);
-                    }
-                } else {
-
-                    return response()->json([
-                                                'message' => 'error',
-                                            ], 200);
-                }
-            } else {
-                //hash errado
-
-                return response()->json([
-                                            'message' => 'error',
-                                        ], 200);
-            }
-        } catch (Exception $e) {
-            Log::error('Erro ao tentar acessar tela de cadastro (PlansController - create)');
-            report($e);
-
-            return response()->json([
-                                        'message' => 'error',
-                                    ], 200);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return Factory|JsonResponse|View
-     */
-    public function edit(Request $request)
-    {
-        try {
-            $planModel    = new Plan();
-            $productModel = new Product();
-            $productPlan  = new ProductPlan();
-            $projectModel = new Project();
-
-            $projectId = current(Hashids::decode($request->input('project')));
-            if ($projectId) {
-                $project = $projectModel->find($projectId);
-                if (Gate::allows('edit', [$project])) {
-
-                    $planId = Hashids::decode($request->input('planId'))[0];
-                    $plan   = $planModel->find($planId);
-                    if ($plan) {
-                        if (!empty($project->shopify_id)) {
-                            $products = $productModel->where('user_id', auth()->user()->id)->where('shopify', 1)->get();
-                        } else {
-                            $products = $productModel->where('user_id', auth()->user()->id)->where('shopify', 0)->get();
-                        }
-
-                        $productPlans = $productPlan->where('plan_id', $plan->id)->get()->toArray();
-
-                        return view('plans::edit', [
-                            'plan'         => $plan,
-                            'products'     => $products,
-                            'productPlans' => $productPlans,
-                        ]);
-                    } else {
-                        return response()->json([
-                                                    'message' => 'error',
-                                                ], 200);
-                    }
-                } else {
-                    return response()->json([
-                                                'message' => 'error',
-                                            ], 200);
-                }
-            } else {
-                return response()->json([
-                                            'message' => 'error',
-                                        ], 200);
-            }
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar tela editar pixel (PlansController - edit)');
-            report($e);
-
-            return response()->json([
-                                        'message' => 'error',
-                                    ], 200);
         }
     }
 
