@@ -55,7 +55,7 @@ class PostBackMercadoPagoController extends Controller
      */
     public function postBackListener(Request $request)
     {
-        $requestData = $request->all();
+        /*$requestData = $request->all();
 
         $postBackLogModel = new PostbackLog();
 
@@ -103,9 +103,10 @@ class PostBackMercadoPagoController extends Controller
                  return response()->json(['message' => 'success'], 200);
              }*/
 
-            $transactions = $transactionModel->where('sale_id', $sale->id)->get();
+            /*$transactions = $transactionModel->where('sale_id', $sale->id)->get();
 
-            if ($requestData['data']['status'] == 'approved') {
+
+            if (!empty($requestData['data']['status']) && $requestData['data']['status'] == 'approved') {
 
                 date_default_timezone_set('America/Sao_Paulo');
 
@@ -188,7 +189,7 @@ class PostBackMercadoPagoController extends Controller
             }
         }
 
-        return response()->json(['message' => 'success'], 200);
+        return response()->json(['message' => 'success'], 200);*/
     }
 }
 
