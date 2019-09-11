@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Sale;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SaleService
@@ -22,5 +23,26 @@ class SaleService
         }
 
         return $subTotal;
+    }
+
+    /**
+     * @param Sale $sale
+     * @return array
+     */
+    public function getPagarmeItensList(Sale $sale)
+    {
+        $itens = [];
+
+        foreach ($sale->plansSales as $key => $planSale) {
+            $itens[] = [
+                'id'         => '#' . Hashids::encode($planSale->plan->id),
+                'title'      => $planSale->plan->name,
+                'unit_price' => str_replace('.', '', $planSale->plan->price),
+                'quantity'   => $planSale->amount,
+                'tangible'   => true,
+            ];
+        }
+
+        return $itens;
     }
 }

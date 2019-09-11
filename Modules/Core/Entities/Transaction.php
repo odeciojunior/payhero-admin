@@ -3,6 +3,9 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id
@@ -28,36 +31,43 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Transaction extends Model
 {
+    use SoftDeletes;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
+    /**
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
     /**
      * @var array
      */
     protected $fillable = [
-        'sale_id', 
-        'company_id', 
-        'value', 
-        'type', 
-        'status', 
-        'release_date', 
-        'created_at', 
-        'updated_at', 
-        'antecipation_date', 
-        'antecipable_value', 
-        'antecipable_tax', 
-        'currency', 
-        'percentage_rate', 
-        'transaction_rate', 
-        'percentage_antecipable'
+        'sale_id',
+        'company_id',
+        'value',
+        'type',
+        'status',
+        'release_date',
+        'created_at',
+        'updated_at',
+        'antecipation_date',
+        'antecipable_value',
+        'antecipable_tax',
+        'currency',
+        'percentage_rate',
+        'transaction_rate',
+        'percentage_antecipable',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {
@@ -65,7 +75,7 @@ class Transaction extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function sale()
     {
@@ -73,7 +83,7 @@ class Transaction extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function antecipatedTransactions()
     {
@@ -81,7 +91,7 @@ class Transaction extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function transfers()
     {

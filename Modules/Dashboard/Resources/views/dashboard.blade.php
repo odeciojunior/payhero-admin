@@ -13,7 +13,7 @@
                 <div class="col-lg-6">
                     <h1 class="page-title">Dashboard</h1>
                 </div>
-                @if(count($companies) > 0)
+                @if(isset($companies) && count($companies) > 0)
                     <div class="col-lg-6">
                         <div class="d-lg-flex align-items-center justify-content-end">
                             <div class="mr-10 text-lg-right">
@@ -32,7 +32,7 @@
             </div>
             <div class="clearfix"></div>
             <!-- CARDS EXTRATO -->
-            @if(count($companies) > 0)
+            @if(isset($companies) && count($companies) > 0)
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-3">
                         <div class="card card-shadow bg-white">

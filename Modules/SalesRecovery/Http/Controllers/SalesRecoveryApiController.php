@@ -13,7 +13,6 @@ use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SaleService;
 use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Services\SalesRecoveryService;
@@ -156,14 +155,14 @@ class SalesRecoveryApiController extends Controller
             ]);
             if ($validator->fails()) {
                 return response()->json([
-                                            'message' => "Ocorreu um erro, tente novamente mais tarde",
+                                            'message' => "Preencha os dados corretamente",
                                         ], 400);
             } else {
 
                 $saleModel   = new Sale();
                 $saleService = new SaleService();
 
-                $sale = $saleModel->find(current(Hashids::decode($request->input('id'))));
+                $sale = $saleModel->find(current(Hashids::decode($request->input('saleId'))));
                 if (!empty($sale)) {
                     $totalPaidValue = $saleService->getSubTotal($sale);
                     $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);

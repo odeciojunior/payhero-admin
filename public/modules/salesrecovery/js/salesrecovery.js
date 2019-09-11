@@ -115,41 +115,56 @@ $(document).ready(function () {
                 }
                 pagination(response, 'salesRecovery', atualizar);
 
-                $(".sale_status").hover(
-                    function () {
-                        $(this).css('cursor', 'pointer').text('Regerar');
-                        $(this).css("background", "#a100ff");
-                    }, function () {
-                        var status = $(this).attr('status');
-                        $(this).removeAttr("style");
-                        $(this).text(status);
-                    }
-                );
-                $('.sale_status').on('click', function () {
-                    $('#saleId').val('');
-                    let saleId = $(this).attr('sale_id');
-                    $('#saleId').val(saleId);
-                    $('#modal_regerar_boleto').modal('show');
+                if ($("#type_recovery").val() == '2') {
+                    $(".sale_status").hover(
+                        function () {
+                            $(this).css('cursor', 'pointer').text('Regerar');
+                            $(this).css("background", "#545B62");
+                        }, function () {
+                            var status = $(this).attr('status');
+                            $(this).removeAttr("style");
+                            $(this).text(status);
+                        }
+                    );
 
-                    $('#bt_send').on('click', function () {
-                        loadingOnScreen();
-                        $.ajax({
-                            method: "POST",
-                            url: "/api/recovery/regenerateboleto",
-                            headers: {
-                                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
-                            },
-                            data: {saleId: saleId, date: $('#date').val()},
-                            error: function error() {
+                    $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                    $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
 
-                            },
-                            success: function success() {
-                                loadingOnScreenRemove();
-                                $(".loading").css("visibility", "hidden");
-                            }
+                    $('.sale_status').on('click', function () {
+                        $('#saleId').val('');
+                        let saleId = $(this).attr('sale_id');
+                        $('#saleId').val(saleId);
+                        $('#modal_regerar_boleto').modal('show');
+
+                        $('#bt_send').on('click', function () {
+                            loadingOnScreen();
+                            $.ajax({
+                                method: "POST",
+                                url: "/api/recovery/regenerateboleto",
+                                headers: {
+                                    'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                                },
+                                data: {saleId: saleId, date: $('#date').val()},
+                                error: function error(response) {
+                                    loadingOnScreenRemove();
+
+                                    if (response.status === 422) {
+                                        for (error in response.errors) {
+                                            alertCustom('error', String(response.errors[error]));
+                                        }
+                                    } else {
+                                        alertCustom('error', response.responseJSON.message);
+                                    }
+                                },
+                                success: function success() {
+                                    loadingOnScreenRemove();
+                                    $(".loading").css("visibility", "hidden");
+                                    window.location = '/sales';
+                                }
+                            });
                         });
                     });
-                });
+                }
 
                 $('.details-cart-recovery').unbind('click');
                 $('.details-cart-recovery').on('click', function () {
@@ -214,15 +229,15 @@ $(document).ready(function () {
                                 /**
                                  * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
                                  */
-                                $("#client-name-details").html('Nome: ' + (response.data.client.name.length === 0 ? '' : response.data.client.name));
-                                $("#client-telephone").html('Telefone: ' + (response.data.client.telephone === 0 ? '' : response.data.client.telephone));
-                                $("#client-whatsapp").attr('href', (response.data.client.whatsapp_link === 0 ? '' : response.data.client.whatsapp_link));
-                                $("#client-email").html('E-mail: ' + (response.data.client.email === 0 ? '' : response.data.client.email));
-                                $("#client-document").html('CPF: ' + (response.data.client.document === 0 ? '' : response.data.client.document));
+                                $("#client-name-details").html('Nome: ' + response.data.client.name.length);
+                                $("#client-telephone").html('Telefone: ' + response.data.client.telephone);
+                                $("#client-whatsapp").attr('href', response.data.client.whatsapp_link);
+                                $("#client-email").html('E-mail: ' + response.data.client.email);
+                                $("#client-document").html('CPF: ' + response.data.client.document);
                                 $("#client-street").html('Endereço: ' + response.data.delivery.street);
                                 $("#client-zip-code").html('CEP: ' + response.data.delivery.zip_code);
                                 $("#client-city-state").html('Cidade: ' + response.data.delivery.city + '/' + response.data.delivery.state);
-                                $("#sale-motive").html('Motivo: ' + (response.data.client.error === 0 ? '' : response.data.client.error));
+                                $("#sale-motive").html('Motivo: ' + response.data.client.error);
 
                                 if (!isEmpty(response.data.link)) {
                                     $("#link-sale").html('Link: <a role="button" class="copy_link" style="cursor:pointer;" link="' + response.data.link + '"><i class="material-icons gradient" style="font-size:17px;">file_copy</i> </a> ');
@@ -380,4 +395,5 @@ $(document).ready(function () {
         $("#checkout-utm-term").html('');
         $("#checkout-utm-content").html('');
     }
+
 });

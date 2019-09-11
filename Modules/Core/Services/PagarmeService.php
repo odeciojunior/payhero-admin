@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\Transaction;
 use PagarMe\Client as PagarmeClient;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -22,6 +23,8 @@ class PagarmeService
     private $client;
     private $delivery;
     private $project;
+    private $saleService;
+    private $transactionModel;
 
     /**
      * PagarmeService constructor.
@@ -32,12 +35,14 @@ class PagarmeService
     public function __construct(Sale $sale, $totalValue, $shippingValue)
     {
 
-        $this->sale          = $sale;
-        $this->shippingValue = $shippingValue;
-        $this->totalValue    = $totalValue;
-        $this->client        = $sale->client;
-        $this->delivery      = $sale->delivery;
-        $this->project       = $sale->project;
+        $this->sale             = $sale;
+        $this->shippingValue    = $shippingValue;
+        $this->totalValue       = $totalValue + $shippingValue;
+        $this->client           = $sale->client;
+        $this->delivery         = $sale->delivery;
+        $this->project          = $sale->project;
+        $this->saleService      = new SaleService();
+        $this->transactionModel = new Transaction();
 
         if (getenv('PAGAR_ME_PRODUCTION') == 'true') {
             $this->pagarmeClient = new PagarmeClient(getenv('PAGAR_ME_PUBLIC_KEY_PRODUCTION'));
@@ -104,8 +109,7 @@ class PagarmeService
                                                                                     "zipcode"       => $this->delivery->zip_code,
                                                                                 ],
                                                                             ],
-                                                                            'items'                  => $this->sale->present()
-                                                                                                                   ->getPagarmeItensList(),
+                                                                            'items'                  => $this->saleService->getPagarmeItensList($this->sale),
                                                                             'metadata'               => [
                                                                                 'sale_id' => Hashids::encode($this->sale->id),
                                                                             ],
@@ -139,7 +143,29 @@ class PagarmeService
                                 'boleto_link'           => $transaction->boleto_url,
                                 'boleto_due_date'       => $transaction->boleto_expiration_date,
                                 'status'                => 2,
+                                'start_date'            => Carbon::now(),
                             ]);
+        $transactions = $this->transactionModel->where('sale_id', $this->sale->id)->get();
+        foreach ($transactions as $transactionVal) {
+            $transactionCreated = $this->transactionModel->create([
+                                                                      'sale_id'                => $transactionVal->sale_id,
+                                                                      'company_id'             => $transactionVal->company_id,
+                                                                      'value'                  => $transactionVal->value,
+                                                                      'type'                   => $transactionVal->type,
+                                                                      'status'                 => 'pending',
+                                                                      'antecipation_date'      => $transactionVal->antecipation_date,
+                                                                      'antecipable_value'      => $transactionVal->antecipable_value,
+                                                                      'antecipable_tax'        => $transactionVal->antecipable_tax,
+                                                                      'currency'               => $transactionVal->currency,
+                                                                      'percentage_rate'        => $transactionVal->percentage_rate,
+                                                                      'transaction_rate'       => $transactionVal->transaction_rate,
+                                                                      'percentage_antecipable' => $transactionVal->percentage_antecipable,
+                                                                  ]);
+            if (isset($transactionCreated) && !empty($transactionCreated)) {
+                $transactionVal->delete();
+                unset($transactionCreated);
+            }
+        }
 
         return [
             'status'  => 'success',
