@@ -115,7 +115,7 @@ class RegisterController extends Controller
         
         $companyModel = new Company();
 
-        $companies = $companyModel->where('user_id',\Auth::user()->id)->get()->toArray();
+        $companies = $companyModel->where('user_id',\Auth::user()->id)->get();
 
         return view('dashboard::dashboard',[
             'companies' => $companies,
