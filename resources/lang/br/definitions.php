@@ -71,7 +71,7 @@ return [
                 "approved"     => "Aprovado",
                 "canceled"     => "Cancelado",
                 "charge_back"  => "Chargeback",
-                'in_process'   => "Em análise",
+                'in_proccess'   => "Em análise",
                 "pending"      => "Pendente",
                 "refused"      => "Recusado",
                 "system_error" => "Erro de sistema",
