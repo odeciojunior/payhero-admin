@@ -63,17 +63,15 @@ class ProductsApiController extends Controller
             $productsOriginal = $productsModel->where('user_id', auth()->user()->id)
                                               ->where('shopify', 0)->first();
 
-            if (!empty($productShopify)) {
-                $projects    = $projectModel->whereHas('usersProjects', function($query) {
-                    $query->where('user_id', auth()->user()->id);
-                })->whereNotNull('shopify_id')->get();
-                $projectsArr = [];
-                foreach ($projects as $project) {
-                    $projectsArr[] = [
-                        'id_code' => $project->id_code,
-                        'name'    => $project->name,
-                    ];
-                }
+            $projects    = $projectModel->whereHas('usersProjects', function($query) {
+                $query->where('user_id', auth()->user()->id);
+            })->whereNotNull('shopify_id')->get();
+            $projectsArr = [];
+            foreach ($projects as $project) {
+                $projectsArr[] = [
+                    'id_code' => $project->id_code,
+                    'name'    => $project->name,
+                ];
             }
 
             return GetTypeProductsResource::make([

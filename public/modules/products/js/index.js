@@ -31,14 +31,10 @@ $(document).ready(function () {
                         text: 'Meus Produtos'
                     }));
 
-                    $("#type-products").show();
-                    if (response.data.shopify != "0") {
-
-                        $("#type-products").append($('<option>', {
-                            value: '1',
-                            text: 'Produtos Shopify'
-                        }));
-                    }
+                    $("#type-products").append($('<option>', {
+                        value: '1',
+                        text: 'Produtos Shopify'
+                    }));
 
                     if ($("#type-products").val() === "1") {
                         $("#select-projects").html('');
@@ -115,7 +111,6 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error(response) {
-                console.log(response);
                 if (response.status === 422) {
                     for (error in response.errors) {
                         alertCustom('error', String(response.errors[error]));
