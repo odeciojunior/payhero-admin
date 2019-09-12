@@ -3,13 +3,18 @@
 namespace Modules\Companies\Http\Controllers;
 
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\View\View;
 use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\CompanyDocument;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
 use Modules\Core\Services\BankService;
@@ -28,7 +33,7 @@ use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
 class CompaniesController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -36,7 +41,7 @@ class CompaniesController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create()
     {
@@ -44,8 +49,8 @@ class CompaniesController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|CompanyResource
+     * @param CompanyCreateRequest $request
+     * @return JsonResponse
      */
     public function store(CompanyCreateRequest $request)
     {
@@ -74,9 +79,9 @@ class CompaniesController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return mixed
-     * @throws \Throwable
+     * @param CompanyCreateFormRequest $request
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function getCreateForm(CompanyCreateFormRequest $request)
     {
@@ -91,13 +96,14 @@ class CompaniesController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao criar form de cadastro da empresa (CompaniesController - getCreateForm)');
             report($e);
+
             return response()->json('erro', 400);
         }
     }
 
     /**
-     * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param $encodedId
+     * @return Factory|JsonResponse|View
      */
     public function edit($encodedId)
     {
@@ -112,7 +118,7 @@ class CompaniesController extends Controller
             if (Gate::allows('edit', [$company])) {
                 $banks = $bankService->getBanks('BR');
 
-                $companyResource = new CompanyResource($company); 
+                $companyResource = new CompanyResource($company);
 
                 if ($company->country == 'usa') {
                     return view('companies::edit_usa', [
@@ -133,13 +139,15 @@ class CompaniesController extends Controller
         } catch (Exception $e) {
             Log::warning('CompaniesController - edit - error');
             report($e);
+
             return response()->json('erro', 400);
         }
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param CompanyUpdateRequest $request
+     * @param $encodedId
+     * @return JsonResponse
      */
     public function update(CompanyUpdateRequest $request, $encodedId)
     {
@@ -174,8 +182,8 @@ class CompaniesController extends Controller
     }
 
     /**
-     * @param $idc
-     * @return \Illuminate\Http\RedirectResponse
+     * @param $encodedId
+     * @return JsonResponse
      */
     public function destroy($encodedId)
     {
@@ -215,8 +223,8 @@ class CompaniesController extends Controller
     }
 
     /**
-     * @param CompanyUpdateRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param CompanyUploadDocumentRequest $request
+     * @return JsonResponse
      */
     public function uploadDocuments(CompanyUploadDocumentRequest $request)
     {
@@ -240,21 +248,27 @@ class CompaniesController extends Controller
                                                   'status'             => null,
                                               ]);
 
-                if (($dataForm["document_type"] ?? '') == $company->present()->getDocumentType('bank_document_status')) {
+                if (($dataForm["document_type"] ?? '') == $company->present()
+                                                                  ->getDocumentType('bank_document_status')) {
                     $company->update([
-                                         'bank_document_status' => $company->present()->getBankDocumentStatus('analyzing'),
+                                         'bank_document_status' => $company->present()
+                                                                           ->getBankDocumentStatus('analyzing'),
                                      ]);
                 }
 
-                if (($dataForm["document_type"] ?? '') == $company->present()->getDocumentType('address_document_status')) {
+                if (($dataForm["document_type"] ?? '') == $company->present()
+                                                                  ->getDocumentType('address_document_status')) {
                     $company->update([
-                                         'address_document_status' => $company->present()->getAddressDocumentStatus('analyzing'),
+                                         'address_document_status' => $company->present()
+                                                                              ->getAddressDocumentStatus('analyzing'),
                                      ]);
                 }
 
-                if (($dataForm["document_type"] ?? '') == $company->present()->getDocumentType('contract_document_status')) {
+                if (($dataForm["document_type"] ?? '') == $company->present()
+                                                                  ->getDocumentType('contract_document_status')) {
                     $company->update([
-                                         'contract_document_status' => $company->present()->getContractDocumentStatus('analyzing'),
+                                         'contract_document_status' => $company->present()
+                                                                               ->getContractDocumentStatus('analyzing'),
                                      ]);
                 }
 
@@ -263,15 +277,18 @@ class CompaniesController extends Controller
                                             'data'    => [
                                                 'bank_document_translate'     => [
                                                     'status'  => $company->bank_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()->getBankDocumentStatus($company->bank_document_status)),
+                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
+                                                                                                                ->getBankDocumentStatus($company->bank_document_status)),
                                                 ],
                                                 'address_document_translate'  => [
                                                     'status'  => $company->address_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()->getAddressDocumentStatus($company->address_document_status)),
+                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
+                                                                                                                ->getAddressDocumentStatus($company->address_document_status)),
                                                 ],
                                                 'contract_document_translate' => [
                                                     'status'  => $company->contract_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()->getContractDocumentStatus($company->contract_document_status)),
+                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
+                                                                                                                ->getContractDocumentStatus($company->contract_document_status)),
                                                 ],
                                             ],
                                         ], 200);

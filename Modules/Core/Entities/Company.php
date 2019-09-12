@@ -4,6 +4,8 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Core\Presenters\CompanyPresenter;
@@ -48,6 +50,11 @@ use Modules\Core\Presenters\CompanyPresenter;
  * @property Transfer[] $transfers
  * @property UsersProject[] $usersProjects
  * @property Withdrawal[] $withdrawals
+ */
+
+/**
+ * Class Company
+ * @package Modules\Core\Entities
  */
 class Company extends Model
 {
@@ -95,7 +102,7 @@ class Company extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
@@ -103,7 +110,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function affiliates()
     {
@@ -111,7 +118,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function anticipations()
     {
@@ -119,7 +126,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function companyDocuments()
     {
@@ -127,23 +134,23 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function hotzappIntegrations()
     {
-        return $this->hasMany('Modules\Core\Entities\HotzappIntegration', 'company');
+        return $this->hasMany('Modules\Core\Entities\HotzappIntegration');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function invitations()
     {
-        return $this->hasMany('Modules\Core\Entities\Invitation', 'company');
+        return $this->hasMany('Modules\Core\Entities\Invitation');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function transactions()
     {
@@ -151,7 +158,7 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function transfers()
     {
@@ -159,15 +166,15 @@ class Company extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function usersProjects()
     {
-        return $this->hasMany('Modules\Core\Entities\UsersProject');
+        return $this->hasMany('Modules\Core\Entities\UserProject');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function withdrawals()
     {
