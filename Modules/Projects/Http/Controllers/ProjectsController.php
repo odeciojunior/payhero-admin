@@ -239,7 +239,7 @@ class ProjectsController extends Controller
 
             if ($requestValidated) {
 
-                $project = $projectModel->where('id', Hashids::decode($id))->first();
+                $project = $projectModel->find(current(Hashids::decode($id)));
 
                 if (Gate::allows('update', [$project])) {
 
