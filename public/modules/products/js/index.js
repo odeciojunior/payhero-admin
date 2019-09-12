@@ -26,6 +26,7 @@ $(document).ready(function () {
                     }
                 },
                 success: function (response) {
+                    console.log(response);
                     $("#type-products").append($('<option>', {
                         value: '0',
                         text: 'Meus Produtos'
@@ -56,16 +57,23 @@ $(document).ready(function () {
                     $("#type-products").on('change', function () {
                         if ($("#type-products").val() === "1") {
                             $("#select-projects").html('');
+                            if (response.data.projects.length == 0) {
 
-                            $.each(response.data.projects, function (index, value) {
-                                $("#select-projects").append($('<option>', {
-                                    value: value.id_code,
-                                    text: value.name
-                                }));
-                            });
-                            $("#is-projects").show();
-                            $("#select-projects").find('option:eq(0)').prop('selected', true);
-                            $(".product-is-empty-cla").hide();
+                                $("#select-projects").hide();
+                                $(".product-is-empty-cla").hide();
+
+                            } else {
+                                $.each(response.data.projects, function (index, value) {
+                                    $("#select-projects").append($('<option>', {
+                                        value: value.id_code,
+                                        text: value.name
+                                    }));
+                                });
+                                $("#is-projects").show();
+                                $("#select-projects").find('option:eq(0)').prop('selected', true);
+                                $(".product-is-empty-cla").hide();
+
+                            }
 
                         } else {
                             $("#is-projects").hide();
