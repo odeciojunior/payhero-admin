@@ -19,27 +19,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class AnticipatedTransaction extends Model
 {
-
     use SoftDeletes;
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'anticipation_id', 
-        'transaction_id', 
-        'tax', 
-        'tax_value', 
-        'days_to_release', 
-        'created_at', 
-        'updated_at'
+        'anticipation_id',
+        'transaction_id',
+        'tax',
+        'tax_value',
+        'days_to_release',
+        'created_at',
+        'updated_at',
     ];
 
     /**

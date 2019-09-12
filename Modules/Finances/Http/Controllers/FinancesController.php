@@ -4,7 +4,10 @@ namespace Modules\Finances\Http\Controllers;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use PagarMe\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,7 +24,7 @@ use Modules\Core\Entities\Transaction;
 class FinancesController extends Controller
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -36,7 +39,7 @@ class FinancesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getBalances(Request $request)
     {
