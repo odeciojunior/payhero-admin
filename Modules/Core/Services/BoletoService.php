@@ -410,12 +410,14 @@ class BoletoService
                             , count(s.owner_id) as count
                             , SUM(t.value) as value
                             FROM sales s
-                            INNER JOIN transactions t ON t.sale_id = s.id AND t.company_id IS NOT NULL
+                            INNER JOIN transactions t ON t.sale_id = s.id AND t.company_id IS NOT NULL AND t.company_id != 29
                             WHERE s.payment_method = 2
                             AND s.status = 1
                             AND date(s.end_date) = CURRENT_DATE
                             GROUP BY s.owner_id';
+
             $boletosPaid = DB::select($sql);
+
             foreach ($boletosPaid as $boleto) {
                 try {
                     $user = $userModel->find($boleto->owner_id);
