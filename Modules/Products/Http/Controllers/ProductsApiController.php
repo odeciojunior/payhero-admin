@@ -125,15 +125,22 @@ class ProductsApiController extends Controller
             $productModel  = new Product();
             $categoryModel = new Category();
 
-            $data                = $request->validated();
-            $data['shopify']     = 0;
-            $data['user']        = auth()->user()->id;
-            $data['price']       = preg_replace("/[^0-9]/", "", $data['price']);
-            $data['cost']        = preg_replace("/[^0-9]/", "", $data['cost']);
-            $data['user_id']     = auth()->user()->id;
-            $category            = $categoryModel->find(current(Hashids::decode($data['category'])));
-            $data['category_id'] = $category->id;
-            $product             = $productModel->create($data);
+            $data            = $request->validated();
+            $data['shopify'] = 0;
+            $data['user']    = auth()->user()->id;
+            $data['price']   = preg_replace("/[^0-9]/", "", $data['price']);
+            $data['cost']    = preg_replace("/[^0-9]/", "", $data['cost']);
+            $data['user_id'] = auth()->user()->id;
+            $category        = $categoryModel->find(current(Hashids::decode($data['category'])));
+
+            if (empty($category)) {
+                $category            = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+                $data['category_id'] = $category->id;
+            } else {
+                $data['category_id'] = $category->id;
+            }
+
+            $product = $productModel->create($data);
 
             $productPhoto = $request->file('product_photo');
 
@@ -258,8 +265,16 @@ class ProductsApiController extends Controller
             $productModel  = new Product();
             $categoryModel = new Category();
 
-            $data['category'] = $categoryModel->find(current(Hashids::decode($data['category'])));
-            $productId        = current(Hashids::decode($id));
+            $category = $categoryModel->find(current(Hashids::decode($data['category'])));
+
+            if (empty($category)) {
+                $category         = $categoryModel->where('name', 'like', '%' . 'Outros' . '%')->first();
+                $data['category'] = $category->id;
+            } else {
+                $data['category'] = $category->id;
+            }
+
+            $productId = current(Hashids::decode($id));
             if (!empty($productId) && !empty($data['category'])) {
                 $product = $productModel->find($productId);
                 if (Gate::allows('update', [$product])) {

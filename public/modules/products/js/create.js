@@ -42,7 +42,6 @@ $(document).ready(function () {
                 }
             },
             success: function (response) {
-                console.log(response);
                 if (!isEmpty(response.data.categories)) {
                     /**
                      * Select com as categorias

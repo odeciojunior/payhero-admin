@@ -11,34 +11,34 @@ $(document).ready(function () {
 
     function getTypeProducts() {
         $.ajax({
-            method: 'GET',
-            url: '/api/products',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
+                method: 'GET',
+                url: '/api/products',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                error: function error(response) {
+                    if (response.status === 422) {
+                        for (error in response.errors) {
+                            alertCustom('error', String(response.errors[error]));
+                        }
+                    } else {
+                        alertCustom('error', response.message);
                     }
-                } else {
-                    alertCustom('error', response.message);
-                }
-            },
-            success: function (response) {
-                if (response.data.productOriginal === "0" && response.data.shopify === "0") {
-                    $(".products-is-empty").show();
-                } else {
-
+                },
+                success: function (response) {
                     $("#type-products").append($('<option>', {
                         value: '0',
                         text: 'Meus Produtos'
                     }));
 
-                    $("#type-products").append($('<option>', {
-                        value: '1',
-                        text: 'Produtos Shopify'
-                    }));
+                    $("#type-products").show();
+                    if (response.data.shopify != "0") {
+
+                        $("#type-products").append($('<option>', {
+                            value: '1',
+                            text: 'Produtos Shopify'
+                        }));
+                    }
 
                     if ($("#type-products").val() === "1") {
                         $("#select-projects").html('');
@@ -97,9 +97,8 @@ $(document).ready(function () {
                     });
 
                 }
-
             }
-        });
+        );
     }
 
     function updateProducts(link = null) {
@@ -126,7 +125,6 @@ $(document).ready(function () {
                 }
             },
             success: function (response) {
-                console.log(response);
                 if (!isEmpty(response.data)) {
                     $(".products-is-empty").hide();
                     $("#data-table-products").html('');
@@ -174,4 +172,5 @@ $(document).ready(function () {
         });
     }
 
-});
+})
+;
