@@ -289,9 +289,7 @@
     <!-- End Modal -->
 
     @push('scripts')
-        <script src="{{ asset('modules/transfers/js/index.js') }}"></script>
         <script src="{{ asset('modules/finances/js/index.js') }}"></script>
-        <script src="{{ asset('modules/anticipations/js/index.js') }}"></script>
     @endpush
 
 @endsection

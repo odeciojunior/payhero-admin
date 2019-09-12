@@ -6,8 +6,7 @@ $(document).ready(function () {
         if ($("#antecipa-popover").is(':visible') && (!$(e.target).hasClass('anticipation'))) {
             $("#antecipa-popover").fadeOut(100);
         }
-        ;
-    })
+    });
 
     $("#pop-antecipacao").click(function () {
         if ($("#antecipa-popover").css('display') == 'none') {
@@ -18,14 +17,21 @@ $(document).ready(function () {
     });
 
     $("#transfers_company_select").on("change", function () {
-        $("#extract_company_select").val($(this).val());
+        $("#extract_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]")
+            .prop("selected", true);
         $('#custom-input-addon').val('');
         updateBalances();
+        updateTransfersTable();
+        updateWithdrawalsTable();
     });
 
     $("#extract_company_select").on("change", function () {
-        $("#transfers_company_select").val($(this).val());
+        $("#transfers_company_select option[value=" + $('#extract_company_select option:selected').val() + "]")
+            .prop("selected", true);
+        $('#custom-input-addon').val('');
+        updateTransfersTable();
         updateBalances();
+        updateWithdrawalsTable();
     });
 
     updateBalances();
@@ -38,6 +44,7 @@ $(document).ready(function () {
         $.ajax({
             url: "/finances/getbalances/",
             type: "GET",
+            data: {company: $("#transfers_company_select option:selected").val()},
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -57,21 +64,29 @@ $(document).ready(function () {
                 $('.saldoDisponivel').html('<span class="currency">R$</span><span class="available-balance">0,00 <i class="material-icons ml-5" style="color: #44a44b;">arrow_forward</i></span>');
                 $('.saltoTotal').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
                 $('.totalConta').html('<span class="currency">R$</span><span class="total-balance">0,00</span>');
-                $('.total_available').html('<span class="currency">R$</span>' + response.available_balance);
-                $(".currency").html(response.currency);
-                $(".available-balance").html(response.available_balance);
-                $(".antecipable-balance").html(response.antecipable_balance);
-                $(".pending-balance").html(response.pending_balance);
-                $(".total-balance").html(response.total_balance);
+                $('.total_available').html('<span class="currency">R$</span>' + isEmpty(response.available_balance));
+                $(".currency").html(isEmpty(response.currency));
+                $(".available-balance").html(isEmpty(response.available_balance));
+                $(".antecipable-balance").html(isEmpty(response.antecipable_balance));
+                $(".pending-balance").html(isEmpty(response.pending_balance));
+                $(".total-balance").html(isEmpty(response.total_balance));
                 $(".loading").remove();
                 $("#div-available-money").unbind('click');
                 $("#div-available-money").on("click", function () {
-                    $(".withdrawal-value").val(response.available_balance);
+                    $(".withdrawal-value").val(isEmpty(response.available_balance));
                 });
                 $.getScript('modules/withdrawals/js/index.js');
                 $("#table-withdrawals-body").html('');
             }
         });
+
+        function isEmpty(value) {
+            if (value.length === 0) {
+                return 0;
+            } else {
+                return value
+            }
+        }
     }
 
     $('#bt-withdrawal').on('click', function () {
@@ -269,4 +284,124 @@ $(document).ready(function () {
         })
 
     });
+
+    /**
+     * Module Finances
+     */
+
+    updateTransfersTable();
+
+    function updateTransfersTable(link = null) {
+
+        loadOnTable('#table-transfers-body', '#transfersTable');
+
+        if (link == null) {
+            link = '/transfers';
+        } else {
+            link = '/transfers' + link;
+        }
+
+        $.ajax({
+            method: "GET",
+            url: link,
+            data: {company: $("#extract_company_select").val()},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error() {
+                $("#table-transfers-body").html('Erro ao encontrar dados');
+            },
+            success: function success(response) {
+
+                $("#table-transfers-body").html('');
+
+                if (response.data == '') {
+
+                    $("#table-transfers-body").html("<tr><td colspan='3' class='text-center'>Nenhuma movimentação até o momento</td></tr>");
+                    $("#pagination-transfers").html("");
+                } else {
+                    data = '';
+
+                    $.each(response.data, function (index, value) {
+                        data += '<tr >';
+                        data += '<td style="vertical-align: middle;">' + value.reason + '<a style="cursor:pointer;" class="detalhes_venda pointer" data-target="#modal_detalhes" data-toggle="modal" sale="' + value.sale_id + '">' + '<span style="color:black;">' + value.transaction_id + '</span>' + '</a></td>';
+                        data += '<td style="vertical-align: middle;">' + value.date + '</td>';
+                        if (value.type_enum === 1) {
+                            data += '<td style="vertical-align: middle; color:green;">' + value.value + ' <span style="color:red;">' + value.anticipable_value + '</span> </td>';
+                        } else {
+                            data += '<td style="vertical-align: middle; color:red;">' + value.value + '</td>';
+                        }
+                        data += '</tr>';
+                    });
+
+                    $("#table-transfers-body").html(data);
+
+                    pagination(response, 'transfers', updateTransfersTable);
+                }
+            }
+        });
+    }
+
+    /**
+     * Withdrawl
+     */
+    var statusWithdrawals = {
+        1: 'warning',
+        2: 'primary',
+        3: 'success',
+        4: 'danger'
+    };
+
+    updateWithdrawalsTable();
+
+    function updateWithdrawalsTable(link = null) {
+
+        loadOnTable('table-withdrawals-body', 'transfersTable');
+        $("#table-withdrawals-body").html('');
+
+        if (link == null) {
+            link = '/withdrawals';
+        } else {
+            link = '/withdrawals' + link;
+        }
+
+        $.ajax({
+            method: "GET",
+            url: link,
+            data: {company: $("#extract_company_select").val()},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function () {
+                $("#table-withdrawals-body").html('Erro ao encontrar dados');
+            },
+            success: function (response) {
+                $("#withdrawals-table-data").html('');
+                if (response.data == '') {
+                    $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
+                    $("#withdrawals-pagination").html("");
+                } else {
+                    $.each(response.data, function (index, value) {
+                        data = '';
+                        data += '<tr>';
+                        data += "<td>" + value.account_information + "</td>";
+                        data += "<td>" + value.date_request + "</td>";
+                        data += "<td>" + value.date_release + "</td>";
+                        data += "<td>" + value.value + "</td>";
+                        data += '<td class="shipping-status">';
+                        data += '<span class="badge badge-' + statusWithdrawals[value.status] + '">' + value.status_translated + '</span>';
+                        data += '</td>';
+                        data += '</tr>';
+
+                        $("#withdrawals-table-data").append(data);
+
+                        $('#withdrawalsTable').addClass('table-striped')
+                    });
+                    pagination(response, 'withdrawals', updateWithdrawalsTable);
+                }
+
+            }
+        });
+    }
+
 });
