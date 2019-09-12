@@ -108,7 +108,7 @@ class ProjectsController extends Controller
                                 $img->save($photo->getPathname());
 
                                 $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
+                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project) . '/main', $photo);
                                 $project->update(['photo' => $digitalOceanPath]);
                             } catch (Exception $e) {
                                 Log::warning('Erro ao tentar salvar foto projeto - ProjectsController - store');
