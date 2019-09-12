@@ -32,11 +32,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Transaction extends Model
 {
     use SoftDeletes;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
     protected $keyType = 'integer';
+
     /**
      * @var array
      */
@@ -45,6 +47,7 @@ class Transaction extends Model
         'updated_at',
         'deleted_at',
     ];
+
     /**
      * @var array
      */

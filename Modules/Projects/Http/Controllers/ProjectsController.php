@@ -108,7 +108,7 @@ class ProjectsController extends Controller
                                 $img->save($photo->getPathname());
 
                                 $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . $project->id_code . '/main', $photo);
+                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
                                 $project->update(['photo' => $digitalOceanPath]);
                             } catch (Exception $e) {
                                 Log::warning('Erro ao tentar salvar foto projeto - ProjectsController - store');
@@ -239,7 +239,7 @@ class ProjectsController extends Controller
 
             if ($requestValidated) {
 
-                $project = $projectModel->where('id', Hashids::decode($id))->first();
+                $project = $projectModel->find(current(Hashids::decode($id)));
 
                 if (Gate::allows('update', [$project])) {
 
@@ -263,7 +263,7 @@ class ProjectsController extends Controller
                                 $img->save($projectPhoto->getPathname());
 
                                 $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/main', $projectPhoto);
+                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $projectPhoto);
                                 $project->update([
                                                      'photo' => $digitalOceanPath,
                                                  ]);
@@ -282,7 +282,7 @@ class ProjectsController extends Controller
                                 $img->save($projectLogo->getPathname());
 
                                 $digitalOceanPathLogo = $digitalOceanService
-                                    ->uploadFile('uploads/user/' . auth()->user()->id_code . '/public/projects/' . $project->id_code . '/logo', $projectLogo);
+                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/logo', $projectLogo);
 
                                 $project->update([
                                                      'logo' => $digitalOceanPathLogo,

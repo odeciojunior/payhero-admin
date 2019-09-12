@@ -97,29 +97,27 @@ class RegisterController extends Controller
 
     public function welcomeEmail()
     {
-        $userEmail      = auth()->user()->email;
-        $userName       = auth()->user()->name;
-        $sendEmail      = new SendgridService();
-        $data           = [
+        $userEmail       = auth()->user()->email;
+        $userName        = auth()->user()->name;
+        $sendgridService = new SendgridService();
+        $data            = [
             "name" => $userName,
         ];
         $emailValidated = FoxUtils::validateEmail($userEmail);
         if ($emailValidated) {
-            $sendEmail->sendEmail('noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
+            $sendgridService->sendEmail('noreply@cloudfox.net', 'cloudfox', $userEmail, $userName, 'd-267dbdcbcc5a454e94a5ae3ffb704505', $data);
         }
     }
 
     public function loginAsSomeUser($userId){
 
         auth()->loginUsingId($userId);
-        
+
         $companyModel = new Company();
 
         $companies = $companyModel->where('user_id',\Auth::user()->id)->get();
 
-        return view('dashboard::dashboard',[
-            'companies' => $companies,
-        ]);
+        return response()->redirectTo('/dashboard');
     }
 }
 

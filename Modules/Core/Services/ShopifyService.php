@@ -27,7 +27,6 @@ use Slince\Shopify\Manager\InventoryItem\InventoryItem;
 use Slince\Shopify\Manager\ProductImage\Image;
 use Slince\Shopify\Manager\ProductVariant\Variant;
 use Slince\Shopify\Manager\Webhook\Webhook;
-use Slince\Shopify\Theme\Theme;
 use Vinkla\Hashids\Facades\Hashids;
 use PHPHtmlParser\Selector\Selector;
 use Slince\Shopify\PublicAppCredential;
