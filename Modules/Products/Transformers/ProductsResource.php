@@ -20,6 +20,7 @@ class ProductsResource extends Resource
     {
         return [
             'id'          => $this->id_code,
+            'id_view'     => ($this->shopify == 1 ? $this->shopify_id : $this->id_code),
             'name'        => substr($this->name, 0, 18),
             'description' => substr($this->description, 0, 20),
             'image'       => $this->photo == '' ? 'modules/global/img/semimagem.png' : $this->photo,
