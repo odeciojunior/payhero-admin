@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="pt-10 pr-20 pl-20 modal_regerar_boleto_body">
                                     <div class="form-group">
-                                        <label for="date">Data:</label>
+                                        <label for="date">Data de vencimeto do boleto:</label>
                                         <input name='date' id="date" class="form-control input-pad" type="date">
                                         <input type='hidden' name='saleId' id='saleId'>
                                     </div>
