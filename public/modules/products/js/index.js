@@ -141,6 +141,7 @@ $(document).ready(function () {
                             '<div class="row align-items-end justify-content-between">' +
                             '<div class="col-10">' +
                             '<h5 class="card-title">' + value.name + '</h5>' +
+                            '<h5 class="">' + value.description + '</h5>' +
                             '<p class="card-text sm">Criado em  ' + value.created_at + '</p>' +
                             '</div>' +
                             '</div>' +
