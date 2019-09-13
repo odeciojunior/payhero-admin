@@ -2,8 +2,12 @@
 
 namespace Modules\Core\Services;
 
+use Exception;
+use Modules\Core\Entities\PlanSale;
+use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
+use stdClass;
 
 /**
  * Class SaleService
@@ -44,5 +48,37 @@ class SaleService
         }
 
         return $itens;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProducts($saleId = null)
+    {
+        try {
+            $saleModel     = new Sale();
+            $productModel  = new Product();
+            $planSaleModel = new PlanSale();
+
+            if ($saleId) {
+
+                $sale = $saleModel->with([
+                                             'plansSales.plan.products',
+                                         ])->find($saleId);
+
+                $plansIds = $sale->plansSales->pluck('plan_id')->toArray();
+
+                $products = $productModel->whereHas('productsPlans', function($query) use ($plansIds) {
+                    $query->whereIn('plan_id', $plansIds);
+                })->get();
+
+                return $products;
+            } else {
+                return null;
+            }
+        } catch (Exception $ex) {
+
+            //thowl
+        }
     }
 }
