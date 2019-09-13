@@ -2,13 +2,18 @@
 
 namespace Modules\Domains\Http\Controllers;
 
+use Cloudflare\API\Endpoints\EndpointException;
 use Cloudflare\API\Endpoints\SSL;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\DomainRecord;
@@ -21,6 +26,7 @@ use Modules\Domains\Http\Requests\DomainCreateRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRecordRequest;
 use Modules\Domains\Http\Requests\DomainDestroyRequest;
 use Modules\Domains\Http\Requests\DomainStoreRequest;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Domains\Transformers\DomainResource;
 
@@ -32,7 +38,7 @@ class DomainsController extends Controller
 {
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -71,7 +77,7 @@ class DomainsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(DomainStoreRequest $request)
     {
@@ -189,8 +195,9 @@ class DomainsController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Request $request, $id)
     {
@@ -281,8 +288,7 @@ class DomainsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Cloudflare\API\Endpoints\EndpointException
+     * @return JsonResponse
      */
     public function update(Request $request)
     {
@@ -400,7 +406,7 @@ class DomainsController extends Controller
 
     /**
      * @param DomainDestroyRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy(DomainDestroyRequest $request)
     {
@@ -444,7 +450,7 @@ class DomainsController extends Controller
                                         $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
                                     }
                                 }
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 //throwl
 
                             }
@@ -469,8 +475,8 @@ class DomainsController extends Controller
 
     /**
      * @param $domainId
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function show($domainId)
     {
@@ -500,8 +506,8 @@ class DomainsController extends Controller
 
     /**
      * @param DomainCreateRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function create(DomainCreateRequest $request)
     {
@@ -542,7 +548,7 @@ class DomainsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroyRecord(DomainDestroyRecordRequest $request)
     {
@@ -584,7 +590,7 @@ class DomainsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function recheckDomain(Request $request)
     {
@@ -621,7 +627,7 @@ class DomainsController extends Controller
 
     /**
      * @param intger $domainId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getDomainData($domainId)
     {
@@ -652,7 +658,7 @@ class DomainsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function recheckOnly(Request $request)
     {
@@ -733,7 +739,7 @@ class DomainsController extends Controller
 
                                                             $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
                                                         }
-                                                    } catch (\Exception $e) {
+                                                    } catch (Exception $e) {
                                                         report($e);
 
                                                         $domain->update([
@@ -759,7 +765,7 @@ class DomainsController extends Controller
 
                                         return response()->json(['message' => 'Não foi possível revalidar o domínio, integração do shopify não encontrada'], 400);
                                     }
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     //throwl
 
                                 }
