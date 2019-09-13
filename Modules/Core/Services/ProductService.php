@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Product;
+use Modules\Core\Entities\Project;
 
 class ProductService
 {
@@ -14,8 +15,9 @@ class ProductService
     public function getProductsMyProject(int $projectId)
     {
         $productModel = new Product();
-
-        if (!empty($projectId)) {
+        $projectModel = new Project();
+        $project = $projectModel->find($projectId);
+        if (!empty($projectId) && !empty($project->shopify_id)) {
             return $productModel->where('user_id', auth()->user()->id)
                                 ->where('shopify', 1)
                                 ->whereHas('productsPlans.plan', function($queryPlan) use ($projectId) {
