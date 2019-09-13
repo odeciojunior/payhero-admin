@@ -362,6 +362,30 @@ class TesteController extends Controller
         }
 
         dd("hey");*/
+
+        //        $productsModel = new Product();
+        //
+        //        $productsSearch = $productsModel->where('user_id', 34)
+        //                                        ->where('shopify', 1)->get();
+        //        foreach ($productsSearch as $product) {
+        //            $product->update([
+        //                                 'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->name, 0, 100)),
+        //                                 'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->description, 0, 100)),
+        //                             ]);
+        //        }
+    }
+
+    public function removeSpecialCharacter()
+    {
+//        $productsModel = new Product();
+//
+//                $productsSearch = $productsModel->where('shopify', 1)->get();
+//        foreach ($productsSearch as $product) {
+//            $product->update([
+//                                 'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->name, 0, 100)),
+//                                 'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->description, 0, 100)),
+//                             ]);
+//        }
     }
 }
 
