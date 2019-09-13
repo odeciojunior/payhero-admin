@@ -839,8 +839,8 @@ class ShopifyService
                     $plan = $planModel->find($productPlan->plan_id);
 
                     $plan->update([
-                                      'name'        => substr($storeProduct->getTitle(), 0, 100),
-                                      'description' => $description,
+                                      'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                                      'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
                                       'price'       => $variant->getPrice(),
                                       'status'      => '1',
                                   ]);
@@ -877,8 +877,8 @@ class ShopifyService
                                                    'shopify_id'         => $storeProduct->getId(),
                                                    'shopify_variant_id' => $variant->getId(),
                                                    'project_id'         => $projectId,
-                                                   'name'               => substr($storeProduct->getTitle(), 0, 100),
-                                                   'description'        => $description,
+                                                   'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                                                   'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
                                                    'code'               => '',
                                                    'price'              => $variant->getPrice(),
                                                    'status'             => '1',
@@ -897,8 +897,8 @@ class ShopifyService
 
                 $product = $productModel->create([
                                                      'user_id'            => $userId,
-                                                     'name'               => substr($storeProduct->getTitle(), 0, 100),
-                                                     'description'        => $description,
+                                                     'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                                                     'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
                                                      'guarantee'          => '0',
                                                      'format'             => 1,
                                                      'category_id'        => '11',
@@ -915,8 +915,8 @@ class ShopifyService
                                                'shopify_id'         => $storeProduct->getId(),
                                                'shopify_variant_id' => $variant->getId(),
                                                'project_id'         => $projectId,
-                                               'name'               => substr($storeProduct->getTitle(), 0, 100),
-                                               'description'        => $description,
+                                               'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                                               'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
                                                'code'               => '',
                                                'price'              => $variant->getPrice(),
                                                'status'             => '1',
