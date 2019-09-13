@@ -297,7 +297,7 @@ class DomainsController extends Controller
 
             $recordsJson = json_decode($requestData['data']);
 
-            $domain = $domainModel->with(['records', 'project'])
+            $domain = $domainModel->with(['domainsRecords', 'project'])
                                   ->find(current(Hashids::decode($requestData['domain'])));
 
             if (Gate::allows('edit', [$domain->project])) {
@@ -321,7 +321,7 @@ class DomainsController extends Controller
                                 ($subdomain == $domain->name)) {
                                 //dominio nao tem "ponto" ou é igual ao dominio
 
-                                if ($domain->records->where('type', current($record[0]))
+                                if ($domain->domainsRecords->where('type', current($record[0]))
                                                     ->where('name', $subdomain)
                                                     ->where('content', current($record[2]))
                                                     ->count() == 0) {
