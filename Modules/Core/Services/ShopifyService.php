@@ -819,8 +819,8 @@ class ShopifyService
                 //plano ja existe, atualiza o plano, produto, produtoplanos
 
                 $product->update([
-                                     'name'               => substr($storeProduct->getTitle(), 0, 100),
-                                     'description'        => $description,
+                                     'name'               => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($storeProduct->getTitle(), 0, 100)),
+                                     'description'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($description, 0, 100)),
                                      'weight'             => $variant->getWeight(),
                                      'cost'               => $this->getShopInventoryItem($variant->getInventoryItemId())
                                                                   ->getCost(),
