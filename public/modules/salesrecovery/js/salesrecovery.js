@@ -113,7 +113,7 @@ $(document).ready(function () {
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
                 }
-                pagination(response, 'salesRecovery', atualizar);
+                paginateSalesRecovery(response, 'salesRecovery', atualizar);
 
                 if ($("#type_recovery").val() == '2') {
                     $(".sale_status").hover(
@@ -397,3 +397,50 @@ $(document).ready(function () {
     }
 
 });
+
+function paginateSalesRecovery(response, model, callback) {
+
+    $("#pagination-" + model).html("");
+
+    var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
+
+    $("#pagination-" + model).append(first_page);
+
+    if (response.meta.current_page === 1) {
+        $("#first_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+    }
+
+    $('#first_page').on("click", function () {
+        callback('?page=1');
+    });
+
+    for (x = 3; x > 0; x--) {
+
+        if (response.meta.current_page - x <= 1) {
+            continue;
+        }
+
+        $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
+
+        $('#page_' + (response.meta.current_page - x)).on("click", function () {
+            callback('?page=' + $(this).html());
+        });
+    }
+
+    if (response.meta.current_page !== 1) {
+        var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
+
+        $("#pagination-" + model).append(current_page);
+
+        $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
+    }
+    for (x = 1; x < 4; x++) {
+
+        $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
+
+        $('#page_' + (response.meta.current_page + x)).on("click", function () {
+            callback('?page=' + $(this).html());
+        });
+    }
+
+}

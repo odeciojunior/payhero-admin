@@ -88,7 +88,7 @@ class SalesRecoveryService
 
         $abandonedCarts->with(['checkoutPlans.plan']);
 
-        return SalesRecoveryResource::collection($abandonedCarts->orderBy('id', 'DESC')->paginate(10));
+        return SalesRecoveryResource::collection($abandonedCarts->orderBy('id', 'DESC')->simplePaginate(10));
     }
 
     /**
