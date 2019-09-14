@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Presenters;
 
+use Modules\Core\Entities\Domain;
 use Laracasts\Presenter\Presenter;
 
 class CheckoutPresenter extends Presenter
@@ -9,12 +10,11 @@ class CheckoutPresenter extends Presenter
     /**
      * @return float|int
      */
-    public function getTotal()
+    public function getSubTotal($checkoutPlans)
     {
         $total = 0;
-        foreach ($this->checkoutPlans as $checkoutPlan) {
-            $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan()
-                                                                       ->first()->price)) * intval($checkoutPlan->amount);
+        foreach ($checkoutPlans as $checkoutPlan) {
+            $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
         }
 
         return $total;
@@ -35,5 +35,32 @@ class CheckoutPresenter extends Presenter
         }
 
         return $products;
+    }
+
+    public function getSmsSentAmount(){
+
+        if ($this->sms_sent_amount == null || $this->sms_sent_amount == 0) {
+            return 'Não enviado';
+        } else {
+            return $this->sms_sent_amount;
+        }
+    }
+
+    public function getEmailSentAmount(){
+        
+        if ($this->email_sent_amount == null || $this->email_sent_amount == 0) {
+            return 'Não enviado';
+        } else {
+            return $this->email_sent_amount;
+        }
+    }
+
+    public function getCheckoutLink($domain){
+
+        if (!empty($domain)) {
+            return "https://checkout." . $domain->name . "/recovery/" . $this->id_log_session;
+        } else {
+            return '';
+        }
     }
 }

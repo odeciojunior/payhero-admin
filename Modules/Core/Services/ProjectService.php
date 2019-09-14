@@ -284,6 +284,6 @@ class ProjectService
 
         $userProjects = $userProjectModel->where('user_id', auth()->user()->id)->pluck('project_id');
 
-        return $projectModel->whereIn('id', $userProjects)->get();
+        return $projectModel->whereIn('id', $userProjects)->orderBy('id', 'DESC')->get();
     }
 }

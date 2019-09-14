@@ -56,7 +56,6 @@ class SalesRecoveryService
     public function getAbandonedCart(int $projectId = null, string $dateStart = null, string $dateEnd = null, $client = null)
     {
         $checkoutModel     = new Checkout();
-        $userProjectsModel = new UserProject();
 
         $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
                                         ->leftjoin('logs', function($join) {
@@ -66,14 +65,8 @@ class SalesRecoveryService
 
         if (!empty($projectId)) {
             $abandonedCarts->where('project_id', $projectId);
-        } else {
-            $userProjects = $userProjectsModel->where([
-                                                          ['user_id', auth()->user()->id],
-                                                          ['type', 'producer'],
-                                                      ])->pluck('project_id')->toArray();
-
-            $abandonedCarts->whereIn('checkouts.project_id', $userProjects)->with(['project']);
         }
+
         if (!empty($client)) {
             $abandonedCarts->where('name', 'like', '%' . $client . '%');
         }
@@ -88,6 +81,12 @@ class SalesRecoveryService
                 $abandonedCarts->whereDate('checkouts.created_at', '<', $dateEnd);
             }
         }
+
+        $abandonedCarts->with(['project.domains' => function($query){
+            $query->where('status', 3);
+        }]);
+
+        $abandonedCarts->with(['checkoutPlans.plan']);
 
         return SalesRecoveryResource::collection($abandonedCarts->orderBy('id', 'DESC')->paginate(10));
     }
