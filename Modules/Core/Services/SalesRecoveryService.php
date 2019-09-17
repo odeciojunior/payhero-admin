@@ -55,7 +55,7 @@ class SalesRecoveryService
      */
     public function getAbandonedCart(int $projectId = null, string $dateStart = null, string $dateEnd = null, $client = null)
     {
-        $checkoutModel     = new Checkout();
+        $checkoutModel = new Checkout();
 
         $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
                                         ->leftjoin('logs', function($join) {
@@ -82,9 +82,11 @@ class SalesRecoveryService
             }
         }
 
-        $abandonedCarts->with(['project.domains' => function($query){
-            $query->where('status', 3);
-        }]);
+        $abandonedCarts->with([
+                                  'project.domains' => function($query) {
+                                      $query->where('status', 3);
+                                  },
+                              ]);
 
         $abandonedCarts->with(['checkoutPlans.plan']);
 
@@ -182,7 +184,7 @@ class SalesRecoveryService
 
         $checkout['hours']      = with(new Carbon($checkout->created_at))->format('H:i:s');
         $checkout['date']       = with(new Carbon($checkout->created_at))->format('d/m/Y');
-        $checkout['total']      = number_format($checkout->present()->getTotal() / 100, 2, ',', '.');
+        $checkout['total']      = number_format($checkout->present()->getSubTotal() / 100, 2, ',', '.');
         $checkout->src          = ($checkout->src == 'null' || $checkout->src == null) ? '' : $checkout->src;
         $checkout->utm_source   = ($checkout->utm_source == 'null' || $checkout->utm_source == null) ? '' : $checkout->utm_source;
         $checkout->utm_medium   = ($checkout->utm_medium == 'null' || $checkout->utm_medium == null) ? '' : $checkout->utm_medium;
@@ -197,7 +199,7 @@ class SalesRecoveryService
         $delivery['zip_code'] = $log->zip_code;
 
         $delivery['state'] = $log->state;
-        
+
         $status = '';
         if ($checkout->status == 'abandoned cart') {
             $status = 'Não recuperado';
