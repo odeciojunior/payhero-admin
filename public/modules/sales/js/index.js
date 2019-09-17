@@ -65,9 +65,9 @@ $(document).ready(function () {
         loadOnTable('#dados_tabela', '#tabela_vendas');
 
         if (link == null) {
-            link = '/sales/getsales?' + 'projeto=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales/getsales?' + 'projeto=' + $("#projeto option:selected ").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         } else {
-            link = '/sales/getsales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales/getsales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         }
 
         $.ajax({
@@ -137,7 +137,7 @@ $(document).ready(function () {
 
                     $.ajax({
                         method: "POST",
-                        url: '/sales/venda/detalhe',
+                        url: '/api/sales/venda/detalhe',
                         data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -187,9 +187,9 @@ $(document).ready(function () {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         if (link == null) {
-            link = '/sales/getcsvsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales/getcsvsales?' + 'projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         } else {
-            link = '/sales/getcsvsales' + link + '&projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
+            link = '/api/sales/getcsvsales' + link + '&projeto=' + $("#projeto").val() + '&forma=' + $("#forma").val() + '&status=' + $("#status").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         }
 
         $.ajax({

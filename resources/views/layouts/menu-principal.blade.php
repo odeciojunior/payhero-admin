@@ -118,7 +118,7 @@
             </a>
             <ul class="site-menu-sub">
                 <li class="site-menu-item has-sub">
-                    <a href="{!! route('sales') !!}">
+                    <a href="{!! route('sales.index') !!}">
                         <span class="site-menu-title">Visão geral</span>
                     </a>
                 </li>
