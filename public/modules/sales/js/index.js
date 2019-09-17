@@ -168,7 +168,7 @@ $(document).ready(function () {
 
                     $.ajax({
                         method: "POST",
-                        url: '/api/sales/venda/detalhe',
+                        url: '/api/sales/detail',
                         data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

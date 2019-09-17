@@ -12,17 +12,6 @@ Route::group(
         'prefix' => 'sales'
     ],
     function() {
-//        Route::get('/', [
-//            'uses' => 'SalesApiController@getVendas',
-//        ]);
-
-//        Route::get('/{id_venda}', [
-//            'uses' => 'SalesApiController@detalhesVenda',
-//        ]);
-
-        Route::post('/estornarvenda', [
-            'uses' => 'SalesApiController@estornarVenda',
-        ]);
 
         Route::get('/getsales', [
             'uses' => 'SalesApiController@getSales',
@@ -33,14 +22,14 @@ Route::group(
             'uses' => 'SalesApiController@getCsvSales',
         ]);
 
-        Route::post('/venda/detalhe', [
+        Route::post('/detail', [
             'as'   => 'sales.detail',
             'uses' => 'SalesApiController@getSaleDetail',
         ]);
 
-        Route::post('/venda/estornar', [
+        Route::post('/refund', [
             'as'   => 'sales.refund',
-            'uses' => 'SalesApiController@estornarVenda',
+            'uses' => 'SalesApiController@refundSale',
         ]);
 
         Route::post('/update/trackingcode', [
@@ -51,10 +40,6 @@ Route::group(
         Route::post('/update/trackingcode/{sale}', [
             'as'   => 'sales.sentemailtrackingcode',
             'uses' => 'SalesApiController@sendEmailUpdateTrackingCode',
-        ]);
-
-        Route::get('/get/{pass}', [
-            'uses' => 'SalesApiController@index',
         ]);
     }
 );
