@@ -265,7 +265,17 @@ function copyToClipboard(element) {
     $temp.val($(element).html()).select();
     document.execCommand("copy");
     $temp.remove();
-    alertCustom('success','Link copiado com sucesso')
+    alertCustom('success', 'Link copiado com sucesso')
+}
+
+function errorAjaxResponse(response) {
+    if (response.status === 422) {
+        for (error in response.responseJSON.errors) {
+            alertCustom('error', response.responseJSON.errors[error]);
+        }
+    } else {
+        alertCustom('error', response.responseJSON.message);
+    }
 }
 
 
