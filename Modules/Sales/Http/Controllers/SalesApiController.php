@@ -404,7 +404,7 @@ class SalesApiController extends Controller
             $checkoutModel = new Checkout();
             $shippingModel = new Shipping();
 
-            $sales = $saleModel->where('owner', auth()->user()->id);
+            $sales = $saleModel->where('owner_id', auth()->user()->id);
 
             if (!empty($dataRequest['select_project'])) {
                 $plans    = $planModel->where('project', $dataRequest['select_project'])->pluck('id');
@@ -437,7 +437,7 @@ class SalesApiController extends Controller
                 $sales->where('start_date', '<=', $endDateTime ?? null);
             }
 
-            $sales->with(['clientModel', 'projectModel', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
+            $sales->with(['client', 'project', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
             ->orderBy('id', 'DESC');
 
             $salesResult = $sales->get();
@@ -489,10 +489,10 @@ class SalesApiController extends Controller
 
             $saleData = collect();
             foreach ($salesResult as $sale) {
-                $checkout  = $checkoutModel->find($sale->checkout);
-                $shipping  = $shippingModel->find($sale->shipping);
+                $checkout  = $checkoutModel->find($sale->checkout->id);
+                $shipping  = $shippingModel->find($sale->shipping->id);
                 $saleArray = [
-                    'project_name'          => $sale->projectModel->name ?? '',
+                    'project_name'          => $sale->project->name ?? '',
                     'sale_code'             => '#' . strtoupper(Hashids::connection('sale_id')
                             ->encode($sale->id)),
                     'owner'                 => $sale->user->name ?? '',
@@ -516,10 +516,10 @@ class SalesApiController extends Controller
                     'shipping_value'        => $shipping->value ?? '',
                     'dolar_quotation'       => $sale->dolar_quotation ?? '',
                     'total_paid'            => $sale->total_paid_value ?? '',
-                    'client_name'           => $sale->clientModel->name ?? '',
-                    'client_telephone'      => $sale->clientModel->telephone ?? '',
-                    'client_email'          => $sale->clientModel->email ?? '',
-                    'client_document'       => $sale->clientModel->document ?? '',
+                    'client_name'           => $sale->client->name ?? '',
+                    'client_telephone'      => $sale->client->telephone ?? '',
+                    'client_email'          => $sale->client->email ?? '',
+                    'client_document'       => $sale->client->document ?? '',
                     'client_street'         => $sale->delivery->street ?? '',
                     'client_number'         => $sale->delivery->number ?? '',
                     'client_complement'     => $sale->delivery->complement ?? '',
