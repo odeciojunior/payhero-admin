@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sales', 'namespace' => 'Modules\Sales\Http\Controllers'], function() {
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sales'], function() {
     Route::get('/', [
         'as'   => 'sales',
         'uses' => 'SalesController@index',
@@ -36,7 +36,7 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'sales', 'namespace' 
     ]);
 });
 
-Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vendas', 'namespace' => 'Modules\Sales\Http\Controllers'], function() {
+Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vendas'], function() {
     Route::get('/', [
         'uses' => 'SalesController@getVendas',
     ]);
@@ -50,7 +50,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'api/vendas', 'namespace' 
     ]);
 });
 
-Route::group(['middleware' => 'api', 'prefix' => 'api/sales', 'namespace' => 'Modules\Sales\Http\Controllers'], function() {
+Route::group(['middleware' => 'api', 'prefix' => 'api/sales'], function() {
     Route::get('/get/{pass}', [
         'uses' => 'SalesApiController@index',
     ]);

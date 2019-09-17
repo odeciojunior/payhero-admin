@@ -9,8 +9,6 @@
         "Modules\\Sales\\Providers\\SalesServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }
