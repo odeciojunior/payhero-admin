@@ -2,18 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::apiResource('sales', 'SalesApiController')
+    ->only('index')
+    ->middleware(['web', 'auth']);
+
 Route::group(
     [
         'middleware' => ['web', 'auth'],
         'prefix' => 'sales'
     ],
     function() {
-        Route::apiResource('sales', 'DashboardApiController')
-            ->only('index');
-
-        Route::get('/', [
-            'uses' => 'SalesApiController@getVendas',
-        ]);
+//        Route::get('/', [
+//            'uses' => 'SalesApiController@getVendas',
+//        ]);
 
 //        Route::get('/{id_venda}', [
 //            'uses' => 'SalesApiController@detalhesVenda',

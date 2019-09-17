@@ -34,36 +34,7 @@ class SalesController extends Controller
      */
     public function index()
     {
-        try {
-            $transactionModel = new Transaction();
-            $companyModel     = new Company();
-            $projectService   = new ProjectService();
-
-            $myProjects = $projectService->getMyProjects();
-
-            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                                          ->pluck('id')
-                                          ->toArray();
-
-            $projects = [];
-
-            foreach ($myProjects as $project) {
-                if ($project != null) {
-                    $projects[] = [
-                        'id'   => Hashids::encode($project->id),
-                        'nome' => $project->name,
-                    ];
-                }
-            }
-
-            return view('sales::index', [
-                'projetos'     => $projects,
-                'sales_amount' => $transactionModel->whereIn('company_id', $userCompanies)->get()->count(),
-            ]);
-        } catch (Exception $e) {
-            Log::warning('Erro ao buscar vendas SalesController - index');
-            report($e);
-        }
+        return view('sales::index');
     }
 }
 

@@ -21,12 +21,17 @@ use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
+use Modules\Core\Services\ProjectService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleUpdateRequest;
 use Modules\Sales\Transformers\SaleApiResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Vinkla\Hashids\Facades\Hashids;
 
+/**
+ * Class SalesApiController
+ * @package Modules\Sales\Http\Controllers
+ */
 class SalesApiController extends Controller
 {
     /**
@@ -50,8 +55,9 @@ class SalesApiController extends Controller
      */
     private $plansSalesModel;
 
+
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|Sale
      */
     private function getSaleModel()
     {
@@ -63,7 +69,7 @@ class SalesApiController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|User
      */
     private function getUserModel()
     {
@@ -74,6 +80,9 @@ class SalesApiController extends Controller
         return $this->userModel;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed|Project
+     */
     private function getProjectModel()
     {
         if (!$this->projectModel) {
@@ -111,38 +120,45 @@ class SalesApiController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index($data)
+    public function index()
     {
         try {
-            if ($data == 'M9NBQY3P') {
+            $transactionModel = new Transaction();
+            $companyModel     = new Company();
+            $projectService   = new ProjectService();
 
-                $userZmDeals = $this->getUserModel()->where('email', 'fernandomuniz1337@gmail.com')->first();
+            $myProjects = $projectService->getMyProjects();
 
-                $sales = $this->getSaleModel()->where([
-                                                          ['owner', $userZmDeals->id],
-                                                          //['status', '!=', 3],
-                                                      ]);
+            $userCompanies = $companyModel->where('user_id', auth()->user()->id)
+                ->pluck('id')
+                ->toArray();
 
-                //paymentmethod = 2 boleto
+            $projects = [];
 
-                $project = $this->getProjectModel()->where('name', 'zmdeals')->first();
-
-                $plans    = $this->getPlan()->where('project', $project->id)->pluck('id');
-                $salePlan = $this->getPlansSales()->whereIn('plan', $plans)->pluck('sale');
-                $sales->whereIn('id', $salePlan);
-
-                $sales->orderBy('id', 'DESC');
-
-                return SaleApiResource::collection($sales->get());
-            } else {
-                return response()->json(['message' => 'Erro'], 400);
+            foreach ($myProjects as $project) {
+                if ($project != null) {
+                    $projects[] = [
+                        'id'   => Hashids::encode($project->id),
+                        'nome' => $project->name,
+                    ];
+                }
             }
+
+            return response()->json([
+                'projetos'     => $projects,
+                'sales_amount' => $transactionModel->whereIn('company_id', $userCompanies)->get()->count(),
+            ], 200);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar vendas SalesApiController - index');
+            Log::warning('Erro ao buscar vendas SalesController - index');
             report($e);
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function getSaleDetail(Request $request)
     {
         try {
@@ -264,11 +280,19 @@ class SalesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function refundSale(Request $request)
     {
         return response()->json('sucesso');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function getSales(Request $request)
     {
         try {
@@ -362,6 +386,10 @@ class SalesApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function getCsvSales(Request $request)
     {
 
@@ -529,6 +557,10 @@ class SalesApiController extends Controller
         }
     }
 
+    /**
+     * @param SaleUpdateRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateTrackingCode(SaleUpdateRequest $request)
     {
         try {
@@ -563,6 +595,10 @@ class SalesApiController extends Controller
         }
     }
 
+    /**
+     * @param $saleCode
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sendEmailUpdateTrackingCode($saleCode)
     {
         try {

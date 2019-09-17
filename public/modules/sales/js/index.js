@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    getSalesData();
+
     atualizar();
 
     $("#filtros").on("click", function () {
@@ -36,6 +39,34 @@ $(document).ready(function () {
         $('#filter_form').submit();
         $('export-sales').remove();
     });
+
+    function getSalesData(){
+        $.ajax({
+            method: "GET",
+            url: "/api/sales/",
+            error: function error(response) {
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', String(response.responseJSON.message));
+                }
+            },
+            success: function success(data) {
+               if(data.sales_amount){
+                   for(let i = 0; i < data.projetos.length; i++){
+                       $('#projeto').append('<option value="'+ data.projetos[i].id + '">' + data.projetos[i].nome + '</option>')
+                   }
+                   $('#export-excel, .page-content').show();
+                   $('.content-error').hide();
+               }else{
+                   $('#export-excel, .page-content').hide();
+                   $('.content-error').show();
+               }
+            }
+        });
+    }
 
     function downloadFile(data, fileName) {
         var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "text/plain";

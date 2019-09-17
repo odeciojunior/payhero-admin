@@ -14,8 +14,7 @@
                     <h1 class="page-title">Vendas</h1>
                 </div>
                 <div class="col-6 text-right">
-                    @if($sales_amount > 0)
-                        <div class="d-flex justify-content-end align-items-center">
+                        <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                             {{--<div class="p-2 align-items-center">
                                 <i class="icon wb-calendar icon-results" aria-hidden="true"></i>
                                 <span class="text-result"> RESULTADOS DE 15 A 26 DE MAIO DE 2019 </span>
@@ -33,11 +32,10 @@
                         <!-- <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
                         Filtros
                         </a> -->
-                    @endif
                 </div>
             </div>
         </div>
-        <div class="page-content container">
+        <div class="page-content container" style="display:none">
             {{--  <div class="col-lg-6 text-right">
                 <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
                   Filtros
@@ -45,7 +43,6 @@
             </div>
           </div>  --}}
             <div class="fixhalf"></div>
-            @if($sales_amount > 0)
                 <form id='filter_form' action='{{route('sales.getcsvsales')}}' method='POST'>
                     @csrf
                     <div id="" class="card shadow p-20">
@@ -54,9 +51,6 @@
                                 <label for="projeto">Projeto</label>
                                 <select name='select_project' id="projeto" class="form-control select-pad">
                                     <option value="">Todos projetos</option>
-                                    @foreach($projetos as $projeto)
-                                        <option value="{!! $projeto['id'] !!}">{!! $projeto['nome'] !!}</option>
-                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -156,19 +150,16 @@
                 <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                     {{-- js carrega... --}}
                 </ul>
-            @else
-                @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-                @endpush
+        </div>
+        @push('css')
+            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        @endpush
 
-                <div class=" content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
-                    <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
-                    <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>
-                    <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
-                </div>
-
-            @endif
+        <div class="content-error text-center" style="display:none">
+            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
+            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
+            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>
+            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
         </div>
     </div>
 
