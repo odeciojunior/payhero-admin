@@ -114,7 +114,7 @@ class SalesController extends Controller
                 $products = $sale->present()->getProducts();
 
                 $discount = '0,00';
-                $subTotal = $sale->present()->getSubTotal();
+                $subTotal = $sale->present()->getSubTotal(); 
                 $total    = $subTotal;
 
                 $total += preg_replace("/[^0-9]/", "", $sale->shipment_value);

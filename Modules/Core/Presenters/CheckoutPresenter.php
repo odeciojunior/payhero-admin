@@ -10,9 +10,13 @@ class CheckoutPresenter extends Presenter
     /**
      * @return float|int
      */
-    public function getSubTotal($checkoutPlans)
+    public function getSubTotal($checkoutPlans = null)
     {
-        $total = 0;
+        if(empty($checkoutPlans)){
+            $checkoutPlans = $this->checkoutPlans;
+        }
+
+        $total = 0; 
         foreach ($checkoutPlans as $checkoutPlan) {
             $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
         }

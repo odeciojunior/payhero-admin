@@ -40,7 +40,7 @@ class SalePresenter extends Presenter
     {
         $subTotal = 0;
         foreach ($this->plansSales as $planSale) {
-            $subTotal += preg_replace("/[^0-9]/", "", $planSale->plan()->first()->price) * $planSale->amount;
+            $subTotal += preg_replace("/[^0-9]/", "", $planSale->plan_value) * $planSale->amount;
         }
 
         return $subTotal;
@@ -62,7 +62,6 @@ class SalePresenter extends Presenter
 
     public function getHotzappPlansList()
     {
-
         $plans = [];
 
         foreach ($this->plansSales as $planSale) {
