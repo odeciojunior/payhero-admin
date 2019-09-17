@@ -10,7 +10,7 @@ Route::group(
         // rotas autenticadas
 
         Route::get('/', 'FinancesController@index')->name('finances');
-        Route::get('/testFinances', 'FinancesTestController@index')->name('financesTeste');
+//        Route::get('/testFinances', 'FinancesTestController@index')->name('financesTeste');
 
         Route::get('/getbalances', 'FinancesController@getBalances')->name('finances.balances');
     }
