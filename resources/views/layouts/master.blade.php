@@ -112,18 +112,18 @@
      <script>
            window.Intercom('boot', {
                app_id: "q35ubavq",
-               user_id: "{!! \Auth::user()->id !!}",
-               name: "{!! \Auth::user()->name !!}",
-               email: "{!! \Auth::user()->email !!}", 
+               user_id: "{!! auth()->user()->id !!}",
+               name: "{!! auth()->user()->name !!}",
+               email: "{!! auth()->user()->email !!}",
            });
      </script>
 
      {{--  <script src="https://js.pusher.com/4.4/pusher.min.js"></script>  --}}
      <script src="{{ asset('modules/global/js-extra/pusher.min.js') }}"></script>
 
-@endif
+     <script src="{{ asset('modules/global/js/notifications.js') }}"></script>
 
-<script src="{{ asset('modules/global/js/notifications.js') }}"></script>
+@endif
 
 </body>
 </html>
