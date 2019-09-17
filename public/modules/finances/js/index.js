@@ -357,7 +357,7 @@ $(document).ready(function () {
                         },
                         success: function success(response) {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
-
+                            $('.modal-body-details').html('');
                             $('.modal-body-details').html(response);
 
                             $(".copy_link").on("click", function () {
