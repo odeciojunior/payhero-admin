@@ -262,7 +262,7 @@ class SalesRecoveryService
 
         $checkout['hours']      = with(new Carbon($sale->created_at))->format('H:i:s');
         $checkout['date']       = with(new Carbon($sale->created_at))->format('d/m/Y');
-        $checkout['total']      = number_format($checkout->present()->getTotal() / 100, 2, ',', '.');
+        $checkout['total']      = number_format($checkout->present()->getSubTotal() / 100, 2, ',', '.');
         $checkout->src          = ($checkout->src == 'null' || $checkout->src == null) ? '' : $checkout->src;
         $checkout->utm_source   = ($checkout->utm_source == 'null' || $checkout->utm_source == null) ? '' : $checkout->utm_source;
         $checkout->utm_medium   = ($checkout->utm_medium == 'null' || $checkout->utm_medium == null) ? '' : $checkout->utm_medium;
