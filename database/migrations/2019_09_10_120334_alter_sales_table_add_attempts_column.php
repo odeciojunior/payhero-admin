@@ -25,7 +25,7 @@ class AlterSalesTableAddAttemptsColumn extends Migration
     public function down()
     {
         Schema::table('sales', function(Blueprint $table) {
-            $table->renameColumn('attempts');
+            $table->dropColumn('attempts');
         });
     }
 }
