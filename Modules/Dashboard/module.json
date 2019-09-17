@@ -9,8 +9,6 @@
         "Modules\\Dashboard\\Providers\\DashboardServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files"      : [],
     "requires": []
 }
