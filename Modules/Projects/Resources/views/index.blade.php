@@ -21,7 +21,7 @@
                         <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                             <div class="card">
                                 @if($project->shopify_id != null)<div class="ribbon"><span>Shopify <a class='ribbon-shopify-default'></a> </span></div>@endif
-                                <img class="card-img-top" src="{!! $project->photo != '' ? $project->photo : '/modules/global/img/projeto.png' !!}" alt="">
+                                <img class="card-img-top" src="{!! $project->photo != '' ? $project->photo : '/modules/global/img/projeto.png' !!}" onerror="this.onerror=null; this.src='{{asset('modules/global/img/projeto.png')}}'" alt="">
                                 <div class="card-body">
                                     <h5 class="card-title">{{$project->name}}</h5>
                                     <p class="card-text sm">Criado em {!! $project->created_at->format('d/m/Y') !!}</p>
