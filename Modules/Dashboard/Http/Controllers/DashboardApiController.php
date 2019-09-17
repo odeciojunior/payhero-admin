@@ -26,8 +26,8 @@ class DashboardApiController extends Controller
      */
     public function index(Request $request)
     {
-        $companies = auth()->user()->companies()->get();
-        $values = $this->getDataValues($companies->first()->id_code);
+        $companies = auth()->user()->companies()->get() ?? collect();
+        $values = $this->getDataValues($companies->first()->id_code ?? null);
 
         return response()->json(compact('companies', 'values'), 200);
     }
@@ -67,69 +67,73 @@ class DashboardApiController extends Controller
         }
     }
 
+
     /**
      * @param $companyHash
-     * @return array|null
+     * @return array
      */
     private function getDataValues($companyHash)
     {
-        $companyModel = new Company();
-        $transactionModel = new Transaction();
-        $companyId = current(Hashids::decode($companyHash));
-        $company = $companyModel->find($companyId);
+        if ($companyHash) {
+            $companyModel = new Company();
+            $transactionModel = new Transaction();
+            $companyId = current(Hashids::decode($companyHash));
+            $company = $companyModel->find($companyId);
 
-        if (!empty($company)) {
-            $antecipableBalance = 0;
-            $pendingBalance = 0;
+            if (!empty($company)) {
+                $antecipableBalance = 0;
+                $pendingBalance = 0;
 
-            $pendingTransactions = $transactionModel->where('company_id', $company->id)
-                ->where('status', 'paid')
-                ->whereDate('release_date', '>', Carbon::today()
-                    ->toDateString())
-                ->get();
+                $pendingTransactions = $transactionModel->where('company_id', $company->id)
+                    ->where('status', 'paid')
+                    ->whereDate('release_date', '>', Carbon::today()
+                        ->toDateString())
+                    ->get();
 
-            if (count($pendingTransactions)) {
-                foreach ($pendingTransactions as $pendingTransaction) {
-                    $pendingBalance += $pendingTransaction->value;
+                if (count($pendingTransactions)) {
+                    foreach ($pendingTransactions as $pendingTransaction) {
+                        $pendingBalance += $pendingTransaction->value;
+                    }
                 }
-            }
 
-            $anticipatedTransactions = $transactionModel->where('company_id', $company->id)
-                ->where('status', 'anticipated')
-                ->whereDate('release_date', '>', Carbon::today()
-                    ->toDateString())
-                ->get();
+                $anticipatedTransactions = $transactionModel->where('company_id', $company->id)
+                    ->where('status', 'anticipated')
+                    ->whereDate('release_date', '>', Carbon::today()
+                        ->toDateString())
+                    ->get();
 
-            if (count($anticipatedTransactions)) {
-                foreach ($anticipatedTransactions as $anticipatedTransaction) {
-                    $pendingBalance += $anticipatedTransaction->value - $anticipatedTransaction->antecipable_value;
+                if (count($anticipatedTransactions)) {
+                    foreach ($anticipatedTransactions as $anticipatedTransaction) {
+                        $pendingBalance += $anticipatedTransaction->value - $anticipatedTransaction->antecipable_value;
+                    }
                 }
-            }
 
-            $antecipableTransactions = $transactionModel->where('company_id', $company->id)
-                ->where('status', 'paid')
-                ->whereDate('release_date', '>', Carbon::today())
-                ->whereDate('antecipation_date', '<=', Carbon::today())
-                ->get();
+                $antecipableTransactions = $transactionModel->where('company_id', $company->id)
+                    ->where('status', 'paid')
+                    ->whereDate('release_date', '>', Carbon::today())
+                    ->whereDate('antecipation_date', '<=', Carbon::today())
+                    ->get();
 
-            if (count($antecipableTransactions)) {
-                foreach ($antecipableTransactions as $antecipableTransaction) {
-                    $antecipableBalance += $antecipableTransaction->antecipable_value;
+                if (count($antecipableTransactions)) {
+                    foreach ($antecipableTransactions as $antecipableTransaction) {
+                        $antecipableBalance += $antecipableTransaction->antecipable_value;
+                    }
                 }
+
+                $availableBalance = $company->balance;
+                $totalBalance = $availableBalance + $pendingBalance;
+
+                return [
+                    'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
+                    'antecipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
+                    'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
+                    'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
+                    'currency' => $company->country == 'usa' ? '$' : 'R$',
+                ];
+            } else {
+                return [];
             }
-
-            $availableBalance = $company->balance;
-            $totalBalance = $availableBalance + $pendingBalance;
-
-            return [
-                'available_balance' => number_format(intval($availableBalance) / 100, 2, ',', '.'),
-                'antecipable_balance' => number_format(intval($antecipableBalance) / 100, 2, ',', '.'),
-                'total_balance' => number_format(intval($totalBalance) / 100, 2, ',', '.'),
-                'pending_balance' => number_format(intval($pendingBalance) / 100, 2, ',', '.'),
-                'currency' => $company->country == 'usa' ? '$' : 'R$',
-            ];
-        } else {
-            return null;
         }
+        return [];
     }
 }
