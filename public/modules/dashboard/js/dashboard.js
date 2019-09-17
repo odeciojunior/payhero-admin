@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    updateValues();
+    getDataDashboard();
     loading('#cardPendente', '#loaderCard');
     loading('#cardAntecipavel', '#loaderCard');
     loading('#cardDisponivel', '#loaderCard');
@@ -10,16 +10,49 @@ $(document).ready(function () {
         updateValues();
     });
 
+    function getDataDashboard() {
+        $.ajax({
+            method: "GET",
+            url: "/api/dashboard/",
+            error: function error(response) {
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', String(response.responseJSON.message));
+                }
+            },
+            success: function success(data) {
+                if(data.companies.length) {
+                    for (let i = 0; i < data.companies.length; i++) {
+                        $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
+                    }
+                    $(".moeda").html(data.values.currency);
+                    $("#pending_money").html(data.values.pending_balance);
+                    $("#antecipation_money").html(data.values.antecipable_balance);
+                    $("#available_money").html(data.values.available_balance);
+                    $("#total_money").html(data.values.total_balance);
+                    $(".page-content").show();
+                    $(".content-error").hide();
+                } else {
+                    $(".page-content").hide();
+                    $(".content-error").show();
+                }
+            }
+        });
+    }
+
     function updateValues() {
 
         $.ajax({
             method: "POST",
-            url: "/dashboard/getvalues",
+            url: "/api/dashboard/getvalues",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {company: $('#company').val()},
-            error: function error() {
+            error: function error(response) {
                 if (response.status === 422) {
                     for (error in response.responseJSON.errors) {
                         alertCustom('error', String(response.responseJSON.errors[error]));
@@ -38,4 +71,8 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#closeWelcome").click(function () {
+        $("#cardWelcome").slideUp("600");
+    });
 });

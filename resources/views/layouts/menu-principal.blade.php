@@ -95,7 +95,7 @@
 <div class="site-menubar">
     <ul class="site-menu" style="margin-top:10px">
         <li class="site-menu-item has-sub">
-            <a href="{{ route('dashboard') }}">
+            <a href="{{ route('dashboard.index') }}">
                 <i class="material-icons align-middle">dashboard</i>
                 <span class="site-menu-title ml-5">Dashboard</span>
             </a>
