@@ -13,8 +13,8 @@ class CreateProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'required|max:100|string|regex:/^[\pL\s\-]+$/u',
-            'description'   => 'required|max:100|string|regex:/^[\pL\s\-]+$/u',
+            'name'          => 'required|max:100|string|regex:/[^A-Za-z0-9.#\\-$]/',
+            'description'   => 'required|max:100|string|regex:/[^A-Za-z0-9.#\\-$]/',
             'format'        => 'nullable',
             'category'      => 'nullable',
             'cost'          => 'nullable',
