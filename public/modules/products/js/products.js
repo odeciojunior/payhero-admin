@@ -123,6 +123,11 @@ $(document).ready(function () {
                     });
 
                     $("#my-form").submit(function (event) {
+                        if($('#photo_w').val() == '0' || $('#photo_h').val() == '0')
+                        {
+                            alertCustom('error', 'Selecione as dimensões da imagem');
+                            return false;
+                        }
                         event.preventDefault();
 
                         let myForm = document.getElementById('my-form');
