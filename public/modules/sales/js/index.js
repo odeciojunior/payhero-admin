@@ -300,6 +300,10 @@ $(document).ready(function () {
                 $('.detalhes_venda').unbind('click');
 
                 $('.detalhes_venda').on('click', function () {
+                    let btn_detalhe = $(this);
+                    btn_detalhe.hide();
+                    btn_detalhe.parent().append('<span class="loaderSpan"></span>');
+
                     var venda = $(this).attr('venda');
 
                     $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
@@ -317,6 +321,8 @@ $(document).ready(function () {
                         },
                         error: function error() {
                             alertCustom('error', 'Erro ao exibir detalhes da venda');
+                            btn_detalhe.parent().children('span').remove();
+                            btn_detalhe.show();
                         },
                         success: function success(response) {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
@@ -344,6 +350,8 @@ $(document).ready(function () {
                             });
 
                             $('#modal_detalhes').modal('show');
+                            btn_detalhe.parent().children('span').remove();
+                            btn_detalhe.show();
                         }
                     });
                 });
