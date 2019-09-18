@@ -190,10 +190,6 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
-
-    </div>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>
         <script src="{{asset('/modules/companies/js/edit.js')}}"></script>

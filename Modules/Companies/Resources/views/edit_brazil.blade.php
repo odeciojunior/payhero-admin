@@ -39,6 +39,7 @@
                                 <form method="POST" action="{!! route('companies.update', ['id' => $company->id_code]) !!}" enctype="multipart/form-data" id='company_update_form'>
                                     @csrf
                                     @method('PUT')
+                                    <input type='hidden' name="country" value="{!! $company->country !!}" id="country">
                                     <h3 class="mb-15 mt-10">Informações básicas</h3>
                                     <div class="row">
                                         <div class="form-group col-xl-4">
@@ -232,7 +233,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
     @push('scripts')
         <script src="{{asset('/modules/global/js/dropzone.js')}}"></script>

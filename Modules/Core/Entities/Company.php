@@ -6,11 +6,12 @@ use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
 
 /**
+ * Class Company
  * @property int $id
  * @property int $user_id
  * @property string $fantasy_name
@@ -48,12 +49,8 @@ use Modules\Core\Presenters\CompanyPresenter;
  * @property Invitation[] $invitations
  * @property Transaction[] $transactions
  * @property Transfer[] $transfers
- * @property UsersProject[] $usersProjects
+ * @property UserProject[] $usersProjects
  * @property Withdrawal[] $withdrawals
- */
-
-/**
- * Class Company
  * @package Modules\Core\Entities
  */
 class Company extends Model
@@ -100,7 +97,6 @@ class Company extends Model
         'deleted_at',
         'updated_at',
     ];
-
     /**
      * @return BelongsTo
      */

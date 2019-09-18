@@ -1,23 +1,8 @@
 <div class="transition-details">
-    <h3> Transação #{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}} </h3>
-    <p class="sm-text text-muted">
-        Pagamento via {{$sale->payment_method == 2 ? 'Boleto' : 'Cartão ' . $sale->flag  }} em {{ $sale->start_date}} às {{$sale->hours}}
+    <h3 id="sale-code" class="text-uppercase"></h3>
+    <p id="payment-type" class="sm-text text-muted">
     </p>
-    <div class="status d-inline">
-        <img style="width: 50px;" src="{{asset('/modules/global/img/cartoes/'. $sale->flag. '.png')}}">
-        @if($sale->status == 1)
-            <span class='badge badge-success'>Aprovada</span></td>
-        @elseif($sale->status == 2)
-            <span class='badge badge-pendente'>Pendente</span>
-        @elseif($sale->status == 3)
-            <span class='badge badge-danger'>Recusada</span>
-        @elseif($sale->status == 4)
-            <span class='badge badge-danger'>Estornada</span>
-        @elseif($sale->status == 6)
-            <span class='badge badge-primary'>Em análise</span>
-        @else
-            <span class='badge badge-primary'>{{$sale->status}}</span>
-        @endif
+    <div id="status" class="status d-inline">
     </div>
 </div>
 <div class="clearfix"></div>
@@ -26,81 +11,64 @@
         <div class="col-lg-3"><p class="table-title"> Produto </p></div>
         <div class="col-lg-9 text-right"><p class="text-muted"> Qtde </p></div>
     </div>
-    @foreach($products as $product)
-        <div class="row align-items-baseline justify-content-between mb-15">
-            <div class="col-lg-2">
-                <img src="{{$product['photo'] ?? asset('modules/global/img/produto.png')  }}" width="50px;" style="border-radius:6px;">
-            </div>
-            <div class="col-lg-5">
-                <h4 class="table-title"> {{$product['name']}} </h4>
-            </div>
-            <div class="col-lg-3 text-right">
-                <p class="sm-text text-muted"> {{$product['amount']}}x </p>
-            </div>
-        </div>
-    @endforeach
+    <div id="table-product">
+    </div>
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
         <div class="col-lg-6 align-items-center">
             <span class="text-muted ft-12"> Subtotal </span>
         </div>
         <div class="col-lg-6 text-right">
-            <span class="text-muted ft-12 subTotal"> R$ {{$subTotal}} </span>
+            <span class="text-muted ft-12" id="subtotal-value"></span>
         </div>
         <div class="col-lg-6">
             <span class="text-muted ft-12"> Frete </span>
         </div>
         <div class="col-lg-6 text-right">
-            <span class="text-muted ft-12"> R$ {{$shipment_value}} </span>
+            <span id="shipment-value" class="text-muted ft-12"></span>
         </div>
-        @if(isset($sale->dolar_quotation))
-            <div class="col-lg-6">
-                <span class="text-muted ft-12"> IOF </span>
-            </div>
-            <div class="col-lg-6 text-right">
-                <span class="text-muted ft-12"> R$ {{$sale->iof}} </span>
-            </div>
-        @endif
+        <div id="iof-label" class="col-lg-6" style="display:none">
+            <span class="text-muted ft-12"> IOF </span>
+        </div>
+        <div id="iof-value" class="col-lg-6 text-right" style="display:none">
+            <span class="text-muted ft-12"></span>
+        </div>
         <div class="col-lg-6">
             <span class="text-muted ft-12"> Desconto</span>
         </div>
         <div class="col-lg-6 text-right">
-            <span class="text-muted ft-12"> R$ {{$discount}} </span>
+            <span id="desconto-value" class="text-muted ft-12"></span>
         </div>
         <div class="col-lg-6">
             <h4 class="table-title"> Total </h4>
         </div>
         <div class="col-lg-6 text-right">
-            <h4 class="table-title"> R$ {{$total}} </h4>
+            <h4 id="total-value" class="table-title"></h4>
         </div>
     </div>
     <div class="row" style="border-top: 1px solid #e2e2e2;padding-top: 10px;">
-        @if(isset($sale->dolar_quotation))
-            <div class='col-8'>
-                <span class='text-muted ft-12'>Câmbio (1 $ = R$ {{$sale->dolar_quotation}}): </span>
-            </div>
-            <div class='col-4 text-right'>
-                <span class='text-muted ft-12'>US$ {{$taxa}}</span>
-            </div>
-        @endif
+        <div id="cambio-label" class='col-8' style="display:none">
+            <span class='text-muted ft-12'></span>
+        </div>
+        <div id="cambio-value" class='col-4 text-right' style="display:none">
+            <span class='text-muted ft-12'></span>
+        </div>
         <div class='col-lg-8'>
-            <span class='text-muted ft-12'>Taxas ({{$transaction->percentage_rate}}% + {{$transaction->transaction_rate}}): </span>
+            <span id="taxas-label" class='text-muted ft-12'></span>
         </div>
         <div class='col-lg-4 text-right'>
-            <span class='text-muted ft-12'>{{$taxaReal ?? ''}}</span>
+            <span id="taxareal-value" class='text-muted ft-12'></span>
         </div>
-        @if($convertax_value != '0,00')
-            <div class='col-lg-8'>
-                <span class='text-muted ft-12'>App ConvertaX: </span>
-            </div>
-            <div class='col-lg-4 text-right'>
-                <span class='text-muted ft-12'>{{$convertax_value ?? ''}}</span>
-            </div>
-        @endif
+        <div id="convertax-label" class='col-lg-8' style="display:none">
+            <span class='text-muted ft-12'>App ConvertaX: </span>
+        </div>
+        <div id="convertax-value" class='col-lg-4 text-right' style="display:none">
+            <span class='text-muted ft-12'></span>
+        </div>
         <div class='col-lg-6'>
             <h4 class='table-title'>Comissão: </h4>
         </div>
         <div class='col-lg-6 text-right'>
-            <h4 class='table-title'>{{$comission ?? ''}}</h4>
+            <h4 id="comission-value" class='table-title'></h4>
         </div>
     </div>
 </div>
@@ -114,167 +82,79 @@
     <!-- CLIENTE -->
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
         <h4> Dados Pessoais </h4>
-        <span class="table-title gray"> Nome: {{$client->name}}</span>
+        <span id="client-name" class="table-title gray"></span>
         <br>
-        <span class='table-title gray'>Telefone: {{$client->telephone}}</span>
-        <a href="{{$whatsapp_link}}" target='_blank'>
+        <span id="client-telephone" class='table-title gray'></span>
+        <a id="client-whatsapp" href="#" target='_blank'>
             <img src="{{ asset('modules/global/img/whatsapplogo.png') }}" width="25px">
         </a>
         <br>
-        <span class="table-title gray"> E-mail: {{$client->email}}</span>
+        <span id="client-email" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> CPF: {{$client->document}}</span>
+        <span id="client-document" class="table-title gray"></span>
         <h4> Entrega </h4>
         <span class="table-title gray table-code-tracking">
             <div class='row' style='line-height: 1.5;'>
                 <span class="table-title gray ml-15">Código Rastreio:</span>
-                @if (empty($sale->shopify_order) && $sale->status == 1)
-                    <div class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle'>
-                    <a id='btn-edit-trackingcode' class='edit pointer' title='Editar Código de rastreio' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'><i class='icon wb-edit' aria-hidden='true'></i></a>
-                    <a id='btn-sent-tracking-user' class='pointer' @if(!empty($delivery->tracking_code)) style='' @else style='display: none;' @endif title='Enviar Email' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'><i class='icon wb-inbox' aria-hidden='true'></i></a>
-                </div>
-                @endif
+                    <div id="tracking-actions" class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle' style="display:none">
+                        <a id='btn-edit-trackingcode' class='edit pointer' title='Editar Código de rastreio' data-code=''><i class='icon wb-edit' aria-hidden='true'></i></a>
+                        <a id='btn-sent-tracking-user' style="display:none" class='pointer' title='Enviar Email' data-code=''><i class='icon wb-inbox' aria-hidden='true'></i></a>
+                    </div>
             </div>
             <div class='tracking-code'>
-                <span class='tracking-code-value'>{{isset($delivery->tracking_code)? $delivery->tracking_code:'Não informado'}}</span>
+                <span class='tracking-code-value'></span>
             </div>
         </span>
-        <input type='text' class='input-value-trackingcode my-10' style='display:none;' value='{{isset($delivery->tracking_code)? $delivery->tracking_code:''}}'>
-        <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code='{{strtoupper(Hashids::connection('sale_id')->encode($sale->id))}}'>Salvar</button>
+        <input type='text' class='input-value-trackingcode my-10' style='display:none;' value=''>
+        <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code=''>Salvar</button>
         <button type='button' class='btn-cancel-tracking mb-10' style='display: none;'>Cancelar</button>
         <br>
-        <span class="table-title gray"> Endereço: {{$delivery->street}}, {{$delivery->number}}</span>
+        <span id="delivery-address" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> CEP: {{$delivery->zip_code}}</span>
+        <span id="delivery-zipcode" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> Cidade: {{$delivery->city}}/{{$delivery->state}}</span>
+        <span id="delivery-city" class="table-title gray"></span>
     </div>
     <!-- DETALHES  -->
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         <h4> Dados Gerais </h4>
-        @if($sale->payment_method == 1)
-            <span class="table-title gray"> Bandeira: {{ ucfirst($sale->flag) ?? ''}}</span>
+        <div id="details-card" style="display:none">
+            <span id="card-flag" class="table-title gray text-capitalize"></span>
             <br>
-            <span class="table-title gray"> Quantidade de parcelas: {{$sale->installments_amount ?? ''}}</span>
+            <span id="card-installments" class="table-title gray"></span>
             <br>
-        @endif
-        @if($sale->payment_method == 2)
-            <span class="table-title gray">Link para o boleto: <a role='button' class='copy_link' style='cursor:pointer;' link='{{$sale->boleto_link ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+        </div>
+        <div id="details-boleto" style="display:none">
+            <span id="boleto-link" class="table-title gray">Link para o boleto: <a role='button' class='copy_link' style='cursor:pointer;' link=''><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
             <br>
-            <span class="table-title gray">Linha Digitável: <a role='button' class='copy_link' style='cursor:pointer;' digitable-line='{{$sale->boleto_digitable_line ?? ''}}'><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
+            <span id="boleto-digitable-line" class="table-title gray">Linha Digitável: <a role='button' class='copy_link' style='cursor:pointer;' digitable-line=''><i class='material-icons gradient' style='font-size:17px;'>file_copy</i></a></span>
             <br>
-            <span class="table-title gray"> Vencimento: {{  with(new \Carbon\Carbon($sale->boleto_due_date))->format('d/m/Y ')?? ''}}</span>
+            <span id="boleto-due" class="table-title gray"></span>
             <br>
-        @endif
-        <span class="table-title gray"> IP: {{$checkout->ip ?? ''}}</span>
+        </div>
+        <span id="checkout-ip" class="table-title gray"></span>
         <br>
-        <span class="table-title gray "> Dispositivo: {{$checkout->operational_system}} </span>
+        <span id="checkout-operational-system" class="table-title gray"></span>
         <br>
-        <span class="table-title gray "> Navegador: {{$checkout->browser}} </span>
+        <span id="checkout-browser" class="table-title gray"></span>
         <br>
-        @if($sale->payment_method == 1)
-            <span class="table-title gray"> Quantidade de tentativas: {{$sale->attempts ?? ''}}</span>
-            <br>
-        @endif
+        <span id="checkout-attempts" class="table-title gray" style="display:none"></span>
+        <br>
         <h4> Conversão </h4>
-        <span class="table-title gray"> SRC: {{$checkout->src}}  </span>
+        <span id="checkout-src" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> UTM Source: {{$checkout->source}}  </span>
+        <span id="checkout-source" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> UTM Medium: {{$checkout->utm_medium}} </span>
+        <span id="checkout-medium" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> UTM Campaign: {{$checkout->utm_campaign}}</span>
+        <span id="checkout-campaign" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> UTM Term: {{$checkout->utm_term}} </span>
+        <span id="checkout-term" class="table-title gray"></span>
         <br>
-        <span class="table-title gray"> UTM Content: {{$checkout->utm_content}}</span>
+        <span id="checkout-content" class="table-title gray"></span>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-
-        $("#sales_tab").css("min-width", $(window).width() / 2);
-
-        $("#client_tab").css("min-width", $("#sales_tab").width());
-        $("#products_tab").css("min-width", $("#sales_tab").width());
-
-        $("#btn-edit-trackingcode").on('click', function () {
-            $('.tracking-code').hide();
-            $('.input-value-trackingcode').show();
-            $('.btn-save-tracking').show();
-            $('.btn-cancel-tracking').show();
-        });
-
-        $('.btn-cancel-tracking').on('click', function () {
-            $('.tracking-code').show();
-            $('.input-value-trackingcode').val('').hide();
-            $('.btn-save-tracking').hide();
-            $('.btn-cancel-tracking').hide();
-        });
-
-        $('.btn-save-tracking').on('click', function () {
-            let trackingCode = $(".input-value-trackingcode").val();
-            let referenceCode = $(this).attr('data-code');
-            ajaxUpdateTracking(trackingCode, referenceCode);
-        });
-
-        function ajaxUpdateTracking(tracking, reference) {
-            var delivery = '{{\Vinkla\Hashids\Facades\Hashids::encode($delivery->id)}}';
-            var sale = '{{\Vinkla\Hashids\Facades\Hashids::encode($sale->id)}}';
-
-            $.ajax({
-                method: 'POST',
-                url: '/sales/update/trackingcode',
-                data: {
-                    sale: sale,
-                    delivery: delivery,
-                    trackingCode: tracking,
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                error: function (response) {
-                    if (response.status == '422') {
-                        for (error in response.responseJSON.errors) {
-                            alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    } else {
-                        alertCustom("error", response.message)
-                    }
-                    $(".btn-cancel-tracking").click();
-                },
-                success: function (response) {
-                    $(".btn-cancel-tracking").click();
-                    $(".tracking-code-value").html(tracking);
-                    $('#btn-sent-tracking-user[data-code=' + reference + ']').show('slow');
-                    alertCustom('success', response.message);
-                }
-            });
-        }
-
-        $('#btn-sent-tracking-user').on('click', function () {
-            let sale = '{{\Vinkla\Hashids\Facades\Hashids::connection('sale_id')->encode($sale->id)}}';
-
-            $.ajax({
-                method: 'POST',
-                url: '/sales/update/trackingcode/' + sale,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                error: function (response) {
-                    if (response.status == '422') {
-                        for (error in response.responseJSON.errors) {
-                            alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    } else {
-                        alertCustom("error", response.message)
-                    }
-                },
-                success: function (response) {
-                    alertCustom('success', response.message);
-                }
-            });
-        });
-    });
-</script>
+@push('scripts')
+    <script src="{{ asset('/modules/sales/js/details.js') }}"></script>
+@endpush
 

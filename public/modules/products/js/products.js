@@ -1,7 +1,5 @@
 $(document).ready(function () {
-
     let code = window.location.href.split('/')[4];
-
     getDataProducts();
     function getDataProducts() {
         $.ajax({

@@ -3,22 +3,22 @@
 namespace Modules\SalesRecovery\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Modules\Core\Entities\Checkout;
+use Modules\Core\Entities\Sale;
 use Modules\Core\Services\PagarmeService;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\SaleService;
-use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\Checkout;
-use Modules\Core\Entities\Sale;
 use Modules\Core\Services\SalesRecoveryService;
-use Modules\SalesRecovery\Transformers\SalesRecoveryIndexResourceTransformer;
-use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
 use Modules\SalesRecovery\Transformers\SalesRecoveryCartAbandonedDetailsResourceTransformer;
+use Modules\SalesRecovery\Transformers\SalesRecoverydetailsResourceTransformer;
+use Modules\SalesRecovery\Transformers\SalesRecoveryIndexResourceTransformer;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class SalesRecoveryApiController

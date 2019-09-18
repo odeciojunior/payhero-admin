@@ -1,3 +1,5 @@
+let currentSaleCode;
+let currentDeliveryCode;
 $(document).ready(function () {
 
     getSalesData();
@@ -101,6 +103,146 @@ $(document).ready(function () {
             link = '/api/sales/getsales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         }
 
+        function renderDetails(data){
+
+            //Dados da venda
+            $('#sale-code').text(data.sale.code);
+            $('#payment-type').text('Pagamento via ' + (data.sale.payment_method === 2 ? 'Boleto' : 'Cartão ' +  data.sale.flag) + ' em ' + data.sale.start_date + ' às ' + data.sale.hours);
+
+            //Status
+            let status = $('.modal-body #status');
+            status.html('');
+            status.append('<img style="width: 50px;" src="/modules/global/img/cartoes/' +  data.sale.flag + '.png">');
+
+            switch (data.sale.status) {
+                case 1:
+                    status.append("<span class='badge badge-success'>Aprovada</span></td>");
+                    break;
+                case 2:
+                    status.append("<span class='badge badge-pendente'>Pendente</span>");
+                    break;
+                case 3:
+                    status.append("<span class='badge badge-danger'>Recusada</span>");
+                    break;
+                case 4:
+                    status.append("<span class='badge badge-danger'>Estornada</span>");
+                    break;
+                case 6:
+                    status.append("<span class='badge badge-primary'>Em análise</span>");
+                    break;
+                default:
+                    status.append("<span class='badge badge-primary'>" + data.sale.status + "</span>");
+                    break;
+            }
+
+            //Produtos
+            $("#table-product").html('');
+            let div = '';
+            let photo = 'public/modules/global/img/produto.png';
+            $.each(data.products, function (index, value) {
+                if (!value.photo) {
+                    value.photo = photo;
+                }
+
+                div += '<div class="row align-items-baseline justify-content-between mb-15">' +
+                    '<div class="col-lg-2">' +
+                    "<img src='" + value.photo + "' width='50px' style='border-radius: 6px;'>" +
+                    '</div>' +
+                    '<div class="col-lg-5">' +
+                    '<h4 class="table-title">' + value.name + '</h4>\n' +
+                    '</div>' +
+                    '<div class="col-lg-3 text-right">' +
+                    '<p class="sm-text text-muted">' + value.amount + 'x</p>' +
+                    '</div>' +
+                    '</div>';
+
+                $("#table-product").html(div);
+            });
+
+            //Valores
+            $("#subtotal-value").html("R$ " + data.subTotal);
+            $("#shipment-value").html("R$ " + data.shipment_value);
+            $("#subtotal-value").html("R$ " + data.subTotal);
+
+            $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
+            if(data.sale.dolar_quotation){
+                $('#iof-value span').text('R$ ' + data.sale.iof);
+                $('#cambio-label span').text('Câmbio (1 $ = R$ ' + data.sale.dolar_quotation + '): ');
+                $('#cambio-value span').text('US$ ' + data.taxa);
+                $('#iof-label, #iof-value, #cambio-label, #cambio-value').show();
+            }
+
+            $("#desconto-value").html("R$ " + data.discount);
+            $("#total-value").html("R$ " + data.total);
+
+            $('#taxas-label').text('Taxas (' + data.transaction.percentage_rate + '% + ' + data.transaction.transaction_rate + '): ');
+            $('#taxareal-value').text(data.taxaReal ? data.taxaReal : '');
+
+            $('#convertax-label, #convertax-value').hide();
+            if(data.convertax_value !== '0,00'){
+                $('#convertax-value').text(data.convertax_value ? data.convertax_value : '');
+                $('#convertax-label, #convertax-value').show();
+            }
+
+            $('#comission-value').text(data.comission ? data.comission : '');
+
+            //Cliente
+            $('#client-name').text('Nome: ' + data.client.name);
+            $('#client-telephone').text('Telefone: ' + data.client.telephone);
+            $('#client-whatsapp').attr('href', data.whatsapp_link);
+            $('#client-email').text('Email: ' + data.client.email);
+            $('#client-document').text('CPF: ' + data.client.document);
+
+            //Entrega
+            $('#tracking-actions').hide();
+            if(data.sale.shopify_order && data.sale.status === 1){
+                $('#tracking-actions #btn-edit-trackingcode, #tracking-actions #btn-sent-tracking-user, .btn-save-tracking').attr('data-code', data.sale.code);
+                $('#tracking-actions').show();
+                if(data.delivery.tracking_code){
+                    $('#tracking-actions #btn-sent-tracking-user').show();
+                    $('.tracking-code .tracking-code-value').text(data.delivery.tracking_code);
+                    $('.input-value-trackingcode').val(data.delivery.tracking_code);
+                }else{
+                    $('#tracking-actions #btn-sent-tracking-user').hide();
+                    $('.tracking-code .tracking-code-value').text('Nao informado');
+                    $('.input-value-trackingcode').val('');
+                }
+            }
+            $('#delivery-address').text('Endereço: ' + data.delivery.street + ', ' + data.delivery.number);
+            $('#delivery-zipcode').text('CEP: ' + data.delivery.zip_code);
+            $('#delivery-city').text('Cidade: ' + data.delivery.city + '/' + data.delivery.state);
+
+            //Detalhes da venda
+            if(data.sale.payment_method === 1){
+                $('#details-card #card-flag').text('Bandeira: ' + data.sale.flag);
+                $('#details-card #card-installments').text('Quantidade de parcelas: ' + data.sale.installments_amount);
+                $('#details-card').show();
+            }
+
+            if(data.sale.payment_method === 2){
+                $('#details-boleto #boleto-link a').attr('link',data.sale.boleto_link);
+                $('#details-boleto #boleto-digitable-line a').attr('digitable-line',data.sale.boleto_digitable_line);
+                $('#details-boleto #boleto-due').text('Vencimento: ' + data.sale.boleto_due_date);
+                $('#details-boleto').show();
+            }
+
+            $('#checkout-ip').text('IP: ' + data.checkout.ip);
+            $('#checkout-operational-system').text('Dispositivo: ' + data.checkout.operational_system);
+            $('#checkout-browser').text('Navegador: ' + data.checkout.browser);
+
+            $('#checkout-attempts').hide();
+            if(data.sale.payment_method === 1){
+                $('#checkout-attempts').text('Quantidade de tentativas: ' + data.sale.attempts).show();
+            }
+
+            $('#checkout-src').text('SRC: ' + data.checkout.src);
+            $('#checkout-source').text('UTM Source: ' + data.checkout.source);
+            $('#checkout-medium').text('UTM Medium: ' + data.checkout.utm_medium);
+            $('#checkout-campaign').text('UTM Campaign: ' + data.checkout.utm_campaign);
+            $('#checkout-term').text('UTM Term: ' + data.checkout.utm_term);
+            $('#checkout-content').text('UTM Content: ' + data.checkout.utm_content);
+        }
+
         $.ajax({
             method: "GET",
             url: link,
@@ -146,7 +288,7 @@ $(document).ready(function () {
                     dados += "<td class='display-sm-none display-m-none'>" + value.start_date + "</td>";
                     dados += "<td class='display-sm-none'>" + value.end_date + "</td>";
                     dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
-                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "' data-target='#modal_detalhes' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></button></a></td>";
+                    dados += "<td><a role='button' class='detalhes_venda pointer' venda='" + value.id + "'><i class='material-icons gradient'>remove_red_eye</i></button></a></td>";
                     dados += '</tr>';
                     $("#dados_tabela").append(dados);
                 });
@@ -158,6 +300,10 @@ $(document).ready(function () {
                 $('.detalhes_venda').unbind('click');
 
                 $('.detalhes_venda').on('click', function () {
+                    let btn_detalhe = $(this);
+                    btn_detalhe.hide();
+                    btn_detalhe.parent().append('<span class="loaderSpan"></span>');
+
                     var venda = $(this).attr('venda');
 
                     $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
@@ -174,14 +320,19 @@ $(document).ready(function () {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function error() {
-                            //
+                            alertCustom('error', 'Erro ao exibir detalhes da venda');
+                            btn_detalhe.parent().children('span').remove();
+                            btn_detalhe.show();
                         },
                         success: function success(response) {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
 
-                            $('.modal-body').html(response);
+                            currentSaleCode = response.sale.code;
+                            currentDeliveryCode = response.delivery.code;
 
-                            $(".copy_link").on("click", function () {
+                            renderDetails(response);
+
+                            $("#boleto-link .copy_link").on("click", function () {
                                 var temp = $("<input>");
                                 $("#nav-tabContent").append(temp);
                                 temp.val($(this).attr('link')).select();
@@ -189,7 +340,7 @@ $(document).ready(function () {
                                 temp.remove();
                                 alertCustom('success', 'Link copiado!');
                             });
-                            $(".copy_link").on("click", function () {
+                            $("#boleto-digitable-line .copy_link").on("click", function () {
                                 var temp = $("<input>");
                                 $("#nav-tabContent").append(temp);
                                 temp.val($(this).attr('digitable-line')).select();
@@ -197,6 +348,10 @@ $(document).ready(function () {
                                 temp.remove();
                                 alertCustom('success', 'Linha Digitável copiado!');
                             });
+
+                            $('#modal_detalhes').modal('show');
+                            btn_detalhe.parent().children('span').remove();
+                            btn_detalhe.show();
                         }
                     });
                 });

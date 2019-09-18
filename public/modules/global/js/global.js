@@ -278,9 +278,101 @@ function errorAjaxResponse(response) {
     }
 }
 
+function extractIdFromPathName() {
+    let urlParams = window.location.pathname.split('/');
+    if (urlParams.length >= 2 && urlParams[urlParams.length - 1] == 'edit') {
+        return urlParams[urlParams.length - 2];
+    } else if (urlParams.length > 0) {
+        return urlParams[urlParams.length - 1];
+    } else {
+        return '';
+    }
+}
 
+function fillAllFormInputsWithModel(formId, model, lists = null) {
+    let formData = $("#" + formId + " input, #" + formId + " select, #" + formId + " textarea");
+    if (formData === undefined || formData === null) {
+        return false;
+    }
+    formData.each(
+        function (key, item) {
+            let element = $(this);
+            if (element.is('input')) {
+                fillInputWithModelField(element, model);
+            } else if (element.is('select')) {
+                if (lists === undefined || lists === null) {
+                    console.log('select lists not available!');
+                } else {
+                    fillSelectAndCheckWithModelFields(
+                        element,
+                        lists,
+                        model);
+                }
 
+            } else if (element.is('textarea')) {
+                console.log('textarea type not implemented!');
+            } else {
+                console.log('element type not implemented: ' + element[0].nodeName);
+            }
+            // console.log('Type: ' + input.attr('type') + ', Name: ' + input.attr('name') + ', Value: ' + input.val());
+        }
+    )
+    return true;
+}
 
+function fillInputWithModelField(input, model) {
+    let field = input.attr('name');
+    if (field === undefined || model[field] === undefined || model[field] === "") {
+        return false;
+    }
+    let value = model[field];
+    switch (input.attr('type')) {
+        case "text":
+            if (input.data('mask') !== undefined) {
+                let mask = input.data('mask').mask;
+                input.unmask().val(value).mask(mask, {reverse: true});
+            } else {
+                input.attr('value', value);
+            }
+            break;
+        case "hidden":
+            input.attr('value', value);
+            break;
+        default:
+            //Do Nothing
+            console.log('Input type not implemented: ' + input.attr('type'));
+            break;
+    }
+    return true;
+}
+
+function fillSelectAndCheckWithModelFields(select, items, model, customItemsFunction = null) {
+    let field = select.attr('name');
+    if (field === undefined || model[field] === undefined || items === undefined || items[field] === undefined || items.length === 0) {
+        return false;
+    }
+    if (customItemsFunction === undefined || customItemsFunction === null) {
+        customItemsFunction = defaultSelectItemsFunction;
+    }
+    let value = model[field];
+    items[field].forEach(
+        function (item) {
+            let optionItem = customItemsFunction(item);
+            let option = new Option(optionItem.text, optionItem.value);
+            if (value !== "" && value === optionItem.value) {
+                option.selected = true;
+            }
+            /// jquerify the DOM object 'o' so we can use the html method
+            // $(option).html("option text");
+            select.append(option);
+        }
+    )
+    return true;
+}
+
+function defaultSelectItemsFunction(item) {
+    return {value: item.code, text: (item.code + ' - ' + item.name)};
+}
 
 
 

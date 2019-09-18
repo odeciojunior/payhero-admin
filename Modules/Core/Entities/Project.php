@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ProjectPresenter;
-use Modules\Core\Presenters\SalePresenter;
 
 /**
  * @property int $id

@@ -51,7 +51,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "DELETE",
-                            url: "/companies/" + company,
+                            url: "/api/companies/" + company,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
