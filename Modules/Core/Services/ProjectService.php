@@ -277,7 +277,7 @@ class ProjectService
     /**
      * @return mixed
      */
-    public function getMyProjects()
+    public function getUserProjects()
     {
         $projectModel     = new Project();
         $userProjectModel = new UserProject();

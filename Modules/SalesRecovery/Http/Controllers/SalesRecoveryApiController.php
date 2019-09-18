@@ -34,7 +34,7 @@ class SalesRecoveryApiController extends Controller
         try {
             $projectService = new ProjectService();
 
-            $projects = $projectService->getMyProjects();
+            $projects = $projectService->getUserProjects();
             if (!empty($projects)) {
                 return SalesRecoveryIndexResourceTransformer::collection($projects);
             } else {

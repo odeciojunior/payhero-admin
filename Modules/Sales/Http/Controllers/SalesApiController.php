@@ -127,7 +127,7 @@ class SalesApiController extends Controller
             $companyModel     = new Company();
             $projectService   = new ProjectService();
 
-            $myProjects = $projectService->getMyProjects();
+            $myProjects = $projectService->getUserProjects();
 
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
                 ->pluck('id')

@@ -2,25 +2,26 @@
 
 namespace Modules\Projects\Http\Controllers;
 
-use Throwable;
 use Exception;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Throwable;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Gate;
-use Intervention\Image\Facades\Image;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Project;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Shipping;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\RedirectResponse;
+use Intervention\Image\Facades\Image;
+use Illuminate\Contracts\View\Factory;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
+use Modules\Projects\Transformers\ProjectsSelectResource;
 
 class ProjectsController extends Controller
 {
@@ -32,7 +33,7 @@ class ProjectsController extends Controller
         try {
             $projectService = new ProjectService();
 
-            $projects = $projectService->getMyProjects();
+            $projects = $projectService->getUserProjects();
 
             return view('projects::index', [
                 'projects' => $projects,
@@ -356,5 +357,12 @@ class ProjectsController extends Controller
 
             return response()->json('Erro ao remover o projeto, tente novamente mais tarde', 400);
         }
+    }
+
+    public function getProjects(){
+
+        $projectService = new ProjectService();
+
+        return ProjectsSelectResource::collection($projectService->getUserProjects());
     }
 }

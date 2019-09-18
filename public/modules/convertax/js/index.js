@@ -1,10 +1,174 @@
 $(document).ready(function () {
-    updateIntegrations();
-    $("#btn-add-integration").on("click", function () {
+
+    index();
+
+    function index(){
+        $.ajax({
+            method: "GET",
+            url: "/api/apps/convertax",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error() {
+                // loadingOnScreenRemove();
+                alertCustom('error', 'Ocorreu algum erro');
+            },
+            success: function success(response) {
+                $('#content').html("");
+                if(Object.keys(response.data).length === 0){
+                    $("#no-integration-found").show();
+                }
+                else{
+                    $(response.data).each(function(index, data){
+                        $('#content').append(`
+                            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                <div class="card shadow card-edit" project=` + data.id +` style='cursor:pointer;'>
+                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo +` onerror="this.onerror=null;this.src='{!! asset('modules/global/img/produto.png') !!}';" alt="{!! asset('modules/global/img/produto.png') !!}"/>
+                                    <div class="card-body">
+                                        <div class='row'>
+                                            <div class='col-md-10'>
+                                                <h4 class="card-title">` + data.project_name +`</h4>
+                                                <p class="card-text sm">Criado em ` + data.created_at + `</p>
+                                            </div>
+                                            <div class='col-md-2'>
+                                                <a role='button' class='delete-integration pointer float-right mt-35' project=` + data.id +` data-toggle='modal' data-target='#modal-delete' type='a'>
+                                                    <i class='material-icons gradient'>delete_outline</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+
+                    $(".delete-integration").unbind('click');
+                    $('.delete-integration').on('click', function (e) {
+                        e.preventDefault();
+                        var project_id = $(this).attr('project');
+                        var card = $(this).parent().parent().parent().parent().parent();
+                        card.find('.card-edit').unbind('click');
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/api/apps/convertax/" + project_id,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function (_error2) {
+                                function error(_x2) {
+                                    return _error2.apply(this, arguments);
+                                }
+    
+                                error.toString = function () {
+                                    return _error2.toString();
+                                };
+    
+                                return error;
+                            }(function (response) {
+                                if (response.status === 422) {
+                                    for (error in response.responseJSON.errors) {
+                                        alertCustom('error', String(response.responseJSON.errors[error]));
+                                    }
+                                } else {
+                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                                }
+                            }),
+                            success: function success(response) {
+                                index();
+                                alertCustom("success", response.message);
+                            }
+                        });
+                    });
+    
+                    $(".card-edit").unbind('click');
+                    $('.card-edit').on('click', function () {
+                        var project_id = $(this).attr('project');
+                        $(".modal-title").html("Editar Integração com ConvertaX");
+                        $.ajax({
+                            method: "GET",
+                            url: "/api/apps/convertax/" + project_id,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function error() {
+                                //
+                            }, 
+                            success: function success(response) {
+                                $("#form_add_integration").hide();
+                                $("#form_update_integration").show();
+                                $("#bt_integration").addClass('btn-update');
+                                $("#bt_integration").text('Atualizar');
+                                $("#btn-modal").show();
+                                $("#modal_add_integracao").modal('show');
+    
+                                $('#value').mask('#.###,#0', {reverse: true});
+    
+                                $('.check').on('click', function () {
+                                    if ($(this).is(':checked')) {
+                                        $(this).val(1);
+                                    } else {
+                                        $(this).val(0);
+                                    }
+                                });
+    
+                                $(".btn-update").unbind('click');
+                                $(".btn-update").on('click', function () {
+                                    if ($('#link').val() == '') {
+                                        alertCustom('error', 'Dados informados inválidos');
+                                        return false;
+                                    }
+                                    var integrationId = $('#integration_id').val();
+                                    var form_data = new FormData(document.getElementById('form_update_integration'));
+    
+                                    $.ajax({
+                                        method: "POST",
+                                        url: "/apps/convertax/" + integrationId,
+                                        headers: {
+                                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        processData: false,
+                                        contentType: false,
+                                        cache: false,
+                                        data: form_data,
+                                        error: function (_error) {
+                                            function error(_x) {
+                                                return _error.apply(this, arguments);
+                                            }
+    
+                                            error.toString = function () {
+                                                return _error.toString();
+                                            };
+    
+                                            return error;
+                                        }(function (response) {
+                                            if (response.status === 422) {
+                                                for (error in response.responseJSON.errors) {
+                                                    alertCustom('error', String(response.responseJSON.errors[error]));
+                                                }
+                                            } else {
+                                                alertCustom('error', String(response.responseJSON.errors[error]));
+                                            }
+                                        }),
+                                        success: function success(response) {
+                                            index();
+                                            alertCustom("success", response.responseJSON.message);
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+    
+                }
+            }
+        });
+    }
+
+    function addIntegration(){
 
         $.ajax({
             method: "GET",
-            url: "/apps/convertax/create",
+            url: "/projects/user-projects",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -13,19 +177,22 @@ $(document).ready(function () {
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(response) {
-                if (response.message === 'Nenhum projeto encontrado') {
+                if (Object.keys(response.data).length === 0) {
                     var route = '/projects/create';
                     $('#modal-project').modal('show');
                     $('#modal-project-title').text("Oooppsssss!");
                     $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não possui projetos para realizar integração</strong></h3>' + '<h5 align="center">Deseja criar seu primeiro projeto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
-                    $(".modal-title").html('Adicionar nova Integração com ConvertaX');
-                    $(".modal_integracao_body").html("");
+                    $(response.data).each(function(index, data){
+                        $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                    });
+                    $(".modal-title").html('Adicionar nova Integração com ConvertaX'); 
                     $("#bt_integration").addClass('btn-save');
                     $("#bt_integration").text('Adicionar integração');
-                    $(".modal_integracao_body").html(response);
                     $("#modal_add_integracao").modal('show');
+                    $("#form_update_integration").hide();
+                    $("#form_add_integration").show();
 
                     $('#value').mask('#.###,#0', {reverse: true});
 
@@ -53,7 +220,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "POST",
-                            url: "/apps/convertax",
+                            url: "/api/apps/convertax",
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -71,7 +238,8 @@ $(document).ready(function () {
                                 }
                             },
                             success: function success(response) {
-                                updateIntegrations();
+                                $("#no-integration-found").hide();
+                                index();
                                 alertCustom('success', response.message);
                             }
                         });
@@ -79,7 +247,7 @@ $(document).ready(function () {
                 }
             }
         });
-    });
+    }
 
     function updateIntegrations() {
         $.ajax({
@@ -177,6 +345,7 @@ $(document).ready(function () {
                         }
                     });
                 });
+
                 $(".delete-integration").unbind('click');
                 $('.delete-integration').on('click', function (e) {
                     e.preventDefault();
@@ -217,4 +386,8 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#btn-add-integration").on("click", function () {
+        addIntegration();
+    });
 });

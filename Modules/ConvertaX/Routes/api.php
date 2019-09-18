@@ -13,6 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/convertax', function (Request $request) {
-    return $request->user();
-});
+Route::group(
+    [
+        'middleware' => ['web', 'auth'],
+    ],
+    function() {
+        Route::apiResource('/apps/convertax', 'ConvertaXApiController')
+            ->only('index', 'show', 'store', 'update', 'destroy');
+
+        Route::get('/getconvertaxintegrations', 'ConvertaXController@getIntegrations');
+    }
+);

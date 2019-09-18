@@ -11,11 +11,7 @@
 |
 */
 
-//Route::prefix('convertax')->group(function() {
-//    Route::get('/', 'ConvertaXController@index');
-//});
 Route::group(['middleware' => ['web', 'auth']], function() {
     Route::Resource('apps/convertax', 'ConvertaXController')
-         ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
-    Route::get('/getconvertaxintegrations', 'ConvertaXController@getIntegrations');
+         ->only('index');
 });

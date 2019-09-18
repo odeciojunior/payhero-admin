@@ -154,7 +154,7 @@ class HotZappController extends Controller
                 $hotzappIntegrationModel = new HotzappIntegration();
                 $projectService          = new ProjectService();
 
-                $projects = $projectService->getMyProjects();
+                $projects = $projectService->getUserProjects();
 
                 $projectId   = current(Hashids::decode($id));
                 $integration = $hotzappIntegrationModel->where('project_id', $projectId)->first();
