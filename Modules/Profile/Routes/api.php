@@ -7,8 +7,10 @@ Route::group(
         'middleware' => ['web', 'auth'],
     ],
     function() {
-        Route::apiResource('products', 'ProductsApiController')
+        Route::apiResource('profile', 'ProfileApiController')
              ->only('index', 'show', 'edit', 'store', 'update', 'destroy', 'create')
-             ->names('api.products');
+             ->names('api.profile');
+
+        Route::post('profile.uploaddocuments', 'ProfileApiController@uploaddocuments')->name('profile.uploaddocuments');
     }
 );

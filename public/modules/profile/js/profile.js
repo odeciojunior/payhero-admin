@@ -1,5 +1,58 @@
 $(document).ready(function () {
 
+    getDataProfile();
+    function getDataProfile() {
+        $.ajax({
+            url: "/api/profile",
+            type: "GET",
+            cache: false,
+            async: false,
+            success: function success(response) {
+                $('#email').val(response.data.email);
+                $('#name').val(response.data.name);
+                $('#document').val(response.data.document);
+                $('#cellphone').val(response.data.cellphone);
+                $('#date_birth').val(response.data.date_birth);
+                $('#zip_code').val(response.data.zip_code);
+                $('#street').val(response.data.street);
+                $('#number').val(response.data.number);
+                $('#neighborhood').val(response.data.neighborhood);
+                $('#complement').val(response.data.complement);
+                $('#city').val(response.data.city);
+                $('#state').val(response.data.state);
+                $('#previewimage').attr("src", response.data.photo);
+                var valuecss = '';
+
+                if (response.data.personal_document_status === 1) {
+                    valuecss = 'primary';
+                } else if (response.data.personal_document_status === 2) {
+                    valuecss = 'pendente';
+                } else if (response.data.personal_document_status === 3) {
+                    valuecss = 'success';
+                } else {
+                    valuecss = 'danger';
+                }
+
+                var linha = '<span class="badge badge-' + valuecss + '" id="personal_document_badge">' + response.data.personal_document_translate + '</span>';
+                $("#td_personal_status").append(linha);
+
+                if (response.data.address_document_status === 1) {
+                    valuecss = 'primary';
+                } else if (response.data.address_document_status === 2) {
+                    valuecss = 'pendente';
+                } else if (response.data.address_document_status === 3) {
+                    valuecss = 'success';
+                } else {
+                    valuecss = 'danger';
+                }
+
+                linha = '<span class="badge badge-' + valuecss + '" id="address_document_badge">' + response.data.address_document_translate + '</span>';
+                $("#td_address_status").append(linha);
+
+            }
+        });
+    }
+
     $("#profile_update_form").on("submit", function (event) {
         event.preventDefault();
         var form_data = new FormData(document.getElementById('profile_update_form'));
@@ -133,7 +186,7 @@ $(document).ready(function () {
 
             $.ajax({
                 method: "POST",
-                url: "/profile/changepassword",
+                url: "/api/profile/changepassword",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -245,13 +298,15 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function success(file, response) {
         //update table
-
-        if (response.personal_document_translate == 'Em análise') {
+        console.log(response.address_document_translate);
+        if (response.personal_document_translate === 'Em análise') {
             $('#personal_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.personal_document_translate);
         }
-        if (response.address_document_translate == 'Em análise') {
+        if (response.address_document_translate === 'Em análise') {
+            console.log('teste');
             $('#address_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.address_document_translate);
         }
+
         swal({
             position: 'bottom',
             type: 'success',

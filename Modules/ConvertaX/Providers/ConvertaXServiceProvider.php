@@ -2,8 +2,8 @@
 
 namespace Modules\ConvertaX\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
 
 class ConvertaXServiceProvider extends ServiceProvider
 {

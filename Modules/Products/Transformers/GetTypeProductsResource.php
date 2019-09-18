@@ -3,7 +3,6 @@
 namespace Modules\Products\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
-use Vinkla\Hashids\Facades\Hashids;
 
 class GetTypeProductsResource extends Resource
 {
