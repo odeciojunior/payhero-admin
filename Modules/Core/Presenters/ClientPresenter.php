@@ -78,6 +78,12 @@ class ClientPresenter extends Presenter
         return preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/", "\$1.\$2.\$3/\$4-\$5", $this->document);
     }
 
+    /**
+     * @return string
+     */
+    public function getWhatsappMessage(){
+       return  "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $this->telephone) . '&text=Olá ' . $this->getFirstName();
+    }
 
 }
 

@@ -187,8 +187,7 @@ class SalesApiController extends Controller
                     'subTotal'        => number_format(intval($subTotal) / 100, 2, ',', '.'),
                     'discount'        => number_format(intval($discount) / 100, 2, ',', '.'),
                     'shipment_value'  => number_format(intval($sale->shipment_value) / 100, 2, ',', '.'),
-                    'whatsapp_link'   => "https://api.whatsapp.com/send?phone=55" . preg_replace('/[^0-9]/', '', $client->telephone) . '&text=Olá ' . $client->present()
-                            ->getFirstName(),
+                    'whatsapp_link'   => $client->present()->getWhatsappMessage(),
                     'comission'       => $comission,
                     'convertax_value' => $convertaxValue,
                     'taxa'            => number_format($taxa / 100, 2, ',', '.'),
