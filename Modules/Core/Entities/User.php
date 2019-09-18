@@ -4,13 +4,12 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\UserPresenter;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticable;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id

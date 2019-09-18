@@ -2,8 +2,8 @@
 
 namespace Modules\Notazz\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
 
 class NotazzServiceProvider extends ServiceProvider
 {
