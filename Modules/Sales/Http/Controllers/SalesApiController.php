@@ -11,20 +11,16 @@ use Modules\Core\Entities\Checkout;
 use Modules\Core\Entities\Client;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Delivery;
-use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\Shipping;
 use Modules\Core\Entities\Transaction;
-use Modules\Core\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProjectService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleUpdateRequest;
-use Modules\Sales\Transformers\SaleApiResource;
 use Modules\Sales\Transformers\TransactionResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -34,88 +30,6 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class SalesApiController extends Controller
 {
-    /**
-     * @var Sale
-     */
-    private $saleModel;
-    /**
-     * @var User
-     */
-    private $userModel;
-    /**
-     * @var Project
-     */
-    private $projectModel;
-    /**
-     * @var
-     */
-    private $planModel;
-    /**
-     * @var
-     */
-    private $plansSalesModel;
-
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|Sale
-     */
-    private function getSaleModel()
-    {
-        if (!$this->saleModel) {
-            $this->saleModel = app(Sale::class);
-        }
-
-        return $this->saleModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|User
-     */
-    private function getUserModel()
-    {
-        if (!$this->userModel) {
-            $this->userModel = app(User::class);
-        }
-
-        return $this->userModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed|Project
-     */
-    private function getProjectModel()
-    {
-        if (!$this->projectModel) {
-            $this->projectModel = app(Project::class);
-        }
-
-        return $this->projectModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getPlan()
-    {
-        if (!$this->planModel) {
-            $this->planModel = app(Plan::class);
-        }
-
-        return $this->planModel;
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|mixed
-     */
-    private function getPlansSales()
-    {
-        if (!$this->plansSalesModel) {
-            $this->plansSalesModel = app(PlanSale::class);
-        }
-
-        return $this->plansSalesModel;
-    }
-
     /**
      * Display a listing of the resource.
      * @return Response
@@ -184,6 +98,10 @@ class SalesApiController extends Controller
 
                 $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
 
+                if(isset($sale['boleto_due_date'])){
+                    $sale['boleto_due_date'] = (new Carbon($sale['boleto_due_date']))->format('d/m/Y');
+                }
+
                 if ($sale->flag) {
                     $sale['flag'] = $sale->flag;
                 } else if ((!$sale->flag || empty($sale->flag)) && $sale->payment_method == 1) {
@@ -214,13 +132,17 @@ class SalesApiController extends Controller
                 }
 
                 $delivery               = $deliveryModel->find($sale['delivery_id']);
-                $checkout               = $checkoutModel->find($sale['checkout_id']);
-                $checkout->src          = ($checkout->src == null || $checkout->src == 'null') ? '' : $checkout->src;
-                $checkout->source       = ($checkout->source == null || $checkout->source == 'null') ? '' : $checkout->source;
-                $checkout->utm_medium   = ($checkout->utm_medium == null || $checkout->utm_medium == 'null') ? '' : $checkout->utm_medium;
-                $checkout->utm_campaign = ($checkout->utm_campaign == null || $checkout->utm_campaign == 'null') ? '' : $checkout->utm_campaign;
-                $checkout->utm_term     = ($checkout->utm_term == null || $checkout->utm_term == 'null') ? '' : $checkout->utm_term;
-                $checkout->utm_content  = ($checkout->utm_content == null || $checkout->utm_content == 'null') ? '' : $checkout->utm_content;
+                if(isset($delivery)){
+                    $delivery['code'] = Hashids::encode($delivery->id);
+                }
+
+                $checkout               = $checkoutModel->find($sale['checkout_id']) ?? (object)[];
+                $checkout->src          = isset($checkout->src) ? $checkout->src : '';
+                $checkout->source       = isset($checkout->source) ? $checkout->source : '';
+                $checkout->utm_medium   = isset($checkout->utm_medium) ? $checkout->utm_medium : '';
+                $checkout->utm_campaign = isset($checkout->utm_campaign) ? $checkout->utm_campaign : '';
+                $checkout->utm_term     = isset($checkout->utm_term) ? $checkout->utm_term : '';
+                $checkout->utm_content  = isset($checkout->utm_content) ? $checkout->utm_content : '';
                 $sale->shipment_value   = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
@@ -253,7 +175,9 @@ class SalesApiController extends Controller
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
 
-                $details = view('sales::details', [
+                $sale['code'] = Hashids::connection('sale_id')->encode($sale->id);
+
+                $data = [
                     'sale'            => $sale,
                     'products'        => $products,
                     'client'          => $client,
@@ -270,13 +194,14 @@ class SalesApiController extends Controller
                     'taxa'            => number_format($taxa / 100, 2, ',', '.'),
                     'taxaReal'        => $taxaReal,
                     'transaction'     => $transaction,
-                ]);
+                ];
 
-                return response()->json($details->render());
+                return response()->json($data, 200);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao mostrar detalhes da venda  SalesController - details');
             report($e);
+            return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
         }
     }
 
