@@ -40,8 +40,8 @@
                                         <img id="previewimage" alt="Selecione a foto do produto" accept="image/*" src="{{ asset('modules/global/img/produto.png') }}" style="max-height: 300px; max-width: 300px;">
                                         <input type="hidden" name="photo_x1" value=''>
                                         <input type="hidden" name="photo_y1" value=''>
-                                        <input type="hidden" name="photo_w" value=''>
-                                        <input type="hidden" name="photo_h" value=''>
+                                        <input type="hidden" name="photo_w" id="photo_w" value=''>
+                                        <input type="hidden" name="photo_h" id="photo_h" value=''>
                                         <p class="info mt-5" style="font-size:10px;">
                                             <i class="icon wb-info-circle" aria-hidden="true"></i> A imagem escolhida deve estar no formato JPG, JPEG, ou PNG.
                                             <br> Dimensões ideais: 300 x 300 pixels.

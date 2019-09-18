@@ -338,6 +338,47 @@ $(document).ready(function () {
 
                     pagination(response, 'transfers', updateTransfersTable);
                 }
+                $('.detalhes_venda').on('click', function () {
+                    var sale = $(this).attr('sale');
+
+                    $('#modal_venda_titulo').html('Detalhes da venda ' + sale + '<br><hr>');
+                    var data = {sale_id: sale};
+
+                    $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
+                    $.ajax({
+                        method: "POST",
+                        url: '/sales/venda/detalhe',
+                        data: data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function error() {
+                            //
+                        },
+                        success: function success(response) {
+                            $('.subTotal').mask('#.###,#0', {reverse: true});
+                            $('.modal-body-details').html('');
+                            $('.modal-body-details').html(response);
+
+                            $(".copy_link").on("click", function () {
+                                var temp = $("<input>");
+                                $("#nav-profile").append(temp);
+                                temp.val($(this).attr('link')).select();
+                                document.execCommand("copy");
+                                temp.remove();
+                                alertCustom('success', 'Link copiado!');
+                            });
+                            $(".copy_link").on("click", function () {
+                                var temp = $("<input>");
+                                $("#nav-profile").append(temp);
+                                temp.val($(this).attr('digitable-line')).select();
+                                document.execCommand("copy");
+                                temp.remove();
+                                alertCustom('success', 'Linha Digitável copiado!');
+                            });
+                        }
+                    });
+                });
             }
         });
     }

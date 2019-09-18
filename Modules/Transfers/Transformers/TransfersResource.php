@@ -30,8 +30,8 @@ class TransfersResource extends Resource
             'anticipable_value' => $anticipableValue,
             'value'             => $this->currency == 'dolar' ? '$ ' . $value : 'R$ ' . $value,
             'reason'            => (!empty($this->transaction) && empty($this->reason)) ? 'Transação #' : $this->reason,
-            'transaction_id'    => strtoupper(Hashids::connection('sale_id')->encode($this->sale)),
-            'sale_id'           => Hashids::connection('sale_id')->encode($this->sale),
+            'transaction_id'    => strtoupper(Hashids::connection('sale_id')->encode($this->sale_id)),
+            'sale_id'           => Hashids::connection('sale_id')->encode($this->sale_id),
             'date'              => $this->created_at->format('d/m/Y'),
         ];
     }
