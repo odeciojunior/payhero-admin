@@ -1,13 +1,9 @@
 <?php
 
 Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
-
-    Route::resource('/companies', 'CompaniesController')->only('index', 'create', 'store', 'edit', 'update', 'destroy')
-         ->names('companies');
-
+    Route::resource('/companies', 'CompaniesController')->names('companies');
     Route::post('/companies/uploaddocuments', 'CompaniesController@uploadDocuments')->name('companies.uploaddocuments');
-    Route::post('/companies/getcompanyform', 'CompaniesController@getCreateForm')
-         ->name('companies.getcompanyform');
+    Route::post('/companies/getcompanyform', 'CompaniesController@getCreateForm')->name('companies.getcompanyform');
 });
 
 /*

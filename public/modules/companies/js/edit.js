@@ -1,100 +1,27 @@
 $(document).ready(function () {
-
-    var options = {
+    //On Ready
+    //Clear all content of form
+    let redirectBackLink = $("#redirect_back_link");
+    let companyUpdateForm = $("#company_update_form");
+    let companyBankUpdateForm = $("#company_bank_update_form");
+    let dropzoneDocuments = $("#dropzoneDocuments");
+    initLinks();
+    initForm();
+    //mascara cnpj
+    var optionsCompanyDocument = {
         onKeyPress: function onKeyPress(identificatioNumber, e, field, options) {
             var masks = ['000.000.000-000', '00.000.000/0000-00'];
             var mask = identificatioNumber.length > 14 ? masks[1] : masks[0];
-            $('#cnpj').mask(mask, options);
+            $('#company_document').mask(mask, options);
         }
     };
-
-    //mascara cnpj
-    $('#cnpj').mask('000.000.000-000', options);
-
-    $("#company_update_form").on("submit", function (event) {
-        event.preventDefault();
-        var form_data = new FormData(document.getElementById('company_update_form'));
-        loadingOnScreen();
-        $.ajax({
-            method: "POST",
-            url: $('#company_update_form').attr('action'),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            processData: false,
-            contentType: false,
-            cache: false,
-            data: form_data,
-            error: function (_error) {
-                function error(_x) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
-                loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
-            success: function success(response) {
-                alertCustom('success', response.message);
-                loadingOnScreenRemove();
-            }
-        });
-    });
-
-    $("#company_bank_update_form").on("submit", function (event) {
-        event.preventDefault();
-        var form_data = new FormData(document.getElementById('company_bank_update_form'));
-        loadingOnScreen();
-        $.ajax({
-            method: "POST",
-            url: $('#company_bank_update_form').attr('action'),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            processData: false,
-            contentType: false,
-            cache: false,
-            data: form_data,
-            error: function (_error2) {
-                function error(_x2) {
-                    return _error2.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error2.toString();
-                };
-
-                return error;
-            }(function (response) {
-                loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
-            success: function success(response) {
-                loadingOnScreenRemove();
-                alertCustom('success', response.message);
-            }
-        });
-    });
-
+    $('#company_document').mask('000.000.000-000', optionsCompanyDocument);
     $(document).on("blur", '#routing_number', function () {
         $.ajax({
             method: "GET",
             url: "https://www.routingnumbers.info/api/data.json?rn=" + $("#routing_number").val(),
             success: function success(data) {
-                if (data.message == 'OK') {
+                if (data.message === 'OK') {
                     $("#bank").val(data.customer_name);
                 } else {
                     alertCustom('error', data.message);
@@ -103,13 +30,9 @@ $(document).ready(function () {
             }
         });
     });
-
-    $("#brazil_zip_code").on("input", function () {
-
-        var zip_code = $('#brazil_zip_code').val().replace(/[^0-9]/g, '');
-
-        if (zip_code.length != 8) return false;
-
+    $("#zip_code").on("input", function () {
+        var zip_code = $('#zip_code').val().replace(/[^0-9]/g, '');
+        if (zip_code.length !== 8) return false;
         $.ajax({
             url: "https://viacep.com.br/ws/" + zip_code + "/json/",
             type: "GET",
@@ -131,8 +54,130 @@ $(document).ready(function () {
             }
         });
     });
-});
+////Functions
+    function initLinks() {
+        let encodedId = extractIdFromPathName();
+        let origin = $(location).attr('origin');
+        let path = origin + '/companies';
+        let apiPath = origin + '/api/companies';
+        redirectBackLink.attr('href', path);
+        companyUpdateForm.attr('action', (apiPath + "/" + encodedId));
+        companyBankUpdateForm.attr('action', (apiPath + "/" + encodedId));
+        dropzoneDocuments.attr('action', (apiPath + '/uploaddocuments'));
+    }
+    function initForm() {
+        //Get CompanyId from path
+        let encodedId = extractIdFromPathName();
+        //Get Company data from laravel api
+        $.ajax({
+            method: "GET",
+            url: "/api/companies/" + encodedId + "/edit",
+            error: function (_error2) {
+                function error(_x2) {
+                    return _error2.apply(this, arguments);
+                }
+                error.toString = function () {
+                    return _error2.toString();
+                };
+                return error;
+            }(
+                function (response) {
+                    if (response.status === '422') {
+                        for (error in response.responseJSON.errors) {
+                            alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+                    }
+                }
+            ),
+            success: function success(response) {
+                // console.log(response);
+                let company = response.company;
+                let lists = {bank: response.banks};
+                fillAllFormInputsWithModel('company_update_form', company);
+                fillAllFormInputsWithModel('company_bank_update_form', company, lists);
+                $("#company_id").attr('value', company.id_code);
+                configSubmits();
+                // console.log('rodou!');
+            }
+        });
+    }
+    //Config Submit
+    function configSubmits() {
+        companyUpdateForm.on("submit", function (event) {
+            event.preventDefault();
+            let form_data = new FormData(document.getElementById('company_update_form'));
+            loadingOnScreen();
+            $.ajax({
+                method: "POST",
+                url: companyUpdateForm.attr('action'),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: form_data,
+                error: function (_error) {
+                    function error(_x) {
+                        return _error.apply(this, arguments);
+                    }
+                    error.toString = function () {
+                        return _error.toString();
+                    };
 
+                    return error;
+                }(function (response) {
+                    loadingOnScreenRemove();
+                    if (response.status === '422') {
+                        for (error in response.responseJSON.errors) {
+                            alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+                    }
+                }),
+                success: function success(response) {
+                    alertCustom('success', response.message);
+                    loadingOnScreenRemove();
+                }
+            });
+        });
+        companyBankUpdateForm.on("submit", function (event) {
+            event.preventDefault();
+            let form_data = new FormData(document.getElementById('company_bank_update_form'));
+            loadingOnScreen();
+            $.ajax({
+                method: "POST",
+                url: companyBankUpdateForm.attr('action'),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                processData: false,
+                contentType: false,
+                cache: false,
+                data: form_data,
+                error: function (_error2) {
+                    function error(_x2) {
+                        return _error2.apply(this, arguments);
+                    }
+                    error.toString = function () {
+                        return _error2.toString();
+                    };
+                    return error;
+                }(function (response) {
+                    loadingOnScreenRemove();
+                    if (response.status === '422') {
+                        for (error in response.responseJSON.errors) {
+                            alertCustom('error', String(response.responseJSON.errors[error]));
+                        }
+                    }
+                }),
+                success: function success(response) {
+                    loadingOnScreenRemove();
+                    alertCustom('success', response.message);
+                }
+            });
+        });
+    }
+});
 Dropzone.options.dropzoneDocuments = {
     paramName: "file",
     maxFilesize: 2, // MB
@@ -140,7 +185,6 @@ Dropzone.options.dropzoneDocuments = {
     //uploadMultiple: true,
     accept: function accept(file, done) {
         var dropz = this;
-
         swal({
             title: 'Qual é o tipo do documento?',
             type: 'warning',
@@ -171,27 +215,21 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function success(file, response) {
         //update table
-        if (response.data.bank_document_translate.status == 3) {
-
+        if (response.data.bank_document_translate.status === 3) {
             $('#td_bank_status').html('<span class="badge badge-aprovado">' + response.data.bank_document_translate.message + '</span>');
-        } else if (response.data.bank_document_translate.status == 2) {
+        } else if (response.data.bank_document_translate.status === 2) {
             $('#td_bank_status').html('<span class="badge badge-pendente">' + response.data.bank_document_translate.message + '</span>');
         }
-
-        if (response.data.address_document_translate.status == 3) {
-
+        if (response.data.address_document_translate.status === 3) {
             $('#td_address_status').html('<span class="badge badge-aprovado">' + response.data.address_document_translate.message + '</span>');
-        } else if (response.data.address_document_translate.status == 2) {
+        } else if (response.data.address_document_translate.status === 2) {
             $('#td_address_status').html('<span class="badge badge-pendente">' + response.data.address_document_translate.message + '</span>');
         }
-
-        if (response.data.contract_document_translate.status == 3) {
-
+        if (response.data.contract_document_translate.status === 3) {
             $('#td_contract_status').html('<span class="badge badge-aprovado">' + response.data.contract_document_translate.message + '</span>');
-        } else if (response.data.contract_document_translate.status == 2) {
+        } else if (response.data.contract_document_translate.status === 2) {
             $('#td_contract_status').html('<span class="badge badge-pendente">' + response.data.contract_document_translate.message + '</span>');
         }
-
         swal({
             position: 'bottom',
             type: 'success',
@@ -202,7 +240,6 @@ Dropzone.options.dropzoneDocuments = {
         });
     },
     error: function error(file, response) {
-
         if (response.search('Max filesize') > 0) {
             response = 'O documento é muito grande. Tamanho maximo: 2mb.';
         } else if (response.search('upload files of this type') > 0) {
@@ -217,8 +254,6 @@ Dropzone.options.dropzoneDocuments = {
             showConfirmButton: false,
             timer: 6000
         });
-
         this.removeFile(file);
     }
-
 };
