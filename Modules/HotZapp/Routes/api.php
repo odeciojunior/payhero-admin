@@ -7,8 +7,6 @@ Route::group(
     ],
     function() {
         Route::apiResource('/apps/hotzapp', 'HotZappApiController')
-            ->only('index', 'store', 'edit', 'update', 'destroy');
-
-        Route::get('/getintegrations', 'HotZappApiController@getIntegrations');
+            ->only('index', 'show', 'store', 'edit', 'update', 'destroy');
     }
 );

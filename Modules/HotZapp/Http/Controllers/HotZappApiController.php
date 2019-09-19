@@ -4,14 +4,12 @@
 namespace Modules\HotZapp\Http\Controllers;
 
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Modules\ConvertaX\Transformers\ConvertaxResource;
-use Modules\Core\Entities\ConvertaxIntegration;
 use Modules\Core\Entities\HotzappIntegration;
-use Modules\Core\Entities\Project;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
 use Modules\HotZapp\Transformers\HotZappResource;
@@ -21,6 +19,9 @@ use Vinkla\Hashids\Facades\Hashids;
 class HotZappApiController extends Controller
 {
 
+    /**
+     * @return JsonResponse
+     */
     public function index(){
         try{
             $hotzappIntegration = new HotzappIntegration();
@@ -45,6 +46,10 @@ class HotZappApiController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return HotZappResource
+     */
     public function show($id){
 
         $hotzappIntegrationModel = new HotzappIntegration();
@@ -53,6 +58,10 @@ class HotZappApiController extends Controller
         return new HotZappResource($hotzappIntegration);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request)
     {
         try {
@@ -119,6 +128,10 @@ class HotZappApiController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
     public function edit($id)
     {
         try {
@@ -154,6 +167,11 @@ class HotZappApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
     public function update(Request $request, $id)
     {
         $hotzappIntegrationModel = new HotzappIntegration();
@@ -171,6 +189,9 @@ class HotZappApiController extends Controller
         }
         if (empty($data['credit_card_refused'])) {
             $data['credit_card_refused'] = 0;
+        }
+        if (empty($data['abandoned_cart'])) {
+            $data['abandoned_cart'] = 0;
         }
         if (empty($data['abandoned_cart'])) {
             $data['abandoned_cart'] = 0;
@@ -195,6 +216,10 @@ class HotZappApiController extends Controller
         ], 400);
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
     public function destroy($id)
     {
         try {
@@ -219,23 +244,5 @@ class HotZappApiController extends Controller
                 'message' => 'Ocorreu um erro ao tentar remover, tente novamente mais tarde!',
             ], 400);
         }
-    }
-
-    public function getIntegrations()
-    {
-        $hotzappIntegrationModel = new HotzappIntegration();
-        $projectModel            = new Project();
-
-        $projectsIntegrated  = [];
-        $hotzappIntegrations = $hotzappIntegrationModel->where('user_id', auth()->user()->id)->get();
-
-        foreach ($hotzappIntegrations as $hotzappIntegration) {
-            $project = $projectModel->find($hotzappIntegration->project_id);
-            if ($project) {
-                $projectsIntegrated[] = $project;
-            }
-        }
-
-        return response()->json(['projectsIntegrated' => $projectsIntegrated], 200);
     }
 }

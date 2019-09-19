@@ -1,22 +1,22 @@
 <div class='col-md-12'>
-{{--    @if(count($projectsIntegrated) == 0)--}}
-        @push('css')
-            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-        @endpush
-        <div id="no-integration-found" class='row justify-content-center' style="display:none">
-            <div class="content-error text-center">
-                <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
-                <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
-                <p class="desc gray">Integre seus projetos com HotZapp de forma totalmente automatizada!</p>
-            </div>
+    @push('css')
+        <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+    @endpush
+    <div id="no-integration-found" class='row justify-content-center' style="display:none">
+        <div class="content-error text-center">
+            <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
+            <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
+            <p class="desc gray">Integre seus projetos com HotZapp de forma totalmente automatizada!</p>
         </div>
-        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
 
-        <div class="row" id="content">
-        </div>
+    <div class="row" id="content">
+    </div>
 </div>
 <!-- Modal add integração -->
-<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true"
+     aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-lg d-flex justify-content-center">
         <div class="modal-content w-450" id="conteudo_modal_add">
             <div class="modal-header">
@@ -43,7 +43,8 @@
             <div class="header-modal simple-border-bottom">
                 <h2 id="modal-project-title" class="modal-title"></h2>
             </div>
-            <div id="modal_project_body" class="modal-body simple-border-bottom" style='padding-bottom:1%;padding-top:1%;'>
+            <div id="modal_project_body" class="modal-body simple-border-bottom"
+                 style='padding-bottom:1%;padding-top:1%;'>
             </div>
             <div id='modal-withdraw-footer' class="modal-footer">
             </div>
