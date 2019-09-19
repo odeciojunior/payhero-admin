@@ -1,18 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::group(
+    [
+        'middleware' => ['web', 'auth']
+    ],
+    function() {
+        Route::apiResource('/apps/hotzapp', 'HotZappApiController')
+            ->only('index', 'store', 'edit', 'update', 'destroy');
 
-Route::middleware('auth:api')->get('/hotzapp', function (Request $request) {
-    return $request->user();
-});
+        Route::get('/getintegrations', 'HotZappApiController@getIntegrations');
+    }
+);
