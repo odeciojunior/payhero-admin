@@ -142,7 +142,6 @@ class ConvertaXApiController extends Controller {
     public function update(Request $request, $id)
     {
         try {
-
             $convertaxIntegrationModel = new ConvertaxIntegration();
 
             $data          = $request->all();
