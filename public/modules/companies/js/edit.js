@@ -90,12 +90,17 @@ $(document).ready(function () {
                 }
             ),
             success: function success(response) {
-                // console.log(response);
+                console.log(response.company);
                 let company = response.company;
                 let lists = {bank: response.banks};
                 fillAllFormInputsWithModel('company_update_form', company);
                 fillAllFormInputsWithModel('company_bank_update_form', company, lists);
+                //CompanyId
                 $("#company_id").attr('value', company.id_code);
+                //Status Documentação
+                $("#td_bank_status").append("<span class='badge badge-" + getStatusBadge(company.bank_document_status) + "'>" + company.bank_document_translate + "</span>");
+                $("#td_address_status").append("<span class='badge badge-" + getStatusBadge(company.address_document_status) + "'>" + company.address_document_translate + "</span>");
+                $("#td_contract_status").append("<span class='badge badge-" + getStatusBadge(company.contract_document_status) + "'>" + company.contract_document_translate + "</span>");
                 configSubmits();
                 // console.log('rodou!');
             }
@@ -176,6 +181,28 @@ $(document).ready(function () {
                 }
             });
         });
+    }
+    function getStatusBadge(bankDocumentStatus) {
+        let badge = null;
+        switch (bankDocumentStatus) {
+            case 1://'pending':
+                badge = 'primary';
+                break;
+            case 2://'analyzing':
+                badge = 'pendente';
+                break;
+            case 3://'approved':
+                badge = 'success';
+                break;
+            case 4://'refused':
+                badge = 'danger';
+                break;
+            default:
+                badge = '';
+                break;
+        }
+
+        return badge;
     }
 });
 Dropzone.options.dropzoneDocuments = {
