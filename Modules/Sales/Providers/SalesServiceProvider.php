@@ -4,7 +4,6 @@ namespace Modules\Sales\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
-use Modules\Shipping\Providers\AuthServiceProvider;
 
 class SalesServiceProvider extends ServiceProvider
 {
@@ -36,8 +35,7 @@ class SalesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(AuthServiceProvider::class);
-            $this->app->register(RouteServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**

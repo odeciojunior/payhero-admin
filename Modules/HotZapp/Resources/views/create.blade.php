@@ -1,14 +1,10 @@
 <form id='form_add_integration' method="post" action="#">
-    @csrf
     <div style="width:100%">
         <div class="row mt-20">
             <div class="col-12">
                 <div class='form-group'>
                     <label for="company">Selecione seu projeto</label>
                     <select class="select-pad" id="project_id" name="project_id">
-                        @foreach($projects as $project)
-                            <option value="{{$project['id_code']}}">{{$project['name']}}</option>
-                        @endforeach
                     </select>
                 </div>
             </div>
