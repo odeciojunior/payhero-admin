@@ -35,9 +35,9 @@ use Modules\Core\Presenters\CompanyPresenter;
  * @property string $support_email
  * @property string $support_telephone
  * @property integer $balance
- * @property boolean $bank_document_status
- * @property boolean $address_document_status
- * @property boolean $contract_document_status
+ * @property int $bank_document_status
+ * @property int $address_document_status
+ * @property int $contract_document_status
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
@@ -51,6 +51,8 @@ use Modules\Core\Presenters\CompanyPresenter;
  * @property Transfer[] $transfers
  * @property UserProject[] $usersProjects
  * @property Withdrawal[] $withdrawals
+ * @property string $bank_document_status_value
+ * @property string $bank_document_status_badge
  * @package Modules\Core\Entities
  */
 class Company extends Model
@@ -61,9 +63,12 @@ class Company extends Model
      */
     protected $presenter = CompanyPresenter::class;
     /**
+     * The accessors to append to the model's array form.
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = [
+        'id_code',
+    ];
     /**
      * @var array
      */
@@ -97,6 +102,7 @@ class Company extends Model
         'deleted_at',
         'updated_at',
     ];
+
     /**
      * @return BelongsTo
      */

@@ -118,7 +118,7 @@ class ConvertaXApiController extends Controller {
     public function show($id)
     {
         $convertaxIntegrationModel = new ConvertaxIntegration();
-        $convertaxIntegration = $convertaxIntegrationModel->find(current(Hashids::decode($id)));
+        $convertaxIntegration = $convertaxIntegrationModel->with(['project'])->find(current(Hashids::decode($id)));
 
         return new ConvertaxResource($convertaxIntegration);
     }
@@ -142,7 +142,6 @@ class ConvertaXApiController extends Controller {
     public function update(Request $request, $id)
     {
         try {
-
             $convertaxIntegrationModel = new ConvertaxIntegration();
 
             $data          = $request->all();

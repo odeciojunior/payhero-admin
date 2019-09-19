@@ -167,46 +167,16 @@
                                                 <tr>
                                                     <td>Extrato Bancário</td>
                                                     <td id="td_bank_status">
-                                                        {{--                                                        @if($company->bank_document_status == 1)--}}
-                                                        {{--                                                            <span class="badge badge-primary"> {{ $company->bank_document_translate }} </span>--}}
-                                                        {{--                                                        @elseif($company->bank_document_status == 2)--}}
-                                                        {{--                                                            <span class="badge badge-pendente"> {{ $company->bank_document_translate }} </span>--}}
-                                                        {{--                                                        @elseif($company->bank_document_status == 3)--}}
-                                                        {{--                                                            <span class="badge badge-success"> {{ $company->bank_document_translate }} </span>--}}
-                                                        {{--                                                        @else--}}
-                                                        {{--                                                            <span class="badge badge-danger"> {{ $company->bank_document_translate }} </span>--}}
-                                                        {{--                                                        @endif--}}
-                                                        {{--                                                        <span class="badge {{ ($company->bank_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}"> {{ $company->bank_document_translate }} </span>--}}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td> Comprovante Residência</td>
                                                     <td id="td_address_status">
-                                                        {{--                                                        @if($company->address_document_status == 1)--}}
-                                                        {{--                                                            <span class="badge badge-primary"> {{ $company->address_document_translate }} </span>--}}
-                                                        {{--                                                        @elseif($company->address_document_status == 2)--}}
-                                                        {{--                                                            <span class="badge badge-pendente"> {{ $company->address_document_translate }} </span>--}}
-                                                        {{--                                                        @elseif($company->address_document_status == 3)--}}
-                                                        {{--                                                            <span class="badge badge-success"> {{ $company->address_document_translate }} </span>--}}
-                                                        {{--                                                        @else--}}
-                                                        {{--                                                            <span class="badge badge-danger"> {{ $company->address_document_translate }} </span>--}}
-                                                        {{--                                                        @endif--}}
-                                                        {{--                                                        <span class="badge {{ ($company->address_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}"> {{ $company->address_document_translate }}</span>--}}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Contrato Social</td>
                                                     <td id="td_contract_status">
-                                                        {{--                                                        @if($company->contract_document_status == 1)--}}
-                                                        {{--                                                            <span class="badge badge-primary"> {{ $company->contract_document_translate }} </span>--}}
-                                                        {{--                                                        @elseif($company->contract_document_status == 2)--}}
-                                                        {{--                                                            <span class="badge badge-pendente"> {{ $company->contract_document_translate }} </span>--}}
-                                                        {{--                                                        @elseif($company->contract_document_status == 3)--}}
-                                                        {{--                                                            <span class="badge badge-success"> {{ $company->contract_document_translate }} </span>--}}
-                                                        {{--                                                        @else--}}
-                                                        {{--                                                            <span class="badge badge-danger"> {{ $company->contract_document_translate }} </span>--}}
-                                                        {{--                                                        @endif--}}
-                                                        {{--                                                        <span class="badge {{ ($company->contract_document_status == 3) ? 'badge-aprovado' : 'badge-pendente' }}">  {{ $company->contract_document_translate }} </span>--}}
                                                     </td>
                                                 </tr>
                                             </tbody>
