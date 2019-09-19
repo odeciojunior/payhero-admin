@@ -187,7 +187,6 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
 });
 
 $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').attr('overflow', 'hidden')
-// $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').on('m','hidden')
 
 function pagination(response, model, callback) {
 
@@ -373,6 +372,4 @@ function fillSelectAndCheckWithModelFields(select, items, model, customItemsFunc
 function defaultSelectItemsFunction(item) {
     return {value: item.code, text: (item.code + ' - ' + item.name)};
 }
-
-
 
