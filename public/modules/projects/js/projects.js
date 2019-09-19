@@ -264,8 +264,11 @@ $(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            error: function () {
-                                alertCustom('error', 'Ocorreu algum erro');
+                            error: function (response) {
+                                if (response.status == '400') {
+                                    alertCustom('error', response.responseJSON); //'Ocorreu algum erro'
+                                }
+                                // alertCustom('error', 'Ocorreu algum erro');
                                 loadingOnScreenRemove()
                             },
                             success: function (data) {

@@ -182,6 +182,12 @@ class ProjectService
                                 }
                             }
                         }
+                    } else {
+                        foreach ($project->plans as $plan) {
+                            foreach ($plan->productsPlans as $productsPlan) {
+                                $productsPlan->delete();
+                            }
+                        }
                     }
 
                     if (!empty($project->plans) && $project->plans->isNotEmpty()) {
