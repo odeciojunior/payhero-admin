@@ -17,6 +17,7 @@ use Modules\Core\Entities\Transfer;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\User;
 use Modules\Core\Services\CloudFlareService;
+use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\NotazzService;
 use Modules\Core\Services\ShopifyService;
@@ -301,15 +302,28 @@ class TesteController extends Controller
     {
         //nada
 
-        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
+        $saleModel = new Sale();
+        $nservice  = new NotazzService();
 
-        $shopifyService->setThemeByRole('main');
-        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
-        if ($htmlBody) {
-            //template do layout
+        $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
 
-            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
-        }
+        //$nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+
+        //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
+
+        dd($nservice->checkCity(env('NOTAZZ_API_TOKEN'),'SP', 'Amparo'));
+
+
+
+//        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
+//
+//        $shopifyService->setThemeByRole('main');
+//        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
+//        if ($htmlBody) {
+//            //template do layout
+//
+//            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
+//        }
 
         /*
         $nservice  = new NotazzService();

@@ -56,6 +56,15 @@ class NotazzInvoice extends Model
         'canceled_flag',
         'schedule',
         'attempts',
+        'max_attempts',
+        'date_last_attempt',
+        'date_pending',
+        'date_send',
+        'date_completed',
+        'date_error',
+        'return_message',
+        'return_http_code',
+        'data_json',
         'created_at',
         'updated_at',
     ];
@@ -66,5 +75,13 @@ class NotazzInvoice extends Model
     public function sale()
     {
         return $this->belongsTo('Modules\Core\Entities\Sale');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function notazzIntegration()
+    {
+        return $this->belongsTo('Modules\Core\Entities\NotazzIntegration');
     }
 }

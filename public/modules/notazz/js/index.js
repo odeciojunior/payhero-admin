@@ -61,7 +61,7 @@ $(document).ready(function () {
     function updateIntegrations() {
         $.ajax({
             method: "GET",
-            url: "/apps/getnotazzintegrations",
+            url: "/api/apps/notazz",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
