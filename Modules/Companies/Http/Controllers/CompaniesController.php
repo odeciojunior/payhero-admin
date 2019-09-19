@@ -34,6 +34,13 @@ class CompaniesController extends Controller
     }
 
     /**
+     *
+     */
+    public function show()
+    {
+
+    }
+    /**
      * @param $encodedId
      * @return Factory|View
      */

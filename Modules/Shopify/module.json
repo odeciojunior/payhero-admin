@@ -9,8 +9,6 @@
         "Modules\\Shopify\\Providers\\ShopifyServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }
