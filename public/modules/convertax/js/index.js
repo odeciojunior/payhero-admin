@@ -111,7 +111,6 @@ $(document).ready(function () {
                                     },
                                     success: function success(response) {
 
-                                        // alert(response.toSource());
                                         $("#select_projects_edit").val(response.data.project_id);
                                         $('#integration_id').val(response.data.id);
                                         $("#link_edit").val(response.data.link);
