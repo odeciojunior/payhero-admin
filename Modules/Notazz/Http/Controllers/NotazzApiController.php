@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\NotazzIntegration;
 use Modules\Core\Entities\UserProject;
+use Modules\Notazz\Transformers\NotazzResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class NotazzApiController extends Controller
@@ -24,17 +25,15 @@ class NotazzApiController extends Controller
 
             $notazzIntegrations = $notazzIntegrationModel->with(['project', 'project.usersProjects'])
                                                          ->whereHas('project.usersProjects', function($query) {
-                                                             $query->where('user', auth()->user()->id);
+                                                             $query->where('user_id', auth()->user()->id);
                                                          })->get();
 
-            $integrations = $notazzIntegrations->toArray();
-
-            return view('notazz::include', ['integrations' => $integrations]);
+            return NotazzResource::collection($notazzIntegrations);
         } catch (Exception $e) {
-            Log::warning('Erro ao buscar integraçeõs da Notazz (NotazzController - getIntegrations)');
+            Log::warning('Erro ao buscar integraçeõs da Notazz (NotazzApiController - index)');
             report($e);
 
-            return view('notazz::include', ['integrations' => $integrations]);
+            return response()->json(['message' => 'Ocorreu um erro ao listar as integrações com a notazz'], 400);
         }
     }
 

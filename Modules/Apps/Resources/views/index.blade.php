@@ -10,7 +10,7 @@
     </div>
     <div class="page-content container">
         <div class="row">
-              <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
+              {{--<div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                 <div class="card" onclick="window.location.href='/apps/notazz/'" style='width:300px;'>
                     @if($notazzIntegrations >0)
                         <a href="/apps/notazz/" class="add-btn added"><i class="icon wb-check" aria-hidden="true"></i>
@@ -24,7 +24,7 @@
                         <p class="card-text sm">Integre seus projetos com a Notazz </p>
                     </div>
                 </div>
-            </div>
+            </div>--}}
             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 pointer d-flex align-items-stretch">
                 <div class="card" onclick="window.location.href='/apps/hotzapp/'">
                     @if($hotzappIngrations >0)

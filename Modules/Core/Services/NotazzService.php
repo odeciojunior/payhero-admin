@@ -71,7 +71,6 @@ class NotazzService
     /**
      * @param $notazzInvoiceId
      * @return bool|mixed
-     * @throws Exception
      */
     public function sendNfse($notazzInvoiceId)
     {
@@ -107,7 +106,7 @@ class NotazzService
                                       'DESTINATION_CITY'       => $sale->delivery->city,//Cidade, informar corretamente o nome da cidade sem abreviações
                                       'DESTINATION_UF'         => $sale->delivery->state,//Sigla do estado
                                       'DESTINATION_ZIPCODE'    => $sale->delivery->zip_code,//CEP, somente números
-                                      'DESTINATION_PHONE'      => $sale->client->telephone,//Telefone do cliente (opcional), somente números
+                                      'DESTINATION_PHONE'      => '19999604599',//Telefone do cliente (opcional), somente números
                                       'DESTINATION_EMAIL'      => $sale->client->email,//E-mail do cliente (opcional)
 
                                       'DESTINATION_EMAIL_SEND' => [
@@ -116,14 +115,14 @@ class NotazzService
                                           ],
                                       ],//e-mail(s) que será enviado a nota depois de emitida (opcional).
 
-                                      'DOCUMENT_BASEVALUE'   => '100.00',//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
+                                      'DOCUMENT_BASEVALUE'   => '10.00',//Valor total da nota fiscal. Utilizar ponto para separar as casas decimais
                                       'DOCUMENT_DESCRIPTION' => 'Prestação de Serviço em consultoria',//Descrição da nota fiscal (obrigatório somente para o método create_nfse e update_nfse)
                                       'DOCUMENT_COMPETENCE'  => date("Y-m-d"), //Competência (opcional), se não informado ou informado inválido será utilizado a data de hoje. Utilizar o padrão YYYY-mm-dd
                                       //'DOCUMENT_CNAE'        => '8599604', //CNAE, somente números (opcional), se não informado ou informado inválido será utilizado o padrão das configurações da empresa. Documentação: http://www.cnae.ibge.gov.br
                                       //'SERVICE_LIST_LC116'   => '0802', //Item da Lista de Serviço da Lei Complementar 116 (opcional), somente números. Caso não seja informado será utilizado o padrão da empresa. Documentação: http://www.fazenda.mg.gov.br/empresas/legislacao_tributaria/ricms/anexoxiii2002.pdf
                                       //'WITHHELD_ISS'         => '0', // ISS retido na fonte (opcional). 1 = Retido e 0 = Não retido. Se não informado ou informado inválido será utilizado o padrão das configurações da empresa
                                       //'CITY_SERVICE_CODE'    => '12345', // Código de serviço do município (opcional), somente números. Se não seja informado será utilizado o padrão da empresa
-
+/*
                                       'ALIQUOTAS' => [
                                           'COFINS' => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                           'CSLL'   => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
@@ -132,7 +131,7 @@ class NotazzService
                                           'PIS'    => '0.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                           'ISS'    => '2.00', // Porcentagem (%) - Utilizar ponto para separar as casas decimais
                                       ], // Opcional - se não informado ou informado inválido será utilizado o padrão das configurações da empresa
-
+*/
                                       'EXTERNAL_ID' => $notazzInvoice->external_id, // ID externo do documento que será enviado
                                   ]);
 
@@ -278,6 +277,10 @@ class NotazzService
 
     /**
      * @param $notazzInvoiceId
+     * @param null $startDate
+     * @param null $finalDate
+     * @param null $status
+     * @param null $invoiceNumber
      * @return bool|mixed
      */
     public function consultAllNfse($notazzInvoiceId, $startDate = null, $finalDate = null, $status = null, $invoiceNumber = null)
@@ -419,10 +422,10 @@ class NotazzService
     }
 
     /**
-     * @param $notazzInvoiceId
+     * @param $tokenApi
      * @param $state
      * @param $city
-     * @return bool|mixed
+     * @return mixed
      */
     public function checkCity($tokenApi, $state, $city)
     {

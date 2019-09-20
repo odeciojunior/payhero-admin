@@ -55,7 +55,7 @@ class SendNotazzInvoiceJob implements ShouldQueue
             } else if ($notazzInvoice->invoice_type == $notazzInvoiceModel->present()->getInvoiceType('product')) {
                 //nota de produto
 
-                $result = $notazzService->sendNfse($this->notazzInvoiceId);
+                //$result = $notazzService->sendNfse($this->notazzInvoiceId);
             } else {
                 //erro ?
 

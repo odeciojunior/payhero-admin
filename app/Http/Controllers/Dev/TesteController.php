@@ -307,11 +307,11 @@ class TesteController extends Controller
 
         $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
 
-        //$nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+       // $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
 
         //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
 
-        dd($nservice->checkCity(env('NOTAZZ_API_TOKEN'),'SP', 'Amparo'));
+        dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ','SP', 'Amparo'));
 
 
 
