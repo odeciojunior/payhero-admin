@@ -13,6 +13,192 @@ function _defineProperty(obj, key, value) {
 }
 
 $(function () {
+    //create
+    function renderCreatePixel(){
+        let form = `<form id='form-register-pixel' method="post" action="/api/pixels">
+                        <input type="hidden" value="${$("meta[name='csrf-token']").attr('content')}" name="_token">
+                        <div class="container-fluid">
+                            <div class="panel" data-plugin="matchHeight">
+                                <div style="width:100%">
+                                    <div class="row">
+                                        <div class="form-group col-12 mt-4">
+                                            <label for="name">Descrição</label>
+                                            <input name="name" type="text" class="form-control" id="name" placeholder="Descrição" maxlength='30'>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="platform">Plataforma</label>
+                                            <select name="platform" type="text" class="form-control" id="platform">
+                                                <option value="facebook">Facebook</option>
+                                                <option value="google">Google</option>
+                                                <option value="null" disabled='disabled'>Taboola (em breve)</option>
+                                                <option value="null" disabled='disabled'>Outbrain (em breve)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="status">Status</label>
+                                            <select name="status" type="text" class="form-control" id="status_pixel">
+                                                <option value="1">Ativo</option>
+                                                <option value="0">Desativado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-xl-12">
+                                            <label for="code">Código</label>
+                                            <input name="code" type="text" class="form-control" id="code" placeholder="Código" maxlength='30'>
+                                        </div>
+                                    </div>
+                                    <div class='mb-1'>
+                                        <label>Rodar Pixel:</label>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-3">
+                                            <div class="switch-holder">
+                                                <label for="checkout" class='mb-10'>Checkout:</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" value="" name='checkout' id='checkout' class='check' checked>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="switch-holder">
+                                                <label for="cartao">Purchase (cartão):</label>
+                                                <br>
+                                                <label class='switch'>
+                                                    <input type="checkbox" value="" name='purchase_card' id='purchase_card' class='check' checked>
+                                                    <span class='slider round'></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="switch-holder">
+                                                <label for="boleto">Purchase (boleto):</label>
+                                                <br>
+                                                <label class='switch'>
+                                                    <input type="checkbox" value="" name='purchase_boleto' id='purchase_boleto' class='check' checked>
+                                                    <span class='slider round'></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`;
+
+        $("#modal-add-body").html(form);
+    }
+
+    //edit
+    function renderEditPixel(pixel){
+        let form = `<form id="form-update-pixel" method="post" action="/api/pixels">
+                        <input type="hidden" value="${$("meta[name='csrf-token']").attr('content')}" name="_token">
+                        <input type="hidden" value="${pixel.id}" name="id" id='pixelId'>
+                        <div class="row">
+                            <div class="form-group col-xl-12 mt-4">
+                                <label for="name">Descrição</label>
+                                <input value="${pixel.name != '' ? pixel.name : ''}" name="name" type="text" class="input-pad" id="name_pixel" placeholder="Descrição" maxlength='30'>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="platform">Plataforma</label>
+                                <select name="platform" type="text" class="form-control select-pad" id="platform">
+                                    <option value="facebook" ${pixel.platform == 'facebook' ? 'selected' : ''}>Facebook</option>
+                                    <option value="google" ${pixel.platform == 'google' ? 'selected' : ''}>Google</option>
+                                    <option value="null" disabled='disabled'>Taboola (em breve)</option>
+                                    <option value="null" disabled='disabled'>Outbrain (em breve)</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="status">Status</label>
+                                <select name="status" type="text" class="form-control select-pad" id="status">
+                                    <option value="1" ${pixel.status == '1' ? 'selected' : ''}>Ativo</option>
+                                    <option value="0" ${pixel.status == '0' ? 'selected' : ''}>Desativado</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-xl-12">
+                                <label for="code">Código</label>
+                                <input value="${pixel.code != '' ? pixel.code : ''}" name="code" type="text" class="input-pad" id="code" placeholder="Código" maxlength='30'>
+                            </div>
+                        </div>
+                        <div class='mb-1'>
+                            <label>Rodar Pixel:</label>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-4">
+                                <div class="switch-holder">
+                                    <label for="Checkout">Checkout:</label>
+                                    <br>
+                                    <label class='switch'>
+                                        <input type="checkbox" ${pixel.checkout == '1' ? 'value="1" checked=""' : 'value="0"'} name='checkout' id='checkout' class='check'>
+                                        <span class='slider round'></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="switch-holder">
+                                    <label for="cartao">Purchase (cartão):</label>
+                                    <br>
+                                    <label class='switch'>
+                                        <input type="checkbox" ${pixel.purchase_card == '1' ? 'value="1" checked=""' : 'value="0"'} name='purchase_card' id='purchase_card' class='check'>
+                                        <span class='slider round'></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="switch-holder">
+                                    <label for="boleto">Purchase (boleto):</label>
+                                    <br>
+                                    <label class='switch'>
+                                        <input type="checkbox" ${pixel.purchase_boleto == '1' ? 'value="1" checked=""' : 'value="0"'} name='purchase_boleto' id='purchase_boleto' class='check'>
+                                        <span class='slider round'></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>`;
+
+        $("#modal-add-body").html(form);
+    }
+
+    //show
+    function renderDetailPixel(pixel){
+        let form = `<table class='table table-striped' style='width: 100%'>
+                        <tbody>
+                            <tr>
+                                <td class="table-title">Descrição</td>
+                                <td style='width: 20px'></td>
+                                <td class='text-left'>${pixel.name}</td>
+                                <br>
+                            </tr>
+                            <tr>
+                                <td class="table-title">Code</td>
+                                <td style='width: 20px'></td>
+                                <td class='text-left'>${pixel.code}</td>
+                            </tr>
+                            <tr>
+                                <td class="table-title">Plataforma</td>
+                                <td style='width: 20px'></td>
+                                <td class='text-left'>${pixel.platform}</td>
+                            </tr>
+                            <tr>
+                                <td class="table-title">Status</td>
+                                <td style='width: 20px'></td>
+                                <td class='text-left'>
+                                ${  
+                                    pixel.status == 1
+                                    ? '<span class="badge badge-success text-left">Ativo</span>'
+                                    : '<span class="badge badge-danger">Desativado</span>'
+                                }
+                                 </td>
+                            </tr>
+                        </tbody>
+                    </table>`;
+
+        $("#modal-add-body").html(form);
+    }
+
     var projectId = $("#project-id").val();
 
     $('#tab_pixels').on('click', function () {
@@ -25,103 +211,83 @@ $(function () {
         loadOnModal('#modal-add-body');
         $("#modal_add_size").addClass('modal_simples');
         $("#modal-title").html('Novo pixel');
-        $.ajax({
-            method: "GET",
-            url: "/pixels/create",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function error(response) {
-                loadingOnScreenRemove();
+        $("#btn-modal").addClass('btn-save');
+        $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
+        $("#btn-modal").show();
+        //$('#modal-add-body').html(data);
+        renderCreatePixel();
+        loadingOnScreenRemove();
 
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-                }
-                $("#modal-content").hide();
-            },
-            success: function success(data) {
-                loadingOnScreenRemove();
-                $("#btn-modal").addClass('btn-save');
-                $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
-                $("#btn-modal").show();
-                $('#modal-add-body').html(data);
-
-                $('.check').on('click', function () {
-                    if ($(this).is(':checked')) {
-                        $(this).val(1);
-                    } else {
-                        $(this).val(0);
-
-                    }
-                });
-
-                if ($(':checkbox').is(':checked')) {
-                    $(':checkbox').val(1);
-                } else {
-                    $(':checkbox').val(0);
-                }
-
-                $(".btn-save").unbind('click');
-                $(".btn-save").on('click', function () {
-                    var formData = new FormData(document.getElementById('form-register-pixel'));
-                    formData.append('project_id', projectId);
-                    formData.append('checkout', $("#checkout").val());
-                    formData.append('purchase_card', $("#purchase_card").val());
-                    formData.append('purchase_boleto', $("#purchase_boleto").val());
-                    loadingOnScreen();
-                    $.ajax({
-                        method: "POST",
-                        url: "/pixels",
-                        headers: {
-                            'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
-                        },
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        error: function (_error) {
-                            function error(_x) {
-                                return _error.apply(this, arguments);
-                            }
-
-                            error.toString = function () {
-                                return _error.toString();
-                            };
-
-                            return error;
-                        }(function (data) {
-                            loadingOnScreenRemove();
-                            $("#modal_add_produto").hide();
-                            $(".loading").css("visibility", "hidden");
-                            if (data.status == '422') {
-                                for (error in data.responseJSON.errors) {
-                                    alertCustom('error', String(data.responseJSON.errors[error]));
-                                }
-                            }
-                        }), success: function success() {
-                            loadingOnScreenRemove();
-                            $(".loading").css("visibility", "hidden");
-                            alertCustom("success", "Pixel Adicionado!");
-                            atualizarPixel();
-                        }
-                    });
-                });
+        $('.check').on('click', function () {
+            if ($(this).is(':checked')) {
+                $(this).val(1);
+            } else {
+                $(this).val(0);
             }
         });
+
+        if ($(':checkbox').is(':checked')) {
+            $(':checkbox').val(1);
+        } else {
+            $(':checkbox').val(0);
+        }
+
+        $(".btn-save").unbind('click');
+        $(".btn-save").on('click', function () {
+            var formData = new FormData(document.getElementById('form-register-pixel'));
+            formData.append('project_id', projectId);
+            formData.append('checkout', $("#checkout").val());
+            formData.append('purchase_card', $("#purchase_card").val());
+            formData.append('purchase_boleto', $("#purchase_boleto").val());
+            loadingOnScreen();
+            $.ajax({
+                method: "POST",
+                url: "/api/pixels",
+                headers: {
+                    'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                error: function (_error) {
+                    function error(_x) {
+                        return _error.apply(this, arguments);
+                    }
+
+                    error.toString = function () {
+                        return _error.toString();
+                    };
+
+                    return error;
+                }(function (data) {
+                    loadingOnScreenRemove();
+                    $("#modal_add_produto").hide();
+                    $(".loading").css("visibility", "hidden");
+                    if (data.status == '422') {
+                        for (error in data.responseJSON.errors) {
+                            alertCustom('error', String(data.responseJSON.errors[error]));
+                        }
+                    }
+                }), success: function success() {
+                    loadingOnScreenRemove();
+                    $(".loading").css("visibility", "hidden");
+                    alertCustom("success", "Pixel Adicionado!");
+                    atualizarPixel();
+                }
+            });
+        });
     });
+
     function atualizarPixel() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-pixel', '#table-pixel');
 
         if (link == null) {
-            link = '/pixels?' + 'project=' + projectId;
+            link = '/api/pixels?' + 'project=' + projectId;
         } else {
-            link = '/pixels' + link + '&project=' + projectId;
+            link = '/api/pixels' + link + '&project=' + projectId;
         }
 
         $.ajax({
@@ -164,12 +330,12 @@ $(function () {
                 $(".details-pixel").on('click', function () {
                     var pixel = $(this).attr('pixel');
                     $("#modal-title").html('Detalhes do pixel');
-                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
+                    loadOnModal('#modal-add-body');
                     var data = {pixelId: pixel};
                     $("#btn-modal").hide();
                     $.ajax({
                         method: "GET",
-                        url: "/pixels/" + pixel,
+                        url: "/api/pixels/" + pixel,
                         data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -177,7 +343,9 @@ $(function () {
                         error: function error() {
                             //
                         }, success: function success(response) {
-                            $("#modal-add-body").html(response);
+                            //$("#modal-add-body").html(response);
+                            loadingOnScreenRemove();
+                            renderDetailPixel(response);
                         }
                     });
                 });
@@ -188,11 +356,11 @@ $(function () {
                     $("#modal-add-body").html("");
                     var pixel = $(this).attr('pixel');
                     $("#modal-title").html("Editar Pixel");
-                    $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
+                    loadOnModal('#modal-add-body');
                     var data = {pixelId: pixel};
                     $.ajax({
                         method: "GET",
-                        url: "/pixels/" + pixel + "/edit",
+                        url: "/api/pixels/" + pixel + "/edit",
                         data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -200,10 +368,12 @@ $(function () {
                         error: function error() {
                             //
                         }, success: function success(response) {
+                            loadingOnScreenRemove();
                             $("#btn-modal").addClass('btn-update');
                             $("#btn-modal").text('Atualizar');
+                            //$("#modal-add-body").html(response)
+                            renderEditPixel(response);
                             $("#btn-modal").show();
-                            $("#modal-add-body").html(response);
                             $('.check').on('click', function () {
                                 if ($(this).is(':checked')) {
                                     $(this).val(1);
@@ -217,7 +387,7 @@ $(function () {
                                 loadingOnScreen();
                                 $.ajax({
                                     method: "PUT",
-                                    url: "/pixels/" + pixel,
+                                    url: "/api/pixels/" + pixel,
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
@@ -272,7 +442,7 @@ $(function () {
                         loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
-                            url: "/pixels/" + pixel,
+                            url: "/api/pixels/" + pixel,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
