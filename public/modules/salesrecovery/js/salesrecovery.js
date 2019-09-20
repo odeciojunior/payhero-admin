@@ -229,7 +229,7 @@ $(document).ready(function () {
                                 /**
                                  * Dados do Cliente e dados da entrega quando for cartao recusado ou boleto expirado
                                  */
-                                $("#client-name-details").html('Nome: ' + response.data.client.name.length);
+                                $("#client-name-details").html('Nome: ' + response.data.client.name);
                                 $("#client-telephone").html('Telefone: ' + response.data.client.telephone);
                                 $("#client-whatsapp").attr('href', response.data.client.whatsapp_link);
                                 $("#client-email").html('E-mail: ' + response.data.client.email);

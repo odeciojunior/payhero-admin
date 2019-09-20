@@ -123,7 +123,7 @@
 
      <script src="{{ asset('modules/global/js/notifications.js') }}"></script>
 
-@endif
+ @endif 
 
 </body>
 </html>
