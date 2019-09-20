@@ -1,4 +1,66 @@
 $(document).ready(function () {
+    atualizar();
+    let transfersCompanySelect = $("#transfers_company_select");
+    let extractCompanySelect = $("#extract_company_select");
+
+    function atualizar() {
+        $.ajax({
+            method: "GET",
+            url: "/api/companies",
+            error: function error(response) {
+                if (response.status === 422) {
+                    for (error in response.errors) {
+                        alertCustom('error', String(response.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', response.message);
+                }
+            },
+            success: function success(response) {
+                // console.log(response);
+
+                //transfers_company_select
+                fillSelectAndCheckWithModelFields(
+                    transfersCompanySelect,
+                    {company: response.data},
+                    null,
+                    {company: selectItemsFunction}
+                );
+                transfersCompanySelect.on("change", function () {
+                    $("#transfers_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]")
+                        .prop("selected", true);
+                    $('#custom-input-addon').val('');
+                    updateBalances();
+                    updateTransfersTable();
+                    updateWithdrawalsTable();
+                });
+
+                //extract_company_select
+                fillSelectAndCheckWithModelFields(
+                    extractCompanySelect,
+                    {company: response.data},
+                    null,
+                    {company: selectItemsFunction}
+                );
+                extractCompanySelect.on("change", function () {
+                    $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]")
+                        .prop("selected", true);
+                    $('#custom-input-addon').val('');
+                    updateTransfersTable();
+                    updateBalances();
+                    updateWithdrawalsTable();
+                });
+
+                //updateBalances();
+
+                console.log('foi');
+            }
+        });
+    }
+
+    function selectItemsFunction(item) {
+        return {value: item.id_code, text: item.fantasy_name};
+    }
 
     $('.withdrawal-value').mask('#.###,#0', {reverse: true});
 
@@ -16,25 +78,6 @@ $(document).ready(function () {
         }
     });
 
-    $("#transfers_company_select").on("change", function () {
-        $("#extract_company_select option[value=" + $('#transfers_company_select option:selected').val() + "]")
-            .prop("selected", true);
-        $('#custom-input-addon').val('');
-        updateBalances();
-        updateTransfersTable();
-        updateWithdrawalsTable();
-    });
-
-    $("#extract_company_select").on("change", function () {
-        $("#transfers_company_select option[value=" + $('#extract_company_select option:selected').val() + "]")
-            .prop("selected", true);
-        $('#custom-input-addon').val('');
-        updateTransfersTable();
-        updateBalances();
-        updateWithdrawalsTable();
-    });
-
-    updateBalances();
 
     function updateBalances() {
 
@@ -289,7 +332,7 @@ $(document).ready(function () {
      * Module Finances
      */
 
-    updateTransfersTable();
+    // updateTransfersTable();
 
     function updateTransfersTable(link = null) {
 
@@ -393,7 +436,7 @@ $(document).ready(function () {
         4: 'danger'
     };
 
-    updateWithdrawalsTable();
+    // updateWithdrawalsTable();
 
     function updateWithdrawalsTable(link = null) {
 

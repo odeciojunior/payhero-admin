@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
@@ -35,9 +36,10 @@ class CompaniesApiController extends Controller
     {
         /** @var Company $companyModel */
         $companyModel = new Company();
+        /** @var LengthAwarePaginator $companies */
         $companies    = $companyModel->with('user')
-                                     ->where('user_id', auth()->user()->id)
-                                     ->paginate(15);
+                                     ->where('user_id', auth()->id())
+                                     ->paginate();
 
         return CompanyResource::collection($companies);
     }
@@ -283,10 +285,14 @@ class CompaniesApiController extends Controller
         }
     }
 
+    /**
+     * @return AnonymousResourceCollection
+     */
     public function getCompanies()
     {
+        /** @var Company $companyModel */
         $companyModel = new Company();
-        $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+        $companies    = $companyModel->newQuery()->where('user_id', auth()->user()->id)->get();
 
         return CompaniesSelectResource::collection($companies);
     }

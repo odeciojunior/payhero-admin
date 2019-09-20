@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Companies\Providers;
+namespace Modules\Finances\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
 /**
  * Class RouteServiceProvider
- * @package Modules\Companies\Providers
+ * @package Modules\Finances\Providers
  */
 class RouteServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider
      * The module namespace to assume when generating URLs to actions.
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Companies\Http\Controllers';
+    protected $moduleNamespace = 'Modules\Finances\Http\Controllers';
 
     /**
      * Called before routes are registered.
@@ -39,18 +39,6 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the "web" routes for the application.
-     * These routes all receive session state, CSRF protection, etc.
-     * @return void
-     */
-    protected function mapWebRoutes()
-    {
-        Route::middleware('web')
-             ->namespace($this->moduleNamespace)
-             ->group(__DIR__ . '/../Routes/web.php');
-    }
-
-    /**
      * Define the "api" routes for the application.
      * These routes are typically stateless.
      * @return void
@@ -61,5 +49,17 @@ class RouteServiceProvider extends ServiceProvider
             //             ->middleware('api')
              ->namespace($this->moduleNamespace)
              ->group(__DIR__ . '/../Routes/api.php');
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     * These routes all receive session state, CSRF protection, etc.
+     * @return void
+     */
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->moduleNamespace)
+             ->group(__DIR__ . '/../Routes/web.php');
     }
 }

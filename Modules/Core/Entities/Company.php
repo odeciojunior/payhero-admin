@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\PaginatableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,7 +58,7 @@ use Modules\Core\Presenters\CompanyPresenter;
  */
 class Company extends Model
 {
-    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    use SoftDeletes, PaginatableTrait, PresentableTrait, FoxModelTrait;
     /**
      * @var string
      */
