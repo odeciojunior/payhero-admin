@@ -16,6 +16,7 @@ use Illuminate\Routing\Controller;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Services\ShopifyService;
+use Modules\Projects\Transformers\CompaniesSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyApiController extends Controller
@@ -58,7 +59,6 @@ class ShopifyApiController extends Controller
     public function store(Request $request)
     {
         try {
-
             $projectModel            = new Project();
             $userProjectModel        = new UserProject();
             $shopifyIntegrationModel = new ShopifyIntegration();
@@ -485,5 +485,10 @@ class ShopifyApiController extends Controller
             return response()->json(['message' => 'Problema ao sincronizar template do shopify, tente novamente mais tarde'], 400);
         }
     }
-
+    public function getCompanies()
+    {
+        $companyModel = new Company();
+        $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+        return CompaniesSelectResource::collection($companies);
+    }
 }

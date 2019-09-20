@@ -1,12 +1,5 @@
 <?php
 
-Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
-    Route::resource('/companies', 'CompaniesController')->names('companies');
-    Route::post('/companies/uploaddocuments', 'CompaniesController@uploadDocuments')->name('companies.uploaddocuments');
-    Route::post('/companies/getcompanyform', 'CompaniesController@getCreateForm')->name('companies.getcompanyform');
-    Route::get('/companies/user-companies', 'CompaniesApiController@getCompanies');
-});
-
 /*
 Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
 
@@ -56,7 +49,7 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies
         'uses' => 'CompaniesController@getCreateForm',
     ]);
 });*/
-
+/*
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'api', 'namespace' => 'Modules\Companies\Http\Controllers'], function() {
 
     Route::resource('/companies', 'CompaniesApiController')->names('api.companies');
@@ -85,4 +78,3 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'api', 'namespace' =>
         'uses' => 'CompaniesApiController@getBancos',
     ]);
     */
-});
