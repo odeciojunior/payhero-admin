@@ -9,8 +9,6 @@
         "Modules\\Plans\\Providers\\PlansServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }
