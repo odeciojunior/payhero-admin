@@ -169,7 +169,7 @@ class PostBackPagarmeController extends Controller
 
                             $transferModel->create([
                                                        'transaction' => $transaction->id,
-                                                       'user'        => $company->user_id,
+                                                       'user_id'     => $company->user_id,
                                                        'value'       => $transaction->value,
                                                        'type'        => 'out',
                                                    ]);
