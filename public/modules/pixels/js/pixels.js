@@ -93,9 +93,10 @@ $(function () {
 
     //edit
     function renderEditPixel(pixel){
+        console.log(pixel)
         let form = `<form id="form-update-pixel" method="post" action="/api/pixels">
                         <input type="hidden" value="${$("meta[name='csrf-token']").attr('content')}" name="_token">
-                        <input type="hidden" value="${pixel.id}" name="id" id='pixelId'>
+                        <input type="hidden" value="${pixel.id_code}" name="id" id='pixelId'>
                         <div class="row">
                             <div class="form-group col-xl-12 mt-4">
                                 <label for="name">Descrição</label>
@@ -346,6 +347,7 @@ $(function () {
                             //$("#modal-add-body").html(response);
                             loadingOnScreenRemove();
                             renderDetailPixel(response);
+                            $("#modal-title").html('Detalhes do pixel');
                         }
                     });
                 });
@@ -368,9 +370,11 @@ $(function () {
                         error: function error() {
                             //
                         }, success: function success(response) {
+                            console.log(response)
                             loadingOnScreenRemove();
                             $("#btn-modal").addClass('btn-update');
                             $("#btn-modal").text('Atualizar');
+                            $("#modal-title").html('Editar pixel');
                             //$("#modal-add-body").html(response)
                             renderEditPixel(response);
                             $("#btn-modal").show();

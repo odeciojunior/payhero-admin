@@ -171,6 +171,7 @@ class PixelsApiController extends Controller {
                 if (Gate::allows('edit', [$project])) {
 
                     if ($pixel) {
+                        $pixel->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
                         return response()->json($pixel);
                     } else {
                         return response()->json('Erro ao buscar pixel');
@@ -214,7 +215,8 @@ class PixelsApiController extends Controller {
             if (Gate::allows('edit', [$project])) {
 
                 if ($pixel) {
-                    return response()->json($pixel);
+                    $pixel->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
+                    return  response()->json($pixel);
                     //return view("pixels::edit", ['pixel' => $pixel]);
                 } else {
                     return response()->json('erro');

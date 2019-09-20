@@ -1,4 +1,4 @@
-<form id="form-update-pixel" method="post" action="/pixels">
+<form id="form-update-pixel" method="post" action="/api/pixels">
     @csrf
     <input type="hidden" value="{{Hashids::encode($pixel->id)}}" name="id" id='pixelId'>
     <div class="row">
