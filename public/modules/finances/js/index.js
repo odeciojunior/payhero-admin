@@ -51,7 +51,9 @@ $(document).ready(function () {
                     updateWithdrawalsTable();
                 });
 
-                //updateBalances();
+                updateBalances();
+                updateTransfersTable();
+                updateWithdrawalsTable();
 
                 console.log('foi');
             }
@@ -78,14 +80,13 @@ $(document).ready(function () {
         }
     });
 
-
     function updateBalances() {
 
         $(".price").append("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
 
         $.ajax({
-            url: "/finances/getbalances/",
+            url: "api/finances/getbalances/",
             type: "GET",
             data: {company: $("#transfers_company_select option:selected").val()},
             headers: {
@@ -147,7 +148,7 @@ $(document).ready(function () {
             alertCustom('error', 'Valor do saque inválido!');
         } else {
             $.ajax({
-                url: "/withdrawals/getaccountinformation/" + $("#transfers_company_select").val(),
+                url: "/withdrawals/getaccountinformation/" + transfersCompanySelect.val(),
                 type: "GET",
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
@@ -261,7 +262,7 @@ $(document).ready(function () {
     $("#btn-disponible-antecipation").on('click', function () {
         // loading("#balance-after-anticipation",'');
         $('#balance-after-anticipation').html("<span class='loaderSpan' >" + "</span>")
-        let company = $("#transfers_company_select").val();
+        let company = transfersCompanySelect.val();
         $("#tax-value").html('');
 
         $.ajax({
@@ -295,12 +296,10 @@ $(document).ready(function () {
     $("#btn-anticipation").unbind('click');
     $("#btn-anticipation").on('click', function () {
         loadingOnScreen();
-        let company = $("#transfers_company_select").val();
-
         $.ajax({
             method: 'POST',
             url: '/api/anticipations',
-            data: {company: company},
+            data: {company: $("#transfers_company_select option:selected").val()},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
             },
@@ -332,8 +331,6 @@ $(document).ready(function () {
      * Module Finances
      */
 
-    // updateTransfersTable();
-
     function updateTransfersTable(link = null) {
 
         loadOnTable('#table-transfers-body', '#transfersTable');
@@ -347,7 +344,7 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
-            data: {company: $("#extract_company_select").val()},
+            data: {company: $("#extract_company_select option:selected").val()},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -436,8 +433,6 @@ $(document).ready(function () {
         4: 'danger'
     };
 
-    // updateWithdrawalsTable();
-
     function updateWithdrawalsTable(link = null) {
 
         loadOnTable('table-withdrawals-body', 'transfersTable');
@@ -452,7 +447,7 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
-            data: {company: $("#extract_company_select").val()},
+            data: {company: $("#transfers_company_select option:selected").val()},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
