@@ -1,205 +1,237 @@
 $(document).ready(function () {
-    updateIntegrations();
-    $("#btn-add-integration").on("click", function () {
 
+    index();
+    function index(){
         $.ajax({
             method: "GET",
-            url: "/apps/hotzapp/create",
+            url: "/api/apps/hotzapp/",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error() {
-                $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(response) {
-                if (response.message === 'Nenhum projeto encontrado') {
-                    var route = '/projects/create';
-                    $('#modal-project').modal('show');
-                    $('#modal-project-title').text("Oooppsssss!");
-                    $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não possui projetos para realizar integração</strong></h3>' + '<h5 align="center">Deseja criar seu primeiro projeto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
-                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
+                $('#content').html("");
+                $('.select-pad').html("");
+                let projects = response.projects;
+                for (let i = 0; i < projects.length; i++) {
+                    $('.select-pad').append('<option value="' + projects[i].id + '">' + projects[i].name + '</option>');
+                }
+                if(Object.keys(response.integrations).length === 0){
+                    $("#no-integration-found").show();
                 } else {
-                    $(".modal-title").html('Adicionar nova Integração com HotZapp');
-                    $(".modal_integracao_body").html("");
-                    $("#bt_integration").addClass('btn-save');
-                    $("#bt_integration").text('Adicionar integração');
-                    $(".modal_integracao_body").html(response);
-                    $("#modal_add_integracao").modal('show');
-
-                    $('.check').on('click', function () {
-                        if ($(this).is(':checked')) {
-                            $(this).val(1);
-                        } else {
-                            $(this).val(0);
-                        }
-                    });
-
-                    if ($(':checkbox').is(':checked')) {
-                        $(':checkbox').val(1);
-                    } else {
-                        $(':checkbox').val(0);
+                    let integrations = response.integrations;
+                    for (let i = 0; i < integrations.length; i++) {
+                        renderIntegration(integrations[i]);
                     }
-
-                    $(".btn-save").unbind('click');
-                    $(".btn-save").on('click', function () {
-                        if ($('#link').val() == '') {
-                            alertCustom('error', 'Dados informados inválidos');
-                            return false;
-                        }
-                        var form_data = new FormData(document.getElementById('form_add_integration'));
-
-                        $.ajax({
-                            method: "POST",
-                            url: "/apps/hotzapp",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            processData: false,
-                            contentType: false,
-                            cache: false,
-                            data: form_data,
-                            error: function error(response) {
-                                alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
-                            },
-                            success: function success(response) {
-                                updateIntegrations();
-                                alertCustom('success', response.message);
-                            }
-                        });
-                    });
+                    $("#no-integration-found").hide();
                 }
             }
         });
+    }
+
+    //checkbox
+    $('.check').on('click', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
     });
-    function updateIntegrations() {
+
+    //reset the intergation modal
+    function clearForm(){
+        $(':text').val('')
+        $(':checkbox').prop('checked', true).val(1);
+        $('.select-pad').prop("selectedIndex", 0).change();
+    }
+
+    //draw the integration cards
+    function renderIntegration(data){
+        $('#content').append(`
+                            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                                <div class="card shadow card-edit" project=` + data.id + ` style='cursor:pointer;'>
+                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo + ` onerror="this.onerror=null;this.src='/modules/global/img/produto.png';" alt="` + data.project_name + `"/>
+                                    <div class="card-body">
+                                        <div class='row'>
+                                            <div class='col-md-10'>
+                                                <h4 class="card-title">` + data.project_name + `</h4>
+                                                <p class="card-text sm">Criado em ` + data.created_at + `</p>
+                                            </div>
+                                            <div class='col-md-2'>
+                                                <a role='button' class='delete-integration pointer float-right mt-35' project=` + data.id + `>
+                                                    <i class='material-icons gradient'>delete_outline</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+    }
+
+    //create
+    $('#btn-add-integration').on('click', function(){
+        $(".modal-title").html('Adicionar nova Integração com HotZapp');
+        $("#bt_integration").addClass('btn-save');
+        $("#bt_integration").removeClass('btn-update');
+        $("#bt_integration").text('Adicionar integração');
+        $("#modal_add_integracao").modal('show');
+        $("#form_update_integration").hide();
+        $("#form_add_integration").show();
+        clearForm();
+    });
+
+    //edit
+    $(document).on('click', '.card-edit', function () {
+        $(".modal-title").html('Editar nova Integração com HotZapp');
+        $("#bt_integration").addClass('btn-update');
+        $("#bt_integration").removeClass('btn-save');
+        $("#bt_integration").text('Atualizar');
+        $("#form_update_integration").show();
+        $("#form_add_integration").hide();
+        $("#modal_add_integracao").modal('show');
+
         $.ajax({
             method: "GET",
-            url: "/getintegrations/",
+            url: "/api/apps/hotzapp/" + $(this).attr('project'),
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error() {
-                loadingOnScreenRemove();
                 alertCustom('error', 'Ocorreu algum erro');
             },
             success: function success(response) {
-                loadingOnScreenRemove();
-                $("#project-integrated").html("");
-                $("#project-integrated").html(response);
+                console.log(response)
+                $("#select_projects_edit").val(response.data.project_id);
+                $('#integration_id').val(response.data.id);
+                $("#link_edit").val(response.data.link);
 
-                $(".card-edit").unbind('click');
-                $('.card-edit').on('click', function () {
-                    $(".modal_integracao_body").html("");
-                    var project = $(this).attr('project');
-                    $(".modal-title").html("Editar Integração com Hotzapp");
-                    $(".modal_integracao_body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-                    var data = {projectId: project};
-                    $.ajax({
-                        method: "GET",
-                        url: "/apps/hotzapp/" + project + "/edit",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function error() {
-                            //
-                        }, success: function success(response) {
-                            $("#bt_integration").addClass('btn-update');
-                            $("#bt_integration").text('Atualizar');
-                            $("#btn-modal").show();
-                            $(".modal_integracao_body").html(response);
-                            $("#modal_add_integracao").modal('show');
+                $("#boleto_generated_edit").val(response.data.boleto_generated);
+                $("#boleto_generated_edit").prop('checked', $("#boleto_generated_edit").val() == '1');
 
-                            $('.check').on('click', function () {
-                                if ($(this).is(':checked')) {
-                                    $(this).val(1);
-                                } else {
-                                    $(this).val(0);
-                                }
-                            });
+                $("#boleto_paid_edit").val(response.data.boleto_paid);
+                $("#boleto_paid_edit").prop('checked', $("#boleto_paid_edit").val() == '1');
 
-                            $(".btn-update").unbind('click');
-                            $(".btn-update").on('click', function () {
-                                if ($('#link').val() == '') {
-                                    alertCustom('error', 'Dados informados inválidos');
-                                    return false;
-                                }
-                                var integrationId = $('#integration_id').val();
-                                var form_data = new FormData(document.getElementById('form_update_integration'));
+                $("#credit_card_refused_edit").val(response.data.credit_card_refused);
+                $("#credit_card_refused_edit").prop('checked', $("#credit_card_refused_edit").val() == '1');
 
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/apps/hotzapp/" + integrationId,
-                                    headers: {
-                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    processData: false,
-                                    contentType: false,
-                                    cache: false,
-                                    data: form_data,
-                                    error: function (_error) {
-                                        function error(_x) {
-                                            return _error.apply(this, arguments);
-                                        }
+                $("#credit_card_paid_edit").val(response.data.credit_card_paid);
+                $("#credit_card_paid_edit").prop('checked', $("#credit_card_paid_edit").val() == '1');
 
-                                        error.toString = function () {
-                                            return _error.toString();
-                                        };
-
-                                        return error;
-                                    }(function (response) {
-                                        if (response.status == '422') {
-                                            for (error in response.responseJSON.errors) {
-                                                alertCustom('error', String(response.responseJSON.errors[error]));
-                                            }
-                                        }
-                                    }),
-                                    success: function success(response) {
-                                        updateIntegrations();
-                                        alertCustom("success", response.message);
-                                    }
-                                });
-                            });
-                        }
-                    });
-                });
-
-                $(".delete-integration").unbind('click');
-                $('.delete-integration').on('click', function (e) {
-                    e.preventDefault();
-                    var project = $(this).attr('project');
-                    var card = $(this).parent().parent().parent().parent().parent();
-                    card.find('.card-edit').unbind('click');
-                    $.ajax({
-                        method: "DELETE",
-                        url: "/apps/hotzapp/" + project,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function (_error2) {
-                            function error(_x2) {
-                                return _error2.apply(this, arguments);
-                            }
-
-                            error.toString = function () {
-                                return _error2.toString();
-                            };
-
-                            return error;
-                        }(function (response) {
-                            if (response.status == '422') {
-                                for (error in response.responseJSON.errors) {
-                                    alertCustom('error', String(response.responseJSON.errors[error]));
-                                }
-                            }
-                        }),
-                        success: function success(response) {
-                            updateIntegrations();
-                            alertCustom("success", response.message);
-                        }
-                    });
-                });
+                $("#abandoned_cart_edit").val(response.data.abandoned_cart);
+                $("#abandoned_cart_edit").prop('checked', $("#abandoned_cart_edit").val() == '1');
             }
         });
-    }
+    });
+
+    //store
+    $(document).on('click', '.btn-save', function () {
+        if ($('#link').val() == '') {
+            alertCustom('error', 'Dados informados inválidos');
+            return false;
+        }
+        var form_data = new FormData(document.getElementById('form_add_integration'));
+
+        $.ajax({
+            method: "POST",
+            url: "/api/apps/hotzapp",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function error(response) {
+                alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
+            },
+            success: function success(response) {
+                index();
+                alertCustom('success', response.message);
+            }
+        });
+    });
+
+    //update
+    $(document).on('click', '.btn-update', function () {
+        if ($('#link_edit').val() == '') {
+            alertCustom('error', 'Dados informados inválidos');
+            return false;
+        }
+        var integrationId = $('#integration_id').val();
+        var form_data = new FormData(document.getElementById('form_update_integration'));
+
+        $.ajax({
+            method: "POST",
+            url: "/api/apps/hotzapp/" + integrationId,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+            },
+            processData: false,
+            contentType: false,
+            cache: false,
+            data: form_data,
+            error: function (_error) {
+                function error(_x) {
+                    return _error.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function (response) {
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', response.message);
+                }
+            }),
+            success: function success(response) {
+                index();
+                alertCustom('success', response.message);
+            }
+        });
+    });
+
+    //destroy
+    $(document).on('click', '.delete-integration', function (e) {
+        e.stopPropagation();
+        var project = $(this).attr('project');
+        var card = $(this).parent().parent().parent().parent().parent();
+        card.find('.card-edit').unbind('click');
+        $.ajax({
+            method: "DELETE",
+            url: "/api/apps/hotzapp/" + project,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function (_error2) {
+                function error(_x2) {
+                    return _error2.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error2.toString();
+                };
+
+                return error;
+            }(function (response) {
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
+            }),
+            success: function success(response) {
+                index();
+                alertCustom("success", response.message);
+            }
+        });
+    });
 });

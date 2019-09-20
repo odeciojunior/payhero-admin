@@ -4,6 +4,7 @@ Route::group(['middleware' => ['web', 'auth'], 'namespace' => 'Modules\Companies
     Route::resource('/companies', 'CompaniesController')->names('companies');
     Route::post('/companies/uploaddocuments', 'CompaniesController@uploadDocuments')->name('companies.uploaddocuments');
     Route::post('/companies/getcompanyform', 'CompaniesController@getCreateForm')->name('companies.getcompanyform');
+    Route::get('/companies/user-companies', 'CompaniesApiController@getCompanies');
 });
 
 /*

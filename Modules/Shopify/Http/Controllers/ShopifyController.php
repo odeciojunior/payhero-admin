@@ -31,37 +31,38 @@ class ShopifyController extends Controller
      */
     public function index()
     {
-        try {
-
-            $companyModel            = new Company();
-            $projectModel            = new Project();
-            $shopifyIntegrationModel = new ShopifyIntegration();
-
-            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
-
-            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->id)->get();
-
-            $projects = [];
-
-            foreach ($shopifyIntegrations as $shopifyIntegration) {
-
-                $project = $projectModel->find($shopifyIntegration->project_id);
-
-                if (!empty($project)) {
-                    $projects[] = $project;
-                }
-            }
-
-            return view('shopify::index', [
-                'companies' => $companies,
-                'projects'  => $projects,
-            ]);
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar aplicativo integração shopify (ShopifyController - index)');
-            report($e);
-
-            return redirect()->back();
-        }
+        //        try {
+        //
+        //            $companyModel            = new Company();
+        //            $projectModel            = new Project();
+        //            $shopifyIntegrationModel = new ShopifyIntegration();
+        //
+        //            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
+        //
+        //            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->id)->get();
+        //
+        //            $projects = [];
+        //
+        //            foreach ($shopifyIntegrations as $shopifyIntegration) {
+        //
+        //                $project = $projectModel->find($shopifyIntegration->project_id);
+        //
+        //                if (!empty($project)) {
+        //                    $projects[] = $project;
+        //                }
+        //            }
+        //
+        //            return view('shopify::index', [
+        //                'companies' => $companies,
+        //                'projects'  => $projects,
+        //            ]);
+        //        } catch (Exception $e) {
+        //            Log::warning('Erro ao tentar aplicativo integração shopify (ShopifyController - index)');
+        //            report($e);
+        //
+        //            return redirect()->back();
+        //        }
+        return view('shopify::index');
     }
 
     /**
@@ -340,7 +341,8 @@ class ShopifyController extends Controller
                                 }
 
                                 $shopifyIntegration->update([
-                                                                'status' => $shopifyIntegration->present()->getStatus('approved'),
+                                                                'status' => $shopifyIntegration->present()
+                                                                                               ->getStatus('approved'),
                                                             ]);
                             }
 

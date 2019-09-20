@@ -19,6 +19,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Projects\Transformers\CompaniesSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -280,6 +281,15 @@ class CompaniesApiController extends Controller
 
             return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
         }
+    }
+
+    public function getCompanies()
+    {
+
+        $companyModel = new Company();
+        $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+
+        return CompaniesSelectResource::collection($companies);
     }
 }
 
