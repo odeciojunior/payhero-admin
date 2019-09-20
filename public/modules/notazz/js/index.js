@@ -50,7 +50,7 @@ $(document).ready(function () {
                         card.find('.card-edit').unbind('click');
                         $.ajax({
                             method: "DELETE",
-                            url: "/api/apps/convertax/" + project_id,
+                            url: "/api/apps/notazz/" + project_id,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -102,7 +102,7 @@ $(document).ready(function () {
 
                                 $.ajax({
                                     method: "GET",
-                                    url: "/api/apps/convertax/" + project_id,
+                                    url: "/api/apps/notazz/" + project_id,
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                     },
@@ -162,7 +162,7 @@ $(document).ready(function () {
 
                                             $.ajax({
                                                 method: "POST",
-                                                url: "/api/apps/convertax/" + integrationId,
+                                                url: "/api/apps/notazz/" + integrationId,
                                                 headers: {
                                                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                                 },
@@ -261,7 +261,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "POST",
-                            url: "/api/apps/convertax",
+                            url: "/api/apps/notazz",
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
