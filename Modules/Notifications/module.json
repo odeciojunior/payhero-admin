@@ -9,8 +9,5 @@
         "Modules\\Notifications\\Providers\\NotificationsServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
     "requires": []
 }
