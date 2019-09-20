@@ -93,8 +93,9 @@ $(document).ready(function () {
                 console.log(response.company);
                 let company = response.company;
                 let lists = {bank: response.banks};
+                let functions = {bank: selectItemsFunction};
                 fillAllFormInputsWithModel('company_update_form', company);
-                fillAllFormInputsWithModel('company_bank_update_form', company, lists);
+                fillAllFormInputsWithModel('company_bank_update_form', company, lists, functions);
                 //CompanyId
                 $("#company_id").attr('value', company.id_code);
                 //Status Documentação
@@ -203,6 +204,9 @@ $(document).ready(function () {
         }
 
         return badge;
+    }
+    function selectItemsFunction(item) {
+        return {value: item.code, text: (item.code + ' - ' + item.name)};
     }
 });
 Dropzone.options.dropzoneDocuments = {

@@ -1,16 +1,14 @@
 {
-    "name": "Finances",
-    "alias": "finances",
+    "name"       : "Finances",
+    "alias"      : "finances",
     "description": "",
-    "keywords": [],
-    "active": 1,
-    "order": 0,
-    "providers": [
+    "keywords"   : [],
+    "active"     : 1,
+    "order"      : 0,
+    "providers"  : [
         "Modules\\Finances\\Providers\\FinancesServiceProvider"
     ],
-    "aliases": {},
-    "files": [
-        "start.php"
-    ],
-    "requires": []
+    "aliases"    : {},
+    "files"      : [],
+    "requires"   : []
 }

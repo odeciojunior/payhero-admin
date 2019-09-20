@@ -288,7 +288,7 @@ function extractIdFromPathName() {
     }
 }
 
-function fillAllFormInputsWithModel(formId, model, lists = null) {
+function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {
     let formData = $("#" + formId + " input, #" + formId + " select, #" + formId + " textarea");
     if (formData === undefined || formData === null) {
         return false;
@@ -305,7 +305,8 @@ function fillAllFormInputsWithModel(formId, model, lists = null) {
                     fillSelectAndCheckWithModelFields(
                         element,
                         lists,
-                        model);
+                        model,
+                        functions);
                 }
 
             } else if (element.is('textarea')) {
@@ -345,15 +346,21 @@ function fillInputWithModelField(input, model) {
     return true;
 }
 
-function fillSelectAndCheckWithModelFields(select, items, model, customItemsFunction = null) {
+function fillSelectAndCheckWithModelFields(select, items, modelSelected = null, functions = null) {
     let field = select.attr('name');
-    if (field === undefined || model[field] === undefined || items === undefined || items[field] === undefined || items.length === 0) {
+    if (field === undefined ||
+        (modelSelected !== null && modelSelected !== undefined && modelSelected[field] === undefined) ||
+        items === undefined || items[field] === undefined || items.length === 0) {
         return false;
     }
-    if (customItemsFunction === undefined || customItemsFunction === null) {
-        customItemsFunction = defaultSelectItemsFunction;
+    let customItemsFunction = defaultSelectItemsFunction;
+    if (customItemsFunction !== undefined && customItemsFunction !== null && functions[field] !== undefined && functions[field] !== null) {
+        customItemsFunction = functions[field];
     }
-    let value = model[field];
+    let value = "";
+    if (modelSelected !== null && modelSelected !== undefined) {
+        value = modelSelected[field];
+    }
     items[field].forEach(
         function (item) {
             let optionItem = customItemsFunction(item);
@@ -370,6 +377,6 @@ function fillSelectAndCheckWithModelFields(select, items, model, customItemsFunc
 }
 
 function defaultSelectItemsFunction(item) {
-    return {value: item.code, text: (item.code + ' - ' + item.name)};
+    return {value: item.id_code, text: item.name};
 }
 

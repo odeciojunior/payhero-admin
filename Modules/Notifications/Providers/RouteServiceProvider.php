@@ -1,21 +1,17 @@
 <?php
 
-namespace Modules\Companies\Providers;
+namespace Modules\Notifications\Providers;
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-/**
- * Class RouteServiceProvider
- * @package Modules\Companies\Providers
- */
 class RouteServiceProvider extends ServiceProvider
 {
     /**
      * The module namespace to assume when generating URLs to actions.
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Companies\Http\Controllers';
+    protected $moduleNamespace = 'Modules\Notifications\Http\Controllers';
 
     /**
      * Called before routes are registered.
