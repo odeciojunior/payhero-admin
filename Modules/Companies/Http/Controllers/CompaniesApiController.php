@@ -285,7 +285,6 @@ class CompaniesApiController extends Controller
 
     public function getCompanies()
     {
-
         $companyModel = new Company();
         $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
 

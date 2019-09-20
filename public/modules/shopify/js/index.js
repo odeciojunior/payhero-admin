@@ -21,7 +21,7 @@ $(document).ready(function () {
                         $('#content').append(`
                             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3">
                                 <div class="card shadow card-edit" project=` + data.id +` style='cursor:pointer;'>
-                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo +` onerror="this.onerror=null;this.src='{!! asset('modules/global/img/produto.png') !!}';" alt="{!! asset('modules/global/img/produto.png') !!}"/>
+                                    <img class="card-img-top img-fluid w-full" src=` + data.project_photo +` onerror="this.onerror=null;this.src='https://app.cloudfox.net/modules/global/img/produto.png'" />
                                     <div class="card-body">
                                         <div class='row'>
                                             <div class='col-md-12'>
@@ -74,7 +74,7 @@ $(document).ready(function () {
     function create(){
         $.ajax({
             method: "GET",
-            url: "/companies/user-companies",
+            url: "/api/companies/usercompanies",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -91,7 +91,7 @@ $(document).ready(function () {
                     $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
                     $(response.data).each(function(index, data){
-                        $("#select_companies").append("<option value='" + data.id + "'>" + data.fantasy_name + "</option>");
+                        $("#select_companies").append("<option value='" + data.id + "'>" + data.name + "</option>");
                     });
                     $(".modal-title").html('Adicionar nova integração com Shopify');
                     $("#bt_integration").addClass('btn-save');
@@ -134,6 +134,7 @@ $(document).ready(function () {
                             },
                             success: function success(response) {
                                 loadingOnScreenRemove();
+                                index();
                                 alertCustom('success', response.message);
                             }
                         });

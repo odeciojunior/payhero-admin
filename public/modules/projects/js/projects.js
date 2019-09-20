@@ -307,7 +307,7 @@ $(function () {
                         if (integrationStatus == 2) {
                             $.ajax({
                                 method: "POST",
-                                url: "/apps/shopify/undointegration",
+                                url: "/api/apps/shopify/undointegration",
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
@@ -329,7 +329,7 @@ $(function () {
                         } else {
                             $.ajax({
                                 method: "POST",
-                                url: "/apps/shopify/reintegration",
+                                url: "/api/apps/shopify/reintegration",
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
@@ -369,7 +369,7 @@ $(function () {
 
                         $.ajax({
                             method: 'POST',
-                            url: '/apps/shopify/synchronize/products',
+                            url: '/api/apps/shopify/synchronize/products',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -406,7 +406,7 @@ $(function () {
 
                         $.ajax({
                             method: 'POST',
-                            url: '/apps/shopify/synchronize/templates',
+                            url: '/api/apps/shopify/synchronize/templates',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
