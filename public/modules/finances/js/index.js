@@ -330,7 +330,6 @@ $(document).ready(function () {
     /**
      * Module Finances
      */
-
     function updateTransfersTable(link = null) {
 
         loadOnTable('#table-transfers-body', '#transfersTable');
