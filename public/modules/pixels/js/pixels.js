@@ -15,189 +15,52 @@ function _defineProperty(obj, key, value) {
 $(function () {
     //create
     function renderCreatePixel(){
-        let form = `<form id='form-register-pixel' method="post" action="/api/pixels">
-                        <input type="hidden" value="${$("meta[name='csrf-token']").attr('content')}" name="_token">
-                        <div class="container-fluid">
-                            <div class="panel" data-plugin="matchHeight">
-                                <div style="width:100%">
-                                    <div class="row">
-                                        <div class="form-group col-12 mt-4">
-                                            <label for="name">Descrição</label>
-                                            <input name="name" type="text" class="form-control" id="name" placeholder="Descrição" maxlength='30'>
-                                        </div>
-                                        <div class="form-group col-6">
-                                            <label for="platform">Plataforma</label>
-                                            <select name="platform" type="text" class="form-control" id="platform">
-                                                <option value="facebook">Facebook</option>
-                                                <option value="google">Google</option>
-                                                <option value="null" disabled='disabled'>Taboola (em breve)</option>
-                                                <option value="null" disabled='disabled'>Outbrain (em breve)</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-6">
-                                            <label for="status">Status</label>
-                                            <select name="status" type="text" class="form-control" id="status_pixel">
-                                                <option value="1">Ativo</option>
-                                                <option value="0">Desativado</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-xl-12">
-                                            <label for="code">Código</label>
-                                            <input name="code" type="text" class="form-control" id="code" placeholder="Código" maxlength='30'>
-                                        </div>
-                                    </div>
-                                    <div class='mb-1'>
-                                        <label>Rodar Pixel:</label>
-                                    </div>
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-3">
-                                            <div class="switch-holder">
-                                                <label for="checkout" class='mb-10'>Checkout:</label>
-                                                <br>
-                                                <label class="switch">
-                                                    <input type="checkbox" value="" name='checkout' id='checkout' class='check' checked>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="switch-holder">
-                                                <label for="cartao">Purchase (cartão):</label>
-                                                <br>
-                                                <label class='switch'>
-                                                    <input type="checkbox" value="" name='purchase_card' id='purchase_card' class='check' checked>
-                                                    <span class='slider round'></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="switch-holder">
-                                                <label for="boleto">Purchase (boleto):</label>
-                                                <br>
-                                                <label class='switch'>
-                                                    <input type="checkbox" value="" name='purchase_boleto' id='purchase_boleto' class='check' checked>
-                                                    <span class='slider round'></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>`;
-
-        $("#modal-add-body").html(form);
+        $("#modal-add-body").html($('#form-register-pixel').clone());
     }
 
     //edit
     function renderEditPixel(pixel){
-        console.log(pixel)
-        let form = `<form id="form-update-pixel" method="post" action="/api/pixels">
-                        <input type="hidden" value="${$("meta[name='csrf-token']").attr('content')}" name="_token">
-                        <input type="hidden" value="${pixel.id_code}" name="id" id='pixelId'>
-                        <div class="row">
-                            <div class="form-group col-xl-12 mt-4">
-                                <label for="name">Descrição</label>
-                                <input value="${pixel.name != '' ? pixel.name : ''}" name="name" type="text" class="input-pad" id="name_pixel" placeholder="Descrição" maxlength='30'>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="platform">Plataforma</label>
-                                <select name="platform" type="text" class="form-control select-pad" id="platform">
-                                    <option value="facebook" ${pixel.platform == 'facebook' ? 'selected' : ''}>Facebook</option>
-                                    <option value="google" ${pixel.platform == 'google' ? 'selected' : ''}>Google</option>
-                                    <option value="null" disabled='disabled'>Taboola (em breve)</option>
-                                    <option value="null" disabled='disabled'>Outbrain (em breve)</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="status">Status</label>
-                                <select name="status" type="text" class="form-control select-pad" id="status">
-                                    <option value="1" ${pixel.status == '1' ? 'selected' : ''}>Ativo</option>
-                                    <option value="0" ${pixel.status == '0' ? 'selected' : ''}>Desativado</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-xl-12">
-                                <label for="code">Código</label>
-                                <input value="${pixel.code != '' ? pixel.code : ''}" name="code" type="text" class="input-pad" id="code" placeholder="Código" maxlength='30'>
-                            </div>
-                        </div>
-                        <div class='mb-1'>
-                            <label>Rodar Pixel:</label>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="col-md-4">
-                                <div class="switch-holder">
-                                    <label for="Checkout">Checkout:</label>
-                                    <br>
-                                    <label class='switch'>
-                                        <input type="checkbox" ${pixel.checkout == '1' ? 'value="1" checked=""' : 'value="0"'} name='checkout' id='checkout' class='check'>
-                                        <span class='slider round'></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="switch-holder">
-                                    <label for="cartao">Purchase (cartão):</label>
-                                    <br>
-                                    <label class='switch'>
-                                        <input type="checkbox" ${pixel.purchase_card == '1' ? 'value="1" checked=""' : 'value="0"'} name='purchase_card' id='purchase_card' class='check'>
-                                        <span class='slider round'></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="switch-holder">
-                                    <label for="boleto">Purchase (boleto):</label>
-                                    <br>
-                                    <label class='switch'>
-                                        <input type="checkbox" ${pixel.purchase_boleto == '1' ? 'value="1" checked=""' : 'value="0"'} name='purchase_boleto' id='purchase_boleto' class='check'>
-                                        <span class='slider round'></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </form>`;
-
-        $("#modal-add-body").html(form);
+        $("#modal-add-body").html($('#form-update-pixel').clone());
+        $('.edit-pixel-id').val(pixel.id_code);
+        $('.edit-description').val(pixel.name);
+        if(pixel.platform == 'facebook'){
+            $('.edit-platform').prop("selectedIndex", 0).change();
+        }
+        if(pixel.platform == 'google') {
+            $('.edit-platform').prop("selectedIndex", 1).change();
+        }
+        if (pixel.status == '1') { //Ativo
+            $('.edit-status').prop("selectedIndex", 0).change();
+        } else {//Desativado
+            $('.edit-status').prop("selectedIndex", 1).change();
+        }
+        $('.edit-code').val(pixel.code);
+        if (pixel.checkout == '1') {
+            $('.edit-checkout').val(1).prop('checked', true);
+        } else {
+            $('.edit-checkout').val(0).prop('checked', false);
+        }
+        if (pixel.purchase_card == '1') {
+            $('.edit-purchase-card').val(1).prop('checked', true);
+        } else {
+            $('.edit-purchase-card').val(0).prop('checked', false);
+        }
+        if (pixel.purchase_boleto == '1') {
+            $('.edit-purchase-boleto').val(1).prop('checked', true);
+        } else {
+            $('.edit-purchase-boleto').val(0).prop('checked', false);
+        }
     }
 
     //show
     function renderDetailPixel(pixel){
-        let form = `<table class='table table-striped' style='width: 100%'>
-                        <tbody>
-                            <tr>
-                                <td class="table-title">Descrição</td>
-                                <td style='width: 20px'></td>
-                                <td class='text-left'>${pixel.name}</td>
-                                <br>
-                            </tr>
-                            <tr>
-                                <td class="table-title">Code</td>
-                                <td style='width: 20px'></td>
-                                <td class='text-left'>${pixel.code}</td>
-                            </tr>
-                            <tr>
-                                <td class="table-title">Plataforma</td>
-                                <td style='width: 20px'></td>
-                                <td class='text-left'>${pixel.platform}</td>
-                            </tr>
-                            <tr>
-                                <td class="table-title">Status</td>
-                                <td style='width: 20px'></td>
-                                <td class='text-left'>
-                                ${  
-                                    pixel.status == 1
-                                    ? '<span class="badge badge-success text-left">Ativo</span>'
-                                    : '<span class="badge badge-danger">Desativado</span>'
-                                }
-                                 </td>
-                            </tr>
-                        </tbody>
-                    </table>`;
-
-        $("#modal-add-body").html(form);
+        $("#modal-add-body").html($('#pixel-details-table').clone());
+        $('.detail-description').html(pixel.name);
+        $('.detail-code').html(pixel.code);
+        $('.detail-platform').html(pixel.platform);
+        $('.detail-status').html(pixel.status == 1
+            ? '<span class="badge badge-success text-left">Ativo</span>'
+            : '<span class="badge badge-danger">Desativado</span>');
     }
 
     var projectId = $("#project-id").val();
@@ -235,11 +98,16 @@ $(function () {
 
         $(".btn-save").unbind('click');
         $(".btn-save").on('click', function () {
-            var formData = new FormData(document.getElementById('form-register-pixel'));
+            var formData = new FormData(document.querySelector('#modal-add-body  #form-register-pixel'));
             formData.append('project_id', projectId);
-            formData.append('checkout', $("#checkout").val());
-            formData.append('purchase_card', $("#purchase_card").val());
-            formData.append('purchase_boleto', $("#purchase_boleto").val());
+            formData.append('checkout', $("#modal-add-body .create-checkout").val());
+            formData.append('purchase_card', $("#modal-add-body .create-purchase-card").val());
+            formData.append('purchase_boleto', $("#modal-add-body .create-purchase-boleto").val());
+            let form=[];
+            for (var pair of formData.entries()) {
+                form[pair[0]] = pair[1];
+            }
+            console.log(form)
             loadingOnScreen();
             $.ajax({
                 method: "POST",
@@ -348,6 +216,7 @@ $(function () {
                             loadingOnScreenRemove();
                             renderDetailPixel(response);
                             $("#modal-title").html('Detalhes do pixel');
+                            $("#btn-modal").hide();
                         }
                     });
                 });
@@ -356,6 +225,7 @@ $(function () {
                 $(".edit-pixel").unbind('click');
                 $(".edit-pixel").on('click', function () {
                     $("#modal-add-body").html("");
+                    $("#btn-modal").hide();
                     var pixel = $(this).attr('pixel');
                     $("#modal-title").html("Editar Pixel");
                     loadOnModal('#modal-add-body');
@@ -370,7 +240,6 @@ $(function () {
                         error: function error() {
                             //
                         }, success: function success(response) {
-                            console.log(response)
                             loadingOnScreenRemove();
                             $("#btn-modal").addClass('btn-update');
                             $("#btn-modal").text('Atualizar');
@@ -395,15 +264,15 @@ $(function () {
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
-                                    data: _defineProperty({
-                                        name: $("#name_pixel").val(),
-                                        code: $("#code").val(),
-                                        platform: $("#platform").val(),
-                                        status: $("#status").val(),
-                                        checkout: $("#checkout").val(),
-                                        purchase_card: $("#purchase_card").val(),
-                                        purchase_boleto: $("#purchase_boleto").val()
-                                    }, 'purchase_card', $("#purchase_card").val()),
+                                    data: {
+                                        name: $("#modal-add-body .edit-description").val(),
+                                        code: $("#modal-add-body .edit-code").val(),
+                                        platform: $("#modal-add-body .edit-platform").val(),
+                                        status: $("#modal-add-body .edit-status").val(),
+                                        checkout: $("#modal-add-body .edit-checkout").val(),
+                                        purchase_card: $("#modal-add-body .edit-purchase-card").val(),
+                                        purchase_boleto: $("#modal-add-body .edit-purchase-boleto").val()
+                                    },
                                     error: function (_error2) {
                                         function error(_x3) {
                                             return _error2.apply(this, arguments);

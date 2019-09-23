@@ -1,8 +1,10 @@
 <div class='row no-gutters mb-10'>
     <div class="top-holder text-right mb-5" style="width: 100%;">
-        <div id="add-pixel" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">
-            <span class="link-button-dependent red"> Adicionar Pixel </span>
-            <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+        <div class="d-flex align-items-center justify-content-end">
+            <div id="add-pixel" class="d-flex align-items-center justify-content-end pointer" data-toggle="modal" data-target="#modal-content">
+                <span class="link-button-dependent red"> Adicionar Pixel </span>
+                <a class="ml-10 rounded-add pointer"><i class="icon wb-plus" aria-hidden="true"></i></a>
+            </div>
         </div>
     </div>
 </div>
@@ -29,4 +31,8 @@
 <ul id="pagination-pixels" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
     {{-- js carrega... --}}
 </ul>
-
+<div class="d-none">
+    @include('pixels::details')
+    @include('pixels::create')
+    @include('pixels::edit')
+</div>
