@@ -16,5 +16,5 @@ Route::group(['middleware' => ['web', 'auth']], function() {
     Route::Resource('apps/notazz', 'NotazzController')
          ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
 
-    Route::get('/apps/getnotazzintegrations', 'NotazzController@getIntegrations');
+    //Route::get('/apps/getnotazzintegrations', 'NotazzController@getIntegrations');
 });

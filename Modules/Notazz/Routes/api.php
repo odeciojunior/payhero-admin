@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/notazz', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['web', 'auth']], function() {
+
+    Route::apiResource('apps/notazz', 'NotazzApiController')
+         ->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
+
+    //Route::get('/apps/getnotazzintegrations', 'NotazzController@getIntegrations');
 });
