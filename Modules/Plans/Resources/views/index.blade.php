@@ -43,7 +43,7 @@
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
-            <div id="modal-add-body" class="modal-body" style='min-height: 100px'>
+            <div id="modal-add-plan-body" class="modal-body" style='min-height: 100px'>
                 @include('plans::create')
                 @include('plans::edit')
             </div>
@@ -55,6 +55,28 @@
                     <i class="material-icons btn-fix"> save </i> Salvar
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal detalhes do plano -->
+<div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_details_plan" role="dialog" tabindex="-1">
+    <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
+        <div class="modal-content p-10" id="conteudo_modal_add">
+            <div class="modal-header simple-border-bottom mb-10">
+                <h4 class="modal-title" id="modal-title-details"></h4>
+                <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons md-16">close</i>
+                </a>
+            </div>
+            <div id="modal-details-body" class="modal-body" style='min-height: 100px'>
+                @include('plans::details')
+            </div>
+{{--            <div class="modal-footer">--}}
+{{--                <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">--}}
+{{--                    Fechar--}}
+{{--                </a>--}}
+{{--            </div>--}}
         </div>
     </div>
 </div>

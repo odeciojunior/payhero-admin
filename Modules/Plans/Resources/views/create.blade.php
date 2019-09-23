@@ -22,7 +22,7 @@
                 </div>
                 <hr class='display-lg-none display-xlg-none'>
                 <div id="products">
-                    <div id="products_div_1" class="row">
+                    <div id="products_div_1" class="row products_div_1">
                         <div class='col-sm-8 col-md-7 col-lg-7'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>

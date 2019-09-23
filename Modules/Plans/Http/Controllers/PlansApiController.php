@@ -14,6 +14,7 @@ use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
+use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
@@ -181,14 +182,14 @@ class PlansApiController extends Controller
                                                         'message' => 'error',
                                                     ], 200);
                         } else {
-                            $view = view('plans::details', ['plan' => $plan]);
-
-                            return response()->json([
-                                                        'message' => 'success',
-                                                        'data'    => [
-                                                            'view' => $view->render(),
-                                                        ],
-                                                    ], 200);
+                            //                            $view = view('plans::details', ['plan' => $plan]);
+                            return new PlansDetailsResource($plan);
+                            //                            return response()->json([
+                            //                                                        'message' => 'success',
+                            //                                                        'data'    => [
+                            //                                                            'view' => $view->render(),
+                            //                                                        ],
+                            //                                                    ], 200);
                         }
                     } else {
                         return response()->json([
@@ -224,6 +225,7 @@ class PlansApiController extends Controller
     public function update(PlanUpdateRequest $request, $id)
     {
         try {
+            dd('asdsad');
             $planModel    = new Plan();
             $productPlan  = new ProductPlan();
             $projectModel = new Project();
