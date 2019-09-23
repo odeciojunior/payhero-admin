@@ -1,4 +1,4 @@
-<form id='form-register-pixel' method="post" action="/api/pixels">
+<form id='form-register-pixel'>
     @csrf
     <div class="container-fluid">
         <div class="panel" data-plugin="matchHeight">

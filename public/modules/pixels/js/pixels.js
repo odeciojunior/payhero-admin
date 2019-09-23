@@ -1,155 +1,246 @@
-var statusPixel = {
+let statusPixel = {
     1: "success",
     0: "danger",
 };
 
-function _defineProperty(obj, key, value) {
-    if (key in obj) {
-        Object.defineProperty(obj, key, {value: value, enumerable: true, configurable: true, writable: true});
-    } else {
-        obj[key] = value;
-    }
-    return obj;
-}
-
 $(function () {
-    //create
-    function renderCreatePixel(){
-        $("#modal-add-body").html($('#form-register-pixel').clone());
-    }
+    let projectId = $("#project-id").val();
 
-    //edit
-    function renderEditPixel(pixel){
-        $("#modal-add-body").html($('#form-update-pixel').clone());
-        $('.edit-pixel-id').val(pixel.id_code);
-        $('.edit-description').val(pixel.name);
-        if(pixel.platform == 'facebook'){
-            $('.edit-platform').prop("selectedIndex", 0).change();
-        }
-        if(pixel.platform == 'google') {
-            $('.edit-platform').prop("selectedIndex", 1).change();
-        }
-        if (pixel.status == '1') { //Ativo
-            $('.edit-status').prop("selectedIndex", 0).change();
-        } else {//Desativado
-            $('.edit-status').prop("selectedIndex", 1).change();
-        }
-        $('.edit-code').val(pixel.code);
-        if (pixel.checkout == '1') {
-            $('.edit-checkout').val(1).prop('checked', true);
-        } else {
-            $('.edit-checkout').val(0).prop('checked', false);
-        }
-        if (pixel.purchase_card == '1') {
-            $('.edit-purchase-card').val(1).prop('checked', true);
-        } else {
-            $('.edit-purchase-card').val(0).prop('checked', false);
-        }
-        if (pixel.purchase_boleto == '1') {
-            $('.edit-purchase-boleto').val(1).prop('checked', true);
-        } else {
-            $('.edit-purchase-boleto').val(0).prop('checked', false);
-        }
-    }
-
-    //show
-    function renderDetailPixel(pixel){
-        $("#modal-add-body").html($('#pixel-details-table').clone());
-        $('.detail-description').html(pixel.name);
-        $('.detail-code').html(pixel.code);
-        $('.detail-platform').html(pixel.platform);
-        $('.detail-status').html(pixel.status == 1
-            ? '<span class="badge badge-success text-left">Ativo</span>'
-            : '<span class="badge badge-danger">Desativado</span>');
-    }
-
-    var projectId = $("#project-id").val();
-
+    //comportamentos da tela
     $('#tab_pixels').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarPixel();
     });
-    atualizarPixel();
-    //criar novo pixel
-    $("#add-pixel").on('click', function () {
-        loadOnModal('#modal-add-body');
-        $("#modal_add_size").addClass('modal_simples');
-        $("#modal-title").html('Novo pixel');
-        $("#btn-modal").addClass('btn-save');
-        $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
-        $("#btn-modal").show();
-        //$('#modal-add-body').html(data);
-        renderCreatePixel();
-        loadingOnScreenRemove();
 
-        $('.check').on('click', function () {
-            if ($(this).is(':checked')) {
-                $(this).val(1);
-            } else {
-                $(this).val(0);
+    $('.check').on('click', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(1);
+        } else {
+            $(this).val(0);
+        }
+    });
+
+    if ($(':checkbox').is(':checked')) {
+        $(':checkbox').val(1);
+    } else {
+        $(':checkbox').val(0);
+    }
+
+    //carrega os itens na tabela
+    atualizarPixel();
+
+    // carregar modal de detalhes
+    $(document).on('click', '.details-pixel', function () {
+        let pixel = $(this).attr('pixel');
+        let data = {pixelId: pixel};
+        $.ajax({
+            method: "GET",
+            url: "/api/pixels/" + pixel,
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error() {
+                //
+            }, success: function success(response) {
+                renderDetailPixel(response);
             }
         });
+    });
 
-        if ($(':checkbox').is(':checked')) {
-            $(':checkbox').val(1);
-        } else {
-            $(':checkbox').val(0);
-        }
+    function renderDetailPixel(pixel) {
+        $('#modal-detail-pixel .detail-description').html(pixel.name);
+        $('#modal-detail-pixel .detail-code').html(pixel.code);
+        $('#modal-detail-pixel .detail-platform').html(pixel.platform);
+        $('#modal-detail-pixel .detail-status').html(pixel.status == 1
+            ? '<span class="badge badge-success text-left">Ativo</span>'
+            : '<span class="badge badge-danger">Desativado</span>');
+        $('#modal-detail-pixel').modal('show');
+    }
 
-        $(".btn-save").unbind('click');
-        $(".btn-save").on('click', function () {
-            var formData = new FormData(document.querySelector('#modal-add-body  #form-register-pixel'));
-            formData.append('project_id', projectId);
-            formData.append('checkout', $("#modal-add-body .create-checkout").val());
-            formData.append('purchase_card', $("#modal-add-body .create-purchase-card").val());
-            formData.append('purchase_boleto', $("#modal-add-body .create-purchase-boleto").val());
-            let form=[];
-            for (var pair of formData.entries()) {
-                form[pair[0]] = pair[1];
+    // carregar modal de edicao
+    $(document).on('click', '.edit-pixel', function () {
+        let pixel = $(this).attr('pixel');
+        let data = {pixelId: pixel};
+        $.ajax({
+            method: "GET",
+            url: "/api/pixels/" + pixel + "/edit",
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error() {
+                //
+            }, success: function success(response) {
+                renderEditPixel(response);
+                $('.check').on('click', function () {
+                    if ($(this).is(':checked')) {
+                        $(this).val(1);
+                    } else {
+                        $(this).val(0);
+                    }
+                });
             }
-            console.log(form)
-            loadingOnScreen();
-            $.ajax({
-                method: "POST",
-                url: "/api/pixels",
-                headers: {
-                    'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
-                },
-                data: formData,
-                processData: false,
-                contentType: false,
-                cache: false,
-                error: function (_error) {
-                    function error(_x) {
-                        return _error.apply(this, arguments);
-                    }
+        });
+    });
 
-                    error.toString = function () {
-                        return _error.toString();
-                    };
+    function renderEditPixel(pixel) {
+        $('#modal-edit-pixel .edit-pixel-id').val(pixel.id_code);
+        $('#modal-edit-pixel .edit-description').val(pixel.name);
+        if (pixel.platform == 'facebook') {
+            $('#modal-edit-pixel .edit-platform').prop("selectedIndex", 0).change();
+        }
+        if (pixel.platform == 'google') {
+            $('#modal-edit-pixel .edit-platform').prop("selectedIndex", 1).change();
+        }
+        if (pixel.status == '1') { //Ativo
+            $('#modal-edit-pixel .edit-status').prop("selectedIndex", 0).change();
+        } else {//Desativado
+            $('#modal-edit-pixel .edit-status').prop("selectedIndex", 1).change();
+        }
+        $('#modal-edit-pixel .edit-code').val(pixel.code);
+        if (pixel.checkout == '1') {
+            $('#modal-edit-pixel .edit-checkout').val(1).prop('checked', true);
+        } else {
+            $('#modal-edit-pixel .edit-checkout').val(0).prop('checked', false);
+        }
+        if (pixel.purchase_card == '1') {
+            $('#modal-edit-pixel .edit-purchase-card').val(1).prop('checked', true);
+        } else {
+            $('#modal-edit-pixel .edit-purchase-card').val(0).prop('checked', false);
+        }
+        if (pixel.purchase_boleto == '1') {
+            $('#modal-edit-pixel .edit-purchase-boleto').val(1).prop('checked', true);
+        } else {
+            $('#modal-edit-pixel .edit-purchase-boleto').val(0).prop('checked', false);
+        }
+        $('#modal-edit-pixel').modal('show');
+    }
 
-                    return error;
-                }(function (data) {
-                    loadingOnScreenRemove();
-                    $("#modal_add_produto").hide();
-                    $(".loading").css("visibility", "hidden");
-                    if (data.status == '422') {
-                        for (error in data.responseJSON.errors) {
-                            alertCustom('error', String(data.responseJSON.errors[error]));
-                        }
-                    }
-                }), success: function success() {
-                    loadingOnScreenRemove();
-                    $(".loading").css("visibility", "hidden");
-                    alertCustom("success", "Pixel Adicionado!");
-                    atualizarPixel();
+    //carregar modal delecao
+    $(document).on('click', '.delete-pixel', function (event) {
+        let pixel = $(this).attr('pixel');
+        $(".btn-delete").attr("pixel", pixel);
+        $("#modal-delete-pixel").modal('show');
+    });
+
+    //criar novo pixel
+    $(".btn-save").on('click', function () {
+        let formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
+        formData.append('project_id', projectId);
+        formData.append('checkout', $("#modal-create-pixel  .create-checkout").val());
+        formData.append('purchase_card', $("#modal-create-pixel  .create-purchase-card").val());
+        formData.append('purchase_boleto', $("#modal-create-pixel  .create-purchase-boleto").val());
+
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: "/api/pixels",
+            headers: {
+                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (_error) {
+                function error(_x) {
+                    return _error.apply(this, arguments);
                 }
-            });
+
+                error.toString = function () {
+                    return _error.toString();
+                };
+
+                return error;
+            }(function (data) {
+                loadingOnScreenRemove();
+                $("#modal_add_produto").hide();
+                $(".loading").css("visibility", "hidden");
+                if (data.status == '422') {
+                    for (error in data.responseJSON.errors) {
+                        alertCustom('error', String(data.responseJSON.errors[error]));
+                    }
+                }
+            }), success: function success() {
+                loadingOnScreenRemove();
+                $(".loading").css("visibility", "hidden");
+                alertCustom("success", "Pixel Adicionado!");
+                atualizarPixel();
+            }
+        });
+    });
+
+    //atualizar pixel
+    $(document).on('click', '.btn-update', function () {
+        loadingOnScreen();
+        let pixel = $('#modal-edit-pixel .edit-pixel-id').val();
+        $.ajax({
+            method: "PUT",
+            url: "/api/pixels/" + pixel,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                name: $("#modal-edit-pixel .edit-description").val(),
+                code: $("#modal-edit-pixel .edit-code").val(),
+                platform: $("#modal-edit-pixel .edit-platform").val(),
+                status: $("#modal-edit-pixel .edit-status").val(),
+                checkout: $("#modal-edit-pixel .edit-checkout").val(),
+                purchase_card: $("#modal-edit-pixel .edit-purchase-card").val(),
+                purchase_boleto: $("#modal-edit-pixel .edit-purchase-boleto").val()
+            },
+            error: function () {
+                loadingOnScreenRemove();
+                alertCustom("error", "Erro ao atualizar pixel");
+            },
+            success: function success() {
+                loadingOnScreenRemove();
+                alertCustom("success", "Pixel atualizado com sucesso");
+                atualizarPixel();
+            }
+        });
+    });
+
+    // deletar pixel
+    $(document).on('click', '.btn-delete', function () {
+        loadingOnScreen();
+        let pixel = $(this).attr('pixel');
+        $.ajax({
+            method: "DELETE",
+            url: "/api/pixels/" + pixel,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function (_error3) {
+                function error() {
+                    return _error3.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error3.toString();
+                };
+
+                return error;
+            }(function () {
+                loadingOnScreenRemove();
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
+            }),
+            success: function success() {
+                loadingOnScreenRemove();
+                alertCustom("success", "Pixel Removido com sucesso");
+                atualizarPixel();
+            }
+
         });
     });
 
     function atualizarPixel() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-pixel', '#table-pixel');
 
@@ -181,11 +272,10 @@ $(function () {
                         data += '<td >' + value.platform + '</td>';
                         data += '<td ><span class="badge badge-' + statusPixel[value.status] + '">' + value.status_translated + '</span></td>';
                         data += "<td style='text-align:center'>"
-                        data += "<a role='button' class='mg-responsive details-pixel pointer'   pixel='" + value.id + "'  data-target='#modal-content' data-toggle='modal'         type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>"
-                        data += "<a role='button' class='mg-responsive edit-pixel    pointer'   pixel='" + value.id + "'  data-target='#modal-content' data-toggle='modal'         type='a'><i class='material-icons gradient'>edit</i></a>"
-                        data += "<a role='button' class='mg-responsive delete-pixel  pointer'   pixel='" + value.id + "'  data-toggle='modal'          data-target='#modal-delete' type='a'><i class='material-icons gradient'>delete_outline</i> </a>";
+                        data += "<a role='button' class='mg-responsive details-pixel pointer'   pixel='" + value.id + "'  data-target='#modal-details-pixel' data-toggle='modal'         type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>"
+                        data += "<a role='button' class='mg-responsive edit-pixel    pointer'   pixel='" + value.id + "'  data-toggle='modal'         type='a'><i class='material-icons gradient'>edit</i></a>"
+                        data += "<a role='button' class='mg-responsive delete-pixel  pointer'   pixel='" + value.id + "'  data-toggle='modal'         type='a'><i class='material-icons gradient'>delete_outline</i> </a>";
                         data += "</td>";
-
                         data += '</tr>';
                         $("#data-table-pixel").append(data);
                         $('#table-pixel').addClass('table-striped');
@@ -193,159 +283,6 @@ $(function () {
                 }
 
                 pagination(response, 'pixels', atualizarPixel);
-
-                // details pixel
-                $(".details-pixel").unbind('click');
-                $(".details-pixel").on('click', function () {
-                    var pixel = $(this).attr('pixel');
-                    $("#modal-title").html('Detalhes do pixel');
-                    loadOnModal('#modal-add-body');
-                    var data = {pixelId: pixel};
-                    $("#btn-modal").hide();
-                    $.ajax({
-                        method: "GET",
-                        url: "/api/pixels/" + pixel,
-                        data: data,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function error() {
-                            //
-                        }, success: function success(response) {
-                            //$("#modal-add-body").html(response);
-                            loadingOnScreenRemove();
-                            renderDetailPixel(response);
-                            $("#modal-title").html('Detalhes do pixel');
-                            $("#btn-modal").hide();
-                        }
-                    });
-                });
-
-                // edit pixel
-                $(".edit-pixel").unbind('click');
-                $(".edit-pixel").on('click', function () {
-                    $("#modal-add-body").html("");
-                    $("#btn-modal").hide();
-                    var pixel = $(this).attr('pixel');
-                    $("#modal-title").html("Editar Pixel");
-                    loadOnModal('#modal-add-body');
-                    var data = {pixelId: pixel};
-                    $.ajax({
-                        method: "GET",
-                        url: "/api/pixels/" + pixel + "/edit",
-                        data: data,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function error() {
-                            //
-                        }, success: function success(response) {
-                            loadingOnScreenRemove();
-                            $("#btn-modal").addClass('btn-update');
-                            $("#btn-modal").text('Atualizar');
-                            $("#modal-title").html('Editar pixel');
-                            //$("#modal-add-body").html(response)
-                            renderEditPixel(response);
-                            $("#btn-modal").show();
-                            $('.check').on('click', function () {
-                                if ($(this).is(':checked')) {
-                                    $(this).val(1);
-                                } else {
-                                    $(this).val(0);
-                                }
-                            });
-
-                            $(".btn-update").unbind('click');
-                            $(".btn-update").on('click', function () {
-                                loadingOnScreen();
-                                $.ajax({
-                                    method: "PUT",
-                                    url: "/api/pixels/" + pixel,
-                                    headers: {
-                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    data: {
-                                        name: $("#modal-add-body .edit-description").val(),
-                                        code: $("#modal-add-body .edit-code").val(),
-                                        platform: $("#modal-add-body .edit-platform").val(),
-                                        status: $("#modal-add-body .edit-status").val(),
-                                        checkout: $("#modal-add-body .edit-checkout").val(),
-                                        purchase_card: $("#modal-add-body .edit-purchase-card").val(),
-                                        purchase_boleto: $("#modal-add-body .edit-purchase-boleto").val()
-                                    },
-                                    error: function (_error2) {
-                                        function error(_x3) {
-                                            return _error2.apply(this, arguments);
-                                        }
-
-                                        error.toString = function () {
-                                            return _error2.toString();
-                                        };
-
-                                        return error;
-                                    }(function (response) {
-                                        loadingOnScreenRemove();
-                                        if (response.status === 422) {
-                                            for (error in response.responseJSON.errors) {
-                                                alertCustom('error', String(response.responseJSON.errors[error]));
-                                            }
-                                        } else {
-                                            alertCustom('error', String(response.responseJSON.message));
-                                        }
-                                    }),
-                                    success: function success(data) {
-                                        loadingOnScreenRemove();
-                                        alertCustom("success", "Pixel atualizado com sucesso");
-                                        atualizarPixel();
-                                    }
-                                });
-                            });
-                        }
-                    });
-                });
-
-                // delete pixel
-                $('.delete-pixel').on('click', function (event) {
-                    event.preventDefault();
-                    var pixel = $(this).attr('pixel');
-                    $("#modal_excluir_titulo").html("Remover Pixel?");
-                    $("#bt_excluir").unbind('click');
-                    $("#bt_excluir").on('click', function () {
-                        $("#fechar_modal_excluir").click();
-                        loadingOnScreen();
-                        $.ajax({
-                            method: "DELETE",
-                            url: "/api/pixels/" + pixel,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            error: function (_error3) {
-                                function error() {
-                                    return _error3.apply(this, arguments);
-                                }
-
-                                error.toString = function () {
-                                    return _error3.toString();
-                                };
-
-                                return error;
-                            }(function () {
-                                loadingOnScreenRemove();
-                                if (response.status == '422') {
-                                    for (error in response.responseJSON.errors) {
-                                        alertCustom('error', String(response.responseJSON.errors[error]));
-                                    }
-                                }
-                            }),
-                            success: function success(data) {
-                                loadingOnScreenRemove();
-                                alertCustom("success", "Pixel Removido com sucesso");
-                                atualizarPixel();
-                            }
-
-                        });
-                    });
-                });
             }
         });
     }
@@ -358,7 +295,7 @@ $(function () {
 
             $("#pagination-pixels").html("");
 
-            var primeira_pagina_pixel = "<button id='primeira_pagina_pixel' class='btn nav-btn'>1</button>";
+            let primeira_pagina_pixel = "<button id='primeira_pagina_pixel' class='btn nav-btn'>1</button>";
 
             $("#pagination-pixels").append(primeira_pagina_pixel);
 
@@ -386,7 +323,7 @@ $(function () {
             }
 
             if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-                var pagina_atual_pixel = "<button id='pagina_atual_pixel' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
+                let pagina_atual_pixel = "<button id='pagina_atual_pixel' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
 
                 $("#pagination-pixels").append(pagina_atual_pixel);
 
@@ -408,7 +345,7 @@ $(function () {
             }
 
             if (response.meta.last_page != '1') {
-                var ultima_pagina_pixel = "<button id='ultima_pagina_pixel' class='btn nav-btn'>" + response.meta.last_page + "</button>";
+                let ultima_pagina_pixel = "<button id='ultima_pagina_pixel' class='btn nav-btn'>" + response.meta.last_page + "</button>";
 
                 $("#pagination-pixels").append(ultima_pagina_pixel);
 
