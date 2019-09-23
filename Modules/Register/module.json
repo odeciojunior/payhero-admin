@@ -9,8 +9,6 @@
         "Modules\\Register\\Providers\\RegisterServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }
