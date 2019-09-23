@@ -594,6 +594,7 @@ class DomainsController extends Controller
      */
     public function recheckDomain(Request $request)
     {
+
         try {
             $domainService = new DomainService();
             $domainModel   = new Domain();
