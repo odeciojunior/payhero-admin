@@ -44,7 +44,7 @@ class VerifyPendingNotazzInvoices extends Command
 
             $notazzService = new NotazzService();
 
-            $result = $notazzService->verifyPendingInvoices();
+            $notazzService->verifyPendingInvoices();
 
         } catch (Exception $e) {
             Log::warning('VerifyPendingNotazzInvoices - Erro no command ');

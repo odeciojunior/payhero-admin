@@ -9,8 +9,6 @@
         "Modules\\Pixels\\Providers\\PixelsServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }

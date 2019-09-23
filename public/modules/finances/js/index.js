@@ -31,8 +31,8 @@ $(document).ready(function () {
                         .prop("selected", true);
                     $('#custom-input-addon').val('');
                     updateBalances();
-                    updateTransfersTable();
-                    updateWithdrawalsTable();
+                    //updateWithdrawalsTable(null, "transfersCompanySelect:change");
+                    // updateTransfersTable();
                 });
 
                 //extract_company_select
@@ -45,17 +45,14 @@ $(document).ready(function () {
                 extractCompanySelect.on("change", function () {
                     $("#extract_company_select option[value=" + $('#extract_company_select option:selected').val() + "]")
                         .prop("selected", true);
-                    $('#custom-input-addon').val('');
+                    // $('#custom-input-addon').val('');
                     updateTransfersTable();
-                    updateBalances();
-                    updateWithdrawalsTable();
+                    // updateBalances();
+                    // updateWithdrawalsTable();
                 });
 
                 updateBalances();
                 updateTransfersTable();
-                updateWithdrawalsTable();
-
-                console.log('foi');
             }
         });
     }
@@ -81,10 +78,8 @@ $(document).ready(function () {
     });
 
     function updateBalances() {
-
         $(".price").append("<span class='loading'>" + "<span class='loaderSpan' >" + "</span>" + "</span>");
         loadOnTable('#withdrawals-table-data', '#withdrawalsTable');
-
         $.ajax({
             url: "api/finances/getbalances/",
             type: "GET",
@@ -119,8 +114,9 @@ $(document).ready(function () {
                 $("#div-available-money").on("click", function () {
                     $(".withdrawal-value").val(isEmpty(response.available_balance));
                 });
-                $.getScript('modules/withdrawals/js/index.js');
-                $("#table-withdrawals-body").html('');
+                // $.getScript('modules/withdrawals/js/index.js');
+                // $("#withdrawals-table-data").html('');
+                updateWithdrawalsTable();
             }
         });
 
@@ -321,7 +317,6 @@ $(document).ready(function () {
                 loadingOnScreenRemove();
                 alertCustom('success', response.message);
                 updateBalances()
-
             }
         })
 
@@ -330,17 +325,13 @@ $(document).ready(function () {
     /**
      * Module Finances
      */
-
     function updateTransfersTable(link = null) {
-
         loadOnTable('#table-transfers-body', '#transfersTable');
-
         if (link == null) {
             link = '/transfers';
         } else {
             link = '/transfers' + link;
         }
-
         $.ajax({
             method: "GET",
             url: link,
@@ -434,16 +425,13 @@ $(document).ready(function () {
     };
 
     function updateWithdrawalsTable(link = null) {
-
-        loadOnTable('table-withdrawals-body', 'transfersTable');
-        $("#table-withdrawals-body").html('');
-
+        loadOnTable('withdrawals-table-data', 'transfersTable');
+        $("#withdrawals-table-data").html("");
         if (link == null) {
             link = '/withdrawals';
         } else {
             link = '/withdrawals' + link;
         }
-
         $.ajax({
             method: "GET",
             url: link,
@@ -452,16 +440,16 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function () {
-                $("#table-withdrawals-body").html('Erro ao encontrar dados');
+                $("#withdrawals-table-data").html('Erro ao encontrar dados');
             },
             success: function (response) {
                 $("#withdrawals-table-data").html('');
-                if (response.data == '') {
+                if (response.data === '' || response.data === undefined || response.data.length === 0) {
                     $("#withdrawals-table-data").html("<tr><td colspan='5' class='text-center'>Nenhum saque realizado até o momento</td></tr>");
                     $("#withdrawals-pagination").html("");
                 } else {
                     $.each(response.data, function (index, value) {
-                        data = '';
+                        let data = '';
                         data += '<tr>';
                         data += "<td>" + value.account_information + "</td>";
                         data += "<td>" + value.date_request + "</td>";
@@ -471,9 +459,7 @@ $(document).ready(function () {
                         data += '<span class="badge badge-' + statusWithdrawals[value.status] + '">' + value.status_translated + '</span>';
                         data += '</td>';
                         data += '</tr>';
-
                         $("#withdrawals-table-data").append(data);
-
                         $('#withdrawalsTable').addClass('table-striped')
                     });
                     pagination(response, 'withdrawals', updateWithdrawalsTable);
@@ -482,77 +468,56 @@ $(document).ready(function () {
             }
         });
     }
+
     function paginationTransfersTable(response) {
-
         $("#pagination-transfers").html("");
-
         var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
-
         $("#pagination-transfers").append(primeira_pagina);
-
         if (response.meta.current_page == '1') {
             $("#primeira_pagina").attr('disabled', true);
             $("#primeira_pagina").addClass('nav-btn');
             $("#primeira_pagina").addClass('active');
         }
-
         $('#primeira_pagina').unbind("click");
         $('#primeira_pagina').on("click", function () {
             updateTransfersTable('?page=1');
         });
-
         for (x = 3; x > 0; x--) {
-
             if (response.meta.current_page - x <= 1) {
                 continue;
             }
-
             $("#pagination-transfers").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
             $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
                 updateTransfersTable('?page=' + $(this).html());
             });
-
         }
-
         if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
             var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + (response.meta.current_page) + "</button>";
-
             $("#pagination-transfers").append(pagina_atual);
             $("#pagina_atual").attr('disabled', true).addClass('nav-btn').addClass('active');
         }
-
         for (x = 1; x < 4; x++) {
-
             if (response.meta.current_page + x >= response.meta.last_page) {
                 continue;
             }
-
             $("#pagination-transfers").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
             $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
                 updateTransfersTable('?page=' + $(this).html());
             });
-
         }
-
         if (response.meta.last_page != '1') {
             var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-
             $("#pagination-transfers").append(ultima_pagina);
-
             if (response.meta.current_page == response.meta.last_page) {
                 $("#ultima_pagina").attr('disabled', true);
                 $("#ultima_pagina").addClass('nav-btn');
                 $("#ultima_pagina").addClass('active');
             }
-
             $('#ultima_pagina').on("click", function () {
                 updateTransfersTable('?page=' + response.meta.last_page);
             });
         }
         $('table').addClass('table-striped');
-
     }
 
 });

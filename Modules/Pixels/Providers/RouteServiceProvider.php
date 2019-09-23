@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Notazz\Providers;
+namespace Modules\Pixels\Providers;
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -11,7 +11,7 @@ class RouteServiceProvider extends ServiceProvider
      * The module namespace to assume when generating URLs to actions.
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Notazz\Http\Controllers';
+    protected $moduleNamespace = 'Modules\Pixels\Http\Controllers';
 
     /**
      * Called before routes are registered.
@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-            //->middleware('api')
+            //             ->middleware('api')
              ->namespace($this->moduleNamespace)
              ->group(__DIR__ . '/../Routes/api.php');
     }
