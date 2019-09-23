@@ -7,6 +7,7 @@ use Modules\Core\Entities\Product;
 use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Project;
 use Modules\Core\Services\DigitalOceanFileService;
+use Modules\Core\Services\ProductService;
 use Modules\Products\Http\Requests\UpdateProductRequest;
 use Modules\Products\Http\Requests\CreateProductRequest;
 use Modules\Products\Transformers\CreateProductResource;
@@ -22,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Modules\Products\Transformers\ProductsSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**
@@ -384,5 +386,17 @@ class ProductsApiController extends Controller
                                         'message' => 'Ocorreu um erro, tente novamente mais tarde!',
                                     ], 400);
         }
+    }
+
+    public function getProducts(Request $request)
+    {
+        $data           = $request->all();
+        $productService = new ProductService();
+
+        $projectId = current(Hashids::decode($data['project']));
+
+        $products = $productService->getProductsMyProject($projectId);
+
+        return ProductsSelectResource::collection($products);
     }
 }

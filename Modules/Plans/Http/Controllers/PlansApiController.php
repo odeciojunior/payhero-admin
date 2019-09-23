@@ -1,285 +1,374 @@
 <?php
 
-namespace Modules\Planos\Http\Controllers;
+namespace Modules\Plans\Http\Controllers;
 
-use App\Plano;
-use App\Brinde;
-use App\Produto;
 use Carbon\Carbon;
-use App\PlanoBrinde;
-use App\ProdutoPlano;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Plan;
+use Modules\Core\Entities\ProductPlan;
+use Modules\Core\Entities\Project;
+use Modules\Plans\Http\Requests\PlanStoreRequest;
+use Modules\Plans\Http\Requests\PlanUpdateRequest;
+use Modules\Plans\Transformers\PlansResource;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 use Modules\Planos\Transformers\PlanosResource;
 
-class PlanosApiController extends Controller {
+class PlansApiController extends Controller
+{
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index(Request $request)
+    {
+        try {
+            $planModel    = new Plan();
+            $projectModel = new Project();
 
-    public function index(Request $request) {
+            if ($request->has('project')) {
+                $projectId = current(Hashids::decode($request->input('project')));
 
-        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+                if ($projectId) {
+                    //hash ok
+                    $project = $projectModel->find($projectId);
 
-        if(!$projeto){
-            return response()->json('projeto não encontrado');
-        }
+                    if (Gate::allows('edit', [$project])) {
+                        //se pode editar o projeto pode visualizar os planos dele
+                        $plans = $planModel->with([
+                                                      'project.domains' => function($query) use ($projectId) {
+                                                          $query->where([['project_id', $projectId], ['status', 3]])
+                                                                ->first();
+                                                      },
+                                                  ])->where('project_id', $projectId);
 
-        if(!$this->isAuthorized($projeto['id'])){
-            return response()->json('não autorizado');
-        }
-
-        $planos = Plano::where('projeto', Hashids::decode($request->id_projeto));
-
-        return PlanosResource::collection($planos->paginate(10));
-    }
-
-    public function store(Request $request) {
-
-        $dados = $request->all();
-
-        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
-
-        if(!$projeto){
-            return response()->json('projeto não encontrado');
-        }
-
-        if(!$this->isAuthorized($projeto['id'])){
-            return response()->json('não autorizado');
-        }
-
-        $dados['projeto'] = $projeto['id'];
-
-        $user_projeto = UserProjeto::where([
-            ['projeto',Hashids::decode($request->id_projeto)],
-            ['tipo','produtor']
-        ])->first();
-
-        $dados['empresa'] = $user_projeto->empresa;
-        $dados['preco'] = $this->getValor($dados['preco']);
-
-        $novo_codigo_identificador = false;
-
-        while($novo_codigo_identificador == false){
-
-            $codigo_identificador = $this->randString(3).rand(100,999);
-            $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
-            if($plano == null){
-                $novo_codigo_identificador = true;
-                $dados['cod_identificador'] = $codigo_identificador;
+                        return PlansResource::collection($plans->orderBy('id', 'DESC')->paginate(5));
+                    } else {
+                        return response()->json([
+                                                    'message' => 'Sem permissão para visualizar planos',
+                                                ], 403);
+                    }
+                } else {
+                    //hash errado
+                    return response()->json([
+                                                'message' => 'Projeto não encontrado',
+                                            ], 400);
+                }
+            } else {
+                return response()->json([
+                                            'message' => 'Projeto não encontrado',
+                                        ], 400);
             }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar buscar planos (PlansController - index)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao tentar listar planos',
+                                    ], 400);
         }
-
-        $plano = Plano::create($dados);
-
-        $foto = $request->file('foto_plano_cadastrar');
-
-        if ($foto != null) {
-            $nome_foto = 'plano_' . $plano->id . '_.' . $foto->getClientOriginalExtension();
-
-            Storage::delete('public/upload/plano/'.$nome_foto);
- 
-            $foto->move(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO, $nome_foto);
-
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-
-            $img->crop($dados['foto_plano_cadastrar_w'], $dados['foto_plano_cadastrar_h'], $dados['foto_plano_cadastrar_x1'], $dados['foto_plano_cadastrar_y1']);
-
-            $img->resize(200, 200);
-
-            Storage::delete('public/upload/plano/'.$nome_foto);
-            
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-
-            $plano->update([
-                'foto' => $nome_foto,
-            ]);
-        }
-
-        $qtd_produto = 1;
-
-        while(isset($dados['produto_'.$qtd_produto]) && $dados['produto_'.$qtd_produto] != ''){
-
-            ProdutoPlano::create([
-                'produto' => $dados['produto_'.$qtd_produto],
-                'plano' => $plano->id,
-                'quantidade_produto' => $dados['produto_qtd_'.$qtd_produto++]
-            ]);
-        }
-
-        $qtd_brinde = 1;
-
-        while(isset($dados['brinde_'.$qtd_brinde]) && $dados['brinde_'.$qtd_brinde] != ''){
-
-            PlanoBrinde::create([
-                'brinde' => $dados['brinde_'.$qtd_brinde++],
-                'plano' => $plano->id,
-            ]);
-        }
-
-        return response()->json('sucesso');
     }
 
-    public function show(Request $request) {
+    /**
+     * @param PlanStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(PlanStoreRequest $request)
+    {
+        try {
+            $planModel    = new Plan();
+            $productPlan  = new ProductPlan();
+            $projectModel = new Project();
 
-        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+            $requestData               = $request->validated();
+            $requestData['project_id'] = current(Hashids::decode($requestData['project_id']));
+            $requestData['status']     = 1;
 
-        if(!$projeto){
-            return response()->json('projeto não encontrado');
-        }
+            $projectId = $requestData['project_id'];
 
-        if(!$this->isAuthorized($projeto['id'])){
-            return response()->json('não autorizado');
-        }
+            if ($projectId) {
+                //hash ok
 
-        $plano = Plano::find(Hashids::decode($request->id_plano));
+                $project = $projectModel->find($projectId);
 
-        $dados = [];
-        $dados['nome'] = $plano['nome'];
-        $dados['descricao'] = $plano['descricao'];
-        $dados['cod_identificador'] = $plano['cod_identificador'];
-        $dados['status'] = $plano['status'];
-        $dados['preco'] = $plano['preco'];
-        $dados['frete'] = $plano['frete'];
-        $dados['frete_fixo'] = $plano['frete_fixo'];
-        $dados['valor_frete'] = $plano['valor_frete'];
-        $dados['created_at'] = with(new Carbon($plano->created_at))->format('d/m/Y H:i:s');
-        $dados['foto'] = url(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto)."?dummy=".uniqid();
+                if (Gate::allows('edit', [$project])) {
 
-        $produtosPlano = ProdutoPlano::where('plano',$plano->id)->get()->toArray();
-        if(count($produtosPlano) > 0){
+                    $requestData['price'] = $this->getValue($requestData['price']);
+                    if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
+                        $plan = $planModel->create($requestData);
+                        if (!empty($plan)) {
+                            $plan->update(['code' => $plan->id_code]);
+                            foreach ($requestData['products'] as $keyProduct => $product) {
+                                foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
+                                    if ($keyProduct == $keyAmount) {
+                                        $dataProductPlan = [
+                                            'product_id' => $product,
+                                            'plan_id'    => $plan->id,
+                                            'amount'     => $productAmount,
+                                        ];
+                                        $productPlan->create($dataProductPlan);
+                                    }
+                                }
+                            }
+                        } else {
+                            return response()->json([
+                                                        'message' => 'Ocorreu um erro, tente novamente mais tarde',
+                                                    ], 400);
+                        }
+                    }
 
-            $produtos = [];
-            foreach($produtosPlano as $produtoPlano){
+                    return response()->json('Plano Configurado com sucesso!', 200);
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para salvar este plano',
+                                            ], 403);
+                }
+            } else {
+                //hash errado
 
-                $produto = Produto::find($produtoPlano['produto']);
-                $produtos[] = [
-                    'nome' => $produto['nome'],
-                    'quantidade' => $produtoPlano['quantidade_produto']
-                ];
-
+                return response()->json([
+                                            'message' => 'Projeto não encontrado',
+                                        ], 400);
             }
-            $dados['produtos'] = $produtos;
+        } catch (Exception $e) {
+            Log::warning('Erro tentar salvar Plano (PlansController - store)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao salvar plano',
+                                    ], 400);
         }
+    }
 
-        $planoBrindes = PlanoBrinde::where('plano',$plano->id)->get()->toArray();
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function show(Request $request, $id)
+    {
+        try {
+            $planModel    = new Plan();
+            $projectModel = new Project();
 
-        if(count($planoBrindes) > 0){
+            $projectId = current(Hashids::decode($request->input('project')));
 
-            $brindes = [];
-            foreach($planoBrindes as $planoBrinde){
+            if ($projectId) {
+                //hash ok
+                $project = $projectModel->find($projectId);
 
-                $brinde = Brinde::find($planoBrinde['brinde']);
-                $brindes[] = $brinde->descricao;
+                if (Gate::allows('edit', [$project])) {
+
+                    if (!empty($id)) {
+                        $planId = current(Hashids::decode($id));
+                        $plan   = $planModel->with([
+                                                       'productsPlans.product', 'project.domains' => function($query) use ($projectId) {
+                                $query->where([['project_id', $projectId], ['status', 3]])
+                                      ->first();
+                            },
+                                                   ])->find($planId);
+
+                        $plan->code = isset($plan->projectId->domains[0]->name) ? 'https://checkout.' . $plan->projectId->domains[0]->name . '/' . $plan->code : 'Dominio não configurado';
+
+                        if (empty($plan)) {
+                            return response()->json([
+                                                        'message' => 'error',
+                                                    ], 200);
+                        } else {
+                            $view = view('plans::details', ['plan' => $plan]);
+
+                            return response()->json([
+                                                        'message' => 'success',
+                                                        'data'    => [
+                                                            'view' => $view->render(),
+                                                        ],
+                                                    ], 200);
+                        }
+                    } else {
+                        return response()->json([
+                                                    'message' => 'error',
+                                                ], 200);
+                    }
+                } else {
+                    return response()->json([
+                                                'message' => 'error',
+                                            ], 200);
+                }
+            } else {
+                //hash errado
+                return response()->json([
+                                            'message' => 'error',
+                                        ], 200);
             }
-            $dados['brindes'] = $brindes;
-        }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar detalhes do Plano (PlansController - show)');
+            report($e);
 
-        return response()->json($dados);
+            return response()->json([
+                                        'message' => 'Erro ao buscar dados do plano!',
+                                    ], 400);
+        }
     }
 
-    public function update(Request $request) {
+    /**
+     * @param PlanUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(PlanUpdateRequest $request, $id)
+    {
+        try {
+            $planModel    = new Plan();
+            $productPlan  = new ProductPlan();
+            $projectModel = new Project();
 
-        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+            $requestData = $request->validated();
 
-        if(!$projeto){
-            return response()->json('projeto não encontrado');
+            $projectId = current(Hashids::decode($requestData['project_id']));
+
+            if ($projectId) {
+                //hash ok
+
+                $project = $projectModel->find($projectId);
+
+                if (Gate::allows('edit', [$project])) {
+
+                    unset($requestData['project_id']);
+                    $planId               = Hashids::decode($id)[0];
+                    $requestData['price'] = $this->getValue($requestData['price']);
+
+                    $plan = $planModel->where('id', $planId)->first();
+                    $plan->update($requestData);
+
+                    $productPlans = $productPlan->where('plan_id', $plan->id)->get();
+                    if (count($productPlans) > 0) {
+                        foreach ($productPlans as $productPlan) {
+                            $productPlan->forceDelete();
+                        }
+                    }
+                    if (!empty($requestData['products']) && !empty($requestData['product_amounts'])) {
+                        foreach ($requestData['products'] as $keyProduct => $product) {
+                            foreach ($requestData['product_amounts'] as $keyAmount => $productAmount) {
+                                if ($keyProduct == $keyAmount) {
+                                    $productPlan->create([
+                                                             'product_id' => $product,
+                                                             'plan_id'    => $plan->id,
+                                                             'amount'     => $productAmount,
+                                                         ]);
+                                }
+                            }
+                        }
+                    }
+
+                    return response()->json('Sucesso', 200);
+                } else {
+                    return response()->json([
+                                                'message' => 'Sem permissão para atualizar este plano',
+                                            ], 403);
+                }
+            } else {
+                //hash errado
+                return response()->json([
+                                            'message' => 'Projeto não encontrado',
+                                        ], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar fazer update dos dados do plano (PlansController - update)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao atualizar plano',
+                                    ], 400);
         }
-
-        if(!$this->isAuthorized($projeto['id'])){
-            return response()->json('não autorizado');
-        }
-
-        $dados = $request->all();
-
-        Plano::find(Hashids::decode($dados['id']))->update($dados);
-
-        return response()->json('sucesso');
     }
 
-    public function destroy(Request $request) {
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        try {
 
-        $projeto = Projeto::find(Hashids::decode($request->id_projeto));
+            $planModel = new Plan();
 
-        if(!$projeto){
-            return response()->json('projeto não encontrado');
+            if (isset($id)) {
+                $planId = current(Hashids::decode($id));
+
+                if ($planId) {
+                    //hash Ok
+                    $plan = $planModel->with(['productsPlans', 'plansSales', 'project'])
+                                      ->where('id', $planId)
+                                      ->first();
+
+                    $project = $plan->project;
+                    if (Gate::allows('edit', [$project])) {
+
+                        if (count($plan->plansSales) > 0) {
+                            return response()->json(['message' => 'Impossível excluir, possui vendas associadas a este plano.'], 400);
+                        }
+                        if (count($plan->productsPlans) > 0) {
+                            foreach ($plan->productsPlans as $productPlan) {
+                                $productPlan->forceDelete();
+                            }
+                        }
+                        $planDeleted = $plan->delete();
+
+                        if ($planDeleted) {
+                            return response()->json(['message' => 'Plano removido com sucesso'], 200);
+                        }
+                    } else {
+                        return response()->json(['message' => 'Sem permissão para excluir plano'], 400);
+                    }
+                } else {
+                    //Hash errado
+                    return response()->json(['message' => 'Erro ao excluir plano.'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Impossível excluir, ocorreu um erro ao buscar dados do plano.'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar detalhes do Plano (PlansController - show)');
+            report($e);
+
+            return response()->json([
+                                        'message' => 'Erro ao buscar dados do plano!',
+                                    ], 400);
         }
-
-        if(!$this->isAuthorized($projeto['id'])){
-            return response()->json('não autorizado');
-        }
-
-        Plano::find(Hashids::decode($request->id_plano))->delete();
-
-        return response()->json('sucesso');
     }
 
-    public function planoCheckout(Request $request){
+    /**
+     * @param $str
+     * @return mixed|string
+     */
+    function getValue($str)
+    {
 
-        $plano = Plano::where('cod_identificador',$request->cod_identificador)->first();
-
-        if(!$plano){
-            return response()->json('Plano não encontrado');
-        }
-
-        return response()->json([
-            'preco' => $plano['preco'],
-            'foto'  => 'https://cloudfox.app/' . CaminhoArquivosHelper::CAMINHO_FOTO_PLANO.$plano->foto."?dummy=".uniqid(),
-        ]);
-    }
-
-    function randString($size){
-
-        $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        $return= "";
-
-        for($count= 0; $size > $count; $count++){
-
-            $return.= $basic[rand(0, strlen($basic) - 1)];
-        }
-
-        return $return;
-    }
-
-    function getValor($str) {
-
-        if($str == ''){
+        if ($str == '') {
             return '0.00';
         }
 
-        if(strstr($str, ",")) {
-          $str = str_replace(".", "", $str);
-          $str = str_replace(",", ".", $str);
+        if (strstr($str, ",")) {
+            $str = str_replace(".", "", $str);
+            $str = str_replace(",", ".", $str);
         }
 
-        $array_valor = explode('.',$str);
+        $arrayValor = explode('.', $str);
 
-        if(count($array_valor) == 1){
-            $str = $str.'.00';
-        }
-        else{
-            if(strlen($array_valor['1']) == 1){
+        if (count($arrayValor) == 1) {
+            $str = $str . '.00';
+        } else {
+            if (strlen($arrayValor['1']) == 1) {
                 $str .= '0';
             }
         }
-       
+
         return $str;
     }
-
-    public function isAuthorized($id_projeto){
-
-        $projeto_usuario = UserProjeto::where([
-            ['user',\Auth::user()->id],
-            ['tipo','produtor'],
-            ['projeto', $id_projeto]
-        ])->first();
-
-        if(!$projeto_usuario){
-            return false;
-        }
-
-        return true;
-    }
-
 }

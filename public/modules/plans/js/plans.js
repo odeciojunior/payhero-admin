@@ -7,7 +7,7 @@ $(function () {
     var projectId = $("#project-id").val();
 
     $('#tab_plans').on('click', function () {
-        updatePlan();
+        index();
     });
 
     /**
@@ -20,35 +20,158 @@ $(function () {
         return Object.keys(obj).length === 0;
     }
 
-    /**
-     * Add new Plan
-     */
-    $("#add-plan").on('click', function () {
+    function create() {
+        // $.ajax({
+        //     method: "GET",
+        //     url: '/plans/create',
+        //     data: {project: projectId},
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     },
+        //     error: function error() {
+        //         loadingOnScreenRemove();
+        //         $("#modal-content").hide();
+        //         alertCustom('error', 'Ocorreu algum erro');
+        //     }, success: function success(data) {
+        //         if (data.message === 'error') {
+        //             $("#modal-plans-error").modal('show');
+        //         } else {
+        //             loadingOnScreenRemove();
+        //             $("#btn-modal").addClass('btn-save');
+        //             $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
+        //             $("#btn-modal").show();
+        //             $('#modal-add-body').html(data.data['view']);
+        //             $("#modal-content").modal('show');
+        //
+        //             $("#modal_add_size").addClass('modal_simples');
+        //             $("#modal-title").html('Adicionar Plano');
+        //
+        //             $('.products_amount').mask('0#');
+        //
+        //             $(document).on('click', '.btnDelete', function (event) {
+        //                 event.preventDefault();
+        //                 $(this).parent().parent().remove();
+        //             });
+        //
+        //             //product
+        //             $('#price').mask('#.###,#0', {reverse: true});
+        //             var qtd_products = '1';
+        //
+        //             var div_products = $('#products_div_' + qtd_products).parent().clone();
+        //
+        //             /**
+        //              * Add new product in array
+        //              */
+        //             $('#add_product_plan').on('click', function () {
+        //
+        //                 qtd_products++;
+        //
+        //                 var new_div = div_products.clone();
+        //                 // var opt = new_div.find('option:selected');
+        //                 // opt.remove();
+        //                 // var select = new_div.find('select');
+        //                 var input = new_div.find('.products_amount');
+        //
+        //                 input.addClass('products_amount');
+        //
+        //                 div_products = new_div;
+        //
+        //                 $('#products').append('<div class="">' + new_div.html() + '</div>');
+        //                 $('.products_amount').mask('0#');
+        //             });
+        //
+        //             /**
+        //              * Save new Plan
+        //              */
+        //             $(".btn-save").unbind('click');
+        //             $(".btn-save").on('click', function () {
+        //                 var hasNoValue;
+        //                 $('.products_amount').each(function () {
+        //                     if ($(this).val() == '' || $(this).val() == 0) {
+        //                         hasNoValue = true;
+        //                     }
+        //                 });
+        //                 if (hasNoValue) {
+        //                     alertCustom('error', 'Dados informados inválidos');
+        //                     return false;
+        //                 }
+        //
+        //                 var formData = new FormData(document.getElementById('form-register-plan'));
+        //                 formData.append("project_id", projectId);
+        //                 loadingOnScreen();
+        //                 $.ajax({
+        //                     method: "POST",
+        //                     url: "/plans",
+        //                     headers: {
+        //                         'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+        //                     },
+        //                     data: formData,
+        //                     processData: false,
+        //                     contentType: false,
+        //                     cache: false,
+        //                     error: function (_error) {
+        //                         function error(_x) {
+        //                             return _error.apply(this, arguments);
+        //                         }
+        //
+        //                         error.toString = function () {
+        //                             return _error.toString();
+        //                         };
+        //
+        //                         return error;
+        //                     }(function (data) {
+        //                         loadingOnScreenRemove();
+        //                         $("#modal_add_produto").hide();
+        //                         $(".loading").css("visibility", "hidden");
+        //                         if (data.status == '400') {
+        //                             alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
+        //                         }
+        //                         if (data.status == '422') {
+        //                             for (error in data.responseJSON.errors) {
+        //                                 alertCustom('error', String(data.responseJSON.errors[error]));
+        //                             }
+        //                         }
+        //                     }), success: function success() {
+        //                         loadingOnScreenRemove();
+        //                         $(".loading").css("visibility", "hidden");
+        //                         alertCustom("success", "Plano Adicionado!");
+        //                         updatePlan();
+        //                     }
+        //                 });
+        //             });
+        //         }
+        //     }
+        // });
 
         $.ajax({
-            method: "GET",
-            url: '/plans/create',
+            method: "POST",
+            url: "/api/products/userproducts",
             data: {project: projectId},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error() {
-                loadingOnScreenRemove();
                 $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
-            }, success: function success(data) {
-                if (data.message === 'error') {
-                    $("#modal-plans-error").modal('show');
+            },
+            success: function success(response) {
+                if (Object.keys(response.data).length === 0) {
+                    var route = '/products/create';
+                    $('#modal-project').modal('show');
+                    $('#modal-project-title').text("Oooppsssss!");
+                    $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não cadastrou nenhum produto</strong></h3>' + '<h5 align="center">Deseja cadastrar uma produto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
+                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
-                    loadingOnScreenRemove();
-                    $("#btn-modal").addClass('btn-save');
-                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
-                    $("#btn-modal").show();
-                    $('#modal-add-body').html(data.data['view']);
-                    $("#modal-content").modal('show');
-
-                    $("#modal_add_size").addClass('modal_simples');
+                    $("#product_1").html('');
+                    $(response.data).each(function (index, data) {
+                        $("#product_1").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                    });
                     $("#modal-title").html('Adicionar Plano');
+                    $("#btn-modal").addClass('btn-save');
+                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar')
+                    $("#modal_add_plan").modal('show');
+                    // $("#form-update-plan").hide();
+                    $("#form-register-plan").show();
 
                     $('.products_amount').mask('0#');
 
@@ -105,7 +228,7 @@ $(function () {
                         loadingOnScreen();
                         $.ajax({
                             method: "POST",
-                            url: "/plans",
+                            url: "/api/plans",
                             headers: {
                                 'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
                             },
@@ -113,53 +236,109 @@ $(function () {
                             processData: false,
                             contentType: false,
                             cache: false,
-                            error: function (_error) {
-                                function error(_x) {
-                                    return _error.apply(this, arguments);
-                                }
-
-                                error.toString = function () {
-                                    return _error.toString();
-                                };
-
-                                return error;
-                            }(function (data) {
+                            error: function error(response) {
                                 loadingOnScreenRemove();
-                                $("#modal_add_produto").hide();
-                                $(".loading").css("visibility", "hidden");
-                                if (data.status == '400') {
-                                    alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
-                                }
-                                if (data.status == '422') {
-                                    for (error in data.responseJSON.errors) {
-                                        alertCustom('error', String(data.responseJSON.errors[error]));
+                                if (response.status === 422) {
+                                    for (error in response.errors) {
+                                        alertCustom('error', String(response.errors[error]));
                                     }
+                                } else {
+                                    alertCustom('error', response.responseJSON.message);
                                 }
-                            }), success: function success() {
+                            },
+                            success: function success(response) {
                                 loadingOnScreenRemove();
-                                $(".loading").css("visibility", "hidden");
+                                index();
                                 alertCustom("success", "Plano Adicionado!");
-                                updatePlan();
                             }
+                            // error: function (_error) {
+                            //     function error(_x) {
+                            //         return _error.apply(this, arguments);
+                            //     }
+                            //
+                            //     error.toString = function () {
+                            //         return _error.toString();
+                            //     };
+                            //
+                            //     return error;
+                            // }(function (data) {
+                            //     loadingOnScreenRemove();
+                            //     $(".loading").css("visibility", "hidden");
+                            //     if (data.status == '400') {
+                            //         alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
+                            //     }
+                            //     if (data.status == '422') {
+                            //         for (error in data.responseJSON.errors) {
+                            //             alertCustom('error', String(data.responseJSON.errors[error]));
+                            //         }
+                            //     }
+                            // }), success: function success() {
+                            //     loadingOnScreenRemove();
+                            //     $(".loading").css("visibility", "hidden");
+                            //     updatePlan();
+                            //     alertCustom("success", "Plano Adicionado!");
+                            // }
                         });
                     });
                 }
             }
         });
+
+        // $(".btn-save").unbind('click');
+        // $(".btn-save").on('click', function () {
+        //     if ($('#link').val() == '' || $('#value').val() == '') {
+        //         alertCustom('error', 'Dados informados inválidos');
+        //         return false;
+        //     }
+        //     var form_data = new FormData(document.getElementById('form_add_integration'));
+        //
+        //     $.ajax({
+        //         method: "POST",
+        //         url: "/api/apps/convertax",
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         processData: false,
+        //         contentType: false,
+        //         cache: false,
+        //         data: form_data,
+        //         error: function error(response) {
+        //             if (response.status === 422) {
+        //                 for (error in response.errors) {
+        //                     alertCustom('error', String(response.errors[error]));
+        //                 }
+        //             } else {
+        //                 alertCustom('error', response.responseJSON.message);
+        //             }
+        //         },
+        //         success: function success(response) {
+        //             $("#no-integration-found").hide();
+        //             index();
+        //             alertCustom('success', response.message);
+        //         }
+        //     });
+        // });
+    }
+
+    /**
+     * Add new Plan
+     */
+    $("#add-plan").on('click', function () {
+        create();
     });
 
     /**
      * Update Table Plan
      */
-    function updatePlan() {
+    function index() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-plan', '#table-plans');
 
         if (link == null) {
-            link = '/plans';
+            link = '/api/plans';
         } else {
-            link = '/plans' + link;
+            link = '/api/plans' + link;
         }
 
         $.ajax({
@@ -216,7 +395,7 @@ $(function () {
                         $('#table-plans').addClass('table-striped');
                     });
 
-                    pagination(response, 'plans', updatePlan);
+                    pagination(response, 'plans', index);
                 }
 
                 /**
@@ -229,7 +408,7 @@ $(function () {
 
                     $.ajax({
                         method: "GET",
-                        url: "/plans/" + plan,
+                        url: "/api/plans/" + plan,
                         data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -374,12 +553,12 @@ $(function () {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
                                         }
-                                        updatePlan();
+                                        index();
                                     }),
                                     success: function success(data) {
                                         loadingOnScreenRemove();
                                         alertCustom("success", "Plano atualizado com sucesso");
-                                        updatePlan();
+                                        index();
                                     }
                                 });
                             });
@@ -400,7 +579,7 @@ $(function () {
                         loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
-                            url: "/plans/" + plan,
+                            url: "/api/plans/" + plan,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -428,7 +607,7 @@ $(function () {
                             success: function success(response) {
                                 loadingOnScreenRemove();
                                 alertCustom('success', response.message);
-                                updatePlan();
+                                index();
                             }
 
                         });
@@ -437,4 +616,5 @@ $(function () {
             }
         });
     }
-});
+})
+;

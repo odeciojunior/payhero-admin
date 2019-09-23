@@ -3,17 +3,19 @@
 namespace Modules\Withdrawals\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Modules\Core\Entities\User;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
-use Modules\Core\Entities\Company;
-use Illuminate\Support\Facades\Log;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Laracasts\Presenter\Exceptions\PresenterException;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\User;
 use Modules\Core\Entities\Withdrawal;
 use Modules\Core\Services\BankService;
 use Modules\Withdrawals\Transformers\WithdrawalResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * Class WithdrawalsController
@@ -23,24 +25,22 @@ class WithdrawalsController extends Controller
 {
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
         try {
+            /** @var Withdrawal $withdrawalModel */
             $withdrawalModel = new Withdrawal();
-            $companyModel    = new Company();
-
-            $companyId = current(Hashids::decode($request->company));
-
+            /** @var Company $companyModel */
+            $companyModel = new Company();
+            $companyId    = current(Hashids::decode($request->company));
             if ($companyId) {
                 //id existe
-                $company = $companyModel->find($companyId);
-
+                $company = $companyModel->newQuery()->find($companyId);
                 if (Gate::allows('edit', [$company])) {
-
                     //se pode editar empresa pode visualizar os saques
-                    $withdrawals = $withdrawalModel->where('company_id', $companyId)
+                    $withdrawals = $withdrawalModel->newQuery()->where('company_id', $companyId)
                                                    ->orderBy('id', 'DESC');
 
                     return WithdrawalResource::collection($withdrawals->paginate(5));
@@ -67,25 +67,24 @@ class WithdrawalsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Laracasts\Presenter\Exceptions\PresenterException
+     * @return JsonResponse
+     * @throws PresenterException
      */
     public function store(Request $request)
     {
         $data = $request->all();
-
+        /** @var Withdrawal $withdrawalModel */
         $withdrawalModel = new Withdrawal();
-        $companyModel    = new Company();
-        $bankService     = new BankService();
-
-        $company = $companyModel->where('user_id', auth()->user()->id)
+        /** @var Company $companyModel */
+        $companyModel = new Company();
+        /** @var Company $company */
+        $company = $companyModel->newQuery()->where('user_id', auth()->user()->id)
                                 ->find(current(Hashids::decode($data['company_id'])));
-
         if (Gate::allows('edit', [$company])) {
-
             if (!$company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') ||
                 !$company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') ||
-                !$company->contract_document_status == $companyModel->present()->getContractDocumentStatus('approved')) {
+                !$company->contract_document_status == $companyModel->present()
+                                                                    ->getContractDocumentStatus('approved')) {
                 return response()->json([
                                             'message' => 'error',
                                             'data'    => [
@@ -93,100 +92,96 @@ class WithdrawalsController extends Controller
                                             ],
                                         ], 400);
             }
-
             $withdrawalValue = preg_replace("/[^0-9]/", "", $data['withdrawal_value']);
             if ($withdrawalValue < 1000) {
                 return response()->json([
                                             'message' => 'Valor de saque precisa ser maior que R$ 10,00',
                                         ], 400);
             }
-
             if ($withdrawalValue > $company->balance) {
-
                 return response()->json([
                                             'message' => 'Valor informado inválido',
                                         ], 400);
             }
-
-            $company->update([
-                                 'balance' => $company->balance -= $withdrawalValue,
-                             ]);
+            $company->update(['balance' => $company->balance -= $withdrawalValue]);
             $withdrawalValue -= 380;
-            $withdrawalModel->create([
-                                         'value'         => $withdrawalValue,
-                                         'company_id'    => $company->id,
-                                         'bank'          => $company->bank,
-                                         'agency'        => $company->agency,
-                                         'agency_digit'  => $company->agency_digit,
-                                         'account'       => $company->account,
-                                         'account_digit' => $company->account_digit,
-                                         'status'        => $companyModel->present()->getStatus('pending'),
-                                     ]);
+            $withdrawalModel->newQuery()->create(
+                [
+                    'value'         => $withdrawalValue,
+                    'company_id'    => $company->id,
+                    'bank'          => $company->bank,
+                    'agency'        => $company->agency,
+                    'agency_digit'  => $company->agency_digit,
+                    'account'       => $company->account,
+                    'account_digit' => $company->account_digit,
+                    'status'        => $companyModel->present()->getStatus('pending'),
+                ]
+            );
 
-            return response()->json([
-                                        'message' => 'Saque pendente',
-                                    ], 200);
+            return response()->json(['message' => 'Saque pendente'], 200);
         } else {
-            return response()->json([
-                                        'message' => 'Sem permissão para salvar saques',
-                                    ], 403);
+            return response()->json(['message' => 'Sem permissão para salvar saques'], 403);
         }
     }
 
     /**
      * @param $companyId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws PresenterException
      */
     public function getAccountInformation($companyId)
     {
-
+        /** @var Company $companyModel */
         $companyModel = new Company();
-        $bankService  = new BankService();
-        $userModel    = new User();
-
-        $company = $companyModel->find(current(Hashids::decode($companyId)));
-
+        /** @var BankService $bankService */
+        $bankService = new BankService();
+        /** @var User $userModel */
+        $userModel = new User();
+        /** @var Company $company */
+        $company = $companyModel->newQuery()->find(current(Hashids::decode($companyId)));
         if (Gate::allows('edit', [$company])) {
-
-            $user = $userModel->where('id', auth()->user()->id)->first();
+            /** @var User $user */
+            $user = $userModel->newQuery()->where('id', auth()->user()->id)->first();
             if ($user->address_document_status != $userModel->present()->getAddressDocumentStatus('approved') ||
                 $user->personal_document_status != $userModel->present()->getPersonalDocumentStatus('approved')) {
-
-                return response()->json([
-                                            'message' => 'success',
-                                            'data'    => [
-                                                'user_documents_status' => 'pending',
-                                            ],
-                                        ], 200);
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'user_documents_status' => 'pending',
+                        ],
+                    ], 200
+                );
             }
-
             if ($company->bank_document_status == $companyModel->present()->getBankDocumentStatus('approved') &&
                 $company->address_document_status == $companyModel->present()->getAddressDocumentStatus('approved') &&
                 $company->contract_document_status == $companyModel->present()->getContractDocumentStatus('approved')) {
-                return response()->json([
-                                            'message' => 'success',
-                                            'data'    => [
-                                                'documents_status' => 'approved',
-                                                'bank'             => $bankService->getBankName($company->bank),
-                                                'account'          => $company->account,
-                                                'account_digit'    => $company->account_digit,
-                                                'agency'           => $company->agency,
-                                                'agency_digit'     => $company->agency_digit,
-                                                'document'         => $company->company_document,
-                                            ],
-                                        ], 200);
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'documents_status' => 'approved',
+                            'bank'             => $bankService->getBankName($company->bank),
+                            'account'          => $company->account,
+                            'account_digit'    => $company->account_digit,
+                            'agency'           => $company->agency,
+                            'agency_digit'     => $company->agency_digit,
+                            'document'         => $company->company_document,
+                        ],
+                    ], 200
+                );
             } else {
-                return response()->json([
-                                            'message' => 'success',
-                                            'data'    => [
-                                                'documents_status' => 'pending',
-                                            ],
-                                        ], 200);
+                return response()->json(
+                    [
+                        'message' => 'success',
+                        'data'    => [
+                            'documents_status' => 'pending',
+                        ],
+                    ], 200
+                );
             }
         } else {
-            return response()->json([
-                                        'message' => 'Sem permissão para visualizar dados da conta',
-                                    ], 403);
+            return response()->json(['message' => 'Sem permissão para visualizar dados da conta'], 403);
         }
     }
 }

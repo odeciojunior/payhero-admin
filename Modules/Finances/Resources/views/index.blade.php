@@ -9,7 +9,7 @@
 
     <div class="page">
         <div class="page-content container">
-            @if(count($companies) > 0)
+            @if(count($companies ?? [1]) > 0)
                 <div class="row">
                     <div class="col-lg-6 mb-30">
                         <h1 class="page-title">Finanças</h1>
@@ -105,10 +105,7 @@
                                             <div class="col-12 mb-3">
                                                 <div class="input-holder">
                                                     <label for="company"> Empresa</label>
-                                                    <select class="form-control select-pad" id="transfers_company_select">
-                                                        @foreach($companies as $company)
-                                                            <option value="{{ Hashids::encode($company['id'])}}">{{ $company['fantasy_name'] }}</option>
-                                                        @endforeach
+                                                    <select class="form-control select-pad" name="company" id="transfers_company_select">
                                                     </select>
                                                 </div>
                                             </div>
@@ -153,7 +150,7 @@
                                             </tbody>
                                         </table>
                                         <ul id="pagination-withdrawals" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
-                                            {{-- js carrega... --}}
+                                            js carrega...
                                         </ul>
                                     </div>
                                 </div>
@@ -183,10 +180,10 @@
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="input-holder">
                                                     <label for="company"> Empresa</label>
-                                                    <select class="form-control select-pad" id="extract_company_select">
-                                                        @foreach($companies as $company)
-                                                            <option value="{{Hashids::encode($company['id'])}}"> {{$company['fantasy_name']}}</option>
-                                                        @endforeach
+                                                    <select class="form-control select-pad" name="company" id="extract_company_select">
+                                                        {{--                                                        @foreach($companies as $company)--}}
+                                                        {{--                                                            <option value="{{Hashids::encode($company['id'])}}"> {{$company['fantasy_name']}}</option>--}}
+                                                        {{--                                                        @endforeach--}}
                                                     </select>
                                                 </div>
                                             </div>
@@ -207,7 +204,7 @@
                                             </tbody>
                                         </table>
                                         <ul id="pagination-transfers" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
-                                            {{-- js carrega... --}}
+                                            js carrega...
                                         </ul>
                                     </div>
                                 </div>

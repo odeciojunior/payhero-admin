@@ -207,29 +207,31 @@
                             @include('projects::edit')
                         </div>
                     </div>
+
                     <!-- Modal padrão para adicionar Adicionar e Editar -->
-                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" role="dialog" tabindex="-1">
-                        <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">
-                            <div class="modal-content p-10" id="conteudo_modal_add">
-                                <div class="modal-header simple-border-bottom mb-10">
-                                    <h4 class="modal-title" id="modal-title"></h4>
-                                    <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
-                                        <i class="material-icons md-16">close</i>
-                                    </a>
-                                </div>
-                                <div id="modal-add-body" class="modal-body" style='min-height: 100px'>
-                                </div>
-                                <div class="modal-footer">
-                                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
-                                        Fechar
-                                    </a>
-                                    <button id="btn-modal" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success" data-dismiss="modal">
-                                        <i class="material-icons btn-fix"> save </i> Salvar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-content" role="dialog" tabindex="-1">--}}
+{{--                        <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple">--}}
+{{--                            <div class="modal-content p-10" id="conteudo_modal_add">--}}
+{{--                                <div class="modal-header simple-border-bottom mb-10">--}}
+{{--                                    <h4 class="modal-title" id="modal-title"></h4>--}}
+{{--                                    <a id="modal-button-close" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">--}}
+{{--                                        <i class="material-icons md-16">close</i>--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
+{{--                                <div id="modal-add-body" class="modal-body" style='min-height: 100px'>--}}
+{{--                                </div>--}}
+{{--                                <div class="modal-footer">--}}
+{{--                                    <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">--}}
+{{--                                        Fechar--}}
+{{--                                    </a>--}}
+{{--                                    <button id="btn-modal" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success" data-dismiss="modal">--}}
+{{--                                        <i class="material-icons btn-fix"> save </i> Salvar--}}
+{{--                                    </button>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+
                     <!-- Modal padrão para excluir -->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog  modal-dialog-centered  modal-simple">

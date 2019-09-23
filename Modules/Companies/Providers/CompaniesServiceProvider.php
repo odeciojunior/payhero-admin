@@ -2,9 +2,14 @@
 
 namespace Modules\Companies\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class CompaniesServiceProvider
+ * @package Modules\Companies\Providers
+ */
 class CompaniesServiceProvider extends ServiceProvider
 {
     /**
@@ -66,7 +71,7 @@ class CompaniesServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(array_merge(array_map(function($path) {
             return $path . '/modules/companies';
-        }, \Config::get('view.paths')), [$sourcePath]), 'companies');
+        }, Config::get('view.paths')), [$sourcePath]), 'companies');
     }
 
     /**
