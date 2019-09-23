@@ -173,4 +173,12 @@ class Sale extends Model
     {
         return $this->hasMany('Modules\Core\Entities\Transaction');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notazzInvoices()
+    {
+        return $this->hasMany('Modules\Core\Entities\NotazzInvoice');
+    }
 }

@@ -71,7 +71,7 @@
                                                 <br>
                                                 <input name="profile_photo" type="file" class="form-control input-pad" id="profile_photo" style="display:none">
                                                 <div style="margin: 20px 0 0 30px;">
-                                                    <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/img/user-default.png') !!}" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
+                                                    <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/img/user-default.png') !!}" onerror="this.onerror=null; this.src='{{asset('modules/global/img/user-default.png')}}'" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
                                                 </div>
                                                 <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>

@@ -114,7 +114,7 @@ class SalesController extends Controller
                 $products = $sale->present()->getProducts();
 
                 $discount = '0,00';
-                $subTotal = $sale->present()->getSubTotal(); 
+                $subTotal = $sale->present()->getSubTotal();
                 $total    = $subTotal;
 
                 $total += preg_replace("/[^0-9]/", "", $sale->shipment_value);
@@ -316,17 +316,18 @@ class SalesController extends Controller
             $checkoutModel = new Checkout();
             $shippingModel = new Shipping();
 
-            $sales = $saleModel->where('owner', auth()->user()->id);
+            $sales = $saleModel->where('owner_id', auth()->user()->id);
 
             if (!empty($dataRequest['select_project'])) {
-                $plans    = $planModel->where('project', $dataRequest['select_project'])->pluck('id');
-                $salePlan = $planSaleModel->whereIn('plan', $plans)->pluck('sale');
+                $projectId = current(Hashids::decode($dataRequest['select_project']));
+                $plans    = $planModel->where('project_id', $projectId)->pluck('id');
+                $salePlan = $planSaleModel->whereIn('plan_id', $plans)->pluck('sale_id');
                 $sales->whereIn('id', $salePlan);
             }
 
             if (!empty($dataRequest['client'])) {
                 $clientes = $clientModel->where('name', 'LIKE', '%' . $dataRequest['client'] . '%')->pluck('id');
-                $sales->whereIn('client', $clientes);
+                $sales->whereIn('client_id', $clientes);
             }
 
             if (!empty($dataRequest['select_payment_method'])) {
@@ -349,33 +350,24 @@ class SalesController extends Controller
                 $sales->where('start_date', '<=', $endDateTime ?? null);
             }
 
-            $sales->with(['clientModel', 'projectModel', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
+            $sales->with(['client', 'project', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
                   ->orderBy('id', 'DESC');
 
             $salesResult = $sales->get();
-
             $header = [
                 'Projeto',
                 'Código da Venda',
-                'Dono do Projeto',
-                'Afiliado',
                 'Forma de Pagamento',
                 'Número de Parcelas',
-                'Valor da Parcela',
                 'Bandeira do Cartão',
                 'Link do Boleto',
                 'Linha Digitavel do Boleto',
                 'Data de Vencimento do Boleto',
                 'Data Inicial do Pagamento',
                 'Data Final do Pagamento',
-                'Data da Criação da  Venda',
                 'Status',
-                'Gateway Status',
-                'Iof',
-                'Desconto Shopify',
-                'Frete',
+                'Desconto',
                 'Valor do Frete',
-                'Cotação do dolar',
                 'Valor Total Venda',
                 'Nome do Cliente',
                 'Telefone do Cliente',
@@ -388,7 +380,6 @@ class SalesController extends Controller
                 'Cep',
                 'Cidade',
                 'Estado',
-                'País',
                 'src',
                 'utm_source',
                 'utm_medium',
@@ -398,40 +389,31 @@ class SalesController extends Controller
                 'utm_perfect',
 
             ];
-
             $saleData = collect();
             foreach ($salesResult as $sale) {
-                $checkout  = $checkoutModel->find($sale->checkout);
-                $shipping  = $shippingModel->find($sale->shipping);
+                $checkout  = $checkoutModel->find($sale->checkout_id);
+                $shipping  = $shippingModel->find($sale->shipping_id);
                 $saleArray = [
-                    'project_name'          => $sale->projectModel->name ?? '',
+                    'project_name'          => $sale->project->name ?? '',
                     'sale_code'             => '#' . strtoupper(Hashids::connection('sale_id')
                                                                        ->encode($sale->id)),
-                    'owner'                 => $sale->user->name ?? '',
-                    'affiliate'             => null,
                     'payment_form'          => $sale->payment_form ?? '',
                     //'payment_method' => ($sale->payment_method == 1) ? "credit_card" : "boleto",
                     'installments_amount'   => $sale->installments_amount ?? '',
-                    'installments_value'    => $sale->installments_value ?? '',
                     'flag'                  => $sale->flag ?? '',
                     'boleto_link'           => $sale->boleto_link ?? '',
                     'boleto_digitable_line' => $sale->boleto_digitable_line ?? '',
                     'boleto_due_date'       => $sale->boleto_due_date ?? '',
                     'start_date'            => $sale->start_date ?? '',
                     'end_date'              => $sale->end_date ?? '',
-                    'created_at'            => $sale->created_at ?? '',
                     'status'                => $sale->status ?? '',
-                    'gateway_status'        => $sale->gateway_status ?? '',
-                    'iof'                   => $sale->iof ?? '',
                     'shopify_discount'      => $sale->shopify_discount ?? '',
-                    'shipping'              => $shipping->name ?? '',
                     'shipping_value'        => $shipping->value ?? '',
-                    'dolar_quotation'       => $sale->dolar_quotation ?? '',
                     'total_paid'            => $sale->total_paid_value ?? '',
-                    'client_name'           => $sale->clientModel->name ?? '',
-                    'client_telephone'      => $sale->clientModel->telephone ?? '',
-                    'client_email'          => $sale->clientModel->email ?? '',
-                    'client_document'       => $sale->clientModel->document ?? '',
+                    'client_name'           => $sale->client->name ?? '',
+                    'client_telephone'      => $sale->client->telephone ?? '',
+                    'client_email'          => $sale->client->email ?? '',
+                    'client_document'       => $sale->client->document ?? '',
                     'client_street'         => $sale->delivery->street ?? '',
                     'client_number'         => $sale->delivery->number ?? '',
                     'client_complement'     => $sale->delivery->complement ?? '',
@@ -439,7 +421,6 @@ class SalesController extends Controller
                     'client_zip_code'       => $sale->delivery->zip_code ?? '',
                     'client_city'           => $sale->delivery->city ?? '',
                     'client_state'          => $sale->delivery->state ?? '',
-                    'client_country'        => $sale->delivery->country ?? '',
                     'src'                   => $checkout->src ?? '',
                     'utm_source'            => $checkout->utm_source ?? '',
                     'utm_medium'            => $checkout->utm_medium ?? '',
@@ -450,7 +431,6 @@ class SalesController extends Controller
 
                 $saleData->push(collect($saleArray));
             }
-
             //$xlsx = new SaleReportExport($saleData, $header, 16);
             //$z    = Excel::store($xlsx, 'x.xlsx');
 
@@ -462,6 +442,7 @@ class SalesController extends Controller
             //$x=sys_get_temp_dir();
 
             return Excel::download(new SaleReportExport($saleData, $header, 16), 'export.xlsx');
+
         } catch (Exception $e) {
             report($e);
 
