@@ -5,24 +5,24 @@ var statusWithdrawals = {
     4: 'danger'
 }
 
-updateWithdrawalsTable();
+// updateWithdrawalsTable();
 
-$("#extract_company_select").on("change", function () {
+// $("#transfers_company_select").on("change", function () {
+//     updateWithdrawalsTable();
+// });
 
-    updateWithdrawalsTable();
-});
-
-function updateWithdrawalsTable(link = null) {
-
+//NAO CHAMAR - DUPLICADO E ERRADO
+function updateWithdrawalsTable(link = null, quemMeChamou = "ninguém") {
     loadOnTable('table-withdrawals-body', 'transfersTable');
     $("#table-withdrawals-body").html('');
-
     if (link == null) {
         link = '/withdrawals';
     } else {
         link = '/withdrawals' + link;
+        quemMeChamou = "pagination";
     }
-
+    console.log("updateWithdrawalsTable2 => " + quemMeChamou);
+    console.log("updateWithdrawalsTable2:company => " + $("#transfers_company_select option:selected").val());
     $.ajax({
         method: "GET",
         url: link,
