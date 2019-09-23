@@ -21,11 +21,13 @@ class NotazzInvoicePresenter extends Presenter
                 case 1:
                     return 'pending';
                 case 2:
-                    return 'analyzing';
+                    return 'send';
                 case 3:
-                    return 'approved';
+                    return 'completed';
                 case 4:
-                    return 'refused';
+                    return 'error';
+                case 5:
+                    return 'in_process';
             }
 
             return '';
@@ -33,12 +35,41 @@ class NotazzInvoicePresenter extends Presenter
             switch ($status) {
                 case 'pending':
                     return 1;
-                case 'analyzing':
+                case 'send':
                     return 2;
-                case 'approved':
+                case 'completed':
                     return 3;
-                case 'refused':
+                case 'error':
                     return 4;
+                case 'in_process':
+                    return 5;
+            }
+
+            return '';
+        }
+    }
+
+    /**
+     * @param $type
+     * @return int|string
+     */
+    public function getInvoiceType($type)
+    {
+        if (is_numeric($type)) {
+            switch ($type) {
+                case 1:
+                    return 'service';
+                case 2:
+                    return 'product';
+            }
+
+            return '';
+        } else {
+            switch ($type) {
+                case 'service':
+                    return 1;
+                case 'product':
+                    return 2;
             }
 
             return '';
