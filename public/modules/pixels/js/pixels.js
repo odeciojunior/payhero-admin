@@ -41,7 +41,7 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error() {
-                //
+                alertCustom("error", "Erro ao carregar detalhes do pixel");
             }, success: function success(response) {
                 renderDetailPixel(response);
             }
@@ -70,7 +70,7 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error() {
-                //
+                alertCustom("error", "Erro ao carregar modal de ediçao");
             }, success: function success(response) {
                 renderEditPixel(response);
                 $('.check').on('click', function () {
@@ -265,18 +265,17 @@ $(function () {
                     $("#data-table-pixel").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
-                        data = '';
-                        data += '<tr >';
-                        data += '<td >' + value.name + '</td>';
-                        data += '<td >' + value.code + '</td>';
-                        data += '<td >' + value.platform + '</td>';
-                        data += '<td ><span class="badge badge-' + statusPixel[value.status] + '">' + value.status_translated + '</span></td>';
-                        data += "<td style='text-align:center'>"
-                        data += "<a role='button' class='mg-responsive details-pixel pointer'   pixel='" + value.id + "'  data-target='#modal-details-pixel' data-toggle='modal'         type='a'><i class='material-icons gradient'>remove_red_eye</i> </a>"
-                        data += "<a role='button' class='mg-responsive edit-pixel    pointer'   pixel='" + value.id + "'  data-toggle='modal'         type='a'><i class='material-icons gradient'>edit</i></a>"
-                        data += "<a role='button' class='mg-responsive delete-pixel  pointer'   pixel='" + value.id + "'  data-toggle='modal'         type='a'><i class='material-icons gradient'>delete_outline</i> </a>";
-                        data += "</td>";
-                        data += '</tr>';
+                        let data = `<tr>
+                                    <td>${value.name}</td>
+                                    <td>${value.code}</td>
+                                    <td>${value.platform}</td>
+                                    <td><span class="badge badge-${statusPixel[value.status]}">${value.status_translated}</span></td>
+                                    <td style='text-align:center'>
+                                        <a role='button' class='mg-responsive details-pixel pointer' pixel='${value.id}' data-target='#modal-details-pixel' data-toggle='modal'><i class='material-icons gradient'>remove_red_eye</i></a>
+                                        <a role='button' class='mg-responsive edit-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><i class='material-icons gradient'>edit</i></a>
+                                        <a role='button' class='mg-responsive delete-pixel pointer' pixel='${value.id}' data-toggle='modal' type='a'><i class='material-icons gradient'>delete_outline</i></a>
+                                    </td>
+                                </tr>`;
                         $("#data-table-pixel").append(data);
                         $('#table-pixel').addClass('table-striped');
                     });
