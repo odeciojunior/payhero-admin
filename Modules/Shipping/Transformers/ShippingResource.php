@@ -19,8 +19,8 @@ class ShippingResource extends Resource
             'shipping_id'             => Hashids::encode($this->id),
             'name'                    => $this->name,
             'information'             => $this->information,
-            'value'                   => $this->value == null ? 'Calculado automaticamente' : $this->value,
-            'type'                    => $this->type == 'static' ? 'Estático' : ($this->type == 'sedex' ? 'SEDEX - Calculado automaticamente' : 'PAC - Calculado automaticamente'),
+            'value'                   => $this->value == null || $this->type != 'static' ? 'Calculado automáticamente' : $this->value,
+            'type'                    => $this->type == 'static' ? 'Estático' : ($this->type == 'sedex' ? 'SEDEX - Calculado automáticamente' : 'PAC - Calculado automáticamente'),
             'zip_code_origin'         => $this->zip_code_origin,
             'status'                  => $this->status,
             'status_translated'       => Lang::get('definitions.enum.shipping.status.' . $this->present()

@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<!-- Edit -->
+<!-- Delete -->
 <div id="modal-delete-pixel" class="modal fade example-modal-lg modal-3d-flip-vertical" aria-hidden="true" role="dialog" tabindex="-1">
     <div class="modal-dialog  modal-dialog-centered  modal-simple">
         <div class="modal-content">

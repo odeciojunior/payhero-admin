@@ -6,11 +6,11 @@
                 <div class="row">
                     <div class="form-group col-12 mt-4">
                         <label for="name">Descrição</label>
-                        <input name="name" type="text" class="form-control create-description" placeholder="Descrição" maxlength='30'>
+                        <input name="name" type="text" class="form-control pixel-description" placeholder="Descrição" maxlength='30'>
                     </div>
                     <div class="form-group col-6">
                         <label for="platform">Plataforma</label>
-                        <select name="platform" type="text" class="form-control create-platform">
+                        <select name="platform" type="text" class="form-control pixel-platform">
                             <option value="facebook">Facebook</option>
                             <option value="google">Google</option>
                             <option value="null" disabled='disabled'>Taboola (em breve)</option>
@@ -19,7 +19,7 @@
                     </div>
                     <div class="form-group col-6">
                         <label for="status">Status</label>
-                        <select name="status" type="text" class="form-control create-status">
+                        <select name="status" type="text" class="form-control pixel-status">
                             <option value="1">Ativo</option>
                             <option value="0">Desativado</option>
                         </select>
@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="form-group col-xl-12">
                         <label for="code">Código</label>
-                        <input name="code" type="text" class="form-control create-code" placeholder="Código" maxlength='30'>
+                        <input name="code" type="text" class="form-control pixel-code" placeholder="Código" maxlength='30'>
                     </div>
                 </div>
                 <div class='mb-1'>
@@ -40,7 +40,7 @@
                             <label for="checkout" class='mb-10'>Checkout:</label>
                             <br>
                             <label class="switch">
-                                <input type="checkbox" value="" name='checkout' class='check create-checkout' checked>
+                                <input type="checkbox" value="" name='checkout' class='check pixel-checkout' checked>
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -50,7 +50,7 @@
                             <label for="cartao">Purchase (cartão):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="" name='purchase_card' class='check create-purchase-card' checked>
+                                <input type="checkbox" value="" name='purchase_card' class='check pixel-purchase-card' checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>
@@ -60,7 +60,7 @@
                             <label for="boleto">Purchase (boleto):</label>
                             <br>
                             <label class='switch'>
-                                <input type="checkbox" value="" name='purchase_boleto' class='check create-purchase-boleto' checked>
+                                <input type="checkbox" value="" name='purchase_boleto' class='check pixel-purchase-boleto' checked>
                                 <span class='slider round'></span>
                             </label>
                         </div>
