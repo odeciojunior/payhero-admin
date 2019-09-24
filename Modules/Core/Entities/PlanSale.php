@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -24,14 +25,12 @@ class PlanSale extends Model
 
     /**
      * The table associated with the model.
-     * 
      * @var string
      */
     protected $table = 'plans_sales';
 
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
@@ -40,17 +39,17 @@ class PlanSale extends Model
      * @var array
      */
     protected $fillable = [
-        'plan_id', 
-        'sale_id', 
-        'plan_value', 
-        'amount', 
-        'created_at', 
-        'updated_at', 
+        'plan_id',
+        'sale_id',
+        'plan_value',
+        'amount',
+        'created_at',
+        'updated_at',
         'deleted_at'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function plan()
     {
@@ -58,7 +57,7 @@ class PlanSale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function sale()
     {
