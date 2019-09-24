@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $id
  * @property int $invite
  * @property int $user_invited
- * @property int $company
+ * @property int $company_id
+ * @property int $invitation_id
  * @property string $email_invited
  * @property int $status
  * @property string $register_date
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $updated_at
  * @property string $deleted_at
  * @property Company $company_id
+ * @property Invitation $invitation_id
  * @property User $user
  * @property User $user
  */
@@ -45,7 +47,8 @@ class Invitation extends Model
     protected $fillable = [
         'invite', 
         'user_invited', 
-        'company_id', 
+        'company_id',
+        'invitation_id',
         'email_invited', 
         'status', 
         'register_date', 
@@ -78,5 +81,13 @@ class Invitation extends Model
     public function user()
     {
         return $this->belongsTo('Modules\Core\Entities\User', 'invite');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function invitation()
+    {
+        return $this->belongsTo('Modules\Core\Entities\Invitation');
     }
 }
