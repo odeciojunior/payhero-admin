@@ -7,7 +7,8 @@ Route::group(
         'middleware' => ['web', 'auth'],
     ],
     function() {
-        Route::apiResource('/plans', 'PlansApiController')
-             ->only('index', 'show', 'store', 'update', 'destroy');
+//        project/{projectId}/plan
+        Route::apiResource('/project/{projectId}/plans', 'PlansApiController')
+             ->only('index', 'show', 'store', 'update', 'destroy')->names('api.plans');
     }
 );

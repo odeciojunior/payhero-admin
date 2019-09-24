@@ -3,6 +3,7 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
@@ -17,7 +18,6 @@ class TrackingHistory extends Model
 
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
@@ -26,14 +26,14 @@ class TrackingHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'delivery_id', 
-        'tracking_code', 
-        'created_at', 
+        'delivery_id',
+        'tracking_code',
+        'created_at',
         'updated_at'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function delivery()
     {
