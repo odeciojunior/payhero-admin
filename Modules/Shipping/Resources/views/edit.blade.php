@@ -16,7 +16,7 @@
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
             <input name='name' type='text' class='input-pad shipping-description' value='' placeholder='PAC'
-                   maxlength='50'>
+                   maxlength='30'>
         </div>
     </div>
     <div class='row'>
@@ -29,7 +29,7 @@
     <div class='row value-shipping-row' style="display:none">
         <div class='form-group col-12'>
             <label for='value'>Valor</label>
-            <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0'>
+            <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0' maxlength='7'>
         </div>
     </div>
     <div class='row zip-code-origin-shipping-row' style="display:block">

@@ -47,7 +47,7 @@ $(document).ready(function () {
     });
 
     $(".shipping-description").keyup(function () {
-        if ($(this).val().length >= 30) {
+        if ($(this).val().length > 30) {
             $(this).parent().children("#shipping-name-error").html("O campo descrição permite apenas 30 caracteres");
             return false;
         } else {
@@ -56,7 +56,7 @@ $(document).ready(function () {
     });
 
     $(".shipping-info").keyup(function () {
-        if ($(this).val().length >= 30) {
+        if ($(this).val().length > 30) {
             $(this).parent().children("#shipping-information-error").html("O campo tempo de entrega estimado permite apenas 30 caracteres");
             return false;
         } else {
@@ -65,7 +65,7 @@ $(document).ready(function () {
     });
 
     $(".shipping-value").keyup(function () {
-        if ($.trim($(this).val()).length >= 7) {
+        if ($.trim($(this).val()).length > 8) {
             $(this).parent().children("#shipping-value-error").html("O campo valor permite apenas 6  caracteres");
             return false;
         } else {
@@ -350,38 +350,4 @@ $(document).ready(function () {
             }
         });
     }
-
-    // $("#shippement").on('change', function () {
-    //     if ($(this).val() == 0) {
-    //         $("#div-carrier").hide();
-    //         $("#div-shipment-responsible").hide();
-    //     } else {
-    //         $("#div-carrier").show();
-    //         $("#div-shipment-responsible").show();
-    //     }
-    // });
-    //
-    // $("#bt-add-shipping-config").unbind('click');
-    // $("#bt-add-shipping-config").on('click', function (event) {
-    //     event.preventDefault();
-    //     var formData = new FormData(document.getElementById('form-config-shipping'));
-    //
-    //     $.ajax({
-    //         method: "POST",
-    //         url: "/shipping/config/" + projectId,
-    //         processData: false,
-    //         contentType: false,
-    //         cache: false,
-    //         data: formData,
-    //         headers: {
-    //             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-    //         }, error: function error() {
-    //             //
-    //         }, success: function success() {
-    //             alertCustom('success', 'Configuração atualizadas com sucesso');
-    //             atualizarFrete();
-    //         }
-    //     });
-    // });
-
 });

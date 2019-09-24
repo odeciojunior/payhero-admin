@@ -13,7 +13,7 @@
     <div class='row'>
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
-            <input name='name' type='text' class='input-pad shipping-description' value='' placeholder='Frete grátis' maxlength='50'>
+            <input name='name' type='text' class='input-pad shipping-description' value='' placeholder='Frete grátis' maxlength='30'>
             <span id='shipping-name-error' class='text-danger'></span>
         </div>
     </div>
@@ -27,7 +27,7 @@
     <div class='row value-shipping-row'  style=''>
         <div class='form-group col-12'>
             <label for='value'>Valor do Frete</label>
-            <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0'>
+            <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0' maxlength='7'>
             <span id='shipping-value-error' class='text-danger'></span>
 
         </div>

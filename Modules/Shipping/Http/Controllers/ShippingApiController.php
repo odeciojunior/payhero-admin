@@ -344,42 +344,4 @@ class ShippingApiController extends Controller
             ], 400);
         }
     }
-
-    public function updateConfig(ShippingUpdateConfigResource $request, $projectId)
-    {
-        try {
-            $projectModel = new Project();
-
-            $requestValidated = $request->validated();
-
-            if ($projectId && $requestValidated) {
-
-                $project = $projectModel->find(current(Hashids::decode($projectId)));
-
-                if (Gate::allows('edit', [$project])) {
-
-                    if ($project) {
-
-                        if (!$requestValidated['shipment']) {
-                            $requestValidated['carrier'] = null;
-                            $requestValidated['shipment_responsible'] = null;
-                        }
-
-                        $projectUpdate = $project->update($requestValidated);
-
-                        if ($projectUpdate) {
-                            return response()->json(['message' => 'Configurações frete atualizados com sucesso'], 200);
-                        }
-                    } else {
-                        return response()->json(['message' => 'Erro ao tentar atualizar dados'], 400);
-                    }
-                } else {
-                    return response()->json(['message' => 'Sem permissão para atualizar configuração deste frete'], 403);
-                }
-            }
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar atualiza configurações de frete ShippingController - updateConfig ');
-            report($e);
-        }
-    }
 }
