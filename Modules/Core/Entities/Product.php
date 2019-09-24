@@ -4,7 +4,10 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use ModulesCoreEntities\ProductPlanSale;
 
 /**
  * @property integer $id
@@ -29,8 +32,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $shopify_variant_id
  * @property Category $category
  * @property User $user
- * @property PlanSaleProduct[] $planSaleProducts
- * @property ProductsPlan[] $productsPlans
+ * @property ProductPlanSale[] $productPlanSales
+ * @property ProductPlan[] $productPlans
  */
 class Product extends Model
 {
@@ -79,34 +82,34 @@ class Product extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function category()
     {
-        return $this->belongsTo('Modules\Core\Entities\Category');
+        return $this->belongsTo(Category::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
-        return $this->belongsTo('Modules\Core\Entities\User');
+        return $this->belongsTo(User::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function planSaleProducts()
+    public function productPlanSales()
     {
-        return $this->hasMany('Modules\Core\Entities\PlanSaleProduct');
+        return $this->hasMany(ProductPlanSale::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function productsPlans()
+    public function productPlans()
     {
-        return $this->hasMany('Modules\Core\Entities\ProductPlan');
+        return $this->hasMany(ProductPlan::class);
     }
 }

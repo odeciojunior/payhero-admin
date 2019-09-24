@@ -30,7 +30,7 @@ class CreateProductPlanSales extends Migration
             $table->string('digital_product_url')->nullable();
             $table->string('price')->nullable();
             $table->string('shopify_id')->nullable();
-            $table->string('shopify_variant')->nullable();
+            $table->string('shopify_variant_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
