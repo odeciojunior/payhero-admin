@@ -323,7 +323,6 @@ $(document).ready(function () {
                     $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
-                        console.log(value)
                         let dados = `<tr>
                                         <td style="vertical-align: middle; display: none;">${value.zip_code_origin}</td>
                                         <td style="vertical-align: middle;">${value.type}</td>

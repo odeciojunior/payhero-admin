@@ -85,34 +85,34 @@ $(function () {
     });
 
     function renderEditPixel(pixel) {
-        $('#modal-edit-pixel .edit-pixel-id').val(pixel.id_code);
-        $('#modal-edit-pixel .edit-description').val(pixel.name);
+        $('#modal-edit-pixel .pixel-id').val(pixel.id_code);
+        $('#modal-edit-pixel .pixel-description').val(pixel.name);
         if (pixel.platform == 'facebook') {
-            $('#modal-edit-pixel .edit-platform').prop("selectedIndex", 0).change();
+            $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 0).change();
         }
         if (pixel.platform == 'google') {
-            $('#modal-edit-pixel .edit-platform').prop("selectedIndex", 1).change();
+            $('#modal-edit-pixel .pixel-platform').prop("selectedIndex", 1).change();
         }
         if (pixel.status == '1') { //Ativo
-            $('#modal-edit-pixel .edit-status').prop("selectedIndex", 0).change();
+            $('#modal-edit-pixel .pixel-status').prop("selectedIndex", 0).change();
         } else {//Desativado
-            $('#modal-edit-pixel .edit-status').prop("selectedIndex", 1).change();
+            $('#modal-edit-pixel .pixel-status').prop("selectedIndex", 1).change();
         }
-        $('#modal-edit-pixel .edit-code').val(pixel.code);
+        $('#modal-edit-pixel .pixel-code').val(pixel.code);
         if (pixel.checkout == '1') {
-            $('#modal-edit-pixel .edit-checkout').val(1).prop('checked', true);
+            $('#modal-edit-pixel .pixel-checkout').val(1).prop('checked', true);
         } else {
-            $('#modal-edit-pixel .edit-checkout').val(0).prop('checked', false);
+            $('#modal-edit-pixel .pixel-checkout').val(0).prop('checked', false);
         }
         if (pixel.purchase_card == '1') {
-            $('#modal-edit-pixel .edit-purchase-card').val(1).prop('checked', true);
+            $('#modal-edit-pixel .pixel-purchase-card').val(1).prop('checked', true);
         } else {
-            $('#modal-edit-pixel .edit-purchase-card').val(0).prop('checked', false);
+            $('#modal-edit-pixel .pixel-purchase-card').val(0).prop('checked', false);
         }
         if (pixel.purchase_boleto == '1') {
-            $('#modal-edit-pixel .edit-purchase-boleto').val(1).prop('checked', true);
+            $('#modal-edit-pixel .pixel-purchase-boleto').val(1).prop('checked', true);
         } else {
-            $('#modal-edit-pixel .edit-purchase-boleto').val(0).prop('checked', false);
+            $('#modal-edit-pixel .pixel-purchase-boleto').val(0).prop('checked', false);
         }
         $('#modal-edit-pixel').modal('show');
     }
@@ -120,7 +120,7 @@ $(function () {
     //carregar modal delecao
     $(document).on('click', '.delete-pixel', function (event) {
         let pixel = $(this).attr('pixel');
-        $("#modal-create-pixel .btn-delete").attr("pixel", pixel);
+        $("#modal-delete-pixel .btn-delete").attr("pixel", pixel);
         $("#modal-delete-pixel").modal('show');
     });
 
@@ -128,9 +128,9 @@ $(function () {
     $("#modal-create-pixel .btn-save").on('click', function () {
         let formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
         formData.append('project_id', projectId);
-        formData.append('checkout', $("#modal-create-pixel .create-checkout").val());
-        formData.append('purchase_card', $("#modal-create-pixel .create-purchase-card").val());
-        formData.append('purchase_boleto', $("#modal-create-pixel .create-purchase-boleto").val());
+        formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
+        formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
+        formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
 
         loadingOnScreen();
         $.ajax({
@@ -174,7 +174,7 @@ $(function () {
     //atualizar pixel
     $(document).on('click', '#modal-edit-pixel .btn-update', function () {
         loadingOnScreen();
-        let pixel = $('#modal-edit-pixel .edit-pixel-id').val();
+        let pixel = $('#modal-edit-pixel .pixel-id').val();
         $.ajax({
             method: "PUT",
             url: "/api/pixels/" + pixel,
@@ -182,13 +182,13 @@ $(function () {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
             data: {
-                name: $("#modal-edit-pixel .edit-description").val(),
-                code: $("#modal-edit-pixel .edit-code").val(),
-                platform: $("#modal-edit-pixel .edit-platform").val(),
-                status: $("#modal-edit-pixel .edit-status").val(),
-                checkout: $("#modal-edit-pixel .edit-checkout").val(),
-                purchase_card: $("#modal-edit-pixel .edit-purchase-card").val(),
-                purchase_boleto: $("#modal-edit-pixel .edit-purchase-boleto").val()
+                name: $("#modal-edit-pixel .pixel-description").val(),
+                code: $("#modal-edit-pixel .pixel-code").val(),
+                platform: $("#modal-edit-pixel .pixel-platform").val(),
+                status: $("#modal-edit-pixel .pixel-status").val(),
+                checkout: $("#modal-edit-pixel .pixel-checkout").val(),
+                purchase_card: $("#modal-edit-pixel .pixel-purchase-card").val(),
+                purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val()
             },
             error: function () {
                 loadingOnScreenRemove();

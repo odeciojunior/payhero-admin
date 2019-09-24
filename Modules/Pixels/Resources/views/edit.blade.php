@@ -1,17 +1,17 @@
 <form id="form-update-pixel">
     @csrf
-    <input type="hidden" value="" name="id" class="edit-pixel-id">
+    <input type="hidden" value="" name="id" class="pixel-id">
     <div class="container-fluid">
         <div class="panel" data-plugin="matchHeight">
             <div class="row">
                 <div class="form-group col-xl-12 mt-4">
                     <label for="name">Descrição</label>
-                    <input value="" name="name" type="text" class="input-pad edit-description" placeholder="Descrição"
+                    <input value="" name="name" type="text" class="input-pad pixel-description" placeholder="Descrição"
                            maxlength='30'>
                 </div>
                 <div class="form-group col-6">
                     <label for="platform">Plataforma</label>
-                    <select name="platform" type="text" class="form-control select-pad edit-platform">
+                    <select name="platform" type="text" class="form-control select-pad pixel-platform">
                         <option value="facebook">Facebook</option>
                         <option value="google">Google</option>
                         <option value="null" disabled='disabled'>Taboola (em breve)</option>
@@ -20,14 +20,14 @@
                 </div>
                 <div class="form-group col-6">
                     <label for="status">Status</label>
-                    <select name="status" type="text" class="form-control select-pad edit-status">
+                    <select name="status" type="text" class="form-control select-pad pixel-status">
                         <option value="1">Ativo</option>
                         <option value="0">Desativado</option>
                     </select>
                 </div>
                 <div class="form-group col-xl-12">
                     <label for="code">Código</label>
-                    <input value="" name="code" type="text" class="input-pad edit-code" placeholder="Código"
+                    <input value="" name="code" type="text" class="input-pad pixel-code" placeholder="Código"
                            maxlength='30'>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                         <label for="Checkout">Checkout:</label>
                         <br>
                         <label class='switch'>
-                            <input type="checkbox" name='checkout' class='check edit-checkout'>
+                            <input type="checkbox" name='checkout' class='check pixel-checkout'>
                             <span class='slider round'></span>
                         </label>
                     </div>
@@ -50,7 +50,7 @@
                         <label for="cartao">Purchase (cartão):</label>
                         <br>
                         <label class='switch'>
-                            <input type="checkbox" name='purchase_card' class='check edit-purchase-card'>
+                            <input type="checkbox" name='purchase_card' class='check pixel-purchase-card'>
                             <span class='slider round'></span>
                         </label>
                     </div>
@@ -60,7 +60,7 @@
                         <label for="boleto">Purchase (boleto):</label>
                         <br>
                         <label class='switch'>
-                            <input type="checkbox" name='purchase_boleto' class='check edit-purchase-boleto'>
+                            <input type="checkbox" name='purchase_boleto' class='check pixel-purchase-boleto'>
                             <span class='slider round'></span>
                         </label>
                     </div>
