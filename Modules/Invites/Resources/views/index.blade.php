@@ -11,6 +11,24 @@
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Convites</h2>
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
+            <div class="card shadow p-20">
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <h6 class="invites"> Convites Enviados </h6>
+                        <h4 id='invitations_sent' class="number green" style='color:green'></h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="invites"> Convites ativos </h6>
+                        <h4 id='invitations_accepted' class="number green" style='color:green'></i>
+                        </h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="invites"> Receita gerada </h6>
+                        <h4 id='balance_generated' class="number green" style='color:green'></i>
+                        </h4>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="page-content container" id='page-invites'>
             <div id="content-error" class='' style='display:none;'>

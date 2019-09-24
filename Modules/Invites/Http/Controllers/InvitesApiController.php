@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Core\Entities\Transaction;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Invitation;
@@ -109,5 +110,24 @@ class InvitesApiController extends Controller
                                         'message' => 'Erro ao tentar enviar convite',
                                     ], 400);
         }
+    }
+
+    public function getInvitationData()
+    {
+
+        $invitationModel = new Invitation();
+        $transactionModel = new Transaction();
+        $invitationAcceptedCount = $invitationModel->where([['invite', auth()->user()->id], ['status', $invitationModel->present()->getStatus('accepted')]])->count();
+        $invitationSentCount = $invitationModel->where('invite', auth()->user()->id)->count();
+        $userIdInvites = $invitationModel->where('invite', auth()->user()->id)->pluck('id')->toArray();
+        $balanceGenerated = $transactionModel->whereIn('invitation_id',$userIdInvites)->where('status','transfered')->sum('value');
+        return response()->json([
+                                    'message' => 'Dados dos convites retornados com sucesso',
+                                    'data'    => [
+                                        'invitation_accepted_count' => $invitationAcceptedCount,
+                                        'invitation_sent_count' => $invitationSentCount,
+                                        'balance_generated' => 'R$ '.number_format(intval($balanceGenerated) / 100, 2, ',', '.'),
+                                    ],
+                                ], 200);
     }
 }

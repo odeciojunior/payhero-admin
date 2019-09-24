@@ -9,8 +9,6 @@
         "Modules\\Invites\\Providers\\InvitesServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }

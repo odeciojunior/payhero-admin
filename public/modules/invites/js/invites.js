@@ -1,7 +1,7 @@
 var statusInvite = {
-    1 : 'success',
-    2 : 'danger',
-    3 : 'warning',
+    1: 'success',
+    2: 'danger',
+    3: 'warning',
 }
 
 $(document).ready(function () {
@@ -76,6 +76,7 @@ $(document).ready(function () {
 
                     pagination(response, 'invites');
                 }
+                getInvitationData();
             }
         });
     }
@@ -213,6 +214,22 @@ $(document).ready(function () {
                 alertCustom('success', response.message);
                 loadingOnScreenRemove();
                 updateInvites();
+            }
+        });
+    }
+    function getInvitationData() {
+        $.ajax({
+            method: "GET",
+            url: '/api/invitations/getinvitationdata',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error() {
+                //
+            }, success: function success(response) {
+                $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '<i class="fas fa-check ml-10">');
+                $("#invitations_sent").html('' + response.data.invitation_sent_count + '<i class="fas fa-check ml-10">');
+                $("#balance_generated").html('' + response.data.balance_generated + '<i class="fas fa-check ml-10">');
             }
         });
     }
