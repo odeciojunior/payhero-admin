@@ -9,8 +9,6 @@
         "Modules\\Shipping\\Providers\\ShippingServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }

@@ -1,38 +1,42 @@
-<form id='form-update-shipping' method="PUT" action="/shippings" enctype="multipart/form-data">
+<form id='form-update-shipping' enctype="multipart/form-data">
     @csrf
     @method('PUT')
+    <input type="hidden" class="shipping-id" value="">
     <div class='row'>
         <div class='form-group col-12'>
             <label for='type'>Tipo</label>
-            <select id='shipping-type' name='type' class='form-control input-pad type'>
-                <option value='pac' {{$shipping->type == "pac"?"selected":""}}>PAC (Calculado automaticamente pela API)</option>
-                <option value='sedex' {{$shipping->type == "sedex"?"selected":""}}>SEDEX (Calculado automaticamente pela API)</option>
-                <option value='static' {{$shipping->type == "static"?"selected":""}}>Frete fixo (você define um valor fixo para o frete)</option>
+            <select name='type' class='form-control input-pad type shipping-type'>
+                <option value='pac'>PAC (Calculado automaticamente pela API)</option>
+                <option value='sedex'>SEDEX (Calculado automaticamente pela API)</option>
+                <option value='static'>Frete fixo (você define um valor fixo para o frete)</option>
             </select>
         </div>
     </div>
     <div class='row'>
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
-            <input name='name' type='text' id='shipping-name' class='input-pad' value='{{$shipping->name}}' placeholder='PAC' maxlength='50'>
+            <input name='name' type='text' class='input-pad shipping-description' value='' placeholder='PAC'
+                   maxlength='50'>
         </div>
     </div>
     <div class='row'>
         <div class='form-group col-12'>
             <label for='information'>Tempo de entrega estimado Apresentada</label>
-            <input name='information' type='text' id='shipping-information' class='input-pad' value='{{$shipping->information}}' placeholder='10 até 20 dias' maxlength='30'>
+            <input name='information' type='text' class='input-pad shipping-info' value='' placeholder='10 até 20 dias'
+                   maxlength='30'>
         </div>
     </div>
-    <div class='row' id='value-shipping-row' @if($shipping->type != 'static')style='display:none;'@endif>
+    <div class='row value-shipping-row' style="display:none">
         <div class='form-group col-12'>
             <label for='value'>Valor</label>
-            <input name='value' type='text' id='shipping-value' class='input-pad' value='{{$shipping->value}}' placeholder='0'>
+            <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0'>
         </div>
     </div>
-    <div class='row' id='zip-code-origin-shipping-row'>
+    <div class='row zip-code-origin-shipping-row' style="display:block">
         <div class='form-group col-12'>
             <label for='zip-code-origin'>CEP de origem</label>
-            <input name='zip_code_origin' id='shipping-zip-code-origin' type='text' class='input-pad' value='{{$shipping->zip_code_origin}}' placeholder='12345-678'>
+            <input name='zip_code_origin' type='text' class='input-pad shipping-zipcode' value=''
+                   placeholder='12345-678'>
         </div>
     </div>
     <div class="row mt-20">
@@ -41,7 +45,7 @@
                 <label for="token" class='mb-10'>Status:</label>
                 <br>
                 <label class="switch">
-                    <input type="checkbox" @if($shipping->status == '1') value="1" checked="" @else value="0" @endif name="status" id="shipping-status" class='check' value='0'>
+                    <input type="checkbox" name="status" class='check shipping-status' value='0'>
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -51,28 +55,10 @@
                 <label for="token" class='mb-10'>Pré-selecionado:</label>
                 <br>
                 <label class="switch">
-                    <input type="checkbox" @if($shipping->pre_selected == '1') value="1" checked="" @else value="0" @endif name="pre_selected" id="shipping-pre-selected" class='check' value='0'>
+                    <input type="checkbox" name="pre_selected" class='check shipping-pre-selected' value='0'>
                     <span class="slider round"></span>
                 </label>
             </div>
         </div>
     </div>
-    {{--    <div class='row'>--}}
-    {{--        <div class='form-group col-12'>--}}
-    {{--            <label for='status'>Status</label>--}}
-    {{--            <select id='shipping-status' name='status' class='form-control input-pad'>--}}
-    {{--                <option value='1' {{$shipping->status == 1 ? 'selected':''}}>Ativado</option>--}}
-    {{--                <option value='0'{{$shipping->status == 0 ? 'selected':''}}>Desativado</option>--}}
-    {{--            </select>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
-    {{--    <div class='row'>--}}
-    {{--        <div class='form-group col-12'>--}}
-    {{--            <label for='pre_selected'>Pré-selecionado</label>--}}
-    {{--            <select name='pre_selected' id='shipping-pre-selected' class=' form-control input-pad'>--}}
-    {{--                <option value='1' {{$shipping->pre_selected == 1 ?'selected':''}}>Sim</option>--}}
-    {{--                <option value='0' {{$shipping->pre_selected == 0 ? 'selected' : ''}}>Não</option>--}}
-    {{--            </select>--}}
-    {{--        </div>--}}
-    {{--    </div>--}}
 </form>

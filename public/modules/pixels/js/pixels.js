@@ -120,17 +120,17 @@ $(function () {
     //carregar modal delecao
     $(document).on('click', '.delete-pixel', function (event) {
         let pixel = $(this).attr('pixel');
-        $(".btn-delete").attr("pixel", pixel);
+        $("#modal-create-pixel .btn-delete").attr("pixel", pixel);
         $("#modal-delete-pixel").modal('show');
     });
 
     //criar novo pixel
-    $(".btn-save").on('click', function () {
+    $("#modal-create-pixel .btn-save").on('click', function () {
         let formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
         formData.append('project_id', projectId);
-        formData.append('checkout', $("#modal-create-pixel  .create-checkout").val());
-        formData.append('purchase_card', $("#modal-create-pixel  .create-purchase-card").val());
-        formData.append('purchase_boleto', $("#modal-create-pixel  .create-purchase-boleto").val());
+        formData.append('checkout', $("#modal-create-pixel .create-checkout").val());
+        formData.append('purchase_card', $("#modal-create-pixel .create-purchase-card").val());
+        formData.append('purchase_boleto', $("#modal-create-pixel .create-purchase-boleto").val());
 
         loadingOnScreen();
         $.ajax({
@@ -172,7 +172,7 @@ $(function () {
     });
 
     //atualizar pixel
-    $(document).on('click', '.btn-update', function () {
+    $(document).on('click', '#modal-edit-pixel .btn-update', function () {
         loadingOnScreen();
         let pixel = $('#modal-edit-pixel .edit-pixel-id').val();
         $.ajax({
@@ -203,7 +203,7 @@ $(function () {
     });
 
     // deletar pixel
-    $(document).on('click', '.btn-delete', function () {
+    $(document).on('click', '#modal-delete-pixel .btn-delete', function () {
         loadingOnScreen();
         let pixel = $(this).attr('pixel');
         $.ajax({
