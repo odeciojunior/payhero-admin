@@ -1,11 +1,11 @@
-var statusPlan = {
-    0: "danger",
-    1: "success",
-}
-
 $(function () {
-    var projectId = $("#project-id").val();
+    var statusPlan = {
+        0: "danger",
+        1: "success",
+    }
+    var projectId = $(window.location.pathname.split('/')).get(-1);
     var form_register_plan = $("#form-register-plan").html();
+    var form_update_plan = $("#form-update-plan").html();
     $('#tab_plans').on('click', function () {
         index();
     });
@@ -50,8 +50,8 @@ $(function () {
                     $(response.data).each(function (index, data) {
                         $("#product_1").append("<option value='" + data.id + "'>" + data.name + "</option>");
                     });
-                    $("#modal-title").html('Adicionar Plano');
-                    $("#btn-modal").addClass('btn-save');
+                    $("#modal-title-plan").html('<span class="ml-15">Adicionar Plano</span>');
+                    $("#btn-modal").addClass('btn-save-plan');
                     $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar')
                     $("#modal_add_plan").modal('show');
                     $("#form-update-plan").hide();
@@ -94,10 +94,10 @@ $(function () {
                     /**
                      * Save new Plan
                      */
-                    $(".btn-save").unbind('click');
-                    $(".btn-save").on('click', function () {
+                    $(".btn-save-plan").unbind('click');
+                    $(".btn-save-plan").on('click', function () {
                         var hasNoValue;
-                        $('.products_amount').each(function () {
+                        $('.products_amount_create').each(function () {
                             if ($(this).val() == '' || $(this).val() == 0) {
                                 hasNoValue = true;
                             }
@@ -112,7 +112,9 @@ $(function () {
                         loadingOnScreen();
                         $.ajax({
                             method: "POST",
-                            url: "/api/plans",
+                            // url: "/api/plans",
+                            url: '/api/project/' + projectId + '/plans',
+
                             headers: {
                                 'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
                             },
@@ -126,7 +128,8 @@ $(function () {
                                     for (error in response.errors) {
                                         alertCustom('error', String(response.errors[error]));
                                     }
-                                } else {
+                                }
+                                if (response.status === 400) {
                                     alertCustom('error', response.responseJSON.message);
                                 }
                             },
@@ -147,7 +150,12 @@ $(function () {
      * Add new Plan
      */
     $("#add-plan").on('click', function () {
+        $('#modal_add_plan').attr('data-backdrop', 'static');
         create();
+        $('.btn-close-add-plan').on('click', function () {
+            clearFields();
+            $('#modal_add_plan').removeAttr('data-backdrop');
+        });
     });
 
     /**
@@ -157,17 +165,20 @@ $(function () {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-plan', '#table-plans');
-
+//        project/{projectId}/plan
         if (link == null) {
-            link = '/api/plans';
+            // link = '/api/plans'; '/api/project/'+projectId+'plans';
+            link = '/api/project/' + projectId + '/plans';
+
         } else {
-            link = '/api/plans' + link;
+            // link = '/api/plans' + link;
+            link = '/api/project/' + projectId + '/plans' + link;
         }
 
         $.ajax({
             method: "GET",
             url: link,
-            data: {project: projectId},
+            // data: {project: projectId},
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
@@ -181,7 +192,7 @@ $(function () {
                 };
 
                 return error;
-            }(function () {
+            }(function (response) {
                 $("#data-table-plan").html('Erro ao encontrar dados');
                 if (response.status == '422') {
                     for (error in response.errors) {
@@ -227,12 +238,13 @@ $(function () {
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {
                     var plan = $(this).attr('plan');
-                    var data = {planId: plan, project: projectId};
+                    // var data = {planId: plan, project: projectId};
 
                     $.ajax({
                         method: "GET",
-                        url: "/api/plans/" + plan,
-                        data: data,
+                        // url: "/api/plans/" + plan,
+                        url: '/api/project/' + projectId + '/plans/' + plan,
+                        // data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -288,13 +300,13 @@ $(function () {
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
                     var plan = $(this).attr('plan');
-                    $("#modal-title").html('Editar Plano');
-                    var data = {planId: plan, project: projectId};
+                    $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
+                    // var data = {planId: plan, project: projectId};
 
                     $.ajax({
                         method: "GET",
-                        url: "/api/plans/" + plan,
-                        data: data,
+                        url: '/api/project/' + projectId + '/plans/' + plan,
+                        // data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -302,20 +314,18 @@ $(function () {
                             //
                             loadingOnScreenRemove()
                         }, success: function success(response) {
+                            $("#form-update-plan").html('');
+                            $("#form-update-plan").html(form_update_plan);
+
                             $('#plan_id').val(response.data.id);
                             $('#plan-name_edit').val(response.data.name);
-                            $('#plan-price_edit').val(response.data.price);
+                            $('#plan-price_edit').val(response.data.price.replace(/[^0-9]/g, ''));
                             $('#plan-description_edit').val(response.data.description);
+                            $('#plan-price_edit').mask('#.###,#0', {reverse: true});
 
                             if (response.data.products != '') {
                                 $.each(response.data.products, function (index, value) {
-                                    console.log(value);
-                                    // data = '';
-                                    // data += '<tr>';
-                                    // data += '<td style="vertical-align: middle;">' + value.product_name + '</td>';
-                                    // data += '<td style="vertical-align: middle;">' + value.amount + '</td>';
-                                    // data += '</tr>';
-                                    // $("#products_plan_details").append(data);
+
                                     $('.products_row_edit').append(`
                                         <div id="products_div_edit" class="row">
                                             <div class="form-group col-sm-8 col-md-7 col-lg-7">
@@ -359,24 +369,24 @@ $(function () {
                                             <hr class='mb-30 display-lg-none display-xlg-none'>
                                         </div>
                                     `);
-                                    $.ajax({
-                                        method: "POST",
-                                        url: "/api/products/userproducts",
-                                        data: {project: projectId},
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                        },
-                                        error: function error() {
-                                            $("#modal-content").hide();
-                                            alertCustom('error', 'Ocorreu algum erro');
-                                        },
-                                        success: function success(response) {
-                                            $("#products_edit").html('');
-                                            $(response.data).each(function (index, data) {
-                                                $("#products_edit").append("<option value='" + data.id + "'>" + data.name + "</option>");
-                                            });
-                                        }
-                                    });
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/api/products/userproducts",
+                                    data: {project: projectId},
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    error: function error() {
+                                        $("#modal-content").hide();
+                                        alertCustom('error', 'Ocorreu algum erro');
+                                    },
+                                    success: function success(response) {
+                                        $("#products_edit").html('');
+                                        $(response.data).each(function (index, data) {
+                                            $("#products_edit").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                                        });
+                                    }
+                                });
                             }
                             $.ajax({
                                 method: "POST",
@@ -390,10 +400,10 @@ $(function () {
                                     alertCustom('error', 'Ocorreu algum erro');
                                 },
                                 success: function success(response) {
-                                    $(".products_edit").each(function(){
+                                    $(".products_edit").each(function () {
                                         var selectProduct = $(this);
                                         $(response.data).each(function (index, data) {
-                                            if(data.id != selectProduct.val()){
+                                            if (data.id != selectProduct.val()) {
                                                 selectProduct.append("<option value='" + data.id + "' >" + data.name + "</option>");
                                             }
                                         });
@@ -405,13 +415,11 @@ $(function () {
                             $("#form-register-plan").hide();
                             $("#form-update-plan").show();
 
-                            $("#btn-modal").removeClass('btn-save');
-                            $("#btn-modal").addClass('btn-update');
+                            $("#btn-modal").removeClass('btn-save-plan');
+                            $("#btn-modal").addClass('btn-update-plan');
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
                             $('.products_amount').mask('0#');
-
-                            // $("#modal-add-body").html(response);
 
                             loadingOnScreenRemove()
 
@@ -424,14 +432,11 @@ $(function () {
                             $('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_products = '1';
 
-                            var div_products = $('#products_div_edit').clone();
-                            // var div_products = $('#products_div_' + qtd_products).parent().clone();
-
                             $('.add_product_plan_edit').on('click', function () {
                                 qtd_products++;
+                                var div_products = $('.products_row_edit').find('#products_div_edit').first().clone();
 
                                 var new_div = div_products.clone();
-                                console.log(new_div.html());
                                 var input = new_div.find('.products_amount');
 
                                 input.addClass('products_amount');
@@ -445,8 +450,8 @@ $(function () {
                             /**
                              * Update Plan
                              */
-                            $(".btn-update").unbind('click');
-                            $(".btn-update").on('click', function () {
+                            $(".btn-update-plan").unbind('click');
+                            $(".btn-update-plan").on('click', function () {
                                 var hasNoValue;
                                 $('.products_amount').each(function () {
                                     if ($(this).val() == '' || $(this).val() == 0) {
@@ -457,13 +462,13 @@ $(function () {
                                     alertCustom('error', 'Dados informados inválidos');
                                     return false;
                                 }
-
                                 var formData = new FormData(document.getElementById('form-update-plan'));
                                 formData.append("project_id", projectId);
                                 loadingOnScreen();
                                 $.ajax({
                                     method: "POST",
-                                    url: "/api/plans/" + plan,
+                                    // url: "/api/plans/" + plan,
+                                    url: '/api/project/' + projectId + '/plans/'+ plan,
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
@@ -488,6 +493,9 @@ $(function () {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
                                         }
+                                        if (response.status === 400) {
+                                            alertCustom('error', response.responseJSON.message);
+                                        }
                                         index();
                                     }),
                                     success: function success(data) {
@@ -500,121 +508,6 @@ $(function () {
                         }
                     });
                 });
-                // $(".edit-plan").unbind('click');
-                // $(".edit-plan").on('click', function () {
-                //     // $("#modal_add_size").addClass('modal-lg');
-                //     loadOnModal('#modal-add-body');
-                //     $("#modal-add-body").html("");
-                //     var plan = $(this).attr('plan');
-                //     $("#modal-title").html("Editar Plano");
-                //     // $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-                //     var data = {planId: plan, project: projectId};
-                //
-                //     $.ajax({
-                //         method: "GET",
-                //         url: "/plans/" + plan + "/edit",
-                //         data: data,
-                //         headers: {
-                //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                //         },
-                //         error: function error() {
-                //             //
-                //             loadingOnScreenRemove()
-                //         }, success: function success(response) {
-                //             $("#btn-modal").addClass('btn-update');
-                //             $("#btn-modal").text('Atualizar');
-                //             $("#btn-modal").show();
-                //             $("#modal-add-body").html(response);
-                //             $('.products_amount').mask('0#');
-                //             loadingOnScreenRemove()
-                //
-                //             $(document).on('click', '.btnDelete', function (event) {
-                //                 event.preventDefault();
-                //                 $(this).parent().parent().remove();
-                //             });
-                //
-                //             //product
-                //             $('#plan-price').mask('#.###,#0', {reverse: true});
-                //             var qtd_products = '1';
-                //
-                //             var div_products = $('#products_div_1').clone();
-                //
-                //             $('#add_product_plan').on('click', function () {
-                //
-                //                 qtd_products++;
-                //
-                //                 var new_div = div_products.clone();
-                //                 // var opt = new_div.find('option:selected');
-                //                 // opt.remove();
-                //                 // var select = new_div.find('select');
-                //                 var input = new_div.find('.products_amount');
-                //
-                //                 input.addClass('products_amount');
-                //
-                //                 div_products = new_div;
-                //
-                //                 $('#products').append('<div class="row">' + new_div.html() + '</div>');
-                //                 $('.products_amount').mask('0#');
-                //             });
-                //
-                //             /**
-                //              * Update Plan
-                //              */
-                //             $(".btn-update").unbind('click');
-                //             $(".btn-update").on('click', function () {
-                //                 var hasNoValue;
-                //                 $('.products_amount').each(function () {
-                //                     if ($(this).val() == '' || $(this).val() == 0) {
-                //                         hasNoValue = true;
-                //                     }
-                //                 });
-                //                 if (hasNoValue) {
-                //                     alertCustom('error', 'Dados informados inválidos');
-                //                     return false;
-                //                 }
-                //
-                //                 var formData = new FormData(document.getElementById('form-update-plan'));
-                //                 formData.append("project_id", projectId);
-                //                 loadingOnScreen();
-                //                 $.ajax({
-                //                     method: "POST",
-                //                     url: "/plans/" + plan,
-                //                     headers: {
-                //                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-                //                     },
-                //                     data: formData,
-                //                     processData: false,
-                //                     contentType: false,
-                //                     cache: false,
-                //                     error: function (_error4) {
-                //                         function error(_x4) {
-                //                             return _error4.apply(this, arguments);
-                //                         }
-                //
-                //                         error.toString = function () {
-                //                             return _error4.toString();
-                //                         };
-                //
-                //                         return error;
-                //                     }(function (response) {
-                //                         loadingOnScreenRemove();
-                //                         if (response.status == '422') {
-                //                             for (error in response.responseJSON.errors) {
-                //                                 alertCustom('error', String(response.responseJSON.errors[error]));
-                //                             }
-                //                         }
-                //                         index();
-                //                     }),
-                //                     success: function success(data) {
-                //                         loadingOnScreenRemove();
-                //                         alertCustom("success", "Plano atualizado com sucesso");
-                //                         index();
-                //                     }
-                //                 });
-                //             });
-                //         }
-                //     });
-                // });
 
                 /**
                  * Delete Plan
@@ -622,14 +515,15 @@ $(function () {
                 $('.delete-plan').on('click', function (event) {
                     event.preventDefault();
                     var plan = $(this).attr('plan');
-                    $("#modal_excluir_titulo").html("Remover Cupom?");
-                    $("#bt_excluir").unbind('click');
-                    $("#bt_excluir").on('click', function () {
-                        $("#fechar_modal_excluir").click();
+                    $("#modal-delete-plan").modal('show');
+                    $("#btn-delete-plan").unbind('click');
+                    $("#btn-delete-plan").on('click', function () {
+                        $("#modal-delete-plan").modal('hide');
                         loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
-                            url: "/api/plans/" + plan,
+                            // url: "/api/plans/" + plan,
+                            url: '/api/project/' + projectId + '/plans/' + plan,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },

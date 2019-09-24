@@ -4,7 +4,9 @@ namespace Modules\Plans\Http\Controllers;
 
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -16,6 +18,7 @@ use Modules\Plans\Http\Requests\PlanStoreRequest;
 use Modules\Plans\Http\Requests\PlanUpdateRequest;
 use Modules\Plans\Transformers\PlansDetailsResource;
 use Modules\Plans\Transformers\PlansResource;
+use Throwable;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Helpers\CaminhoArquivosHelper;
 use Modules\Planos\Transformers\PlanosResource;
@@ -23,17 +26,16 @@ use Modules\Planos\Transformers\PlanosResource;
 class PlansApiController extends Controller
 {
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param $projectId
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index($projectId)
     {
         try {
             $planModel    = new Plan();
             $projectModel = new Project();
-
-            if ($request->has('project')) {
-                $projectId = current(Hashids::decode($request->input('project')));
+            if (!empty($projectId)) {
+                $projectId = current(Hashids::decode($projectId));
 
                 if ($projectId) {
                     //hash ok
@@ -77,9 +79,9 @@ class PlansApiController extends Controller
 
     /**
      * @param PlanStoreRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function store(PlanStoreRequest $request)
+    public function store(PlanStoreRequest $request,$projectID)
     {
         try {
             $planModel    = new Plan();
@@ -147,18 +149,17 @@ class PlansApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param $projectID
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
+     * @return JsonResponse|PlansDetailsResource
      */
-    public function show(Request $request, $id)
+    public function show($projectID, $id)
     {
         try {
             $planModel    = new Plan();
             $projectModel = new Project();
 
-            $projectId = current(Hashids::decode($request->input('project')));
+            $projectId = current(Hashids::decode($projectID));
 
             if ($projectId) {
                 //hash ok
@@ -182,14 +183,7 @@ class PlansApiController extends Controller
                                                         'message' => 'error',
                                                     ], 200);
                         } else {
-                            //                            $view = view('plans::details', ['plan' => $plan]);
                             return new PlansDetailsResource($plan);
-                            //                            return response()->json([
-                            //                                                        'message' => 'success',
-                            //                                                        'data'    => [
-                            //                                                            'view' => $view->render(),
-                            //                                                        ],
-                            //                                                    ], 200);
                         }
                     } else {
                         return response()->json([
@@ -219,20 +213,19 @@ class PlansApiController extends Controller
 
     /**
      * @param PlanUpdateRequest $request
+     * @param $projectID
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(PlanUpdateRequest $request, $id)
+    public function update(PlanUpdateRequest $request,$projectID,$id)
     {
         try {
-            dd('asdsad');
             $planModel    = new Plan();
             $productPlan  = new ProductPlan();
             $projectModel = new Project();
 
             $requestData = $request->validated();
-
-            $projectId = current(Hashids::decode($requestData['project_id']));
+            $projectId   = current(Hashids::decode($projectID));
 
             if ($projectId) {
                 //hash ok
@@ -282,6 +275,7 @@ class PlansApiController extends Controller
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar fazer update dos dados do plano (PlansController - update)');
+            dd($e);
             report($e);
 
             return response()->json([
@@ -292,9 +286,9 @@ class PlansApiController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($projectId,$id)
     {
         try {
 
