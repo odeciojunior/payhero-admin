@@ -22,22 +22,19 @@
                 </div>
                 <hr class='display-lg-none display-xlg-none'>
                 <div id="products">
-                    <div id="products_div_1" class="row">
+                    <div id="products_div_1" class="row products_div_1">
                         <div class='col-sm-8 col-md-7 col-lg-7'>
                             <div class="form-group">
                                 <label>Produtos do plano:</label>
                                 <select id="product_1" name="products[]" class="form-control plan_product">
                                     {{--select no js--}}
-                                    {{--                                    @foreach($products as $product)--}}
-{{--                                        <option value="{{ $product->id }}">{{ $product->name }}</option>--}}
-{{--                                    @endforeach--}}
                                 </select>
                             </div>
                         </div>
                         <div class='col-sm-4 col-md-3 col-lg-3'>
                             <div class="form-group">
                                 <label>Quantidade:</label>
-                                <input class="form-control products_amount" type="text" name="product_amounts[]" id="products_amount" placeholder="quantidade" data-mask="0#" value="1">
+                                <input class="form-control products_amount_create" type="text" name="product_amounts[]" id="products_amount" placeholder="quantidade" data-mask="0#" value="1">
                             </div>
                         </div>
                         <div class='col-sm-12 col-md-2 col-lg-2'>
