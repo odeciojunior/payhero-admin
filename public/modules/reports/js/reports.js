@@ -1,43 +1,31 @@
 $(function () {
-    var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-    var endDate = moment().format('YYYY-MM-DD');
-    $('input[name="daterange"]').daterangepicker({
-        startDate: moment().subtract(30, 'days'),
-        endDate: moment(),
-        opens: 'left',
-        maxDate: moment().endOf("day"),
-        alwaysShowCalendar: true,
-        showCustomRangeLabel: 'Customizado',
-        autoUpdateInput: true,
-        locale: {
-            locale: 'pt-br',
-            format: 'DD/MM/YYYY',
-            applyLabel: "Aplicar",
-            cancelLabel: "Limpar",
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Customizado',
-            weekLabel: 'W',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 0
+
+    $.ajax({
+        method: "GET",
+        url: "/projects/user-projects",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
-            'Este mês': [moment().startOf('month'), moment().endOf('month')],
-            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        error: function error() {
+            $("#modal-content").hide();
+            alertCustom('error', 'Ocorreu algum erro');
+        },
+        success: function success(response) {
+            if (Object.keys(response.data).length === 0) {
+                $("#no-projects").show();
+            } else {
+                $(response.data).each(function(index, data){
+                    $("#select_projects").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                });
+
+                $("#reports-content").show();
+
+                updateReports();
+            }
         }
-    }, function (start, end) {
-        startDate = start.format('YYYY-MM-DD');
-        endDate = end.format('YYYY-MM-DD');
-        updateReports();
     });
 
-    $("#project").on('change', function () {
-        $('#project').val($(this).val());
+    $("#select_projects").on('change', function () {
         updateReports();
     });
 
@@ -55,10 +43,10 @@ $(function () {
         loadOnTable('#origins-table-itens', '.table-vendas-itens');
 
         $.ajax({
-            url: '/reports/getValues/' + $("#project").val(),
+            url: '/api/reports',
             type: 'GET',
             data: {
-                project: $("#project").val(),
+                project: $("#select_projects").val(),
                 endDate: endDate,
                 startDate: startDate
             },
@@ -69,6 +57,7 @@ $(function () {
                 alertCustom('error', 'Erro ao tentar buscar dados');
             },
             success: function success(response) {
+
                 current_currency = response.currency;
                 $("#revenue-generated").html(response.currency + ' ' + response.totalPaidValueAproved);
                 $("#qtd-aproved").html(response.contAproved);
@@ -110,13 +99,12 @@ $(function () {
     function updateSalesByOrigin() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-        /*$('#origins-table').html("<td colspan='3' class='text-center'> Carregando... </div>");*/
         loadOnTable('#origins-table', '.table-vendas');
 
         if (link == null) {
-            link = '/reports/getsalesbyorigin?' + 'project_id=' + $("#project").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
+            link = '/api/reports/getsalesbyorigin?' + 'project_id=' + $("#select_projects").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
         } else {
-            link = '/reports/getsalesbyorigin' + link + '&project_id=' + $("#project").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
+            link = '/api/reports/getsalesbyorigin' + link + '&project_id=' + $("#select_projects").val() + '&start_date=' + startDate + '&end_date=' + endDate + '&origin=' + $("#origin").val();
         }
 
         $.ajax({
@@ -148,13 +136,11 @@ $(function () {
                     $("#origins-table").append(table_data);
                     $('.table-vendas').addClass('table-striped');
 
-                    pagination(response);
+                    pagination(response, "origins", updateSalesByOrigin);
                 }
             }
         });
     }
-
-    updateReports();
 
     function updateGraph(chartData) {
 
@@ -235,74 +221,41 @@ $(function () {
         });
     }
 
-    function pagination(response) {
-
-        $("#pagination").html("");
-
-        if (response.meta.last_page == '1') {
-            return true;
+    var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+    var endDate = moment().format('YYYY-MM-DD');
+    $('input[name="daterange"]').daterangepicker({
+        startDate: moment().subtract(30, 'days'),
+        endDate: moment(),
+        opens: 'left',
+        maxDate: moment().endOf("day"),
+        alwaysShowCalendar: true,
+        showCustomRangeLabel: 'Customizado',
+        autoUpdateInput: true,
+        locale: {
+            locale: 'pt-br',
+            format: 'DD/MM/YYYY',
+            applyLabel: "Aplicar",
+            cancelLabel: "Limpar",
+            fromLabel: 'De',
+            toLabel: 'Até',
+            customRangeLabel: 'Customizado',
+            weekLabel: 'W',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            firstDay: 0
+        },
+        ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+            'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            'Este mês': [moment().startOf('month'), moment().endOf('month')],
+            'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
+    }, function (start, end) {
+        startDate = start.format('YYYY-MM-DD');
+        endDate = end.format('YYYY-MM-DD');
+        updateReports();
+    });
 
-        var primeira_pagina = "<button id='primeira_pagina' class='btn nav-btn'>1</button>";
-
-        $("#pagination").append(primeira_pagina);
-
-        if (response.meta.current_page == '1') {
-            $("#primeira_pagina").addClass('nav-btn');
-            $("#primeira_pagina").addClass('active');
-            $("#primeira_pagina").attr('disabled', 'true');
-        }
-
-        $('#primeira_pagina').on("click", function () {
-            updateSalesByOrigin('?page=1');
-        });
-
-        for (x = 3; x > 0; x--) {
-
-            if (response.meta.current_page - x <= 1) {
-                continue;
-            }
-
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-            $('#pagina_' + (response.meta.current_page - x)).on("click", function () {
-                updateSalesByOrigin('?page=' + $(this).html());
-            });
-        }
-
-        if (response.meta.current_page != 1 && response.meta.current_page != response.meta.last_page) {
-            var pagina_atual = "<button id='pagina_atual' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-
-            $("#pagination").append(pagina_atual);
-        }
-
-        for (x = 1; x < 4; x++) {
-
-            if (response.meta.current_page + x >= response.meta.last_page) {
-                continue;
-            }
-
-            $("#pagination").append("<button id='pagina_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
-            $('#pagina_' + (response.meta.current_page + x)).on("click", function () {
-                updateSalesByOrigin('?page=' + $(this).html());
-            });
-        }
-
-        if (response.meta.last_page != '1') {
-            var ultima_pagina = "<button id='ultima_pagina' class='btn nav-btn'>" + response.meta.last_page + "</button>";
-
-            $("#pagination").append(ultima_pagina);
-
-            if (response.meta.current_page == response.meta.last_page) {
-                $("#ultima_pagina").attr('disabled', true);
-                $("#ultima_pagina").addClass('active');
-                $("#ultima_pagina").attr('disabled', 'true');
-            }
-
-            $('#ultima_pagina').on("click", function () {
-                updateSalesByOrigin('?page=' + response.meta.last_page);
-            });
-        }
-    }
 });
