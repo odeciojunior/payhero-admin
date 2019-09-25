@@ -50,7 +50,7 @@ class SalePresenter extends Presenter
     {
         $productsSale = [];
         foreach ($this->plansSales as $planSale) {
-            foreach ($planSale->plan()->first()->productsPlans as $productPlan) {
+            foreach ($planSale->plan()->first()->productPlans as $productPlan) {
                 $product           = $productPlan->product()->first()->toArray();
                 $product['amount'] = $productPlan->amount * $planSale->amount;
                 $productsSale[]    = $product;
