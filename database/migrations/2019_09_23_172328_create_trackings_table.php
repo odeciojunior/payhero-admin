@@ -27,7 +27,7 @@ class CreateTrackingsTable extends Migration
         });
 
         Schema::table('trackings', function(Blueprint $table) {
-            $table->foreign('product_plan_sale_id')->references('id')->on('product_plan_sales');
+            $table->foreign('product_plan_sale_id')->references('id')->on('products_plans_sales');
         });
 
         Schema::table('trackings', function(Blueprint $table) {

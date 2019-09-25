@@ -55,10 +55,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Sale extends Model
 {
     use FoxModelTrait, SoftDeletes, PresentableTrait;
-    /**
-     * @var string
-     */
+
     protected $presenter = SalePresenter::class;
+
     /**
      * The "type" of the auto-incrementing ID.
      * @var string

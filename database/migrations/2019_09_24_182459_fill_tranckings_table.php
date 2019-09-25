@@ -12,7 +12,7 @@ class FillTranckingsTable extends Migration
     public function up()
     {
         DB::unprepared("
-            INSERT INTO product_plan_sales
+            INSERT INTO products_plans_sales
                 (product_id
                 , plan_id
                 , sale_id
