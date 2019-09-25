@@ -3,23 +3,23 @@
     <tr>
         <td class="table-title">Descrição</td>
         <td style='width: 20px'></td>
-        <td class='text-left detail-description'></td>
+        <td class='text-left pixel-description'></td>
         <br>
     </tr>
     <tr>
         <td class="table-title">Code</td>
         <td style='width: 20px'></td>
-        <td class='text-left detail-code'></td>
+        <td class='text-left pixel-code'></td>
     </tr>
     <tr>
         <td class="table-title">Plataforma</td>
         <td style='width: 20px'></td>
-        <td class='text-left detail-platform'></td>
+        <td class='text-left pixel-platform'></td>
     </tr>
     <tr>
         <td class="table-title">Status</td>
         <td style='width: 20px'></td>
-        <td class='text-left detail-status'>
+        <td class='text-left pixel-status'>
         </td>
     </tr>
     </tbody>

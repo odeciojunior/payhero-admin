@@ -49,10 +49,10 @@ $(function () {
     });
 
     function renderDetailPixel(pixel) {
-        $('#modal-detail-pixel .detail-description').html(pixel.name);
-        $('#modal-detail-pixel .detail-code').html(pixel.code);
-        $('#modal-detail-pixel .detail-platform').html(pixel.platform);
-        $('#modal-detail-pixel .detail-status').html(pixel.status == 1
+        $('#modal-detail-pixel .pixel-description').html(pixel.name);
+        $('#modal-detail-pixel .pixel-code').html(pixel.code);
+        $('#modal-detail-pixel .pixel-platform').html(pixel.platform);
+        $('#modal-detail-pixel .pixel-status').html(pixel.status == 1
             ? '<span class="badge badge-success text-left">Ativo</span>'
             : '<span class="badge badge-danger">Desativado</span>');
         $('#modal-detail-pixel').modal('show');
