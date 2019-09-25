@@ -210,6 +210,8 @@
         </div>
     </div>
 </div>
-<button id='current-page-shippings2' class='btn nav-btn float-right'>2</button>
-<button id='current-page-shippings1' class='btn nav-btn active float-right'>1</button>
+<div class="pagination-sm text-right">
+    <button id='current-page-shippings1' class='btn nav-btn active'>1</button>
+    <button id='current-page-shippings2' class='btn nav-btn'>2</button>
+</div>
 
