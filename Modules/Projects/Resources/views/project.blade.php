@@ -253,7 +253,7 @@
                             </div>
                         </div>
                     </div>
-                    @if($project->shopify_id)
+                @if($project->shopify_id)
                     <!-- Modal para fazer-desfazer integração com shopify -->
                         <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                             <div class="modal-dialog  modal-dialog-centered  modal-simple">
@@ -288,7 +288,8 @@
     @push('scripts')
         <script src="{{asset('modules/partners/js/partners.js')}}"></script>
         <script src="{{asset('modules/shipping/js/shipping.js')}}"></script>
-        <script src="{{asset('modules/domain/js/domain.js')}}"></script>
+        {{--<script src="{{asset('modules/domain/js/domain.js')}}"></script>--}}
+        <script src="{{asset('modules/domain/js/domainEdit.js')}}"></script>
         <script src="{{asset('modules/sms-message/js/smsMessage.js')}}"></script>
         <script src="{{asset('modules/pixels/js/pixels.js')}}"></script>
         <script src="{{asset('modules/discount-coupons/js/discountCoupons.js')}}"></script>

@@ -1,0 +1,676 @@
+$(document).ready(function () {
+    let projectId = $(window.location.pathname.split('/')).get(-1);
+    let btnAddDomain = $("#btn-add-domain");
+    let btnDeleteDomain = $("#btn-delete-domain");
+    let btnAddDomainModal = $("#btn-modal-add-domain");
+
+    let infoDomain = $(".info-domain");
+
+    let csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    $("#tab-domains").on('click', function () {
+        $("#previewimage").imgAreaSelect({remove: true});
+        updateDomains();
+    });
+
+    updateDomains();
+
+    /**
+     * Atualiza tabelas de dominios
+     * @param link
+     */
+    function updateDomains(link = null) {
+        loadOnTable('#domain-table-body', '#tabela-dominios');
+
+        if (link == null) {
+            link = '/api/project/' + projectId + '/domains';
+        } else {
+            link = '/api/project/' + projectId + '/domains' + link;
+        }
+
+        $.ajax({
+            method: 'GET',
+            url: link,
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            },
+            error: function (response) {
+                if (response.status === 422) {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                } else {
+                    alertCustom('error', response.responseJSON.message);
+                }
+            }, success: function (response) {
+                $("#domain-table-body").html('');
+
+                if (response.data == '') {
+                    $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum dominio encontrado</td></tr>")
+                } else {
+                    $.each(response.data, function (index, value) {
+                        tableDomains(value);
+                    });
+
+                    pagination(response, 'domain', updateDomains);
+
+                    /**
+                     * Delete Domain
+                     */
+                    $(".delete-domain").on('click', function () {
+                        let domain = $(this).attr('domain');
+                        deleteDomain(domain);
+                    });
+
+                    /**
+                     * Update Domain
+                     */
+                    $(".edit-domain").on('click', function () {
+                        $("#btn-modal-add-input").show();
+                        let domain = $(this).attr('domain');
+                        $("#modal-content-domain").css('overflow-y', 'auto').modal('show');
+                        $("#domain").val(domain);
+
+                        updateTableRecords(domain);
+                    });
+
+                    $(".details-domain").on('click', function () {
+                        let domainId = $(this).attr('domain');
+                        console.log(domainId);
+                        $("#domain").val('');
+                        $("#domain").val(domainId);
+                        $("#content-modal-recheck-dns-error").hide();
+                        $("#content-modal-recheck-dns").show();
+                        verifyDataDomain();
+                    });
+
+                }
+
+            }
+        });
+    }
+
+    /**
+     * Delete Domain
+     * @param domain
+     */
+    function deleteDomain(domain) {
+        $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
+        $("#loaderModal").remove();
+        loadingOnScreenRemove();
+
+        $("#modal-delete-domain").modal("show");
+
+        btnDeleteDomain.unbind('click');
+        btnDeleteDomain.on('click', function () {
+            $(".btn-delete-modal-domain").hide();
+
+            loadOnModal('#modal-delete-domain-body');
+
+            $.ajax({
+                method: 'DELETE',
+                url: '/api/project/' + projectId + '/domains/' + domain,
+                dataType: 'json',
+                data: {
+                    'project': projectId,
+                    'domain': domain,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                error: function (response) {
+                    loadingOnScreenRemove();
+                    $("#loaderModal").remove();
+                    $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
+
+                    errorAjaxResponse(response);
+                },
+                success: function (response) {
+                    loadingOnScreenRemove();
+                    $("#loaderModal").remove();
+
+                    $('#close-modal-delete-domain').click();
+
+                    alertCustom('success', response.message);
+                    loadingOnScreenRemove();
+                    updateDomains();
+                }
+            });
+
+        })
+
+    }
+
+    /**
+     * Monta tabela de dominios
+     * @param value
+     */
+    function tableDomains(value) {
+        var dados = '';
+        dados += '<tr>';
+        dados += '<td class="text-center">' + value.domain + '</td>';
+        dados += '<td class="text-center"><span class="badge badge-' + statusDomain[value.status] + '">' + value.status_translated + '</span></td>';
+        dados += "<td style='text-align:center;'>"
+        dados += "<a role='button' class='mg-responsive details-domain pointer' status='" + value.status + "' domain='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i> </a>"
+        dados += "<a role='button' class='mg-responsive edit-domain    pointer' status='" + value.status + "' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>edit</i> </a>"
+        dados += "<a role='button' class='mg-responsive delete-domain  pointer' status='' domain='" + value.id + "' data-toggle='modal'><i class='material-icons gradient'>delete_outline</i> </a>";
+        dados += "</td>";
+        dados += '</tr>';
+        $("#domain-table-body").append(dados);
+    }
+
+    /**
+     * Verifica dados e exibi modal para adicionar novo dominio
+     */
+    btnAddDomain.unbind('click');
+    btnAddDomain.on('click', function () {
+        $("#btn-modal-add-input").show();
+        $("#loaderModal").remove();
+        loadingOnScreenRemove();
+
+        $("#modal-title-add-domain").html('Novo domínio').show();
+        $("#form-add-domain, #btn-modal-add-domain").show();
+
+        $("#form-add-domain").submit(function () {
+            return false;
+        });
+
+        $('#modal-body-add-domain, #btn-modal-add-domain').show();
+
+        $("#modal-add-domain").modal('show');
+
+        btnAddDomainModal.unbind('click');
+        btnAddDomainModal.on('click', function () {
+
+            if ($.trim($(".name-domain").val()).length === 0) {
+                infoDomain.addClass('text-danger').html('Preencha corretamente o dominio').show();
+            } else {
+                $(".info-domain").html('');
+                addNewDomain();
+            }
+
+        });
+    });
+
+    /**
+     * Salva dados novo dominio da modal
+     */
+    function addNewDomain() {
+        loadOnModal('#modal-body-add-domain');
+        $("#especialModalTitle").remove();
+        $("#modal-title-add-domain").html('');
+        loadOnModalDomainEspecial('#modal-content-add-domain');
+        $("#btn-modal-add-domain").hide();
+
+        btnAddDomainModal.hide();
+
+        let formData = new FormData(document.getElementById('form-add-domain'));
+        formData.append('project_id', projectId);
+
+        $.ajax({
+            method: "POST",
+            url: '/api/project/' + projectId + '/domains',
+            processData: false,
+            contentType: false,
+            cache: false,
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            },
+            dataType: "json",
+            data: formData,
+            error: function (response) {
+                console.log(response);
+                $("#especialModalTitle").remove();
+
+                $("#loaderModal").remove();
+                loadingOnScreenRemove();
+                $("#modal-title-add-domain").html('Novo domínio').show();
+                $("#form-add-domain, #btn-modal-add-domain").show();
+
+                // $(`#modal-body-add-domain, ${btnAddDomainModal}`).show();
+
+                errorAjaxResponse(response);
+            },
+            success: function success(response) {
+                console.log(response);
+                $("#loaderModal").remove();
+                loadingOnScreenRemove();
+
+                $("#modal-button-close").click();
+                alertCustom('success', response.message);
+                updateDomains();
+                $(".btn-continue-domain").show();
+                infoDomain = response.data;
+                modalDomainEdit(response);
+
+            }
+        });
+
+    }
+
+    /**
+     * Remove Loads
+     */
+    function removeLoad() {
+        loadingOnScreenRemove();
+        $("#loaderModal").remove();
+        $('#especialModalTitle').remove();
+    }
+
+    /**
+     * Muda input quando for entrada MX
+     */
+    $("#type-register").change(function () {
+        if ($("#type-register option:selected").val() === 'MX') {
+            $("#name-register").parent().removeClass('col-lg-10').addClass('col-lg-8');
+
+            $("#name-register").parent().after(
+                ' <div id="div-input-priority" class="col-sm-12 col-md-5 col-lg-2 mb-3">' +
+                '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
+                '</div>'
+            );
+
+            $("#proxy").val('0').attr('disabled', 'disabled');
+
+            $('#value-priority').mask('0#');
+
+        } else if ($("#type-register option:selected").val() === 'TXT') {
+            $("#proxy").val('0').attr('disabled', 'disabled');
+
+        } else {
+            $("#proxy").val('0').removeAttr('disabled');
+            $("#div-input-priority").remove();
+            $("#name-register").parent().removeClass('col-lg-8').addClass('col-lg-10');
+        }
+    });
+
+    /**
+     * Cancela o submit do form de adicionar record
+     */
+    $("#form-modal-add-domain-record").submit(function () {
+        return false;
+    });
+
+    /**
+     * Modal carrega dados apos adicionar dominio, editar records
+     * @param response
+     */
+    function modalDomainEdit(response) {
+
+        $("#domain").val('');
+        $("#domain").val(response.data.id_code);
+        $("#btn-modal-continue-domain").show();
+
+        $("#modal-content-domain").css('overflow-y', 'auto').modal('show');
+
+        updateTableRecords(response.data.id_code);
+
+    }
+
+    /**
+     * Adiciona records ao dominio
+     */
+    $("#bt-add-record").on('click', function () {
+        let domainId = $("#domain").val();
+        console.log('dominio: ' + domainId);
+
+        let formData = new FormData(document.getElementById('form-modal-add-domain-record'));
+        formData.append('project', projectId);
+
+        formData.append('domain', domainId);
+        console.log(formData);
+
+        $.ajax({
+            method: 'POST',
+            url: '/api/project/' + projectId + '/domain/' + domainId + '/records',
+            processData: false,
+            contentType: false,
+            cache: false,
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            },
+            data: formData,
+            dataType: "json",
+            error: function (response) {
+                console.log(response);
+                $(".swal2-container").remove();
+                removeLoad();
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                console.log(response);
+                $(".swal2-container").remove();
+                removeLoad();
+                alertCustom('success', response.message);
+                $('#name-register, #value-record').val('');
+                updateTableRecords(domainId);
+
+            }
+        });
+    });
+
+    /**
+     * Atualiza tabelas de records
+     * @property response.data.domainRecords
+     */
+    function updateTableRecords(domainId) {
+        loadOnTable('#table-body-new-records', '#new-registers-table');
+        $.ajax({
+            method: 'GET',
+            url: '/api/project/' + projectId + '/domain/' + domainId + '/records',
+            processData: false,
+            contentType: false,
+            cache: false,
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            },
+            dataType: 'json',
+            error: function (response) {
+                console.log(response);
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                $("#table-body-new-records").html('');
+                tableRecords(response.data.domainRecords, domainId);
+
+                $(".delete-domain-record").unbind('click');
+                $(".delete-domain-record").on('click', function () {
+                    if (isEmptyValue($(this).data('domain')) && isEmptyValue($(this).data('record'))) {
+                        deleteRecord(projectId, $(this).data('domain'), $(this).data('record'));
+                    }
+                });
+
+                $('.check-proxy').bind('change', function () {
+
+                    if ($(this).is(':checked')) {
+                        $(this).val(1);
+                    } else {
+                        $(this).val(0);
+                    }
+
+                    console.log($(this).data('domain'));
+                    console.log($(this).data('record'));
+
+                    if (!$(this).data('system')) {
+                        $.ajax({
+                            method: 'PUT',
+                            url: '/api/project/' + projectId + '/domain/' + $(this).data('domain') + '/records/' + $(this).data('record'),
+                            data: {
+                                proxy: this.value
+                            },
+                            headers: {
+                                "X-CSRF-TOKEN": csrfToken
+                            },
+                            error: function (response) {
+                                console.log(response);
+                            }, success: function (response) {
+                                console.log(response);
+
+                                alertCustom('success', response.message);
+
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+    }
+
+    /**
+     * Monta tabela com todos os records atualizados
+     * @param domainRecords
+     * @param domainId
+     * @param domainRecords.value.system_flag
+     */
+    function tableRecords(domainRecords, domainId) {
+        console.log(domainRecords);
+        let data = '';
+        let cont = 0;
+        let proxyVar = 'checked';
+        let disable = '';
+        $.each(domainRecords, function (index, value) {
+            data += '<tr>';
+            data += '<td >' + value.type + '</td>';
+            data += '<td >' + value.name + '</td>';
+            data += '<td style="overflow-wrap: break-word;">' + value.content + '</,td>';
+
+            if (!value.proxy) {
+                proxyVar = '';
+            } else {
+                proxyVar = 'checked'
+            }
+
+            if (value.type === 'MX' || value.type === 'TXT') {
+                disable = 'disabled';
+            }
+
+            if (!value.system_flag) {
+                data += '<td><div class="switch-holder">' +
+                    '<label class="switch">';
+
+                data += '<input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy"  class="check check-proxy" data-domain="' + domainId + '" data-system="' + value.system_flag + '" data-record="' + value.id + '"  ' + proxyVar + '' + disable + '  >' +
+                    '<span class="slider round"></span>' +
+                    '</label>' +
+                    '</div></td>';
+                data += "<td><a role='button' class='mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+
+            } else {
+                cont++;
+                data += '<td><div class="switch-holder">' +
+                    '                    <label class="switch">' +
+                    '                        <input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + ' disabled>' +
+                    '                        <span class="slider round"></span>' +
+                    '                    </label>' +
+                    '                </div></td>';
+                data += "<td><a role='button' class='mg-responsive pointer' disabled='disabled'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+
+            }
+
+            data += "</td>";
+            data += '</tr>';
+        });
+        $("#loaderLine").remove();
+        $("#new-registers-table").addClass('table-striped');
+        if (cont > 0) {
+            $("#empty-info").hide();
+        } else {
+            $("#empty-info").show();
+        }
+        $("#table-body-new-records").append(data);
+
+    }
+
+    /**
+     * Deleta record
+     * @param projectId
+     * @param domain
+     * @param record
+     */
+    function deleteRecord(projectId, domain, record) {
+        if (isEmptyValue(projectId) && isEmptyValue(domain) && isEmptyValue(record)) {
+            $.ajax({
+                method: 'DELETE',
+                url: '/api/project/' + projectId + '/domain/' + domain + '/records/' + record,
+                processData: false,
+                contentType: false,
+                cache: false,
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken
+                },
+                dataType: 'json',
+                error: function (response) {
+                    console.log(response);
+                    errorAjaxResponse(response);
+                },
+                success: function (response) {
+                    alertCustom('success', response.message);
+                    $("#table-body-new-records").html('');
+                    updateTableRecords(domain);
+                }
+            });
+
+        } else {
+            alertCustom('error', 'Ocorreu um erro, tente novamente mais tarde!');
+        }
+    }
+
+    /**
+     *
+     */
+    function verifyDataDomain() {
+        $.ajax({
+            method: 'GET',
+            url: '/api/project/' + projectId + '/domain/' + $("#domain").val() + '/info',
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            },
+            error: function (response) {
+                console.log(response);
+                errorAjaxResponse(response);
+            },
+            success: function (response) {
+                console.log(response);
+                $(".table-title-entry").remove();
+                var data = '';
+                $.each(response.data.zones, function (index, value) {
+                    data += '<tr class="table-title-entry">' +
+                        '<td class= "table-title" > <b>Novo servidor DNS: </b></td>' +
+                        '<td> "' + value + '" </td>' +
+                        '</tr>';
+                });
+
+                $("#table-zones-add").append(data);
+                console.log(response.data.domainHost);
+                if (response.data.domainHost) {
+                    $("#nameHost").html(response.data.domainHost);
+                } else {
+                    $("#nameHost").html('');
+                }
+                $("#content-modal-recheck-dns-success").hide();
+
+                $("#modal-title-dns-recheck, #modal-info-dsn-body, #content-modal-recheck-dns").show();
+
+                // $("#modal-info-dsn-body").show();
+                $("#modal-info-dns").modal('show');
+
+            }
+        });
+    }
+
+    /**
+     * Mostra modal para validar entradas
+     */
+    $(".btn-continue-domain").on('click', function () {
+        $("#modal-button-close-edit-domain-record").click();
+
+        $("#content-modal-recheck-dns-error").hide();
+        $("#content-modal-recheck-dns").show();
+        verifyDataDomain();
+
+    });
+
+    /**
+     * Recheck dominio
+     */
+    $(".btn-verify-domain").unbind('click');
+    $(".btn-verify-domain").on('click', function () {
+        let domainId = $("#domain").val();
+        console.log('recheck dominio: ' + domainId);
+        $("#modal-title-dns-recheck").hide();
+
+        loadOnModal('.content-dns');
+        // #modal-info-dsn-body
+        $.ajax({
+            method: 'GET',
+            url: '/api/project/' + projectId + '/domain/' + domainId + '/recheck',
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            },
+            error: function (response) {
+                console.log(response);
+                $(".swal2-container").remove();
+                removeLoad();
+                $("#loaderModal").remove();
+                loadingOnScreenRemove();
+                errorAjaxResponse(response);
+                $("#content-modal-recheck-dns").hide();
+                $("#content-modal-recheck-dns-error").show();
+
+            },
+            success: function (response) {
+                console.log(response);
+                $(".swal2-container").remove();
+                removeLoad();
+                $("#loaderModal").remove();
+                loadingOnScreenRemove();
+                alertCustom('success', response.message);
+                $("#content-modal-recheck-dns").hide();
+                $("#modal-info-dsn-success-body, #content-modal-recheck-dns-success").show();
+                updateDomains();
+            }
+        });
+
+    });
+
+    /**
+     * Loader do titulo ao cadastrar dominio
+     * @param whereToLoad
+     */
+    function loadOnModalDomainEspecial(whereToLoad) {
+
+        $(whereToLoad).children().hide('fast');
+        $('#modal-title-add-domain').after('<h3 id="especialModalTitle" style="font-weight:bold; color:black"></h3>');
+        $('#modal-title-add-domain').hide();
+        $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" + "<div class='loaderModal'>" + "</div>" + "</div>");
+        $('#loadingOnScreen').append("<div class='blockScreen'></div>");
+
+        $('#especialModalTitle').html('Iniciando ... ');
+
+        setTimeout(function () {
+            $('#especialModalTitle').html('Configurando domínio');
+        }, 1000);
+        setTimeout(function () {
+            $('#especialModalTitle').html('Configurando entradas DNS');
+        }, 6000);
+        setTimeout(function () {
+            $('#especialModalTitle').html('Preparando servidores de Email');
+        }, 13000);
+        setTimeout(function () {
+            $('#especialModalTitle').html('Preparando checkout transparente');
+        }, 20000);
+        setTimeout(function () {
+            $('#especialModalTitle').html('Finalizando ... ');
+        }, 25000);
+    }
+
+    /**
+     * Presenter
+     */
+    let statusDomain = {
+        1: 'warning',
+        2: 'warning',
+        3: 'success',
+        4: 'danger'
+    };
+
+    /**
+     * Não sei o que faz
+     */
+    $('.modal').on('hidden.bs.modal', function () {
+        resetHtml();
+        $('.modal-footer').css('display', '');
+        $('#btn-modal').show();
+        $('#modal-title').show();
+        $('#especialModalTitle').remove();
+    });
+
+    /**
+     * Não sei
+     * @param whereToReset
+     */
+    function resetHtml(whereToReset) {
+        $(whereToReset).html('');
+    }
+
+});

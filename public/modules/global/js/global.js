@@ -273,9 +273,30 @@ function errorAjaxResponse(response) {
         for (error in response.responseJSON.errors) {
             alertCustom('error', response.responseJSON.errors[error]);
         }
+    } else if (response.status === 404) { // Conteudo Não pode ser encontrado
+        for (error in response.responseJSON.errors) {
+            alertCustom('error', response.responseJSON.errors[error]);
+        }
+    } else if (response.status === 403) { // Não tem acesso ao conteudo
+        for (error in response.responseJSON.errors) {
+            alertCustom('error', response.responseJSON.errors[error]);
+        }
+    } else if (response.status === 401) { // Não esta autenticado
+        window.location.href = window.location.origin + '/';
+        for (error in response.responseJSON.errors) {
+            alertCustom('error', response.responseJSON.errors[error]);
+        }
     } else {
         alertCustom('error', response.responseJSON.message);
     }
+}
+
+function isEmptyValue(value) {
+    if (value.length === 0) {
+        return false;
+    }
+
+    return true;
 }
 
 

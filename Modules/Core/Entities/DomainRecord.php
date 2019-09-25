@@ -43,6 +43,7 @@ class DomainRecord extends Model
         'content',
         'system_flag',
         'priority',
+        'proxy',
         'created_at',
         'updated_at',
         'deleted_at',

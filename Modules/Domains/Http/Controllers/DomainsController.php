@@ -36,162 +36,14 @@ use Modules\Domains\Transformers\DomainResource;
  */
 class DomainsController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return AnonymousResourceCollection
-     */
-    public function index(Request $request)
+    public function index()
     {
-        try {
-            $domainModel  = new Domain();
-            $projectModel = new Project();
-
-            $dataRequest = $request->all();
-            if (isset($dataRequest["project"])) {
-                $projectId = current(Hashids::decode($dataRequest["project"]));
-                $project   = $projectModel->where('id', $projectId)->first();
-
-                if (Gate::allows('index', [$project])) {
-                    $domains = $domainModel->with(['project'])->where('project_id', $projectId);
-
-                    return DomainResource::collection($domains->orderBy('id', 'DESC')->paginate(5));
-                } else {
-                    return response()->json([
-                                                'message' => 'Sem permissão para visualizar os domínios',
-                                            ], 400);
-                }
-            } else {
-                return response()->json([
-                                            'message' => 'Erro ao listar dados de domínios',
-                                        ], 400);
-            }
-        } catch (Exception $e) {
-            Log::warning('Erro ao buscar dados (DomainsController - index)');
-            report($e);
-
-            return response()->json([
-                                        'message' => 'Erro ao listar dados de domínios',
-                                    ], 400);
-        }
+        //
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function store(DomainStoreRequest $request)
+    public function store()
     {
-        try {
-            $domainModel       = new Domain();
-            $projectModel      = new Project();
-            $cloudFlareService = new CloudFlareService();
-
-            DB::beginTransaction();
-            $requestData = $request->validated();
-
-            $projectId = $requestData['project_id'] ?? null;
-            $projectId = current(Hashids::decode($projectId));
-
-            if ($projectId) {
-
-                $project = $projectModel->with(['domains'])->find($projectId);
-
-                if (Gate::allows('edit', [$project])) {
-                    //se pode editar o projeto, pode editar os dominios
-
-                    if (!empty($project->shopify_id)) {
-                        //projeto shopify
-                        $domainIp = $cloudFlareService::shopifyIp;
-                    } else {
-                        //projeto web
-                        $domainIp = null;
-                    }
-
-                    //tratamento parcial do dominio
-                    $requestData['name'] = str_replace("http://", "", $requestData['name']);
-                    $requestData['name'] = str_replace("https://", "", $requestData['name']);
-                    $requestData['name'] = str_replace("www.", "", $requestData['name']);
-                    $requestData['name'] = 'http://' . $requestData['name'];
-                    $requestData['name'] = parse_url($requestData['name'], PHP_URL_HOST);
-
-                    if ($project->domains->where('name', $requestData['name'])
-                                         ->count() == 0) {
-
-                        if (empty($cloudFlareService->getZones($requestData['name']))) {
-                            $domainCreated = $domainModel->create([
-                                                                      'project_id' => $projectId,
-                                                                      'name'       => $requestData['name'],
-                                                                      'domain_ip'  => $domainIp,
-                                                                      'status'     => $domainModel->present()
-                                                                                                  ->getStatus('pending'),
-                                                                  ]);
-
-                            if ($domainCreated) {
-                                if ($project->shopify_id == null) {
-                                    $newDomain = $cloudFlareService->integrationWebsite($domainCreated->id, $requestData['name'], $domainIp);
-                                } else {
-                                    $newDomain                = $cloudFlareService->integrationShopify($domainCreated->id, $requestData['name']);
-                                    $requestData['domain_ip'] = 'Domínio Shopify';
-                                }
-
-                                $cloudFlareService->setCloudFlareConfig($requestData['name']);
-
-                                if ($newDomain) {
-                                    DB::commit();
-
-                                    $newNameServers = [];
-                                    foreach ($cloudFlareService->getZones() as $zone) {
-                                        if ($zone->name == $domainCreated->name) {
-                                            foreach ($zone->name_servers as $new_name_server) {
-                                                $newNameServers[] = $new_name_server;
-                                            }
-                                        }
-                                    }
-
-                                    return response()->json(['message' => 'Domínio cadastrado com sucesso', 'data' => ['id_code' => Hashids::encode($domainCreated->id), 'zones' => $newNameServers]], 200);
-                                } else {
-                                    //problema ao cadastrar dominio
-                                    DB::rollBack();
-
-                                    return response()->json(['message' => 'Erro ao criar domínio.'], 400);
-                                }
-                            } else {
-                                //erro ao criar dominio
-                                DB::rollBack();
-
-                                return response()->json(['message' => 'Erro ao cadastrar domínios.'], 400);
-                            }
-                        } else {
-                            //dominio ja existe registrado no cloudflare
-                            DB::rollBack();
-
-                            return response()->json(['message' => 'Domínio já está sendo utilizado'], 400);
-                        }
-                    } else {
-                        //dominio ja cadastrado
-
-                        DB::rollBack();
-
-                        return response()->json(['message' => 'Domínios já cadastrado.'], 400);
-                    }
-                } else {
-                    DB::rollBack();
-
-                    return response()->json(['message' => 'Sem permissão para criar um domínio neste projeto'], 403);
-                }
-            } else {
-                //nao veio projectid
-                DB::rollBack();
-
-                return response()->json(['message' => 'Projeto não encontrado.'], 400);
-            }
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::warning('Erro ao obter form de cadastro de domínios (DomainsController - create)');
-            report($e);
-
-            return response()->json(['message' => 'Erro ao configurar domínios.'], 400);
-        }
+        //
     }
 
     /**
@@ -328,9 +180,9 @@ class DomainsController extends Controller
                                 //dominio nao tem "ponto" ou é igual ao dominio
 
                                 if ($domain->domainsRecords->where('type', current($record[0]))
-                                                    ->where('name', $subdomain)
-                                                    ->where('content', current($record[2]))
-                                                    ->count() == 0) {
+                                                           ->where('name', $subdomain)
+                                                           ->where('content', current($record[2]))
+                                                           ->count() == 0) {
                                     //nao existe a record
 
                                     if (is_numeric(current($record[3]))) {
@@ -550,48 +402,6 @@ class DomainsController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function destroyRecord(DomainDestroyRecordRequest $request)
-    {
-        try {
-            $domainRecordModel = new DomainRecord();
-            $cloudFlareService = new CloudFlareService();
-
-            $requestData = $request->validated();
-
-            $recordId = current(Hashids::decode($requestData['id_record']));
-            $record   = $domainRecordModel->with(['domain', 'domain.project'])->find($recordId);
-
-            if (Gate::allows('edit', [$record->domain->project])) {
-                $cloudFlareService->setZone($record->domain->name);
-
-                if ($cloudFlareService->deleteRecord($record->cloudflare_record_id)) {
-                    //zona deletada
-                    $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
-
-                    if ($recordsDeleted) {
-                        return response()->json(['message' => 'Domínio removido com sucesso'], 200);
-                    } else {
-                        return response()->json(['message' => 'Não foi possível deletar o registro do domínio!'], 400);
-                    }
-                } else {
-                    //erro ao deletar zona
-                    return response()->json(['message' => 'Não foi possível deletar o domínio!'], 400);
-                }
-            } else {
-                return response()->json(['message' => 'Sem permissão para remover record'], 403);
-            }
-        } catch (Exception $e) {
-            Log::warning('DomainsController destroyRecord - erro ao deletar domínio');
-            report($e);
-
-            return response()->json(['message' => 'Problema ao deletar o domínio'], 400);
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function recheckDomain(Request $request)
     {
 
@@ -660,8 +470,9 @@ class DomainsController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function recheckOnly(Request $request)
+    /*public function recheckOnly(Request $request)
     {
         try {
             $domainModel       = new Domain();
@@ -803,6 +614,6 @@ class DomainsController extends Controller
 
             return response()->json(['message' => 'Problema ao revalidar o domínio'], 400);
         }
-    }
+    }*/
 }
 

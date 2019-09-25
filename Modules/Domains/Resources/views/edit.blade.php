@@ -29,7 +29,9 @@
             </div>
             @if(!$haveEnterA && $project->shopify_id == null)
                 <p class='info mt-12' style='font-size: 10px;'>
-                    <i class='icon wb-info-circle' aria-hidden='true'></i><strong> Caso você possua um site hospedado em algum servidor com este domínio, você precisa criar uma entrada A com seu domínio apontando para o IP do servidor para seu site continuar funcionando normalmente. </strong>
+                    <i class='icon wb-info-circle' aria-hidden='true'></i><strong>
+                        Caso você possua um site hospedado em algum servidor com este domínio, você precisa criar uma entrada
+                        A com seu domínio apontando para o IP do servidor para seu site continuar funcionando normalmente. </strong>
                 </p>
             @endif
         </form>
@@ -62,7 +64,8 @@
                                     {{--<td class='col-6' style='overflow-x:scroll'>{{ $register['content'] }}</td>--}}
                                     <td class='col-sm-12 col-md-6 col-lg-6'>{{ $register['content'] }}</td>
                                     <td class='col-sm-12 col-md-2 col-lg-2 text-center align-middle'>
-                                        <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro col-12" {!! ($register['system_flag'] == 1) ? 'disabled' : '' !!}>Remover</button>
+                                        <button type="button" id-registro="{!! $register['id'] !!}" class="btn btn-danger remover_registro col-12"
+                                            {!! ($register['system_flag'] == 1) ? 'disabled' : '' !!}>Remover</button>
                                     </td>
                                 </tr>
                             @endif
