@@ -1,16 +1,16 @@
-var statusShipping = {
+let statusShipping = {
     1: "success",
     0: "danger",
 }
 
-var activeShipping = {
+let activeShipping = {
     1: "success",
     0: "danger",
 }
 
 $(document).ready(function () {
 
-    var projectId = $("#project-id").val();
+    let projectId = $("#project-id").val();
 
     //comportamentos da tela
     $("#tab-fretes").on('click', function () {
@@ -20,7 +20,7 @@ $(document).ready(function () {
 
     $(document).on('change', '.shipping-type', function () {
         // altera campo value dependendo do tipo do frete
-        var selected = $(this).val();
+        let selected = $(this).val();
         if (selected === 'static') {
             $('.shipping-description').attr('placeholder', 'Frete grátis');
             $(".value-shipping-row").css('display', 'block');
@@ -78,8 +78,8 @@ $(document).ready(function () {
 
     // carregar modal de detalhes
     $(document).on('click', '.detalhes-frete', function () {
-        var frete = $(this).attr('frete');
-        var data = {freteId: frete};
+        let frete = $(this).attr('frete');
+        let data = {freteId: frete};
 
         $.ajax({
             method: "GET",
@@ -115,10 +115,10 @@ $(document).ready(function () {
 
     // carregar modal de edicao
     $(document).on("click", '.editar-frete', function () {
-        var frete = $(this).attr('frete');
+        let frete = $(this).attr('frete');
         $(this).attr('frete');
 
-        var data = {frete: frete};
+        let data = {frete: frete};
 
         $.ajax({
             method: "GET",
@@ -165,14 +165,14 @@ $(document).ready(function () {
 
     //carregar modal delecao
     $(document).on('click', '.excluir-frete', function (event) {
-        var frete = $(this).attr('frete');
+        let frete = $(this).attr('frete');
         $("#modal-delete-shipping .btn-delete").attr('frete', frete);
         $("#modal-delete-shipping").modal('show');
     });
 
     //cria novo frete
     $("#modal-create-shipping .btn-save").click(function () {
-        var formData = new FormData(document.getElementById('form-add-shipping'));
+        let formData = new FormData(document.getElementById('form-add-shipping'));
         formData.append("project_id", projectId);
         loadingOnScreen();
 
@@ -216,7 +216,7 @@ $(document).ready(function () {
 
     //atualizar frete
     $("#modal-edit-shipping .btn-update").on('click', function () {
-        var formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
+        let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
         formData.append("project_id", projectId);
         formData.append('status', $('#modal-edit-shipping .shipping-status').val());
         formData.append('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').val());

@@ -4,7 +4,6 @@
         <td class="table-title">Descrição</td>
         <td style='width: 20px'></td>
         <td class='text-left pixel-description'></td>
-        <br>
     </tr>
     <tr>
         <td class="table-title">Code</td>
