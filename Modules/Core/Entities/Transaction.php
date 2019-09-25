@@ -54,6 +54,7 @@ class Transaction extends Model
     protected $fillable = [
         'sale_id',
         'company_id',
+        'invitation_id',
         'value',
         'type',
         'status',
@@ -100,4 +101,13 @@ class Transaction extends Model
     {
         return $this->hasMany('Modules\Core\Entities\Transfer');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function invitations(){
+
+        return $this->belongsTo('Modules\Core\Entities\Invitation');
+    }
+
 }
