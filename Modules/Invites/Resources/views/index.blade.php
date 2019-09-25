@@ -1,8 +1,8 @@
 @extends("layouts.master")
 
 @section('content')
-
     @push('css')
+        <link rel="stylesheet" href="{{ asset('modules/global/css/new-dashboard.css') }}">
         <link rel="stylesheet" href="{{ asset('modules/global/css/empty.css') }}">
     @endpush
     <div class="page">
@@ -13,18 +13,23 @@
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
             <div class="card shadow p-20">
                 <div class="row justify-content-center">
-                    <div class="col-md-4">
-                        <h6 class="invites"> Convites Enviados </h6>
-                        <h4 id='invitations_sent' class="number green" style='color:green'></h4>
+                    <div class="col-md-3 col-sm-12">
+                        <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites Enviados </h6>
+                        <h4 id='invitations_sent' class="number text-center orange-gradient"></h4>
                     </div>
-                    <div class="col-md-4">
-                        <h6 class="invites"> Convites ativos </h6>
-                        <h4 id='invitations_accepted' class="number green" style='color:green'></i>
+                    <div class="col-md-3 col-sm-12">
+                        <h6 class="text-center green-gradient"><i class="material-icons align-middle green-gradient mr-1" > people </i>  Convites ativos </h6>
+                        <h4 id='invitations_accepted' class="number text-center green-gradient"></i>
                         </h4>
                     </div>
-                    <div class="col-md-4">
-                        <h6 class="invites"> Receita gerada </h6>
-                        <h4 id='balance_generated' class="number green" style='color:green'></i>
+                    <div class="col-md-3 col-sm-12">
+                        <h6 class="text-center orange-gradient"> <i class="material-icons align-middle orange-gradient"> attach_money </i> Comissão pendente </h6>
+                        <h4 id='commission_pending' class="number text-center orange-gradient" style='color:green'></i>
+                        </h4>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <h6 class="text-center green-gradient"> <i class="material-icons align-middle green-gradient"> attach_money </i> Comissão paga </h6>
+                        <h4 id='commission_paid' class="number text-center green-gradient"></i>
                         </h4>
                     </div>
                 </div>
@@ -45,6 +50,7 @@
                         <thead class="text-center">
                             <th class="text-left">Convite</th>
                             <th class="text-center">Email convidado</th>
+                            <th class="text-center">Empresa Recebedora</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Data cadastro</th>
                             <th class="text-center">Data expiração</th>
@@ -125,8 +131,52 @@
             </div>
         </div>
     </div>
-
-
+    <!-- Modal padrão para excluir -->
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-delete-invitation" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                        <i class="material-icons md-16">close</i>
+                    </a>
+                </div>
+                <div id="modal_excluir_body" class="modal-body text-center p-20">
+                    <div class="d-flex justify-content-center">
+                        <i class="material-icons gradient" style="font-size: 80px;color: #ff4c52;"> highlight_off </i>
+                    </div>
+                    <h3 class="black"> Você tem certeza? </h3>
+                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>
+                </div>
+                <div class="modal-footer d-flex align-items-center justify-content-center">
+                    <button id='btn-cancel-invitation' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                    <button id="btn-delete-invitation" type="button" class="col-4 btn btn-danger" style="width: 20%;" data-dismiss="modal">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para reenviar convite -->
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-resend-invitation" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog  modal-dialog-centered  modal-simple">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="fechar_modal_excluir">
+                        <i class="material-icons md-16">close</i>
+                    </a>
+                </div>
+                <div id="modal_excluir_body" class="modal-body text-center p-20">
+                    <div class="d-flex justify-content-center">
+                        <i class="material-icons" style="font-size: 80px;color:#16b248;"> email </i>
+                    </div>
+                    <h4 class="black"> Você realmente deseja reenviar o convite? </h4>
+{{--                    <p class="gray"> Se você excluir esse registro, não será possível recuperá-lo! </p>--}}
+                </div>
+                <div class="modal-footer d-flex align-items-center justify-content-center">
+                    <button id='btn-cancel' type="button" class="col-4 btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                    <button id="btn-resend-invitation" type="button" class="col-4 btn btn-success" style="width: 20%;" data-dismiss="modal">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     @push('scripts')
         <script src="{{asset('modules/invites/js/invites.js') }}"></script>
     @endpush

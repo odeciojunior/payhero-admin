@@ -64,7 +64,7 @@ class Invitation extends Model
      */
     public function company()
     {
-        return $this->belongsTo('Modules\Core\Entities\Company', 'company');
+        return $this->belongsTo('Modules\Core\Entities\Company', 'company_id');
     }
 
     /**
