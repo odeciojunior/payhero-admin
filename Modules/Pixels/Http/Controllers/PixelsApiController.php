@@ -5,7 +5,6 @@ namespace Modules\Pixels\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -21,17 +20,17 @@ class PixelsApiController extends Controller
 {
 
     /**
-     * @param Request $request
+     * @param $projectId
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index($projectId)
     {
         try {
-            if ($request->has('project') && !empty($request->input('project'))) {
-                $pixelModel = new \Modules\Core\Entities\Pixel();
+            if (!empty($projectId)) {
+                $pixelModel = new Pixel();
                 $projectModel = new Project();
 
-                $projectId = current(Hashids::decode($request->input('project')));
+                $projectId = current(Hashids::decode($projectId));
                 $project = $projectModel->find($projectId);
                 if (Gate::allows('edit', [$project])) {
                     $pixels = $pixelModel->where('project_id', $projectId);
@@ -59,9 +58,10 @@ class PixelsApiController extends Controller
 
     /**
      * @param PixelStoreRequest $request
+     * @param $projectId
      * @return JsonResponse
      */
-    public function store(PixelStoreRequest $request)
+    public function store(PixelStoreRequest $request, $projectId)
     {
         try {
             $pixelModel = new Pixel();
@@ -69,11 +69,11 @@ class PixelsApiController extends Controller
 
             $validator = $request->validated();
 
-            if (!$validator) {
+            if (!$validator || !isset($projectId)) {
                 return response()->json('Parametros invalidos', 400);
             }
 
-            $validator['project_id'] = current(Hashids::decode($validator['project_id']));
+            $validator['project_id'] = current(Hashids::decode($projectId));
 
             $project = $projectModel->find($validator['project_id']);
 
@@ -97,19 +97,20 @@ class PixelsApiController extends Controller
 
     /**
      * @param PixelUpdateRequest $request
+     * @param $projectId
      * @param $id
      * @return JsonResponse
      */
-    public function update(PixelUpdateRequest $request, $id)
+    public function update(PixelUpdateRequest $request, $projectId, $id)
     {
         $validated = $request->validated();
         try {
-            if (isset($validated) && isset($id)) {
+            if (isset($validated) && isset($id) && isset($projectId)) {
                 $pixelModel = new Pixel();
+                $projectModel = new Project();
 
-                $pixelId = Hashids::decode($id)[0];
-                $pixel = $pixelModel->with(['project'])->find($pixelId);
-                $project = $pixel->getRelation('project');
+                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -132,18 +133,20 @@ class PixelsApiController extends Controller
     }
 
     /**
+     * @param $projectId
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($projectId, $id)
     {
         try {
-            if (isset($id)) {
+            if (isset($id) && isset($projectId)) {
                 $pixelModel = new Pixel();
+                $projectModel = new Project();
 
-                $pixelId = Hashids::decode($id)[0];
-                $pixel = $pixelModel->with(['project'])->find($pixelId);
-                $project = $pixel->getRelation('project');
+                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
+                $projectId = Hashids::decode($projectId)[0];
+                $project = $projectModel->find($projectId);
 
                 if (Gate::allows('edit', [$project])) {
                     $pixelDeleted = $pixel->delete();
@@ -165,24 +168,24 @@ class PixelsApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param $projectId
+     * @param $id
      * @return JsonResponse
      */
-    public function show(Request $request)
+    public function show($projectId, $id)
     {
         try {
-            $pixelModel = new Pixel();
+            if (isset($id) && isset($projectId)) {
+                $pixelModel = new Pixel();
+                $projectModel = new Project();
 
-            $data = $request->all();
-            if (isset($data['pixelId'])) {
-                $pixelId = Hashids::decode($data['pixelId'])[0];
-                $pixel = $pixelModel->with(['project'])->find($pixelId);
-                $project = $pixel->getRelation('project');
+                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
 
                 if (Gate::allows('edit', [$project])) {
 
                     if ($pixel) {
-                        $pixel->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
+                        $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
                         return response()->json($pixel);
                     } else {
                         return response()->json('Erro ao buscar pixel', 400);
@@ -200,30 +203,34 @@ class PixelsApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param $projectId
+     * @param $id
      * @return JsonResponse
      */
-    public function edit(Request $request)
+    public function edit($projectId, $id)
     {
         try {
-            $pixelModel = new Pixel();
+            if (isset($projectId) && isset($id)) {
+                $pixelModel = new Pixel();
+                $projectModel = new Project();
 
-            $pixelId = $request->input('pixelId');
-            $pixel = $pixelModel->with(['project'])->find(Hashids::decode($pixelId)[0]);
-            $project = $pixel->getRelation('project');
+                $pixel = $pixelModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
 
-            if (Gate::allows('edit', [$project])) {
+                if (Gate::allows('edit', [$project])) {
 
-                if ($pixel) {
-                    $pixel->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
-                    return response()->json($pixel);
-                    //return view("pixels::edit", ['pixel' => $pixel]);
+                    if ($pixel) {
+                        $pixel->makeHidden(['id', 'project_id', 'campaing_id']);
+                        return response()->json($pixel);
+                    } else {
+                        return response()->json('Erro ao buscar pixel', 400);
+                    }
                 } else {
-                    return response()->json('erro');
+                    return response()->json(['message' => 'Sem permissão para editar pixels'], 403);
                 }
-            } else {
-                return response()->json(['message' => 'Sem permissão para editar pixels'], 403);
             }
+            return response()->json('Erro ao buscar pixel', 404);
+
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar pixel (PixelsController - edit)');
             report($e);

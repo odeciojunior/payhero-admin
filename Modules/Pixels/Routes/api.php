@@ -6,7 +6,7 @@ Route::group(
         'middleware' => ['web', 'auth']
     ],
     function() {
-        Route::apiResource('/pixels', 'PixelsApiController')
+        Route::apiResource('/project/{projectId}/pixels', 'PixelsApiController')
             ->only('index', 'store', 'update', 'destroy', 'show', 'edit');
     }
 );

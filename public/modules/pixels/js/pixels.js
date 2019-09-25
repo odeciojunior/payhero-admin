@@ -4,7 +4,7 @@ let statusPixel = {
 };
 
 $(function () {
-    let projectId = $("#project-id").val();
+    let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamentos da tela
     $('#tab_pixels').on('click', function () {
@@ -35,7 +35,7 @@ $(function () {
         let data = {pixelId: pixel};
         $.ajax({
             method: "GET",
-            url: "/api/pixels/" + pixel,
+            url: "/api/project/" + projectId + "/pixels/" + pixel,
             data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -64,7 +64,7 @@ $(function () {
         let data = {pixelId: pixel};
         $.ajax({
             method: "GET",
-            url: "/api/pixels/" + pixel + "/edit",
+            url: "/api/project/" + projectId + "/pixels/" + pixel + "/edit",
             data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -135,7 +135,7 @@ $(function () {
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: "/api/pixels",
+            url: "/api/project/" + projectId + "/pixels",
             headers: {
                 'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
             },
@@ -177,7 +177,7 @@ $(function () {
         let pixel = $('#modal-edit-pixel .pixel-id').val();
         $.ajax({
             method: "PUT",
-            url: "/api/pixels/" + pixel,
+            url: "/api/project/" + projectId + "/pixels/" + pixel,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -208,7 +208,7 @@ $(function () {
         let pixel = $(this).attr('pixel');
         $.ajax({
             method: "DELETE",
-            url: "/api/pixels/" + pixel,
+            url: "/api/project/" + projectId + "/pixels/" + pixel,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -240,19 +240,12 @@ $(function () {
     });
 
     function atualizarPixel() {
-        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-pixel', '#table-pixel');
 
-        if (link == null) {
-            link = '/api/pixels?' + 'project=' + projectId;
-        } else {
-            link = '/api/pixels' + link + '&project=' + projectId;
-        }
-
         $.ajax({
             method: "GET",
-            url: link,
+            url: "/api/project/" + projectId + "/pixels",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
