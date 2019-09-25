@@ -64,12 +64,20 @@ $(document).ready(function () {
 
                         dados += '<td class="" style="vertical-align: middle;"><button class="btn btn-floating btn-primary btn-sm" disabled>' + (cont += 1) + '</button></td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.email_invited + '</td>';
+                        dados += '<td class="text-center" style="vertical-align: middle;">' + value.company_name + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">';
                         dados += '<span class="badge badge-' + statusInvite[value.status] + ' text-center">' + value.status_translated + '</span>';
                         dados += '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.register_date + '</td>';
                         dados += '<td class="text-center" style="vertical-align: middle;">' + value.expiration_date + '</td>';
+                        if (value.status != '2') {
+                            dados += "<td><button class='btn pointer resend-invitation' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gray gradient'> sync </i></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' style='background-color:transparent;' invitation='" + value.id + "' disabled><i class='material-icons gradient'>delete</i></button></td>";
 
+                        } else {
+                            dados += "<td><button class='btn pointer resend-invitation' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gray gradient'> sync </i></button></td>";
+                            dados += "<td><button class='btn pointer delete-invitation' style='background-color:transparent;' invitation='" + value.id + "'><i class='material-icons gradient'>delete</i></button></td>";
+                        }
                         dados += '</tr>';
                         $("#table-body-invites").append(dados);
                     });
@@ -77,6 +85,60 @@ $(document).ready(function () {
                     pagination(response, 'invites');
                 }
                 getInvitationData();
+
+                // Reenviar convite
+                $(".resend-invitation").unbind('click');
+                $('.resend-invitation').on('click', function () {
+                    let invitationId = $(this).attr('invitation');
+                    $('#modal-resend-invitation').modal('show');
+                    $('#btn-resend-invitation').unbind('click');
+                    $('#btn-resend-invitation').on('click', function () {
+                        loadingOnScreen();
+                        $.ajax({
+                            method: "POST",
+                            url: "/api/invitations/resendinvitation",
+                            data: {invitationId: invitationId},
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function error(response) {
+                                loadingOnScreenRemove();
+                                alertCustom('error', response.message);
+                            }, success: function success(response) {
+                                loadingOnScreenRemove();
+                                updateInvites();
+                                alertCustom('success', response.message);
+                            }
+                        });
+                    });
+                });
+
+                // Excluir convite
+                $('.delete-invitation').unbind('click');
+                $('.delete-invitation').on('click', function () {
+                    let invitationId = $(this).attr('invitation');
+                    $('#modal-delete-invitation').modal('show');
+                    $('#btn-delete-invitation').unbind('click');
+                    $('#btn-delete-invitation').on('click', function () {
+                        loadingOnScreen();
+                        $.ajax({
+                            method: "DELETE",
+                            url: "/api/invitations/" + invitationId,
+                            data: {invitationId: invitationId},
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            error: function error(response) {
+                                loadingOnScreenRemove();
+                                alertCustom('error', response.message);
+                            }, success: function success(response) {
+                                loadingOnScreenRemove();
+                                updateInvites();
+                                alertCustom('success', response.message);
+                            }
+                        });
+                    });
+                });
             }
         });
     }
@@ -227,9 +289,10 @@ $(document).ready(function () {
             error: function error() {
                 //
             }, success: function success(response) {
-                $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '<i class="fas fa-check ml-10">');
-                $("#invitations_sent").html('' + response.data.invitation_sent_count + '<i class="fas fa-check ml-10">');
-                $("#balance_generated").html('' + response.data.balance_generated + '<i class="fas fa-check ml-10">');
+                $("#invitations_accepted").html('' + response.data.invitation_accepted_count + '');
+                $("#invitations_sent").html('' + response.data.invitation_sent_count + '');
+                $("#commission_paid").html('' + response.data.commission_paid + '');
+                $("#commission_pending").html('' + response.data.commission_pending + '');
             }
         });
     }

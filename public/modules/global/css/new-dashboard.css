@@ -39,8 +39,8 @@ body { font-family: 'Muli', sans-serif !important;}
     color: black;
   }
 
-  
-  
+
+
   .text-money {
     font-family: Muli;
     font-size: 32px;
@@ -51,8 +51,8 @@ body { font-family: 'Muli', sans-serif !important;}
     line-height: 0.82;
     letter-spacing: 1px;
   }
-  
-  .card-bottom{ 
+
+  .card-bottom{
 
     height:10px;
     background-image: linear-gradient(to right, rgb(15, 4, 41), #000011);
@@ -76,8 +76,17 @@ body { font-family: 'Muli', sans-serif !important;}
   .card-bottom.orangered {
     background-image: linear-gradient(to right, #8E2DE2, #4A00E0);
   }
+  .orange-gradient{
+      background: -webkit-linear-gradient(rgb(250, 217, 97),rgb(247, 107, 28));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+  .green-gradient{
+    background: -webkit-linear-gradient( rgba(63, 218, 88, 1), #51ecc3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+ }
 
-  
 
   .drop-empresas {
     min-height: 140px;
