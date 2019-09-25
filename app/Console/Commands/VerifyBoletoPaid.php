@@ -29,10 +29,11 @@ class VerifyBoletoPaid extends Command
 
     /**
      * Execute the console command.
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
+        /** @var BoletoService $boletoService */
         $boletoService = new BoletoService();
         $boletoService->verifyBoletoPaid();
     }
