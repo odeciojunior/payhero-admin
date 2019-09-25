@@ -1,4 +1,4 @@
-<form id='form-add-shipping' method="post" action="/shippings">
+<form id='form-add-shipping'>
     @csrf
     <div class='row'>
         <div class='form-group col-12'>

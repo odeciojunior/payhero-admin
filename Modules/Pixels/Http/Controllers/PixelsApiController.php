@@ -30,10 +30,9 @@ class PixelsApiController extends Controller
                 $pixelModel = new Pixel();
                 $projectModel = new Project();
 
-                $projectId = current(Hashids::decode($projectId));
-                $project = $projectModel->find($projectId);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
                 if (Gate::allows('edit', [$project])) {
-                    $pixels = $pixelModel->where('project_id', $projectId);
+                    $pixels = $pixelModel->where('project_id', $project->id);
 
                     return PixelsResource::collection($pixels->orderBy('id', 'DESC')->paginate(5));
                 } else {

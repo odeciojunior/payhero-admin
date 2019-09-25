@@ -32,11 +32,9 @@ $(function () {
     // carregar modal de detalhes
     $(document).on('click', '.details-pixel', function () {
         let pixel = $(this).attr('pixel');
-        let data = {pixelId: pixel};
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/pixels/" + pixel,
-            data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -127,7 +125,6 @@ $(function () {
     //criar novo pixel
     $("#modal-create-pixel .btn-save").on('click', function () {
         let formData = new FormData(document.querySelector('#modal-create-pixel  #form-register-pixel'));
-        formData.append('project_id', projectId);
         formData.append('checkout', $("#modal-create-pixel .pixel-checkout").val());
         formData.append('purchase_card', $("#modal-create-pixel .pixel-purchase-card").val());
         formData.append('purchase_boleto', $("#modal-create-pixel .pixel-purchase-boleto").val());
