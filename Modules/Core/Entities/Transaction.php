@@ -103,10 +103,10 @@ class Transaction extends Model
     }
 
     /**
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function invitation()
-    {
+    public function invitations(){
+
         return $this->belongsTo('Modules\Core\Entities\Invitation');
     }
 
