@@ -4,6 +4,7 @@ namespace Modules\Core\Services;
 
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Illuminate\Support\Facades\Log;
 
 class FoxUtils
 {
@@ -24,12 +25,17 @@ class FoxUtils
             $Aresult                       = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
             if (!$Aresult) {
                 $error = new NoDNSRecord();
+                Log::warning(print_r($error));
             }
         }
 
         return $MXresult || $Aresult;
     }
 
+    /**
+     * @param $email
+     * @return bool
+     */
     public static function validateEmail($email)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($email)) {
@@ -38,15 +44,15 @@ class FoxUtils
             if (defined('INTL_IDNA_VARIANT_UTS46')) {
                 $variant = INTL_IDNA_VARIANT_UTS46;
             }
-            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), '.') . '.';
+            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), '.');
+            var_dump($host);
+            var_dump(checkdnsrr($host, 'MX'));
 
-            $checkdnsrr = checkdnsrr($host, 'MX');
-            if ($checkdnsrr) {
-                return true;
-            }
-
-            return false;
+            return checkdnsrr($host, 'MX');
         }
+        var_dump('n entrou');
+
+        return false;
     }
 
     public static function prepareCellPhoneNumber($phoneNumber)
@@ -125,6 +131,7 @@ class FoxUtils
 
             return '';
         }
+
         return '';
     }
 

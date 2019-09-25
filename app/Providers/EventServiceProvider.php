@@ -24,8 +24,8 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\DomainApprovedEmailNotifyUserListener',
         ],
         'Modules\Core\Events\BoletoPaidEvent'              => [
-            //            'Modules\Core\Listeners\BoletoPaidPusherNotifyUser',
-            //            'Modules\Core\Listeners\BoletoPaidNotifyUser',
+            'Modules\Core\Listeners\BoletoPaidPusherNotifyUser',
+            'Modules\Core\Listeners\BoletoPaidNotifyUser',
             'Modules\Core\Listeners\BoletoPaidEmailNotifyUser',
         ],
         'Modules\Core\Events\TrackingCodeUpdatedEvent'     => [
@@ -38,10 +38,10 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\ReleasedBalanceNotifyUserListener',
         ],
         'Modules\Core\Events\SaleApprovedEvent'            => [
-//            'Modules\Core\Listeners\NotifyUsersApprovedSaleListener',
-//            'Modules\Core\Listeners\PusherNotificationApprovedSaleListener',
+            //            'Modules\Core\Listeners\NotifyUsersApprovedSaleListener',
+            //            'Modules\Core\Listeners\PusherNotificationApprovedSaleListener',
             'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
-//            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
+            //            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
         ],
 
     ];
