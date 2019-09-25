@@ -4,8 +4,10 @@ let statusCupons = {
 };
 
 $(function () {
+
     let projectId = $("#project-id").val();
 
+    //comportamento da tela
     $('.coupon-value').mask('00%', {reverse: true});
     $(document).on('change', '.coupon-type', function () {
         if ($(this).val() == 1) {
@@ -18,9 +20,82 @@ $(function () {
     $('#tab_coupons').on('click', function () {
         atualizarCoupon();
     });
+
+    //carrega os itens na tabela
     atualizarCoupon();
 
-    $(document).on('click', '#modal-create-coupon .btn-save', function () {
+    // carregar modal de detalhes
+    $(document).on('click', '.details-coupon', function () {
+        let coupon = $(this).attr('coupon');
+        let data = {couponId: coupon};
+        $("#btn-modal").hide();
+        $.ajax({
+            method: "GET",
+            url: "/api/couponsdiscounts/" + coupon,
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error() {
+                alertCustom('error', 'Erro ao exibir detalhes do cupom');
+            }, success: function success(response) {
+                $('#modal-detail-coupon .coupon-name').html(response.name);
+                $('#modal-detail-coupon .coupon-code').html(response.code);
+                $('#modal-detail-coupon .coupon-type').html(response.type == 1 ? 'Valor' : 'Porcentagem');
+                $('#modal-detail-coupon .coupon-value').html(response.value);
+                $('#modal-detail-coupon .coupon-status').html(response.status == 1
+                    ? '<span class="badge badge-success text-left">Ativo</span>'
+                    : '<span class="badge badge-danger">Desativado</span>');
+                $('#modal-detail-coupon').modal('show');
+
+            }
+        });
+    });
+
+    // carregar modal de edicao
+    $(document).on('click', '.edit-coupon', function () {
+        let coupon = $(this).attr('coupon');
+        let data = {couponId: coupon};
+        $.ajax({
+            method: "GET",
+            url: "/api/couponsdiscounts/" + coupon + "/edit",
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function error() {
+                alertCustom('error', 'Erro ao tentar editar cupom')
+            }, success: function success(response) {
+                $('#modal-edit-coupon .coupon-id').val(coupon);
+                $('#modal-edit-coupon .coupon-name').val(response.name);
+                $('#modal-edit-coupon .coupon-value').val(response.value);
+                if (response.type == 1) {
+                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 1).change();
+                } else {
+                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 0).change();
+                }
+
+                $('#modal-edit-coupon .coupon-code').val(response.code);
+
+                if (response.status == 1) {
+                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 0).change();
+                } else {
+                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 1).change();
+                }
+                $('#modal-edit-coupon').modal('show');
+            }
+        });
+    });
+
+    // carregar modal delecao
+    $(document).on('click', '.delete-coupon', function (event) {
+        let coupon = $(this).attr('coupon');
+        $('#modal-delete-coupon .btn-delete').attr('coupon', coupon);
+        $("#modal-delete-coupon").modal('show');
+    });
+
+    //cria novo cupom
+    $('#modal-create-coupon .btn-save').on('click', function () {
         let formData = new FormData(document.getElementById('form-register-coupon'));
         formData.append("project_id", projectId);
         loadingOnScreen();
@@ -62,6 +137,85 @@ $(function () {
                 alertCustom("success", "Cupom Adicionado!");
                 atualizarCoupon();
             }
+        });
+    });
+
+    //atualizar cupom
+    $("#modal-edit-coupon .btn-update").on('click', function () {
+        let formData = new FormData(document.getElementById('form-update-coupon'));
+        let coupon = $('#modal-edit-coupon .coupon-id').val();
+        formData.append("project_id", projectId);
+        loadingOnScreen();
+        $.ajax({
+            method: "POST",
+            url: "/api/couponsdiscounts/" + coupon,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            error: function (_error2) {
+                function error(_x3) {
+                    return _error2.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error2.toString();
+                };
+
+                return error;
+            }(function (response) {
+                loadingOnScreenRemove();
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
+            }),
+            success: function success(data) {
+                loadingOnScreenRemove();
+                alertCustom("success", "Cupom atualizado com sucesso");
+                atualizarCoupon();
+            }
+        });
+    });
+
+    //deletar cupom
+    $('#modal-delete-coupon .btn-delete').on('click',  function () {
+        let coupon = $(this).attr('coupon');
+        loadingOnScreen();
+        $.ajax({
+            method: "DELETE",
+            url: "/api/couponsdiscounts/" + coupon,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            error: function (_error3) {
+                function error() {
+                    return _error3.apply(this, arguments);
+                }
+
+                error.toString = function () {
+                    return _error3.toString();
+                };
+
+                return error;
+            }(function () {
+                loadingOnScreenRemove();
+                if (response.status == '422') {
+                    for (error in response.responseJSON.errors) {
+                        alertCustom('error', String(response.responseJSON.errors[error]));
+                    }
+                }
+            }),
+            success: function success(data) {
+                loadingOnScreenRemove();
+                alertCustom("success", "Cupom Removido com sucesso");
+                atualizarCoupon();
+            }
+
         });
     });
 
@@ -111,154 +265,6 @@ $(function () {
             }
         });
     }
-
-    $(document).on('click', '.details-coupon', function () {
-        let coupon = $(this).attr('coupon');
-        let data = {couponId: coupon};
-        $("#btn-modal").hide();
-        $.ajax({
-            method: "GET",
-            url: "/api/couponsdiscounts/" + coupon,
-            data: data,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function error() {
-                alertCustom('error', 'Erro ao exibir detalhes do cupom');
-            }, success: function success(response) {
-                $('#modal-detail-coupon .coupon-name').html(response.name);
-                $('#modal-detail-coupon .coupon-code').html(response.code);
-                $('#modal-detail-coupon .coupon-type').html(response.type == 1 ? 'Valor' : 'Porcentagem');
-                $('#modal-detail-coupon .coupon-value').html(response.value);
-                $('#modal-detail-coupon .coupon-status').html(response.status == 1
-                    ? '<span class="badge badge-success text-left">Ativo</span>'
-                    : '<span class="badge badge-danger">Desativado</span>');
-                $('#modal-detail-coupon').modal('show');
-
-            }
-        });
-    });
-
-    $(document).on('click', '.edit-coupon', function () {
-        let coupon = $(this).attr('coupon');
-        let data = {couponId: coupon};
-        $.ajax({
-            method: "GET",
-            url: "/api/couponsdiscounts/" + coupon + "/edit",
-            data: data,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function error() {
-                alertCustom('error', 'Erro ao tentar editar cupom')
-            }, success: function success(response) {
-                console.log(response)
-                $('#modal-edit-coupon .coupon-id').val(coupon);
-                $('#modal-edit-coupon .coupon-name').val(response.name);
-                $('#modal-edit-coupon .coupon-value').val(response.value);
-                if (response.type == 1) {
-                    $('#modal-edit-coupon .coupon-value').mask('#.##0,00', {reverse: true}).removeAttr('maxlength');
-                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 1).change();
-                } else {
-                    $('#modal-edit-coupon .coupon-value').mask('00%', {reverse: true});
-                    $('#modal-edit-coupon .coupon-type').prop("selectedIndex", 0).change();
-                }
-
-                $('#modal-edit-coupon .coupon-code').val(response.code);
-
-                if (response.status == 1) {
-                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 0).change();
-                } else {
-                    $('#modal-edit-coupon .coupon-status').prop("selectedIndex", 1).change();
-                }
-
-                $('#modal-edit-coupon').modal('show');
-            }
-        });
-    });
-
-    $("#modal-edit-coupon .btn-update").on('click', function () {
-        let formData = new FormData(document.getElementById('form-update-coupon'));
-        let coupon = $('#modal-edit-coupon .coupon-id').val();
-        formData.append("project_id", projectId);
-        loadingOnScreen();
-        $.ajax({
-            method: "POST",
-            url: "/api/couponsdiscounts/" + coupon,
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
-            },
-            data: formData,
-            processData: false,
-            contentType: false,
-            cache: false,
-            error: function (_error2) {
-                function error(_x3) {
-                    return _error2.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error2.toString();
-                };
-
-                return error;
-            }(function (response) {
-                loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
-            success: function success(data) {
-                loadingOnScreenRemove();
-                alertCustom("success", "Cupom atualizado com sucesso");
-                atualizarCoupon();
-            }
-        });
-    });
-
-    $(document).on('click', '.delete-coupon', function (event) {
-        let coupon = $(this).attr('coupon');
-        $('#modal-delete-coupon .btn-delete').attr('coupon', coupon);
-        $("#modal-delete-coupon").modal('show');
-    });
-
-    $(document).on('click', '#modal-delete-coupon .btn-delete', function () {
-        let coupon = $(this).attr('coupon');
-        loadingOnScreen();
-        $.ajax({
-            method: "DELETE",
-            url: "/api/couponsdiscounts/" + coupon,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function (_error3) {
-                function error() {
-                    return _error3.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error3.toString();
-                };
-
-                return error;
-            }(function () {
-                loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
-            success: function success(data) {
-                loadingOnScreenRemove();
-                alertCustom("success", "Cupom Removido com sucesso");
-                atualizarCoupon();
-            }
-
-        });
-    });
 
     function pagination(response) {
         if (response.meta.last_page == 1) {
