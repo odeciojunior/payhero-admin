@@ -10,7 +10,7 @@ let activeShipping = {
 
 $(document).ready(function () {
 
-    let projectId = $("#project-id").val();
+    let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamentos da tela
     $("#tab-fretes").on('click', function () {
@@ -83,7 +83,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/shippings/" + frete,
+            url: "/api/project/" + projectId + "/shippings/" + frete,
             data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -118,12 +118,9 @@ $(document).ready(function () {
         let frete = $(this).attr('frete');
         $(this).attr('frete');
 
-        let data = {frete: frete};
-
         $.ajax({
             method: "GET",
-            url: "/api/shippings/" + frete + "/edit",
-            data: data,
+            url: "/api/project/" + projectId + "/shippings/" + frete + "/edit",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -173,12 +170,11 @@ $(document).ready(function () {
     //cria novo frete
     $("#modal-create-shipping .btn-save").click(function () {
         let formData = new FormData(document.getElementById('form-add-shipping'));
-        formData.append("project_id", projectId);
         loadingOnScreen();
 
         $.ajax({
             method: "POST",
-            url: "/api/shippings",
+            url: "/api/project/" + projectId + "/shippings",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -224,7 +220,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: "/api/shippings/" + frete,
+            url: "/api/project/" + projectId +  "/shippings/" + frete,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -265,7 +261,7 @@ $(document).ready(function () {
         let frete = $(this).attr('frete');
         $.ajax({
             method: "DELETE",
-            url: "/api/shippings/" + frete,
+            url: "/api/project/" + projectId + "/shippings/" + frete,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -301,14 +297,10 @@ $(document).ready(function () {
     function atualizarFrete(link = null) {
 
         loadOnTable('#dados-tabela-frete', '#tabela_fretes');
-        if (link == null) {
-            link = '/api/shippings?' + 'project=' + projectId;
-        } else {
-            link = '/api/shippings' + link + '&project=' + projectId;
-        }
+
         $.ajax({
             method: "GET",
-            url: link,
+            url: "/api/project/" + projectId + "/shippings",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },

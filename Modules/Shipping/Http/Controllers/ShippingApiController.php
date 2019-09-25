@@ -6,7 +6,6 @@ namespace Modules\Shipping\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -14,30 +13,29 @@ use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
 use Modules\Shipping\Http\Requests\ShippingStoreRequest;
-use Modules\Shipping\Http\Requests\ShippingUpdateConfigResource;
 use Modules\Shipping\Http\Requests\ShippingUpdateRequest;
 use Modules\Shipping\Transformers\ShippingResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ShippingApiController extends Controller
 {
+
     /**
-     * @param Request $request
+     * @param $projectId
      * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index($projectId)
     {
         try {
             $shippingModel = new Shipping();
             $projectModel = new Project();
 
-            if ($request->has('project') && !empty($request->input("project"))) {
-                $projectId = current(Hashids::decode($request->input("project")));
+            if (isset($projectId)) {
 
-                $project = $projectModel->find($projectId);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
 
                 if (Gate::allows('edit', [$project])) {
-                    $shippings = $shippingModel->where('project_id', $projectId);
+                    $shippings = $shippingModel->where('project_id', $project->id);
 
                     return ShippingResource::collection($shippings->orderBy('id', 'DESC')->paginate(5));
                 } else {
@@ -60,11 +58,13 @@ class ShippingApiController extends Controller
         }
     }
 
+
     /**
      * @param ShippingStoreRequest $request
+     * @param $projectId
      * @return JsonResponse
      */
-    public function store(ShippingStoreRequest $request)
+    public function store(ShippingStoreRequest $request, $projectId)
     {
         try {
             $shippingModel = new Shipping();
@@ -73,7 +73,7 @@ class ShippingApiController extends Controller
             $shippingValidated = $request->validated();
 
             if ($shippingValidated) {
-                $shippingValidated['project_id'] = current(Hashids::decode($shippingValidated['project_id']));
+                $shippingValidated['project_id'] = Hashids::decode($projectId)[0];
 
                 $project = $projectModel->find($shippingValidated['project_id']);
 
@@ -119,23 +119,24 @@ class ShippingApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param $projectId
+     * @param $id
      * @return JsonResponse
      */
-    public function show(Request $request)
+    public function show($projectId, $id)
     {
         try {
-            $shippingModel = new Shipping();
-            if ($request->input('freteId')) {
-                $shippingId = current(Hashids::decode($request->input('freteId')));
-                $shipping = $shippingModel->with(['project'])->find($shippingId);
+            if (isset($projectId) && isset($id)) {
+                $shippingModel = new Shipping();
+                $projectModel = new Project();
 
-                $project = $shipping->getRelation('project');
+                $shipping = $shippingModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
 
                 if (Gate::allows('edit', [$project])) {
 
                     if ($shipping) {
-                        $shipping->makeHidden(['id', 'project_id', 'campaing_id'])->unsetRelation('project');
+                        $shipping->makeHidden(['id', 'project_id', 'campaing_id']);
                         return response()->json($shipping, 200);
                     } else {
                         return response()->json(['message' => 'Erro ao tentar visualizar frete!'], 400);
@@ -153,21 +154,19 @@ class ShippingApiController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param $projectId
      * @param $id
      * @return JsonResponse
      */
-    public function edit(Request $request, $id)
+    public function edit($projectId, $id)
     {
         try {
+            if (isset($projectId) && isset($id)) {
+                $shippingModel = new Shipping();
+                $projectModel = new Project();
 
-            $shippingModel = new Shipping();
-
-            if ($request->input('frete')) {
-                $shippingId = current(Hashids::decode($request->input('frete')));
-                $shipping = $shippingModel->with(['project'])->find($shippingId);
-
-                $project = $shipping->getRelation('project');
+                $shipping = $shippingModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
 
                 if (Gate::allows('edit', [$project])) {
                     if ($shipping) {
@@ -190,14 +189,13 @@ class ShippingApiController extends Controller
 
     /**
      * @param ShippingUpdateRequest $request
+     * @param $projectId
      * @param $id
      * @return JsonResponse
      */
-    public function update(ShippingUpdateRequest $request, $id)
+    public function update(ShippingUpdateRequest $request, $projectId, $id)
     {
         try {
-            $shippingModel = new Shipping();
-
             $requestValidated = $request->validated();
 
             if (empty($requestValidated['pre_selected'])) {
@@ -207,12 +205,13 @@ class ShippingApiController extends Controller
                 $requestValidated['status'] = 0;
             }
 
-            if (isset($requestValidated) && isset($id)) {
+            if (isset($requestValidated) && isset($projectId) && isset($id)) {
 
-                $shippingId = current(Hashids::decode($id));
-                $shipping = $shippingModel->with(['project'])->find($shippingId);
+                $shippingModel = new Shipping();
+                $projectModel = new Project();
 
-                $project = $shipping->getRelation('project');
+                $shipping = $shippingModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find(Hashids::decode($projectId)[0]);
 
                 if (Gate::allows('edit', [$project])) {
 
@@ -285,18 +284,20 @@ class ShippingApiController extends Controller
     }
 
     /**
+     * @param $projectId
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy($projectId, $id)
     {
         try {
-            $shippingModel = new Shipping();
-
             if (isset($id) && !empty($id)) {
-                $shipping = $shippingModel->with(['project'])
-                    ->withCount(['sales'])
-                    ->find(current(Hashids::decode($id)));
+
+                $shippingModel = new Shipping();
+                $projectModel = new Project();
+
+                $shipping = $shippingModel->withCount(['sales'])
+                    ->find(Hashids::decode($id)[0]);
 
                 if ($shipping->sales_count > 0) {
                     return response()->json(['message' => 'Impossivel excluir, existem vendas associados a este frete!'], 400);
@@ -304,7 +305,7 @@ class ShippingApiController extends Controller
 
                 if ($shipping) {
 
-                    $project = $shipping->getRelation('project');
+                    $project = $projectModel->find(Hashids::decode($projectId)[0]);
                     if (Gate::allows('edit', [$project])) {
 
                         if ($shipping->pre_selected) {

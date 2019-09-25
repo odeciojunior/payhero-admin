@@ -13,7 +13,6 @@ class ShippingStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id'      => 'required',
             "type"            => "required|string",
             "name"            => "required|string|max:100",
             "information"     => "required|string|max:30",
