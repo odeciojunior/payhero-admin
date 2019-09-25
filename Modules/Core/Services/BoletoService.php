@@ -2,25 +2,16 @@
 
 namespace Modules\Core\Services;
 
-use Exception;
 use Carbon\Carbon;
-use Pusher\Pusher;
-use Modules\Core\Entities\Plan;
-use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\User;
-use Modules\Core\Entities\Domain;
+use Exception;
 use Illuminate\Support\Facades\DB;
-use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
-use Modules\Core\Services\FoxUtils;
-use Vinkla\Hashids\Facades\Hashids;
-use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Sale;
+use Modules\Core\Entities\User;
 use Modules\Core\Events\BoletoPaidEvent;
-use Modules\Core\Services\SendgridService;
-use Modules\Core\Services\ZenviaSmsService;
-use Modules\Core\Services\LinkShortenerService;
-use Modules\Notifications\Notifications\boletoCompensatedNotification;
 
 class BoletoService
 {
@@ -51,20 +42,27 @@ class BoletoService
     public function verifyBoletosExpiring()
     {
         try {
-            $dateNow = Carbon::now()->toDateString();
-
-            $boletoDueToday = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $dateNow]])
-                                  ->with('client', 'plansSales.plan.products')
-                                  ->get();
+            /** @var Sale $saleModel */
+            $saleModel = new Sale();
+            /** @var Project $projectModel */
+            $projectModel = new Project();
+            /** @var Domain $domainModel */
+            $domainModel    = new Domain();
+            $boletoDueToday = $saleModel->newQuery()
+                                        ->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), now()->toDateString()]])
+                                        ->with('client', 'plansSales.plan.products')
+                                        ->get();
+            /** @var Sale $boleto */
             foreach ($boletoDueToday as $boleto) {
                 try {
-                    $sendEmail     = new SendgridService();
+                    /** @var SendgridService $sendEmail */
+                    $sendEmail = new SendgridService();
+                    /** @var Checkout $checkoutModel */
                     $checkoutModel = new Checkout();
-
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    /** @var Checkout $checkout */
+                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
-                    $data        = [];
 
                     $subTotal = $boleto->present()->getSubTotal();
                     $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
@@ -87,8 +85,8 @@ class BoletoService
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
 
                     $products = $boleto->present()->getProducts();
-                    $project  = Project::find($boleto->project_id);
-                    $domain   = Domain::where('project_id', $project->id)->first();
+                    $project  = $projectModel->newQuery()->find($boleto->project_id);
+                    $domain   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -105,7 +103,7 @@ class BoletoService
                     if (!empty($link) && !empty($telephoneValidated)) {
                         $zenviaSms = new ZenviaSmsService();
                         $zenviaSms->sendSms('Olá ' . $clientNameExploded[0] . ',  seu boleto vence hoje, não deixe de efetuar o pagamento e garantir seu pedido! ' . $link, $telephoneValidated);
-                        $checkout->increment('sms_sent_amount');
+                        $checkout->newQuery()->increment('sms_sent_amount');
                     }
 
                     $data           = [
@@ -126,7 +124,7 @@ class BoletoService
                     if ($emailValidated) {
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-957fe3c5ecc6402dbd74e707b3d37a9b', $data);
 
-                        $checkout->increment('email_sent_amount');
+                        $checkout->newQuery()->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boleto vencendo');
@@ -395,57 +393,61 @@ class BoletoService
     }
 
     /**
-     *  Boletos Compensado
+     *  Boletos Compensados
+     * @return void
      */
     public function verifyBoletoPaid()
     {
         try {
-            $userModel        = new User();
-            $saleModel        = new Sale();
-            $transactionModel = new Transaction();
-
-            $date        = Carbon::now()->toDateString();
-            $data        = [];
-            $sql         = 'SELECT s.owner_id
-                            , count(s.owner_id) as count
-                            , SUM(t.value) as value
-                            FROM sales s
-                            INNER JOIN transactions t ON t.sale_id = s.id AND t.company_id IS NOT NULL AND t.company_id != 29
-                            WHERE s.payment_method = 2
+            /** @var User $userModel */
+            $userModel   = new User();
+            $sql         = 'SELECT u.id owner_id
+                            , u.email
+                            , COUNT(DISTINCT s.id) as boleto_count
+                            , COUNT(DISTINCT t.id) as transactions_boleto_count
+                            , SUM(t.value) as transactions_amount
+                            FROM users u
+                            INNER JOIN companies c
+                            ON u.id = c.user_id
+                            INNER JOIN sales s
+                            ON u.id = s.owner_id
+                            INNER JOIN transactions t 
+                            ON t.sale_id = s.id 
+                            AND t.company_id = c.id
+                            WHERE 1 = 1
+                            AND s.payment_method = 2
                             AND s.status = 1
                             AND date(s.end_date) = CURRENT_DATE
-                            GROUP BY s.owner_id';
-
+                            GROUP BY u.id
+                            , u.email';
             $boletosPaid = DB::select($sql);
-
             foreach ($boletosPaid as $boleto) {
                 try {
-                    $user = $userModel->find($boleto->owner_id);
+                    if (!FoxUtils::validateEmail($boleto->email)) {
+                        var_dump('n foi');
+                        continue;
+                    }
+                    var_dump('foi');
 
-                    $emailValidated = FoxUtils::validateEmail($user->email);
-                    $message        = '';
-                    $messageHeader  = '';
-
-                    if ($boleto->count == 1) {
+                    return;
+                    /** @var User $user */
+                    $user = $userModel->newQuery()->find($boleto->owner_id);
+                    if ($boleto->boleto_count == 1) {
                         $message       = 'boleto foi compensado';
                         $messageHeader = 'Boleto Compensado!';
                     } else {
                         $message       = 'boletos foram compensados';
                         $messageHeader = 'Boletos Compensados!';
                     }
-
                     $data = [
                         'user'              => $user,
                         "name"              => $user->name,
-                        'boleto_count'      => strval($boleto->count),
+                        'boleto_count'      => strval($boleto->boleto_count),
                         'message'           => $message,
                         'messageHeader'     => $messageHeader,
-                        'transaction_value' => "R$ " . number_format(intval($boleto->value) / 100, 2, ',', '.'),
+                        'transaction_value' => "R$ " . number_format(intval($boleto->transactions_amount) / 100, 2, ',', '.'),
                     ];
-
-                    if ($emailValidated) {
-                        event(new BoletoPaidEvent($data));
-                    }
+                    event(new BoletoPaidEvent($data));
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Boletos compensados');
                     report($e);
