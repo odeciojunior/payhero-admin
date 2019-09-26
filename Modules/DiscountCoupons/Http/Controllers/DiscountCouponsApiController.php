@@ -4,7 +4,6 @@ namespace Modules\DiscountCoupons\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -19,6 +18,10 @@ use Vinkla\Hashids\Facades\Hashids;
 class DiscountCouponsApiController extends Controller
 {
 
+    /**
+     * @param $projectId
+     * @return JsonResponse|AnonymousResourceCollection
+     */
     public function index($projectId)
     {
         try {
@@ -54,6 +57,11 @@ class DiscountCouponsApiController extends Controller
         }
     }
 
+    /**
+     * @param DiscountCouponsStoreRequest $request
+     * @param $projectId
+     * @return JsonResponse
+     */
     public function store(DiscountCouponsStoreRequest $request, $projectId)
     {
         try {
@@ -102,6 +110,11 @@ class DiscountCouponsApiController extends Controller
         }
     }
 
+    /**
+     * @param $projectId
+     * @param $id
+     * @return JsonResponse
+     */
     public function show($projectId, $id)
     {
         try {
@@ -133,6 +146,11 @@ class DiscountCouponsApiController extends Controller
         }
     }
 
+    /**
+     * @param $projectId
+     * @param $id
+     * @return JsonResponse
+     */
     public function edit($projectId, $id)
     {
         try {
@@ -165,6 +183,12 @@ class DiscountCouponsApiController extends Controller
         }
     }
 
+    /**
+     * @param DiscountCouponsUpdateRequest $request
+     * @param $projectId
+     * @param $id
+     * @return JsonResponse
+     */
     public function update(DiscountCouponsUpdateRequest $request, $projectId, $id)
     {
         try {
@@ -203,6 +227,11 @@ class DiscountCouponsApiController extends Controller
         }
     }
 
+    /**
+     * @param $projectId
+     * @param $id
+     * @return JsonResponse
+     */
     public function destroy($projectId, $id)
     {
         try {
