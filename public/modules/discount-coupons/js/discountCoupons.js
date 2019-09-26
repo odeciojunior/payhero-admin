@@ -5,7 +5,7 @@ let statusCupons = {
 
 $(function () {
 
-    let projectId = $("#project-id").val();
+    let projectId = $(window.location.pathname.split('/')).get(-1);
 
     //comportamento da tela
     $('.coupon-value').mask('00%', {reverse: true});
@@ -31,7 +31,7 @@ $(function () {
         $("#btn-modal").hide();
         $.ajax({
             method: "GET",
-            url: "/api/couponsdiscounts/" + coupon,
+            url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon,
             data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -58,7 +58,7 @@ $(function () {
         let data = {couponId: coupon};
         $.ajax({
             method: "GET",
-            url: "/api/couponsdiscounts/" + coupon + "/edit",
+            url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon + "/edit",
             data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -97,11 +97,10 @@ $(function () {
     //cria novo cupom
     $('#modal-create-coupon .btn-save').on('click', function () {
         let formData = new FormData(document.getElementById('form-register-coupon'));
-        formData.append("project_id", projectId);
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: "/api/couponsdiscounts",
+            url: "/api/project/" + projectId + "/couponsdiscounts",
             headers: {
                 'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
             },
@@ -144,11 +143,10 @@ $(function () {
     $("#modal-edit-coupon .btn-update").on('click', function () {
         let formData = new FormData(document.getElementById('form-update-coupon'));
         let coupon = $('#modal-edit-coupon .coupon-id').val();
-        formData.append("project_id", projectId);
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: "/api/couponsdiscounts/" + coupon,
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -220,16 +218,10 @@ $(function () {
     });
 
     function atualizarCoupon() {
-        let link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         loadOnTable('#data-table-coupon', '#tabela-coupom');
-        if (link == null) {
-            link = '/api/couponsdiscounts?' + 'project=' + projectId;
-        } else {
-            link = '/api/couponsdiscounts' + link + '&project=' + projectId;
-        }
         $.ajax({
             method: "GET",
-            url: link,
+            url: "/api/project/" + projectId + "/couponsdiscounts",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },

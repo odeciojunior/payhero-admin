@@ -213,7 +213,6 @@ $(document).ready(function () {
     //atualizar frete
     $("#modal-edit-shipping .btn-update").on('click', function () {
         let formData = new FormData(document.querySelector('#modal-edit-shipping #form-update-shipping'));
-        formData.append("project_id", projectId);
         formData.append('status', $('#modal-edit-shipping .shipping-status').val());
         formData.append('pre_selected', $('#modal-edit-shipping .shipping-pre-selected').val());
         let frete = $('#modal-edit-shipping .shipping-id').val();

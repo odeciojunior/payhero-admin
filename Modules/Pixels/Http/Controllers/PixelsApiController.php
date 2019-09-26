@@ -123,7 +123,7 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para atualizar pixels'], 403);
                 }
             }
-            return response()->json(['message' => 'Pixel nao encontrado'], 404);
+            return response()->json(['message' => 'Pixel nao encontrado'], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar fazer update dos dados do pixel (PixelsController - update)');
             report($e);
@@ -158,7 +158,7 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para remover pixels'], 403);
                 }
             }
-            return response()->json(['message' => 'Pixel nao encontrado'], 404);
+            return response()->json(['message' => 'Pixel nao encontrado'], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar excluir pixel (PixelsController - destroy)');
             report($e);
@@ -193,7 +193,7 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para visualizar pixels'], 403);
                 }
             }
-            return response()->json('Pixel nao encontrado', 404);
+            return response()->json('Pixel nao encontrado', 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar detalhes do pixel (PixelController - show)');
             report($e);
@@ -228,7 +228,7 @@ class PixelsApiController extends Controller
                     return response()->json(['message' => 'Sem permissão para editar pixels'], 403);
                 }
             }
-            return response()->json('Erro ao buscar pixel', 404);
+            return response()->json('Erro ao buscar pixel', 400);
 
         } catch (Exception $e) {
             Log::warning('Erro ao tentar acessar tela editar pixel (PixelsController - edit)');
