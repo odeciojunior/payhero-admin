@@ -62,7 +62,7 @@ class DiscountCouponsApiController extends Controller
                 $projectModel = new Project();
 
                 $requestData = $request->validated();
-                $requestData["project_id"] = Hashids::decode($projectId);
+                $requestData["project_id"] = Hashids::decode($projectId)[0];
                 $requestData['value'] = preg_replace("/[^0-9]/", "", $requestData['value']);
 
                 $project = $projectModel->find($requestData["project_id"]);
@@ -203,16 +203,15 @@ class DiscountCouponsApiController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy($projectId, $id)
     {
         try {
-            $discountCouponsModel = new DiscountCoupon();
-
             if (isset($id)) {
-                $descountCouponId = Hashids::decode($id)[0];
+                $discountCouponsModel = new DiscountCoupon();
+                $projectModel = new Project();
 
-                $descountCoupon = $discountCouponsModel->with(['project'])->find($descountCouponId);
-                $project = $descountCoupon->getRelation('project');
+                $descountCoupon = $discountCouponsModel->find(Hashids::decode($id)[0]);
+                $project = $projectModel->find( Hashids::decode($projectId)[0]);
 
                 if (Gate::allows('edit', [$project])) {
                     $descountCoupon->delete();

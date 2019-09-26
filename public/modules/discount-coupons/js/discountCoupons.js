@@ -56,7 +56,6 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon + "/edit",
-            data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -183,7 +182,7 @@ $(function () {
         loadingOnScreen();
         $.ajax({
             method: "DELETE",
-            url: "/api/couponsdiscounts/" + coupon,
+            url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

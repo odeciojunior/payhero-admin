@@ -13,7 +13,6 @@ class DiscountCouponsStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required',
             'name'       => 'required|string|max:100',
             'type'       => 'required',
             'value'      => 'required|string|max:30',
