@@ -210,6 +210,13 @@ class DomainRecordsApiController extends Controller
             dd($domain);
             $domainRecord = $domainRecordModel->find(current(Hashids::decode($domainRecord)));
 
+            if (Gate::allows('edit', [$domainRecord->domain->project])) {
+            } else {
+                return response()->json([
+                                            'message' => 'Sem permissão para remover a entrada',
+                                        ], 400);
+            }
+
             if (!$domainRecord->system_flag) {
                 if ($domainRecord->type == 'MX' || $domainRecord->type == 'TXT') {
                     $proxy = false;
