@@ -466,10 +466,10 @@ $(document).ready(function () {
                 } else {
                     enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " + enabledEntrada + "><i class='material-icons gradient' >delete_outline</i> </a></td>";
                 }
-                data += '<td><div class="switch-holder" style="pointer-events: none; opacity: 0.5;">' +
-                    '                    <label class="switch">' +
-                    '                        <input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + '  ' + enabledEntrada + ' >' +
-                    '                        <span class="slider round"></span>' +
+                data += '<td><div class="switch-holder" style=" opacity: 0.5;">' +
+                    '                    <label class="switch" style="cursor: not-allowed">' +
+                    '                        <input type="checkbox" style="cursor: not-allowed" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + '  ' + enabledEntrada + ' >' +
+                    '                        <span class="slider round" style="cursor: not-allowed"></span>' +
                     '                    </label>' +
                     '                </div></td>';
                 data += enabledA;
