@@ -30,20 +30,7 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        try {
-            $projectService = new ProjectService();
-
-            $projects = $projectService->getUserProjects();
-
-            return view('projects::index', [
-                'projects' => $projects,
-            ]);
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar pagina de projetos (ProjectsController - index)');
-            report($e);
-
-            return redirect()->back()->with('error', 'Ocorreu um tente novamente mais tarde');
-        }
+        return view('projects::index');
     }
 
     /**
@@ -51,107 +38,7 @@ class ProjectsController extends Controller
      */
     public function create()
     {
-        try {
-            $user = auth()->user()->load('companies');
-
-            return view('projects::create', ['companies' => $user->companies]);
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar acessar pagina de criar Projeto (ProjectController - create)');
-            report($e);
-
-            return redirect()->back()->with('error', 'Erro ao tentar acessar tela de cadastro de projeto');
-        }
-    }
-
-    /**
-     * @param ProjectStoreRequest $request
-     * @return RedirectResponse
-     */
-    public function store(ProjectStoreRequest $request)
-    {
-        try {
-            $requestValidated = $request->validated();
-
-            $projectModel        = new Project();
-            $userProjectModel    = new UserProject();
-            $shippingModel       = new Shipping();
-            $digitalOceanService = app(DigitalOceanFileService::class);
-
-            if (!empty($requestValidated)) {
-                $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
-
-                $project = $projectModel->create([
-                                                     'name'                       => $requestValidated['name'],
-                                                     'description'                => $requestValidated['description'],
-                                                     'installments_amount'        => 12,
-                                                     'installments_interest_free' => 1,
-                                                     'visibility'                 => 'private',
-                                                     'automatic_affiliation'      => 0,
-                                                     'boleto'                     => 1,
-                                                 ]);
-                if (!empty($project)) {
-                    $shipping = $shippingModel->create([
-                                                           'project_id'   => $project->id,
-                                                           'name'         => 'Frete gratis',
-                                                           'information'  => 'de 15 até 30 dias',
-                                                           'value'        => '0,00',
-                                                           'type'         => 'static',
-                                                           'status'       => '1',
-                                                           'pre_selected' => '1',
-                                                       ]);
-
-                    if (!empty($shipping)) {
-                        $photo = $request->file('photo-main');
-                        if ($photo != null) {
-                            try {
-                                $img = Image::make($photo->getPathname());
-                                $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
-                                $img->save($photo->getPathname());
-
-                                $digitalOceanPath = $digitalOceanService
-                                    ->uploadFile("uploads/user/" . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $photo);
-                                $project->update(['photo' => $digitalOceanPath]);
-                            } catch (Exception $e) {
-                                Log::warning('Erro ao tentar salvar foto projeto - ProjectsController - store');
-                                report($e);
-                            }
-                        }
-
-                        $userProject = $userProjectModel->create([
-                                                                     'user_id'           => auth()->user()->id,
-                                                                     'project_id'        => $project->id,
-                                                                     'company_id'        => $requestValidated['company'],
-                                                                     'type'              => 'producer',
-                                                                     'access_permission' => 1,
-                                                                     'edit_permission'   => 1,
-                                                                     'status'            => 'active',
-                                                                 ]);
-                        if (!empty($userProject)) {
-                            return redirect()->route('projects.index')->with('success', 'Projeto salvo com sucesso!');
-                        } else {
-                            $digitalOceanPath->deleteFile($project->photo);
-                            $shipping->delete();
-                            $project->delete();
-
-                            return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
-                        }
-                    } else {
-                        $project->delete();
-
-                        return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
-                    }
-                } else {
-                    return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
-                }
-            } else {
-                return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
-            }
-        } catch (Exception $e) {
-            Log::warning('Erro ao tentar salvar projeto - ProjectsController -store');
-            report($e);
-
-            return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
-        }
+        return view('projects::create');
     }
 
     /**
