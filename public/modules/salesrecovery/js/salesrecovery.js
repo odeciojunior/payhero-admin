@@ -74,9 +74,11 @@ $(document).ready(function () {
 
             },
             success: function success(response) {
+                console.log(response);
 
                 $('#table_data').html('');
                 $('#carrinhoAbandonado').addClass('table-striped');
+                let cont = 0;
 
                 $.each(response.data, function (index, value) {
 
@@ -94,6 +96,7 @@ $(document).ready(function () {
                     dados += "<td class='display-sm-none' align='center'> <a role='button' class='details-cart-recovery' style='cursor:pointer;' data-venda='" + value.id + "' ><i class='material-icons gradient'>remove_red_eye</i></button></td>";
 
                     dados += "</tr>";
+                    cont++;
                     $("#table_data").append(dados);
 
                     $(".copy_link").on("click", function () {
@@ -113,7 +116,14 @@ $(document).ready(function () {
                 } else if (response.data == '' && $('#type_recovery').val() == 3) {
                     $('#table_data').html("<tr><td colspan='11' class='text-center' style='height: 70px;vertical-align: middle'> Nenhum cartão recusado até o momento</td></tr>");
                 }
-                paginateSalesRecovery(response, 'salesRecovery', atualizar);
+
+                if (response.data.length > 9) {
+                    $("#pagination-salesRecovery").show();
+                    paginateSalesRecovery(response, 'salesRecovery', atualizar);
+
+                } else {
+                    $("#pagination-salesRecovery").hide();
+                }
 
                 if ($("#type_recovery").val() == '2') {
                     $(".sale_status").hover(

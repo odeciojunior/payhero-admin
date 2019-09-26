@@ -207,7 +207,6 @@ class DomainRecordsApiController extends Controller
             $cloudFlareService = new CloudFlareService();
 
             $domain       = $domainModel->find(current(Hashids::decode($domain)));
-            dd($domain);
             $domainRecord = $domainRecordModel->find(current(Hashids::decode($domainRecord)));
 
             if (Gate::allows('edit', [$domainRecord->domain->project])) {
