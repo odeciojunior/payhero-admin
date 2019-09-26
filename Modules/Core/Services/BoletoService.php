@@ -2,8 +2,8 @@
 
 namespace Modules\Core\Services;
 
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Checkout;
@@ -17,7 +17,7 @@ class BoletoService
 {
     public function verifyBoletosExpired()
     {
-        //        $date = Carbon::now()->subDay('1')->toDateString();
+        //        $date = now()->subDay('1')->toDateString();
         //
         //        $boletos = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
         //                       ->with('clientModel', 'plansSales.plan.products')
@@ -143,24 +143,38 @@ class BoletoService
     public function verifyBoletoWaitingPayment()
     {
         try {
-            $date                 = Carbon::now()->subDay('1')->toDateString();
-            $boletoWaitingPayment = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
-                                        ->with('client', 'plansSales.plan.products')->get();
+            /** @var Sale $saleModel */
+            $saleModel = new Sale();
+            /** @var SendgridService $sendEmail */
+            $sendEmail = new SendgridService();
+            /** @var Checkout $checkoutModel */
+            $checkoutModel = new Checkout();
+            /** @var Project $projectModel */
+            $projectModel = new Project();
+            /** @var Domain $domainModel */
+            $domainModel = new Domain();
+            /** @var Carbon $startDate */
+            $startDate = now()->startOfDay()->subDay();
+            /** @var Carbon $endDate */
+            $endDate              = now()->endOfDay()->subDay();
+            $boletoWaitingPayment = $saleModel->newQuery()
+                                              ->with('client', 'plansSales.plan.products')
+                                              ->whereBetween('start_date', [$startDate, $endDate])
+                                              ->where(
+                                                  [
+                                                      ['payment_method', '=', '2'],
+                                                      ['status', '=', '2'],
+                                                  ]
+                                              )->get();
+            /** @var Sale $boleto */
             foreach ($boletoWaitingPayment as $boleto) {
-
                 try {
-                    $sendEmail     = new SendgridService();
-                    $checkoutModel = new Checkout();
-
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
-                    $data        = [];
                     $subTotal    = $boleto->present()->getSubTotal();
-
-                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
-
+                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
                         $iof = '';
                     } else {
@@ -175,19 +189,17 @@ class BoletoService
                     $clientNameExploded       = explode(' ', $clientName);
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
-
-                    $products = $boleto->present()->getProducts();
-                    $project  = Project::find($boleto->project_id);
-                    $domain   = Domain::where('project_id', $project->id)->first();
-
-                    $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
-                    $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
-                    $boleto->shipment_value  = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
-                    $boletoDigitableLine     = [];
-                    $boletoDigitableLine[0]  = substr($boleto->boleto_digitable_line, 0, 24);
-                    $boletoDigitableLine[1]  = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
-                    $boleto->boleto_due_date = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
-                    $data                    = [
+                    $products                 = $boleto->present()->getProducts();
+                    $project                  = $projectModel->newQuery()->find($boleto->project_id);
+                    $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
+                    $subTotal                 = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
+                    $boleto->shipment_value   = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
+                    $boleto->shipment_value   = substr_replace($boleto->shipment_value, ',', strlen($boleto->shipment_value) - 2, 0);
+                    $boletoDigitableLine      = [];
+                    $boletoDigitableLine[0]   = substr($boleto->boleto_digitable_line, 0, 24);
+                    $boletoDigitableLine[1]   = substr($boleto->boleto_digitable_line, 24, strlen($boleto->boleto_digitable_line) - 1);
+                    $boleto->boleto_due_date  = Carbon::parse($boleto->boleto_due_date)->format('d/m/y');
+                    $data                     = [
                         "name"                  => $clientNameExploded[0],
                         "boleto_link"           => $boleto->boleto_link,
                         "boleto_digitable_line" => $boletoDigitableLine,
@@ -201,7 +213,7 @@ class BoletoService
                         "project_contact"       => $project->contact,
                         "products"              => $products,
                     ];
-                    $emailValidated          = FoxUtils::validateEmail($clientEmail);
+                    $emailValidated           = FoxUtils::validateEmail($clientEmail);
 
                     if ($emailValidated) {
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-59dab7e71d4045e294cb6a14577da236', $data);
@@ -225,26 +237,37 @@ class BoletoService
     public function verifyBoleto2()
     {
         try {
-            $saleModel    = new Sale();
+            /** @var Sale $saleModel */
+            $saleModel = new Sale();
+            /** @var Project $projectModel */
             $projectModel = new Project();
-            $domainModel  = new Domain();
-
-            $date    = Carbon::now()->subDay('2')->toDateString();
-            $boletos = $saleModel->where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(start_date,'%Y-%m-%d'))"), $date]])
-                                 ->with('client', 'plansSales.plan.products')->get();
+            /** @var Domain $domainModel */
+            $domainModel = new Domain();
+            /** @var Checkout $checkoutModel */
+            $checkoutModel = new Checkout();
+            /** @var Carbon $startDate */
+            $startDate = now()->startOfDay()->subDay();
+            /** @var Carbon $endDate */
+            $endDate = now()->endOfDay()->subDay();
+            $boletos = $saleModel->newQuery()
+                                 ->with('client', 'plansSales.plan.products')
+                                 ->whereBetween('start_date', [$startDate, $endDate])
+                                 ->where(
+                                     [
+                                         ['payment_method', '=', '2'],
+                                         ['status', '=', '2'],
+                                     ]
+                                 )->get();
+            /** @var Sale $boleto */
             foreach ($boletos as $boleto) {
                 try {
-                    $checkoutModel = new Checkout();
-
-                    $checkout    = $checkoutModel->where("id", $boleto->checkout_id)->first();
+                    /** @var Checkout $checkout */
+                    $checkout    = $checkoutModel->newQuery()->where("id", $boleto->checkout_id)->first();
                     $clientName  = $boleto->client->name;
                     $clientEmail = $boleto->client->email;
-                    $data        = [];
                     $subTotal    = $boleto->present()->getSubTotal();
-
-                    $iof      = preg_replace("/[^0-9]/", "", $boleto->iof);
-                    $discount = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
-
+                    $iof         = preg_replace("/[^0-9]/", "", $boleto->iof);
+                    $discount    = preg_replace("/[^0-9]/", "", $boleto->shopify_discount);
                     if ($iof == 0) {
                         $iof = '';
                     } else {
@@ -260,8 +283,8 @@ class BoletoService
                     $boleto->total_paid_value = preg_replace("/[^0-9]/", "", $boleto->iof) + preg_replace("/[^0-9]/", "", $boleto->total_paid_value);
                     $boleto->total_paid_value = substr_replace($boleto->total_paid_value, ',', strlen($boleto->total_paid_value) - 2, 0);
                     $products                 = $boleto->present()->getProducts();
-                    $project                  = $projectModel->find($boleto->project_id);
-                    $domain                   = $domainModel->where('project_id', $project->id)->first();
+                    $project                  = $projectModel->newQuery()->find($boleto->project_id);
+                    $domain                   = $domainModel->newQuery()->where('project_id', $project->id)->first();
 
                     $subTotal                = substr_replace($subTotal, ',', strlen($subTotal) - 2, 0);
                     $boleto->shipment_value  = preg_replace("/[^0-9]/", "", $boleto->shipment_value);
@@ -289,7 +312,7 @@ class BoletoService
                         $sendEmail = new SendgridService();
 
                         $sendEmail->sendEmail('noreply@' . $domain['name'], $project['name'], $clientEmail, $clientNameExploded[0], 'd-690a6140f72643c1af280b079d5e84c5', $data);
-                        $checkout->increment('email_sent_amount');
+                        $checkout->newQuery()->increment('email_sent_amount');
                     }
                 } catch (Exception $e) {
                     Log::warning('Erro ao enviar boleto para e-mail no foreach - Vamos ter que liberar sua mercadoria');
@@ -307,7 +330,7 @@ class BoletoService
      */
     public function verifyBoletoExpired3()
     {
-        //        $date          = Carbon::now()->subDay('3')->toDateString();
+        //        $date          = now()->subDay('3')->toDateString();
         //        $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
         //                             ->with('clientModel')->get();
         //        foreach ($boletoExpired as $boleto) {
@@ -335,7 +358,7 @@ class BoletoService
      */
     public function verifyBoletoExpired4()
     {
-        //        $date          = Carbon::now()->subDay('4')->toDateString();
+        //        $date          = now()->subDay('4')->toDateString();
         //        $boletoExpired = Sale::where([['payment_method', '=', '2'], ['status', '=', '2'], [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), $date]])
         //                             ->with('clientModel')->get();
         //        foreach ($boletoExpired as $boleto) {
@@ -423,13 +446,6 @@ class BoletoService
             $boletosPaid = DB::select($sql);
             foreach ($boletosPaid as $boleto) {
                 try {
-                    if (!FoxUtils::validateEmail($boleto->email)) {
-                        var_dump('n foi');
-                        continue;
-                    }
-                    var_dump('foi');
-
-                    return;
                     /** @var User $user */
                     $user = $userModel->newQuery()->find($boleto->owner_id);
                     if ($boleto->boleto_count == 1) {
@@ -460,24 +476,27 @@ class BoletoService
     }
 
     /**
-     *
+     * @return void
      */
     public function changeBoletoPendingToCanceled()
     {
+        /** @var Sale $saleModel */
         $saleModel = new Sale();
-
-        $date = Carbon::now()->subDay('4')->toDateString();
-
-        $boletos = $saleModel->where([
-                                         ['payment_method', '=', '2'],
-                                         ['status', '=', '2'],
-                                         [DB::raw("(DATE_FORMAT(boleto_due_date,'%Y-%m-%d'))"), '<=', $date],
-                                     ])
-                             ->get();
+        /** @var Carbon $startDate */
+        $startDate = now()->startOfDay()->subDays('4');
+        /** @var Carbon $endDate */
+        $endDate = now()->endOfDay()->subDays('4');
+        $boletos = $saleModel->newQuery()
+                             ->whereBetween('boleto_due_date', [$startDate, $endDate])
+                             ->where(
+                                 [
+                                     ['payment_method', '=', '2'],
+                                     ['status', '=', '2'],
+                                 ]
+                             )->get();
+        /** @var Sale $boleto */
         foreach ($boletos as $boleto) {
-            $boleto->update([
-                                'status' => 5,
-                            ]);
+            $boleto->update(['status' => 5]);
         }
     }
 }

@@ -4,6 +4,8 @@ namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\SalePresenter;
@@ -49,8 +51,9 @@ use Modules\Core\Presenters\SalePresenter;
  * @property Client $client
  * @property Delivery $delivery
  * @property User $user
- * @property PlansSale[] $plansSales
+ * @property PlanSale[] $plansSales
  * @property Transaction[] $transactions
+ * @method SalePresenter present()
  */
 class Sale extends Model
 {
@@ -103,7 +106,7 @@ class Sale extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function checkout()
     {
@@ -111,7 +114,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function project()
     {
@@ -119,7 +122,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function shipping()
     {
@@ -127,7 +130,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function affiliate()
     {
@@ -135,7 +138,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function client()
     {
@@ -143,7 +146,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function delivery()
     {
@@ -151,7 +154,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
@@ -159,7 +162,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function plansSales()
     {
@@ -167,7 +170,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function transactions()
     {
@@ -175,7 +178,7 @@ class Sale extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function notazzInvoices()
     {
