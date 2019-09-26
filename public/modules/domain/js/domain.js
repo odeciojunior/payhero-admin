@@ -718,8 +718,8 @@ $(document).ready(function () {
 function loadOnModalDomainEspecial(whereToLoad) {
 
     $(whereToLoad).children().hide('fast');
-    $('#modal-title').after('<h3 id="especialModalTitle" style="weight:bold; color:black"></h3>');
-    $('#modal-title').hide();
+    $('#modal-title-domain').after('<h3 id="especialModalTitle" style="weight:bold; color:black"></h3>');
+    $('#modal-title-domain').hide();
     $(whereToLoad).append("<div id='loaderModal' class='loadingModal'>" + "<div class='loaderModal'>" + "</div>" + "</div>");
     $('#loadingOnScreen').append("<div class='blockScreen'></div>");
 

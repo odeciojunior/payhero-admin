@@ -22,6 +22,11 @@ use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\NotazzService;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
+use Exception;
+use Carbon\Carbon;
+use DOMDocument;
+use DOMXPath;
+use Vinkla\Hashids\Facades\Hashids;
 
 class TesteController extends Controller
 {
@@ -344,38 +349,8 @@ class TesteController extends Controller
     }
 
     public function joaoLucasFunction()
-    {/*
-        $productsModel    = new Product();
-        $productPlanModel = new ProductPlan();
-        $planModel        = new Plan();
-
-        $products = $productsModel->WhereNotNull('shopify_id')->whereNull('project_id')->get();
-        foreach ($products as $product) {
-            $productPlan = $productPlanModel->where('product_id', $product->id)->first();
-            if (!empty($productPlan)) {
-
-                $plan = $planModel->find($productPlan->plan_id);
-
-                $product->update(
-                    [
-                        'project_id' => $plan->project_id,
-                    ]
-                );
-            }
-        }
-
-        dd("hey");*/
-
-        //        $productsModel = new Product();
-        //
-        //        $productsSearch = $productsModel->where('user_id', 34)
-        //                                        ->where('shopify', 1)->get();
-        //        foreach ($productsSearch as $product) {
-        //            $product->update([
-        //                                 'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->name, 0, 100)),
-        //                                 'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->description, 0, 100)),
-        //                             ]);
-        //        }
+    {
+        dd(current(Hashids::decode('nyOeXZKYkgAQap9')));
     }
 
     public function removeSpecialCharacter()

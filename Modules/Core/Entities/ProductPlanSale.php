@@ -39,6 +39,12 @@ use Modules\Core\Entities\Sale;
 class ProductPlanSale extends Model
 {
     /**
+     * The table associated with the model.
+     * @var string
+     */
+    protected $table = 'products_plans_sales';
+
+    /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */

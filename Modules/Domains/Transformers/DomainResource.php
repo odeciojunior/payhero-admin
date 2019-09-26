@@ -2,20 +2,26 @@
 
 namespace Modules\Domains\Transformers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
-use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\SendgridService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;
 
+/**
+ * Class DomainResource
+ * @property mixed name
+ * @property mixed status
+ * @property mixed id
+ * @package Modules\Domains\Transformers
+ */
 class DomainResource extends Resource
 {
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
-     * @throws \Cloudflare\API\Endpoints\EndpointException]
      */
-    public function toArray($request) {
+    public function toArray($request)
+    {
         return [
             'id'                => Hashids::encode($this->id),
             'domain'            => $this->name,
@@ -23,5 +29,4 @@ class DomainResource extends Resource
             'status_translated' => Lang::get('definitions.enum.status.' . $this->present()->getStatus($this->status)),
         ];
     }
-
 }

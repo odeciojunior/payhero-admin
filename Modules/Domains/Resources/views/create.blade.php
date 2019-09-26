@@ -5,7 +5,8 @@
         <div class="row">
             <div class="form-group">
                 <label for="name">Domínio</label>
-                <input name="name" type="text" class="input-pad fildName" id="name" placeholder="Digite o domínio">
+                <input name="name" type="text" class="input-pad fildName"
+                       id="name" placeholder="Digite o domínio">
             </div>
         </div>
     </form>

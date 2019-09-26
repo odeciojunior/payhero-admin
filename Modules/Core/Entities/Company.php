@@ -13,6 +13,7 @@ use Modules\Core\Presenters\CompanyPresenter;
 
 /**
  * Class Company
+ * @package Modules\Core\Entities
  * @property int $id
  * @property int $user_id
  * @property string $fantasy_name
@@ -54,7 +55,6 @@ use Modules\Core\Presenters\CompanyPresenter;
  * @property Withdrawal[] $withdrawals
  * @property string $bank_document_status_value
  * @property string $bank_document_status_badge
- * @package Modules\Core\Entities
  */
 class Company extends Model
 {
