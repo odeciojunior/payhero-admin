@@ -75,7 +75,7 @@
     <div class="modal-dialog modal-dialog-centered modal-simple modal-lg">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title-edit-domain">Registros DNS </h4>
+                <h4 class="modal-title" id="modal-title-edit-domain">Gerenciador de registros DNS </h4>
                 <a id="modal-button-close-edit-domain-record" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
@@ -118,15 +118,10 @@
                                 </div>
                             </div>
                         </div>
-                        <p class='info mt-12' style='font-size: 10px;'>
-                            <i class='icon wb-info-circle' aria-hidden='true'></i>
-                            <strong> Caso você possua um site hospedado em algum servidor com este domínio, você precisa criar uma entrada A com seu domínio apontado para o IP do servidor para seu site continuar funcionando normalmente. </strong>
-                        </p>
                     </form>
                 </div>
-                Lista de entradas personalizadas
                 <div class='row mx-2 col-sm-12'>
-                    <h4 class='text-sm-center col-sm-12'>Entradas personalizadas</h4>
+                    <h4 class='text-sm-center col-sm-12'>Listas de registros DNS</h4>
                 </div>
                 <div id='divCustomDomain' class='table-responsive' style='overflow-y:scroll; height: 250px;'>
                     <table id='new-registers-table' class='table table-hover table-bordered table-striped'>

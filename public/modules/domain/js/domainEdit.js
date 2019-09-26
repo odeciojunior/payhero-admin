@@ -51,6 +51,7 @@ $(document).ready(function () {
                     $.each(response.data, function (index, value) {
                         tableDomains(value);
                     });
+                    $('#tabela-dominios').addClass('table-striped');
 
                     pagination(response, 'domain', updateDomains);
 
