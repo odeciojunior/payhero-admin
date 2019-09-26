@@ -9,8 +9,6 @@
         "Modules\\Authentication\\Providers\\AuthenticationServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }
