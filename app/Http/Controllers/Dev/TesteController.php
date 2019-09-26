@@ -22,10 +22,6 @@ use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\NotazzService;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
-use Exception;
-use Carbon\Carbon;
-use DOMDocument;
-use DOMXPath;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TesteController extends Controller
@@ -124,11 +120,11 @@ class TesteController extends Controller
                         $transaction->update([
                                                  'status'            => 'paid',
                                                  'release_date'      => Carbon::now()
-                                                     ->addDays($user['release_money_days'])
-                                                     ->format('Y-m-d'),
+                                                                              ->addDays($user['release_money_days'])
+                                                                              ->format('Y-m-d'),
                                                  'antecipation_date' => Carbon::now()
-                                                     ->addDays($user['boleto_antecipation_money_days'])
-                                                     ->format('Y-m-d'),
+                                                                              ->addDays($user['boleto_antecipation_money_days'])
+                                                                              ->format('Y-m-d'),
                                              ]);
                     } else {
                         $transaction->update([
