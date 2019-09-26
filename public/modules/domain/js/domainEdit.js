@@ -318,6 +318,8 @@ $(document).ready(function () {
     $("#bt-add-record").on('click', function () {
         let domainId = $("#domain").val();
         console.log('dominio: ' + domainId);
+        loadOnTable('#table-body-new-records', '#new-registers-table');
+
 
         let formData = new FormData(document.getElementById('form-modal-add-domain-record'));
         formData.append('project', projectId);
