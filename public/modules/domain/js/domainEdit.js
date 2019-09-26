@@ -44,7 +44,6 @@ $(document).ready(function () {
                 }
             }, success: function (response) {
                 $("#domain-table-body").html('');
-
                 if (response.data == '') {
                     $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum dominio encontrado</td></tr>")
                 } else {
@@ -270,16 +269,21 @@ $(document).ready(function () {
                 '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
                 '</div>'
             );
+            $("#proxy-active").attr('disabled', true);
+            $("#proxy-select ").val('0').change();
 
-            $("#proxy").val('0').attr('disabled', 'disabled');
+
 
             $('#value-priority').mask('0#');
 
         } else if ($("#type-register option:selected").val() === 'TXT') {
-            $("#proxy").val('0').attr('disabled', 'disabled');
+            $("#proxy-active").attr('disabled', true);
+            $("#proxy-select").val('0').change();
 
         } else {
-            $("#proxy").val('0').removeAttr('disabled');
+
+            $("#proxy-active").removeAttr('disabled');
+
             $("#div-input-priority").remove();
             $("#name-register").parent().removeClass('col-lg-8').addClass('col-lg-10');
         }
@@ -334,7 +338,7 @@ $(document).ready(function () {
             dataType: "json",
             error: function (response) {
                 console.log(response);
-                $(".swal2-container").remove();
+                $(".swal2-container, #modal-backdrop").remove();
                 removeLoad();
                 errorAjaxResponse(response);
             },

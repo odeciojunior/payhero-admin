@@ -97,9 +97,9 @@
                             <input id='name-register' name='name-register' class='input-pad' placeholder='Nome'>
                         </div>
                         <div class='form-group col-lg-3'>
-                            <select id='proxy' name='proxy' class='input-pad'>
-                                <option value='1'>Proxy Ativado</option>
-                                <option value='0'>Proxy Desativado</option>
+                            <select id='proxy-select' name='proxy' class='input-pad'>
+                                <option id='proxy-active' value='1'>Proxy Ativado</option>
+                                <option id='proxy-inactive' value='0'>Proxy Desativado</option>
                             </select>
                         </div>
                         <div class='col-lg-8'>
