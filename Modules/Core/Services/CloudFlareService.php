@@ -364,6 +364,12 @@ class CloudFlareService
         if ($newZone) {
             //dominio criado
 
+            $domainModel->where('id', $domainModelId)
+                        ->update([
+                                    'cloudflare_domain_id' => $newZone->id,
+                                ]);
+
+
             $this->setZone($newZone->name);
 
             if (!empty($ipAddress)) {
