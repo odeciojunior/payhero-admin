@@ -11,7 +11,7 @@
                 <i class="icon wb-plus" aria-hidden="true"></i></button>
             <h2 class="page-title">Convites</h2>
             <p id='text-info' style="margin-top: 12px; display: none;">A cada convite aceito, você vai ganhar 1% de comissão das vendas efetuadas pelos novos usuários que você convidou durante 1 ano.</p>
-            <div class="card shadow p-20">
+            <div class="card shadow p-20" id='card-invitation-data' style='display:none;'>
                 <div class="row justify-content-center">
                     <div class="col-md-3 col-sm-12">
                         <h6 class="text-center orange-gradient"><i class="material-icons align-middle mr-1 orange-gradient"> group_add </i> Convites Enviados </h6>

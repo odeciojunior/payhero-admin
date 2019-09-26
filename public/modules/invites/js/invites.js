@@ -52,6 +52,7 @@ $(document).ready(function () {
                 } else {
                     $("#content-error").hide();
                     $("#card-table-invite").css('display', 'block');
+                    $("#card-invitation-data").css('display', 'block');
 
                     $("#text-info").css('display', 'block');
                     $("#card-table-invite").css('display', 'block');
