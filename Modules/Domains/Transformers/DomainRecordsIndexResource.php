@@ -45,6 +45,7 @@ class DomainRecordsIndexResource extends Resource
                 'id'          => Hashids::encode($record->id),
                 'type'        => $record->type,
                 'proxy'       => $record->proxy,
+                'domain_name' => $this->resource['domain']->name,
                 //'name'        => ($record->name == $domain['name']) ? $record->name : ($subdomain[0] ?? ''),
                 'name'        => $record->name,
                 'content'     => substr($content, 0, 20),

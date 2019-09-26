@@ -311,10 +311,10 @@
                         </h3>
                         <h4 align='center'>Agora falta pouco</h4>
                         <h4 align='center'>
-                            "Você só precisa adicionar essas novas entradas"
-                            <strong>DNS</strong> " onde você registrou seu domínio
+                            Entre onde você registrou seu dominio
                             <span id='nameHost'></span>
-                            . Logo após clique em " <strong style='color: green;'>Verificar</strong>
+                            e remova os nameservers atuais, logo após você só precisa adicionar esses novos nameservers. Depois clique em
+                            <strong style='color: green;'>Verificar</strong>
                         </h4>
                         <div id="table-info-dns-check" style="width:100%">
                             <table class="table table-striped">

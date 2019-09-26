@@ -32,11 +32,9 @@ class DomainRecordsApiController extends Controller
     public function index($projectId, $domainId)
     {
         try {
-            $domainModel       = new Domain();
-            $companyModel      = new Company();
-            $cloudFlareService = new CloudFlareService();
+            $domainModel = new Domain();
 
-            $domainId = current(\Vinkla\Hashids\Facades\Hashids::decode($domainId));
+            $domainId = current(Hashids::decode($domainId));
 
             if ($domainId) {
                 //hash ok

@@ -550,7 +550,10 @@ class DomainsApiController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Dados do dominio', 'data' => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers, 'domainHost' => $domainHost]], 200);
+            return response()->json([
+                                        'message' => 'Dados do dominio',
+                                        'data'    => ['id_code' => Hashids::encode($domain->id), 'zones' => $newNameServers, 'domainHost' => $domainHost, 'status' => $domain->status],
+                                    ], 200);
         } else {
             return response()->json(['message' => 'Sem permissão para visualizar o domínio'], 400);
         }

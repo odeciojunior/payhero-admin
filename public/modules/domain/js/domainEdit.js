@@ -422,6 +422,7 @@ $(document).ready(function () {
      * @param domainRecords
      * @param domainId
      * @param domainRecords.value.system_flag
+     * @param domainRecords.value.domain_name
      */
     function tableRecords(domainRecords, domainId) {
         console.log(domainRecords);
@@ -457,13 +458,19 @@ $(document).ready(function () {
 
             } else {
                 cont++;
+                let enabledA = 'disabled';
+                if (value.type === 'A' && value.name === value.domain_name) {
+                    enabledA = "<td><a role='button' class='mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+                } else {
+                    enabledA = "<td><a role='button' class='mg-responsive pointer'  '" + enabledA + "'><i class='material-icons gradient' >delete_outline</i> </a></td>";
+                }
                 data += '<td><div class="switch-holder">' +
                     '                    <label class="switch">' +
-                    '                        <input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + ' disabled>' +
+                    '                        <input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + ' disabled  >' +
                     '                        <span class="slider round"></span>' +
                     '                    </label>' +
                     '                </div></td>';
-                data += "<td><a role='button' class='mg-responsive pointer' disabled='disabled'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+                data += enabledA;
 
             }
 
@@ -532,26 +539,35 @@ $(document).ready(function () {
             success: function (response) {
                 console.log(response);
                 $(".table-title-entry").remove();
-                var data = '';
-                $.each(response.data.zones, function (index, value) {
-                    data += '<tr class="table-title-entry">' +
-                        '<td class= "table-title" > <b>Novo servidor DNS: </b></td>' +
-                        '<td> "' + value + '" </td>' +
-                        '</tr>';
-                });
+                debugger
+                if (response.data.status === 3) {
+                    $("#content-modal-recheck-dns").hide();
+                    $("#modal-info-dsn-success-body, #content-modal-recheck-dns-success").show();
 
-                $("#table-zones-add").append(data);
-                console.log(response.data.domainHost);
-                if (response.data.domainHost) {
-                    $("#nameHost").html(response.data.domainHost);
                 } else {
-                    $("#nameHost").html('');
+
+                    var data = '';
+                    $.each(response.data.zones, function (index, value) {
+                        data += '<tr class="table-title-entry">' +
+                            '<td class= "table-title" > <b>Novo servidor DNS: </b></td>' +
+                            '<td> ' + value + ' </td>' +
+                            '</tr>';
+                    });
+
+                    $("#table-zones-add").append(data);
+                    console.log(response.data.domainHost);
+                    if (response.data.domainHost) {
+                        $("#nameHost").html(response.data.domainHost);
+                    } else {
+                        $("#nameHost").html('');
+                    }
+                    $("#content-modal-recheck-dns-success").hide();
+
+                    $("#modal-title-dns-recheck, #modal-info-dsn-body, #content-modal-recheck-dns").show();
+
+                    // $("#modal-info-dsn-body").show();
                 }
-                $("#content-modal-recheck-dns-success").hide();
 
-                $("#modal-title-dns-recheck, #modal-info-dsn-body, #content-modal-recheck-dns").show();
-
-                // $("#modal-info-dsn-body").show();
                 $("#modal-info-dns").modal('show');
 
             }
