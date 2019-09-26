@@ -539,7 +539,6 @@ $(document).ready(function () {
             success: function (response) {
                 console.log(response);
                 $(".table-title-entry").remove();
-                debugger
                 if (response.data.status === 3) {
                     $("#content-modal-recheck-dns").hide();
                     $("#modal-info-dsn-success-body, #content-modal-recheck-dns-success").show();
