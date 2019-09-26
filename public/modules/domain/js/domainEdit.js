@@ -455,19 +455,20 @@ $(document).ready(function () {
                     '<span class="slider round"></span>' +
                     '</label>' +
                     '</div></td>';
-                data += "<td><a role='button' class='mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+                data += "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </button></td>";
 
             } else {
                 cont++;
-                let enabledA = 'disabled';
+                let enabledA = '';
+                let enabledEntrada = 'disabled';
                 if (value.type === 'A' && value.name === value.domain_name) {
-                    enabledA = "<td><a role='button' class='mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </a></td>";
+                    enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive delete-domain-record pointer' data-domain='" + domainId + "' data-system='" + value.system_flag + "' data-record='" + value.id + "'><i class='material-icons gradient'>delete_outline</i> </button></td>";
                 } else {
-                    enabledA = "<td><a role='button' class='mg-responsive pointer'  '" + enabledA + "'><i class='material-icons gradient' >delete_outline</i> </a></td>";
+                    enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " + enabledEntrada + "><i class='material-icons gradient' >delete_outline</i> </a></td>";
                 }
-                data += '<td><div class="switch-holder">' +
+                data += '<td><div class="switch-holder" style="pointer-events: none; opacity: 0.5;">' +
                     '                    <label class="switch">' +
-                    '                        <input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + ' disabled  >' +
+                    '                        <input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + '  ' + enabledEntrada + ' >' +
                     '                        <span class="slider round"></span>' +
                     '                    </label>' +
                     '                </div></td>';
