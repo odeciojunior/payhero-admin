@@ -81,49 +81,41 @@
                 </a>
             </div>
             <div id="modal-body-content-domain" class="modal-body" style='min-height: 100px'>
-                <div class='row'>
-                    <a id='domain' hidden></a>
-                    <form id='form-modal-add-domain-record' class=''>
-                        <div class='col-lg-12'>
-                            <div class='row '>
-                                <div class='form-group col-lg-2'>
-                                    <select id='type-register' name='type-register' class='form-control input-pad'>
-                                        <option value='A'>A</option>
-                                        <option value='AAA'>AAA</option>
-                                        <option value='CNAME'>CNAME</option>
-                                        <option value='TXT'>TXT</option>
-                                        <option value='MX'>MX</option>
-                                    </select>
-                                </div>
-                                <div class='form-group col-lg-10'>
-                                    <input id='name-register' name='name-register' class='input-pad' placeholder='Nome'>
-                                </div>
-                            </div>
+                <a id='domain' hidden></a>
+                <form id='form-modal-add-domain-record' class=''>
+                    <div class="row">
+                        <div class='form-group col-lg-2'>
+                            <select id='type-register' name='type-register' class='form-control input-pad'>
+                                <option value='A'>A</option>
+                                <option value='AAA'>AAA</option>
+                                <option value='CNAME'>CNAME</option>
+                                <option value='TXT'>TXT</option>
+                                <option value='MX'>MX</option>
+                            </select>
                         </div>
-                        <div class='col-lg-12'>
-                            <div class='row '>
-                                <div class='form-group col-lg-3'>
-                                    <select id='proxy' name='proxy' class='input-pad'>
-                                        <option value='1'>Proxy Ativado</option>
-                                        <option value='0'>Proxy Desativado</option>
-                                    </select>
-                                </div>
-                                <div class='col-lg-8'>
-                                    <input id='value-record' name='value-record' class='input-pad' placeholder='Valor'>
-                                </div>
-                                <div class='col-lg-1'>
-                                    <button class='btn btn-primary' id='bt-add-record'>
-                                        <i class='fa fa-plus'></i>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class='form-group col-lg-10'>
+                            <input id='name-register' name='name-register' class='input-pad' placeholder='Nome'>
                         </div>
-                    </form>
-                </div>
+                        <div class='form-group col-lg-3'>
+                            <select id='proxy' name='proxy' class='input-pad'>
+                                <option value='1'>Proxy Ativado</option>
+                                <option value='0'>Proxy Desativado</option>
+                            </select>
+                        </div>
+                        <div class='col-lg-8'>
+                            <input id='value-record' name='value-record' class='input-pad' placeholder='Valor'>
+                        </div>
+                        <div class='col-lg-1'>
+                            <button class='btn btn-primary' id='bt-add-record'>
+                                <i class='fa fa-plus'></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
                 <div class='row mx-2 col-sm-12'>
                     <h4 class='text-sm-center col-sm-12'>Listas de registros DNS</h4>
                 </div>
-                <div id='divCustomDomain' class='table-responsive' style='overflow-y:scroll; height: 250px;'>
+                <div id='divCustomDomain' class='table-responsive' style='overflow-y:scroll; height: 300px;'>
                     <table id='new-registers-table' class='table table-hover table-bordered table-striped'>
                         <thead>
                             <tr>
