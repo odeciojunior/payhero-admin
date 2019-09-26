@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('/guard/broadcast/auth', function(\Illuminate\Support\Facades\Request $req) {
     return true;
-})->middleware('broadcast');
+})->middleware('broadcast')->name('broadcast.auth');
 
 Route::get('/', function() {
     return view('auth.login');
