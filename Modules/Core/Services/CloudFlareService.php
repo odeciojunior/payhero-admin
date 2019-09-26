@@ -301,11 +301,10 @@ class CloudFlareService
     }
 
     /**
-     * @param string $domain
+     * @param string $recordId
      * @return bool
      */
-    public
-    function deleteRecord(string $recordId)
+    public function deleteRecord(string $recordId)
     {
         try {
 
@@ -329,10 +328,8 @@ class CloudFlareService
     /**
      * @param string $domain
      * @return bool
-     * @throws EndpointException
      */
-    public
-    function activationCheck(string $domain)
+    public function activationCheck(string $domain)
     {
         try {
             $zoneID = $this->zones->getZoneID($domain);
@@ -347,14 +344,16 @@ class CloudFlareService
     }
 
     /**
+     * @param int $domainModelId
      * @param string $domain
-     * @param string|null $ipAddress
+     * @param $ipAddress
      * @return bool
      * @throws EndpointException
      */
-    public
-    function integrationWebsite(int $domainModelId, string $domain, $ipAddress)
+    public function integrationWebsite(int $domainModelId, string $domain, $ipAddress)
     {
+        $domainModel = new Domain();
+
         $this->deleteZone($domain);
         $this->getDomainRecordModel()->where('domain_id', $domainModelId)->delete();
 
@@ -366,9 +365,8 @@ class CloudFlareService
 
             $domainModel->where('id', $domainModelId)
                         ->update([
-                                    'cloudflare_domain_id' => $newZone->id,
-                                ]);
-
+                                     'cloudflare_domain_id' => $newZone->id,
+                                 ]);
 
             $this->setZone($newZone->name);
 
@@ -478,8 +476,7 @@ class CloudFlareService
      * @return bool
      * @throws EndpointException
      */
-    public
-    function integrationShopify(int $domainModelId, string $domain)
+    public function integrationShopify(int $domainModelId, string $domain)
     {
         $domainModel = new Domain();
 
@@ -650,8 +647,7 @@ class CloudFlareService
      * @param string $domain
      * @return array|false|string
      */
-    public
-    function getSSLSetting(string $domain)
+    public function getSSLSetting(string $domain)
     {
         try {
             if ($domain) {
@@ -678,8 +674,7 @@ class CloudFlareService
      * @param null $domain
      * @return array|bool
      */
-    public
-    function setSSLSetting(string $value, string $domain = null)
+    public function setSSLSetting(string $value, string $domain = null)
     {
         try {
             if ($domain) {
@@ -706,8 +701,7 @@ class CloudFlareService
      * @param null $domain
      * @return array|bool
      */
-    public
-    function setHTTPSRedirectSetting(string $value, string $domain = null)
+    public function setHTTPSRedirectSetting(string $value, string $domain = null)
     {
         try {
             if ($domain) {
@@ -731,11 +725,10 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
-    public
-    function setHTTPSRewritesSetting(string $value, string $domain = null)
+    public function setHTTPSRewritesSetting(string $value, string $domain = null)
     {
         try {
             if ($domain) {
@@ -758,11 +751,10 @@ class CloudFlareService
     }
 
     /**
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
-    public
-    function enableTLS13(string $domain = null)
+    public function enableTLS13(string $domain = null)
     {
         try {
             if ($domain) {
@@ -786,11 +778,10 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
-    public
-    function setOpportunisticEncryptionSetting(string $value, string $domain = null)
+    public function setOpportunisticEncryptionSetting(string $value, string $domain = null)
     {
         try {
             if ($domain) {
@@ -814,11 +805,10 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
-    public
-    function setOnionRoutingSetting(string $value, string $domain = null)
+    public function setOnionRoutingSetting(string $value, string $domain = null)
     {
         try {
             if ($domain) {
@@ -841,12 +831,11 @@ class CloudFlareService
     }
 
     /**
-     * @param array $options
      * @param string|null $domain
+     * @param array $options
      * @return bool
      */
-    public
-    function setCloudFlareConfig(string $domain = null, array $options = [])
+    public function setCloudFlareConfig(string $domain = null, array $options = [])
     {
         /*
         Configuracoes Default

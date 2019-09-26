@@ -61,7 +61,7 @@
                 <a id="btn-mobile-modal-close" class="col-sm-6 btn btn-primary display-sm-none display-m-none display-lg-none display-xlg-none" style='color:white' role="button" data-dismiss="modal" aria-label="Close">
                     Fechar
                 </a>
-                <button id="btn-modal-add-domain" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success" style='display:none;'>
+                <button id="btn-modal-add-domain" type="button" class="col-sm-6 col-md-3 col-lg-3 btn btn-success float-right" style='display:none;'>
                     <i class="material-icons btn-fix"> save </i> Salvar
                 </button>
             </div>
@@ -75,18 +75,13 @@
     <div class="modal-dialog modal-dialog-centered modal-simple modal-lg">
         <div class="modal-content p-10">
             <div class="modal-header simple-border-bottom mb-10">
-                <h4 class="modal-title" id="modal-title-edit-domain">Editar Dominio</h4>
+                <h4 class="modal-title" id="modal-title-edit-domain">Registros DNS </h4>
                 <a id="modal-button-close-edit-domain-record" class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close">
                     <i class="material-icons md-16">close</i>
                 </a>
             </div>
             <div id="modal-body-content-domain" class="modal-body" style='min-height: 100px'>
-                <div class='"row'><h4>Adicionar nova entrada</h4></div>
                 <div class='row'>
-                    <div class="float-left mr-20">
-                        <input type="checkbox" id="inputBasicOn" name="inputiCheckBasicCheckboxes" data-plugin="switchery" checked="" data-switchery="true" data-color='red' data-size='small'>
-                        {{--                        <span class="switchery switchery-default" style="background-color: rgb(62, 142, 247); border-color: rgb(62, 142, 247); box-shadow: rgb(62, 142, 247) 0px 0px 0px 13px inset; transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s, background-color 1.2s ease 0s;"><small style="left: 21px; transition: background-color 0.4s ease 0s, left 0.2s ease 0s; background-color: rgb(255, 255, 255);"></small></span>--}}
-                    </div>
                     <a id='domain' hidden></a>
                     <form id='form-modal-add-domain-record' class=''>
                         <div class='col-lg-12'>
@@ -145,7 +140,6 @@
                             </tr>
                         </thead>
                         <tbody id='table-body-new-records'>
-
                             {{-- JS carrega tabela  --}}
                         </tbody>
                     </table>
