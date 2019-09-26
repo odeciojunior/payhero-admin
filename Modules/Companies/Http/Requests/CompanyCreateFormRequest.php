@@ -14,7 +14,7 @@ class CompanyCreateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'country'          => 'required|string|max:255|in:"usa","brazil"',
+            'country' => 'required|string|max:255|in:"usa","brasil"',
         ];
     }
 
