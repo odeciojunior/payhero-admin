@@ -104,7 +104,15 @@ $(document).ready(function () {
                             },
                             error: function error(response) {
                                 loadingOnScreenRemove();
-                                alertCustom('error', response.message);
+                                if (response.status == '422') {
+                                    for (error in response.errors) {
+                                        alertCustom('error', String(response.errors[error]));
+                                    }
+                                }
+                                if (response.status == '400') {
+                                    alertCustom('error', response.responseJSON.message);
+
+                                }
                             }, success: function success(response) {
                                 loadingOnScreenRemove();
                                 updateInvites();
