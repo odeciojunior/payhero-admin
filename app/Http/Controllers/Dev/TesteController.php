@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dev;
 
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -41,7 +42,7 @@ class TesteController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws Exception
      */
     public function index()
@@ -184,7 +185,7 @@ class TesteController extends Controller
 
                         $hotZappService->newBoleto($sale, $plans);
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
                     report($e);
                 }
