@@ -59,11 +59,9 @@ $(function () {
     // carregar modal de edicao
     $(document).on('click', '.edit-pixel', function () {
         let pixel = $(this).attr('pixel');
-        let data = {pixelId: pixel};
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/pixels/" + pixel + "/edit",
-            data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

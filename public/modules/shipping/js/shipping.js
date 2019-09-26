@@ -79,12 +79,9 @@ $(document).ready(function () {
     // carregar modal de detalhes
     $(document).on('click', '.detalhes-frete', function () {
         let frete = $(this).attr('frete');
-        let data = {freteId: frete};
-
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/shippings/" + frete,
-            data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

@@ -27,12 +27,10 @@ $(function () {
     // carregar modal de detalhes
     $(document).on('click', '.details-coupon', function () {
         let coupon = $(this).attr('coupon');
-        let data = {couponId: coupon};
         $("#btn-modal").hide();
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon,
-            data: data,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -55,7 +53,6 @@ $(function () {
     // carregar modal de edicao
     $(document).on('click', '.edit-coupon', function () {
         let coupon = $(this).attr('coupon');
-        let data = {couponId: coupon};
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon + "/edit",
