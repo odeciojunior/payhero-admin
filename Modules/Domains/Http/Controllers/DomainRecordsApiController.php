@@ -148,7 +148,7 @@ class DomainRecordsApiController extends Controller
                             DB::commit();
 
                             return response()->json([
-                                                        'message' => 'Subdomínio cadastrado com sucesso',
+                                                        'message' => 'DNS cadastrado com sucesso',
                                                     ], 200);
                         } else {
                             //dominio já cadastrado
@@ -289,7 +289,7 @@ class DomainRecordsApiController extends Controller
                         $recordsDeleted = $domainRecordModel->where('id', $record->id)->delete();
                         if ($recordsDeleted) {
                             return response()->json([
-                                                        'message' => 'Dominio removido com sucesso!',
+                                                        'message' => 'DNS removido com sucesso!',
                                                     ], 200);
                         } else {
                             return response()->json([
