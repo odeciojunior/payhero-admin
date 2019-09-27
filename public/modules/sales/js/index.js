@@ -335,20 +335,20 @@ $(document).ready(function () {
 
                     var data = {sale_id: venda};
 
-                    $.ajax({
-                        method: "get",
-                        url: '/api/client/' + 3800,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function error(response) {
-                            console.log(response);
-                        },
-                        success: function success(response) {
-                            console.log(response);
-
-                        }
-                    });
+                    // $.ajax({
+                    //     method: "get",
+                    //     url: '/api/client/' + 3800,
+                    //     headers: {
+                    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    //     },
+                    //     error: function error(response) {
+                    //         console.log(response);
+                    //     },
+                    //     success: function success(response) {
+                    //         console.log(response);
+                    //
+                    //     }
+                    // });
 
                     $.ajax({
                         method: "POST",
