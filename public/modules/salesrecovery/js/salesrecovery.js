@@ -64,13 +64,7 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 console.log(response);
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.responseJSON.message);
-                }
+                errorAjaxResponse(response);
 
             },
             success: function success(response) {

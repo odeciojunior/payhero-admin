@@ -45,12 +45,9 @@ class FoxUtils
                 $variant = INTL_IDNA_VARIANT_UTS46;
             }
             $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), '.');
-            var_dump($host);
-            var_dump(checkdnsrr($host, 'MX'));
 
             return checkdnsrr($host, 'MX');
         }
-        var_dump('n entrou');
 
         return false;
     }
