@@ -15,7 +15,8 @@ class ProjectsResource extends Resource {
             'photo' => $this->photo,
             'name' => $this->name,
             'description' => $this->description,
-            'created_at' => (new Carbon($this->created_at))->format('d/m/Y')
+            'created_at' => (new Carbon($this->created_at))->format('d/m/Y'),
+            'shopify_id' => $this->shopify_id
         ];
     }
 }

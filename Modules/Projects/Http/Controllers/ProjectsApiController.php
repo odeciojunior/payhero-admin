@@ -4,21 +4,27 @@ namespace Modules\Projects\Http\Controllers;
 
 use Exception;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Modules\Core\Entities\Project;
 use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\ProjectService;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Transformers\ProjectsResource;
+use Modules\Projects\Transformers\UserProjectResource;
+use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Vinkla\Hashids\Facades\Hashids;
 
-class ProjectsApiController extends Controller {
+class ProjectsApiController extends Controller
+{
 
-    public function index(){
+    public function index()
+    {
         try {
             $projectService = new ProjectService();
 
@@ -34,7 +40,8 @@ class ProjectsApiController extends Controller {
         }
     }
 
-    public function create(){
+    public function create()
+    {
         try {
             $user = auth()->user()->load('companies');
             return response()->json(CompaniesSelectResource::collection($user->companies));
@@ -50,31 +57,31 @@ class ProjectsApiController extends Controller {
         try {
             $requestValidated = $request->validated();
 
-            $projectModel        = new Project();
-            $userProjectModel    = new UserProject();
-            $shippingModel       = new Shipping();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
+            $shippingModel = new Shipping();
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if (!empty($requestValidated)) {
                 $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
 
                 $project = $projectModel->create([
-                    'name'                       => $requestValidated['name'],
-                    'description'                => $requestValidated['description'],
-                    'installments_amount'        => 12,
+                    'name' => $requestValidated['name'],
+                    'description' => $requestValidated['description'],
+                    'installments_amount' => 12,
                     'installments_interest_free' => 1,
-                    'visibility'                 => 'private',
-                    'automatic_affiliation'      => 0,
-                    'boleto'                     => 1,
+                    'visibility' => 'private',
+                    'automatic_affiliation' => 0,
+                    'boleto' => 1,
                 ]);
                 if (!empty($project)) {
                     $shipping = $shippingModel->create([
-                        'project_id'   => $project->id,
-                        'name'         => 'Frete gratis',
-                        'information'  => 'de 15 até 30 dias',
-                        'value'        => '0,00',
-                        'type'         => 'static',
-                        'status'       => '1',
+                        'project_id' => $project->id,
+                        'name' => 'Frete gratis',
+                        'information' => 'de 15 até 30 dias',
+                        'value' => '0,00',
+                        'type' => 'static',
+                        'status' => '1',
                         'pre_selected' => '1',
                     ]);
 
@@ -96,13 +103,13 @@ class ProjectsApiController extends Controller {
                         }
 
                         $userProject = $userProjectModel->create([
-                            'user_id'           => auth()->user()->id,
-                            'project_id'        => $project->id,
-                            'company_id'        => $requestValidated['company'],
-                            'type'              => 'producer',
+                            'user_id' => auth()->user()->id,
+                            'project_id' => $project->id,
+                            'company_id' => $requestValidated['company'],
+                            'type' => 'producer',
                             'access_permission' => 1,
-                            'edit_permission'   => 1,
-                            'status'            => 'active',
+                            'edit_permission' => 1,
+                            'status' => 'active',
                         ]);
                         if (!empty($userProject)) {
                             return redirect()->route('projects.index')->with('success', 'Projeto salvo com sucesso!');
@@ -129,6 +136,47 @@ class ProjectsApiController extends Controller {
             report($e);
 
             return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
+        }
+    }
+
+    public function edit($id)
+    {
+        try{
+            if(isset($id)){
+                $projectModel = new Project();
+                $userProjectModel = new UserProject();
+                $shopifyIntegrationModel = new ShopifyIntegration();
+
+                $user = auth()->user()->load('companies');
+
+                $idProject = Hashids::decode($id)[0];
+                $project = $projectModel->find($idProject)->makeHidden(['id', 'carrier_id']);
+
+                $userProject = $userProjectModel->where('user_id', $user->id)
+                    ->where('project_id', $idProject)->first();
+                $userProject = new UserProjectResource($userProject);
+
+                $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', $user->id)
+                    ->where('project_id', $idProject)->get();
+                $shopifyIntegrations = ShopifyIntegrationsResource::collection($shopifyIntegrations);
+
+                $companies = CompaniesSelectResource::collection($user->companies);
+
+                if (Gate::allows('edit', [$project])) {
+                    return response()->json(compact('companies','project', 'userProject', 'shopifyIntegrations'));
+                } else {
+                    return response()->json(['message' => 'Erro ao carregar configuraçoes do projeto'], 400);
+                }
+            }
+            return response()->json([
+                'message' => 'Erro ao carregar configuracoes do projeto',
+            ], 400);
+        }catch (Exception $e){
+            Log::warning('Erro ao carregar configuracoes do projeto (ProjectsApiController - edit)');
+            report($e);
+            return response()->json([
+                'message' => 'Erro ao carregar configuracoes do projeto',
+            ], 400);
         }
     }
 

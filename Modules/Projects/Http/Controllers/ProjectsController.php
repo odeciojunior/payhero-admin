@@ -81,7 +81,7 @@ class ProjectsController extends Controller
      * @return JsonResponse
      * @throws Throwable
      */
-    public function edit($id)
+    /*public function edit($id)
     {
         try {
             $user = auth()->user()->load('companies');
@@ -109,7 +109,7 @@ class ProjectsController extends Controller
             Log::error('Erro ao tentar buscar dados do edit (ProjectController - edit)');
             report($e);
         }
-    }
+    }*/
 
     /**
      * @param Request $request

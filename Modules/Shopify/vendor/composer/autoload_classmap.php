@@ -10,5 +10,5 @@ return array(
     'Modules\\Shopify\\Http\\Controllers\\ShopifyApiController' => $baseDir . '/Http/Controllers/ShopifyApiController.php',
     'Modules\\Shopify\\Http\\Controllers\\ShopifyController' => $baseDir . '/Http/Controllers/ShopifyController.php',
     'Modules\\Shopify\\Providers\\ShopifyServiceProvider' => $baseDir . '/Providers/ShopifyServiceProvider.php',
-    'Modules\\Shopify\\Transformers\\IntegracoesShopifyResource' => $baseDir . '/Transformers/IntegracoesShopifyResource.php',
+    'Modules\\Shopify\\Transformers\\ShopifyIntegrationsResource' => $baseDir . '/Transformers/IntegracoesShopifyResource.php',
 );
