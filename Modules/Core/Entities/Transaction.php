@@ -3,16 +3,18 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Core\Presenters\TransactionPresenter;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property integer $id
  * @property integer $sale_id
- * @property int $company_id
+ * @property integer $company_id
  * @property string $value
- * @property string $type
+ * @property integer $type
  * @property string $status
  * @property string $release_date
  * @property string $created_at
@@ -31,7 +33,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Transaction extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, PresentableTrait;
+
+    protected $presenter = TransactionPresenter::class;
 
     /**
      * The "type" of the auto-incrementing ID.

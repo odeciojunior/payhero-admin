@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dev;
 
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,7 @@ use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\NotazzService;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
+use Vinkla\Hashids\Facades\Hashids;
 
 class TesteController extends Controller
 {
@@ -40,7 +42,7 @@ class TesteController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws Exception
      */
     public function index()
@@ -119,11 +121,11 @@ class TesteController extends Controller
                         $transaction->update([
                                                  'status'            => 'paid',
                                                  'release_date'      => Carbon::now()
-                                                     ->addDays($user['release_money_days'])
-                                                     ->format('Y-m-d'),
+                                                                              ->addDays($user['release_money_days'])
+                                                                              ->format('Y-m-d'),
                                                  'antecipation_date' => Carbon::now()
-                                                     ->addDays($user['boleto_antecipation_money_days'])
-                                                     ->format('Y-m-d'),
+                                                                              ->addDays($user['boleto_antecipation_money_days'])
+                                                                              ->format('Y-m-d'),
                                              ]);
                     } else {
                         $transaction->update([
@@ -183,7 +185,7 @@ class TesteController extends Controller
 
                         $hotZappService->newBoleto($sale, $plans);
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
                     report($e);
                 }
@@ -344,38 +346,8 @@ class TesteController extends Controller
     }
 
     public function joaoLucasFunction()
-    {/*
-        $productsModel    = new Product();
-        $productPlanModel = new ProductPlan();
-        $planModel        = new Plan();
-
-        $products = $productsModel->WhereNotNull('shopify_id')->whereNull('project_id')->get();
-        foreach ($products as $product) {
-            $productPlan = $productPlanModel->where('product_id', $product->id)->first();
-            if (!empty($productPlan)) {
-
-                $plan = $planModel->find($productPlan->plan_id);
-
-                $product->update(
-                    [
-                        'project_id' => $plan->project_id,
-                    ]
-                );
-            }
-        }
-
-        dd("hey");*/
-
-        //        $productsModel = new Product();
-        //
-        //        $productsSearch = $productsModel->where('user_id', 34)
-        //                                        ->where('shopify', 1)->get();
-        //        foreach ($productsSearch as $product) {
-        //            $product->update([
-        //                                 'name'        => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->name, 0, 100)),
-        //                                 'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->description, 0, 100)),
-        //                             ]);
-        //        }
+    {
+        dd(current(Hashids::decode('nyOeXZKYkgAQap9')));
     }
 
     public function removeSpecialCharacter()

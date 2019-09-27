@@ -93,6 +93,22 @@
         <br>
         <span id="client-document" class="table-title gray"></span>
         <h4> Entrega </h4>
+        <div id='div_tracking_code'>
+            {{--            @if (empty($sale->shopify_order) && $sale->status == 1)--}}
+            <table class='table table-striped'>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Cód Rastreio</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id='data-tracking-products'>
+                        {{-- js carregado--}}
+                </tbody>
+            </table>
+            {{--            @endif--}}
+        </div>
         <span class="table-title gray table-code-tracking">
             <div class='row' style='line-height: 1.5;'>
                 <span class="table-title gray ml-15">Código Rastreio:</span>

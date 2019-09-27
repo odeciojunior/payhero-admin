@@ -12,7 +12,7 @@ class CreateProductPlanSales extends Migration
      */
     public function up()
     {
-        Schema::create('product_plan_sales', function(Blueprint $table) {
+        Schema::create('products_plans_sales', function(Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('product_id')->index();
             $table->unsignedBigInteger('plan_id')->index();
@@ -35,15 +35,15 @@ class CreateProductPlanSales extends Migration
             $table->softDeletes();
         });
 
-        Schema::table('product_plan_sales', function(Blueprint $table) {
+        Schema::table('products_plans_sales', function(Blueprint $table) {
             $table->foreign('product_id')->references('id')->on('products');
         });
 
-        Schema::table('product_plan_sales', function(Blueprint $table) {
+        Schema::table('products_plans_sales', function(Blueprint $table) {
             $table->foreign('plan_id')->references('id')->on('plans');
         });
 
-        Schema::table('product_plan_sales', function(Blueprint $table) {
+        Schema::table('products_plans_sales', function(Blueprint $table) {
             $table->foreign('sale_id')->references('id')->on('sales');
         });
     }
@@ -54,6 +54,6 @@ class CreateProductPlanSales extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_plan_sales');
+        Schema::dropIfExists('products_plans_sales');
     }
 }

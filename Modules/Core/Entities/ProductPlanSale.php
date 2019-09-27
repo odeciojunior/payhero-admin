@@ -1,13 +1,15 @@
 <?php
 
-namespace ModulesCoreEntities;
+namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
+use Modules\Core\Presenters\ProductPlanSalePresenter;
 
 /**
  * @property integer $id
@@ -38,6 +40,13 @@ use Modules\Core\Entities\Sale;
  */
 class ProductPlanSale extends Model
 {
+    use PresentableTrait;
+    protected $presenter = ProductPlanSalePresenter::class;
+    /**
+     * The table associated with the model.
+     * @var string
+     */
+    protected $table = 'products_plans_sales';
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
@@ -63,7 +72,10 @@ class ProductPlanSale extends Model
         'digital_product_url',
         'price',
         'shopify_id',
-        'shopify_variant',
+        'shopify_variant_id',
+        'tracking_code',
+        'tracking_type_enum',
+        'tracking_status_enum',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -74,7 +86,7 @@ class ProductPlanSale extends Model
      */
     public function plan()
     {
-        return $this->belongsTo('ModulesCoreEntities\Plan');
+        return $this->belongsTo('Modules\Core\Entities\Plan');
     }
 
     /**
@@ -82,7 +94,7 @@ class ProductPlanSale extends Model
      */
     public function product()
     {
-        return $this->belongsTo('ModulesCoreEntities\Product');
+        return $this->belongsTo('Modules\Core\Entities\Product');
     }
 
     /**
@@ -90,7 +102,7 @@ class ProductPlanSale extends Model
      */
     public function sale()
     {
-        return $this->belongsTo('ModulesCoreEntities\Sale');
+        return $this->belongsTo('Modules\Core\Entities\Sale');
     }
 
     /**
@@ -98,6 +110,6 @@ class ProductPlanSale extends Model
      */
     public function trackings()
     {
-        return $this->hasMany('ModulesCoreEntities\Tracking');
+        return $this->hasMany('Modules\Core\Entities\Tracking');
     }
 }

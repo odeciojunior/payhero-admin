@@ -217,6 +217,7 @@ class CloudFlareService
     /**
      * @param string|null $domain
      * @return mixed
+     * @throws EndpointException
      */
     public function getRecords(string $domain = null)
     {
@@ -274,7 +275,33 @@ class CloudFlareService
     }
 
     /**
-     * @param string $domain
+     * @param string $zoneID
+     * @param string $recordID
+     * @param array $details
+     * @return array
+     */
+    public function updateRecordDetails(string $zoneID, string $recordID, array $details)
+    {
+        try {
+
+            if (!empty($zoneID) && !empty($recordID) && !empty($details)) {
+                $response = $this->adapter->put('zones/' . $zoneID . '/dns_records/' . $recordID, $details);
+                $body     = json_decode($response->getBody());
+
+                return $body;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao remover record (record inexistente)');
+            report($e);
+
+            return false;
+        }
+    }
+
+    /**
+     * @param string $recordId
      * @return bool
      */
     public function deleteRecord(string $recordId)
@@ -301,7 +328,6 @@ class CloudFlareService
     /**
      * @param string $domain
      * @return bool
-     * @throws EndpointException
      */
     public function activationCheck(string $domain)
     {
@@ -318,13 +344,16 @@ class CloudFlareService
     }
 
     /**
+     * @param int $domainModelId
      * @param string $domain
-     * @param string|null $ipAddress
+     * @param $ipAddress
      * @return bool
      * @throws EndpointException
      */
     public function integrationWebsite(int $domainModelId, string $domain, $ipAddress)
     {
+        $domainModel = new Domain();
+
         $this->deleteZone($domain);
         $this->getDomainRecordModel()->where('domain_id', $domainModelId)->delete();
 
@@ -333,6 +362,11 @@ class CloudFlareService
 
         if ($newZone) {
             //dominio criado
+
+            $domainModel->where('id', $domainModelId)
+                        ->update([
+                                     'cloudflare_domain_id' => $newZone->id,
+                                 ]);
 
             $this->setZone($newZone->name);
 
@@ -566,7 +600,8 @@ class CloudFlareService
 
     /**
      * @param $url
-     * @param $meta
+     * @param $metaName
+     * @param $metaContent
      * @return bool
      * @throws GuzzleException
      */
@@ -690,7 +725,7 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
     public function setHTTPSRewritesSetting(string $value, string $domain = null)
@@ -716,7 +751,7 @@ class CloudFlareService
     }
 
     /**
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
     public function enableTLS13(string $domain = null)
@@ -743,7 +778,7 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
     public function setOpportunisticEncryptionSetting(string $value, string $domain = null)
@@ -770,7 +805,7 @@ class CloudFlareService
 
     /**
      * @param string $value
-     * @param null $domain
+     * @param string|null $domain
      * @return array|bool
      */
     public function setOnionRoutingSetting(string $value, string $domain = null)
@@ -796,8 +831,8 @@ class CloudFlareService
     }
 
     /**
-     * @param array $options
      * @param string|null $domain
+     * @param array $options
      * @return bool
      */
     public function setCloudFlareConfig(string $domain = null, array $options = [])

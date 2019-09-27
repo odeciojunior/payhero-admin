@@ -2,7 +2,9 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\ClientPresenter;
@@ -21,34 +23,32 @@ use Modules\Core\Presenters\ClientPresenter;
  */
 class Client extends Model
 {
-
-    use SoftDeletes, PresentableTrait;
-
+    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    /**
+     * @var string
+     */
     protected $presenter = ClientPresenter::class;
-
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'name', 
-        'document', 
-        'email', 
-        'telephone', 
-        'id_kapsula_client', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'name',
+        'document',
+        'email',
+        'telephone',
+        'id_kapsula_client',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function sales()
     {

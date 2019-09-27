@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\DomainPresenter;
+use Modules\Domains\Transformers\DomainResource;
 
 /**
+ * Class Domain
+ * @package Modules\Core\Entities
  * @property int $id
  * @property int $project_id
  * @property string $cloudflare_domain_id
@@ -21,11 +24,15 @@ use Modules\Core\Presenters\DomainPresenter;
  * @property string $updated_at
  * @property string $deleted_at
  * @property Project $project
- * @property DomainsRecord[] $domainsRecords
+ * @property DomainResource[] $domainsRecords
  */
 class Domain extends Model
 {
     use SoftDeletes, PresentableTrait, FoxModelTrait;
+    /**
+     * @var string
+     */
+    protected $presenter = DomainPresenter::class;
     /**
      * @var array
      */
@@ -34,10 +41,6 @@ class Domain extends Model
         'updated_at',
         'deleted_at',
     ];
-    /**
-     * @var string
-     */
-    protected $presenter = DomainPresenter::class;
     /**
      * @var array
      */
