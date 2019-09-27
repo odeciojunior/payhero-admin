@@ -3,6 +3,7 @@
 namespace Modules\Core\Services;
 
 use Modules\Core\Entities\Sale;
+use Vinkla\Hashids\Facades\Hashids;
 
 class HotZappService
 {
@@ -28,25 +29,25 @@ class HotZappService
     {
 
         $data = [
-            'transaction_id'        => @$sale->id,
-            'name'                  => @$sale->client()->first()->name,
-            'phone'                 => @$sale->client()->first()->cellphone,
-            'email'                 => @$sale->client()->first()->email,
-            'address'               => @$sale->delivery()->first()->street,
-            'address_number'        => @$sale->delivery()->first()->number,
-            'address_district'      => @$sale->delivery()->first()->neighborhood,
-            'address_zip_code'      => @$sale->delivery()->first()->zip_code,
-            'address_city'          => @$sale->delivery()->first()->city,
-            'address_state'         => @$sale->delivery()->first()->state,
+            'transaction_id'        => Hashids::encode($sale->id),
+            'name'                  => $sale->client->name,
+            'phone'                 => $sale->client->cellphone,
+            'email'                 => $sale->client->email,
+            'address'               => $sale->delivery->street,
+            'address_number'        => $sale->delivery->number,
+            'address_district'      => $sale->delivery->neighborhood,
+            'address_zip_code'      => $sale->delivery->zip_code,
+            'address_city'          => $sale->delivery->city,
+            'address_state'         => $sale->delivery->state,
             'address_country'       => 'BR',
-            'doc'                   => @$sale->client()->first()->document,
+            'doc'                   => $sale->client->document,
             'cms_vendor'            => '',
-            'total_price'           => @$sale->total_paid_value,
+            'total_price'           => $sale->total_paid_value,
             'receiver_type'         => '',
             'cms_aff'               => '',
             'aff'                   => '',
             'aff_name'              => '',
-            'billet_url'            => @$sale->boleto_link,
+            'billet_url'            => $sale->boleto_link,
             'transaction_error_msg' => '',
             'paid_at'               => '',
             'payment_method'        => 'billet',

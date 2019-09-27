@@ -20,7 +20,7 @@
                     <div class="form-group col-3">
                         <label for="country">País da empresa</label>
                         <select id="country" name='country' class="form-control select-pad">
-                            <option value="brazil">Brasil</option>
+                            <option value="brasil">Brasil</option>
                             <option value="usa" disabled>United States</option>
                         </select>
                     </div>

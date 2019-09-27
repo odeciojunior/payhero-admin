@@ -36,7 +36,6 @@ $(document).ready(function () {
                     });
 
                     atualizar();
-
                 } else {
                     $("#project-not-empty").hide();
                     $("#project-empty").show();

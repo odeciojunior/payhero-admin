@@ -230,7 +230,8 @@ class SalesController extends Controller
                                              ->whereHas('sale', function($querySale) {
                                                  $querySale->whereNotIn('status', [3, 5, 10]);
                                              })
-                                             ->whereIn('company_id', $userCompanies);
+                                             ->whereIn('company_id', $userCompanies)
+                                             ->whereNull('invitation_id');
 
             if (!empty($data["projeto"])) {
                 $projectId = current(Hashids::decode($data["projeto"]));
