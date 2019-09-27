@@ -95,10 +95,17 @@ return [
                 "approved"     => "Aprovado",
                 "canceled"     => "Cancelado",
                 "charge_back"  => "Chargeback",
-                'in_proccess'   => "Em análise",
+                'in_proccess'  => "Em análise",
                 "pending"      => "Pendente",
                 "refused"      => "Recusado",
                 "system_error" => "Erro de sistema",
+            ],
+        ],
+        "product_plan_sale"        => [
+            "tracking_status_enum" => [
+                "posted"     => "Postado",
+                "dispatched" => "Despachado",
+                "delivered"  => "Entregue",
             ],
         ],
     ],

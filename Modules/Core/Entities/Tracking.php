@@ -1,6 +1,6 @@
 <?php
 
-namespace ModulesCoreEntities;
+namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,9 +38,6 @@ class Tracking extends Model
         'product_plan_sale_id',
         'plans_sale_id',
         'delivery_id',
-        'tracking_code',
-        'tracking_type_enum',
-        'tracking_status_enum',
         'tracking_date',
         'description',
         'created_at',

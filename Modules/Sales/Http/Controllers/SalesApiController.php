@@ -19,6 +19,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Events\TrackingCodeUpdatedEvent;
 use Modules\Core\Services\ProjectService;
+use Modules\Core\Services\TrackingService;
 use Modules\Sales\Exports\Reports\SaleReportExport;
 use Modules\Sales\Http\Requests\SaleUpdateRequest;
 use Modules\Sales\Transformers\TransactionResource;
@@ -44,8 +45,8 @@ class SalesApiController extends Controller
             $myProjects = $projectService->getUserProjects();
 
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                ->pluck('id')
-                ->toArray();
+                                          ->pluck('id')
+                                          ->toArray();
 
             $projects = [];
 
@@ -59,9 +60,10 @@ class SalesApiController extends Controller
             }
 
             return response()->json([
-                'projetos'     => $projects,
-                'sales_amount' => $transactionModel->whereIn('company_id', $userCompanies)->get()->count(),
-            ], 200);
+                                        'projetos'     => $projects,
+                                        'sales_amount' => $transactionModel->whereIn('company_id', $userCompanies)
+                                                                           ->get()->count(),
+                                    ], 200);
         } catch (Exception $e) {
             Log::warning('Erro ao buscar vendas SalesController - index');
             report($e);
@@ -85,20 +87,21 @@ class SalesApiController extends Controller
             $checkoutModel    = new Checkout();
             $companyModel     = new Company();
             $transactionModel = new Transaction();
+            $trackingSerive   = new TrackingService();
 
             if (!empty($requestData['sale_id'])) {
                 $sale = $saleModel->with([
-                    'transactions' => function($query) {
-                        $query->where('company_id', '!=', null)->first();
-                    },
-                ])->find(current(Hashids::connection('sale_id')
-                    ->decode($requestData['sale_id'])));
+                                             'transactions' => function($query) {
+                                                 $query->where('company_id', '!=', null)->first();
+                                             },
+                                         ])->find(current(Hashids::connection('sale_id')
+                                                                 ->decode($requestData['sale_id'])));
 
                 $sale['hours'] = (new Carbon($sale['start_date']))->format('H:m:s');
 
                 $sale['start_date'] = (new Carbon($sale['start_date']))->format('d/m/Y');
 
-                if(isset($sale['boleto_due_date'])){
+                if (isset($sale['boleto_due_date'])) {
                     $sale['boleto_due_date'] = (new Carbon($sale['boleto_due_date']))->format('d/m/Y');
                 }
 
@@ -117,7 +120,9 @@ class SalesApiController extends Controller
                     $client['telephone'] = '';
                 }
 
-                $products = $sale->present()->getProducts();
+                //                $products = $sale->present()->getProducts();
+
+                $products = $trackingSerive->getTrackingProducts($sale);
 
                 $discount = '0,00';
                 $subTotal = $sale->present()->getSubTotal();
@@ -131,12 +136,12 @@ class SalesApiController extends Controller
                     $discount = '0,00';
                 }
 
-                $delivery               = $deliveryModel->find($sale['delivery_id']);
-                if(isset($delivery)){
+                $delivery = $deliveryModel->find($sale['delivery_id']);
+                if (isset($delivery)) {
                     $delivery['code'] = Hashids::encode($delivery->id);
                 }
 
-                $checkout               = $checkoutModel->find($sale['checkout_id']) ?? (object)[];
+                $checkout               = $checkoutModel->find($sale['checkout_id']) ?? (object) [];
                 $checkout->src          = isset($checkout->src) ? $checkout->src : '';
                 $checkout->source       = isset($checkout->source) ? $checkout->source : '';
                 $checkout->utm_medium   = isset($checkout->utm_medium) ? $checkout->utm_medium : '';
@@ -147,11 +152,11 @@ class SalesApiController extends Controller
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
                 $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
-                    ->first();
+                                                  ->first();
 
                 $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
-                    ->where('company_id', 29)
-                    ->first();
+                                                         ->where('company_id', 29)
+                                                         ->first();
 
                 if (!empty($transactionConvertax)) {
                     $convertaxValue = ($transaction->currency == 'real' ? 'R$ ' : 'US$ ') . substr_replace($transactionConvertax->value, ',', strlen($transactionConvertax->value) - 2, 0);
@@ -175,9 +180,8 @@ class SalesApiController extends Controller
                     $taxaReal = 'R$ ' . number_format($taxaReal / 100, 2, ',', '.');
                 }
 
-                $sale['code'] = Hashids::connection('sale_id')->encode($sale->id);
-
-                $data = [
+                $sale['code']    = Hashids::connection('sale_id')->encode($sale->id);
+                $data            = [
                     'sale'            => $sale,
                     'products'        => $products,
                     'client'          => $client,
@@ -200,6 +204,7 @@ class SalesApiController extends Controller
         } catch (Exception $e) {
             Log::warning('Erro ao mostrar detalhes da venda  SalesController - details');
             report($e);
+
             return response()->json(['error' => 'Erro ao exibir detalhes da venda'], 400);
         }
     }
@@ -227,22 +232,22 @@ class SalesApiController extends Controller
             $data = $request->all();
 
             $userCompanies = $companyModel->where('user_id', auth()->user()->id)
-                ->pluck('id')
-                ->toArray();
+                                          ->pluck('id')
+                                          ->toArray();
 
             $transactions = $transactionModel->with([
-                'sale',
-                'sale.project',
-                'sale.client',
-                'sale.plansSales',
-                'sale.plansSales.plan',
-                'sale.plansSales.plan.products',
-                'sale.plansSales.plan.project',
-            ])
-                ->whereHas('sale', function($querySale) {
-                    $querySale->whereNotIn('status', [3, 5, 10]);
-                })
-                ->whereIn('company_id', $userCompanies);
+                                                        'sale',
+                                                        'sale.project',
+                                                        'sale.client',
+                                                        'sale.plansSales',
+                                                        'sale.plansSales.plan',
+                                                        'sale.plansSales.plan.products',
+                                                        'sale.plansSales.plan.project',
+                                                    ])
+                                             ->whereHas('sale', function($querySale) {
+                                                 $querySale->whereNotIn('status', [3, 5, 10]);
+                                             })
+                                             ->whereIn('company_id', $userCompanies);
 
             if (!empty($data["projeto"])) {
                 $projectId = current(Hashids::decode($data["projeto"]));
@@ -351,18 +356,18 @@ class SalesApiController extends Controller
 
             if (!empty($dataRequest['start_date'])) {
                 $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['start_date'] . ' 00:00:00')
-                    ->toDateTimeString();
+                                       ->toDateTimeString();
                 $sales->where('start_date', '>=', $startDateTime ?? null);
             }
 
             if (!empty($dataRequest['end_date'])) {
                 $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $dataRequest['end_date'] . " 23:59:59")
-                    ->toDateTimeString();
+                                     ->toDateTimeString();
                 $sales->where('start_date', '<=', $endDateTime ?? null);
             }
 
             $sales->with(['client', 'project', 'plansSales', 'user', 'affiliate', 'delivery'])//'shippingModel', , 'checkoutModel'
-            ->orderBy('id', 'DESC');
+                  ->orderBy('id', 'DESC');
 
             $salesResult = $sales->get();
 
@@ -418,7 +423,7 @@ class SalesApiController extends Controller
                 $saleArray = [
                     'project_name'          => $sale->project->name ?? '',
                     'sale_code'             => '#' . strtoupper(Hashids::connection('sale_id')
-                            ->encode($sale->id)),
+                                                                       ->encode($sale->id)),
                     'owner'                 => $sale->user->name ?? '',
                     'affiliate'             => null,
                     'payment_form'          => $sale->payment_form ?? '',
@@ -499,20 +504,20 @@ class SalesApiController extends Controller
                     $delivery->update(['tracking_code' => $requestValidated['trackingCode']]);
 
                     return response()->json([
-                        'message' => 'Código Rastreio salvo com sucesso',
-                        'data'    => [
-                            'tracking_code' => $delivery->tracking_code,
-                        ],
-                    ], 200);
+                                                'message' => 'Código Rastreio salvo com sucesso',
+                                                'data'    => [
+                                                    'tracking_code' => $delivery->tracking_code,
+                                                ],
+                                            ], 200);
                 }
             }
 
             return response()->json([
-                'message' => 'Preencha o campo Código Rastreio corretamente',
-                'data'    => [
-                    'tracking_code' => $delivery->tracking_code,
-                ],
-            ], 400);
+                                        'message' => 'Preencha o campo Código Rastreio corretamente',
+                                        'data'    => [
+                                            'tracking_code' => $delivery->tracking_code,
+                                        ],
+                                    ], 400);
         } catch (Exception $e) {
             Log::warning('Erro ao tentar atualizar o codigo de rastreio SalesController - updateTrackingCode');
             report($e);
@@ -534,8 +539,8 @@ class SalesApiController extends Controller
                     event(new TrackingCodeUpdatedEvent($sale));
 
                     return response()->json([
-                        'message' => 'Email enviado com sucesso',
-                    ], 200);
+                                                'message' => 'Email enviado com sucesso',
+                                            ], 200);
                 }
             }
         } catch (Exception $e) {
