@@ -163,6 +163,7 @@ class SalesRecoveryApiController extends Controller
                 $saleService = new SaleService();
 
                 $sale = $saleModel->find(current(Hashids::decode($request->input('saleId'))));
+
                 if (!empty($sale)) {
                     $totalPaidValue = $saleService->getSubTotal($sale);
                     $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);

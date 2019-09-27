@@ -16,10 +16,6 @@
                 <div class="col-6 text-right">
                     @if($sales_amount > 0)
                         <div class="d-flex justify-content-end align-items-center">
-                            {{--<div class="p-2 align-items-center">
-                                <i class="icon wb-calendar icon-results" aria-hidden="true"></i>
-                                <span class="text-result"> RESULTADOS DE 15 A 26 DE MAIO DE 2019 </span>
-                            </div>--}}
                             <div class="p-2 align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20" viewBox="0 0 24 24">
                                     <path d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
@@ -172,8 +168,35 @@
         </div>
     </div>
 
+    <!-- Modal regerar boleto-->
+    <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg d-flex justify-content-center">
+            <div class="modal-content w-450" id="conteudo_modal_add">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" style="font-weight: 700;">Regerar boleto</h4>
+                </div>
+                <div class="pt-10 pr-20 pl-20 modal_regerar_boleto_body">
+                    <div class="form-group">
+                        <label for="date">Data de vencimeto do boleto:</label>
+                        <input name='date' id="date" class="form-control input-pad" type="date">
+                        <input type='hidden' name='saleId' id='saleId'>
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 15px">
+                    <button id="bt_send" type="button" class="btn btn-success">Regerar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
     @push('scripts')
         <script src="{{ asset('/modules/sales/js/index.js') }}"></script>
+        <script src="{{ asset('modules/global/js-extra/moment.min.js') }}"></script>
     @endpush
 
 @endsection

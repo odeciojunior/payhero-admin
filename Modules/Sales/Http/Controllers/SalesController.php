@@ -111,6 +111,10 @@ class SalesController extends Controller
                     $client['telephone'] = '';
                 }
 
+                if(strpos($client['email'], 'invalido') !== false){
+                    $client['email'] = 'Email inválido';
+                }
+
                 $products = $sale->present()->getProducts();
 
                 $discount = '0,00';
@@ -136,8 +140,7 @@ class SalesController extends Controller
                 $sale->shipment_value   = preg_replace('/[^0-9]/', '', $sale->shipment_value);
 
                 $userCompanies = $companyModel->where('user_id', auth()->user()->id)->pluck('id');
-                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)
-                                                  ->first();
+                $transaction   = $transactionModel->where('sale_id', $sale->id)->whereIn('company_id', $userCompanies)->first();
 
                 $transactionConvertax = $transactionModel->where('sale_id', $sale->id)
                                                          ->where('company_id', 29)
