@@ -42,7 +42,7 @@ $(document).ready(function () {
         $('export-sales').remove();
     });
 
-    function getSalesData(){
+    function getSalesData() {
         $.ajax({
             method: "GET",
             url: "/api/sales/",
@@ -56,16 +56,16 @@ $(document).ready(function () {
                 }
             },
             success: function success(data) {
-               if(data.sales_amount){
-                   for(let i = 0; i < data.projetos.length; i++){
-                       $('#projeto').append('<option value="'+ data.projetos[i].id + '">' + data.projetos[i].nome + '</option>')
-                   }
-                   $('#export-excel, .page-content').show();
-                   $('.content-error').hide();
-               }else{
-                   $('#export-excel, .page-content').hide();
-                   $('.content-error').show();
-               }
+                if (data.sales_amount) {
+                    for (let i = 0; i < data.projetos.length; i++) {
+                        $('#projeto').append('<option value="' + data.projetos[i].id + '">' + data.projetos[i].nome + '</option>')
+                    }
+                    $('#export-excel, .page-content').show();
+                    $('.content-error').hide();
+                } else {
+                    $('#export-excel, .page-content').hide();
+                    $('.content-error').show();
+                }
             }
         });
     }
@@ -103,16 +103,16 @@ $(document).ready(function () {
             link = '/api/sales/getsales' + link + '&projeto=' + $("#projeto option:selected").val() + '&transaction=' + $("#transaction").val().replace('#', '') + '&forma=' + $("#forma option:selected").val() + '&status=' + $("#status option:selected").val() + '&comprador=' + $("#comprador").val() + '&data_inicial=' + $("#data_inicial").val() + '&data_final=' + $("#data_final").val();
         }
 
-        function renderDetails(data){
+        function renderDetails(data) {
 
             //Dados da venda
             $('#sale-code').text(data.sale.code);
-            $('#payment-type').text('Pagamento via ' + (data.sale.payment_method === 2 ? 'Boleto' : 'Cartão ' +  data.sale.flag) + ' em ' + data.sale.start_date + ' às ' + data.sale.hours);
+            $('#payment-type').text('Pagamento via ' + (data.sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + data.sale.flag) + ' em ' + data.sale.start_date + ' às ' + data.sale.hours);
 
             //Status
             let status = $('.modal-body #status');
             status.html('');
-            status.append('<img style="width: 50px;" src="/modules/global/img/cartoes/' +  data.sale.flag + '.png">');
+            status.append('<img style="width: 50px;" src="/modules/global/img/cartoes/' + data.sale.flag + '.png">');
 
             switch (data.sale.status) {
                 case 1:
@@ -165,7 +165,7 @@ $(document).ready(function () {
             $("#subtotal-value").html("R$ " + data.subTotal);
 
             $('#iof-label, #iof-value, #cambio-label, #cambio-value').hide();
-            if(data.sale.dolar_quotation){
+            if (data.sale.dolar_quotation) {
                 $('#iof-value span').text('R$ ' + data.sale.iof);
                 $('#cambio-label span').text('Câmbio (1 $ = R$ ' + data.sale.dolar_quotation + '): ');
                 $('#cambio-value span').text('US$ ' + data.taxa);
@@ -179,7 +179,7 @@ $(document).ready(function () {
             $('#taxareal-value').text(data.taxaReal ? data.taxaReal : '');
 
             $('#convertax-label, #convertax-value').hide();
-            if(data.convertax_value !== '0,00'){
+            if (data.convertax_value !== '0,00') {
                 $('#convertax-value').text(data.convertax_value ? data.convertax_value : '');
                 $('#convertax-label, #convertax-value').show();
             }
@@ -195,14 +195,14 @@ $(document).ready(function () {
 
             //Entrega
             $('#tracking-actions').hide();
-            if(data.sale.shopify_order && data.sale.status === 1){
+            if (data.sale.shopify_order && data.sale.status === 1) {
                 $('#tracking-actions #btn-edit-trackingcode, #tracking-actions #btn-sent-tracking-user, .btn-save-tracking').attr('data-code', data.sale.code);
                 $('#tracking-actions').show();
-                if(data.delivery.tracking_code){
+                if (data.delivery.tracking_code) {
                     $('#tracking-actions #btn-sent-tracking-user').show();
                     $('.tracking-code .tracking-code-value').text(data.delivery.tracking_code);
                     $('.input-value-trackingcode').val(data.delivery.tracking_code);
-                }else{
+                } else {
                     $('#tracking-actions #btn-sent-tracking-user').hide();
                     $('.tracking-code .tracking-code-value').text('Nao informado');
                     $('.input-value-trackingcode').val('');
@@ -213,15 +213,15 @@ $(document).ready(function () {
             $('#delivery-city').text('Cidade: ' + data.delivery.city + '/' + data.delivery.state);
 
             //Detalhes da venda
-            if(data.sale.payment_method === 1){
+            if (data.sale.payment_method === 1) {
                 $('#details-card #card-flag').text('Bandeira: ' + data.sale.flag);
                 $('#details-card #card-installments').text('Quantidade de parcelas: ' + data.sale.installments_amount);
                 $('#details-card').show();
             }
 
-            if(data.sale.payment_method === 2){
-                $('#details-boleto #boleto-link a').attr('link',data.sale.boleto_link);
-                $('#details-boleto #boleto-digitable-line a').attr('digitable-line',data.sale.boleto_digitable_line);
+            if (data.sale.payment_method === 2) {
+                $('#details-boleto #boleto-link a').attr('link', data.sale.boleto_link);
+                $('#details-boleto #boleto-digitable-line a').attr('digitable-line', data.sale.boleto_digitable_line);
                 $('#details-boleto #boleto-due').text('Vencimento: ' + data.sale.boleto_due_date);
                 $('#details-boleto').show();
             }
@@ -231,7 +231,7 @@ $(document).ready(function () {
             $('#checkout-browser').text('Navegador: ' + data.checkout.browser);
 
             $('#checkout-attempts').hide();
-            if(data.sale.payment_method === 1){
+            if (data.sale.payment_method === 1) {
                 $('#checkout-attempts').text('Quantidade de tentativas: ' + data.sale.attempts).show();
             }
 
@@ -311,6 +311,21 @@ $(document).ready(function () {
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
 
                     var data = {sale_id: venda};
+
+                    $.ajax({
+                        method: "get",
+                        url: '/api/client/' + 3800,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        error: function error(response) {
+                            console.log(response);
+                        },
+                        success: function success(response) {
+                            console.log(response);
+
+                        }
+                    });
 
                     $.ajax({
                         method: "POST",
