@@ -104,7 +104,6 @@ $(document).ready(function () {
         }
 
         function renderDetails(data) {
-
             //Dados da venda
             $('#sale-code').text(data.sale.code);
             $('#payment-type').text('Pagamento via ' + (data.sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + data.sale.flag) + ' em ' + data.sale.start_date + ' às ' + data.sale.hours);
@@ -137,6 +136,7 @@ $(document).ready(function () {
 
             //Produtos
             $("#table-product").html('');
+            $('#data-tracking-products').html('');
             let div = '';
             let photo = 'public/modules/global/img/produto.png';
             $.each(data.products, function (index, value) {
@@ -156,7 +156,29 @@ $(document).ready(function () {
                     '</div>' +
                     '</div>';
 
+                //Tabela de produtos Tracking Code
+                console.log(value);
+                let data = `<tr>
+                                 <td>
+                                      <img src='${value.photo}'  width='35px;' style='border-radius:6px;'>
+                                      <span>${value.name}</span>
+                                  </td>
+                                 <td>
+                                      <span class='tracking-code-span'>${value.tracking_code}</span>
+                                      <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
+                                 </td>
+                                 <td>
+                                     <span>
+                                           ${value.tracking_status_enum}
+                                           <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                     </span>
+                                 </td>
+                                </tr>`;
+
                 $("#table-product").html(div);
+
+                $('#data-tracking-products').append(data);
+
             });
 
             //Valores
@@ -241,6 +263,7 @@ $(document).ready(function () {
             $('#checkout-campaign').text('UTM Campaign: ' + data.checkout.utm_campaign);
             $('#checkout-term').text('UTM Term: ' + data.checkout.utm_term);
             $('#checkout-content').text('UTM Content: ' + data.checkout.utm_content);
+
         }
 
         $.ajax({
@@ -341,11 +364,13 @@ $(document).ready(function () {
                         },
                         success: function success(response) {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
-
+                            console.log(response);
                             currentSaleCode = response.sale.code;
                             currentDeliveryCode = response.delivery.code;
 
                             renderDetails(response);
+
+                            setTrackingCode(response.sale.id_code);
 
                             $("#boleto-link .copy_link").on("click", function () {
                                 var temp = $("<input>");
@@ -367,6 +392,7 @@ $(document).ready(function () {
                             $('#modal_detalhes').modal('show');
                             btn_detalhe.parent().children('span').remove();
                             btn_detalhe.show();
+
                         }
                     });
                 });
@@ -383,7 +409,48 @@ $(document).ready(function () {
             }
         });
     }
+    //Código de rastreio
+    function setTrackingCode(sale_id) {
+        $(".btn-edit-trackingcode").unbind('click');
+        $('.btn-edit-trackingcode').on('click', function () {
+            var trackingInput = $(this).parent().parent().parent().find('#tracking_code');
+            var productId = $(this).attr('product-code');
+            var icon = $(this).html('');
+            icon.html('<i class="material-icons gradient" style="font-size:17px;">save</i>');
+            trackingInput.show('fast');
 
+            $(".btn-edit-trackingcode").addClass('btn-save-trackingcode');
+            $(".btn-save-trackingcode").unbind('click');
+            $('.btn-save-trackingcode').on('click', function () {
+                var tracking_code = trackingInput.val();
+                if (tracking_code == '') {
+                    alertCustom('error', 'Dados informados inválidos');
+                    return false;
+                }
+                icon.html('');
+                icon.html('<i class="icon wb-edit" aria-hidden="true" style="color:#f1556f;"></i>');
+                $(".btn-edit-trackingcode").removeClass('btn-save-trackingcode');
+                trackingInput.hide('fast');
+                $.ajax({
+                    method: "POST",
+                    url: '/api/tracking',
+                    data: {tracking_code: tracking_code, sale_id: sale_id, product_id: productId},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    error: function error(response) {
+                        trackingInput.hide('fast');
+                        alertCustom('error', response.message);
+                    },
+                    success: function success(response) {
+                        trackingInput.hide('fast');
+                        alertCustom('success', response.message);
+                    }
+                });
+            });
+
+        });
+    }
     function csvSalesExport() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
