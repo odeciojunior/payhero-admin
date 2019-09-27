@@ -4,7 +4,7 @@ var statusCupons = {
 }
 
 $(function () {
-    var projectId = $("#project-id").val();
+    var projectId = $(window.location.pathname.split('/')).get(-1);
 
     $('#tab_coupons').on('click', function () {
         atualizarCoupon();

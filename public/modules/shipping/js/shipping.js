@@ -10,8 +10,7 @@ var activeShipping = {
 
 $(document).ready(function () {
 
-    var projectId = $("#project-id").val();
-
+    var projectId = $(window.location.pathname.split('/')).get(-1);
     $("#tab-fretes").on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         atualizarFrete();
@@ -222,7 +221,7 @@ $(document).ready(function () {
                         dados += '<td class="shipping-pre-selected text-center display-sm-none display-m-none" style="vertical-align: middle;">';
                         dados += '<span class="badge badge-' + activeShipping[value.pre_selected] + '">' + value.pre_selected_translated + '</span>';
                         dados += '</td>';
-                        
+
                         dados += "<td style='text-align:center'>"
                         dados += "<a role='button' class='pointer detalhes-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>"
                         dados += "<a role='button' class='pointer editar-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>"

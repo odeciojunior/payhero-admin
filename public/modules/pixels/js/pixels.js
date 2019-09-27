@@ -13,7 +13,7 @@ function _defineProperty(obj, key, value) {
 }
 
 $(function () {
-    var projectId = $("#project-id").val();
+    var projectId = $(window.location.pathname.split('/')).get(-1);
 
     $('#tab_pixels').on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
