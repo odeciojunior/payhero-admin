@@ -4,6 +4,7 @@ namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Core\Events\ResetPasswordEvent;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -240,5 +241,10 @@ class User extends Authenticable
     public function projects()
     {
         return $this->belongsToMany('Modules\Core\Entities\Projects', 'users_projects', 'user_id', 'project_id');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        event(new ResetPasswordEvent($token, $this));
     }
 }
