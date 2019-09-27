@@ -10,16 +10,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Core\Entities\Project;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\Shipping;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\RedirectResponse;
 use Intervention\Image\Facades\Image;
 use Illuminate\Contracts\View\Factory;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Services\ProjectService;
 use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsSelectResource;
 

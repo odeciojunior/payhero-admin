@@ -147,6 +147,18 @@ function loadOnTable(whereToLoad, tableReference) {
         "</tr>");
 }
 
+function loadOnAny(element, stop = false){
+    $('.element-loading').remove();
+    if(!stop){
+        let loading = `<span class="loader loader-circle loader-any" style=""></span>`;
+        let loader = $(element).clone().addClass( 'element-loading').html(loading);
+        $(element).hide();
+        $(element).parent().append(loader);
+    }else{
+        $(element).show();
+    }
+}
+
 function modalClear(modalBody) {
     $(modalBody).html('');
 }

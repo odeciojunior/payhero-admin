@@ -57,32 +57,32 @@ $(function () {
      }
  */
 
-    function renderProjectConfig(data){
+    function renderProjectConfig(data) {
 
         let {project, companies, userProject, shopifyIntegrations} = data;
 
-        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/modules/global/img/projeto.png');
+        $('#update-project #previewimage').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
         $('#update-project #name').val(project.name);
         $('#update-project #description').text(project.description);
-        if(project.visibility === 'public'){
+        if (project.visibility === 'public') {
             $('#update-project #visibility').prop('selectedIndex', 0).change();
-        }else{
+        } else {
             $('#update-project #visibility').prop('selectedIndex', 1).change();
         }
-        $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/modules/global/img/projeto.png');
+        $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.png');
         $('#update-project #url-page').val(project.url_page ? project.url_page : '//');
         $('#update-project #contact').val(project.contact);
         $('#update-project #support_phone').val(project.support_phone);
         $('#update-project #invoice-description').val(project.invoice_description);
         $('#update-project #companies').html('');
-        for(let company of companies){
+        for (let company of companies) {
             $('#update-project #companies').append(`<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} >${company.name}</option>`)
         }
-        $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount -1).change();
+        $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount - 1).change();
         $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_amount - 1).change();
-        if(project.boleto === 1){
+        if (project.boleto === 1) {
             $('#update-project #boleto').prop('selectedIndex', 0).change();
-        }else{
+        } else {
             $('#update-project #boleto').prop('selectedIndex', 1).change();
         }
         $('#update-project #boleto_redirect').val(project.boleto_redirect);
@@ -91,17 +91,17 @@ $(function () {
 
         $('#shopify-integration-pending, #bt-change-shopify-integration, #bt-shopify-sincronization-product, #bt-shopify-sincronization-template').hide();
 
-        if(project.shopify_id){
+        if (project.shopify_id) {
             $('#update-project #shopify-configs').show();
-            if(shopifyIntegrations[0].status !== 1){
+            if (shopifyIntegrations[0].status !== 1) {
                 $('#bt-change-shopify-integration')
                     .attr('integration-status', shopifyIntegrations[0].status)
                     .show();
                 $('#bt-change-shopify-integration span').html(shopifyIntegrations[0].status === 2 ? 'Desfazer integração com shopify' : 'Integrar com shopify');
-            } else if(shopifyIntegrations[0].status === 1) {
+            } else if (shopifyIntegrations[0].status === 1) {
                 $('#shopify-integration-pending').show();
             }
-            if(shopifyIntegrations[0].status !== 3){
+            if (shopifyIntegrations[0].status !== 3) {
                 $('#bt-shopify-sincronization-product, #bt-shopify-sincronization-template')
                     .attr('integration-status', shopifyIntegrations[0].status)
                     .show();
@@ -109,8 +109,10 @@ $(function () {
         }
     }
 
+
     ///// UDPATE CONFIGURAÇÃO Tela Project
     function updateConfiguracoes() {
+        loadOnAny('#tab_configuration_project .card');
         $.ajax({
             method: "GET",
             url: "/api/projects/" + projectId + '/edit',
@@ -120,7 +122,11 @@ $(function () {
                 alertCustom('error', 'Erro ao carregar configuraçoes do projeto');
 
             }, success: function (data) {
-               renderProjectConfig(data);
+
+                renderProjectConfig(data);
+
+                loadOnAny('#tab_configuration_project .card', true);
+
                 let parcelas = '';
                 let parcelasJuros = '';
                 $(".installment_amount").on('change', function () {
@@ -244,8 +250,7 @@ $(function () {
 
                 $("#bt-update-project").unbind('click');
                 $("#bt-update-project").on('click', function (event) {
-                    if($('#photo_w').val() == '0' || $('#photo_h').val() == '0')
-                    {
+                    if ($('#photo_w').val() == '0' || $('#photo_h').val() == '0') {
                         alertCustom('error', 'Selecione as dimensões da imagem de capa');
                         return false;
                     }
