@@ -216,7 +216,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: "/api/project/" + projectId +  "/shippings/" + frete,
+            url: "/api/project/" + projectId + "/shippings/" + frete,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -311,33 +311,7 @@ $(document).ready(function () {
                     $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
-<<<<<<< HEAD
-                        dados = '';
-                        dados += '<tr>';
-                        dados += '<td class="shipping-id " style="vertical-align: middle; display: none;">' + value.shipping_id + '</td>';
-                        dados += '<td class="shipping-type " style="vertical-align: middle; display: none;">' + value.type + '</td>';
-                        dados += '<td class="shipping-value " style="vertical-align: middle; display: none;">' + value.value + '</td>';
-                        dados += '<td class="shipping-zip-code-origin " style="vertical-align: middle; display: none;">' + value.zip_code_origin + '</td>';
-                        dados += '<td class="shipping-id " style="vertical-align: middle;">' + value.type + '</td>';
-                        dados += '<td class="shipping-name " style="vertical-align: middle;">' + value.name + '</td>';
-                        dados += '<td class="shipping-type " style="vertical-align: middle;">' + value.value + '</td>';
-                        dados += '<td class="shipping-information " style="vertical-align: middle;">' + value.information + '</td>';
 
-                        dados += '<td class="shipping-status " style="vertical-align: middle;">';
-                        dados += '<span class="badge badge-' + statusShipping[value.status] + '">' + value.status_translated + '</span>';
-                        dados += '</td>';
-
-                        dados += '<td class="shipping-pre-selected text-center display-sm-none display-m-none" style="vertical-align: middle;">';
-                        dados += '<span class="badge badge-' + activeShipping[value.pre_selected] + '">' + value.pre_selected_translated + '</span>';
-                        dados += '</td>';
-
-                        dados += "<td style='text-align:center'>"
-                        dados += "<a role='button' class='pointer detalhes-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'>remove_red_eye</i> </a>"
-                        dados += "<a role='button' class='pointer editar-frete mg-responsive'  frete='" + value.shipping_id + "' data-target='#modal-content' data-toggle='modal'> <i class='material-icons gradient'> edit </i> </a>"
-                        dados += "<a role='button' class='pointer excluir-frete mg-responsive'  frete='" + value.shipping_id + "'  data-toggle='modal' data-target='#modal-delete'> <i class='material-icons gradient'> delete_outline </i></a>";
-                        "</td>";
-                        dados += '</tr>';
-=======
                         let dados = `<tr>
                                         <td style="vertical-align: middle; display: none;">${value.zip_code_origin}</td>
                                         <td style="vertical-align: middle;">${value.type}</td>
@@ -356,7 +330,6 @@ $(document).ready(function () {
                                             <a role='button' class='pointer excluir-frete mg-responsive' frete="${value.shipping_id}"><i class='material-icons gradient'> delete_outline </i></a>
                                         </td>
                                      </tr>`;
->>>>>>> 78a4e1c5b025368bf5381e49cd97f745cdf62697
                         $("#dados-tabela-frete").append(dados);
                     });
 
