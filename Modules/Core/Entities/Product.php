@@ -99,7 +99,7 @@ class Product extends Model
     /**
      * @return HasMany
      */
-    public function productPlanSales()
+    public function productsPlanSales()
     {
         return $this->hasMany(ProductPlanSale::class);
     }
@@ -107,7 +107,7 @@ class Product extends Model
     /**
      * @return HasMany
      */
-    public function productPlans()
+    public function productsPlans()
     {
         return $this->hasMany(ProductPlan::class);
     }

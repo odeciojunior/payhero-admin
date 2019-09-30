@@ -36,19 +36,13 @@ $(document).ready(function () {
             method: "GET",
             url: "/domains/create",
             data: {'project_id': projectId},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
-
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom("error", response.message);
-                }
-                loadingOnScreenRemove();
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 modalAddDomain(response);
@@ -76,31 +70,14 @@ $(document).ready(function () {
                         contentType: false,
                         cache: false,
                         headers: {
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
                         dataType: "json",
                         data: form_data,
-                        error: function (_error) {
-                            function error(_x) {
-                                return _error.apply(this, arguments);
-                            }
-
-                            error.toString = function () {
-                                return _error.toString();
-                            };
-
-                            return error;
-                        }(function (response) {
-                            console.log(response);
-                            if (response.status === 422) {
-                                for (error in response.responseJSON.errors) {
-                                    alertCustom('error', response.responseJSON.errors[error]);
-                                }
-                            } else {
-                                alertCustom('error', response.responseJSON.message);
-                            }
-                            $('#modal-content').modal('hide');
-                        }),
+                        error: function (response) {
+                            errorAjaxResponse(response);
+                        },
                         success: function success(response) {
                             globalDomain = response.data['id_code'];
                             fromNew = 'true';
@@ -128,11 +105,13 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
-                $("#domain-table-body").html(response.message);
+                errorAjaxResponse(response);
             },
             success: function success(response) {
 
@@ -188,28 +167,12 @@ $(document).ready(function () {
                             },
                             dataType: 'json',
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
-                            error: function (_error2) {
-                                function error(_x3) {
-                                    return _error2.apply(this, arguments);
-                                }
-
-                                error.toString = function () {
-                                    return _error2.toString();
-                                };
-
-                                return error;
-                            }(function (response) {
-                                if (response.status == '422') {
-                                    for (error in response.responseJSON.errors) {
-                                        alertCustom('error', String(response.responseJSON.errors[error]));
-                                    }
-                                } else {
-                                    alertCustom("error", response.responseJSON.message);
-                                }
-                                loadingOnScreenRemove();
-                            }),
+                            error: function (response) {
+                                errorAjaxResponse(response);
+                            },
                             success: function success(response) {
                                 alertCustom("success", response.message);
                                 loadingOnScreenRemove();
@@ -228,29 +191,14 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: '/domains/getDomainData/' + domain,
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (_error3) {
-                function error(_x4) {
-                    return _error3.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error3.toString();
-                };
-
-                return error;
-            }(function (response) {
-                $('#modal-button-close').click();
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-                }
-            }),
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
                 loadingOnScreenRemove();
                 if (status == 3) {
@@ -266,33 +214,18 @@ $(document).ready(function () {
                     $.ajax({
                         method: "POST",
                         url: '/domains/recheck/',
+                        dataType: "json",
                         data: {
                             domain: domain,
                             project: projectId
                         },
                         headers: {
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
-                        error: function (_error4) {
-                            function error(_x5) {
-                                return _error4.apply(this, arguments);
-                            }
-
-                            error.toString = function () {
-                                return _error4.toString();
-                            };
-
-                            return error;
-                        }(function (response) {
-                            if (response.status === 422) {
-                                for (error in response.errors) {
-                                    alertCustom('error', String(response.errors[error]));
-                                }
-                            } else {
-                                // alertCustom('error', String(response.responseJSON.message));
-                            }
-                            modalErrorRegistry();
-                        }),
+                        error: function (response) {
+                            errorAjaxResponse(response);
+                        },
                         success: function success(response) {
                             modalSuccessRegistry();
                         }
@@ -318,10 +251,11 @@ $(document).ready(function () {
             url: "/domains/" + globalDomain + "/edit",
             data: data,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                //
+            error: function error(response) {
+                errorAjaxResponse(response);
             }, success: function success(response) {
                 //predefinições da modal.
                 modalEdit(response, fromSave);
@@ -352,28 +286,12 @@ $(document).ready(function () {
                                 id_domain: globalDomain
                             },
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
-                            error: function (_error5) {
-                                function error(_x6) {
-                                    return _error5.apply(this, arguments);
-                                }
-
-                                error.toString = function () {
-                                    return _error5.toString();
-                                };
-
-                                return error;
-                            }(function (response) {
-                                if (response.status === 422) {
-                                    for (error in response.errors) {
-                                        alertCustom('error', String(response.errors[error]));
-                                    }
-                                } else {
-                                    alertCustom('error', String(response.responseJSON.message));
-                                }
-                                loadingOnScreenRemove();
-                            }),
+                            error: function (response) {
+                                errorAjaxResponse(response);
+                            },
                             success: function success(response) {
                                 loadingOnScreenRemove();
                                 $(row).remove();
@@ -424,34 +342,17 @@ $(document).ready(function () {
                         method: "PUT",
                         url: "/domains/" + globalDomain,
                         headers: {
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
                         data: {
                             data: JSON.stringify(tbl),
                             projectId: projectId,
                             domain: globalDomain
                         },
-                        error: function (_error6) {
-                            function error(_x7) {
-                                return _error6.apply(this, arguments);
-                            }
-
-                            error.toString = function () {
-                                return _error6.toString();
-                            };
-
-                            return error;
-                        }(function (response) {
-                            if (response.status == '422') {
-                                for (error in response.responseJSON.errors) {
-                                    alertCustom('error', String(response.responseJSON.errors[error]));
-                                }
-                            } else {
-                                alertCustom("error", response.responseJSON.message);
-                            }
-                            loadingOnScreenRemove();
-                            modalDomainEdit(responseDomainsVar);
-                        }),
+                        error: function (response) {
+                            errorAjaxResponse(response);
+                        },
                         success: function success(response) {
                             loadingOnScreenRemove();
                             if (fromNew == 'true') {

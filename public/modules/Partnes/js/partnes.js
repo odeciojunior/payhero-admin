@@ -15,8 +15,10 @@ $(function () {
             method: "GET",
             url: "/partnes",
             data: projectId,
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error() {
                 $("#data-table-partners").html("Erro ao encontrar dados");

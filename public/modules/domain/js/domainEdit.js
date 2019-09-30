@@ -6,8 +6,6 @@ $(document).ready(function () {
 
     let infoDomain = $(".info-domain");
 
-    let csrfToken = $('meta[name="csrf-token"]').attr('content');
-
     $("#tab-domains").on('click', function () {
         $("#previewimage").imgAreaSelect({remove: true});
         updateDomains();
@@ -32,16 +30,11 @@ $(document).ready(function () {
             method: 'GET',
             url: link,
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.responseJSON.message);
-                }
+                errorAjaxResponse(response);
             }, success: function (response) {
                 $("#domain-table-body").html('');
                 if (response.data == '') {
@@ -116,13 +109,11 @@ $(document).ready(function () {
                     'domain': domain,
                 },
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 error: function (response) {
                     loadingOnScreenRemove();
-                    $("#loaderModal").remove();
-                    $("#modal-delete-domain-body, #title-delete-domain, #description-delete-domain, .btn-delete-modal-domain").show();
-
                     errorAjaxResponse(response);
                 },
                 success: function (response) {
@@ -214,12 +205,12 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             dataType: "json",
             data: formData,
             error: function (response) {
-                console.log(response);
                 $("#especialModalTitle").remove();
 
                 $("#loaderModal").remove();
@@ -334,18 +325,17 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: formData,
             dataType: "json",
             error: function (response) {
-                console.log(response);
                 $(".swal2-container, #modal-backdrop").remove();
                 removeLoad();
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                console.log(response);
                 $(".swal2-container").remove();
                 removeLoad();
                 alertCustom('success', response.message);
@@ -369,11 +359,11 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             dataType: 'json',
             error: function (response) {
-                console.log(response);
                 errorAjaxResponse(response);
             },
             success: function (response) {
@@ -395,9 +385,6 @@ $(document).ready(function () {
                         $(this).val(0);
                     }
 
-                    console.log($(this).data('domain'));
-                    console.log($(this).data('record'));
-
                     if (!$(this).data('system')) {
                         $.ajax({
                             method: 'PUT',
@@ -406,15 +393,13 @@ $(document).ready(function () {
                                 proxy: this.value
                             },
                             headers: {
-                                "X-CSRF-TOKEN": csrfToken
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             error: function (response) {
-                                console.log(response);
+
                             }, success: function (response) {
-                                console.log(response);
-
                                 alertCustom('success', response.message);
-
                             }
                         });
                     }
@@ -432,7 +417,6 @@ $(document).ready(function () {
      * @param domainRecords.value.domain_name
      */
     function tableRecords(domainRecords, domainId) {
-        console.log(domainRecords);
         let data = '';
         let cont = 0;
         let proxyVar = 'checked';
@@ -511,11 +495,11 @@ $(document).ready(function () {
                 contentType: false,
                 cache: false,
                 headers: {
-                    "X-CSRF-TOKEN": csrfToken
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 dataType: 'json',
                 error: function (response) {
-                    console.log(response);
                     errorAjaxResponse(response);
                 },
                 success: function (response) {
@@ -538,14 +522,13 @@ $(document).ready(function () {
             method: 'GET',
             url: '/api/project/' + projectId + '/domains/' + $("#domain").val(),
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
-                console.log(response);
                 errorAjaxResponse(response);
             },
             success: function (response) {
-                console.log(response);
                 $(".table-title-entry").remove();
                 if (response.data.status === 3) {
                     $("#content-modal-recheck-dns").hide();
@@ -562,7 +545,6 @@ $(document).ready(function () {
                     });
 
                     $("#table-zones-add").append(data);
-                    console.log(response.data.domainHost);
                     if (response.data.domainHost) {
                         $("#nameHost").html(response.data.domainHost);
                     } else {
@@ -572,7 +554,6 @@ $(document).ready(function () {
 
                     $("#modal-title-dns-recheck, #modal-info-dsn-body, #content-modal-recheck-dns").show();
 
-                    // $("#modal-info-dsn-body").show();
                 }
 
                 $("#modal-info-dns").modal('show');
@@ -608,10 +589,10 @@ $(document).ready(function () {
             method: 'GET',
             url: '/api/project/' + projectId + '/domain/' + domainId + '/recheck',
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
-                console.log(response);
                 $(".swal2-container").remove();
                 removeLoad();
                 $("#loaderModal").remove();
@@ -622,7 +603,6 @@ $(document).ready(function () {
 
             },
             success: function (response) {
-                console.log(response);
                 $(".swal2-container").remove();
                 removeLoad();
                 $("#loaderModal").remove();

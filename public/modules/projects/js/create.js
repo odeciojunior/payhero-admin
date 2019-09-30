@@ -2,8 +2,13 @@ $(document).ready(function () {
 
     $.ajax({
         url: '/api/projects/create',
-        error: () => {
-            alertCustom('error', 'Erro ao carregar empresas');
+        dataType: "json",
+        headers: {
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
+        },
+        error: (response) => {
+            errorAjaxResponse(response);
         },
         success: (response) => {
             if (response.length) {
@@ -23,16 +28,19 @@ $(document).ready(function () {
         $.ajax({
             method: 'post',
             url: '/api/projects',
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
-            error: () => {
+            error: (response) => {
                 loadingOnScreenRemove();
-                alertCustom('error', 'Erro ao salvar projeto');
+                errorAjaxResponse(response);
+
             },
             success: (response) => {
                 loadingOnScreenRemove();
