@@ -30,6 +30,10 @@ class SalesRecoverydetailsResourceTransformer extends Resource
             'error'         => $this['client']->error ?? '',
         ];
 
+        if(strpos($client['email'], 'invalido') !== false){
+            $client['email'] = 'Email inválido';
+        }
+
         $delivery = [
             'street'   => $this['delivery']->street,
             'zip_code' => $this['delivery']->zip_code,

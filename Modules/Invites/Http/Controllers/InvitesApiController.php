@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\Transaction;
+use Modules\Core\Entities\User;
 use Modules\Core\Services\FoxUtils;
 use Vinkla\Hashids\Facades\Hashids;
 use Modules\Core\Entities\Invitation;
@@ -39,16 +40,23 @@ class InvitesApiController extends Controller
         try {
             if (!empty($request->input('email')) && !empty($request->input('company'))) {
                 $invitationModel = new Invitation();
+                $userModel       = new User();
                 $inviteSaved     = null;
 
                 $company = current(Hashids::decode($request->input('company')));
                 if (FoxUtils::validateEmail($request->input('email')) && !empty($company)) {
                     try {
-                        $invite = $invitationModel->where([['email_invited', $request->input('email')], ['company_id', $company]])
-                                                  ->first();
-
+                        $invite          = $invitationModel->where([['email_invited', $request->input('email')], ['company_id', $company]])
+                                                           ->first();
+                        $user            = $userModel->where('email', $request->input('email'))->first();
                         $sendgridService = new EmailService();
-                        $emailInvited    = $sendgridService->sendInvite($request->input('email'), $company);
+                        if (!$user) {
+                            $emailInvited = $sendgridService->sendInvite($request->input('email'), $company);
+                        } else {
+                            return response()->json([
+                                                        'message' => 'Já existe um usuário cadastrado com esse Email.',
+                                                    ], 400);
+                        }
 
                         if ($emailInvited == 'error') {
                             return response()->json([
@@ -179,13 +187,21 @@ class InvitesApiController extends Controller
     {
         try {
             $invitationModel = new Invitation();
+            $userModel       = new User();
             $data            = $request->all();
             $invitationId    = current(Hashids::decode($data['invitationId']));
             if ($invitationId) {
                 $sendgridService = new EmailService();
                 $invitation      = $invitationModel->find($invitationId);
                 if (FoxUtils::validateEmail($invitation->email_invited) && !empty($invitation->company_id)) {
-                    $emailInvited = $sendgridService->sendInvite($invitation->email_invited, $invitation->company_id);
+                    $user = $userModel->where('email', $invitation->email_invited)->first();
+                    if (!$user) {
+                        $emailInvited = $sendgridService->sendInvite($invitation->email_invited, $invitation->company_id);
+                    } else {
+                        return response()->json([
+                                                    'message' => 'Já existe um usuário cadastrado com esse Email.',
+                                                ], 400);
+                    }
                     if ($emailInvited == 'error') {
                         return response()->json([
                                                     'message' => 'Erro ao tentar reenviar convite, tente novamente mais tarde.',
