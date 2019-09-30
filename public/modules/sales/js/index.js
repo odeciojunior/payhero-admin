@@ -107,7 +107,7 @@ $(document).ready(function () {
             //Dados da venda
             $('#sale-code').text(data.sale.code);
             $('#payment-type').text('Pagamento via ' + (data.sale.payment_method === 2 ? 'Boleto' : 'Cartão ' + data.sale.flag) + ' em ' + data.sale.start_date + ' às ' + data.sale.hours);
-
+            var sale_status = data.sale.status;
             //Status
             let status = $('.modal-body #status');
             status.html('');
@@ -155,29 +155,31 @@ $(document).ready(function () {
                     '<p class="sm-text text-muted">' + value.amount + 'x</p>' +
                     '</div>' +
                     '</div>';
+                $("#table-product").html(div);
 
                 //Tabela de produtos Tracking Code
-                console.log(value);
-                let data = `<tr>
+                if (sale_status == 1) {
+                    let data = `<tr>
                                  <td>
                                       <img src='${value.photo}'  width='35px;' style='border-radius:6px;'>
-                                      <span>${value.name}</span>
+                                      <span><small>${value.name}</small></span>
                                   </td>
                                  <td>
-                                      <span class='tracking-code-span'>${value.tracking_code}</span>
+                                      <span class='tracking-code-span'><small>${value.tracking_code}</small></span>
                                       <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
                                  </td>
                                  <td>
-                                     <span>
-                                           ${value.tracking_status_enum}
-                                           <a class='pointer btn-edit-trackingcode' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                     </span>
+                                      <span class='tracking-status-span'><small>${value.tracking_status_enum}</small></span>
+                                 </td>
+                                 <td>
+                                      <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
+                                      <a class='pointer btn-save-trackingcode p-3 mb-10' title='Salvar Código de rastreio' product-code='${value.id_code}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                      <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
                                  </td>
                                 </tr>`;
-
-                $("#table-product").html(div);
-
-                $('#data-tracking-products').append(data);
+                    $('#div_tracking_code').css('display', 'block');
+                    $('#data-tracking-products').append(data);
+                }
 
             });
 
@@ -335,20 +337,20 @@ $(document).ready(function () {
 
                     var data = {sale_id: venda};
 
-                    $.ajax({
-                        method: "get",
-                        url: '/api/client/' + 3800,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        error: function error(response) {
-                            console.log(response);
-                        },
-                        success: function success(response) {
-                            console.log(response);
-
-                        }
-                    });
+                    // $.ajax({
+                    //     method: "get",
+                    //     url: '/api/client/' + 3800,
+                    //     headers: {
+                    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    //     },
+                    //     error: function error(response) {
+                    //         console.log(response);
+                    //     },
+                    //     success: function success(response) {
+                    //         console.log(response);
+                    //
+                    //     }
+                    // });
 
                     $.ajax({
                         method: "POST",
@@ -364,7 +366,6 @@ $(document).ready(function () {
                         },
                         success: function success(response) {
                             $('.subTotal').mask('#.###,#0', {reverse: true});
-                            console.log(response);
                             currentSaleCode = response.sale.code;
                             currentDeliveryCode = response.delivery.code;
 
@@ -412,25 +413,29 @@ $(document).ready(function () {
     //Código de rastreio
     function setTrackingCode(sale_id) {
         $(".btn-edit-trackingcode").unbind('click');
+
         $('.btn-edit-trackingcode').on('click', function () {
-            var trackingInput = $(this).parent().parent().parent().find('#tracking_code');
+            var trackingInput = $(this).parent().parent().find('#tracking_code');
+            var trackingCodeSpan = trackingInput.parent().find('.tracking-code-span');
             var productId = $(this).attr('product-code');
-            var icon = $(this).html('');
-            icon.html('<i class="material-icons gradient" style="font-size:17px;">save</i>');
+            var btnEdit = $(this);
+            var btnSave = btnEdit.parent().find('.btn-save-trackingcode');
+            var btnClose = $(this).parent().find('.btn-close-tracking');
+            btnEdit.hide('fast');
+            btnSave.show('fast');
+            btnClose.show('fast');
+            trackingCodeSpan.hide('fast');
             trackingInput.show('fast');
 
-            $(".btn-edit-trackingcode").addClass('btn-save-trackingcode');
-            $(".btn-save-trackingcode").unbind('click');
-            $('.btn-save-trackingcode').on('click', function () {
+            //Botão para salvar Código de Restreio
+            btnSave.unbind('click');
+            btnSave.on('click', function () {
                 var tracking_code = trackingInput.val();
                 if (tracking_code == '') {
                     alertCustom('error', 'Dados informados inválidos');
                     return false;
                 }
-                icon.html('');
-                icon.html('<i class="icon wb-edit" aria-hidden="true" style="color:#f1556f;"></i>');
-                $(".btn-edit-trackingcode").removeClass('btn-save-trackingcode');
-                trackingInput.hide('fast');
+
                 $.ajax({
                     method: "POST",
                     url: '/api/tracking',
@@ -439,14 +444,33 @@ $(document).ready(function () {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     error: function error(response) {
-                        trackingInput.hide('fast');
-                        alertCustom('error', response.message);
+                        // trackingInput.hide('fast');
+                        if (response.status == '400') {
+                            alertCustom('error', response.message);
+                        }
                     },
                     success: function success(response) {
+                        var trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
+                        trackingCodeSpan.html(response.data.tracking_code);
+                        trackingStatusSPan.html(response.data.tracking_status);
+                        trackingInput.val(response.data.tracking_code);
                         trackingInput.hide('fast');
+                        trackingCodeSpan.show('fast');
+                        btnSave.hide('fast');
+                        btnEdit.show('fast');
+                        btnClose.hide('fast');
                         alertCustom('success', response.message);
                     }
                 });
+            });
+
+            //Botão para
+            $('.btn-close-tracking').on('click', function () {
+                $(this).hide('fast');
+                btnSave.hide('fast');
+                trackingInput.hide('fast');
+                btnEdit.show('fast');
+                trackingCodeSpan.show('fast');
             });
 
         });

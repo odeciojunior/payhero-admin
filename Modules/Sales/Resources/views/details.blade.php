@@ -93,14 +93,20 @@
         <br>
         <span id="client-document" class="table-title gray"></span>
         <h4> Entrega </h4>
-        <div id='div_tracking_code'>
+        <span id="delivery-address" class="table-title gray"></span>
+        <br>
+        <span id="delivery-zipcode" class="table-title gray"></span>
+        <br>
+        <span id="delivery-city" class="table-title gray"></span>
+        <div id='div_tracking_code' style='display:none;'>
             {{--            @if (empty($sale->shopify_order) && $sale->status == 1)--}}
-            <table class='table table-striped'>
+            <table class='table table-striped mt-20'>
                 <thead>
                     <tr>
                         <th>Produto</th>
-                        <th>Cód Rastreio</th>
+                        <th>Rastreio</th>
                         <th>Status</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id='data-tracking-products'>
@@ -109,27 +115,29 @@
             </table>
             {{--            @endif--}}
         </div>
-        <span class="table-title gray table-code-tracking">
-            <div class='row' style='line-height: 1.5;'>
-                <span class="table-title gray ml-15">Código Rastreio:</span>
-                    <div id="tracking-actions" class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle' style="display:none">
-                        <a id='btn-edit-trackingcode' class='edit pointer' title='Editar Código de rastreio' data-code=''><i class='icon wb-edit' aria-hidden='true'></i></a>
-                        <a id='btn-sent-tracking-user' style="display:none" class='pointer' title='Enviar Email' data-code=''><i class='icon wb-inbox' aria-hidden='true'></i></a>
-                    </div>
-            </div>
-            <div class='tracking-code'>
-                <span class='tracking-code-value'></span>
-            </div>
-        </span>
-        <input type='text' class='input-value-trackingcode my-10' style='display:none;' value=''>
-        <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code=''>Salvar</button>
-        <button type='button' class='btn-cancel-tracking mb-10' style='display: none;'>Cancelar</button>
-        <br>
-        <span id="delivery-address" class="table-title gray"></span>
-        <br>
-        <span id="delivery-zipcode" class="table-title gray"></span>
-        <br>
-        <span id="delivery-city" class="table-title gray"></span>
+
+{{--        <span class="table-title gray table-code-tracking">--}}
+{{--            <div class='row' style='line-height: 1.5;'>--}}
+{{--                <span class="table-title gray ml-15">Código Rastreio:</span>--}}
+{{--                    <div id="tracking-actions" class='col-xl-3 col-lg-3 col-md-3 col-3 icondemo-wrap vertical-align-middle' style="display:none">--}}
+{{--                        <a id='btn-edit-trackingcode' class='edit pointer' title='Editar Código de rastreio' data-code=''><i class='icon wb-edit' aria-hidden='true'></i></a>--}}
+{{--                        <a id='btn-sent-tracking-user' style="display:none" class='pointer' title='Enviar Email' data-code=''><i class='icon wb-inbox' aria-hidden='true'></i></a>--}}
+{{--                    </div>--}}
+{{--            </div>--}}
+{{--            <div class='tracking-code'>--}}
+{{--                <span class='tracking-code-value'></span>--}}
+{{--            </div>--}}
+{{--        </span>--}}
+{{--        <input type='text' class='input-value-trackingcode my-10' style='display:none;' value=''>--}}
+{{--        <button type='button' class='btn-save-tracking mb-10' style='display: none;' data-code=''>Salvar</button>--}}
+{{--        <button type='button' class='btn-cancel-tracking mb-10' style='display: none;'>Cancelar</button>--}}
+{{--        <br>--}}
+
+{{--        <span id="delivery-address" class="table-title gray"></span>--}}
+{{--        <br>--}}
+{{--        <span id="delivery-zipcode" class="table-title gray"></span>--}}
+{{--        <br>--}}
+{{--        <span id="delivery-city" class="table-title gray"></span>--}}
     </div>
     <!-- DETALHES  -->
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
