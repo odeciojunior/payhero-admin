@@ -29,17 +29,14 @@ $(document).ready(function () {
         $.ajax({
             method: 'GET',
             url: '/api/products/create',
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.responseJSON.message);
-                }
+                errorAjaxResponse(response);
+
             },
             success: function (response) {
                 if (!isEmpty(response.data.categories)) {
@@ -62,8 +59,7 @@ $(document).ready(function () {
     }
 
     $("#my-form-add-product").submit(function (event) {
-        if($('#photo_w').val() == '0' || $('#photo_h').val() == '0')
-        {
+        if ($('#photo_w').val() == '0' || $('#photo_h').val() == '0') {
             alertCustom('error', 'Selecione as dimensões da imagem');
             return false;
         }
@@ -79,21 +75,17 @@ $(document).ready(function () {
                 processData: false,
                 cache: false,
                 contentType: false,
+                dataType: "json",
                 headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 data: formData,
-                dataType: "json",
                 error: function (response) {
                     loadingOnScreenRemove();
 
-                    if (response.status === 422) {
-                        for (error in response.responseJSON.errors) {
-                            alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    } else {
-                        alertCustom('error', response.responseJSON.message);
-                    }
+                    errorAjaxResponse(response);
+
                 }, success: function (response) {
                     loadingOnScreenRemove();
 

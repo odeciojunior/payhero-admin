@@ -152,6 +152,11 @@ $(() => {
 
         $.ajax({
             url: '/api/projects/' + projectId,
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             success: (response) => {
 
                 let project = response.data;
@@ -173,8 +178,8 @@ $(() => {
 
                 loadOnAny('#tab_info_geral', true);
             },
-            error: () => {
-                alertCustom('error', 'Erro ao exibir informaçoes do projeto');
+            error: (response) => {
+                errorAjaxResponse(response);
                 loadOnAny('#tab_info_geral', true);
             }
         });
@@ -238,11 +243,14 @@ $(() => {
         $.ajax({
             method: "GET",
             url: "/api/projects/" + projectId + '/edit',
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             }, error: function (response) {
                 loadOnAny('#tab_configuration_project', true);
-                alertCustom('error', 'Erro ao carregar configuraçoes do projeto');
+                errorAjaxResponse(response);
+
             }, success: function (data) {
                 renderProjectConfig(data);
                 loadOnAny('#tab_configuration_project', true);
@@ -262,13 +270,14 @@ $(() => {
             $.ajax({
                 method: "DELETE",
                 url: "/api/projects/" + projectId,
+                dataType: "json",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 error: function (response) {
-                    if (response.status == '400') {
-                        alertCustom('error', response.responseJSON); //'Ocorreu algum erro'
-                    }
+                    errorAjaxResponse(response);
+
                     // alertCustom('error', 'Ocorreu algum erro');
                     loadingOnScreenRemove()
                 },
@@ -307,20 +316,16 @@ $(() => {
                 processData: false,
                 contentType: false,
                 cache: false,
+                dataType: "json",
                 headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 data: formData,
                 error: function (response) {
                     loadingOnScreenRemove();
-                    if (response.status === 422) {
-                        for (error in response.responseJSON.errors) {
-                            alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    } else {
-                        alertCustom('error', String(response.responseJSON.message));
+                    errorAjaxResponse(response);
 
-                    }
                 }, success: function (response) {
                     alertCustom('success', response.message);
 
@@ -337,7 +342,6 @@ $(() => {
 
     });
 
-
     // Sincroniza template do shopify
     $("#bt-shopify-sincronization-template").on('click', function (event) {
         event.preventDefault();
@@ -353,15 +357,18 @@ $(() => {
             $.ajax({
                 method: 'POST',
                 url: '/api/apps/shopify/synchronize/templates',
+                dataType: "json",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 data: {
                     project_id: projectId
                 },
                 error: function (response) {
                     loadingOnScreenRemove();
-                    alertCustom('error', response.responseJSON.message);
+                    errorAjaxResponse(response);
+
                     window.location.reload();
                 },
                 success: function (response) {
@@ -394,8 +401,10 @@ $(() => {
                 $.ajax({
                     method: "POST",
                     url: "/api/apps/shopify/undointegration",
+                    dataType: "json",
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
                     },
                     data: {
                         project_id: projectId
@@ -403,7 +412,7 @@ $(() => {
 
                     error: function (response) {
                         loadingOnScreenRemove();
-                        alertCustom('error', response.responseJSON.message);
+                        errorAjaxResponse(response);
                         window.location.reload();
                     },
                     success: function (response) {
@@ -416,15 +425,17 @@ $(() => {
                 $.ajax({
                     method: "POST",
                     url: "/api/apps/shopify/reintegration",
+                    dataType: "json",
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
                     },
                     data: {
                         project_id: projectId
                     },
 
                     error: function (response) {
-                        alertCustom('error', response.responseJSON.message);
+                        errorAjaxResponse(response);
                         loadingOnScreenRemove()
                         window.location.reload();
                     },
@@ -453,15 +464,17 @@ $(() => {
             $.ajax({
                 method: 'POST',
                 url: '/api/apps/shopify/synchronize/products',
+                dataType: "json",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 data: {
                     project_id: projectId
                 },
                 error: function (response) {
                     loadingOnScreenRemove();
-                    alertCustom('error', response.responseJSON.message);
+                    errorAjaxResponse(response);
                     window.location.reload();
                 },
                 success: function (response) {

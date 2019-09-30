@@ -5,8 +5,13 @@ $(() => {
     function index() {
         $.ajax({
             url: '/api/projects',
-            error: () => {
-                alertCustom('error', 'Erro ao exibir projetos')
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
+            error: (response) => {
+                errorAjaxResponse(response);
             },
             success: (response) => {
                 console.log(response)
@@ -33,6 +38,5 @@ $(() => {
             }
         });
     }
-
 
 });

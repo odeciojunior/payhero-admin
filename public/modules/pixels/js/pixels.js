@@ -35,11 +35,14 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/pixels/" + pixel,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error() {
-                alertCustom("error", "Erro ao carregar detalhes do pixel");
+                errorAjaxResponse(response);
+
             }, success: function success(response) {
                 renderDetailPixel(response);
             }
@@ -62,11 +65,14 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/pixels/" + pixel + "/edit",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom("error", "Erro ao carregar modal de ediçao");
+            error: function error(response) {
+                errorAjaxResponse(response);
+
             }, success: function success(response) {
                 renderEditPixel(response);
                 $('.check').on('click', function () {
@@ -131,8 +137,10 @@ $(function () {
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/pixels",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: formData,
             processData: false,
@@ -148,15 +156,12 @@ $(function () {
                 };
 
                 return error;
-            }(function (data) {
+            }(function (response) {
                 loadingOnScreenRemove();
                 $("#modal_add_produto").hide();
                 $(".loading").css("visibility", "hidden");
-                if (data.status == '422') {
-                    for (error in data.responseJSON.errors) {
-                        alertCustom('error', String(data.responseJSON.errors[error]));
-                    }
-                }
+                errorAjaxResponse(response);
+
             }), success: function success() {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
@@ -173,8 +178,10 @@ $(function () {
         $.ajax({
             method: "PUT",
             url: "/api/project/" + projectId + "/pixels/" + pixel,
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: {
                 name: $("#modal-edit-pixel .pixel-description").val(),
@@ -185,9 +192,10 @@ $(function () {
                 purchase_card: $("#modal-edit-pixel .pixel-purchase-card").val(),
                 purchase_boleto: $("#modal-edit-pixel .pixel-purchase-boleto").val()
             },
-            error: function () {
+            error: function (response) {
                 loadingOnScreenRemove();
-                alertCustom("error", "Erro ao atualizar pixel");
+                errorAjaxResponse(response);
+
             },
             success: function success() {
                 loadingOnScreenRemove();
@@ -204,8 +212,10 @@ $(function () {
         $.ajax({
             method: "DELETE",
             url: "/api/project/" + projectId + "/pixels/" + pixel,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (_error3) {
                 function error() {
@@ -217,13 +227,10 @@ $(function () {
                 };
 
                 return error;
-            }(function () {
+            }(function (response) {
                 loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
+                errorAjaxResponse(response);
+
             }),
             success: function success() {
                 loadingOnScreenRemove();
@@ -241,8 +248,10 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/pixels",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
                 $("#data-table-pixel").html(response.message);
