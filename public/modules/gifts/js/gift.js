@@ -9,14 +9,15 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/brindes/getformaddbrinde",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                $('#modal_add').hide();
-                alertPersonalizado('error', 'Ocorreu algum erro');
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function success(data) {
+            success: (data) => {
                 $('#modal_add_body').html(data);
 
                 $('#cadastrar').unbind('click');
@@ -36,25 +37,25 @@ $(function () {
                     $.ajax({
                         method: "POST",
                         url: "/brindes/cadastrarbrinde",
+                        dataType: "json",
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
                         processData: false,
                         contentType: false,
                         cache: false,
                         data: form_data,
-                        error: function error() {
-                            $('.loading').css("visibility", "hidden");
-                            alertPersonalizado('error', 'Ocorreu algum erro');
-                            $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
+                        error: (response) => {
+                            errorAjaxResponse(response);
                         },
-                        success: function success(data) {
+                        success: (data) => {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('success', 'Brinde adicionado!');
                             $('#modal_add').hide();
                             $($.fn.dataTable.tables(true)).css('width', '100%');
                             $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                            $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
+                            $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
                         }
                     });
                 });
@@ -99,9 +100,9 @@ $(function () {
                             $('input[name="foto_brinde_cadastrar_h"]').val(y2 - y1);
 
                             $('#modal_editar').on('hidden.bs.modal', function () {
-                                $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
+                                $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
                             });
-                            $('#previewimage_brinde_cadastrar').imgAreaSelect({ remove: true });
+                            $('#previewimage_brinde_cadastrar').imgAreaSelect({remove: true});
 
                             $('#previewimage_brinde_cadastrar').imgAreaSelect({
                                 x1: x1, y1: y1, x2: x2, y2: y2,
@@ -148,13 +149,18 @@ $(function () {
         serverSide: true,
         ajax: {
             url: '/brindes/data-source',
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             type: 'POST',
-            data: { projeto: id_projeto }
+            data: {projeto: id_projeto}
         },
-        columns: [{ data: 'title', name: 'title' }, { data: 'description', name: 'description' }, { data: 'type', name: 'type' }, { data: 'detalhes', name: 'detalhes', orderable: false, searchable: false }],
+        columns: [{data: 'title', name: 'title'}, {data: 'description', name: 'description'}, {
+            data: 'type',
+            name: 'type'
+        }, {data: 'detalhes', name: 'detalhes', orderable: false, searchable: false}],
         "language": {
             "sProcessing": "Carregando...",
             "lengthMenu": "Apresentando _MENU_ registros por página",
@@ -180,7 +186,7 @@ $(function () {
                 var brinde = $(this).attr('brinde');
                 $('#modal_detalhes_titulo').html('Detalhes da brinde');
                 $('#modal_detalhes_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-                var data = { id_brinde: brinde };
+                var data = {id_brinde: brinde};
                 $.post("/brindes/detalhe", data).then(function (response, status) {
                     $('#modal_detalhes_body').html(response);
                 });
@@ -203,16 +209,16 @@ $(function () {
                     $.ajax({
                         method: "POST",
                         url: "/brindes/deletarbrinde",
+                        dataType: "json",
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
-                        data: { id: id_brinde },
-                        error: function error() {
-                            $('.loading').css("visibility", "hidden");
-                            $('#fechar_modal_excluir').click();
-                            alertPersonalizado('error', 'Ocorreu algum erro');
+                        data: {id: id_brinde},
+                        error: (response) => {
+                            errorAjaxResponse(response);
                         },
-                        success: function success(data) {
+                        success: (data) => {
                             $('.loading').css("visibility", "hidden");
                             alertPersonalizado('success', 'Brinde removido!');
                             $('#fechar_modal_excluir').click();
@@ -235,15 +241,16 @@ $(function () {
                 $.ajax({
                     method: "POST",
                     url: "/brindes/getformeditarbrinde",
+                    dataType: "json",
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
                     },
-                    data: { id: id_brinde },
-                    error: function error() {
-                        $('#modal_editar').hide();
-                        alertPersonalizado('error', 'Ocorreu algum erro');
+                    data: {id: id_brinde},
+                    error: (response) => {
+                        errorAjaxResponse(response);
                     },
-                    success: function success(data) {
+                    success: (data) => {
                         $('#modal_editar_body').html(data);
 
                         $('#editar').unbind('click');
@@ -258,26 +265,25 @@ $(function () {
                             $.ajax({
                                 method: "POST",
                                 url: "/brindes/editarbrinde",
+                                dataType: "json",
                                 headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
                                 },
                                 processData: false,
                                 contentType: false,
                                 cache: false,
                                 data: form_data,
-                                error: function error() {
-                                    $('.loading').css("visibility", "hidden");
-                                    $('#modal_editar').hide();
-                                    alertPersonalizado('error', 'Ocorreu algum erro');
-                                    $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
+                                error: (response) => {
+                                    errorAjaxResponse(response);
                                 },
-                                success: function success(data) {
+                                success: (data) => {
                                     $('.loading').css("visibility", "hidden");
                                     alertPersonalizado('success', 'Brinde atualizado!');
                                     $('#modal_editar').hide();
                                     $($.fn.dataTable.tables(true)).css('width', '100%');
                                     $($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
-                                    $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
+                                    $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
                                 }
                             });
                         });
@@ -322,9 +328,9 @@ $(function () {
                                     $('input[name="foto_brinde_editar_h"]').val(y2 - y1);
 
                                     $('#modal_editar').on('hidden.bs.modal', function () {
-                                        $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
+                                        $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
                                     });
-                                    $('#previewimage_brinde_editar').imgAreaSelect({ remove: true });
+                                    $('#previewimage_brinde_editar').imgAreaSelect({remove: true});
 
                                     $('#previewimage_brinde_editar').imgAreaSelect({
                                         x1: x1, y1: y1, x2: x2, y2: y2,
@@ -372,6 +378,5 @@ $(function () {
                 });
             });
         }
-
     });
 });
