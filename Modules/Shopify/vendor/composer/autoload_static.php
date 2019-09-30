@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInit06a4f4269c8703302b3be090586e5312
 {
     public static $prefixLengthsPsr4 = array (
-        'M' => 
+        'M' =>
         array (
             'Modules\\Shopify\\' => 16,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Modules\\Shopify\\' => 
+        'Modules\\Shopify\\' =>
         array (
             0 => __DIR__ . '/../..' . '/',
         ),
@@ -25,7 +25,7 @@ class ComposerStaticInit06a4f4269c8703302b3be090586e5312
         'Modules\\Shopify\\Http\\Controllers\\ShopifyApiController' => __DIR__ . '/../..' . '/Http/Controllers/ShopifyApiController.php',
         'Modules\\Shopify\\Http\\Controllers\\ShopifyController' => __DIR__ . '/../..' . '/Http/Controllers/ShopifyController.php',
         'Modules\\Shopify\\Providers\\ShopifyServiceProvider' => __DIR__ . '/../..' . '/Providers/ShopifyServiceProvider.php',
-        'Modules\\Shopify\\Transformers\\IntegracoesShopifyResource' => __DIR__ . '/../..' . '/Transformers/IntegracoesShopifyResource.php',
+        'Modules\\Shopify\\Transformers\\ShopifyIntegrationsResource' => __DIR__ . '/../..',
     );
 
     public static function getInitializer(ClassLoader $loader)
