@@ -34,17 +34,19 @@ $(document).ready(function(){
                 contentType: false,
                 cache: false,
                 data: form_data,
+                dataType: "json",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
-                beforeSend: function(){
+                beforeSend: () => {
                     $('.ajax-loader').css("visibility", "visible");
                     // efetuandoPagamento();
                 },
-                error: function(){
-                    alert('Ocorreu algum erro');
+                error: (response) => {
+                    errorAjaxResponse(response);
                 },
-                success: function(response){
+                success:(response) => {
                     if(response.sucesso){
                         window.location.replace("/ferramentas/sms");
                     }
@@ -87,23 +89,25 @@ $(document).ready(function(){
             contentType: false,
             cache: false,
             data: form_data,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             beforeSend: function(){
                 $('.ajax-loader').css("visibility", "visible");
                 // efetuandoPagamento();
             },
-            error: function(){
-                alert('Ocorreu algum erro');
+            error: (response) => {
+                errorAjaxResponse(response)
             },
-            success: function(response){
+            success: () => {
                 window.location.replace("/ferramentas/sms");
             },
             complete: function(){
                 $('.ajax-loader').css("visibility", "hidden");
             }
-        });                
+        });
 
     });
 

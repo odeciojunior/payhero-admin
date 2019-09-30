@@ -13,13 +13,15 @@ $(document).ready( function(){
             method: "POST",
             url: "/checkout/getparcelas",
             data: { valor_total: valor_total },
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function() {
-                // erro
+            error: (response) => {
+                errorAjaxResponse(response);
             },
-            success: function(data) {
+            success: (data) => {
 
                 var installments = data.installments;
 
