@@ -64,8 +64,10 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/companies",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: {
                 country: $('#country').val(),
@@ -80,7 +82,7 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 loadingOnScreenRemove();
-                alertCustom('error', 'Ocorreu algum erro');
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 loadingOnScreenRemove();
@@ -108,8 +110,10 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/register/",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: {
                 name: $('#firstname').val() + ' ' + $('#lastname').val(),
@@ -129,11 +133,8 @@ $(document).ready(function () {
 
                 return error;
             }(function (response) {
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
+                errorAjaxResponse(response);
+
                 loadingOnScreenRemove();
             }),
             success: function success(response) {
@@ -248,6 +249,11 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/register/welcome/",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             error: function error() {
             },
             success: function success() {

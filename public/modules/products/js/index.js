@@ -13,20 +13,16 @@ $(document).ready(function () {
         $.ajax({
                 method: 'GET',
                 url: '/api/products',
+                dataType: "json",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 error: function error(response) {
-                    if (response.status === 422) {
-                        for (error in response.errors) {
-                            alertCustom('error', String(response.errors[error]));
-                        }
-                    } else {
-                        alertCustom('error', response.message);
-                    }
+                    errorAjaxResponse(response);
+
                 },
                 success: function (response) {
-                    console.log(response);
                     $("#type-products").append($('<option>', {
                         value: '0',
                         text: 'Meus Produtos'
@@ -115,17 +111,14 @@ $(document).ready(function () {
         $.ajax({
             method: 'GET',
             url: link,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.message);
-                }
+                errorAjaxResponse(response);
+
             },
             success: function (response) {
                 if (!isEmpty(response.data)) {
