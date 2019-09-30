@@ -13,29 +13,17 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/companies/getcompanyform/",
+            dataType: "json",
             data: {
                 country: $("#country").val()
             },
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (_error) {
-                function error(_x) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
                 $("#store_form").html(response);
 
@@ -58,28 +46,15 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/companies",
+            dataType: "json",
             data: $("#create_form").serialize(),
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function (_error2) {
-                function error(_x2) {
-                    return _error2.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error2.toString();
-                };
-
-                return error;
-            }(function (response) {
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
                 alertCustom('success', response.message);
                 window.location.replace('/companies/' + response.idEncoded + '/edit ');

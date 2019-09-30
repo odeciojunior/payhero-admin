@@ -31,11 +31,13 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom('error', 'Erro ao exibir detalhes do cupom');
+            error: function error(response) {
+                errorAjaxResponse(response);
             }, success: function success(response) {
                 $('#modal-detail-coupon .coupon-name').html(response.name);
                 $('#modal-detail-coupon .coupon-code').html(response.code);
@@ -56,11 +58,13 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId +"/couponsdiscounts/" + coupon + "/edit",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom('error', 'Erro ao tentar editar cupom')
+            error: function error(response) {
+                errorAjaxResponse(response);
             }, success: function success(response) {
                 $('#modal-edit-coupon .coupon-id').val(coupon);
                 $('#modal-edit-coupon .coupon-name').val(response.name);
@@ -97,36 +101,19 @@ $(function () {
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
-            error: function (_error) {
-                function error(_x) {
-                    return _error.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error.toString();
-                };
-
-                return error;
-            }(function (response) {
-                loadingOnScreenRemove();
-                $("#modal_add_produto").hide();
-                $(".loading").css("visibility", "hidden");
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-
-                }
-            }), success: function success() {
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
+            success: function success() {
                 loadingOnScreenRemove();
                 $(".loading").css("visibility", "hidden");
                 alertCustom("success", "Cupom Adicionado!");
@@ -143,31 +130,18 @@ $(function () {
         $.ajax({
             method: "POST",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
-            error: function (_error2) {
-                function error(_x3) {
-                    return _error2.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error2.toString();
-                };
-
-                return error;
-            }(function (response) {
-                loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(data) {
                 loadingOnScreenRemove();
                 alertCustom("success", "Cupom atualizado com sucesso");
@@ -183,27 +157,14 @@ $(function () {
         $.ajax({
             method: "DELETE",
             url: "/api/project/" + projectId + "/couponsdiscounts/" + coupon,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function (_error3) {
-                function error() {
-                    return _error3.apply(this, arguments);
-                }
-
-                error.toString = function () {
-                    return _error3.toString();
-                };
-
-                return error;
-            }(function () {
-                loadingOnScreenRemove();
-                if (response.status == '422') {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                }
-            }),
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(data) {
                 loadingOnScreenRemove();
                 alertCustom("success", "Cupom Removido com sucesso");
@@ -218,11 +179,13 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/project/" + projectId + "/couponsdiscounts",
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
-                $("#data-table-coupon").html(response.message);
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 $("#data-table-coupon").html('');
@@ -232,19 +195,19 @@ $(function () {
                 } else {
                     $.each(response.data, function (index, value) {
                         let data = `<tr>
-                                        <td class="shipping-id">${value.name}</td>
-                                        <td class="shipping-type">${value.type}</td>
-                                        <td class="shipping-value">${value.value}</td>
-                                        <td class="shipping-zip-code-origin">${value.code}</td>
-                                        <td class="shipping-status" style="vertical-align: middle">
-                                            <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
-                                        </td>
-                                        <td style="text-align:center">
-                                            <a role="button" class="mg-responsive details-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">remove_red_eye</i></a>
-                                            <a role="button" class="mg-responsive edit-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">edit</i> </a>
-                                            <a role="button" class="mg-responsive delete-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
-                                        </td>
-                                    </tr>`;
+                            <td class="shipping-id">${value.name}</td>
+                            <td class="shipping-type">${value.type}</td>
+                            <td class="shipping-value">${value.value}</td>
+                            <td class="shipping-zip-code-origin">${value.code}</td>
+                            <td class="shipping-status" style="vertical-align: middle">
+                                <span class="badge badge-${statusCupons[value.status]}">${value.status_translated}</span>
+                            </td>
+                            <td style="text-align:center">
+                                <a role="button" class="mg-responsive details-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">remove_red_eye</i></a>
+                                <a role="button" class="mg-responsive edit-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">edit</i> </a>
+                                <a role="button" class="mg-responsive delete-coupon pointer" coupon="${value.id}"><i class="material-icons gradient">delete_outline</i></a>
+                            </td>
+                        </tr>`;
 
                         $("#data-table-coupon").append(data);
                     });

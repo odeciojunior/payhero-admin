@@ -72,42 +72,26 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/companies/" + encodedId,
+            dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function (_error2) {
-                function error(_x2) {
-                    return _error2.apply(this, arguments);
-                }
-                error.toString = function () {
-                    return _error2.toString();
-                };
-                return error;
-            }(
-                function (response) {
-                    if (response.status === '422') {
-                        for (error in response.responseJSON.errors) {
-                            alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    }
-                }
-            ),
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
-                // console.log(response.company);
                 let company = response.company;
                 let lists = {bank: response.banks};
                 let functions = {bank: selectItemsFunction};
                 fillAllFormInputsWithModel('company_update_form', company);
                 fillAllFormInputsWithModel('company_bank_update_form', company, lists, functions);
-                //CompanyId
                 $("#company_id").attr('value', company.id_code);
-                //Status Documentação
+
                 $("#td_bank_status").append("<span class='badge badge-" + getStatusBadge(company.bank_document_status) + "'>" + company.bank_document_translate + "</span>");
                 $("#td_address_status").append("<span class='badge badge-" + getStatusBadge(company.address_document_status) + "'>" + company.address_document_translate + "</span>");
                 $("#td_contract_status").append("<span class='badge badge-" + getStatusBadge(company.contract_document_status) + "'>" + company.contract_document_translate + "</span>");
                 configSubmits();
-                // console.log('rodou!');
             }
         });
     }
@@ -128,23 +112,9 @@ $(document).ready(function () {
                 contentType: false,
                 cache: false,
                 data: form_data,
-                error: function (_error) {
-                    function error(_x) {
-                        return _error.apply(this, arguments);
-                    }
-                    error.toString = function () {
-                        return _error.toString();
-                    };
-
-                    return error;
-                }(function (response) {
-                    loadingOnScreenRemove();
-                    if (response.status === '422') {
-                        for (error in response.responseJSON.errors) {
-                            alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    }
-                }),
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
                 success: function success(response) {
                     alertCustom('success', response.message);
                     loadingOnScreenRemove();
@@ -166,22 +136,9 @@ $(document).ready(function () {
                 contentType: false,
                 cache: false,
                 data: form_data,
-                error: function (_error2) {
-                    function error(_x2) {
-                        return _error2.apply(this, arguments);
-                    }
-                    error.toString = function () {
-                        return _error2.toString();
-                    };
-                    return error;
-                }(function (response) {
-                    loadingOnScreenRemove();
-                    if (response.status === '422') {
-                        for (error in response.responseJSON.errors) {
-                            alertCustom('error', String(response.responseJSON.errors[error]));
-                        }
-                    }
-                }),
+                error: function (response) {
+                    errorAjaxResponse(response);
+                },
                 success: function success(response) {
                     loadingOnScreenRemove();
                     alertCustom('success', response.message);
