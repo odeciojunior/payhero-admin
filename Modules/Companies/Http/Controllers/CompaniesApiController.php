@@ -20,7 +20,7 @@ use Modules\Core\Entities\Company;
 use Modules\Core\Entities\CompanyDocument;
 use Modules\Core\Services\BankService;
 use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Projects\Transformers\CompaniesSelectResource;
+use Modules\Companies\Transformers\CompaniesSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 /**

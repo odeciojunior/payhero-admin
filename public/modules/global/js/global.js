@@ -113,6 +113,7 @@ function loadingOnScreen() {
     $('#loadingOnScreen').html('');
     $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
 }
+
 function loadingOnScreenRemove() {
     $('#loadingOnScreen').html('');
     $('#btn-modal').show();
@@ -145,6 +146,23 @@ function loadOnTable(whereToLoad, tableReference) {
         "<a id='loader' class='loaderTable'></a>" +
         "</td>" +
         "</tr>");
+}
+
+function loadOnAny(element, stop = false) {
+    $('.element-loading').remove();
+    if (!stop) {
+        let loading = `<span class="loader loader-circle loader-any" style=""></span>`;
+        let loader = $(element).clone().addClass('element-loading').html(loading);
+        $(element).hide();
+        $(element).parent().append(loader);
+        loader.show();
+    } else {
+        if (!$(element).hasClass('tab-pane') ||
+            ($(element).hasClass('tab-pane') &&
+                $(element).hasClass('active'))) {
+            $(element).show();
+        }
+    }
 }
 
 function modalClear(modalBody) {
@@ -300,14 +318,10 @@ function extractIdFromPathName() {
         return '';
     }
 }
+
 function isEmptyValue(value) {
-    if (value.length === 0) {
-        return false;
-    }
-
-    return true;
+    return value.length !== 0;
 }
-
 
 function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {
     let formData = $("#" + formId + " input, #" + formId + " select, #" + formId + " textarea");

@@ -5,7 +5,7 @@ namespace Modules\Shopify\Http\Controllers;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Modules\ConvertaX\Transformers\ShopifyResource;
+use Modules\Shopify\Transformers\ShopifyResource;
 use Modules\Core\Entities\Company;
 use Modules\Core\Entities\Domain;
 use Modules\Core\Entities\Project;
@@ -16,7 +16,7 @@ use Illuminate\Routing\Controller;
 use Modules\Core\Entities\UserProject;
 use Modules\Core\Events\ShopifyIntegrationEvent;
 use Modules\Core\Services\ShopifyService;
-use Modules\Projects\Transformers\CompaniesSelectResource;
+use Modules\Companies\Transformers\CompaniesSelectResource;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ShopifyApiController extends Controller

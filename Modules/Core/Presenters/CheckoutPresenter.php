@@ -5,6 +5,11 @@ namespace Modules\Core\Presenters;
 use Modules\Core\Entities\Domain;
 use Laracasts\Presenter\Presenter;
 
+/**
+ * @property mixed sms_sent_amount
+ * @property mixed email_sent_amount
+ * @property mixed id_log_session
+ */
 class CheckoutPresenter extends Presenter
 {
     /**
@@ -12,11 +17,11 @@ class CheckoutPresenter extends Presenter
      */
     public function getSubTotal($checkoutPlans = null)
     {
-        if(empty($checkoutPlans)){
+        if (empty($checkoutPlans)) {
             $checkoutPlans = $this->checkoutPlans;
         }
 
-        $total = 0; 
+        $total = 0;
         foreach ($checkoutPlans as $checkoutPlan) {
             $total += intval(preg_replace("/[^0-9]/", "", $checkoutPlan->plan->price)) * intval($checkoutPlan->amount);
         }
@@ -41,7 +46,8 @@ class CheckoutPresenter extends Presenter
         return $products;
     }
 
-    public function getSmsSentAmount(){
+    public function getSmsSentAmount()
+    {
 
         if ($this->sms_sent_amount == null || $this->sms_sent_amount == 0) {
             return 'Não enviado';
@@ -50,8 +56,9 @@ class CheckoutPresenter extends Presenter
         }
     }
 
-    public function getEmailSentAmount(){
-        
+    public function getEmailSentAmount()
+    {
+
         if ($this->email_sent_amount == null || $this->email_sent_amount == 0) {
             return 'Não enviado';
         } else {
@@ -59,7 +66,8 @@ class CheckoutPresenter extends Presenter
         }
     }
 
-    public function getCheckoutLink($domain){
+    public function getCheckoutLink($domain)
+    {
 
         if (!empty($domain)) {
             return "https://checkout." . $domain->name . "/recovery/" . $this->id_log_session;

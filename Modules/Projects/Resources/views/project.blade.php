@@ -73,7 +73,7 @@
     <!-- Page -->
     <div class="page">
         <div class="page-header container">
-            <h1 class="page-title">Projeto {{ $project->name }}</h1>
+            <h1 class="page-title" style="min-height: 28px"></h1>
             <div class="page-header-actions">
                 <a class="btn btn-success float-right" href="/projects">
                     Meus projetos
@@ -81,12 +81,11 @@
             </div>
         </div>
         <div class="page-content container">
-            <input type='hidden' id='project-id' value='{{Hashids::encode($project->id)}}'/>
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" data-toggle="tab" href="#tab_info_geral"
+                            <a id="tab-info" class="nav-link active" data-toggle="tab" href="#tab_info_geral"
                                aria-controls="tab_info_geral" role="tab">Informações gerais
                             </a>
                         </li>
@@ -115,18 +114,11 @@
                                aria-controls="tab-fretes" role="tab">Frete
                             </a>
                         </li>
-                        {{--                        @if($project->shopify_id == '')--}}
                         <li class="nav-item" role="presentation">
                             <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
                                 Planos
                             </a>
                         </li>
-                        {{--                        @endif--}}
-                        {{--<li class="nav-item" role="presentation">--}}
-                        {{--<a id='tab-partners' class="nav-link" data-toggle="tab" href="#tab_partners"--}}
-                        {{--aria-controls="tab_partners" role="tab">Parceiros--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
                         <li class="nav-item" role="presentation">
                             <a id="tab_configuration" class="nav-link" data-toggle="tab" href="#tab_configuration_project"
                                aria-controls="tab_configuration_project" role="tab">Configurações
@@ -143,32 +135,30 @@
                             <div class="card">
                                 <div class="row no-gutters">
                                     <div class="col-md-3">
-                                        <img src="{{ $project->photo ? $project->photo : '/modules/global/img/projeto.png' }}" class="card-img" alt="">
+                                        <img id="show-photo" class="card-img" src="" alt="">
                                     </div>
                                     <div class="col-md-9 pl-10">
                                         <div class="card-body">
                                             <div class="row justify-content-between align-items-baseline">
                                                 <div class="col-md-6">
-                                                    <h4 class="title-pad">{{ $project->name }}</h4>
-                                                    <p class="card-text sm"> Criado em {{$project->created_at->format('d/m/Y')}} </p>
+                                                    <h4 class="title-pad"></h4>
+                                                    <p class="card-text sm" id="created_at"></p>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="d-flex">
                                                         <div class="p-2 d-flex flex-column">
                                                             <span class="details-text">Visibilidade</span>
-                                                            <p @if($project->visibility == 'public') class="card-text text-center sm badge-pill badge-primary" @else class="card-text text-center sm badge-pill badge-danger" @endif> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>
+                                                            <p id="show-visibility" class="card-text text-center sm badge-pill"></p>
                                                         </div>
                                                         <div class="p-2 d-flex flex-column">
                                                             <span class="details-text">Status</span>
-                                                            <p @if($project->status) class="card-text sm badge-pill badge-primary" @else class="card-text sm badge-pill badge-danger" @endif> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>
+                                                            <p id="show-status" class="card-text sm badge-pill"></p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <h5 class="sm-title"><strong> Descrição </strong></h5>
-                                            <p class="card-text sm">
-                                                {{ $project->description }}
-                                            </p>
+                                            <p id="show-description" class="card-text sm"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -255,37 +245,35 @@
 {{--                            </div>--}}
 {{--                        </div>--}}
 {{--                    </div>--}}
-                    @if($project->shopify_id)
-                    <!-- Modal para fazer-desfazer integração com shopify -->
-                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
-                            <div class="modal-dialog  modal-dialog-centered  modal-simple">
-                                <div class="modal-content">
-                                    <div class="modal-header text-center">
-                                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
-                                            <i class="material-icons md-16">close</i>
-                                        </a>
-                                    </div>
-                                    <div class="modal-body text-center p-20">
-                                        <div class="d-flex justify-content-center">
-                                            <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
-                                        </div>
-                                        <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>
-                                        <p class="gray" id="modal-change-shopify-integration-text"></p>
-                                    </div>
-                                    <div class="modal-footer d-flex align-items-center justify-content-center">
-                                        <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
-                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;">Confirmar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+{{--                    @if($project->shopify_id)--}}
+{{--                    <!-- Modal para fazer-desfazer integração com shopify -->--}}
+{{--                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">--}}
+{{--                            <div class="modal-dialog  modal-dialog-centered  modal-simple">--}}
+{{--                                <div class="modal-content">--}}
+{{--                                    <div class="modal-header text-center">--}}
+{{--                                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">--}}
+{{--                                            <i class="material-icons md-16">close</i>--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="modal-body text-center p-20">--}}
+{{--                                        <div class="d-flex justify-content-center">--}}
+{{--                                            <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>--}}
+{{--                                        </div>--}}
+{{--                                        <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>--}}
+{{--                                        <p class="gray" id="modal-change-shopify-integration-text"></p>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="modal-footer d-flex align-items-center justify-content-center">--}}
+{{--                                        <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>--}}
+{{--                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;">Confirmar</button>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
                 </div>
             </div>
         </div>
     </div>
-
-    <span id='shopifyIdLabel' data-shopifyId='{{$project->shopify_id}}'></span>
 
     @push('scripts')
         <script src="{{asset('modules/partners/js/partners.js')}}"></script>

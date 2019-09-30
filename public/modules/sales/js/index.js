@@ -161,20 +161,20 @@ $(document).ready(function () {
                 if (sale_status == 1) {
                     let data = `<tr>
                                  <td>
-                                      <img src='${value.photo}'  width='35px;' style='border-radius:6px;'>
-                                      <span><small>${value.name}</small></span>
+                                      <img src='${value.photo}'  width='35px;' style='border-radius:6px;'><br>
+                                      <span class='small'>${value.name}</span>
                                   </td>
                                  <td>
-                                      <span class='tracking-code-span'><small>${value.tracking_code}</small></span>
+                                      <span class='tracking-code-span small'>${value.tracking_code}</span>
                                       <input class='form-control' id='tracking_code' name='tracking_code' value='${value.tracking_code}' style='display:none;'/>
                                  </td>
                                  <td>
-                                      <span class='tracking-status-span'><small>${value.tracking_status_enum}</small></span>
+                                      <span class='tracking-status-span small'>${value.tracking_status_enum}</span>
                                  </td>
                                  <td>
                                       <a class='pointer btn-edit-trackingcode p-5' title='Editar Código de rastreio' product-code='${value.id_code}'><i class='icon wb-edit' aria-hidden='true' style='color:#f1556f;'></i></a>
-                                      <a class='pointer btn-save-trackingcode p-3 mb-10' title='Salvar Código de rastreio' product-code='${value.id_code}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
-                                      <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient'>close</i></a>
+                                      <a class='pointer btn-save-trackingcode p-3 mb-15' title='Salvar Código de rastreio' product-code='${value.id_code}' style='display:none;'><i class="material-icons gradient" style="font-size:17px;">save</i></a>
+                                      <a class='pointer btn-close-tracking' title='Fechar' style='display:none;'><i class='material-icons gradient mt-5'>close</i></a>
                                  </td>
                                 </tr>`;
                     $('#div_tracking_code').css('display', 'block');
@@ -410,6 +410,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //Código de rastreio
     function setTrackingCode(sale_id) {
         $(".btn-edit-trackingcode").unbind('click');
@@ -464,7 +465,7 @@ $(document).ready(function () {
                 });
             });
 
-            //Botão para
+            //Botão para ocultar campos
             $('.btn-close-tracking').on('click', function () {
                 $(this).hide('fast');
                 btnSave.hide('fast');

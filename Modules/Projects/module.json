@@ -9,8 +9,6 @@
         "Modules\\Projects\\Providers\\ProjectsServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }

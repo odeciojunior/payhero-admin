@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Projects\Transformers;
+namespace Modules\Companies\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;

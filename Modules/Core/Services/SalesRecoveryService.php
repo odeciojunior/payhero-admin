@@ -20,19 +20,17 @@ use Modules\SalesRecovery\Transformers\SalesRecoveryCardRefusedResource;
 class SalesRecoveryService
 {
     /**
-     * @param $type
-     * @param $projectId
-     * @param $dateStart
-     * @param $dateEnd
-     * @param null $client
+     * @param string $type
+     * @param string $projectId
+     * @param string $dateStart
+     * @param string $dateEnd
+     * @param string $client
      * @return AnonymousResourceCollection|string
      * Verifica tipo de recuperação
      */
-    public function verifyType($type, $projectId = null, $dateStart = null, $dateEnd = null, $client = null)
+    public function verifyType(string $type, string $projectId = null, string $dateStart = null, string $dateEnd = null, string $client = null)
     {
-        if ($type == 1) {
-            return $this->getAbandonedCart($projectId, $dateStart, $dateEnd, $client);
-        } else if ($type == 2) {
+         if ($type == 2) {
             $paymentMethod = 2; // boleto
             $status        = [3, 5]; // expired
 
@@ -46,55 +44,7 @@ class SalesRecoveryService
     }
 
     /**
-     * @param int|null $projectId
-     * @param string|null $dateStart
-     * @param string|null $dateEnd
-     * @param null $client
-     * @return AnonymousResourceCollection
-     * Carrinho abandonado
-     */
-    public function getAbandonedCart(int $projectId = null, string $dateStart = null, string $dateEnd = null, $client = null)
-    {
-        $checkoutModel = new Checkout();
-
-        $abandonedCarts = $checkoutModel->select('checkouts.id', 'checkouts.created_at', 'checkouts.project_id', 'checkouts.id_log_session', 'checkouts.status', 'checkouts.email_sent_amount', 'checkouts.sms_sent_amount', 'logs.name', 'logs.telephone')
-                                        ->leftjoin('logs', function($join) {
-                                            $join->on('logs.id', '=', DB::raw("(select max(logs.id) from logs WHERE logs.id_log_session = checkouts.id_log_session)"));
-                                        })
-                                        ->whereIn('status', ['recovered', 'abandoned cart']);
-
-        if (!empty($projectId)) {
-            $abandonedCarts->where('project_id', $projectId);
-        }
-
-        if (!empty($client)) {
-            $abandonedCarts->where('name', 'like', '%' . $client . '%');
-        }
-
-        if (!empty($dateStart) && !empty($dateEnd)) {
-            $abandonedCarts->whereBetween('checkouts.created_at', [$dateStart, $dateEnd]);
-        } else {
-            if (!empty($dateStart)) {
-                $abandonedCarts->whereDate('checkouts.created_at', '>=', $dateStart);
-            }
-            if (!empty($dateEnd)) {
-                $abandonedCarts->whereDate('checkouts.created_at', '<', $dateEnd);
-            }
-        }
-
-        $abandonedCarts->with([
-                                  'project.domains' => function($query) {
-                                      $query->where('status', 3);
-                                  },
-                              ]);
-
-        $abandonedCarts->with(['checkoutPlans.plan']);
-
-        return SalesRecoveryResource::collection($abandonedCarts->orderBy('id', 'DESC')->simplePaginate(10));
-    }
-
-    /**
-     * @param int $projectId
+     * @param string $projectId
      * @param string $dateStart
      * @param string $dateEnd
      * @param int $paymentMethod
@@ -103,7 +53,7 @@ class SalesRecoveryService
      * @return AnonymousResourceCollection
      *  Monta Tabela quando for boleto expirado ou cartão recusado
      */
-    public function getSaleExpiredOrRefused(int $projectId = null, string $dateStart = null, string $dateEnd = null, int $paymentMethod, array $status, string $client = null)
+    public function getSaleExpiredOrRefused(string $projectId = null, string $dateStart = null, string $dateEnd = null, int $paymentMethod, array $status, string $client = null)
     {
         $salesModel        = new Sale();
         $userProjectsModel = new UserProject();

@@ -5,9 +5,14 @@ namespace Modules\Core\Services;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
 {
+    /**
+     * @param $host
+     * @return bool
+     */
     public static function checkDNS($host)
     {
 
@@ -132,8 +137,21 @@ class FoxUtils
         return '';
     }
 
+    /**
+     * @param $zipCode
+     * @return string
+     */
     public static function getCep($zipCode)
     {
         return substr($zipCode, 0, 5) . '-' . substr($zipCode, 5, 3);
+    }
+
+    /**
+     * @param $hash
+     * @return mixed
+     */
+    public static function decodeHash($hash)
+    {
+        return current(Hashids::decode($hash));
     }
 }
