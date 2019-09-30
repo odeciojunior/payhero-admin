@@ -14,7 +14,8 @@ $(document).ready(function () {
             url: "/api/recovery",
             dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
                 errorAjaxResponse(response);
@@ -48,10 +49,12 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = '';
         if (link == null) {
-            url = `?project=${project.val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
+            url = `?project=${$("#project option:selected").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
         } else {
-            url = `${link}&project=${project.val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
+            url = `${link}&project=${$("#project option:selected").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
         }
+
+        console.log(url);
 
         if (selectTypeSalesRecovery.val() == 1) {
             return `/api/checkout` + url;
@@ -75,7 +78,8 @@ $(document).ready(function () {
             method: "GET",
             url: link,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
                 console.log(response);
@@ -160,7 +164,8 @@ $(document).ready(function () {
                                 method: "POST",
                                 url: "/api/recovery/regenerateboleto",
                                 headers: {
-                                    'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
                                 },
                                 data: {
                                     saleId: saleId,
@@ -197,7 +202,8 @@ $(document).ready(function () {
                         url: '/api/recovery/details',
                         data: {checkout: sale},
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
                         error: function error() {
                             errorAjaxResponse(response);
@@ -380,50 +386,3 @@ $(document).ready(function () {
     }
 
 });
-
-function paginateSalesRecovery(response, model, callback) {
-
-    $("#pagination-" + model).html("");
-
-    var first_page = "<button id='first_page' class='btn nav-btn'>1</button>";
-
-    $("#pagination-" + model).append(first_page);
-
-    if (response.meta.current_page === 1) {
-        $("#first_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-    }
-
-    $('#first_page').on("click", function () {
-        callback('?page=1');
-    });
-
-    for (x = 3; x > 0; x--) {
-
-        if (response.meta.current_page - x <= 1) {
-            continue;
-        }
-
-        $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page - x) + "' class='btn nav-btn'>" + (response.meta.current_page - x) + "</button>");
-
-        $('#page_' + (response.meta.current_page - x)).on("click", function () {
-            callback('?page=' + $(this).html());
-        });
-    }
-
-    if (response.meta.current_page !== 1) {
-        var current_page = "<button id='current_page' class='btn nav-btn active'>" + response.meta.current_page + "</button>";
-
-        $("#pagination-" + model).append(current_page);
-
-        $("#current_page").attr('disabled', true).addClass('nav-btn').addClass('active');
-    }
-    for (x = 1; x < 4; x++) {
-
-        $("#pagination-" + model).append("<button id='page_" + (response.meta.current_page + x) + "' class='btn nav-btn'>" + (response.meta.current_page + x) + "</button>");
-
-        $('#page_' + (response.meta.current_page + x)).on("click", function () {
-            callback('?page=' + $(this).html());
-        });
-    }
-
-}
