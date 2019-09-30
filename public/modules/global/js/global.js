@@ -113,6 +113,7 @@ function loadingOnScreen() {
     $('#loadingOnScreen').html('');
     $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
 }
+
 function loadingOnScreenRemove() {
     $('#loadingOnScreen').html('');
     $('#btn-modal').show();
@@ -147,16 +148,20 @@ function loadOnTable(whereToLoad, tableReference) {
         "</tr>");
 }
 
-function loadOnAny(element, stop = false){
+function loadOnAny(element, stop = false) {
     $('.element-loading').remove();
-    if(!stop){
+    if (!stop) {
         let loading = `<span class="loader loader-circle loader-any" style=""></span>`;
-        let loader = $(element).clone().addClass( 'element-loading').html(loading);
+        let loader = $(element).clone().addClass('element-loading').html(loading);
         $(element).hide();
         $(element).parent().append(loader);
         loader.show();
-    }else{
-        $(element).show();
+    } else {
+        if (!$(element).hasClass('tab-pane') ||
+            ($(element).hasClass('tab-pane') &&
+                $(element).hasClass('active'))) {
+            $(element).show();
+        }
     }
 }
 
@@ -313,6 +318,7 @@ function extractIdFromPathName() {
         return '';
     }
 }
+
 function isEmptyValue(value) {
     if (value.length === 0) {
         return false;
