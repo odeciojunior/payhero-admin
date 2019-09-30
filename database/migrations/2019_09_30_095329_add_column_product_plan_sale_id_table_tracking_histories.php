@@ -25,7 +25,9 @@ class AddColumnProductPlanSaleIdTableTrackingHistories extends Migration
         DB::select($sql);
 
         Schema::table('tracking_histories', function(Blueprint $table) {
+            $table->dropForeign(['delivery_id']);
             $table->dropColumn('delivery_id');
+            $table->dropForeign(['plan_sale_id']);
             $table->dropColumn('plans_sale_id');
         });
     }
