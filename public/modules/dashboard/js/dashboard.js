@@ -14,17 +14,16 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/dashboard/",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-                }
+                errorAjaxResponse(response);
             },
             success: function success(data) {
-                if(data.companies.length) {
+                if (data.companies.length) {
                     for (let i = 0; i < data.companies.length; i++) {
                         $('#company').append('<option value="' + data.companies[i].id_code + '">' + data.companies[i].fantasy_name + '</option>')
                     }
@@ -48,18 +47,15 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: "/api/dashboard/getvalues",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             data: {company: $('#company').val()},
             error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-                }
+                errorAjaxResponse(response);
+
             },
             success: function success(data) {
 
