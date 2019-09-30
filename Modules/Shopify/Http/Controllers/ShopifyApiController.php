@@ -4,6 +4,7 @@ namespace Modules\Shopify\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Modules\Shopify\Transformers\ShopifyResource;
 use Modules\Core\Entities\Company;
@@ -22,16 +23,16 @@ use Vinkla\Hashids\Facades\Hashids;
 class ShopifyApiController extends Controller
 {
     /**
-     *
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index()
     {
         try {
-//            $companyModel            = new Company();
+            //            $companyModel            = new Company();
             $projectModel            = new Project();
             $shopifyIntegrationModel = new ShopifyIntegration();
 
-//            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
+            //            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
 
             $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->id)->get();
 
@@ -54,7 +55,7 @@ class ShopifyApiController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -327,7 +328,8 @@ class ShopifyApiController extends Controller
                                 }
 
                                 $shopifyIntegration->update([
-                                                                'status' => $shopifyIntegration->present()->getStatus('approved'),
+                                                                'status' => $shopifyIntegration->present()
+                                                                                               ->getStatus('approved'),
                                                             ]);
                             }
 
@@ -429,7 +431,8 @@ class ShopifyApiController extends Controller
                                 if ($htmlCart) {
                                     //template normal
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('basic_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'sections/cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
@@ -439,7 +442,8 @@ class ShopifyApiController extends Controller
                                 } else {
                                     //template ajax
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'snippets/ajax-cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
@@ -460,7 +464,8 @@ class ShopifyApiController extends Controller
                                 }
 
                                 $shopifyIntegration->update([
-                                                                'status' => $shopifyIntegration->getEnum('status', 'approved'),
+                                                                'status' => $shopifyIntegration->present()
+                                                                                               ->getStatus('approved'),
                                                             ]);
                             }
 
@@ -485,10 +490,12 @@ class ShopifyApiController extends Controller
             return response()->json(['message' => 'Problema ao sincronizar template do shopify, tente novamente mais tarde'], 400);
         }
     }
+
     public function getCompanies()
     {
         $companyModel = new Company();
         $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+
         return CompaniesSelectResource::collection($companies);
     }
 }
