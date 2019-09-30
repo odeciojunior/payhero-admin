@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
 use Laracasts\Presenter\PresentableTrait;
+use Laravel\Passport\HasApiTokens;
 use Modules\Core\Presenters\UserPresenter;
 
 /**
@@ -63,7 +64,7 @@ use Modules\Core\Presenters\UserPresenter;
  */
 class User extends Authenticable
 {
-    use Notifiable, HasRoles, SoftDeletes, PresentableTrait;
+    use Notifiable, HasRoles, HasApiTokens, SoftDeletes, PresentableTrait;
     /**
      * @var string
      */

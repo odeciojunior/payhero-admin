@@ -14,6 +14,9 @@
                 </a>
             </div>
         </div>
+        {{--<a href="#" class="btn btn-sm btn-success float-right" onclick='getUserResume()'>
+            <i class="fa fa-search"></i> Resumo Teste Api
+        </a>--}}
         <div class="page-content container">
             <div class="card shadow">
                 <div class="page-invoice-table table-responsive">
@@ -103,11 +106,33 @@
             </div>
         </div>
     </div>
-
     @push('scripts')
         <script src="{{ asset('/modules/companies/js/index.js') }}"></script>
+        <script type="text/javascript">
+            // console.log($('meta[name="access-token"]').attr('content'));
+            // getUserResume();
+            function getUserResume() {
+                let viewData = {};
+                $.ajax({
+                    headers: {
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'appication/json'
+                    },
+                    method: 'GET',
+                    url: '{{ route("api.companies.index") }}',
+                    dataType: 'json',
+                    data: viewData,
+                    success: function (data) {
+                        console.log('api funciona!');
+                        console.log(data);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log('erro', XMLHttpRequest);
+                        return false;
+                    }
+                });
+            }
+        </script>
     @endpush
-
-
 @endsection
 

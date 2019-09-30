@@ -48,9 +48,9 @@ $(document).ready(function () {
     function urlDataFormatted(link) {
         let url = '';
         if (link == null) {
-            url = `?project=${$("#project").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client_name").val()}`;
+            url = `?project=${project.val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
         } else {
-            url = `${link}&project=${$("#project").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client_name").val()}`;
+            url = `${link}&project=${project.val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client-name").val()}`;
         }
 
         if (selectTypeSalesRecovery.val() == 1) {
@@ -162,7 +162,12 @@ $(document).ready(function () {
                                 headers: {
                                     'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
                                 },
-                                data: {saleId: saleId, date: $('#date').val(), discountType: $("#discount_type").val(), discountValue: $("#discount_value").val()},
+                                data: {
+                                    saleId: saleId,
+                                    date: $('#date').val(),
+                                    discountType: $("#discount_type").val(),
+                                    discountValue: $("#discount_value").val()
+                                },
                                 error: function error(response) {
                                     loadingOnScreenRemove();
 
@@ -317,11 +322,11 @@ $(document).ready(function () {
 
     $('#discount_value').mask('00%', {reverse: true});
 
-    $("#apply_discount").on("click", function(){
-        if($("#div_discount").is(":visible")){
+    $("#apply_discount").on("click", function () {
+        if ($("#div_discount").is(":visible")) {
             $("#div_discount").hide();
             $("#discount_value").val("");
-        } else{
+        } else {
             $("#div_discount").show();
 
             $("#discount_type").on('change', function () {
@@ -335,7 +340,6 @@ $(document).ready(function () {
             });
         }
     });
-
 
     /**
      * Helper Functions

@@ -46,14 +46,12 @@ class CheckoutService
             }
         }
 
-        $abandonedCarts = $abandonedCarts->with([
-                                                    'project.domains' => function($query) {
-                                                        $query->where('status', 3);
-                                                    },
-                                                    'checkoutPlans.plan',
-                                                ])->orderBy('id', 'DESC')->simplePaginate(10);
-
-        return $abandonedCarts;
+        return $abandonedCarts->with([
+                                         'project.domains' => function($query) {
+                                             $query->where('status', 3);
+                                         },
+                                         'checkoutPlans.plan',
+                                     ])->orderBy('id', 'DESC')->simplePaginate(10);
     }
 
     /**
