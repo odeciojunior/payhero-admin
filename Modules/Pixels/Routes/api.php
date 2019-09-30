@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'middleware' => ['web', 'auth']
+        'middleware' => ['auth:api'],
     ],
     function() {
         Route::apiResource('/project/{projectId}/pixels', 'PixelsApiController')
-            ->only('index', 'store', 'update', 'destroy', 'show', 'edit');
+             ->only('index', 'store', 'update', 'destroy', 'show', 'edit');
     }
 );

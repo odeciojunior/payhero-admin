@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::group(
     [
-        'middleware' => ['web', 'auth']
+        'middleware' => ['auth:api'],
     ],
     function () {
         Route::get('/projects/user-projects', 'ProjectsApiController@getProjects');

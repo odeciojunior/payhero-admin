@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['auth:api']], function() {
     Route::apiResource('anticipations', 'AnticipationsApiController')->names('api.anticipations');
 });
 

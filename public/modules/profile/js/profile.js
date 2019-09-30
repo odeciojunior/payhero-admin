@@ -5,8 +5,15 @@ $(document).ready(function () {
         $.ajax({
             url: "/api/profile",
             type: "GET",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             cache: false,
             async: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
                 $('#email').val(response.data.email);
                 $('#name').val(response.data.name);
@@ -60,8 +67,10 @@ $(document).ready(function () {
         $.ajax({
             method: "POST",
             url: $('#profile_update_form').attr('action'),
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             processData: false,
             contentType: false,
@@ -79,7 +88,6 @@ $(document).ready(function () {
                 return error;
             }(function (response) {
                 loadingOnScreenRemove();
-                // console.log(response)
                 if (response.status == '422') {
                     for (error in response.responseJSON.errors) {
                         switch (String(response.responseJSON.errors[error])) {
@@ -224,12 +232,12 @@ $(document).ready(function () {
 
     $("#nav_documents").on("click", function () {
         $("#tab_documentos").click();
-        $("#previewimage").imgAreaSelect({ remove: true });
+        $("#previewimage").imgAreaSelect({remove: true});
     });
 
     $("#nav_users").on("click", function () {
         $("#tab_user").click();
-        $("#previewimage").imgAreaSelect({ remove: true });
+        $("#previewimage").imgAreaSelect({remove: true});
     });
 
     $("#zip_code").on("input", function () {
@@ -243,6 +251,9 @@ $(document).ready(function () {
             type: "GET",
             cache: false,
             async: false,
+            error: function (response) {
+                errorAjaxResponse(response);
+            },
             success: function success(response) {
 
                 if (response.localidade) {
@@ -298,12 +309,11 @@ Dropzone.options.dropzoneDocuments = {
     },
     success: function success(file, response) {
         //update table
-        console.log(response.address_document_translate);
         if (response.personal_document_translate === 'Em análise') {
             $('#personal_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.personal_document_translate);
         }
         if (response.address_document_translate === 'Em análise') {
-            console.log('teste');
+
             $('#address_document_badge').removeAttr('class').attr('class', 'badge badge-pendente').text(response.address_document_translate);
         }
 
