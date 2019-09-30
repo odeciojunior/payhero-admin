@@ -113,7 +113,7 @@ class ProjectsController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function update(ProjectUpdateRequest $request, $id)
+    /*public function update(ProjectUpdateRequest $request, $id)
     {
         try {
 
@@ -198,13 +198,13 @@ class ProjectsController extends Controller
             Log::warning('ProjectController - update - Erro ao atualizar project');
             report($e);
         }
-    }
+    }*/
 
     /**
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id)
+    /*public function destroy($id)
     {
         try {
             $projectModel = new Project();
@@ -241,7 +241,7 @@ class ProjectsController extends Controller
 
             return response()->json('Erro ao remover o projeto, tente novamente mais tarde', 400);
         }
-    }
+    }*/
 
     public function getProjects(){
 

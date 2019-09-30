@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\ConvertaX\Transformers;
+namespace Modules\Shopify\Transformers;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\Resource;

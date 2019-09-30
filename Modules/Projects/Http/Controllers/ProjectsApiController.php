@@ -15,6 +15,7 @@ use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\ProjectService;
 use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
+use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
@@ -177,6 +178,134 @@ class ProjectsApiController extends Controller
             return response()->json([
                 'message' => 'Erro ao carregar configuracoes do projeto',
             ], 400);
+        }
+    }
+
+    public function destroy($id){
+        try {
+            $projectModel = new Project();
+
+            $projectId = Hashids::decode($id)[0];
+
+            $project   = $projectModel->where('id', $projectId)->first();
+
+            if (Gate::allows('destroy', [$project])) {
+
+                $projectService = new ProjectService();
+
+                if ($projectId) {
+                    if (!$projectService->hasSales($projectId)) {
+                        //n tem venda
+                        if ($projectService->delete($projectId)) {
+                            //projeto removido
+                            return response()->json('success', 200);
+                        } else {
+                            //erro ao remover projeto
+                            return response()->json('error', 400);
+                        }
+                    } else {
+                        return response()->json('Impossível remover projeto, possui vendas', 400);
+                    }
+                } else {
+                    return response()->json('Projeto não encontrado', 400);
+                }
+            } else {
+                return response()->json('Sem permissão para remover projeto', 403);
+            }
+        } catch (Exception $e) {
+            Log::warning('ProjectController - delete - Erro ao deletar project');
+            report($e);
+
+            return response()->json('Erro ao remover o projeto, tente novamente mais tarde', 400);
+        }
+    }
+
+    public function update(ProjectUpdateRequest $request, $id)
+    {
+        try {
+
+            $requestValidated    = $request->validated();
+            $projectModel        = new Project();
+            $userProjectModel    = new UserProject();
+            $digitalOceanService = app(DigitalOceanFileService::class);
+
+            if ($requestValidated) {
+
+                $project = $projectModel->find(current(Hashids::decode($id)));
+
+                if (Gate::allows('update', [$project])) {
+
+                    if ($requestValidated['installments_amount'] < $requestValidated['installments_interest_free']) {
+                        $requestValidated['installments_interest_free'] = $requestValidated['installments_amount'];
+                    }
+
+                    $requestValidated['cookie_duration'] = 60;
+                    $requestValidated['status']          = 1;
+
+                    $projectUpdate = $project->update($requestValidated);
+                    if ($projectUpdate) {
+                        try {
+                            $projectPhoto = $request->file('photo');
+                            if ($projectPhoto != null) {
+                                $digitalOceanService->deleteFile($project->photo);
+                                $img = Image::make($projectPhoto->getPathname());
+                                $img->crop($requestValidated['photo_w'], $requestValidated['photo_h'], $requestValidated['photo_x1'], $requestValidated['photo_y1']);
+                                $img->resize(300, 300);
+                                $img->save($projectPhoto->getPathname());
+
+                                $digitalOceanPath = $digitalOceanService
+                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/main', $projectPhoto);
+                                $project->update([
+                                    'photo' => $digitalOceanPath,
+                                ]);
+                            }
+
+                            $projectLogo = $request->file('logo');
+                            if ($projectLogo != null) {
+
+                                $digitalOceanService->deleteFile($project->logo);
+                                $img = Image::make($projectLogo->getPathname());
+
+                                $img->resize(null, 300, function($constraint) {
+                                    $constraint->aspectRatio();
+                                });
+
+                                $img->save($projectLogo->getPathname());
+
+                                $digitalOceanPathLogo = $digitalOceanService
+                                    ->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/public/projects/' . Hashids::encode($project->id) . '/logo', $projectLogo);
+
+                                $project->update([
+                                    'logo' => $digitalOceanPathLogo,
+                                ]);
+                            }
+                        } catch (Exception $e) {
+                            Log::warning('ProjectController - update - Erro ao enviar foto');
+                            report($e);
+                            return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+                        }
+
+                        $userProject                    = $userProjectModel->where([
+                            ['user_id', auth()->user()->id],
+                            ['project_id', $project->id],
+                        ])->first();
+                        $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
+                        if ($userProject->company_id != $requestValidated['company_id']) {
+                            $userProject->update(['company_id' => $requestValidated['company_id']]);
+                        }
+
+                        return response()->json(['message' => 'Projeto atualizado!'], 200);
+                    }
+                    return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+                } else {
+                    return response()->json(['message' => 'Sem permissão para atualizar o projeto'], 403);
+                }
+            }
+            return response()->json(['message', 'Erro ao atualizar projeto'], 400);
+        } catch (Exception $e) {
+            Log::warning('ProjectController - update - Erro ao atualizar project');
+            report($e);
+            return response()->json(['message', 'Erro ao atualizar projeto'], 400);
         }
     }
 

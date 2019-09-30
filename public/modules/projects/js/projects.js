@@ -70,7 +70,7 @@ $(function () {
             $('#update-project #visibility').prop('selectedIndex', 1).change();
         }
         $('#update-project #image-logo-email').attr('src', project.logo ? project.logo : '/modules/global/img/projeto.png');
-        $('#update-project #url-page').val(project.url_page ? project.url_page : '//');
+        $('#update-project #url-page').val(project.url_page ? project.url_page : 'https://');
         $('#update-project #contact').val(project.contact);
         $('#update-project #support_phone').val(project.support_phone);
         $('#update-project #invoice-description').val(project.invoice_description);
@@ -267,7 +267,7 @@ $(function () {
                     if (!verify) {
                         $.ajax({
                             method: "POST",
-                            url: "/projects/" + projectId,
+                            url: "/api/projects/" + projectId,
                             processData: false,
                             contentType: false,
                             cache: false,
@@ -312,7 +312,7 @@ $(function () {
                         loadingOnScreen()
                         $.ajax({
                             method: "DELETE",
-                            url: "/projects/" + projectId,
+                            url: "/api/projects/" + projectId,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },

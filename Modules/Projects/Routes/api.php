@@ -6,6 +6,6 @@ Route::group(
     ],
     function () {
         Route::apiResource('/projects', 'ProjectsApiController')
-            ->only('index', 'create', 'store', 'edit');
+            ->only('index', 'create', 'store', 'edit', 'destroy', 'update');
     }
 );
