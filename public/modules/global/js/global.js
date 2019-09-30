@@ -301,13 +301,8 @@ function extractIdFromPathName() {
     }
 }
 function isEmptyValue(value) {
-    if (value.length === 0) {
-        return false;
-    }
-
-    return true;
+    return value.length !== 0;
 }
-
 
 function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {
     let formData = $("#" + formId + " input, #" + formId + " select, #" + formId + " textarea");
