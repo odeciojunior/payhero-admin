@@ -44,7 +44,6 @@ $(document).ready(function () {
                 }
             }, success: function (response) {
                 $("#domain-table-body").html('');
-
                 if (response.data == '') {
                     $("#domain-table-body").html("<tr class='text-center'><td colspan='4' style='height: 70px; vertical-align: middle;'>Nenhum dominio encontrado</td></tr>")
                 } else {
@@ -270,16 +269,21 @@ $(document).ready(function () {
                 '<input id="value-priority" name="priority" class="input-pad" data-mask="0#" placeholder="Prioridade">' +
                 '</div>'
             );
+            $("#proxy-active").attr('disabled', true);
+            $("#proxy-select ").val('0').change();
 
-            $("#proxy").val('0').attr('disabled', 'disabled');
+
 
             $('#value-priority').mask('0#');
 
         } else if ($("#type-register option:selected").val() === 'TXT') {
-            $("#proxy").val('0').attr('disabled', 'disabled');
+            $("#proxy-active").attr('disabled', true);
+            $("#proxy-select").val('0').change();
 
         } else {
-            $("#proxy").val('0').removeAttr('disabled');
+
+            $("#proxy-active").removeAttr('disabled');
+
             $("#div-input-priority").remove();
             $("#name-register").parent().removeClass('col-lg-8').addClass('col-lg-10');
         }
@@ -314,6 +318,8 @@ $(document).ready(function () {
     $("#bt-add-record").on('click', function () {
         let domainId = $("#domain").val();
         console.log('dominio: ' + domainId);
+        loadOnTable('#table-body-new-records', '#new-registers-table');
+
 
         let formData = new FormData(document.getElementById('form-modal-add-domain-record'));
         formData.append('project', projectId);
@@ -334,7 +340,7 @@ $(document).ready(function () {
             dataType: "json",
             error: function (response) {
                 console.log(response);
-                $(".swal2-container").remove();
+                $(".swal2-container, #modal-backdrop").remove();
                 removeLoad();
                 errorAjaxResponse(response);
             },
@@ -466,10 +472,10 @@ $(document).ready(function () {
                 } else {
                     enabledA = "<td><button style='background-color: transparent;' role='button' class='btn mg-responsive pointer'  " + enabledEntrada + "><i class='material-icons gradient' >delete_outline</i> </a></td>";
                 }
-                data += '<td><div class="switch-holder" style="pointer-events: none; opacity: 0.5;">' +
-                    '                    <label class="switch">' +
-                    '                        <input type="checkbox" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + '  ' + enabledEntrada + ' >' +
-                    '                        <span class="slider round"></span>' +
+                data += '<td><div class="switch-holder" style=" opacity: 0.5;">' +
+                    '                    <label class="switch" style="cursor: not-allowed">' +
+                    '                        <input type="checkbox" style="cursor: not-allowed" value="' + value.proxy + '" name="proxy" id="proxy" class="check check-proxy" ' + proxyVar + '  ' + enabledEntrada + ' >' +
+                    '                        <span class="slider round" style="cursor: not-allowed"></span>' +
                     '                    </label>' +
                     '                </div></td>';
                 data += enabledA;
@@ -530,7 +536,7 @@ $(document).ready(function () {
     function verifyDataDomain() {
         $.ajax({
             method: 'GET',
-            url: '/api/project/' + projectId + '/domain/' + $("#domain").val() + '/info',
+            url: '/api/project/' + projectId + '/domains/' + $("#domain").val(),
             headers: {
                 "X-CSRF-TOKEN": csrfToken
             },

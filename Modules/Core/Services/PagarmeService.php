@@ -2,13 +2,14 @@
 
 namespace Modules\Core\Services;
 
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Modules\Core\Entities\Sale;
-use Modules\Core\Entities\Transaction;
-use PagarMe\Client as PagarmeClient;
+use Illuminate\Support\Facades\Log;
 use Vinkla\Hashids\Facades\Hashids;
+use PagarMe\Client as PagarmeClient;
+use Modules\Core\Entities\Transaction;
+use Modules\Core\Services\SplitPaymentService;
 
 /**
  * Class PagarmeService
@@ -55,7 +56,7 @@ class PagarmeService
      * @param $dueDate
      * @return array
      */
-    public function boletoPayment($dueDate)
+    public function boletoPayment($dueDate, $discountType = null, $discountValue = null)
     {
         try {
             $transaction = $this->pagarmeClient->transactions()->create([
@@ -145,27 +146,12 @@ class PagarmeService
                                 'status'                => 2,
                                 'start_date'            => Carbon::now(),
                             ]);
-        $transactions = $this->transactionModel->where('sale_id', $this->sale->id)->get();
-        foreach ($transactions as $transactionVal) {
-            $transactionCreated = $this->transactionModel->create([
-                                                                      'sale_id'                => $transactionVal->sale_id,
-                                                                      'company_id'             => $transactionVal->company_id,
-                                                                      'value'                  => $transactionVal->value,
-                                                                      'type'                   => $transactionVal->type,
-                                                                      'status'                 => 'pending',
-                                                                      'antecipation_date'      => $transactionVal->antecipation_date,
-                                                                      'antecipable_value'      => $transactionVal->antecipable_value,
-                                                                      'antecipable_tax'        => $transactionVal->antecipable_tax,
-                                                                      'currency'               => $transactionVal->currency,
-                                                                      'percentage_rate'        => $transactionVal->percentage_rate,
-                                                                      'transaction_rate'       => $transactionVal->transaction_rate,
-                                                                      'percentage_antecipable' => $transactionVal->percentage_antecipable,
-                                                                  ]);
-            if (isset($transactionCreated) && !empty($transactionCreated)) {
-                $transactionVal->delete();
-                unset($transactionCreated);
-            }
-        }
+
+        $transactions = $this->transactionModel->where('sale_id', $this->sale->id)->delete();
+
+        $splitPaymentService = new SplitPaymentService();
+
+        $splitPaymentService->splitPayment($this->totalValue, $this->sale, $this->project, $this->sale->user);
 
         return [
             'status'  => 'success',
@@ -173,3 +159,7 @@ class PagarmeService
         ];
     }
 }
+
+
+
+

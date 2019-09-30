@@ -216,7 +216,7 @@ $(document).ready(function () {
         loadingOnScreen();
         $.ajax({
             method: "POST",
-            url: "/api/project/" + projectId +  "/shippings/" + frete,
+            url: "/api/project/" + projectId + "/shippings/" + frete,
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
@@ -311,6 +311,7 @@ $(document).ready(function () {
                     $("#dados-tabela-frete").html("<tr class='text-center'><td colspan='8' style='height: 70px; vertical-align: middle;'>Nenhum registro encontrado</td></tr>");
                 } else {
                     $.each(response.data, function (index, value) {
+
                         let dados = `<tr>
                                         <td style="vertical-align: middle; display: none;">${value.zip_code_origin}</td>
                                         <td style="vertical-align: middle;">${value.type}</td>

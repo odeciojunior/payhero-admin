@@ -17,7 +17,7 @@ Route::group(
         Route::get('project/{projectId}/domain/{domainId}/recheck', 'DomainsApiController@recheckOnly')
              ->name('api.domain.recheck');
 
-        Route::get('project/{projectId}/domain/{domainId}/info', 'DomainsApiController@getDomainData')
-             ->name('api.domain.info');
+        // Route::get('project/{projectId}/domain/{domainId}', 'DomainsApiController@show')
+        //      ->name('api.domain.show');
     }
 );

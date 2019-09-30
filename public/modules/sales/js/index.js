@@ -18,6 +18,7 @@ $(document).ready(function () {
         event.preventDefault();
         atualizar();
     });
+
     $("#bt_get_csv").on("click", function () {
         $('<input>').attr({
             id: 'export-sales',
@@ -297,19 +298,12 @@ $(document).ready(function () {
                     dados += "<td>" + value.product + "</td>";
                     dados += "<td class='display-sm-none display-m-none display-lg-none'>" + value.client + "</td>";
                     dados += "<td><img src='/modules/global/img/cartoes/" + value.brand + ".png'  style='width: 60px'></td>";
-
-                    dados += "<td><span class='badge badge-" + statusArray[value.status] + "'>" + value.status_translate + "</span></td>";
-
-                    // if (value.status == '1') {
-                    //     dados += "<td><span class='badge badge-success'>Aprovada</span></td>";
-                    // } else if (value.status == '2') {
-                    //     dados += "<td><span class='badge badge-pendente'>Pendente</span></td>";
-                    // } else if (value.status == '4') {
-                    //     dados += "<td><span class='badge badge-danger'>Estornada</span></td>";
-                    // } else if (value.status == '5') {
-                    //     dados += "<td><span class='badge badge-pendente'>Cancelada</span></td>";
-                    // }
-
+                    if(value.status_translate == 'Pendente'){
+                        dados += "<td><span class='boleto-pending badge badge-" + statusArray[value.status] + "' status=" + value.status_translate + " sale=" + value.id_default + ">" + value.status_translate + "</span></td>";
+                    }
+                    else{
+                        dados += "<td><span class='badge badge-" + statusArray[value.status] + "'>" + value.status_translate + "</span></td>";
+                    }
                     dados += "<td class='display-sm-none display-m-none'>" + value.start_date + "</td>";
                     dados += "<td class='display-sm-none'>" + value.end_date + "</td>";
                     dados += "<td style='white-space: nowrap'><b>" + value.total_paid + "</b></td>";
@@ -321,6 +315,56 @@ $(document).ready(function () {
                     $('#dados_tabela').html("<tr class='text-center'><td colspan='10' style='height: 70px;vertical-align: middle'> Nenhuma venda encontrada</td></tr>");
                 }
                 pagination(response, 'sales', atualizar);
+
+                $(".boleto-pending").hover(
+                    function () {
+                        $(this).css('cursor', 'pointer').text('Regerar');
+                        $(this).css("background", "#545B62");
+                    }, function () {
+                        var status = $(this).attr('status'); 
+                        $(this).removeAttr("style");
+                        $(this).text(status);
+                    }
+                );
+
+                $("#date").val(moment(new Date()).add(3, "days").format("YYYY-MM-DD"));
+                $("#date").attr('min', moment(new Date()).format("YYYY-MM-DD"));
+
+                $('.boleto-pending').on('click', function () {
+                    // $('#saleId').val('');
+                    let saleId = $(this).attr('sale');
+                    // $('#saleId').val(saleId);
+                    $('#modal_regerar_boleto').modal('show');
+
+                    $('#bt_send').unbind("click");
+                    $('#bt_send').on('click', function () {
+                        loadingOnScreen();
+                        $.ajax({
+                            method: "POST",
+                            url: "/api/recovery/regenerateboleto",
+                            headers: {
+                                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                            },
+                            data: {saleId: saleId, date: $('#date').val(), discountType: $("#discount_type").val(), discountValue: $("#discount_value").val()},
+                            error: function error(response) {
+                                loadingOnScreenRemove();
+
+                                if (response.status === 422) {
+                                    for (error in response.errors) {
+                                        alertCustom('error', String(response.errors[error]));
+                                    }
+                                } else {
+                                    alertCustom('error', response.responseJSON.message);
+                                }
+                            },
+                            success: function success(response) {
+                                loadingOnScreenRemove();
+                                $(".loading").css("visibility", "hidden");
+                                window.location = '/sales';
+                            }
+                        });
+                    });
+                });
 
                 $('.detalhes_venda').unbind('click');
 
@@ -334,7 +378,7 @@ $(document).ready(function () {
                     $('#modal_venda_titulo').html('Detalhes da venda ' + venda + '<br><hr>');
 
                     $('#modal_venda_body').html("<h5 style='width:100%; text-align: center'>Carregando..</h5>");
-
+ 
                     var data = {sale_id: venda};
 
                     // $.ajax({
@@ -398,15 +442,6 @@ $(document).ready(function () {
                     });
                 });
 
-                $('.estornar_venda').unbind('click');
-
-                $('.estornar_venda').on('click', function () {
-
-                    id_venda = $(this).attr('venda');
-
-                    $('#modal_estornar_titulo').html('Estornar venda #' + id_venda + ' ?');
-                    $('#modal_estornar_body').html('');
-                });
             }
         });
     }
@@ -499,4 +534,26 @@ $(document).ready(function () {
             }
         });
     }
+
+    $('#discount_value').mask('00%', {reverse: true});
+
+    $("#apply_discount").on("click", function(){
+        if($("#div_discount").is(":visible")){
+            $("#div_discount").hide();
+            $("#discount_value").val("");
+        } else{
+            $("#div_discount").show();
+
+            $("#discount_type").on('change', function () {
+                if ($("#discount_type").val() == 'value') {
+                    $("#discount_value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
+                    $("#label_discount_value").html("Valor (ex: 20,00)");
+                } else {
+                    $('#discount_value').mask('00%', {reverse: true});
+                    $("#label_discount_value").html("Valor (ex: 20%)");
+                }
+            });
+        }
+    });
+
 });

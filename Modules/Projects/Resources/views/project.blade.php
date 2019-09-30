@@ -246,29 +246,29 @@
 {{--                        </div>--}}
 {{--                    </div>--}}
 {{--                    @if($project->shopify_id)--}}
-{{--                    <!-- Modal para fazer-desfazer integração com shopify -->--}}
-{{--                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">--}}
-{{--                            <div class="modal-dialog  modal-dialog-centered  modal-simple">--}}
-{{--                                <div class="modal-content">--}}
-{{--                                    <div class="modal-header text-center">--}}
-{{--                                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">--}}
-{{--                                            <i class="material-icons md-16">close</i>--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="modal-body text-center p-20">--}}
-{{--                                        <div class="d-flex justify-content-center">--}}
-{{--                                            <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>--}}
-{{--                                        </div>--}}
-{{--                                        <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>--}}
-{{--                                        <p class="gray" id="modal-change-shopify-integration-text"></p>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="modal-footer d-flex align-items-center justify-content-center">--}}
-{{--                                        <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>--}}
-{{--                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;">Confirmar</button>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                    <!-- Modal para fazer-desfazer integração com shopify -->
+                        <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal-change-shopify-integration" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
+                            <div class="modal-dialog  modal-dialog-centered  modal-simple">
+                                <div class="modal-content">
+                                    <div class="modal-header text-center">
+                                        <a class="close-card pointer close" role="button" data-dismiss="modal" aria-label="Close" id="bt-close-modal-change-shopify-integration">
+                                            <i class="material-icons md-16">close</i>
+                                        </a>
+                                    </div>
+                                    <div class="modal-body text-center p-20">
+                                        <div class="d-flex justify-content-center">
+                                            <i class="material-icons gradient" style="font-size: 70px;color: #ff4c52; margin-bottom: 30px"> sync </i>
+                                        </div>
+                                        <h3 class="black" id="modal-change-shopify-integration-title"> Você tem certeza? </h3>
+                                        <p class="gray" id="modal-change-shopify-integration-text"></p>
+                                    </div>
+                                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                                        <button type="button" class="btn btn-gray" data-dismiss="modal" style="width: 20%;">Cancelar</button>
+                                        <button id="bt-modal-change-shopify-integration" type="button" class="btn btn-success" style="width: 20%;">Confirmar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 {{--                    @endif--}}
                 </div>
             </div>

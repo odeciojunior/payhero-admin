@@ -148,6 +148,7 @@ class SalesRecoveryApiController extends Controller
      */
     public function regenerateBoleto(Request $request)
     {
+
         try {
             $validator = Validator::make($request->all(), [
                 'saleId' => 'required|string',
@@ -163,10 +164,28 @@ class SalesRecoveryApiController extends Controller
                 $saleService = new SaleService();
 
                 $sale = $saleModel->find(current(Hashids::decode($request->input('saleId'))));
+
                 if (!empty($sale)) {
                     $totalPaidValue = $saleService->getSubTotal($sale);
                     $shippingPrice  = preg_replace("/[^0-9]/", "", $sale->shipment_value);
-                    $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice);
+
+                    if(!empty($request->input('discountValue'))){
+
+                        if($request->discountType == 'percentage'){
+                            $discount = intval($totalPaidValue * (preg_replace("/[^0-9]/", "", $request->input('discountValue')) / 100 ));
+                            $totalPaidValue -= preg_replace("/[^0-9]/", "", $discount);
+                        }
+                        else{
+                            $discount = preg_replace("/[^0-9]/", "", $request->input('discountValue'));
+                            $totalPaidValue -= $discount;
+                        }
+
+                        $sale->update([
+                            'shopify_discount' => $discount
+                        ]);
+                    }
+
+                    $pagarmeService = new PagarmeService($sale, $totalPaidValue, $shippingPrice); 
 
                     $boletoRegenerated = $pagarmeService->boletoPayment($request->input('date'));
                     if ($boletoRegenerated['status'] == 'success') {

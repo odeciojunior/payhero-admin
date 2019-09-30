@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/checkouts",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Checkouts\\Providers\\CheckoutsServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Checkouts\\": ""
+        }
+    }
+}

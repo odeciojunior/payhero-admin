@@ -52,6 +52,7 @@ $(document).ready(function () {
                 } else {
                     $("#content-error").hide();
                     $("#card-table-invite").css('display', 'block');
+                    $("#card-invitation-data").css('display', 'block');
 
                     $("#text-info").css('display', 'block');
                     $("#card-table-invite").css('display', 'block');
@@ -103,7 +104,15 @@ $(document).ready(function () {
                             },
                             error: function error(response) {
                                 loadingOnScreenRemove();
-                                alertCustom('error', response.message);
+                                if (response.status == '422') {
+                                    for (error in response.errors) {
+                                        alertCustom('error', String(response.errors[error]));
+                                    }
+                                }
+                                if (response.status == '400') {
+                                    alertCustom('error', response.responseJSON.message);
+
+                                }
                             }, success: function success(response) {
                                 loadingOnScreenRemove();
                                 updateInvites();

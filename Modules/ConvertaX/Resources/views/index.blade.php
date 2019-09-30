@@ -1,8 +1,11 @@
 @extends("layouts.master")
+
 @push('css')
+    <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
     <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
 @endpush
+
 @section('content')
     <div id='project-content'>
         <div class='page'>

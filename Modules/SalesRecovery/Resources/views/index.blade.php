@@ -4,6 +4,7 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
+        <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
     @endpush
 
     <!-- Page -->
@@ -69,6 +70,7 @@
                             </tbody>
                         </table>
                     </div>
+
                     <!-- Modal regerar boleto-->
                     <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_regerar_boleto" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-lg d-flex justify-content-center">
@@ -85,6 +87,31 @@
                                         <input name='date' id="date" class="form-control input-pad" type="date">
                                         <input type='hidden' name='saleId' id='saleId'>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="switch-holder">
+                                                <label for="token" class='mb-10'>Aplicar desconto:</label>
+                                                <br>
+                                                <label class="switch">
+                                                    <input type="checkbox" value='1' id="apply_discount" class='check'>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <div class="row" id="div_discount" style="display:none">
+                                        <div class="col-6">
+                                            <label for="discount_type"> Tipo:</label>
+                                            <select id="discount_type" class="form-control">
+                                                <option value="percentage" selected>Porcentagem</option>
+                                                <option value="value">Valor</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label id="label_discount_value" for="discount_value">Valor (ex: 20%)</label>
+                                            <input id="discount_value" class="form-control" placeholder="Valor">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer" style="margin-top: 15px">
                                     <button id="bt_send" type="button" class="btn btn-success">Regerar</button>
@@ -94,6 +121,7 @@
                         </div>
                     </div>
                     <!-- End Modal -->
+
                     <!-- Modal detalhes da venda-->
                     <div class="modal fade example-modal-lg" id="modal_detalhes" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                         <div class="modal-dialog modal-simple modal-sidebar modal-lg">
@@ -198,6 +226,7 @@
                         </div>
                     </div>
                     <!-- End Modal -->
+
                 </div>
                 <div class="row">
                     <div class="col-12">
@@ -207,6 +236,7 @@
                     </div>
                 </div>
             </div>
+
             {{-- Quando não tem projeto cadastrado  --}}
             <div id='project-empty' class="content-error text-center" style='display:none'>
                 <link rel="stylesheet" href="modules/global/css/empty.css">
@@ -216,6 +246,7 @@
                 <a href="/projects/create" class="btn btn-primary gradient">Cadastrar primeiro projeto</a>
             </div>
             {{-- FIM projeto nao existem projetos--}}
+
         </div>
     </div>
 

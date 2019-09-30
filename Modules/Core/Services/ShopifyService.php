@@ -585,6 +585,8 @@ class ShopifyService
 
             return false;
         }
+
+        return false;
     }
 
     /**

@@ -16,10 +16,12 @@ class TransactionPresenter extends Presenter
                 case 2:
                     return 'producer';
                 case 3:
-                    return 'invite';
+                    return 'invitation';
                 case 4:
                     return 'affiliate';
                 case 5:
+                    return 'partner';
+                case 6:
                     return 'convertaX';
             }
             return '';
@@ -29,12 +31,14 @@ class TransactionPresenter extends Presenter
                     return 1;
                 case 'producer':
                     return 2;
-                case 'invite':
+                case 'invitation':
                     return 3;
                 case 'affiliate':
                     return 4;
-                case 'convertaX':
+                case 'partner':
                     return 5;
+                case 'convertaX':
+                    return 6;
             }
             return '';
         }
