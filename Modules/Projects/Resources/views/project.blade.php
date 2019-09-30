@@ -73,7 +73,6 @@
     <!-- Page -->
     <div class="page">
         <div class="page-header container">
-{{--            <h1 class="page-title">Projeto {{ $project->name }}</h1>--}}
             <h1 class="page-title" style="min-height: 28px"></h1>
             <div class="page-header-actions">
                 <a class="btn btn-success float-right" href="/projects">
@@ -82,7 +81,6 @@
             </div>
         </div>
         <div class="page-content container">
-{{--            <input type='hidden' id='project-id' value='{{Hashids::encode($project->id)}}'/>--}}
             <div class="mb-15">
                 <div class="nav-tabs-horizontal" data-plugin="tabs">
                     <ul class="nav nav-tabs nav-tabs-line" role="tablist" style="color: #ee535e">
@@ -116,18 +114,11 @@
                                aria-controls="tab-fretes" role="tab">Frete
                             </a>
                         </li>
-                        {{--                        @if($project->shopify_id == '')--}}
                         <li class="nav-item" role="presentation">
                             <a id="tab_plans" class="nav-link" data-toggle="tab" href="#tab_plans-panel" aria-controls="tab_plans" role="tab">
                                 Planos
                             </a>
                         </li>
-                        {{--                        @endif--}}
-                        {{--<li class="nav-item" role="presentation">--}}
-                        {{--<a id='tab-partners' class="nav-link" data-toggle="tab" href="#tab_partners"--}}
-                        {{--aria-controls="tab_partners" role="tab">Parceiros--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
                         <li class="nav-item" role="presentation">
                             <a id="tab_configuration" class="nav-link" data-toggle="tab" href="#tab_configuration_project"
                                aria-controls="tab_configuration_project" role="tab">Configurações
@@ -144,15 +135,12 @@
                             <div class="card">
                                 <div class="row no-gutters">
                                     <div class="col-md-3">
-{{--                                        <img src="{{ $project->photo ? $project->photo : '/modules/global/img/projeto.png' }}" class="card-img" alt="">--}}
                                         <img id="show-photo" class="card-img" src="" alt="">
                                     </div>
                                     <div class="col-md-9 pl-10">
                                         <div class="card-body">
                                             <div class="row justify-content-between align-items-baseline">
                                                 <div class="col-md-6">
-{{--                                                    <h4 class="title-pad">{{ $project->name }}</h4>--}}
-{{--                                                    <p class="card-text sm"> Criado em {{$project->created_at->format('d/m/Y')}} </p>--}}
                                                     <h4 class="title-pad"></h4>
                                                     <p class="card-text sm" id="created_at"></p>
                                                 </div>
@@ -160,12 +148,10 @@
                                                     <div class="d-flex">
                                                         <div class="p-2 d-flex flex-column">
                                                             <span class="details-text">Visibilidade</span>
-{{--                                                            <p @if($project->visibility == 'public') class="card-text text-center sm badge-pill badge-primary" @else class="card-text text-center sm badge-pill badge-danger" @endif> {{ ($project->visibility == 'public') ? 'Público' : 'Privado' }} </p>--}}
                                                             <p id="show-visibility" class="card-text text-center sm badge-pill"></p>
                                                         </div>
                                                         <div class="p-2 d-flex flex-column">
                                                             <span class="details-text">Status</span>
-{{--                                                            <p @if($project->status) class="card-text sm badge-pill badge-primary" @else class="card-text sm badge-pill badge-danger" @endif> {{ $project->status ? 'Ativo' : 'Inativo' }} </p>--}}
                                                             <p id="show-status" class="card-text sm badge-pill"></p>
                                                         </div>
                                                     </div>
@@ -288,9 +274,6 @@
             </div>
         </div>
     </div>
-
-{{--    <span id='shopifyIdLabel' data-shopifyId='{{$project->shopify_id}}'></span>--}}
-    <span id='shopifyIdLabel' data-shopifyId=''></span>
 
     @push('scripts')
         <script src="{{asset('modules/partners/js/partners.js')}}"></script>

@@ -348,8 +348,8 @@ $(function () {
                     var name = $("#name").val();
                     $("#modal_excluir_titulo").html("Remover projeto " + name + " ?");
 
-                    $("#bt_excluir").unbind('click');
-                    $("#bt_excluir").on('click', function () {
+                    $("#modal-delete-project .btn-delete").unbind('click');
+                    $("#modal-delete-project .btn-delete").on('click', function () {
                         $("#modal-delete").modal('hide');
                         loadingOnScreen()
                         $.ajax({
