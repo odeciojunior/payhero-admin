@@ -37,9 +37,9 @@ class CompaniesApiController extends Controller
         /** @var Company $companyModel */
         $companyModel = new Company();
         /** @var LengthAwarePaginator $companies */
-        $companies    = $companyModel->with('user')
-                                     ->where('user_id', auth()->id())
-                                     ->paginate();
+        $companies = $companyModel->with('user')
+                                  ->where('user_id', auth()->id())
+                                  ->paginate();
 
         return CompanyResource::collection($companies);
     }
@@ -92,7 +92,7 @@ class CompaniesApiController extends Controller
      * @param $encodedId
      * @return Factory|JsonResponse|View
      */
-    public function edit($encodedId)
+    public function show($encodedId)
     {
         try {
             /** @var Company $companyModel */

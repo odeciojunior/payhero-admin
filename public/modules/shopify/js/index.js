@@ -76,7 +76,8 @@ $(document).ready(function () {
             method: "GET",
             url: "/api/companies/usercompanies",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error() {
                 $("#modal-content").hide();

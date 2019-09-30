@@ -60,7 +60,8 @@ $(document).ready(function () {
             url: "/api/companies",
             data: $("#create_form").serialize(),
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (_error2) {
                 function error(_x2) {

@@ -22,6 +22,7 @@ class CompaniesController extends Controller
      */
     public function index()
     {
+        //        dd("foi");
         return view('companies::index');
     }
 
