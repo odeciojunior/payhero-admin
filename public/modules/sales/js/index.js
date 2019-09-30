@@ -13,6 +13,7 @@ $(document).ready(function () {
         event.preventDefault();
         atualizar();
     });
+
     $("#bt_get_csv").on("click", function () {
         $('<input>').attr({
             id: 'export-sales',
@@ -137,6 +138,7 @@ $(document).ready(function () {
                     // $('#saleId').val(saleId);
                     $('#modal_regerar_boleto').modal('show');
 
+                    $('#bt_send').unbind("click");
                     $('#bt_send').on('click', function () {
                         loadingOnScreen();
                         $.ajax({
@@ -145,7 +147,7 @@ $(document).ready(function () {
                             headers: {
                                 'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
                             },
-                            data: {saleId: saleId, date: $('#date').val()},
+                            data: {saleId: saleId, date: $('#date').val(), discountType: $("#discount_type").val(), discountValue: $("#discount_value").val()},
                             error: function error(response) {
                                 loadingOnScreenRemove();
 
@@ -239,4 +241,26 @@ $(document).ready(function () {
             }
         });
     }
+
+    $('#discount_value').mask('00%', {reverse: true});
+
+    $("#apply_discount").on("click", function(){
+        if($("#div_discount").is(":visible")){
+            $("#div_discount").hide();
+            $("#discount_value").val("");
+        } else{
+            $("#div_discount").show();
+
+            $("#discount_type").on('change', function () {
+                if ($("#discount_type").val() == 'value') {
+                    $("#discount_value").mask('#.###,#0', {reverse: true}).removeAttr('maxlength');
+                    $("#label_discount_value").html("Valor (ex: 20,00)");
+                } else {
+                    $('#discount_value').mask('00%', {reverse: true});
+                    $("#label_discount_value").html("Valor (ex: 20%)");
+                }
+            });
+        }
+    });
+
 });
