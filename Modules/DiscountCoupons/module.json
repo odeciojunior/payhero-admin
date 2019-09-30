@@ -9,8 +9,6 @@
         "Modules\\DiscountCoupons\\Providers\\DiscountCouponsServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
+    "files": [],
     "requires": []
 }

@@ -2,6 +2,8 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
+    <link rel="stylesheet" href="{{ asset('/modules/convertax/css/index.css') }}">
+    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
 @endpush
 
 @section('content')
@@ -20,8 +22,18 @@
                 </div>
             </div>
             <div class='page-content container' id='project-integrated'>
-            {{--                integrations here--}}
-            <!-- Modal add integração -->
+                <div class="row" id="content">
+                    {{-- js load dynamically --}}
+                </div>
+                <div id="no-integration-found" class='row justify-content-center' style="display:none">
+                    <div class="content-error text-center">
+                        <img src="{!! asset('modules/global/img/emptyconvites.svg') !!}" width="250px">
+                        <h1 class="big gray"><strong>Nenhuma integração encontrada!</strong></h1>
+                        <p class="desc gray">Integre seus projetos com ConvertaX de forma totalmente automatizada!</p>
+                    </div>
+                </div>
+        
+                {{-- Modal add-edit integration --}}
                 <div class="modal fade example-modal-lg modal-3d-flip-vertical" id="modal_add_integracao" aria-hidden="true" aria-labelledby="exampleModalTitle" role="dialog" tabindex="-1">
                     <div class="modal-dialog modal-lg d-flex justify-content-center">
                         <div class="modal-content w-450" id="conteudo_modal_add">
@@ -32,6 +44,8 @@
                                 <h4 class="modal-title" style="font-weight: 700;"></h4>
                             </div>
                             <div class="pt-10 pr-20 pl-20 modal_integracao_body">
+                                @include('convertax::create')
+                                @include('convertax::edit')
                             </div>
                             <div class="modal-footer" style="margin-top: 15px">
                                 <button id="bt_integration" type="button" class="btn btn-success" data-dismiss="modal"></button>
@@ -40,24 +54,11 @@
                         </div>
                     </div>
                 </div>
-                <!-- End Modal -->
-                <div id="modal-project" class="modal fade modal-3d-flip-vertical " role="dialog" tabindex="-1">
-                    <div id="modal_add_size" class="modal-dialog modal-dialog-centered modal-simple ">
-                        <div id="conteudo_modal_add" class="modal-content p-10">
-                            <div class="header-modal simple-border-bottom">
-                                <h2 id="modal-project-title" class="modal-title"></h2>
-                            </div>
-                            <div id="modal_project_body" class="modal-body simple-border-bottom" style='padding-bottom:1%;padding-top:1%;'>
-                            </div>
-                            <div id='modal-withdraw-footer' class="modal-footer">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {{-- End Modal  --}}
+
             </div>
         </div>
     </div>
-
 
     @push('scripts')
         <script src="/modules/convertax/js/index.js"></script>

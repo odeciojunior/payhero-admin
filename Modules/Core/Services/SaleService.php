@@ -7,7 +7,6 @@ use Modules\Core\Entities\PlanSale;
 use Modules\Core\Entities\Product;
 use Modules\Core\Entities\Sale;
 use Vinkla\Hashids\Facades\Hashids;
-use stdClass;
 
 /**
  * Class SaleService

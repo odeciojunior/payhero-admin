@@ -4,9 +4,15 @@ namespace Modules\Core\Services;
 
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Illuminate\Support\Facades\Log;
+use Vinkla\Hashids\Facades\Hashids;
 
 class FoxUtils
 {
+    /**
+     * @param $host
+     * @return bool
+     */
     public static function checkDNS($host)
     {
 
@@ -24,12 +30,17 @@ class FoxUtils
             $Aresult                       = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
             if (!$Aresult) {
                 $error = new NoDNSRecord();
+                Log::warning(print_r($error));
             }
         }
 
         return $MXresult || $Aresult;
     }
 
+    /**
+     * @param $email
+     * @return bool
+     */
     public static function validateEmail($email)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($email)) {
@@ -38,15 +49,12 @@ class FoxUtils
             if (defined('INTL_IDNA_VARIANT_UTS46')) {
                 $variant = INTL_IDNA_VARIANT_UTS46;
             }
-            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), '.') . '.';
+            $host = rtrim(idn_to_ascii($emailExploded[1], IDNA_DEFAULT, $variant), '.');
 
-            $checkdnsrr = checkdnsrr($host, 'MX');
-            if ($checkdnsrr) {
-                return true;
-            }
-
-            return false;
+            return checkdnsrr($host, 'MX');
         }
+
+        return false;
     }
 
     public static function prepareCellPhoneNumber($phoneNumber)
@@ -125,11 +133,25 @@ class FoxUtils
 
             return '';
         }
+
         return '';
     }
 
+    /**
+     * @param $zipCode
+     * @return string
+     */
     public static function getCep($zipCode)
     {
         return substr($zipCode, 0, 5) . '-' . substr($zipCode, 5, 3);
+    }
+
+    /**
+     * @param $hash
+     * @return mixed
+     */
+    public static function decodeHash($hash)
+    {
+        return current(Hashids::decode($hash));
     }
 }

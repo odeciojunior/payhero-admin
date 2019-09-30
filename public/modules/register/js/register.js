@@ -63,7 +63,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/companies",
+            url: "/api/companies",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -102,9 +102,12 @@ $(document).ready(function () {
             return false;
         }
 
+        let url = new URL(window.location.href).pathname;
+        let parameter = url.split("/")[2];
+
         $.ajax({
             method: "POST",
-            url: "/register",
+            url: "/api/register/",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -113,7 +116,7 @@ $(document).ready(function () {
                 email: $('#email').val(),
                 cellphone: $('#phone').val(),
                 password: $('#password').val(),
-                parameter: $('#parameter').val()
+                parameter: parameter,
             },
             error: function (_error) {
                 function error(_x) {
@@ -244,9 +247,11 @@ $(document).ready(function () {
         $("#btn-go").hide();
         $.ajax({
             method: "GET",
-            url: "/register/welcome/",
-            error: function error() {},
-            success: function success() {}
+            url: "/api/register/welcome/",
+            error: function error() {
+            },
+            success: function success() {
+            }
 
         });
         setTimeout(registerComplete, 10000);

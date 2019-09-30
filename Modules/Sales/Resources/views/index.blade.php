@@ -4,7 +4,14 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
-        <link rel="stylesheet" href="{{ asset('/modules/global/css/switch.css') }}">
+        <style>
+            .crop {
+                width: 100px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        </style>
     @endpush
 
     <!-- Page -->
@@ -15,8 +22,7 @@
                     <h1 class="page-title">Vendas</h1>
                 </div>
                 <div class="col-6 text-right">
-                    @if($sales_amount > 0)
-                        <div class="d-flex justify-content-end align-items-center">
+                        <div class="justify-content-end align-items-center" id="export-excel" style="display:none">
                             <div class="p-2 align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon-download" width="20" height="20" viewBox="0 0 24 24">
                                     <path d="M8 20h3v-5h2v5h3l-4 4-4-4zm11.479-12.908c-.212-3.951-3.473-7.092-7.479-7.092s-7.267 3.141-7.479 7.092c-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h3.5v-2h-3.5c-1.93 0-3.5-1.57-3.5-3.5 0-2.797 2.479-3.833 4.433-3.72-.167-4.218 2.208-6.78 5.567-6.78 3.453 0 5.891 2.797 5.567 6.78 1.745-.046 4.433.751 4.433 3.72 0 1.93-1.57 3.5-3.5 3.5h-3.5v2h3.5c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408z"/>
@@ -27,22 +33,11 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
-                        Filtros
-                        </a> -->
-                    @endif
                 </div>
             </div>
         </div>
-        <div class="page-content container">
-            {{--  <div class="col-lg-6 text-right">
-                <a id="filtros" class="text-filtros"><svg xmlns="http://www.w3.org/2000/svg" class="icon-filtro" width="14" height="14" viewBox="0 0 24 24"><path d="M19.479 2l-7.479 12.543v5.924l-1-.6v-5.324l-7.479-12.543h15.958zm3.521-2h-23l9 15.094v5.906l5 3v-8.906l9-15.094z"/></svg>
-                  Filtros
-                </a>
-            </div>
-          </div>  --}}
+        <div class="page-content container" style="display:none">
             <div class="fixhalf"></div>
-            @if($sales_amount > 0)
                 <form id='filter_form' action='{{route('sales.getcsvsales')}}' method='POST'>
                     @csrf
                     <div id="" class="card shadow p-20">
@@ -51,9 +46,6 @@
                                 <label for="projeto">Projeto</label>
                                 <select name='select_project' id="projeto" class="form-control select-pad">
                                     <option value="">Todos projetos</option>
-                                    @foreach($projetos as $projeto)
-                                        <option value="{!! $projeto['id'] !!}">{!! $projeto['nome'] !!}</option>
-                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xl-3 col-12">
@@ -142,6 +134,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-body">
+                                    @include('sales::details')
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -153,19 +146,16 @@
                 <ul id="pagination-sales" class="pagination-sm" style="margin-top:10px;position:relative;float:right">
                     {{-- js carrega... --}}
                 </ul>
-            @else
-                @push('css')
-                    <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
-                @endpush
+        </div>
+        @push('css')
+            <link rel="stylesheet" href="{!! asset('modules/global/css/empty.css') !!}">
+        @endpush
 
-                <div class=" content-error d-flex text-center">
-                    <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
-                    <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
-                    <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>
-                    <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
-                </div>
-
-            @endif
+        <div class="content-error text-center" style="display:none">
+            <img src="{!! asset('modules/global/img/emptyvendas.svg') !!}" width="250px">
+            <h1 class="big gray">Poxa! Você ainda não fez nenhuma venda.</h1>
+            <p class="desc gray">Comece agora mesmo a vender produtos de seus projetos! </p>
+            <a href="/projects" class="btn btn-primary gradient">Meus Projetos</a>
         </div>
     </div>
 

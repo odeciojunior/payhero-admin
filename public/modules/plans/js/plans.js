@@ -1,13 +1,13 @@
-var statusPlan = {
-    0: "danger",
-    1: "success",
-}
-
 $(function () {
+    var statusPlan = {
+        0: "danger",
+        1: "success",
+    }
     var projectId = $(window.location.pathname.split('/')).get(-1);
-
+    var form_register_plan = $("#form-register-plan").html();
+    var form_update_plan = $("#form-update-plan").html();
     $('#tab_plans').on('click', function () {
-        updatePlan();
+        index();
     });
 
     /**
@@ -19,36 +19,43 @@ $(function () {
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
     }
-
-    /**
-     * Add new Plan
-     */
-    $("#add-plan").on('click', function () {
-
+    function clearFields() {
+        $('#name').val('');
+        $('#price').val('');
+        $('#description').val('');
+        $("#form-register-plan").html('');
+        $("#form-register-plan").html(form_register_plan);
+    }
+    function create() {
         $.ajax({
-            method: "GET",
-            url: '/plans/create',
+            method: "POST",
+            url: "/api/products/userproducts",
             data: {project: projectId},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             error: function error() {
-                loadingOnScreenRemove();
                 $("#modal-content").hide();
                 alertCustom('error', 'Ocorreu algum erro');
-            }, success: function success(data) {
-                if (data.message === 'error') {
-                    $("#modal-plans-error").modal('show');
+            },
+            success: function success(response) {
+                if (Object.keys(response.data).length === 0) {
+                    var route = '/products/create';
+                    $('#modal-project').modal('show');
+                    $('#modal-project-title').text("Oooppsssss!");
+                    $('#modal_project_body').html('<div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: flex;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>' + '<h3 align="center"><strong>Você não cadastrou nenhum produto</strong></h3>' + '<h5 align="center">Deseja cadastrar uma produto? <a class="red pointer" href="' + route + '">clique aqui</a></h5>');
+                    $('#modal-withdraw-footer').html('<div style="width:100%;text-align:center;padding-top:3%"><span class="btn btn-success" data-dismiss="modal" style="font-size: 25px">Retornar</span></div>');
                 } else {
-                    loadingOnScreenRemove();
-                    $("#btn-modal").addClass('btn-save');
-                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar');
-                    $("#btn-modal").show();
-                    $('#modal-add-body').html(data.data['view']);
-                    $("#modal-content").modal('show');
-
-                    $("#modal_add_size").addClass('modal_simples');
-                    $("#modal-title").html('Adicionar Plano');
+                    $("#product_1").html('');
+                    $(response.data).each(function (index, data) {
+                        $("#product_1").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                    });
+                    $("#modal-title-plan").html('<span class="ml-15">Adicionar Plano</span>');
+                    $("#btn-modal").addClass('btn-save-plan');
+                    $("#btn-modal").html('<i class="material-icons btn-fix"> save </i>Salvar')
+                    $("#modal_add_plan").modal('show');
+                    $("#form-update-plan").hide();
+                    $("#form-register-plan").show();
 
                     $('.products_amount').mask('0#');
 
@@ -79,18 +86,18 @@ $(function () {
                         input.addClass('products_amount');
 
                         div_products = new_div;
-
                         $('#products').append('<div class="">' + new_div.html() + '</div>');
+
                         $('.products_amount').mask('0#');
                     });
 
                     /**
                      * Save new Plan
                      */
-                    $(".btn-save").unbind('click');
-                    $(".btn-save").on('click', function () {
+                    $(".btn-save-plan").unbind('click');
+                    $(".btn-save-plan").on('click', function () {
                         var hasNoValue;
-                        $('.products_amount').each(function () {
+                        $('.products_amount_create').each(function () {
                             if ($(this).val() == '' || $(this).val() == 0) {
                                 hasNoValue = true;
                             }
@@ -105,7 +112,9 @@ $(function () {
                         loadingOnScreen();
                         $.ajax({
                             method: "POST",
-                            url: "/plans",
+                            // url: "/api/plans",
+                            url: '/api/project/' + projectId + '/plans',
+
                             headers: {
                                 'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
                             },
@@ -113,59 +122,63 @@ $(function () {
                             processData: false,
                             contentType: false,
                             cache: false,
-                            error: function (_error) {
-                                function error(_x) {
-                                    return _error.apply(this, arguments);
-                                }
-
-                                error.toString = function () {
-                                    return _error.toString();
-                                };
-
-                                return error;
-                            }(function (data) {
+                            error: function error(response) {
                                 loadingOnScreenRemove();
-                                $("#modal_add_produto").hide();
-                                $(".loading").css("visibility", "hidden");
-                                if (data.status == '400') {
-                                    alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
-                                }
-                                if (data.status == '422') {
-                                    for (error in data.responseJSON.errors) {
-                                        alertCustom('error', String(data.responseJSON.errors[error]));
+                                if (response.status === 422) {
+                                    for (error in response.errors) {
+                                        alertCustom('error', String(response.errors[error]));
                                     }
                                 }
-                            }), success: function success() {
+                                if (response.status === 400) {
+                                    alertCustom('error', response.responseJSON.message);
+                                }
+                            },
+                            success: function success(response) {
                                 loadingOnScreenRemove();
-                                $(".loading").css("visibility", "hidden");
+                                index();
+                                clearFields();
                                 alertCustom("success", "Plano Adicionado!");
-                                updatePlan();
                             }
                         });
                     });
                 }
             }
         });
+    }
+
+    /**
+     * Add new Plan
+     */
+    $("#add-plan").on('click', function () {
+        $('#modal_add_plan').attr('data-backdrop', 'static');
+        create();
+        $('.btn-close-add-plan').on('click', function () {
+            clearFields();
+            $('#modal_add_plan').removeAttr('data-backdrop');
+        });
     });
 
     /**
      * Update Table Plan
      */
-    function updatePlan() {
+    function index() {
         var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
         loadOnTable('#data-table-plan', '#table-plans');
-
+//        project/{projectId}/plan
         if (link == null) {
-            link = '/plans';
+            // link = '/api/plans'; '/api/project/'+projectId+'plans';
+            link = '/api/project/' + projectId + '/plans';
+
         } else {
-            link = '/plans' + link;
+            // link = '/api/plans' + link;
+            link = '/api/project/' + projectId + '/plans' + link;
         }
 
         $.ajax({
             method: "GET",
             url: link,
-            data: {project: projectId},
+            // data: {project: projectId},
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
@@ -179,7 +192,7 @@ $(function () {
                 };
 
                 return error;
-            }(function () {
+            }(function (response) {
                 $("#data-table-plan").html('Erro ao encontrar dados');
                 if (response.status == '422') {
                     for (error in response.errors) {
@@ -216,7 +229,7 @@ $(function () {
                         $('#table-plans').addClass('table-striped');
                     });
 
-                    pagination(response, 'plans', updatePlan);
+                    pagination(response, 'plans', index);
                 }
 
                 /**
@@ -225,12 +238,13 @@ $(function () {
                 $(".details-plan").unbind('click');
                 $('.details-plan').on('click', function () {
                     var plan = $(this).attr('plan');
-                    var data = {planId: plan, project: projectId};
+                    // var data = {planId: plan, project: projectId};
 
                     $.ajax({
                         method: "GET",
-                        url: "/plans/" + plan,
-                        data: data,
+                        // url: "/api/plans/" + plan,
+                        url: '/api/project/' + projectId + '/plans/' + plan,
+                        // data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -257,12 +271,22 @@ $(function () {
                             if (response.message == 'error') {
                                 alertCustom('error', 'Ocorreu um erro ao tentar buscar dados plano!');
                             } else {
-                                $("#modal-title").html('Detalhes do Plano <br>');
-                                $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando...</h5>");
-                                $("#btn-modal").hide();
-
-                                $("#modal-add-body").html(response.data['view']);
-                                $("#modal-content").modal('show');
+                                $("#modal-title-details").html('Detalhes do Plano <br>');
+                                $('#plan_name_details').text(response.data.name);
+                                $('#plan_description_details').text(response.data.description);
+                                $('#plan_code_edit_details').text(response.data.code);
+                                $('#plan_price_edit_details').text(response.data.price);
+                                $('#plan_status_edit_details').html('<span class="badge badge-' + statusPlan[response.data.status] + '">' + response.data.status_translated + '</span>');
+                                $("#products_plan_details").html('');
+                                $.each(response.data.products, function (index, value) {
+                                    data = '';
+                                    data += '<tr>';
+                                    data += '<td style="vertical-align: middle;">' + value.product_name + '</td>';
+                                    data += '<td style="vertical-align: middle;">' + value.amount + '</td>';
+                                    data += '</tr>';
+                                    $("#products_plan_details").append(data);
+                                });
+                                $("#modal_details_plan").modal('show');
                             }
                         }
                     });
@@ -273,18 +297,16 @@ $(function () {
                  */
                 $(".edit-plan").unbind('click');
                 $(".edit-plan").on('click', function () {
-                    // $("#modal_add_size").addClass('modal-lg');
                     loadOnModal('#modal-add-body');
                     $("#modal-add-body").html("");
                     var plan = $(this).attr('plan');
-                    $("#modal-title").html("Editar Plano");
-                    // $("#modal-add-body").html("<h5 style='width:100%; text-align: center;'>Carregando.....</h5>");
-                    var data = {planId: plan, project: projectId};
+                    $("#modal-title-plan").html('<span class="ml-15">Editar Plano</span>');
+                    // var data = {planId: plan, project: projectId};
 
                     $.ajax({
                         method: "GET",
-                        url: "/plans/" + plan + "/edit",
-                        data: data,
+                        url: '/api/project/' + projectId + '/plans/' + plan,
+                        // data: data,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -292,11 +314,113 @@ $(function () {
                             //
                             loadingOnScreenRemove()
                         }, success: function success(response) {
-                            $("#btn-modal").addClass('btn-update');
+                            $("#form-update-plan").html('');
+                            $("#form-update-plan").html(form_update_plan);
+
+                            $('#plan_id').val(response.data.id);
+                            $('#plan-name_edit').val(response.data.name);
+                            $('#plan-price_edit').val(response.data.price.replace(/[^0-9]/g, ''));
+                            $('#plan-description_edit').val(response.data.description);
+                            $('#plan-price_edit').mask('#.###,#0', {reverse: true});
+
+                            if (response.data.products != '') {
+                                $.each(response.data.products, function (index, value) {
+
+                                    $('.products_row_edit').append(`
+                                        <div id="products_div_edit" class="row">
+                                            <div class="form-group col-sm-8 col-md-7 col-lg-7">
+                                            <label>Produtos do plano:</label>
+                                            <select id="product_1" name="products[]" class="form-control products_edit">
+                                                <option value= ` + value.product_id + ` selected> ` + value.product_name + ` </option>
+                                             </select>
+                                            </div>
+                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                            <label>Quantidade:</label>
+                                            <input value="` + value.amount + `" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
+                                            </div>
+                                            <div class='form-group col-sm-12 col-md-2 col-lg-2'>
+                                                <label class="display-xsm-none">Remover:</label>
+                                               <button class='btn btn-outline btn-danger btnDelete form-control'>
+                                                    <i class='icon wb-trash' aria-hidden='true'></i></button>
+                                                </button>
+                                            </div>
+                                            <hr class='mb-30 display-lg-none display-xlg-none'>
+                                        </div>
+                                    `);
+                                });
+                            } else {
+                                $('.products_row_edit').append(`
+                                        <div id="products_div_edit" class="row">
+                                            <div class="form-group col-sm-8 col-md-7 col-lg-7">
+                                            <label>Produtos do plano:</label>
+                                            <select id="product_1" name="products[]" class="form-control products_edit">
+                                             </select>
+                                            </div>
+                                            <div class="form-group col-sm-4 col-md-3 col-lg-3">
+                                            <label>Quantidade:</label>
+                                            <input value="" id="product_amount_1" class="form-control products_amount" type="text" data-mask='0#' name="product_amounts[]" placeholder="quantidade">
+                                            </div>
+                                            <div class='form-group col-sm-12 col-md-2 col-lg-2'>
+                                                <label class="display-xsm-none">Remover:</label>
+                                               <button class='btn btn-outline btn-danger btnDelete form-control'>
+                                                    <i class='icon wb-trash' aria-hidden='true'></i></button>
+                                                </button>
+                                            </div>
+                                            <hr class='mb-30 display-lg-none display-xlg-none'>
+                                        </div>
+                                    `);
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/api/products/userproducts",
+                                    data: {project: projectId},
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    error: function error() {
+                                        $("#modal-content").hide();
+                                        alertCustom('error', 'Ocorreu algum erro');
+                                    },
+                                    success: function success(response) {
+                                        $("#products_edit").html('');
+                                        $(response.data).each(function (index, data) {
+                                            $("#products_edit").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                                        });
+                                    }
+                                });
+                            }
+                            $.ajax({
+                                method: "POST",
+                                url: "/api/products/userproducts",
+                                data: {project: projectId},
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                error: function error() {
+                                    $("#modal-content").hide();
+                                    alertCustom('error', 'Ocorreu algum erro');
+                                },
+                                success: function success(response) {
+                                    $(".products_edit").each(function () {
+                                        var selectProduct = $(this);
+                                        $(response.data).each(function (index, data) {
+                                            if (data.id != selectProduct.val()) {
+                                                selectProduct.append("<option value='" + data.id + "' >" + data.name + "</option>");
+                                            }
+                                        });
+
+                                    });
+                                }
+                            });
+                            $("#modal_add_plan").modal('show');
+                            $("#form-register-plan").hide();
+                            $("#form-update-plan").show();
+
+                            $("#btn-modal").removeClass('btn-save-plan');
+                            $("#btn-modal").addClass('btn-update-plan');
                             $("#btn-modal").text('Atualizar');
                             $("#btn-modal").show();
-                            $("#modal-add-body").html(response);
                             $('.products_amount').mask('0#');
+
                             loadingOnScreenRemove()
 
                             $(document).on('click', '.btnDelete', function (event) {
@@ -308,31 +432,26 @@ $(function () {
                             $('#plan-price').mask('#.###,#0', {reverse: true});
                             var qtd_products = '1';
 
-                            var div_products = $('#products_div_1').clone();
-
-                            $('#add_product_plan').on('click', function () {
-
+                            $('.add_product_plan_edit').on('click', function () {
                                 qtd_products++;
+                                var div_products = $('.products_row_edit').find('#products_div_edit').first().clone();
 
                                 var new_div = div_products.clone();
-                                // var opt = new_div.find('option:selected');
-                                // opt.remove();
-                                // var select = new_div.find('select');
                                 var input = new_div.find('.products_amount');
 
                                 input.addClass('products_amount');
 
                                 div_products = new_div;
 
-                                $('#products').append('<div class="row">' + new_div.html() + '</div>');
+                                $('.products_row_edit').append('<div class="row">' + new_div.html() + '</div>');
                                 $('.products_amount').mask('0#');
                             });
 
                             /**
                              * Update Plan
                              */
-                            $(".btn-update").unbind('click');
-                            $(".btn-update").on('click', function () {
+                            $(".btn-update-plan").unbind('click');
+                            $(".btn-update-plan").on('click', function () {
                                 var hasNoValue;
                                 $('.products_amount').each(function () {
                                     if ($(this).val() == '' || $(this).val() == 0) {
@@ -343,13 +462,13 @@ $(function () {
                                     alertCustom('error', 'Dados informados inválidos');
                                     return false;
                                 }
-
                                 var formData = new FormData(document.getElementById('form-update-plan'));
                                 formData.append("project_id", projectId);
                                 loadingOnScreen();
                                 $.ajax({
                                     method: "POST",
-                                    url: "/plans/" + plan,
+                                    // url: "/api/plans/" + plan,
+                                    url: '/api/project/' + projectId + '/plans/'+ plan,
                                     headers: {
                                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
                                     },
@@ -374,12 +493,15 @@ $(function () {
                                                 alertCustom('error', String(response.responseJSON.errors[error]));
                                             }
                                         }
-                                        updatePlan();
+                                        if (response.status === 400) {
+                                            alertCustom('error', response.responseJSON.message);
+                                        }
+                                        index();
                                     }),
                                     success: function success(data) {
                                         loadingOnScreenRemove();
                                         alertCustom("success", "Plano atualizado com sucesso");
-                                        updatePlan();
+                                        index();
                                     }
                                 });
                             });
@@ -393,14 +515,15 @@ $(function () {
                 $('.delete-plan').on('click', function (event) {
                     event.preventDefault();
                     var plan = $(this).attr('plan');
-                    $("#modal_excluir_titulo").html("Remover Cupom?");
-                    $("#bt_excluir").unbind('click');
-                    $("#bt_excluir").on('click', function () {
-                        $("#fechar_modal_excluir").click();
+                    $("#modal-delete-plan").modal('show');
+                    $("#btn-delete-plan").unbind('click');
+                    $("#btn-delete-plan").on('click', function () {
+                        $("#modal-delete-plan").modal('hide');
                         loadingOnScreen();
                         $.ajax({
                             method: "DELETE",
-                            url: "/plans/" + plan,
+                            // url: "/api/plans/" + plan,
+                            url: '/api/project/' + projectId + '/plans/' + plan,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -428,7 +551,7 @@ $(function () {
                             success: function success(response) {
                                 loadingOnScreenRemove();
                                 alertCustom('success', response.message);
-                                updatePlan();
+                                index();
                             }
 
                         });
@@ -437,4 +560,5 @@ $(function () {
             }
         });
     }
-});
+})
+;

@@ -5,26 +5,11 @@ namespace Modules\Companies\Http\Controllers;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\View\View;
-use Modules\Core\Entities\Company;
 use Illuminate\Support\Facades\Log;
-use Modules\Core\Entities\CompanyDocument;
-use Throwable;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Gate;
-use Modules\Core\Services\BankService;
-use Yajra\DataTables\Facades\DataTables;
-use Modules\Core\Services\DigitalOceanFileService;
-use Modules\Companies\Transformers\CompanyResource;
-use Modules\Companies\Http\Requests\CompanyCreateRequest;
-use Modules\Companies\Http\Requests\CompanyUpdateRequest;
+use Illuminate\View\View;
 use Modules\Companies\Http\Requests\CompanyCreateFormRequest;
-use Modules\Companies\Http\Requests\CompanyUploadDocumentRequest;
+use Throwable;
 
 /**
  * Class CompaniesController
@@ -49,33 +34,19 @@ class CompaniesController extends Controller
     }
 
     /**
-     * @param CompanyCreateRequest $request
-     * @return JsonResponse
+     *
      */
-    public function store(CompanyCreateRequest $request)
+    public function show()
     {
-        try {
-            $companyModel = new Company();
 
-            $requestData = $request->validated();
-
-            $company = $companyModel->create([
-                                                 'user_id'          => auth()->user()->id,
-                                                 'country'          => $requestData["country"],
-                                                 'fantasy_name'     => $requestData["fantasy_name"],
-                                                 'company_document' => $requestData["company_document"],
-                                             ]);
-
-            return response()->json([
-                                        'message'  => 'Dados atualizados com sucesso',
-                                        'redirect' => route('companies.edit', ['idEncoded' => Hashids::encode($company->id)]),
-                                    ], 200);
-        } catch (Exception $e) {
-            Log::warning('Erro ao cadastrar empresa (CompaniesController - store)');
-            report($e);
-
-            return response()->json('erro', 400);
-        }
+    }
+    /**
+     * @param $encodedId
+     * @return Factory|View
+     */
+    public function edit($encodedId)
+    {
+        return view('companies::edit', compact('encodedId'));
     }
 
     /**
@@ -86,7 +57,7 @@ class CompaniesController extends Controller
     public function getCreateForm(CompanyCreateFormRequest $request)
     {
         try {
-            if ($request->country == 'usa') {
+            if ($request->get('country') == 'usa') {
                 $view = view('companies::create_american_company');
             } else {
                 $view = view('companies::create_brazilian_company');
@@ -98,210 +69,6 @@ class CompaniesController extends Controller
             report($e);
 
             return response()->json('erro', 400);
-        }
-    }
-
-    /**
-     * @param $encodedId
-     * @return Factory|JsonResponse|View
-     */
-    public function edit($encodedId)
-    {
-        try {
-            $companyModel = new Company();
-            $bankService  = new BankService();
-
-            $company = $companyModel
-                ->with('user')
-                ->find(current(Hashids::decode($encodedId)));
-
-            if (Gate::allows('edit', [$company])) {
-                $banks = $bankService->getBanks('BR');
-
-                $companyResource = new CompanyResource($company);
-
-                if ($company->country == 'usa') {
-                    return view('companies::edit_usa', [
-                        'company' => json_decode(json_encode($companyResource)),
-                        'banks'   => $banks,
-                    ]);
-                } else {
-                    return view('companies::edit_brazil', [
-                        'company' => json_decode(json_encode($companyResource)),
-                        'banks'   => $banks,
-                    ]);
-                }
-            } else {
-                return response()->json([
-                                            'message' => 'Sem permissão para editar a empresa',
-                                        ], 403);
-            }
-        } catch (Exception $e) {
-            Log::warning('CompaniesController - edit - error');
-            report($e);
-
-            return response()->json('erro', 400);
-        }
-    }
-
-    /**
-     * @param CompanyUpdateRequest $request
-     * @param $encodedId
-     * @return JsonResponse
-     */
-    public function update(CompanyUpdateRequest $request, $encodedId)
-    {
-        try {
-            $companyModel = new Company();
-
-            $requestData = $request->validated();
-
-            $company = $companyModel
-                ->find(current(Hashids::decode($encodedId)));
-
-            if (Gate::allows('update', [$company])) {
-                if (isset($requestData['company_document']) && $company->company_document != $requestData['company_document']) {
-                    $company->bank_document_status = $companyModel->present()->getBankDocumentStatus('pending');
-                }
-                $requestData = array_filter($requestData);
-
-                $company->update($requestData);
-
-                return response()->json(['message' => 'Dados atualizados com sucesso'], 200);
-            } else {
-                return response()->json([
-                                            'message' => 'Sem permissão para atualizar a empresa',
-                                        ], 403);
-            }
-        } catch (Exception $e) {
-            Log::warning('CompaniesController - update - error');
-            report($e);
-
-            return response()->json('erro', 400);
-        }
-    }
-
-    /**
-     * @param $encodedId
-     * @return JsonResponse
-     */
-    public function destroy($encodedId)
-    {
-        try {
-            $companyModel = new Company();
-
-            $company = $companyModel->withCount([
-                                                    'transactions',
-                                                    'usersProjects',
-                                                ])->find(current(Hashids::decode($encodedId)));
-            if ($company) {
-                if (Gate::allows('destroy', [$company])) {
-                    if ($company->transactions_count > 0) {
-                        return response()->json(['message' => 'Impossivel excluir, existem transações relacionadas a essa empresa!'], 422);
-                    } else if ($company->users_projects_count > 0) {
-                        return response()->json(['message' => 'Impossivel excluir, existem projetos relacionadas a essa empresa!'], 422);
-                    } else {
-                        $company->delete();
-                    }
-                } else {
-                    return response()->json([
-                                                'message' => 'Sem permissão para remover a empresa',
-                                            ], 403);
-                }
-            } else {
-                //empresa nao exsite
-                return response()->json(['message' => 'Empresa não encontrada para remoção'], 422);
-            }
-
-            return response()->json(['message' => 'Empresa removida com sucesso'], 200);
-        } catch (Exception $e) {
-            Log::warning('CompaniesController - destroy - error');
-            report($e);
-
-            return response()->json('erro', 400);
-        }
-    }
-
-    /**
-     * @param CompanyUploadDocumentRequest $request
-     * @return JsonResponse
-     */
-    public function uploadDocuments(CompanyUploadDocumentRequest $request)
-    {
-        try {
-            $companyModel            = new Company();
-            $digitalOceanFileService = app(DigitalOceanFileService::class);
-            $companyDocumentModel    = new CompanyDocument();
-
-            $dataForm = $request->validated();
-            $company  = $companyModel->find(current(Hashids::decode($dataForm['company_id'])));
-
-            if (Gate::allows('uploadDocuments', [$company])) {
-                $document = $request->file('file');
-
-                $digitalOceanPath = $digitalOceanFileService->uploadFile('uploads/user/' . Hashids::encode(auth()->user()->id) . '/companies/' . Hashids::encode($company->id) . '/private/documents', $document, null, null, 'private');
-
-                $companyDocumentModel->create([
-                                                  'company_id'         => $company->id,
-                                                  'document_url'       => $digitalOceanPath,
-                                                  'document_type_enum' => $dataForm["document_type"],
-                                                  'status'             => null,
-                                              ]);
-
-                if (($dataForm["document_type"] ?? '') == $company->present()
-                                                                  ->getDocumentType('bank_document_status')) {
-                    $company->update([
-                                         'bank_document_status' => $company->present()
-                                                                           ->getBankDocumentStatus('analyzing'),
-                                     ]);
-                }
-
-                if (($dataForm["document_type"] ?? '') == $company->present()
-                                                                  ->getDocumentType('address_document_status')) {
-                    $company->update([
-                                         'address_document_status' => $company->present()
-                                                                              ->getAddressDocumentStatus('analyzing'),
-                                     ]);
-                }
-
-                if (($dataForm["document_type"] ?? '') == $company->present()
-                                                                  ->getDocumentType('contract_document_status')) {
-                    $company->update([
-                                         'contract_document_status' => $company->present()
-                                                                               ->getContractDocumentStatus('analyzing'),
-                                     ]);
-                }
-
-                return response()->json([
-                                            'message' => 'Arquivo enviado com sucesso.',
-                                            'data'    => [
-                                                'bank_document_translate'     => [
-                                                    'status'  => $company->bank_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                                                ->getBankDocumentStatus($company->bank_document_status)),
-                                                ],
-                                                'address_document_translate'  => [
-                                                    'status'  => $company->address_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                                                ->getAddressDocumentStatus($company->address_document_status)),
-                                                ],
-                                                'contract_document_translate' => [
-                                                    'status'  => $company->contract_document_status,
-                                                    'message' => Lang::get('definitions.enum.status.' . $company->present()
-                                                                                                                ->getContractDocumentStatus($company->contract_document_status)),
-                                                ],
-                                            ],
-                                        ], 200);
-            } else {
-                return response()->json([
-                                            'message' => 'Sem permissão para enviar documentos para a empresa',
-                                        ], 403);
-            }
-        } catch (Exception $e) {
-            Log::warning('ProfileController uploadDocuments');
-            report($e);
-
-            return response()->json(['message' => 'Não foi possivel enviar o arquivo.'], 400);
         }
     }
 }

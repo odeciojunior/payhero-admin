@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::post('/guard/broadcast/auth', function(\Illuminate\Support\Facades\Request $req) {
+    return true;
+})->middleware('broadcast')->name('broadcast.auth');
 
 Route::get('/', function() {
     return view('auth.login');
@@ -67,6 +70,7 @@ Route::group(
 
         Route::get('/julio', 'TesteController@julioFunction');
         Route::get('/joao', 'TesteController@joaoLucasFunction');
+        Route::get('/thales', 'TesteController@thalesFunction');
         Route::get('/rmcharacter', 'TesteController@removeSpecialCharacter');
     }
 );

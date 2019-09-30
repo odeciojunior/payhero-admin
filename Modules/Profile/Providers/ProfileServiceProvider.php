@@ -2,8 +2,8 @@
 
 namespace Modules\Profile\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
 
 class ProfileServiceProvider extends ServiceProvider
 {
@@ -33,6 +33,7 @@ class ProfileServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(AuthServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /**

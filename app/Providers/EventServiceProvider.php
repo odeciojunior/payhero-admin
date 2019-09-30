@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -39,10 +38,10 @@ class EventServiceProvider extends ServiceProvider
             'Modules\Core\Listeners\ReleasedBalanceNotifyUserListener',
         ],
         'Modules\Core\Events\SaleApprovedEvent'            => [
-//            'Modules\Core\Listeners\NotifyUsersApprovedSaleListener',
-//            'Modules\Core\Listeners\PusherNotificationApprovedSaleListener',
+            //            'Modules\Core\Listeners\NotifyUsersApprovedSaleListener',
+            //            'Modules\Core\Listeners\PusherNotificationApprovedSaleListener',
             'Modules\Core\Listeners\SetApprovedShopifyOrderListener',
-//            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
+            //            'Modules\Core\Listeners\HotZappCardApprovedSaleListener',
         ],
 
     ];

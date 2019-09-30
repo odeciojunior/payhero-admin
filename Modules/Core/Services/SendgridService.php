@@ -2,11 +2,9 @@
 
 namespace Modules\Core\Services;
 
-use SendGrid;
 use Exception;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
-use SebastianBergmann\CodeCoverage\Report\Xml\Report;
+use SendGrid;
 
 /**
  * Class SendgridService
@@ -19,7 +17,7 @@ class SendgridService
      */
     private $sendgrid;
     /**
-     * @var Array
+     * @var array
      */
     private $zone;
 
@@ -278,23 +276,49 @@ class SendgridService
         }
     }
 
+    /**
+     * @param $fromEmail
+     * @param $fromName
+     * @param $toEmail
+     * @param $toName
+     * @param $templateId
+     * @param $data
+     * @return bool
+     */
     public function sendEmail($fromEmail, $fromName, $toEmail, $toName, $templateId, $data)
     {
         try {
+            //Em produção valida o e-mail e local marreta e-mail de teste
+            if (env('APP_ENV') == 'production') {
+                if (!FoxUtils::validateEmail($toEmail)) {
+                    Log::warning('E-mail invalid');
+
+                    return false;
+                }
+            } else {
+                $toEmail = env('APP_EMAIL_TEST');
+                if (empty($toEmail)) {
+                    Log::warning('E-mail test invalid');
+
+                    return false;
+                }
+            }
             $email = new \SendGrid\Mail\Mail();
             $email->setFrom($fromEmail, $fromName);
             $email->addTo($toEmail, $toName);
             $email->addDynamicTemplateDatas($data);
             $email->setTemplateId($templateId);
             try {
-                $response = $this->sendgrid->send($email);
+                $this->sendgrid->send($email);
+
+                return true;
             } catch (Exception $e) {
                 Log::warning('Caught exception: ' . $e->getMessage());
-
-                return false;
             }
         } catch (Exception $e) {
             report($e);
         }
+
+        return false;
     }
 }

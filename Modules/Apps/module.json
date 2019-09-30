@@ -9,8 +9,5 @@
         "Modules\\Apps\\Providers\\AppsServiceProvider"
     ],
     "aliases": {},
-    "files": [
-        "start.php"
-    ],
     "requires": []
 }

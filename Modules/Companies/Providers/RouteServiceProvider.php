@@ -2,9 +2,13 @@
 
 namespace Modules\Companies\Providers;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
+/**
+ * Class RouteServiceProvider
+ * @package Modules\Companies\Providers
+ */
 class RouteServiceProvider extends ServiceProvider
 {
     /**

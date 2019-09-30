@@ -29,7 +29,7 @@
                     <div class="p-30 pt-20">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="tab_user" role="tabpanel">
-                                <form method="POST" action="{!! route('profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" id='profile_update_form'>
+                                <form method="POST" action="{!! route('api.profile.update', ['id' => 'self']) !!}" enctype="multipart/form-data" id='profile_update_form'>
                                     @csrf
                                     @method('PUT')
                                     <div class="row">
@@ -45,23 +45,23 @@
                                             <div class="row">
                                                 <div class="form-group col-xl-6">
                                                     <label for="name">Nome Completo</label>
-                                                    <input name="name" value="{!! $user->name !!}" type="text" class="input-pad" id="name" placeholder="Nome">
+                                                    <input name="name" value="" type="text" class="input-pad" id="name" placeholder="Nome">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="email">Email</label>
-                                                    <input name="email" value="{!! $user->email !!}" type="text" class="input-pad" id="email" placeholder="Email">
+                                                    <input name="email" value="" type="text" class="input-pad" id="email" placeholder="Email">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="cpf">Documento</label>
-                                                    <input name="document" value="{!! $user->document !!}" type="text" class="input-pad" id="document" placeholder="Documento">
+                                                    <input name="document" value="" type="text" class="input-pad" id="document" placeholder="Documento">
                                                 </div>
                                                 <div class="form-group col-xl-6">
                                                     <label for="celular">Celular</label>
-                                                    <input name="cellphone" value="{!! $user->cellphone !!}" type="text" data-mask="(00) 00000-0000" class="input-pad" id="cellphone" placeholder="Celular">
+                                                    <input name="cellphone" value="" type="text" data-mask="(00) 00000-0000" class="input-pad" id="cellphone" placeholder="Celular">
                                                 </div>
                                                 <div class="form-group col-xl-4">
                                                     <label for="date_birth">Data de nascimento</label>
-                                                    <input name="date_birth" value="{!! $user->date_birth !!}" type="date" class="form-control input-pad" id="date_birth">
+                                                    <input name="date_birth" value="" type="date" class="form-control input-pad" id="date_birth">
                                                 </div>
                                             </div>
                                         </div>
@@ -71,7 +71,7 @@
                                                 <br>
                                                 <input name="profile_photo" type="file" class="form-control input-pad" id="profile_photo" style="display:none">
                                                 <div style="margin: 20px 0 0 30px;">
-                                                    <img src="{!! $user->photo != '' ? $user->photo : asset('modules/global/img/user-default.png') !!}" onerror="this.onerror=null; this.src='{{asset('modules/global/img/user-default.png')}}'" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
+                                                    <img src="" id="previewimage" alt="Nenhuma foto cadastrada" accept="image/*" style="max-height: 250px; max-width: 350px; cursor:pointer;"/>
                                                 </div>
                                                 <input type="hidden" name="photo_x1"/>
                                                 <input type="hidden" name="photo_y1"/>
@@ -91,33 +91,33 @@
                                     <div class="row">
                                         <div class="form-group col-lg-3">
                                             <label for="zip_code">CEP</label>
-                                            <input name="zip_code" value="{!! $user->zip_code !!}" type="text" data-mask="00000-000" class="input-pad" id="zip_code" placeholder="digite seu CEP">
+                                            <input name="zip_code" value="" type="text" data-mask="00000-000" class="input-pad" id="zip_code" placeholder="digite seu CEP">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xl-6">
                                             <label for="street">Rua</label>
-                                            <input name="street" value="{!! $user->street !!}" type="text" class="input-pad" id="street" placeholder="Rua">
+                                            <input name="street" value="" type="text" class="input-pad" id="street" placeholder="Rua">
                                         </div>
                                         <div class="form-group col-xl-2">
                                             <label for="number">Número</label>
-                                            <input name="number" value="{!! $user->number !!}" type="text" data-mask="0#" class="input-pad" id="number" placeholder="Número">
+                                            <input name="number" value="" type="text" data-mask="0#" class="input-pad" id="number" placeholder="Número">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="neighborhood">Bairro</label>
-                                            <input name="neighborhood" value="{!! $user->neighborhood !!}" type="text" class="input-pad" id="neighborhood" placeholder="Bairro">
+                                            <input name="neighborhood" value="" type="text" class="input-pad" id="neighborhood" placeholder="Bairro">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="complement">Complemento</label>
-                                            <input name="complement" value="{!! $user->complement !!}" type="text" class="input-pad" id="complement" placeholder="Complemento">
+                                            <input name="complement" value="" type="text" class="input-pad" id="complement" placeholder="Complemento">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="city">Cidade</label>
-                                            <input name="city" value="{!! $user->city !!}" type="text" class="input-pad" id="city" placeholder="Cidade">
+                                            <input name="city" value="" type="text" class="input-pad" id="city" placeholder="Cidade">
                                         </div>
                                         <div class="form-group col-xl-4">
                                             <label for="state">Estado</label>
-                                            <input name="state" value="{!! $user->state !!}" type="text" class="input-pad" id="state" placeholder="Estado">
+                                            <input name="state" value="" type="text" class="input-pad" id="state" placeholder="Estado">
                                         </div>
                                         <div class="col-lg-12 text-right" style="margin-top: 30px">
                                             <a href="#" data-toggle='modal' data-target='#modal_change_password' class="mr-10">
@@ -160,32 +160,11 @@
                                             <tbody class="custom-t-body">
                                                 <tr>
                                                     <td>Identidade</td>
-                                                    <td id="td_personal_status">
-                                                        @if($user->personal_document_status == 1)
-                                                            <span class="badge badge-primary" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
-                                                        @elseif($user->personal_document_status == 2)
-                                                            <span class="badge badge-pendente" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
-                                                        @elseif($user->personal_document_status == 3)
-                                                            <span class="badge badge-success" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
-                                                        @else
-                                                            <span class="badge badge-danger" id='personal_document_badge'>{!! $user->personal_document_translate !!}</span>
-                                                        @endif
-                                                    </td>
+                                                    <td id="td_personal_status"></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Residência</td>
-                                                    <td id="td_address_status">
-                                                        @if($user->address_document_status == 1)
-                                                            <span class="badge badge-primary" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
-                                                        @elseif($user->address_document_status == 2)
-                                                            <span class="badge badge-pendente" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
-                                                        @elseif($user->address_document_status == 3)
-                                                            <span class="badge badge-success" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
-                                                        @else
-                                                            <span class="badge badge-danger" id='address_document_badge'>{!! $user->address_document_translate !!}</span>
-                                                        @endif
-{{--                                                        <span class="badge badge-pendente" id='address_document_badge'> {!! $user->address_document_translate !!}</span>--}}
-                                                    </td>
+                                                    <td id="td_address_status"></td>
                                                 </tr>
                                             </tbody>
                                         </table>

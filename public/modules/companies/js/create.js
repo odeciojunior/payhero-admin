@@ -57,7 +57,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "POST",
-            url: "/companies",
+            url: "/api/companies",
             data: $("#create_form").serialize(),
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -81,7 +81,7 @@ $(document).ready(function () {
             }),
             success: function success(response) {
                 alertCustom('success', response.message);
-                window.location.replace(response.redirect);
+                window.location.replace('/companies/' + response.idEncoded + '/edit ');
             }
         });
     });

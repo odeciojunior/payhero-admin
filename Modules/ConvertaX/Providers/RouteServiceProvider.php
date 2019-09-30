@@ -2,8 +2,8 @@
 
 namespace Modules\ConvertaX\Providers;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -62,8 +62,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-            ->middleware('api')
+            // ->middleware('api')
             ->namespace($this->moduleNamespace)
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__ . '/../Routes/api.php'); 
     }
 }

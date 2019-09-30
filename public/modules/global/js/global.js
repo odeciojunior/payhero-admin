@@ -113,6 +113,7 @@ function loadingOnScreen() {
     $('#loadingOnScreen').html('');
     $('#loadingOnScreen').append("<div class='loading2'><div class='loader'></div></div>")
 }
+
 function loadingOnScreenRemove() {
     $('#loadingOnScreen').html('');
     $('#btn-modal').show();
@@ -145,6 +146,23 @@ function loadOnTable(whereToLoad, tableReference) {
         "<a id='loader' class='loaderTable'></a>" +
         "</td>" +
         "</tr>");
+}
+
+function loadOnAny(element, stop = false) {
+    $('.element-loading').remove();
+    if (!stop) {
+        let loading = `<span class="loader loader-circle loader-any" style=""></span>`;
+        let loader = $(element).clone().addClass('element-loading').html(loading);
+        $(element).hide();
+        $(element).parent().append(loader);
+        loader.show();
+    } else {
+        if (!$(element).hasClass('tab-pane') ||
+            ($(element).hasClass('tab-pane') &&
+                $(element).hasClass('active'))) {
+            $(element).show();
+        }
+    }
 }
 
 function modalClear(modalBody) {
@@ -187,7 +205,6 @@ $(document).ajaxComplete(function (jqXHR, textStatus) {
 });
 
 $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').attr('overflow', 'hidden')
-// $('.mm-panels.scrollable.scrollable-inverse.scrollable-vertical.is-enabled').on('m','hidden')
 
 function pagination(response, model, callback) {
 
@@ -291,17 +308,110 @@ function errorAjaxResponse(response) {
     }
 }
 
+function extractIdFromPathName() {
+    let urlParams = window.location.pathname.split('/');
+    if (urlParams.length >= 2 && urlParams[urlParams.length - 1] == 'edit') {
+        return urlParams[urlParams.length - 2];
+    } else if (urlParams.length > 0) {
+        return urlParams[urlParams.length - 1];
+    } else {
+        return '';
+    }
+}
+
 function isEmptyValue(value) {
-    if (value.length === 0) {
+    return value.length !== 0;
+}
+
+function fillAllFormInputsWithModel(formId, model, lists = null, functions = null) {
+    let formData = $("#" + formId + " input, #" + formId + " select, #" + formId + " textarea");
+    if (formData === undefined || formData === null) {
         return false;
     }
+    formData.each(
+        function (key, item) {
+            let element = $(this);
+            if (element.is('input')) {
+                fillInputWithModelField(element, model);
+            } else if (element.is('select')) {
+                if (lists === undefined || lists === null) {
+                    console.log('select lists not available!');
+                } else {
+                    fillSelectAndCheckWithModelFields(
+                        element,
+                        lists,
+                        model,
+                        functions);
+                }
 
+            } else if (element.is('textarea')) {
+                console.log('textarea type not implemented!');
+            } else {
+                console.log('element type not implemented: ' + element[0].nodeName);
+            }
+            // console.log('Type: ' + input.attr('type') + ', Name: ' + input.attr('name') + ', Value: ' + input.val());
+        }
+    )
     return true;
 }
 
+function fillInputWithModelField(input, model) {
+    let field = input.attr('name');
+    if (field === undefined || model[field] === undefined || model[field] === "") {
+        return false;
+    }
+    let value = model[field];
+    switch (input.attr('type')) {
+        case "text":
+            if (input.data('mask') !== undefined) {
+                let mask = input.data('mask').mask;
+                input.unmask().val(value).mask(mask, {reverse: true});
+            } else {
+                input.attr('value', value);
+            }
+            break;
+        case "hidden":
+            input.attr('value', value);
+            break;
+        default:
+            //Do Nothing
+            console.log('Input type not implemented: ' + input.attr('type'));
+            break;
+    }
+    return true;
+}
 
+function fillSelectAndCheckWithModelFields(select, items, modelSelected = null, functions = null) {
+    let field = select.attr('name');
+    if (field === undefined ||
+        (modelSelected !== null && modelSelected !== undefined && modelSelected[field] === undefined) ||
+        items === undefined || items[field] === undefined || items.length === 0) {
+        return false;
+    }
+    let customItemsFunction = defaultSelectItemsFunction;
+    if (customItemsFunction !== undefined && customItemsFunction !== null && functions[field] !== undefined && functions[field] !== null) {
+        customItemsFunction = functions[field];
+    }
+    let value = "";
+    if (modelSelected !== null && modelSelected !== undefined) {
+        value = modelSelected[field];
+    }
+    items[field].forEach(
+        function (item) {
+            let optionItem = customItemsFunction(item);
+            let option = new Option(optionItem.text, optionItem.value);
+            if (value !== "" && value === optionItem.value) {
+                option.selected = true;
+            }
+            /// jquerify the DOM object 'o' so we can use the html method
+            // $(option).html("option text");
+            select.append(option);
+        }
+    )
+    return true;
+}
 
-
-
-
+function defaultSelectItemsFunction(item) {
+    return {value: item.id_code, text: item.name};
+}
 

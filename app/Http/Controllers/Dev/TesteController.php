@@ -2,35 +2,27 @@
 
 namespace App\Http\Controllers\Dev;
 
+use App\Http\Controllers\Controller;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Modules\Checkout\Classes\MP;
 use Modules\Core\Entities\Company;
-use Modules\Core\Entities\Domain;
-use Modules\Core\Entities\DomainRecord;
 use Modules\Core\Entities\HotZappIntegration;
+use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\PlanSale;
-use Modules\Core\Entities\PostbackLog;
 use Modules\Core\Entities\Product;
-use Modules\Core\Entities\ProductPlan;
 use Modules\Core\Entities\Sale;
 use Modules\Core\Entities\ShopifyIntegration;
 use Modules\Core\Entities\Transaction;
 use Modules\Core\Entities\Transfer;
-use Modules\Core\Entities\Plan;
 use Modules\Core\Entities\User;
-use Modules\Core\Services\CloudFlareService;
-use Modules\Core\Services\DigitalOceanFileService;
 use Modules\Core\Services\HotZappService;
 use Modules\Core\Services\NotazzService;
-use Modules\Core\Services\ShopifyService;
-use Modules\Checkout\Classes\MP;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Slince\Shopify\Client;
 use Slince\Shopify\PublicAppCredential;
-use Exception;
-use Carbon\Carbon;
-use DOMDocument;
-use DOMXPath;
 use Vinkla\Hashids\Facades\Hashids;
 
 class TesteController extends Controller
@@ -50,7 +42,7 @@ class TesteController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws Exception
      */
     public function index()
@@ -193,7 +185,7 @@ class TesteController extends Controller
 
                         $hotZappService->newBoleto($sale, $plans);
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::warning('erro ao enviar notificação pro HotZapp na venda ' . $sale->id);
                     report($e);
                 }
@@ -308,23 +300,21 @@ class TesteController extends Controller
 
         $sale = $saleModel->with(['project', 'project.notazzIntegration'])->find(3366);
 
-       // $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
+        // $nservice->createInvoice($sale->project->notazzIntegration->id, $sale->id, 1);
 
         //$tokenApi = $nservice->createOldInvoices($sale->project->id,'2018-09-18');
 
-        dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ','SP', 'Amparo'));
+        dd($nservice->checkCity('wNiRmZ2EGZ2EWN5MjYzEGMwITZjRGO4cTO2QGZlBzNyoHd14ke5QVMuVWYkFDZhRjZkVGMzIzM0YGZ3kTM4AzM1U2N1IzN4EGMnZ', 'SP', 'Amparo'));
 
-
-
-//        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
-//
-//        $shopifyService->setThemeByRole('main');
-//        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
-//        if ($htmlBody) {
-//            //template do layout
-//
-//            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
-//        }
+        //        $shopifyService = new ShopifyService('joaolucasteste1.myshopify.com', '465599868002dc3194ed778d7ea1a1ff');
+        //
+        //        $shopifyService->setThemeByRole('main');
+        //        $htmlBody = $shopifyService->getTemplateHtml('layout/theme.liquid');
+        //        if ($htmlBody) {
+        //            //template do layout
+        //
+        //            $shopifyService->insertUtmTracking('layout/theme.liquid', $htmlBody);
+        //        }
 
         /*
         $nservice  = new NotazzService();
@@ -371,6 +361,29 @@ class TesteController extends Controller
                                  'description' => preg_replace('/[^a-zA-Z0-9_ -]/s', '', substr($product->description, 0, 100)),
                              ]);
         }
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function thalesFunction(Request $request)
+    {
+        //        (new BoletoService())->verifyBoletoPaid();
+        /** @var Sale $saleModel */
+        $saleModel = new Sale();
+        /** @var Carbon $date */
+        $start   = now()->startOfDay()->subDays(70);//->toDateString();
+        $end     = now()->endOfDay()->subDays(70);//->toDateString();
+        $boletos = $saleModel->newQuery()
+                             ->with(['client', 'plansSales.plan.products'])
+                             ->whereBetween('start_date', [$start, $end])
+                             ->where(
+                                 [
+                                     ['payment_method', '=', '2'],
+                                     ['status', '=', '2'],
+                                 ]
+                             )->get();
+        dd($start, $end, $boletos);
     }
 }
 

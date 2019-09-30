@@ -1,9 +1,9 @@
-<form id='form-add-shipping' method="post" action="/shippings">
+<form id='form-add-shipping'>
     @csrf
     <div class='row'>
         <div class='form-group col-12'>
             <label for='type'>Tipo</label>
-            <select id='shipping-type' name='type' class='form-control type select-pad'>
+            <select name='type' class='form-control type select-pad shipping-type'>
                 <option value='pac'>PAC (Calculado automaticamente pela API)</option>
                 <option value='sedex'>SEDEX (Calculado automaticamente pela API)</option>
                 <option value='static' selected>Frete fixo(você define um valor fixo para o frete)</option>
@@ -13,29 +13,29 @@
     <div class='row'>
         <div class='form-group col-12'>
             <label for='name'>Descrição no checkout</label>
-            <input name='name' type='text' id='shipping-name' class='input-pad' value='' placeholder='Frete grátis' maxlength='50'>
+            <input name='name' type='text' class='input-pad shipping-description' value='' placeholder='Frete grátis' maxlength='30'>
             <span id='shipping-name-error' class='text-danger'></span>
         </div>
     </div>
     <div class='row'>
         <div class='form-group col-12'>
             <label for='information'>Tempo de entrega estimado apresentado no checkout</label>
-            <input name='information' type='text' id='shipping-information' class='input-pad' value='' placeholder='10 até 20 dias' maxlength='30'>
+            <input name='information' type='text' class='input-pad shipping-info' value='' placeholder='10 até 20 dias' maxlength='30'>
             <span id='shipping-information-error' class='text-danger'></span>
         </div>
     </div>
-    <div class='row' id='value-shipping-row' style=''>
+    <div class='row value-shipping-row'  style=''>
         <div class='form-group col-12'>
             <label for='value'>Valor do Frete</label>
-            <input name='value' type='text' id='shipping-value' class='input-pad' value='' placeholder='0'>
+            <input name='value' type='text' class='input-pad shipping-value' value='' placeholder='0' maxlength='7'>
             <span id='shipping-value-error' class='text-danger'></span>
 
         </div>
     </div>
-    <div class='row' id='zip-code-origin-shipping-row' style='display:none'>
+    <div class='row zip-code-origin-shipping-row' style='display:none'>
         <div class='form-group col-12'>
             <label for='zip-code-origin'>CEP de origem</label>
-            <input name='zip_code_origin' id='shipping-zip-code-origin' type='text' class='input-pad' value='' placeholder='12345-678'>
+            <input name='zip_code_origin' type='text' class='input-pad shipping-zipcode' value='' placeholder='12345-678'>
         </div>
     </div>
     <div class='row'>
@@ -44,7 +44,7 @@
                 <label for="cartao">Status</label>
                 <br>
                 <label class='switch'>
-                    <input id='shipping-status' name='status' value='1' class='check' type="checkbox" checked>
+                    <input name='status' value='1' class='check shipping-status' type="checkbox" checked>
                     <span class='slider round'></span>
                 </label>
             </div>
@@ -54,7 +54,7 @@
                 <label for="cartao">Pré-selecionado</label>
                 <br>
                 <label class='switch'>
-                    <input id='shipping-pre-selected' name='pre_selected' value='1' class='check' type="checkbox" checked>
+                    <input name='pre_selected' value='1' class='check shipping-pre-selected' type="checkbox" checked>
                     <span class='slider round'></span>
                 </label>
             </div>

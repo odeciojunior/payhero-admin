@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::group(
     [
         'prefix'     => 'finances',
@@ -8,10 +10,7 @@ Route::group(
     ],
     function() {
         // rotas autenticadas
-
         Route::get('/', 'FinancesController@index')->name('finances');
-//        Route::get('/testFinances', 'FinancesTestController@index')->name('financesTeste');
-
         Route::get('/getbalances', 'FinancesController@getBalances')->name('finances.balances');
     }
 

@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Core\Events\ResetPasswordEvent;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\UserPresenter;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticable;
 
 /**
  * @property int $id

@@ -2,428 +2,493 @@
 
 namespace Modules\Shopify\Http\Controllers;
 
-use App\Plano;
-use App\Venda;
 use Exception;
-use App\Empresa;
-use App\Entrega;
-use App\Produto;
-use App\Projeto;
-use App\Comprador;
-use App\PlanoVenda;
-use App\ProdutoPlano;
-use App\IntegracaoShopify;
-use Slince\Shopify\Client;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Cloudflare\API\Auth\APIKey;
-use Cloudflare\API\Endpoints\DNS;
-use Cloudflare\API\Adapter\Guzzle;
-use Illuminate\Routing\Controller;
-use Vinkla\Hashids\Facades\Hashids;
-use Cloudflare\API\Endpoints\Zones;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
-use Slince\Shopify\PublicAppCredential;
-use Modules\Core\Helpers\CaminhoArquivosHelper;
-use Modules\Shopify\Transformers\IntegracoesShopifyResource;
+use Modules\Shopify\Transformers\ShopifyResource;
+use Modules\Core\Entities\Company;
+use Modules\Core\Entities\Domain;
+use Modules\Core\Entities\Project;
+use Modules\Core\Entities\Shipping;
+use Modules\Core\Entities\ShopifyIntegration;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Modules\Core\Entities\UserProject;
+use Modules\Core\Events\ShopifyIntegrationEvent;
+use Modules\Core\Services\ShopifyService;
+use Modules\Companies\Transformers\CompaniesSelectResource;
+use Vinkla\Hashids\Facades\Hashids;
 
-class ShopifyApiController extends Controller {
+class ShopifyApiController extends Controller
+{
+    /**
+     *
+     */
+    public function index()
+    {
+        try {
+//            $companyModel            = new Company();
+            $projectModel            = new Project();
+            $shopifyIntegrationModel = new ShopifyIntegration();
 
-    public function index() {
+//            $companies = $companyModel->where('user_id', auth()->user()->id)->get()->toArray();
 
-        $integracoes_shopify = IntegracaoShopify::where('user',\Auth::user()->id);
- 
-        return IntegracoesShopifyResource::collection($integracoes_shopify->paginate());
-    }
+            $shopifyIntegrations = $shopifyIntegrationModel->where('user_id', auth()->user()->id)->get();
 
-    public function store(Request $request){
+            $projects = [];
 
-        $dados = $request->all();
+            foreach ($shopifyIntegrations as $shopifyIntegration) {
 
-        try{
-            $credential = new PublicAppCredential($dados['token']);
-            //$credential = new PublicAppCredential('0fc0fea41cc38c989749dc9040794bb4');
+                $project = $projectModel->find($shopifyIntegration->project_id);
 
-            //$client = new Client($credential, 'canto-infantil.myshopify.com', [
-            $client = new Client($credential, $dados['url_loja'], [
-                'metaCacheDir' => './tmp' // Metadata cache dir, required
-            ]);
-        }
-        catch(\Exception $e){
-            return response()->json('Dados do shopify inválidos, revise os dados informados');
-        }
-
-        try{
-            $projeto = Projeto::create([
-                'nome' => $client->getShopManager()->get()->getName(),
-                'status' => '1',
-                'visibilidade' => 'privado',
-                'porcentagem_afiliados' => '0',
-                'descricao' =>  $client->getShopManager()->get()->getName(),
-                'descricao_fatura' => $client->getShopManager()->get()->getName(),
-                'url_pagina' =>  'https://'.$client->getShopManager()->get()->getDomain(),
-                'afiliacao_automatica' => false,
-                'shopify_id' => $client->getShopManager()->get()->getId(),
-            ]);
-        }
-        catch(\Exception $e){
-            return response()->json('Dados do shopify inválidos, revise os dados informados');
-        }
-
-        $imagem = $request->file('foto_projeto');
-
-        if ($imagem != null) {
-            $nome_foto = 'projeto_' . $projeto->id . '_.' . $imagem->getClientOriginalExtension();
-
-            $imagem->move(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO, $nome_foto);
-
-            $img = Image::make(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
-
-            $img->crop($dados['foto_w'], $dados['foto_h'], $dados['foto_x1'], $dados['foto_y1']);
-
-            $img->resize(200, 200);
-
-            Storage::delete('public/upload/projeto/'.$nome_foto);
-
-            $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PROJETO . $nome_foto);
-
-            $projeto->update([
-                'foto' => $nome_foto
-            ]);
-        }
-
-        UserProjeto::create([
-            'user'              => \Auth::user()->id,
-            'projeto'           => $projeto->id,
-            'empresa'           => $dados['empresa'],
-            'tipo'              => 'produtor',
-            'responsavel_frete' => true,
-            'permissao_acesso'  => true,
-            'permissao_editar'  => true,
-            'status'            => 'ativo'
-        ]);
-
-        $products = $client->getProductManager()->findAll([]);
-
-        foreach($products as $product){
-
-            foreach($product->getVariants() as $variant){
-
-                $produto = Produto::create([
-                    'user' => \Auth::user()->id,
-                    'nome' => substr($product->getTitle(),0,100),
-                    'descricao' => '',
-                    'garantia' => '0',
-                    'disponivel' => true,
-                    'quantidade' => '0',
-                    'formato' => 1,
-                    'categoria' => '1',
-                    'custo_produto' => '',
-                ]);
-
-                $novo_codigo_identificador = false;
-
-                while($novo_codigo_identificador == false){
-
-                    $codigo_identificador = $this->randString(3).rand(100,999);
-                    $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
-                    if($plano == null){
-                        $novo_codigo_identificador = true;
-                    }
+                if (!empty($project)) {
+                    $projects[] = $project;
                 }
-
-                $plano = Plano::create([
-                    'shopify_id' => $product->getId(),
-                    'shopify_variant_id' => $variant->getId(),
-                    'empresa' => $dados['empresa'],
-                    'projeto' => $projeto->id,
-                    'nome' => substr($product->getTitle(),0,100),
-                    'descricao' => '',
-                    'cod_identificador' => $codigo_identificador,
-                    'preco' => $variant->getPrice(),
-                    'frete_fixo' => '1',
-                    'valor_frete' => '0.00',
-                    'pagamento_cartao' => true,
-                    'pagamento_boleto' => true,
-                    'status' => '1',
-                    'transportadora' => '2',
-                    'qtd_parcelas' => '12',
-                    'parcelas_sem_juros' => '1'
-                ]);
-
-                if(count($product->getVariants()) > 1){
-                    foreach($product->getImages() as $image){
-
-                        foreach($image->getVariantIds() as $variant_id){
-                            if($variant_id == $variant->getId()){
-
-                                $img = Image::make($image->getSrc());
-            
-                                $nome_foto = 'plano_' . $plano->id . '_.png';
-            
-                                Storage::delete('public/upload/plano/'.$nome_foto);
-            
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-            
-                                $plano->update([
-                                    'foto' => $nome_foto
-                                ]);
-
-                                $img = Image::make($image->getSrc());
-        
-                                $nome_foto = 'produto_' . $produto->id . '_.png';
-                    
-                                Storage::delete('public/upload/produto/'.$nome_foto);
-                    
-                                $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
-                    
-                                $produto->update([
-                                    'foto' => $nome_foto
-                                ]);
-        
-                            }
-                        }
-                    }
-                }
-                else{
-
-                    $img = Image::make($product->getImage()->getSrc());
-            
-                    $nome_foto = 'plano_' . $plano->id . '_.png';
-
-                    Storage::delete('public/upload/plano/'.$nome_foto);
-
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-
-                    $plano->update([
-                        'foto' => $nome_foto
-                    ]);
-
-                    $img = Image::make($product->getImage()->getSrc());
-
-                    $nome_foto = 'produto_' . $produto->id . '_.png';
-        
-                    Storage::delete('public/upload/produto/'.$nome_foto);
-        
-                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
-        
-                    $produto->update([
-                        'foto' => $nome_foto
-                    ]);
-                }
-
-                ProdutoPlano::create([
-                    'produto' => $produto->id,
-                    'plano' => $plano->id,
-                    'quantidade_produto' => '1'
-                ]);
             }
 
+            return ShopifyResource::collection(collect($projects));
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Ocorreu algum erro'], 400);
         }
-
-        IntegracaoShopify::create([
-            'token' => $dados['token'],
-            'url_loja' => $dados['url_loja'],
-            'user' => \Auth::user()->id,
-            'projeto' => $projeto->id
-        ]);
-
-        return response()->json('Sucesso');
-        
     }
 
-    public function sincronizarIntegracao(Request $request){
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request)
+    {
+        try {
+            $projectModel            = new Project();
+            $userProjectModel        = new UserProject();
+            $shopifyIntegrationModel = new ShopifyIntegration();
+            $shippingModel           = new Shipping();
 
-        $dados = $request->all();
+            $dataRequest = $request->all();
 
-        $projeto = Projeto::find(Hashids::decode($dados['projeto']));
-        $integracao = IntegracaoShopify::where('projeto',Hashids::decode($dados['projeto']))->first();
+            $shopifyIntegration = $shopifyIntegrationModel
+                ->where('token', $dataRequest['token'])
+                ->first();
 
-        try{
-            $credential = new PublicAppCredential($integracao['token']);
-
-            $client = new Client($credential, $integracao['url_loja'], [
-                'metaCacheDir' => './tmp'
-            ]);
-        }
-        catch(\Exception $e){
-            return response()->json('Dados do shopify inválidos, revise os dados informados');
-        }
-
-        $products = $client->getProductManager()->findAll([]);
-
-        foreach($products as $product){
-
-            foreach($product->getVariants() as $variant){
-
-                $plano = Plano::where('shopify_variant_id' , $variant->getId())->first();
-
-                $descricao = '';
-
-                try{
-                    $descricao = $variant->getOption1();
-                    if($descricao == 'Default Title'){
-                        $descricao = '';
-                    }
-                    if($variant->getOption2() != ''){
-                        $descricao .= ' - '. $$variant->getOption2();
-                    }
-                    if($variant->getOption3() != ''){
-                        $descricao .= ' - '. $$variant->getOption3();
-                    }
-                }
-                catch(\Exception $e){
-                    //
+            if ($shopifyIntegration) {
+                if ($shopifyIntegration->status == 1) {
+                    return response()->json(['message' => 'Integração em andamento'], 400);
                 }
 
-                if($plano == null){
-                    $produto = Produto::create([
-                        'user' => \Auth::user()->id,
-                        'nome' => substr($product->getTitle(),0,100),
-                        'descricao' => $descricao,
-                        'garantia' => '0',
-                        'disponivel' => true,
-                        'quantidade' => '0',
-                        'disponivel' => true,
-                        'formato' => 1,
-                        'categoria' => '1',
-                        'custo_produto' => '',
-                    ]);
+                return response()->json(['message' => 'Projeto já integrado'], 400);
+            }
 
-                    $novo_codigo_identificador = false;
+            try {
+                //tratamento parcial do dominio
+                $dataRequest['url_store'] = str_replace("http://", "", $dataRequest['url_store']);
+                $dataRequest['url_store'] = str_replace("https://", "", $dataRequest['url_store']);
+                $dataRequest['url_store'] = 'http://' . $dataRequest['url_store'];
+                $dataRequest['url_store'] = parse_url($dataRequest['url_store'], PHP_URL_HOST);
 
-                    while($novo_codigo_identificador == false){
+                $urlStore = str_replace('.myshopify.com', '', $dataRequest['url_store']);
 
-                        $codigo_identificador = $this->randString(3).rand(100,999);
-                        $plano = Plano::where('cod_identificador', $codigo_identificador)->first();
-                        if($plano == null){
-                            $novo_codigo_identificador = true;
+                $shopifyService = new ShopifyService($urlStore . '.myshopify.com', $dataRequest['token']);
+
+                if (empty($shopifyService->getClient())) {
+                    return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+                }
+            } catch (Exception $e) {
+                report($e);
+
+                return response()->json(['message' => 'Dados do shopify inválidos, revise os dados informados'], 400);
+            }
+
+            $shopifyName = $shopifyService->getShopName();
+            $project     = $projectModel->create([
+                                                     'name'                       => $shopifyName,
+                                                     'status'                     => $projectModel->present()
+                                                                                                  ->getStatus('approved'),
+                                                     'visibility'                 => 'private',
+                                                     'percentage_affiliates'      => '0',
+                                                     'description'                => $shopifyName,
+                                                     'invoice_description'        => $shopifyName,
+                                                     'url_page'                   => 'https://' . $shopifyService->getShopDomain(),
+                                                     'automatic_affiliation'      => false,
+                                                     'shopify_id'                 => $shopifyService->getShopId(),
+                                                     'boleto'                     => '1',
+                                                     'installments_amount'        => '12',
+                                                     'installments_interest_free' => '1',
+                                                 ]);
+            if (!empty($project)) {
+                $shippingModel->create([
+                                           'project_id'   => $project->id,
+                                           'name'         => 'Frete gratis',
+                                           'information'  => 'de 15 até 30 dias',
+                                           'value'        => '0,00',
+                                           'type'         => 'static',
+                                           'status'       => '1',
+                                           'pre_selected' => '1',
+                                       ]);
+                if (!empty($shippingModel)) {
+                    $shopifyIntegration = $shopifyIntegrationModel->create([
+                                                                               'token'         => $dataRequest['token'],
+                                                                               'shared_secret' => '',
+                                                                               'url_store'     => $urlStore . '.myshopify.com',
+                                                                               'user_id'       => auth()->user()->id,
+                                                                               'project_id'    => $project->id,
+                                                                               'status'        => 1,
+                                                                           ]);
+                    if (!empty($shopifyIntegration)) {
+                        $companyId = current(Hashids::decode($dataRequest['company']));
+
+                        $userProjectModel->create([
+                                                      'user_id'              => auth()->user()->id,
+                                                      'project_id'           => $project->id,
+                                                      'company_id'           => $companyId,
+                                                      'type'                 => 'producer',
+                                                      'shipment_responsible' => true,
+                                                      'permissao_acesso'     => true,
+                                                      'permissao_editar'     => true,
+                                                      'status'               => 'active',
+                                                  ]);
+                        if (!empty($userProjectModel)) {
+                            event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
+                        } else {
+                            $shippingModel->delete();
+                            $shopifyIntegration->delete();
+                            $project->delete();
+
+                            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
                         }
+                    } else {
+                        $shippingModel->delete();
+                        $project->delete();
+
+                        return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
                     }
+                } else {
+                    $project->delete();
 
-                    $user_projeto = UserProjeto::where([
-                        ['user', \Auth::user()->id],
-                        ['projeto',$dados['projeto']],
-                        ['tipo', 'produtor']
-                    ])->first();
+                    return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+            }
 
-                    $plano = Plano::create([
-                        'shopify_id' => $product->getId(),
-                        'shopify_variant_id' => $variant->getId(),
-                        'empresa' => $user_projeto->empresa,
-                        'projeto' => $projeto->id,
-                        'nome' => substr($product->getTitle(),0,100),
-                        'descricao' => $descricao,
-                        'cod_identificador' => $codigo_identificador, 
-                        'preco' => $variant->getPrice(),
-                        'frete_fixo' => '1',
-                        'valor_frete' => '0.00',
-                        'pagamento_cartao' => true,
-                        'pagamento_boleto' => true,
-                        'status' => '1',
-                        'transportadora' => '2',
-                        'qtd_parcelas' => '12',
-                        'parcelas_sem_juros' => '1'
-                    ]);
+            return response()->json(['message' => 'Integração em andamento. Assim que tudo estiver pronto você será avisado(a)!'], 200);
+        } catch (Exception $e) {
+            Log::critical('Erro ao realizar integração com loja do shopify | ShopifyController@store');
+            report($e);
 
-                    if(count($product->getVariants()) > 1){
+            return response()->json(['message' => 'Problema ao criar integração, tente novamente mais tarde'], 400);
+        }
+    }
 
-                        foreach($product->getImages() as $image){
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function undoIntegration(Request $request)
+    {
+        try {
+            $requestData = $request->all();
 
-                            foreach($image->getVariantIds() as $variant_id){
-                                if($variant_id == $variant->getId()){
+            $projectId = current(Hashids::decode($requestData['project_id']));
 
-                                    $img = Image::make($image->getSrc());
+            $projectModel = new Project();
 
-                                    $nome_foto = 'plano_' . $plano->id . '_.png';
+            if ($projectId) {
+                //id decriptado
+                $project = $projectModel
+                    ->with(['domains', 'shopifyIntegrations', 'plans', 'plans.productsPlans', 'plans.productsPlans.product', 'pixels', 'discountCoupons', 'shippings'])
+                    ->find($projectId);
 
-                                    Storage::delete('public/upload/plano/'.$nome_foto);
+                if (!empty($project->shopify_id)) {
+                    //se for shopify, voltar as integraçoes ao html padrao
+                    try {
 
-                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
+                        foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                            $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
 
-                                    $plano->update([
-                                        'foto' => $nome_foto
-                                    ]);
+                            $shopify->setThemeByRole('main');
+                            if (!empty($shopifyIntegration->theme_html)) {
+                                $shopify->setTemplateHtml($shopifyIntegration->theme_file, $shopifyIntegration->theme_html);
+                            }
+                            if (!empty($shopifyIntegration->layout_theme_html)) {
+                                $shopify->setTemplateHtml('layout/theme.liquid', $shopifyIntegration->layout_theme_html);
+                            }
 
-                                    $img = Image::make($image->getSrc());
+                            //remove todos os webhooks
+                            $shopify->deleteShopWebhook();
 
-                                    $nome_foto = 'produto_' . $produto->id . '_.png';
+                            $shopifyIntegration->update([
+                                                            'status' => $shopifyIntegration->present()
+                                                                                           ->getStatus('disabled'),
+                                                        ]);
+                        }
 
-                                    Storage::delete('public/upload/produto/'.$nome_foto);
+                        return response()->json(['message' => 'Integração com o shopify desfeita'], 200);
+                    } catch (Exception $e) {
+                        //throwl
+                        return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], 400);
+                    }
+                } else {
+                    return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                }
+            } else {
+                //problema no id
+                return response()->json(['message' => 'Projeto não encontrado'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('ShopifyController - undoIntegration - Erro ao desfazer integracao');
+            report($e);
 
-                                    $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
+            return response()->json(['message' => 'Problema ao desfazer integração, tente novamente mais tarde'], 400);
+        }
+    }
 
-                                    $produto->update([
-                                        'foto' => $nome_foto
-                                    ]);
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function reIntegration(Request $request)
+    {
+        try {
+            $requestData = $request->all();
 
+            $projectId               = current(Hashids::decode($requestData['project_id']));
+            $projectModel            = new Project();
+            $shopifyIntegrationModel = new ShopifyIntegration();
+            $domainModel             = new Domain();
+
+            if ($projectId) {
+                //id decriptado
+                $project = $projectModel
+                    ->with([
+                               'domains',
+                               'shopifyIntegrations',
+                               'plans',
+                               'plans.productsPlans',
+                               'plans.productsPlans.product',
+                               'pixels', 'discountCoupons',
+                               'shippings',
+                           ])
+                    ->find($projectId);
+
+                //puxa todos os produtos
+                foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                    $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+                    $shopify->importShopifyStore($projectId, auth()->user()->id);
+                }
+
+                //procura por um dominio aprovado
+                $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
+
+                if (!empty($domain)) {
+                    //primeiro dominio valido
+                    if (!empty($project->shopify_id)) {
+                        //se for shopify, voltar as integraçoes ao html padrao
+                        try {
+
+                            foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setThemeByRole('main');
+                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                if ($htmlCart) {
+                                    //template normal
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('basic_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                } else {
+                                    //template ajax
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('ajax_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
                                 }
+
+                                //inserir o javascript para o trackeamento (src, utm)
+                                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                if ($htmlBody) {
+                                    //template do layout
+                                    $shopifyIntegration->update([
+                                                                    'layout_theme_html' => $htmlBody,
+                                                                ]);
+
+                                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                }
+
+                                $shopifyIntegration->update([
+                                                                'status' => $shopifyIntegration->present()->getStatus('approved'),
+                                                            ]);
                             }
+
+                            return response()->json(['message' => 'Integração com o shopify refeita'], 200);
+                        } catch (Exception $e) {
+                            //throwl
+                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
                         }
+                    } else {
+                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
                     }
-                    else{
-
-                        $img = Image::make($product->getImage()->getSrc());
-                
-                        $nome_foto = 'plano_' . $plano->id . '_.png';
-    
-                        Storage::delete('public/upload/plano/'.$nome_foto);
-    
-                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PLANO . $nome_foto);
-    
-                        $plano->update([
-                            'foto' => $nome_foto
-                        ]);
-
-                        $img = Image::make($product->getImage()->getSrc());
-
-                        $nome_foto = 'produto_' . $produto->id . '_.png';
-            
-                        Storage::delete('public/upload/produto/'.$nome_foto);
-            
-                        $img->save(CaminhoArquivosHelper::CAMINHO_FOTO_PRODUTO . $nome_foto);
-            
-                        $produto->update([
-                            'foto' => $nome_foto
-                        ]);
-
-                    }
-
-                    ProdutoPlano::create([
-                        'produto' => $produto->id,
-                        'plano' => $plano->id,
-                        'quantidade_produto' => '1'
-                    ]);
+                } else {
+                    //nenhum dominio ativado
+                    return response()->json(['message' => 'Produtos do shopify importados, adicione um domínio para finalizar a sua integração'], 200);
                 }
-                else{
-                    $plano->update([
-                        'nome' => substr($product->getTitle(),0,100),
-                        'descricao' => $descricao,
-                        'preco' => $variant->getPrice(),
-                    ]);
-                }
+            } else {
+                //problema no id
+                return response()->json(['message' => 'Projeto não encontrado'], 400);
             }
+        } catch (Exception $e) {
+            Log::warning('ShopifyController - reIntegration - Erro ao refazer integracao');
+            report($e);
 
+            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
         }
-
-        return response()->json('sucesso');
-
     }
 
-    function randString($size){
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function synchronizeProducts(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+            $projectId   = current(Hashids::decode($requestData['project_id']));
 
-        $basic = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $shopifyModel = new ShopifyIntegration();
+            if (!empty($projectId)) {
+                $shopifyIntegration = $shopifyModel->where('project_id', $projectId)->first();
+                if (!empty($shopifyIntegration)) {
+                    event(new ShopifyIntegrationEvent($shopifyIntegration, auth()->user()->id));
 
-        $return= "";
+                    return response()->json(['message' => 'Os Produtos do shopify estão sendo sincronizados.'], 200);
+                } else {
+                    return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Problema ao sincronizar produtos, tente novamente mais tarde'], 400);
+            }
+        } catch (Exception $e) {
+            Log::critical('Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts');
+            report($e);
 
-        for($count= 0; $size > $count; $count++){
-
-            $return.= $basic[rand(0, strlen($basic) - 1)];
+            return response()->json(['message' => 'Problema ao sincronizar produtos do shopify, tente novamente mais tarde'], 400);
         }
-
-        return $return;
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function synchronizeTemplates(Request $request)
+    {
+        try {
+            $requestData = $request->all();
+
+            $projectModel            = new Project();
+            $shopifyIntegrationModel = new ShopifyIntegration();
+            $domainModel             = new Domain();
+
+            $projectId = current(Hashids::decode($requestData['project_id']));
+
+            if (!empty($projectId)) {
+                $project = $projectModel->with([
+                                                   'domains',
+                                                   'shopifyIntegrations',
+                                                   'plans',
+                                                   'plans.productsPlans',
+                                                   'plans.productsPlans.product',
+                                                   'pixels', 'discountCoupons',
+                                                   'shippings',
+                                               ])
+                                        ->find($projectId);
+
+                // procura dominio aprovado
+                $domain = $project->domains->where('status', $domainModel->present()->getStatus('approved'))->first();
+
+                if (!empty($domain)) {
+                    if (!empty($project->shopify_id)) {
+                        try {
+
+                            foreach ($project->shopifyIntegrations as $shopifyIntegration) {
+                                $shopify = new ShopifyService($shopifyIntegration->url_store, $shopifyIntegration->token);
+
+                                $shopify->setThemeByRole('main');
+                                $htmlCart = $shopify->getTemplateHtml('sections/cart-template.liquid');
+
+                                if ($htmlCart) {
+                                    //template normal
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'sections/cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('sections/cart-template.liquid', $htmlCart, $domain->name);
+                                } else {
+                                    //template ajax
+                                    $shopifyIntegration->update([
+                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_name' => $shopify->getThemeName(),
+                                                                    'theme_file' => 'snippets/ajax-cart-template.liquid',
+                                                                    'theme_html' => $htmlCart,
+                                                                ]);
+
+                                    $shopify->updateTemplateHtml('snippets/ajax-cart-template.liquid', $htmlCart, $domain->name, true);
+                                }
+
+                                //inserir o javascript para o trackeamento (src, utm)
+                                $htmlBody = $shopify->getTemplateHtml('layout/theme.liquid');
+                                if ($htmlBody) {
+                                    //template do layout
+                                    $shopifyIntegration->update([
+                                                                    'layout_theme_html' => $htmlBody,
+                                                                ]);
+
+                                    $shopify->insertUtmTracking('layout/theme.liquid', $htmlBody);
+                                }
+
+                                $shopifyIntegration->update([
+                                                                'status' => $shopifyIntegration->getEnum('status', 'approved'),
+                                                            ]);
+                            }
+
+                            return response()->json(['message' => 'Sincronização do template com o shopify concluida com sucesso!'], 200);
+                        } catch (Exception $e) {
+                            //throwl
+                            return response()->json(['message' => 'Problema ao refazer integração, tente novamente mais tarde'], 400);
+                        }
+                    } else {
+                        return response()->json(['message' => 'Este projeto não tem integração com o shopify'], 400);
+                    }
+                } else {
+                    return response()->json(['message' => 'Você não tem nenhum domínio configurado'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Projeto não encontrado'], 400);
+            }
+        } catch (Exception $e) {
+            Log::critical('Erro ao realizar sincronização produtos com o shopify| ShopifyController@synchronizeProducts');
+            report($e);
+
+            return response()->json(['message' => 'Problema ao sincronizar template do shopify, tente novamente mais tarde'], 400);
+        }
+    }
+    public function getCompanies()
+    {
+        $companyModel = new Company();
+        $companies    = $companyModel->where('user_id', auth()->user()->id)->get();
+        return CompaniesSelectResource::collection($companies);
+    }
 }

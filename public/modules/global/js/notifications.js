@@ -1,100 +1,156 @@
-$(document).ready(function () {
+// $(document).ready(function () {
 
-    var pusher = new Pusher('339254dee7e0c0a31840', {
-        cluster: 'us2',
-        forceTLS: true
-    });
+//     updateUnreadNotificationsAmount();
 
-    Pusher.logToConsole = false;
+//     var pusher = new Pusher('339254dee7e0c0a31840', {
+//         cluster: 'us2',
+//         forceTLS: true
+//     });
 
-    var user = $("#user").val();
+//     Pusher.logToConsole = false;
 
-    var channel = pusher.subscribe('channel-' + user);
+//     var channel = pusher.subscribe('channel-' + $("#user").val());
 
-    channel.bind('new-notification', function (data) {
-        alertCustom('success', data.message);
-        updateUnreadNotificationsAmount();
-    });
+//     channel.bind('new-notification', function (data) {
+//         alertCustom('success', data.message);
+//         updateUnreadNotificationsAmount();
+//     });
 
-    $("#notification").on('click', function () {
-        updateUnreadNotification();
-        $("#notification-amount").html('0');
-        $('#notificationBadge').html('New 0');
-    });
+//     $("#notification").on('click', function () {
+//         getNotifications();
+//     });
 
-    // verifica se existem novas notificações
-    function updateUnreadNotificationsAmount() {
-        $.ajax({
-            method: 'GET',
-            url: '/notificacoes/unreadamount/',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                user: user
-            },
-            error: function () {
-                //
-            },
-            success: function (response) {
-                $("#notification-amount").html(response.qtd_notification);
-                $('#notificationBadge').html('New ' + response.qtd_notification)
-            }
-        });
-    }
+//     // autaliza status das notificações para lidas
+//     function markNotificationsAsRead() {
+//         $.ajax({
+//             method: 'POST',
+//             url: '/api/notifications/markasread/',
+//             headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             },
+//             error: function () {
+//                 //
+//             },
+//             success: function (response) {
+//                 //
+//             }
+//         });
+//     }
 
-    // monta hmtl quando não tem notificação notificação
-    function htmlNotNotifications() {
-        $("#notificationTemplate").html('');
-        dados = '';
-        dados += '<a class="list-group-item dropdown-item" role="menuitem">';
-        dados += '<div class="media">';
-        dados += '<div class="pr-10">';
-        dados += '<i class="icon wb-chat bg-orange-600 white icon-circle" aria-hidden="true"></i>';
-        dados += '</div>';
-        dados += '<div class="media-body">';
-        dados += '<h6 class="media-heading">Nenhuma nova notificação</h6>';
-        dados += '</div>';
-        dados += '</div>';
-        dados += '</a>';
-        $("#notificationTemplate").html(dados);
-    }
+//     // verifica se existem novas notificações
+//     function updateUnreadNotificationsAmount() {
+//         $.ajax({ 
+//             method: 'GET',
+//             url: '/api/notifications/unreadamount',
+//             headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             },
+//             error: function () {
+//                 //
+//             },
+//             success: function (response) {
+//                 $("#notification-amount").html(response.qtd_notification);
+//                 $('#notificationBadge').html('New ' + response.qtd_notification)
+//             }
+//         });
+//     }
 
-    // monta html com as notificações
-    function updateUnreadNotification() {
-        loadOnNotification('#notificationTemplate');
-        $.ajax({
-            method: 'GET',
-            url: '/notificacoes/unread/',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function () {
-                //
-            },
-            success: function (response) {
-                $("#notificationTemplate").html('');
-                $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
-                $("#notificationTemplate").html(response.notificacoes);
-                updateMarkAsReadNotification();
-            }
-        });
-    }
+//     // monta html com as notificações
+//     function getNotifications() {
+//         loadOnNotification('#notificationTemplate');
+//         $.ajax({
+//             method: 'GET',
+//             url: '/api/notifications/unread',
+//             headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             },
+//             error: function () {
+//                 //
+//             },
+//             success: function (response) {
+//                 $("#notificationTemplate").html('');
+//                 $("#notificationTemplate").css({'height': '250px', 'overflow-y': 'scroll'});
+//                 $(response.data).each(function(index, data){
+//                     $("#notificationTemplate").append(notificationTemplate(data));                    
+//                 });
+//                 markNotificationsAsRead();
+//             }
+//         });
+//     }
 
-    // autaliza status das notificações
-    function updateMarkAsReadNotification() {
-        $.ajax({
-            method: 'POST',
-            url: '/notificacoes/markasread/',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            error: function () {
-                //
-            },
-            success: function (response) {
-                //
-            }
-        });
-    }
-});
+//     // notification template
+//     function notificationTemplate(data){
+
+//         data = getNotificationData(data);
+
+//         return `<a class="list-group-item dropdown-item" href=` + data.link + ` role="menuitem" id='item-notification' style='width:100%;` + data.background + `'>
+//                     <div class="media">
+//                         <div class="pr-10" style='margin:auto'>
+//                             <span class='` + data.iconClass + `'></span>
+//                         </div>
+//                         <div class="media-body">
+//                             <h6 class="media-heading" style='white-space:normal'>
+//                                 ` + data.message + `
+//                             </h6>
+//                             <time class="media-meta">` + data.date + `</time>
+//                         </div>
+//                     </div>
+//                 </a>`;
+//     }
+
+//     // prepare data to create a template
+//     function getNotificationData(data){
+
+//         var message = '', iconClass = '', link = '';
+
+//         switch (data.type) {
+//             case 'BoletoCompensatedNotification' :
+//                 message   = data.message + (data.message > 1) ? ' boletos compensados' : ' boleto compensado';
+//                 iconClass = 'money-success';
+//                 link      = '/sales';
+//                 break;
+//             case 'DomainApprovedNotification' :
+//                 message   = data.message;
+//                 iconClass = 'cloud-success';
+//                 link      = '/projects';
+//                 break;
+//             case 'ReleasedBalanceNotification' :
+//                 message   = data.message;
+//                 iconClass = 'money-success';
+//                 link      = '/finances';
+//                 break;
+//             case 'SaleNotification' :
+//                 message   = data.message + (data.message > 1) ? ' novas vendas' : ' nova venda';
+//                 iconClass = 'money-success';
+//                 link      = '/sales';
+//                 break;
+//             case 'ShopifyIntegrationReadyNotification' :
+//                 message   = data.message;
+//                 iconClass = 'shopify-success';
+//                 link      = '/projects';
+//                 break;
+//             case 'UserShopifyIntegrationStroreNotification' :
+//                 message   = data.success;
+//                 iconClass = 'shopify-success';
+//                 link      = '/projects';
+//                 break;
+//             case 'WithdrawalApprovedNotification' :
+//                 message   = data.message;
+//                 iconClass = 'money-success';
+//                 link      = '/finances';
+//                 break;
+//             default:
+//                 break;
+//         }
+
+//         if(data.read == 1){
+//             var backgroundColor = '';
+//         }
+//         else{
+//             var backgroundColor = 'background-color:#b5e0ee5e';
+//         }
+
+//         return { message: message, iconClass: iconClass, link: link, date: data.date, background: backgroundColor};
+//     }
+
+// });

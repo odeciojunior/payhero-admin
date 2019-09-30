@@ -1,10 +1,11 @@
 $(document).ready(function () {
+    let selectTypeSalesRecovery = $("#type_recovery option:selected");
 
     getProjects();
 
     $("#bt_filtro").on("click", function (event) {
         event.preventDefault();
-        atualizar();
+        updateSalesRecovery();
     });
 
     function getProjects() {
@@ -16,13 +17,8 @@ $(document).ready(function () {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             },
             error: function (response) {
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.responseJSON.message);
-                }
+                errorAjaxResponse(response);
+
             },
             success: function (response) {
                 if (!isEmpty(response.data)) {
@@ -35,7 +31,8 @@ $(document).ready(function () {
                         }));
                     });
 
-                    atualizar();
+                    updateSalesRecovery();
+
                 } else {
                     $("#project-not-empty").hide();
                     $("#project-empty").show();
@@ -44,16 +41,35 @@ $(document).ready(function () {
         });
     }
 
-    function atualizar() {
-        var link = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    /**
+     * Formata url
+     * @param link
+     */
+    function urlDataFormatted(link) {
+        let url = '';
+        if (link == null) {
+            url = `?project=${$("#project").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client_name").val()}`;
+        } else {
+            url = `${link}&project=${$("#project").val()}&type=${selectTypeSalesRecovery.val()}&start_date=${$("#start_date").val()}&end_date=${$("#end_date").val()}&client_name=${$("#client_name").val()}`;
+        }
+
+        if (selectTypeSalesRecovery.val() == 1) {
+            return `/api/checkout` + url;
+        } else {
+            return `/api/sale` + url;
+        }
+    }
+
+    /**
+     * Atualiza tabela de recuperação de vendas
+     * @param link
+     */
+    function updateSalesRecovery(link = null) {
 
         loadOnTable('#table_data', '#carrinhoAbandonado');
 
-        if (link == null) {
-            link = 'api/recovery/getrecoverydata?project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val() + '&client_name=' + $("#client-name").val();
-        } else {
-            link = 'api/recovery/getrecoverydata' + link + '&project=' + $("#project").val() + '&type=' + $("#type_recovery option:selected").val() + '&start_date=' + $("#start_date").val() + '&end_date=' + $("#end_date").val() + '&client_name=' + $("#client-name").val();
-        }
+        // Formata a url
+        link = urlDataFormatted(link);
 
         $.ajax({
             method: "GET",
@@ -63,14 +79,7 @@ $(document).ready(function () {
             },
             error: function error(response) {
                 console.log(response);
-                if (response.status === 422) {
-                    for (error in response.errors) {
-                        alertCustom('error', String(response.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', response.responseJSON.message);
-                }
-
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 console.log(response);
@@ -118,7 +127,7 @@ $(document).ready(function () {
 
                 if (response.data.length > 9) {
                     $("#pagination-salesRecovery").show();
-                    paginateSalesRecovery(response, 'salesRecovery', atualizar);
+                    pagination(response, 'salesRecovery', updateSalesRecovery);
 
                 } else {
                     $("#pagination-salesRecovery").hide();
@@ -157,13 +166,8 @@ $(document).ready(function () {
                                 error: function error(response) {
                                     loadingOnScreenRemove();
 
-                                    if (response.status === 422) {
-                                        for (error in response.errors) {
-                                            alertCustom('error', String(response.errors[error]));
-                                        }
-                                    } else {
-                                        alertCustom('error', response.responseJSON.message);
-                                    }
+                                    errorAjaxResponse(response);
+
                                 },
                                 success: function success() {
                                     loadingOnScreenRemove();
@@ -191,13 +195,8 @@ $(document).ready(function () {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         error: function error() {
-                            if (response.status === 422) {
-                                for (error in response.errors) {
-                                    alertCustom('error', String(response.errors[error]));
-                                }
-                            } else {
-                                alertCustom('error', response.responseJSON.message);
-                            }
+                            errorAjaxResponse(response);
+
                         },
                         success: function success(response) {
                             $("#table-product").html('');
@@ -298,29 +297,8 @@ $(document).ready(function () {
 
                 function clearFields() {
                     $("#status-checkout").removeClass('badge-success badge-danger');
-                    $("#date-as-hours").html('');
-                    $("#table-product").html('');
-                    $("#total-value").html('');
-                    $("#client-name-details").html('');
-                    $("#client-telephone").html('');
                     $("#client-whatsapp").attr('href', '');
-                    $("#client-email").html('');
-                    $("#client-document").html('');
-                    $("#client-street").html('');
-                    $("#client-zip-code").html('');
-                    $("#client-city-state").html('');
-                    $("#sale-motive").html('');
-                    $("#link-sale").html('');
-                    $("#checkout-ip").html('');
-                    $("#checkout-is-mobile").html('');
-                    $("#checkout-operational-system").html('');
-                    $("#checkout-browser").html('');
-                    $("#checkout-src").html('');
-                    $("#checkout-utm-source").html('');
-                    $("#checkout-utm-medium").html('');
-                    $("#checkout-utm-campaign").html('');
-                    $("#checkout-utm-term").html('');
-                    $("#checkout-utm-content").html('');
+                    $("#date-as-hours, #table-product, #total-value, #client-name-details, #client-telephone, #client-email, #client-document, #client-street, #client-zip-code, #client-city-state, #sale-motive, #link-sale, #checkout-ip, #checkout-is-mobile, #checkout-operational-system, #checkout-browser, #checkout-src, #checkout-utm-source, #checkout-utm-medium, #checkout-utm-campaign, #checkout-utm-term, #checkout-utm-content").html('');
                 }
 
                 $('.estornar_venda').unbind('click');
@@ -395,36 +373,6 @@ $(document).ready(function () {
      */
     function isEmpty(obj) {
         return Object.keys(obj).length === 0;
-    }
-
-    /**
-     * Limpa os campos da modal
-     */
-    function clearFields() {
-        $("#status-checkout").removeClass('badge-success badge-danger');
-        $("#date-as-hours").html('');
-        $("#table-product").html('');
-        $("#total-value").html('');
-        $("#client-name-details").html('');
-        $("#client-telephone").html('');
-        $("#client-whatsapp").attr('href', '');
-        $("#client-email").html('');
-        $("#client-document").html('');
-        $("#client-street").html('');
-        $("#client-zip-code").html('');
-        $("#client-city-state").html('');
-        $("#sale-motive").html('');
-        $("#link-sale").html('');
-        $("#checkout-ip").html('');
-        $("#checkout-is-mobile").html('');
-        $("#checkout-operational-system").html('');
-        $("#checkout-browser").html('');
-        $("#checkout-src").html('');
-        $("#checkout-utm-source").html('');
-        $("#checkout-utm-medium").html('');
-        $("#checkout-utm-campaign").html('');
-        $("#checkout-utm-term").html('');
-        $("#checkout-utm-content").html('');
     }
 
 });

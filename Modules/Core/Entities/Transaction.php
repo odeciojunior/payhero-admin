@@ -63,8 +63,6 @@ class Transaction extends Model
         'type',
         'status',
         'release_date',
-        'created_at',
-        'updated_at',
         'antecipation_date',
         'antecipable_value',
         'antecipable_tax',
@@ -72,6 +70,8 @@ class Transaction extends Model
         'percentage_rate',
         'transaction_rate',
         'percentage_antecipable',
+        'created_at',
+        'updated_at',
     ];
 
     /**

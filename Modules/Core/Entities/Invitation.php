@@ -3,9 +3,9 @@
 namespace Modules\Core\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\InvitePresenter;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property integer $id

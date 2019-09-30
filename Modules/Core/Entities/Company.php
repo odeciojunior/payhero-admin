@@ -3,11 +3,12 @@
 namespace Modules\Core\Entities;
 
 use App\Traits\FoxModelTrait;
+use App\Traits\PaginatableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laracasts\Presenter\PresentableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
 use Modules\Core\Presenters\CompanyPresenter;
 
 /**
@@ -36,9 +37,9 @@ use Modules\Core\Presenters\CompanyPresenter;
  * @property string $support_email
  * @property string $support_telephone
  * @property integer $balance
- * @property boolean $bank_document_status
- * @property boolean $address_document_status
- * @property boolean $contract_document_status
+ * @property int $bank_document_status
+ * @property int $address_document_status
+ * @property int $contract_document_status
  * @property string $created_at
  * @property string $deleted_at
  * @property string $updated_at
@@ -52,18 +53,23 @@ use Modules\Core\Presenters\CompanyPresenter;
  * @property Transfer[] $transfers
  * @property UserProject[] $usersProjects
  * @property Withdrawal[] $withdrawals
+ * @property string $bank_document_status_value
+ * @property string $bank_document_status_badge
  */
 class Company extends Model
 {
-    use SoftDeletes, PresentableTrait, FoxModelTrait;
+    use SoftDeletes, PaginatableTrait, PresentableTrait, FoxModelTrait;
     /**
      * @var string
      */
     protected $presenter = CompanyPresenter::class;
     /**
+     * The accessors to append to the model's array form.
      * @var array
      */
-    protected $appends = ['id_code'];
+    protected $appends = [
+        'id_code',
+    ];
     /**
      * @var array
      */

@@ -2,7 +2,10 @@
 
 namespace Modules\Core\Entities;
 
+use App\Traits\FoxModelTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -30,41 +33,37 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Delivery extends Model
 {
-
-    use SoftDeletes;
-
+    use SoftDeletes, FoxModelTrait;
     /**
      * The "type" of the auto-incrementing ID.
-     * 
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
-        'carrier_id', 
-        'receiver_name', 
-        'zip_code', 
-        'country', 
-        'state', 
-        'city', 
-        'neighborhood', 
-        'street', 
-        'number', 
-        'complement', 
-        'id_order_carrier', 
-        'status_carrier', 
-        'tracking_code', 
-        'type', 
-        'created_at', 
-        'updated_at', 
-        'deleted_at'
+        'carrier_id',
+        'receiver_name',
+        'zip_code',
+        'country',
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+        'number',
+        'complement',
+        'id_order_carrier',
+        'status_carrier',
+        'tracking_code',
+        'type',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function carrier()
     {
@@ -72,7 +71,7 @@ class Delivery extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function sales()
     {
@@ -80,7 +79,7 @@ class Delivery extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function trackingHistories()
     {

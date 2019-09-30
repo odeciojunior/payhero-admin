@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="page-content container">
-            <form id='create_form' method="post" action="{{route('companies.store')}}">
+            <form id='create_form' method="post" action="{{route('api.companies.store')}}">
                 @csrf
                 @method('POST')
                 <div class="card shadow p-30" data-plugin="matchHeight">

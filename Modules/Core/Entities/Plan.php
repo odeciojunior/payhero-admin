@@ -28,8 +28,8 @@ use Modules\Core\Presenters\PlanPresenter;
  * @property AffiliateLink[] $affiliateLinks
  * @property CheckoutPlan[] $checkoutPlans
  * @property PlanGift[] $planGifts
- * @property PlansSale[] $plansSales
- * @property ProductsPlan[] $productsPlans
+ * @property PlanSale[] $planSales
+ * @property ProductPlan[] $productPlans
  * @property SmsMessage[] $smsMessages
  * @property ZenviaSm[] $zenviaSms
  */
@@ -71,7 +71,7 @@ class Plan extends Model
      */
     public function project()
     {
-        return $this->belongsTo('Modules\Core\Entities\Project');
+        return $this->belongsTo(Project::class);
     }
 
     /**
@@ -79,7 +79,7 @@ class Plan extends Model
      */
     public function affiliateLinks()
     {
-        return $this->hasMany('Modules\Core\Entities\AffiliateLink');
+        return $this->hasMany(AffiliateLink::class);
     }
 
     /**
@@ -87,7 +87,7 @@ class Plan extends Model
      */
     public function checkoutPlans()
     {
-        return $this->hasMany('Modules\Core\Entities\CheckoutPlan');
+        return $this->hasMany(CheckoutPlan::class);
     }
 
     /**
@@ -95,7 +95,7 @@ class Plan extends Model
      */
     public function planGifts()
     {
-        return $this->hasMany('Modules\Core\Entities\PlanGift');
+        return $this->hasMany(PlanGift::class);
     }
 
     /**
@@ -103,7 +103,7 @@ class Plan extends Model
      */
     public function plansSales()
     {
-        return $this->hasMany('Modules\Core\Entities\PlanSale');
+        return $this->hasMany(PlanSale::class);
     }
 
     /**
@@ -111,7 +111,7 @@ class Plan extends Model
      */
     public function productsPlans()
     {
-        return $this->hasMany('Modules\Core\Entities\ProductPlan');
+        return $this->hasMany(ProductPlan::class);
     }
 
     /**
@@ -131,10 +131,10 @@ class Plan extends Model
     }
 
     /**
-     * @return BelongsToMany|BelongsToMany
+     * @return BelongsToMany
      */
     public function products()
     {
-        return $this->belongsToMany('Modules\Core\Entities\Product', 'products_plans', 'plan_id', 'product_id');
+        return $this->belongsToMany(Product::class, 'products_plans', 'plan_id', 'product_id');
     }
 }
