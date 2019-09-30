@@ -1,5 +1,9 @@
 $(function () {
 
+    $('#tab-info').click(()=>{
+       show();
+    });
+
     $("#tab_configuration").click(function () {
         $("#image-logo-email").imgAreaSelect({remove: true});
         $("#previewimage").imgAreaSelect({remove: true});
@@ -7,6 +11,8 @@ $(function () {
     });
 
     let projectId = $(window.location.pathname.split('/')).get(-1);
+
+    show();
 
     /* function verifyInputText() {
          let verify = false;
@@ -57,7 +63,43 @@ $(function () {
      }
  */
 
+    function show() {
+
+        loadOnAny('#tab_info_geral');
+
+        $.ajax({
+            url: '/api/projects/' + projectId,
+            success: (response) => {
+
+                let project = response.data;
+
+                $('.page-title, .title-pad').text(project.name);
+                $('#show-photo').attr('src', project.photo ? project.photo : '/modules/global/img/projeto.png');
+                $('#created_at').text('Criado em ' + project.created_at);
+                if(project.visibility === 'public'){
+                    $('#show-visibility').text('Público').addClass('badge-primary');
+                }else{
+                    $('#show-visibility').text('Privado').addClass('badge-danger');
+                }
+                if(project.status){
+                    $('#show-status').text('Ativo').addClass('badge-primary');
+                }else{
+                    $('#show-status').text('Inativo').addClass('badge-danger');
+                }
+                $('#show-description').text(project.description);
+
+                loadOnAny('#tab_info_geral', true);
+            },
+            error: () => {
+                alertCustom('error', 'Erro ao exibir informaçoes do projeto');
+                loadOnAny('#tab_info_geral', true);
+            }
+        });
+    }
+
     function renderProjectConfig(data) {
+
+        console.log(data);
 
         let {project, companies, userProject, shopifyIntegrations} = data;
 
@@ -79,7 +121,7 @@ $(function () {
             $('#update-project #companies').append(`<option value="${company.id}" ${(company.id === userProject.company_id ? 'selected' : '')} >${company.name}</option>`)
         }
         $('#update-project .installment_amount').prop('selectedIndex', project.installments_amount - 1).change();
-        $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_amount - 1).change();
+        $('#update-project .parcelas-juros').prop('selectedIndex', project.installments_interest_free - 1).change();
         if (project.boleto === 1) {
             $('#update-project #boleto').prop('selectedIndex', 0).change();
         } else {
@@ -112,20 +154,20 @@ $(function () {
 
     ///// UDPATE CONFIGURAÇÃO Tela Project
     function updateConfiguracoes() {
-        loadOnAny('#tab_configuration_project .card');
+        loadOnAny('#tab_configuration_project');
         $.ajax({
             method: "GET",
             url: "/api/projects/" + projectId + '/edit',
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
             }, error: function (response) {
+                loadOnAny('#tab_configuration_project', true);
                 alertCustom('error', 'Erro ao carregar configuraçoes do projeto');
-
             }, success: function (data) {
 
                 renderProjectConfig(data);
 
-                loadOnAny('#tab_configuration_project .card', true);
+                loadOnAny('#tab_configuration_project', true);
 
                 let parcelas = '';
                 let parcelasJuros = '';

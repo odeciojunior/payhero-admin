@@ -85,7 +85,7 @@ $(document).ready(function () {
                         var project_id = $(this).attr('project');
                         $.ajax({
                             method: "GET",
-                            url: "/projects/user-projects",
+                            url: "/api/projects/user-projects",
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -209,7 +209,7 @@ $(document).ready(function () {
 
         $.ajax({
             method: "GET",
-            url: "/projects/user-projects",
+            url: "/api/projects/user-projects",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },

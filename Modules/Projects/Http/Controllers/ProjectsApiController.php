@@ -3,6 +3,7 @@
 namespace Modules\Projects\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +18,7 @@ use Modules\Companies\Transformers\CompaniesSelectResource;
 use Modules\Projects\Http\Requests\ProjectStoreRequest;
 use Modules\Projects\Http\Requests\ProjectUpdateRequest;
 use Modules\Projects\Transformers\ProjectsResource;
+use Modules\Projects\Transformers\ProjectsSelectResource;
 use Modules\Projects\Transformers\UserProjectResource;
 use Modules\Shopify\Transformers\ShopifyIntegrationsResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -24,6 +26,9 @@ use Vinkla\Hashids\Facades\Hashids;
 class ProjectsApiController extends Controller
 {
 
+    /**
+     * @return JsonResponse
+     */
     public function index()
     {
         try {
@@ -41,6 +46,9 @@ class ProjectsApiController extends Controller
         }
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function create()
     {
         try {
@@ -53,6 +61,7 @@ class ProjectsApiController extends Controller
         }
     }
 
+
     public function store(ProjectStoreRequest $request)
     {
         try {
@@ -64,7 +73,7 @@ class ProjectsApiController extends Controller
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if (!empty($requestValidated)) {
-                $requestValidated['company'] = current(Hashids::decode($requestValidated['company']));
+                $requestValidated['company'] = Hashids::decode($requestValidated['company'])[0];
 
                 $project = $projectModel->create([
                     'name' => $requestValidated['name'],
@@ -113,37 +122,40 @@ class ProjectsApiController extends Controller
                             'status' => 'active',
                         ]);
                         if (!empty($userProject)) {
-                            return redirect()->route('projects.index')->with('success', 'Projeto salvo com sucesso!');
+                            return response()->json(['message', 'Projeto salvo com sucesso']);
                         } else {
                             $digitalOceanPath->deleteFile($project->photo);
                             $shipping->delete();
                             $project->delete();
 
-                            return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
+                            return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
                         }
                     } else {
                         $project->delete();
 
-                        return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
+                        return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
                     }
                 } else {
-                    return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
+                    return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
                 }
             } else {
-                return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
+                return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar salvar projeto - ProjectsController -store');
             report($e);
-
-            return redirect()->back()->with('error', 'Erro ao tentar salvar projeto');
+            return response()->json(['message', 'Erro ao tentar salvar projeto'], 400);
         }
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
     public function edit($id)
     {
-        try{
-            if(isset($id)){
+        try {
+            if (isset($id)) {
                 $projectModel = new Project();
                 $userProjectModel = new UserProject();
                 $shopifyIntegrationModel = new ShopifyIntegration();
@@ -151,7 +163,7 @@ class ProjectsApiController extends Controller
                 $user = auth()->user()->load('companies');
 
                 $idProject = Hashids::decode($id)[0];
-                $project = $projectModel->find($idProject)->makeHidden(['id', 'carrier_id']);
+                $project = $projectModel->find($idProject);
 
                 $userProject = $userProjectModel->where('user_id', $user->id)
                     ->where('project_id', $idProject)->first();
@@ -164,7 +176,8 @@ class ProjectsApiController extends Controller
                 $companies = CompaniesSelectResource::collection($user->companies);
 
                 if (Gate::allows('edit', [$project])) {
-                    return response()->json(compact('companies','project', 'userProject', 'shopifyIntegrations'));
+                    $project = new ProjectsResource($project);
+                    return response()->json(compact('companies', 'project', 'userProject', 'shopifyIntegrations'));
                 } else {
                     return response()->json(['message' => 'Erro ao carregar configuraçoes do projeto'], 400);
                 }
@@ -172,7 +185,7 @@ class ProjectsApiController extends Controller
             return response()->json([
                 'message' => 'Erro ao carregar configuracoes do projeto',
             ], 400);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Log::warning('Erro ao carregar configuracoes do projeto (ProjectsApiController - edit)');
             report($e);
             return response()->json([
@@ -181,13 +194,18 @@ class ProjectsApiController extends Controller
         }
     }
 
-    public function destroy($id){
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function destroy($id)
+    {
         try {
             $projectModel = new Project();
 
             $projectId = Hashids::decode($id)[0];
 
-            $project   = $projectModel->where('id', $projectId)->first();
+            $project = $projectModel->where('id', $projectId)->first();
 
             if (Gate::allows('destroy', [$project])) {
 
@@ -220,18 +238,23 @@ class ProjectsApiController extends Controller
         }
     }
 
+    /**
+     * @param ProjectUpdateRequest $request
+     * @param $id
+     * @return JsonResponse
+     */
     public function update(ProjectUpdateRequest $request, $id)
     {
         try {
 
-            $requestValidated    = $request->validated();
-            $projectModel        = new Project();
-            $userProjectModel    = new UserProject();
+            $requestValidated = $request->validated();
+            $projectModel = new Project();
+            $userProjectModel = new UserProject();
             $digitalOceanService = app(DigitalOceanFileService::class);
 
             if ($requestValidated) {
 
-                $project = $projectModel->find(current(Hashids::decode($id)));
+                $project = $projectModel->find(Hashids::decode($id)[0]);
 
                 if (Gate::allows('update', [$project])) {
 
@@ -240,7 +263,7 @@ class ProjectsApiController extends Controller
                     }
 
                     $requestValidated['cookie_duration'] = 60;
-                    $requestValidated['status']          = 1;
+                    $requestValidated['status'] = 1;
 
                     $projectUpdate = $project->update($requestValidated);
                     if ($projectUpdate) {
@@ -266,7 +289,7 @@ class ProjectsApiController extends Controller
                                 $digitalOceanService->deleteFile($project->logo);
                                 $img = Image::make($projectLogo->getPathname());
 
-                                $img->resize(null, 300, function($constraint) {
+                                $img->resize(null, 300, function ($constraint) {
                                     $constraint->aspectRatio();
                                 });
 
@@ -285,11 +308,11 @@ class ProjectsApiController extends Controller
                             return response()->json(['message', 'Erro ao atualizar projeto'], 400);
                         }
 
-                        $userProject                    = $userProjectModel->where([
+                        $userProject = $userProjectModel->where([
                             ['user_id', auth()->user()->id],
                             ['project_id', $project->id],
                         ])->first();
-                        $requestValidated['company_id'] = current(Hashids::decode($requestValidated['company_id']));
+                        $requestValidated['company_id'] = Hashids::decode($requestValidated['company_id'])[0];
                         if ($userProject->company_id != $requestValidated['company_id']) {
                             $userProject->update(['company_id' => $requestValidated['company_id']]);
                         }
@@ -309,128 +332,43 @@ class ProjectsApiController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse|ProjectsResource
+     */
+    public function show($id)
+    {
+        try {
+            if ($id) {
 
-//    public function index()  {
-//
-//        $projetos_usuario = UserProjeto::where([
-//            ['user',\Auth::user()->id],
-//            ['tipo','produtor']
-//        ])->pluck('projeto')->toArray();
-//
-//        $projetos = Projeto::whereIn('id',$projetos_usuario);
-//
-//        return ProjetosResource::collection($projetos_usuario->paginate());
-//    }
-//
-//    public function store(Request $request)  {
-//
-//        $dados = $request->all();
-//
-//        $projeto = Projeto::create($dados);
-//
-//        UserProjeto::create([
-//            'user'              => \Auth::user()->id,
-//            'projeto'           => $projeto->id,
-//            'empresa'           => $dados['empresa'],
-//            'tipo'              => 'produtor',
-//            'responsavel_frete' => true,
-//            'permissao_acesso'  => true,
-//            'permissao_editar'  => true,
-//            'status'            => 'ativo'
-//        ]);
-//
-//        return response()->json('sucesso');
-//    }
-//
-//    public function show($id)  {
-//
-//        $projeto = Projeto::find(Hashids::decode($id));
-//
-//        if(!$projeto){
-//            return response()->json('Projeto não encontrado');
-//        }
-//
-//        if(!$this->isAuthorized($projeto['id'])){
-//            return response()->json('não autorizado');
-//        }
-//
-//        $projeto_usuario = UserProjeto::where([
-//            ['user',\Auth::user()->id],
-//            ['tipo','produtor'],
-//            ['projeto', $projeto['id']]
-//        ])->first();
-//
-//        if(!$projeto_usuario){
-//            return response()->json('Sem autorização');
-//        }
-//
-//        return response()->json($projeto);
-//    }
-//
-//    public function update(Request $request)  {
-//
-//        $projeto = Projeto::find(Hashids::decode($dados['id']));
-//
-//        if(!$projeto){
-//            return response()->json('projeto não encontrado');
-//        }
-//
-//        if(!$this->isAuthorized($projeto['id'])){
-//            return response()->json('não autorizado');
-//        }
-//
-//        $projeto_usuario = UserProjeto::where([
-//            ['user',\Auth::user()->id],
-//            ['tipo','produtor'],
-//            ['projeto', $projeto['id']]
-//        ])->first();
-//
-//        if(!$projeto_usuario){
-//            return response()->json('Sem autorização');
-//        }
-//
-//        $projeto->update($dados);
-//
-//        return response()->json('sucesso');
-//    }
-//
-//    public function destroy($id)  {
-//
-//        $projeto = Projeto::find(Hashids::decode($id));
-//
-//        if(!$projeto){
-//            return response()->json('projeto não encontrado');
-//        }
-//
-//        $projeto_usuario = UserProjeto::where([
-//            ['user',\Auth::user()->id],
-//            ['tipo','produtor'],
-//            ['projeto', $projeto['id']]
-//        ])->first();
-//
-//        if(!$projeto_usuario){
-//            return response()->json('Sem autorização');
-//        }
-//
-//        $projeto->delete();
-//
-//        return response()->json('sucesso');
-//    }
-//
-//    public function isAuthorized($id_projeto){
-//
-//        $projeto_usuario = UserProjeto::where([
-//            ['user',\Auth::user()->id],
-//            ['tipo','produtor'],
-//            ['projeto', $id_projeto]
-//        ])->first();
-//
-//        if(!$projeto_usuario){
-//            return false;
-//        }
-//
-//        return true;
-//    }
+                $projectModel = new Project();
 
+                $project = $projectModel->find(Hashids::decode($id)[0]);
+
+                if (Gate::allows('show', [$project])) {
+                    return new ProjectsResource($project);
+                } else {
+                    return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+                }
+            } else {
+                return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+            }
+        } catch (Exception $e) {
+            Log::warning('Erro ao tentar acessar detalhes do projeto (ProjectsController - show)');
+            report($e);
+            return response()->json(['message' => 'Erro ao exibir detalhes do projeto'], 400);
+        }
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getProjects()
+    {
+
+        $projectService = new ProjectService();
+
+        return ProjectsSelectResource::collection($projectService->getUserProjects());
+    }
 }
 

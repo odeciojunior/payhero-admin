@@ -2,7 +2,7 @@ $(function () {
 
     $.ajax({
         method: "GET",
-        url: "/projects/user-projects",
+        url: "/api/projects/user-projects",
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },

@@ -154,6 +154,7 @@ function loadOnAny(element, stop = false){
         let loader = $(element).clone().addClass( 'element-loading').html(loading);
         $(element).hide();
         $(element).parent().append(loader);
+        loader.show();
     }else{
         $(element).show();
     }
