@@ -62,6 +62,10 @@ class ProjectsApiController extends Controller
     }
 
 
+    /**
+     * @param ProjectStoreRequest $request
+     * @return JsonResponse
+     */
     public function store(ProjectStoreRequest $request)
     {
         try {
