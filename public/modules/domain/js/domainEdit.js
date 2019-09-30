@@ -536,7 +536,7 @@ $(document).ready(function () {
     function verifyDataDomain() {
         $.ajax({
             method: 'GET',
-            url: '/api/project/' + projectId + '/domain/' + $("#domain").val() + '/info',
+            url: '/api/project/' + projectId + '/domains/' + $("#domain").val(),
             headers: {
                 "X-CSRF-TOKEN": csrfToken
             },

@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#ffffff">
 
     <!-- csrf token used for ajax requests -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <!-- access token used for api ajax requests -->
     <meta name="access-token" content="Bearer {{ auth()->user()->createToken("Laravel Password Grant Client")->accessToken  }}">
 

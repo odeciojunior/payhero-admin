@@ -529,7 +529,7 @@ class DomainsApiController extends Controller
      * @param $domain
      * @return JsonResponse
      */
-    public function getDomainData($project, $domain)
+    public function show($project, $domain)
     {
         try {
 
