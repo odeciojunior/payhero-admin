@@ -340,7 +340,8 @@ class ShopifyController extends Controller
                                 }
 
                                 $shopifyIntegration->update([
-                                                                'status' => $shopifyIntegration->present()->getStatus('approved'),
+                                                                'status' => $shopifyIntegration->present()
+                                                                                               ->getStatus('approved'),
                                                             ]);
                             }
 
@@ -442,7 +443,8 @@ class ShopifyController extends Controller
                                 if ($htmlCart) {
                                     //template normal
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'basic_theme'),
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('basic_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'sections/cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
@@ -452,7 +454,8 @@ class ShopifyController extends Controller
                                 } else {
                                     //template ajax
                                     $shopifyIntegration->update([
-                                                                    'theme_type' => $shopifyIntegrationModel->getEnum('theme_type', 'ajax_theme'),
+                                                                    'theme_type' => $shopifyIntegrationModel->present()
+                                                                                                            ->getThemeType('ajax_theme'),
                                                                     'theme_name' => $shopify->getThemeName(),
                                                                     'theme_file' => 'snippets/ajax-cart-template.liquid',
                                                                     'theme_html' => $htmlCart,
@@ -473,7 +476,8 @@ class ShopifyController extends Controller
                                 }
 
                                 $shopifyIntegration->update([
-                                                                'status' => $shopifyIntegration->getEnum('status', 'approved'),
+                                                                'status' => $shopifyIntegration->present()
+                                                                                               ->getStatus('approved'),
                                                             ]);
                             }
 
