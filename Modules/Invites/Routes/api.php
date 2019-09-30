@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['auth:api']], function() {
     Route::apiResource('invitations', 'InvitesApiController')->only('index', 'store','destroy')->names('api.invites');
 
     Route::get('/invitations/getinvitationdata', 'InvitesApiController@getInvitationData')

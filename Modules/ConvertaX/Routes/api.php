@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(
     [
-        'middleware' => ['web', 'auth'],
+        'middleware' => ['auth:api'],
     ],
     function() {
         Route::apiResource('/apps/convertax', 'ConvertaXApiController')

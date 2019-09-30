@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['middleware' => ['web', 'auth']], function() {
+Route::group(['middleware' => ['auth:api']], function() {
     Route::apiResource('tracking', 'TrackingsApiController')->only('index', 'store','destroy')->names('api.trackings');
 });
 
