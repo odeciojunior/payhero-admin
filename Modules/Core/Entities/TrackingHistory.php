@@ -21,19 +21,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class TrackingHistory extends Model
 {
-
     /**
      * The "type" of the auto-incrementing ID.
      * @var string
      */
     protected $keyType = 'integer';
-
     /**
      * @var array
      */
     protected $fillable = [
         'delivery_id',
         'plans_sale_id',
+        'product_plan_sale_id',
         'tracking_code',
         'created_at',
         'updated_at',
