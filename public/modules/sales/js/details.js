@@ -36,8 +36,10 @@ $(document).ready(function () {
                 delivery: delivery,
                 trackingCode: tracking,
             },
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
                 if (response.status == '422') {
@@ -64,8 +66,10 @@ $(document).ready(function () {
         $.ajax({
             method: 'POST',
             url: '/api/sales/update/trackingcode/' + sale,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
                 if (response.status == '422') {

@@ -4,14 +4,6 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('/modules/sales/css/index.css') }}">
-        <style>
-            .crop {
-                width: 100px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-        </style>
     @endpush
 
     <!-- Page -->

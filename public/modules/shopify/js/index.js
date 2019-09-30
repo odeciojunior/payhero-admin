@@ -4,12 +4,14 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/apps/shopify",
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
+            error: function error(response) {
                 // loadingOnScreenRemove();
-                alertCustom('error', 'Ocorreu algum erro');
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 $('#content').html("");
@@ -75,13 +77,14 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/companies/usercompanies",
+            dataType: "json",
             headers: {
                 'Authorization': $('meta[name="access-token"]').attr('content'),
                 'Accept': 'application/json',
             },
-            error: function error() {
+            error: function error(response) {
                 $("#modal-content").hide();
-                alertCustom('error', 'Ocorreu algum erro');
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 if (Object.keys(response.data).length === 0) {
@@ -122,8 +125,10 @@ $(document).ready(function () {
                         $.ajax({
                             method: "POST",
                             url: "/api/apps/shopify",
+                            dataType: "json",
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             processData: false,
                             contentType: false,
@@ -131,7 +136,7 @@ $(document).ready(function () {
                             data: form_data,
                             error: function error(response) {
                                 loadingOnScreenRemove();
-                                alertCustom('error', response.responseJSON.message); //'Ocorreu algum erro'
+                                errorAjaxResponse(response);
                             },
                             success: function success(response) {
                                 loadingOnScreenRemove();

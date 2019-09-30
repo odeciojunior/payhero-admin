@@ -21,16 +21,17 @@ function updateWithdrawalsTable(link = null, quemMeChamou = "ninguém") {
         link = '/withdrawals' + link;
         quemMeChamou = "pagination";
     }
-    console.log("updateWithdrawalsTable2 => " + quemMeChamou);
-    console.log("updateWithdrawalsTable2:company => " + $("#transfers_company_select option:selected").val());
     $.ajax({
         method: "GET",
         url: link,
         data: {company: $("#extract_company_select").val()},
+        dataType: "json",
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
         },
-        error: function () {
+        error: function (response) {
+            errorAjaxResponse(response);
             $("#table-withdrawals-body").html('Erro ao encontrar dados');
         },
         success: function (response) {

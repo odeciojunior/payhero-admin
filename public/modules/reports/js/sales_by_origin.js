@@ -21,11 +21,13 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                //
+            error: function error(response) {
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 $('#origins-data').html('');

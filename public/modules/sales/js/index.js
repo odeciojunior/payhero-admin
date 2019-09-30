@@ -47,14 +47,13 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/sales/",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             error: function error(response) {
-                if (response.status === 422) {
-                    for (error in response.responseJSON.errors) {
-                        alertCustom('error', String(response.responseJSON.errors[error]));
-                    }
-                } else {
-                    alertCustom('error', String(response.responseJSON.message));
-                }
+                errorAjaxResponse(response);
             },
             success: function success(data) {
                 if (data.sales_amount) {
@@ -272,11 +271,13 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                //
+            error: function error(response) {
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 $('#dados_tabela').html('');
@@ -342,20 +343,16 @@ $(document).ready(function () {
                         $.ajax({
                             method: "POST",
                             url: "/api/recovery/regenerateboleto",
+                            dataType: "json",
                             headers: {
-                                'X-CSRF-TOKEN': $("meta[name='csrf-token']").attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             data: {saleId: saleId, date: $('#date').val(), discountType: $("#discount_type").val(), discountValue: $("#discount_value").val()},
                             error: function error(response) {
                                 loadingOnScreenRemove();
 
-                                if (response.status === 422) {
-                                    for (error in response.errors) {
-                                        alertCustom('error', String(response.errors[error]));
-                                    }
-                                } else {
-                                    alertCustom('error', response.responseJSON.message);
-                                }
+                                errorAjaxResponse(response);
                             },
                             success: function success(response) {
                                 loadingOnScreenRemove();
@@ -400,11 +397,13 @@ $(document).ready(function () {
                         method: "POST",
                         url: '/api/sales/detail',
                         data: data,
+                        dataType: "json",
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
-                        error: function error() {
-                            alertCustom('error', 'Erro ao exibir detalhes da venda');
+                        error: function error(response) {
+                            errorAjaxResponse(response);
                             btn_detalhe.parent().children('span').remove();
                             btn_detalhe.show();
                         },
@@ -476,14 +475,13 @@ $(document).ready(function () {
                     method: "POST",
                     url: '/api/tracking',
                     data: {tracking_code: tracking_code, sale_id: sale_id, product_id: productId},
+                    dataType: "json",
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'Authorization': $('meta[name="access-token"]').attr('content'),
+                        'Accept': 'application/json',
                     },
                     error: function error(response) {
-                        // trackingInput.hide('fast');
-                        if (response.status == '400') {
-                            alertCustom('error', response.message);
-                        }
+                        errorAjaxResponse(response);
                     },
                     success: function success(response) {
                         var trackingStatusSPan = trackingInput.parents().next('td').find('.tracking-status-span');
@@ -523,11 +521,13 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: link,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
-
+                errorAjaxResponse(response);
             },
             success: function success(response) {
                 downloadFile(response, 'export.xlsx');

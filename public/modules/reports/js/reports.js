@@ -3,12 +3,14 @@ $(function () {
     $.ajax({
         method: "GET",
         url: "/api/projects/user-projects",
+        dataType: "json",
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'Authorization': $('meta[name="access-token"]').attr('content'),
+            'Accept': 'application/json',
         },
-        error: function error() {
+        error: function error(response) {
             $("#modal-content").hide();
-            alertCustom('error', 'Ocorreu algum erro');
+            errorAjaxResponse(response);
         },
         success: function success(response) {
             if (Object.keys(response.data).length === 0) {
@@ -50,11 +52,13 @@ $(function () {
                 endDate: endDate,
                 startDate: startDate
             },
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom('error', 'Erro ao tentar buscar dados');
+            error: function error(response) {
+                errorAjaxResponse(response);
             },
             success: function success(response) {
 
@@ -80,7 +84,6 @@ $(function () {
 
                 var table_data_itens = '';
                 $.each(response.plans, function (index, data) {
-                    console.log(data);
                     table_data_itens += '<tr>';
                     table_data_itens += '<td><img src=' + data.photo + ' width="50px;" style="border-radius:6px;"></td>';
                     table_data_itens += '<td>' + data.name + "</td>";
@@ -110,11 +113,13 @@ $(function () {
         $.ajax({
             url: link,
             type: 'GET',
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
-            error: function error() {
-                alertCustom('error', 'Erro ao tentar buscar dados');
+            error: function error(response) {
+                errorAjaxResponse(response);
             },
             success: function success(response) {
 
