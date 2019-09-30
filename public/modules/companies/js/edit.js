@@ -71,7 +71,11 @@ $(document).ready(function () {
         //Get Company data from laravel api
         $.ajax({
             method: "GET",
-            url: "/api/companies/" + encodedId + "/edit",
+            url: "/api/companies/" + encodedId,
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             error: function (_error2) {
                 function error(_x2) {
                     return _error2.apply(this, arguments);
@@ -90,7 +94,7 @@ $(document).ready(function () {
                 }
             ),
             success: function success(response) {
-                console.log(response.company);
+                // console.log(response.company);
                 let company = response.company;
                 let lists = {bank: response.banks};
                 let functions = {bank: selectItemsFunction};
@@ -117,7 +121,8 @@ $(document).ready(function () {
                 method: "POST",
                 url: companyUpdateForm.attr('action'),
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 processData: false,
                 contentType: false,
@@ -154,7 +159,8 @@ $(document).ready(function () {
                 method: "POST",
                 url: companyBankUpdateForm.attr('action'),
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 processData: false,
                 contentType: false,
@@ -210,6 +216,10 @@ $(document).ready(function () {
     }
 });
 Dropzone.options.dropzoneDocuments = {
+    headers: {
+        'Authorization': $('meta[name="access-token"]').attr('content'),
+        'Accept': 'application/json',
+    },
     paramName: "file",
     maxFilesize: 2, // MB
     acceptedFiles: ".jpg,.jpeg,.doc,.pdf,.png",

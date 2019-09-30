@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     atualizar(1);
 
     function atualizar(page) {
@@ -10,12 +11,15 @@ $(document).ready(function () {
             url: "/api/companies?page=" + page,
             dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
+                console.log('GET /api/companies: error');
                 $('#companies_table_data').html("<tr class='text-center'><td colspan='11'>Error</td></tr>");
             },
             success: function success(response) {
+                console.log('GET /api/companies: success');
                 $.each(response.data, function (index, value) {
                     dados = "<tr>";
                     dados += "<td>" + value.fantasy_name + "</td>";
@@ -53,9 +57,11 @@ $(document).ready(function () {
                             method: "DELETE",
                             url: "/api/companies/" + company,
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'Authorization': $('meta[name="access-token"]').attr('content'),
+                                'Accept': 'application/json',
                             },
                             error: function (_error) {
+                                console.log('DELETE /api/companies: error');
                                 function error(_x) {
                                     return _error.apply(this, arguments);
                                 }
@@ -77,6 +83,7 @@ $(document).ready(function () {
                                 }
                             }),
                             success: function success(data) {
+                                console.log('DELETE /api/companies: success');
                                 alertCustom("success", data.message);
                                 atualizar(page);
                             }
