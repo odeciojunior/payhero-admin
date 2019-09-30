@@ -55,7 +55,7 @@ class TrackingsApiController extends Controller
                                                                         ]);
                         if ($trackingCodeupdated) {
                             return response()->json([
-                                                        'message' => 'Código de rastreio alterado',
+                                                        'message' => 'Código de rastreio salvo',
                                                         'data'    => [
                                                             'tracking_code'   => $productPlanSale->tracking_code,
                                                             'tracking_status' => Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
@@ -64,32 +64,51 @@ class TrackingsApiController extends Controller
                                                     ], 200);
                         } else {
                             return response()->json([
-                                                        'message' => 'Erro ao alterar código de rastreio',
+                                                        'message' => 'Erro ao salvar código de rastreio',
                                                     ], 400);
                         }
+                    } else if ($productPlanSale && $productPlanSale->tracking_code != $data['tracking_code']) {
+                        $trackingCode = $productPlanSale->tracking_code;
+
+                        $trackingCodeupdated = $productPlanSale->update([
+                                                                            'tracking_code' => $data['tracking_code'],
+                                                                        ]);
+                        if ($trackingCodeupdated) {
+                            $trackingHistoryModel = new TrackingHistory();
+                            $trackingHistoryModel->create([
+                                                              'product_plan_sale_id' => $productPlanSale->id,
+                                                              'tracking_code'        => $trackingCode,
+                                                              'tracking_type_enum'   => null,
+                                                              'tracking_status_enum' => null,
+                                                              'tracking_date'        => null,
+                                                              'description'          => null,
+                                                          ]);
+
+                            return response()->json([
+                                                        'message' => 'Código de rastreio alterado',
+                                                        'data'    => [
+                                                            'tracking_code'   => $productPlanSale->tracking_code,
+                                                            'tracking_status' => Lang::get('definitions.enum.product_plan_sale.tracking_status_enum.' . $productPlanSaleModel->present()
+                                                                                                                                                                             ->getStatusEnum($productPlanSale->tracking_status_enum)),
+                                                        ],
+                                                    ], 200);
+                        }
+                    } else {
+                        return response()->json([
+                                                    'message' => 'Erro ao alterar código de rastreio',
+                                                ], 400);
                     }
-                    //                    else {
-                    //                        $trackingCodeupdated = $productPlanSale->update([
-                    //                                                                            'tracking_code' => $data['tracking_code'],
-                    //                                                                        ]);
-                    //                        if ($trackingCodeupdated) {
-                    //                            $trackingHistoryModel = new TrackingHistory();
-                    //                            $trackingHistoryModel->create([
-                    //
-                    //                                                          ]);
-                    //                        }
-                    //                    }
                 }
             } else {
                 return response()->json([
-                                            'message' => 'Erro ao alterar código de rastreio',
+                                            'message' => 'Erro ao salvar código de rastreio',
                                         ], 400);
             }
         } catch (Exception $e) {
             Log::warning('Erro ao tentar alterar código de rastreio (TrackingApiController - store)');
             report($e);
-            return response()->json(['message' => 'Erro ao alterar código de rastreio'], 400);
 
+            return response()->json(['message' => 'Erro ao salvar código de rastreio'], 400);
         }
     }
 
