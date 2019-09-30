@@ -7,6 +7,11 @@ $(document).ready(function () {
         $.ajax({
             method: "GET",
             url: "/api/companies",
+            dataType: "json",
+            headers: {
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
+            },
             error: function error(response) {
                 if (response.status === 422) {
                     for (error in response.errors) {
@@ -84,8 +89,10 @@ $(document).ready(function () {
             url: "api/finances/getbalances/",
             type: "GET",
             data: {company: $("#transfers_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error(response) {
                 if (response.status === 422) {
@@ -146,8 +153,10 @@ $(document).ready(function () {
             $.ajax({
                 url: "/withdrawals/getaccountinformation/" + transfersCompanySelect.val(),
                 type: "GET",
+                dataType: "json",
                 headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                    'Accept': 'application/json',
                 },
                 error: function error() {
                     //
@@ -196,8 +205,10 @@ $(document).ready(function () {
                                     company_id: $('#transfers_company_select').val(),
                                     withdrawal_value: $('#custom-input-addon').val()
                                 },
+                                dataType: "json",
                                 headers: {
-                                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                                    'Authorization': $('meta[name="access-token"]').attr('content'),
+                                    'Accept': 'application/json',
                                 },
                                 error: function (_error) {
                                     function error(_x) {
@@ -264,9 +275,10 @@ $(document).ready(function () {
         $.ajax({
             method: 'GET',
             url: '/api/anticipations/' + company,
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN':
-                    $('meta[name="csrf-token"]').attr('content'),
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
                 if (response.status === 422) {
@@ -296,8 +308,10 @@ $(document).ready(function () {
             method: 'POST',
             url: '/api/anticipations',
             data: {company: $("#transfers_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function (response) {
                 loadingOnScreenRemove();
@@ -336,8 +350,10 @@ $(document).ready(function () {
             method: "GET",
             url: link,
             data: {company: $("#extract_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function error() {
                 $("#table-transfers-body").html('Erro ao encontrar dados');
@@ -380,8 +396,10 @@ $(document).ready(function () {
                         method: "POST",
                         url: '/sales/venda/detalhe',
                         data: data,
+                        dataType: "json",
                         headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            'Authorization': $('meta[name="access-token"]').attr('content'),
+                            'Accept': 'application/json',
                         },
                         error: function error() {
                             //
@@ -436,8 +454,10 @@ $(document).ready(function () {
             method: "GET",
             url: link,
             data: {company: $("#transfers_company_select option:selected").val()},
+            dataType: "json",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'Authorization': $('meta[name="access-token"]').attr('content'),
+                'Accept': 'application/json',
             },
             error: function () {
                 $("#withdrawals-table-data").html('Erro ao encontrar dados');
